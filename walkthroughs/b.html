@@ -1,0 +1,143 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>全程拆解B｜一次仓库修复的每轮输入、输出、工具和恢复｜AI系统工程：从基础到内部实现</title><link rel="stylesheet" href="../assets/style.css" /></head><body><header class="top"><a class="brand" href="../index.html">AI系统工程：从基础到内部实现</a><nav><a href="../guide.html">阅读指南</a><a href="../index.html#twelve">核心专题</a><a href="../questions.html">全文搜索</a><a class="optional" href="../glossary.html">术语</a></nav><div class="tools"><button class="mobile-menu" data-menu aria-expanded="false" aria-label="打开章节目录">目录</button><button data-font="-1" aria-label="缩小字号">A−</button><button data-font="1" aria-label="放大字号">A＋</button></div></header><div class="layout"><aside class="sidebar" aria-label="章节目录"><div class="side-label">阅读</div><a href="../index.html">首页</a><a href="../guide.html">导论与学习方法</a><a href="../index.html#twelve">十二个核心专题</a><a href="../start.html">章末贯通例题</a><a href="../labs.html">实验与运行记录</a><a href="../questions.html">搜索目录与问题</a><div class="side-label">第一编 · 从文字到数值表示</div><a href="../foundations/01.html"><span class="side-num">01</span>先分清：文字、数字、模型和运行它的程序</a><a href="../foundations/02.html"><span class="side-num">02</span>一排数、一张表和一叠表：读懂张量与形状</a><a href="../foundations/03.html"><span class="side-num">03</span>文字为什么要先变成Token编号</a><a href="../foundations/04.html"><span class="side-num">04</span>组批和补齐：为什么两句话变成[2,3]</a><a href="../foundations/05.html"><span class="side-num">05</span>Embedding查表：把一个编号换成一排数</a><a href="../foundations/06.html"><span class="side-num">06</span>“放到设备”是什么：数据类型、内存、CPU与GPU</a><div class="side-label">第二编 · 理解Transformer计算</div><a href="../foundations/07.html"><span class="side-num">07</span>模型最常做的算术：加权求和、点积与矩阵乘法</a><a href="../foundations/08.html"><span class="side-num">08</span>reshape、转轴、广播：形状变了，内容未必算过</a><a href="../foundations/09.html"><span class="side-num">09</span>概率、指数与softmax：把分数变成比例</a><a href="../foundations/10.html"><span class="side-num">10</span>神经网络最小模型：参数、层、前向与隐藏状态</a><a href="../foundations/11.html"><span class="side-num">11</span>Attention慢速版：先算相关分数，再混合内容</a><a href="../foundations/12.html"><span class="side-num">12</span>Mask不是黑箱：把“谁能看谁”写成一张表</a><a href="../foundations/13.html"><span class="side-num">13</span>位置编号与RoPE：先懂位置，再懂旋转</a><a href="../foundations/14.html"><span class="side-num">14</span>把Attention装进一层：残差、归一化与前馈网络</a><a href="../foundations/15.html"><span class="side-num">15</span>从最后一排数到一个Token，再到一句回答</a><a href="../foundations/16.html"><span class="side-num">16</span>KV Cache从零解释：为什么可以少算，又记住了什么</a><div class="side-label">第三编 · 训练与计算效率</div><a href="../foundations/17.html"><span class="side-num">17</span>微积分只学用得上的部分：导数、梯度与链式法则</a><a href="../foundations/18.html"><span class="side-num">18</span>一次训练从头到尾：标签、交叉熵和Adam</a><a href="../foundations/19.html"><span class="side-num">19</span>后训练的前置数学：偏好、奖励、概率比与KL</a><a href="../foundations/20.html"><span class="side-num">20</span>低秩、量化、专家：先看究竟少算了什么</a><a href="../foundations/21.html"><span class="side-num">21</span>算得快与装得下：复杂度、带宽、批处理和并行</a><div class="side-label">第四编 · Agent基础与上下文</div><a href="../foundations/22.html"><span class="side-num">22</span>Agent不是另一个神经网络：用一次读文件讲清循环</a><a href="../foundations/23.html"><span class="side-num">23</span>API与流式协议：请求如何变成可执行数据</a><a href="../foundations/24.html"><span class="side-num">24</span>状态、事件与检查点：模型知道和系统记录的区别</a><a href="../foundations/25.html"><span class="side-num">25</span>工具与MCP：连接、发现、授权、执行四层拆开</a><a href="../foundations/26.html"><span class="side-num">26</span>上下文组装：每轮到底给模型什么，以及为什么</a><a href="../foundations/27.html"><span class="side-num">27</span>压缩不是魔法：摘要、原文和执行状态怎样配合</a><div class="side-label">第五编 · 信息、记忆与可靠执行</div><a href="../foundations/28.html"><span class="side-num">28</span>检索入门：目录、倒排索引、向量与近似搜索</a><a href="../foundations/29.html"><span class="side-num">29</span>从搜索结果到可信答案：召回、重排和证据</a><a href="../foundations/30.html"><span class="side-num">30</span>代码不是普通文档：语法树、调用关系与版本</a><a href="../foundations/31.html"><span class="side-num">31</span>长期记忆的基础：事实、经历、流程和时间</a><a href="../foundations/32.html"><span class="side-num">32</span>Skill、路由和多Agent：先理解谁负责什么</a><a href="../foundations/33.html"><span class="side-num">33</span>重试、幂等和事务：为什么超时不是失败证明</a><a href="../foundations/34.html"><span class="side-num">34</span>工程质量的基础：需求、反例、测试与审查</a><div class="side-label">第六编 · 评测、安全与生产运行</div><a href="../foundations/35.html"><span class="side-num">35</span>评测指标的分母：成功率、精确率、召回率和pass</a><a href="../foundations/36.html"><span class="side-num">36</span>别被几个百分点骗了：随机性、样本与统计判断</a><a href="../foundations/37.html"><span class="side-num">37</span>安全基础：数据能影响模型，但不能因此获得权限</a><a href="../foundations/38.html"><span class="side-num">38</span>看懂生产运行：Trace、队列、成本和回滚</a><a href="../foundations/39.html"><span class="side-num">39</span>多模态与可信度：图片怎样成为输入，解释为什么有限</a><a href="../foundations/40.html"><span class="side-num">40</span>从机制到诊断：定位问题并控制复杂度</a><div class="side-label">第七编 · 模型与推理</div><a href="../chapters/01.html"><span class="side-num">01</span>输入究竟是什么：从用户的一句话到模型张量</a><a href="../chapters/02.html"><span class="side-num">02</span>一次Transformer前向：逐张量、逐算子讲明白</a><a href="../chapters/03.html"><span class="side-num">03</span>注意力的深入追问：位置、掩码、多头与反向传播</a><a href="../chapters/04.html"><span class="side-num">04</span>输出是怎样一个Token一个Token生成的</a><a href="../chapters/05.html"><span class="side-num">05</span>训练的一步：从正确标签到参数真正改变</a><a href="../chapters/06.html"><span class="side-num">06</span>后训练、MoE与模型定制：能力和行为如何改变</a><a href="../chapters/07.html"><span class="side-num">07</span>KV Cache、FlashAttention与PagedAttention的内部过程</a><a href="../chapters/08.html"><span class="side-num">08</span>推理服务：调度、吞吐、延迟和并行</a><div class="side-label">第八编 · Agent运行与上下文</div><a href="../chapters/09.html"><span class="side-num">09</span>Agent一次任务的完整循环：谁在思考，谁在执行</a><a href="../chapters/10.html"><span class="side-num">10</span>模型输出怎样变成真实工具调用：协议与执行边界</a><a href="../chapters/11.html"><span class="side-num">11</span>工具设计与MCP：从连接到可控执行</a><a href="../chapters/12.html"><span class="side-num">12</span>Codex、Claude Code、Copilot：从公开事实到可诊断运行链</a><a href="../chapters/13.html"><span class="side-num">13</span>每一轮Prompt怎样组装：上下文是一条数据管线</a><a href="../chapters/14.html"><span class="side-num">14</span>上下文压缩：到底压掉什么，丢失后又如何恢复</a><div class="side-label">第九编 · 检索与记忆</div><a href="../chapters/15.html"><span class="side-num">15</span>检索离线链路：文档怎样变成可查询索引</a><a href="../chapters/16.html"><span class="side-num">16</span>检索在线链路：召回、融合、重排与证据充足性</a><a href="../chapters/17.html"><span class="side-num">17</span>代码智能：从文本搜索到符号、版本与运行证据</a><a href="../chapters/18.html"><span class="side-num">18</span>长期记忆：写入、检索、冲突、失效与遗忘</a><a href="../chapters/19.html"><span class="side-num">19</span>Skills与路由：怎样加载刚好需要的专业能力</a><a href="../chapters/20.html"><span class="side-num">20</span>多Agent：并行的收益与交接的损失</a><div class="side-label">第十编 · 工程可靠性与生产</div><a href="../chapters/21.html"><span class="side-num">21</span>可靠执行：重试、幂等、崩溃与状态恢复</a><a href="../chapters/22.html"><span class="side-num">22</span>工程质量：从需求到测试，再到真正可交付的代码</a><a href="../chapters/23.html"><span class="side-num">23</span>Evaluation：怎样证明一次优化真有收益</a><a href="../chapters/24.html"><span class="side-num">24</span>安全：指令边界、沙箱、权限与记忆污染</a><a href="../chapters/25.html"><span class="side-num">25</span>生产运行：Trace、成本、队列、灰度与回滚</a><a href="../chapters/26.html"><span class="side-num">26</span>深度应用：把组件组合成能解释的工作系统</a><a href="../chapters/27.html"><span class="side-num">27</span>事实可靠性、多模态与可解释性：能力边界在哪里</a><a href="../chapters/28.html"><span class="side-num">28</span>研究深水区与系统综合判断</a><div class="side-label">贯通案例与参考</div><a href="a.html">案例A · 从消息输入到逐Token生成</a><a href="b.html" class="active">案例B · 一次真实可追踪的仓库修复任务</a><a href="c.html">案例C · 知识检索与记忆的生命周期</a><a href="d.html">案例D · 定位一个速度与质量同时退化的系统故障</a><a href="../coverage.html">206项专题阅读索引</a><a href="../sources.html">一手来源与事实边界</a><a href="../glossary.html">术语与符号速查</a><a href="../questions.html">阅读题检索</a><a href="../checks.html">实验附录</a><a href="../advanced-labs.html">进阶代码附录</a><a href="../complete.html">单页连续阅读</a><a href="../about.html">本书说明</a></aside><main class="main"><article class="article"><div class="eyebrow">贯通案例</div><h1 id="walkb-s0">全程拆解B｜一次仓库修复的每轮输入、输出、工具和恢复</h1><div class="preq"><span class="label">连续案例的前置</span>这是把每轮调用逐项展开的教学构造，不声称商业LLM自动完成了这些步骤。<div class="pillrow"><a class="pill" href="../foundations/22.html">F22 · Agent不是另一个神经网络</a><a class="pill" href="../foundations/23.html">F23 · API与流式协议</a><a class="pill" href="../foundations/24.html">F24 · 状态、事件与检查点</a><a class="pill" href="../foundations/25.html">F25 · 工具与MCP</a><a class="pill" href="../foundations/26.html">F26 · 上下文组装</a><a class="pill" href="../foundations/27.html">F27 · 压缩不是魔法</a><a class="pill" href="../foundations/30.html">F30 · 代码不是普通文档</a><a class="pill" href="../foundations/33.html">F33 · 重试、幂等和事务</a><a class="pill" href="../foundations/34.html">F34 · 工程质量的基础</a></div></div>
+<p>下面是一段<strong>作者设计的协议级教学轨迹</strong>，不是从商业LLM运行中导出的真实会话。工具结构是简化的<a class="term" href="../glossary.html#g137" title="组织模型输入、工具、状态、权限和反馈的外围程序。 例：模型提出读文件，Harness执行并回填结果。">Harness</a>自定义格式，不要求与任何厂商<a class="term" href="../glossary.html#g140" title="表达对象、数组、字符串、数值等结构化数据的文本格式。 例：合法JSON不保证字段内容在业务上合法。">JSON</a>字段完全相同。它用于回答：“<a class="term" href="../glossary.html#g136" title="根据任务与观察调用模型和工具、持续推进的执行系统。 例：不只是一次写得很长的Prompt。">Agent</a>多次调用模型时，每一次到底给了什么、拿回什么、程序如何利用？”<a class="source-ref" href="../sources.html#src-TOOLS" title="来源说明">[TOOLS]</a><a class="source-ref" href="../sources.html#src-CODEX" title="来源说明">[CODEX]</a><a class="source-ref" href="../sources.html#src-COMPACT" title="来源说明">[COMPACT]</a></p>
+<p>任务：修复exclude功能的路径处理。约束：模式按项目根目录的相对路径匹配；不改包含规则；不提交、不部署。把最后两项保留下来，是为了防止“修好代码”被扩展成未经授权的交付动作。</p>
+<nav aria-label="本页目录" class="toc"><p class="toc-title">本页怎么读</p><a href="#walkb-s1">B.1｜开始前，宿主拥有的四种对象</a><a href="#walkb-s2">B.2｜模型调用M1：输入中为什么要包含工具Schema</a><a href="#walkb-s3">B.3｜工具T1：输出先成为证据，再进入下一轮</a><a href="#walkb-s4">B.4｜模型调用M2：明确下一步缺哪段证据</a><a href="#walkb-s5">B.5｜模型调用M3：从候选解释到可反证检查</a><a href="#walkb-s6">B.6｜模型调用M4：补丁表达的是变更，不是结果</a><a href="#walkb-s7">B.7｜最重要的故障窗口：文件改了，但成功结果丢失</a><a href="#walkb-s8">B.8｜长会话要压缩：压缩前有哪些信息不能丢</a><a href="#walkb-s9">B.9｜压缩不是原地删历史，而是一次状态切换</a><a href="#walkb-s10">B.10｜模型调用M5：先核验，不重复写</a><a href="#walkb-s11">B.11｜模型调用M6：测试必须绑定r43</a><a href="#walkb-s12">B.12｜面试官继续追问：每轮都把全部历史重新传一遍吗</a></nav><h2 id="walkb-s1">B.1｜开始前，宿主拥有的四种对象</h2>
+<pre><code class="language-json">{
+  "task_id":"t7",
+  "goal":"修复exclude路径处理",
+  "constraints":["按项目根目录相对路径匹配","保留包含规则","不提交、不部署"],
+  "workspace":{"root":"/work/demo","revision":"r42"},
+  "tools":["search_code","read_file","apply_patch","run_tests","inspect_operation"],
+  "state":{"phase":"investigate","pending_calls":[],"verified":[]}
+}
+</code></pre>
+<p>这不是全部直接塞给模型的唯一格式。任务对象、权限对象、工作区状态和工具注册表可以分开存储。模型输入只是从这些对象中选择和渲染的结果；执行器必须保留真实权限，不能以模型“说允许了”为准。</p>
+<p>首轮尚无源码证据。主Agent可以先选择检索，而不是立刻猜一个补丁。若前端已附带相关源码，首轮也可能直接分析；本例选择无附件路线，为了展示完整检索循环。</p>
+<h2 id="walkb-s2">B.2｜模型调用M1：输入中为什么要包含工具Schema</h2>
+<pre><code class="language-json">{
+  "instructions":"完成用户指定修复；用证据定位；遵守授权范围。",
+  "user_task":"修复exclude路径处理。模式相对项目根目录；不改包含规则；不提交、不部署。",
+  "workspace_hint":{"root":"/work/demo","revision":"r42"},
+  "tools":[
+    {"name":"search_code","arguments":{"query":"string","path_scope":"string"}},
+    {"name":"read_file","arguments":{"path":"string","start_line":"integer","end_line":"integer"}}
+  ],
+  "history":[]
+}
+</code></pre>
+<p><a class="term" href="../glossary.html#g141" title="对数据字段及类型等结构的约束描述。 例：path是字符串，不表示可以读取任意路径。">Schema</a>告诉模型可以表达什么动作、参数叫什么。实际系统可能只暴露部分工具，其他工具通过发现机制按需加载。工具已经在注册表中，不表示每轮都必须把完整定义放进上下文。</p>
+<p>M1输出不是最终答案，而是：</p>
+<pre><code class="language-json">{"kind":"tool_call","call_id":"c1","name":"search_code",
+ "arguments":{"query":"exclude","path_scope":"pipeline"}}
+</code></pre>
+<p>宿主解析响应项，检查工具是否存在、参数完整、调用范围允许，再执行。模型并没有在生成这个JSON的一刻直接读取磁盘。</p>
+<h2 id="walkb-s3">B.3｜工具T1：输出先成为证据，再进入下一轮</h2>
+<pre><code class="language-json">{"call_id":"c1","status":"succeeded","workspace_revision":"r42",
+ "matches":[
+  {"path":"pipeline/filter.py","lines":"20-35","preview":"def excluded(path, patterns): ..."},
+  {"path":"tests/test_filter.py","lines":"10-28","preview":"test_relative_exclude ..."}
+ ],"truncated":false}
+</code></pre>
+<p>返回片段只有定位作用，不足以确认完整控制流。若结果被截断，必须明确标注，不能把前几条当成全部。记录版本r42是为了后续判断证据是否仍对应当前工作区。</p>
+<p>宿主将M1的工具调用与T1结果按call_id配对加入历史。模型M2至少需要看到原任务、约束、c1及其结果；可以还看当前计划，但不需要把工具内部日志全部复制进去。</p>
+<h2 id="walkb-s4">B.4｜模型调用M2：明确下一步缺哪段证据</h2>
+<p>M2根据定位结果发出两个读取动作：</p>
+<pre><code class="language-json">[
+ {"kind":"tool_call","call_id":"c2","name":"read_file",
+  "arguments":{"path":"pipeline/filter.py","start_line":1,"end_line":70}},
+ {"kind":"tool_call","call_id":"c3","name":"read_file",
+  "arguments":{"path":"tests/test_filter.py","start_line":1,"end_line":60}}
+]
+</code></pre>
+<p>它们是只读、互不依赖的操作，可以并行，但每个结果仍须保留自己的ID。c3先返回不代表它属于c2。宿主不应按“第一个回来就是第一个调用”匹配。</p>
+<p>假设读到以下教学代码：</p>
+<pre><code class="language-python">from fnmatch import fnmatchcase
+
+def excluded(path, patterns):
+    return any(fnmatchcase(path, pattern) for pattern in patterns)
+
+def select_files(root, files, patterns):
+    return [p for p in files if not excluded(str(p), patterns)]
+</code></pre>
+<p>这里还不能立刻断言root未使用就是唯一错误。需要确认files传入的是绝对路径还是相对路径，patterns语义是什么，路径分隔符规则如何。一个未使用参数是线索，不是根因证明。</p>
+<h2 id="walkb-s5">B.5｜模型调用M3：从候选解释到可反证检查</h2>
+<p>把需要验证的假设写成可检查关系：</p>
+<pre><code class="language-text">H1：匹配函数本身不支持此模式。
+H2：调用方把绝对路径传入了相对模式匹配。
+H3：测试期望与已确定的产品语义不一致。
+</code></pre>
+<p>在本教学轨迹中，运行独立的两个断言：相对路径<code>generated/a.py</code>应匹配<code>generated/*</code>；同一文件绝对路径<code>/work/demo/generated/a.py</code>不匹配该相对模式。再确认用户指定的产品语义确实是根目录相对路径。这样H2获得支持，H1与H3被相应证据削弱。</p>
+<p>M3输出运行测试调用c4，而不是“我已经验证过”：</p>
+<pre><code class="language-json">{"kind":"tool_call","call_id":"c4","name":"run_tests",
+ "arguments":{"target":"tests/test_filter.py","revision":"r42"}}
+</code></pre>
+<p>结果应包含命令、返回码、实际运行测试数和失败断言。这里的教学轨迹假定原始失败已被观察；不能把本页的示例文本当成真实仓库测试报告。可执行的协议与故障恢复程序列在实验附录中；具体测试结果应以可运行记录为准。</p>
+<h2 id="walkb-s6">B.6｜模型调用M4：补丁表达的是变更，不是结果</h2>
+<p>候选修复应在正确边界把路径转为根目录相对形式，并明确根外路径如何处理。<code>relative_to</code>可能失败；不能为了让它不报错就把异常静默吞掉，也不能无需求地重新设计所有路径语义。</p>
+<pre><code class="language-json">{"kind":"tool_call","call_id":"c19","name":"apply_patch",
+ "arguments":{
+  "path":"pipeline/filter.py",
+  "expected_revision":"r42",
+  "patch_ref":"patch/p1",
+  "purpose":"仅在匹配前构造根目录相对路径"
+ }}
+</code></pre>
+<p>执行器检查版本和补丁前提，再修改文件。这里出现了三个不同状态：模型提出p1、执行器开始c19、文件实际变为r43。它们不能压成一个“已修复”。</p>
+<p>如果其他用户先把文件改成r42b，expected_revision不匹配，应该拒绝或重新读取协调。直接按旧片段覆盖，会破坏用户修改。版本检查与写入之间还有并发窗口，需要与存储机制结合；仅在Python中“先读哈希再写”并不自动消除竞争。</p>
+<h2 id="walkb-s7">B.7｜最重要的故障窗口：文件改了，但成功结果丢失</h2>
+<p>假设c19已完成文件替换，运行器却在记录成功前崩溃。模型和任务状态只知道超时，外部文件已经是r43。</p>
+<pre><code class="language-text">时间t1：记录 c19 pending
+时间t2：执行 c19，文件 r42 → r43
+时间t3：进程中断，成功响应未送达
+时间t4：恢复时看到 c19 尚未确认
+</code></pre>
+<p>把c19标为failed并直接重试，可能再次修改文件；把它标为succeeded则可能在另一种故障窗口下撒谎。正确状态是<a class="term" href="../glossary.html#g149" title="无法确认外部动作是否已经完成的状态。 例：超时可能发生在成功执行之后。">unknown</a>：需要核验。</p>
+<p>恢复器调用inspect_operation或读取目标版本/补丁效果。如果外部系统支持幂等键，可以用c19或独立业务键查询；本地文件系统则检查目标内容和预期变更是否已应用。只有证据表明未发生，才允许按适当条件重试。</p>
+<p>这里不能承诺“有一张本地表就实现分布式<a class="term" href="../glossary.html#g183" title="要求业务效果恰好一次的语义目标。 例：至少一次传输加幂等可帮助实现，不是任意系统自动保证。">exactly-once</a>”。如果状态表和外部副作用不在一个原子事务里，仍有窗口。工程目标是明确结果、避免危险重复，并为无法判定的情况提供受控恢复。</p>
+<h2 id="walkb-s8">B.8｜长会话要压缩：压缩前有哪些信息不能丢</h2>
+<p>到这里历史可能已有多次搜索、整文件读取和失败尝试。对后续任务最重要的是目标、约束、已确认根因、当前文件版本、未确认操作、测试状态和证据位置。</p>
+<p>错误摘要：</p>
+<blockquote>
+<p>已修复exclude问题，准备交付。</p>
+</blockquote>
+<p>它同时犯了三件事：把执行未知写成完成；把原始测试结果误用到新版本；丢掉“不提交、不部署”。即使文字很短很流畅，也不适合作为恢复状态。</p>
+<p>更合理的教学摘要：</p>
+<pre><code class="language-json">{
+ "task":"t7",
+ "goal":"exclude按根目录相对路径匹配",
+ "constraints":["保留包含规则","不提交、不部署"],
+ "confirmed_cause":{"claim":"绝对路径进入相对模式匹配",
+   "evidence":["e/read-c2@r42","e/test-c4@r42"]},
+ "patch":{"id":"p1","call_id":"c19","status":"unknown"},
+ "workspace":{"last_confirmed":"r42","observed_candidate":"r43"},
+ "next":"先核验c19，再对确认后的当前版本运行测试",
+ "verification":{"current_patch_tested":false}
+}
+</code></pre>
+<p>摘要不是原始证据的替代品。<code>e/read-c2@r42</code>必须能找回来源；如果源码已变，要知道旧证据只能支持历史判断，不能直接代表当前事实。</p>
+<h2 id="walkb-s9">B.9｜压缩不是原地删历史，而是一次状态切换</h2>
+<p>先取得待压缩历史的快照版本H17，再生成候选摘要C18。校验关键约束、工具调用配对、unknown状态和证据引用。重建稳定系统指令、必要工具定义与新摘要，再条件性替换当前上下文。</p>
+<p>若生成摘要时用户插入新指令，当前历史已变成H18，就不能盲目用基于H17的摘要覆盖新消息。可以把新消息追加到新上下文，或重新协调快照；具体策略由运行器决定。本质是并发状态更新问题，不是“让模型总结得更认真”就能解决。</p>
+<p>压缩后模型请求M5应包含：原始授权范围、上述恢复状态、核验工具以及最新观察。旧的所有大段源码不必常驻，但模型需要时可以按证据ID重新读取。缓存命中可能变化；这影响成本，不应成为保留错误上下文的理由。</p>
+<h2 id="walkb-s10">B.10｜模型调用M5：先核验，不重复写</h2>
+<p>M5看到c19 unknown，选择：</p>
+<pre><code class="language-json">{"kind":"tool_call","call_id":"c20","name":"inspect_operation",
+ "arguments":{"operation_id":"c19","target":"pipeline/filter.py","patch_ref":"patch/p1"}}
+</code></pre>
+<p>教学返回：</p>
+<pre><code class="language-json">{"call_id":"c20","status":"succeeded",
+ "finding":{"operation_applied":true,"workspace_revision":"r43",
+ "expected_change_present":true}}
+</code></pre>
+<p>宿主现在可以把c19更新为已核验完成，仍不能把整个任务标成完成。新代码是否满足功能和回归要求，是下一阶段验证问题。</p>
+<p>如果返回只说“文件存在”，不足以证明补丁已应用；如果内容与p1部分一致，要识别部分修改、外部并发或核验不足，不能强行归到成功。结果Schema需要表达不确定性，而不是只有true/false逼模型选一个。</p>
+<h2 id="walkb-s11">B.11｜模型调用M6：测试必须绑定r43</h2>
+<p>M6调用测试c21，结果应表明实际在r43上运行了哪些测试。若通过，再检查改动范围和用户约束，形成最终交付。若测试期间源码再次变化，结果不能自动证明新版本正确，需要重新核对受影响范围。</p>
+<p>最终回答的结构可以是：根因、修改范围、验证证据、剩余限制。不得声称已经提交或部署，因为用户明确禁止且本例没有执行。一个合格的结束条件是：所需修复已确认、相关验证完成、无待核验重要副作用、未越权。</p>
+<p>这里不存在必须追加一整轮独立Review的固定要求。若变更风险低且证据充分，可结束；若跨模块语义或并发风险尚未确认，就继续有针对性的验证。Review的价值来自消除特定风险，不来自流程名字。</p>
+<h2 id="walkb-s12">B.12｜面试官继续追问：每轮都把全部历史重新传一遍吗</h2>
+<p>不一定。接口可能由客户端传完整逻辑历史，也可能引用服务端保存的响应或会话；服务仍需构建本轮可用上下文。逻辑历史连续、网络只发增量、计算缓存命中，是三个独立维度。</p>
+<p>使用不透明压缩状态时，客户端可能无法逐字段检查模型内部保留内容，所以更要在外部持久状态中保留任务约束、操作结果和证据引用。不能把全部工程可靠性押在一个无法检查的摘要块上。</p>
+<p>另一个追问是：子Agent是否自动继承这些工具和状态？不能假设。应根据产品和配置确认，交接时显式提供任务所需的最小证据与权限。主Agent有<a class="term" href="../glossary.html#g150" title="宿主与外部工具或资源服务器交互的一套协议。 例：不是Agent间全部通信的总称。">MCP</a>，不代表每个子Agent都能访问；子Agent返回“完成”也不代表最终工作区已经整合并通过测试。</p>
+<p>读完本例应能回答：一项事实最早在哪个阶段被知道、谁有权改变它、谁负责记录它、压缩后如何恢复，以及哪个证据足以关闭任务。能回答这些，才是理解Agent运行，而不只是会背“思考—行动—观察”。</p>
+<div class="progress-row"><button aria-pressed="false" data-mark="walkthroughs/b.html">标记本节已读</button><span class="read-status">只保存在本机浏览器；不上传阅读数据。</span></div><footer class="footer">本书为独立编写的中文教程；教学数值、构造案例与实际软件运行证据分别标注，闭源系统未公开的内部细节不作推断。<br /><a href="../sources.html">资料来源</a> · <a href="../coverage.html">阅读索引</a> · <a href="../about.html">关于本书</a></footer></article></main></div><script src="../assets/app.js"></script></body></html>

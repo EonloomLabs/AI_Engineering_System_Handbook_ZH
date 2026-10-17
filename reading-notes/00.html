@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>专题阅读 00｜AI系统工程：从基础到内部实现</title><link href="../assets/style.css" rel="stylesheet"/></head><body><header class="top"><a class="brand" href="../index.html">AI系统工程：从基础到内部实现</a><nav><a href="../guide.html">阅读指南</a><a href="../index.html#twelve">核心专题</a><a href="../questions.html">全文搜索</a><a class="optional" href="../glossary.html">术语</a></nav><div class="tools"><button aria-expanded="false" aria-label="打开章节目录" class="mobile-menu" data-menu="">目录</button><button aria-label="缩小字号" data-font="-1">A−</button><button aria-label="放大字号" data-font="1">A＋</button></div></header><div class="layout"><aside aria-label="章节目录" class="sidebar"><div class="side-label">阅读</div><a href="../index.html">首页</a><a href="../guide.html">导论与学习方法</a><a href="../index.html#twelve">十二个核心专题</a><a href="../start.html">章末贯通例题</a><a href="../labs.html">实验与运行记录</a><a href="../questions.html">搜索目录与问题</a><div class="side-label">第一编 · 从文字到数值表示</div><a href="../foundations/01.html"><span class="side-num">01</span>先分清：文字、数字、模型和运行它的程序</a><a href="../foundations/02.html"><span class="side-num">02</span>一排数、一张表和一叠表：读懂张量与形状</a><a href="../foundations/03.html"><span class="side-num">03</span>文字为什么要先变成Token编号</a><a href="../foundations/04.html"><span class="side-num">04</span>组批和补齐：为什么两句话变成[2,3]</a><a href="../foundations/05.html"><span class="side-num">05</span>Embedding查表：把一个编号换成一排数</a><a href="../foundations/06.html"><span class="side-num">06</span>“放到设备”是什么：数据类型、内存、CPU与GPU</a><div class="side-label">第二编 · 理解Transformer计算</div><a href="../foundations/07.html"><span class="side-num">07</span>模型最常做的算术：加权求和、点积与矩阵乘法</a><a href="../foundations/08.html"><span class="side-num">08</span>reshape、转轴、广播：形状变了，内容未必算过</a><a href="../foundations/09.html"><span class="side-num">09</span>概率、指数与softmax：把分数变成比例</a><a href="../foundations/10.html"><span class="side-num">10</span>神经网络最小模型：参数、层、前向与隐藏状态</a><a href="../foundations/11.html"><span class="side-num">11</span>Attention慢速版：先算相关分数，再混合内容</a><a href="../foundations/12.html"><span class="side-num">12</span>Mask不是黑箱：把“谁能看谁”写成一张表</a><a href="../foundations/13.html"><span class="side-num">13</span>位置编号与RoPE：先懂位置，再懂旋转</a><a href="../foundations/14.html"><span class="side-num">14</span>把Attention装进一层：残差、归一化与前馈网络</a><a href="../foundations/15.html"><span class="side-num">15</span>从最后一排数到一个Token，再到一句回答</a><a href="../foundations/16.html"><span class="side-num">16</span>KV Cache从零解释：为什么可以少算，又记住了什么</a><div class="side-label">第三编 · 训练与计算效率</div><a href="../foundations/17.html"><span class="side-num">17</span>微积分只学用得上的部分：导数、梯度与链式法则</a><a href="../foundations/18.html"><span class="side-num">18</span>一次训练从头到尾：标签、交叉熵和Adam</a><a href="../foundations/19.html"><span class="side-num">19</span>后训练的前置数学：偏好、奖励、概率比与KL</a><a href="../foundations/20.html"><span class="side-num">20</span>低秩、量化、专家：先看究竟少算了什么</a><a href="../foundations/21.html"><span class="side-num">21</span>算得快与装得下：复杂度、带宽、批处理和并行</a><div class="side-label">第四编 · Agent基础与上下文</div><a href="../foundations/22.html"><span class="side-num">22</span>Agent不是另一个神经网络：用一次读文件讲清循环</a><a href="../foundations/23.html"><span class="side-num">23</span>API与流式协议：请求如何变成可执行数据</a><a href="../foundations/24.html"><span class="side-num">24</span>状态、事件与检查点：模型知道和系统记录的区别</a><a href="../foundations/25.html"><span class="side-num">25</span>工具与MCP：连接、发现、授权、执行四层拆开</a><a href="../foundations/26.html"><span class="side-num">26</span>上下文组装：每轮到底给模型什么，以及为什么</a><a href="../foundations/27.html"><span class="side-num">27</span>压缩不是魔法：摘要、原文和执行状态怎样配合</a><div class="side-label">第五编 · 信息、记忆与可靠执行</div><a href="../foundations/28.html"><span class="side-num">28</span>检索入门：目录、倒排索引、向量与近似搜索</a><a href="../foundations/29.html"><span class="side-num">29</span>从搜索结果到可信答案：召回、重排和证据</a><a href="../foundations/30.html"><span class="side-num">30</span>代码不是普通文档：语法树、调用关系与版本</a><a href="../foundations/31.html"><span class="side-num">31</span>长期记忆的基础：事实、经历、流程和时间</a><a href="../foundations/32.html"><span class="side-num">32</span>Skill、路由和多Agent：先理解谁负责什么</a><a href="../foundations/33.html"><span class="side-num">33</span>重试、幂等和事务：为什么超时不是失败证明</a><a href="../foundations/34.html"><span class="side-num">34</span>工程质量的基础：需求、反例、测试与审查</a><div class="side-label">第六编 · 评测、安全与生产运行</div><a href="../foundations/35.html"><span class="side-num">35</span>评测指标的分母：成功率、精确率、召回率和pass</a><a href="../foundations/36.html"><span class="side-num">36</span>别被几个百分点骗了：随机性、样本与统计判断</a><a href="../foundations/37.html"><span class="side-num">37</span>安全基础：数据能影响模型，但不能因此获得权限</a><a href="../foundations/38.html"><span class="side-num">38</span>看懂生产运行：Trace、队列、成本和回滚</a><a href="../foundations/39.html"><span class="side-num">39</span>多模态与可信度：图片怎样成为输入，解释为什么有限</a><a href="../foundations/40.html"><span class="side-num">40</span>从机制到诊断：定位问题并控制复杂度</a><div class="side-label">第七编 · 模型与推理</div><a href="../chapters/01.html"><span class="side-num">01</span>输入究竟是什么：从用户的一句话到模型张量</a><a href="../chapters/02.html"><span class="side-num">02</span>一次Transformer前向：逐张量、逐算子讲明白</a><a href="../chapters/03.html"><span class="side-num">03</span>注意力的深入追问：位置、掩码、多头与反向传播</a><a href="../chapters/04.html"><span class="side-num">04</span>输出是怎样一个Token一个Token生成的</a><a href="../chapters/05.html"><span class="side-num">05</span>训练的一步：从正确标签到参数真正改变</a><a href="../chapters/06.html"><span class="side-num">06</span>后训练、MoE与模型定制：能力和行为如何改变</a><a href="../chapters/07.html"><span class="side-num">07</span>KV Cache、FlashAttention与PagedAttention的内部过程</a><a href="../chapters/08.html"><span class="side-num">08</span>推理服务：调度、吞吐、延迟和并行</a><div class="side-label">第八编 · Agent运行与上下文</div><a href="../chapters/09.html"><span class="side-num">09</span>Agent一次任务的完整循环：谁在思考，谁在执行</a><a href="../chapters/10.html"><span class="side-num">10</span>模型输出怎样变成真实工具调用：协议与执行边界</a><a href="../chapters/11.html"><span class="side-num">11</span>工具设计与MCP：从连接到可控执行</a><a href="../chapters/12.html"><span class="side-num">12</span>Codex、Claude Code、Copilot：从公开事实到可诊断运行链</a><a href="../chapters/13.html"><span class="side-num">13</span>每一轮Prompt怎样组装：上下文是一条数据管线</a><a href="../chapters/14.html"><span class="side-num">14</span>上下文压缩：到底压掉什么，丢失后又如何恢复</a><div class="side-label">第九编 · 检索与记忆</div><a href="../chapters/15.html"><span class="side-num">15</span>检索离线链路：文档怎样变成可查询索引</a><a href="../chapters/16.html"><span class="side-num">16</span>检索在线链路：召回、融合、重排与证据充足性</a><a href="../chapters/17.html"><span class="side-num">17</span>代码智能：从文本搜索到符号、版本与运行证据</a><a href="../chapters/18.html"><span class="side-num">18</span>长期记忆：写入、检索、冲突、失效与遗忘</a><a href="../chapters/19.html"><span class="side-num">19</span>Skills与路由：怎样加载刚好需要的专业能力</a><a href="../chapters/20.html"><span class="side-num">20</span>多Agent：并行的收益与交接的损失</a><div class="side-label">第十编 · 工程可靠性与生产</div><a href="../chapters/21.html"><span class="side-num">21</span>可靠执行：重试、幂等、崩溃与状态恢复</a><a href="../chapters/22.html"><span class="side-num">22</span>工程质量：从需求到测试，再到真正可交付的代码</a><a href="../chapters/23.html"><span class="side-num">23</span>Evaluation：怎样证明一次优化真有收益</a><a href="../chapters/24.html"><span class="side-num">24</span>安全：指令边界、沙箱、权限与记忆污染</a><a href="../chapters/25.html"><span class="side-num">25</span>生产运行：Trace、成本、队列、灰度与回滚</a><a href="../chapters/26.html"><span class="side-num">26</span>深度应用：把组件组合成能解释的工作系统</a><a href="../chapters/27.html"><span class="side-num">27</span>事实可靠性、多模态与可解释性：能力边界在哪里</a><a href="../chapters/28.html"><span class="side-num">28</span>研究深水区与系统综合判断</a><div class="side-label">贯通案例与参考</div><a href="../walkthroughs/a.html">案例A · 从消息输入到逐Token生成</a><a href="../walkthroughs/b.html">案例B · 一次真实可追踪的仓库修复任务</a><a href="../walkthroughs/c.html">案例C · 知识检索与记忆的生命周期</a><a href="../walkthroughs/d.html">案例D · 定位一个速度与质量同时退化的系统故障</a><a href="../coverage.html">206项专题阅读索引</a><a href="../sources.html">一手来源与事实边界</a><a href="../glossary.html">术语与符号速查</a><a href="../questions.html">阅读题检索</a><a href="../checks.html">实验附录</a><a href="../advanced-labs.html">进阶代码附录</a><a href="../complete.html">单页连续阅读</a><a href="../about.html">本书说明</a></aside><main class="main"><article class="article"><header class="chapter-header"><p class="eyebrow">专题文献导读</p><h1>专题阅读 00 · 全局认知</h1><p class="subtitle">建立模型、Agent、上下文与工程系统的完整地图</p><div class="meta"><span class="chip">阶段 0</span><span class="chip">5 项展开讲义</span><span class="chip">正文全部展开</span></div></header><div class="prose"><h2 id="llm-course">先建立完整系统模型</h2>
+<p>把AI用于工作，不只是输入一句话再等待答案，而是建立一个能够获取信息、形成判断、执行动作、检查结果的系统。先区分四个对象：<strong>模型</strong>根据输入计算输出；**Harness（运行框架）**组织调用和执行；<strong>环境</strong>提供文件、终端、数据库与业务系统；<strong>任务目标</strong>决定什么才算完成。课程与Agent工程资料分别解释这些不同层面。<a aria-label="来源 S001，LLM课程：概念与工具全景" class="source-ref" href="sources.html#S001">[S001]</a><a aria-label="来源 S003，构建有效的智能体" class="source-ref" href="sources.html#S003">[S003]</a><a aria-label="来源 S004，展开Codex智能体循环" class="source-ref" href="sources.html#S004">[S004]</a></p>
+<pre><code class="language-text">用户目标、约束与当前状态
+          ↓
+Harness选择本轮需要的信息
+          ↓
+LLM生成回答或候选工具调用
+          ↓
+程序检查参数、权限并执行工具
+          ↓
+环境返回观察，状态发生变化
+          ↓
+更新上下文 → 继续执行或验证结束
+</code></pre>
+<p>这是一张教学职责图，不是某个产品的完整内部实现。模型能访问代码，不代表代码已经进入本轮输入；文件被读取，不代表其中每条约束都被正确利用。要分别追踪“可以访问、确实读取、正确理解、已经验证”，不能把其中一个状态当成全部。</p>
+<h2 id="c00-section-2">一个贯穿全书的工程案例</h2>
+<p>本书使用一个<strong>假设任务</strong>：为构建流水线增加<code>exclude</code>，使它跳过指定目录，同时不改变未配置该字段时的旧行为。案例不是对用户真实仓库的审计，也不代表某产品已完成这些修改。</p>
+<p>任务涉及参数语义、配置入口、路径基准、过滤时机、兼容性和测试。如果模型说“已修复”，仍要检查补丁是否真正应用、对应哪一版代码、测试是否在修改后运行、是否覆盖默认行为。完整工作证据比流畅的完成声明更重要。</p>
+<p>本书采用的工程分析方法是：遇到错误，先寻找第一处关键断点。没有读取正确文件是证据供给问题；读取后误解条件是推理问题；补丁未应用是执行问题；代码改错却未发现是验证问题。相同的最终失败，可能需要完全不同的修复。</p>
+<h2 id="c00-section-3">一次模型调用与一个完整任务</h2>
+<p>一次调用处理有限输入并产生输出；一个任务可能涉及许多次模型调用。第1轮选择搜索，第2轮读取文件，第3轮产生修改，第4轮根据测试继续。各轮的信息不同，不能只看用户最初的Prompt解释整个任务。Codex公开的Agent Loop正是这种模型与工具交替的组织方式。<a aria-label="来源 S004，展开Codex智能体循环" class="source-ref" href="sources.html#S004">[S004]</a></p>
+<p>界面、CLI和IDE扩展是交互入口；模型、工具与状态管理是执行部件。相同界面不保证相同上下文，不同界面也可能共享核心执行逻辑。具体是否共享，应依据产品说明或某个版本源码，而非从外观推测。</p>
+<h2 id="c00-section-4">五类容易混淆的“知识”</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>存放什么</th>
+<th>怎样变化</th>
+<th>不能替代什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>模型参数</td>
+<td>训练形成的语言和任务规律</td>
+<td>训练、微调</td>
+<td>最新外部事实</td>
+</tr>
+<tr>
+<td>本轮上下文</td>
+<td>指令、证据、历史与状态</td>
+<td>输入组装</td>
+<td>跨会话持久化</td>
+</tr>
+<tr>
+<td>外部知识源</td>
+<td>源码、文档、数据库</td>
+<td>源系统更新</td>
+<td>正确检索与解释</td>
+</tr>
+<tr>
+<td>执行状态</td>
+<td>已做动作、测试、待审批事项</td>
+<td>工具与Harness更新</td>
+<td>实际环境核验</td>
+</tr>
+<tr>
+<td>计算缓存</td>
+<td>可复用的中间计算</td>
+<td>服务端策略</td>
+<td>经验记忆</td>
+</tr>
+</tbody>
+</table></div>
+<p>In-Context Learning利用输入示例改善当前表现，不要求在该次推理中更新模型权重。因此，“告诉模型十个例子后它做对了”不等于永久学会。KV Cache和Prompt Cache同样不是把业务知识写进参数。<a aria-label="来源 S015，少样本与上下文学习" class="source-ref" href="sources.html#S015">[S015]</a><a aria-label="来源 S036，KV缓存策略" class="source-ref" href="sources.html#S036">[S036]</a><a aria-label="来源 S039，提示前缀缓存" class="source-ref" href="sources.html#S039">[S039]</a></p>
+<h2 id="agent-design">从最小有效系统开始</h2>
+<p>已知步骤的工作流与动态Agent可以混合。参数校验、测试执行、补丁应用适合确定性程序；未知Bug的调查方向可以由模型决定；发布、删除等高风险副作用仍需要明确授权。不要为了“更像Agent”而把成熟的控制流全部改成概率判断。<a aria-label="来源 S003，构建有效的智能体" class="source-ref" href="sources.html#S003">[S003]</a></p>
+<p>一个原创反问是：去掉这个环节，会发生什么具体错误？如果答案只是“不够专业”，还不足以支持增加它；如果缺少权限校验会泄露凭据，则有明确保留理由。这个方法用于判断工程必要性，不是某篇论文证明的普遍定律。</p>
+<h2 id="c00-section-6">本章自检与答案</h2>
+<p>**问题：读取源码后仍修改错误，一定是检索问题吗？**不是。可能读取范围不足，也可能误解、执行或验证出错，应检查证据、补丁和测试。</p>
+<p>**问题：把架构写进AGENTS.md是否属于微调？**不是。只要运行时读取而未训练参数，它属于上下文供给；是否加载取决于Harness。</p>
+<p>**问题：学习完成的标准是什么？**能追踪一次任务的信息、动作、状态与验证，并判断该改模型、Prompt、检索、工具还是流程，而不只是会背技术名称。</p>
+</div><div class="section-divider" id="readings"><h2>逐项中文讲义</h2><p>保留本书目录编号与A/B/C优先级；每项包括机制解释、边界与原创练习。</p></div><section class="lecture" id="m-00-01"><div class="lecture-title"><h3><span class="priority">A</span>0.1 · LLM课程：概念与工具全景</h3><button aria-pressed="false" data-mark="reading-note-0.1">标记本条已读</button></div><p class="english-title">对应资料：Hugging Face LLM Course</p><div class="prose"><p>Hugging Face课程把Tokenizer、模型、数据与任务接口连接起来。理解一个高层pipeline时，应继续追踪输入如何变成ID、模型怎样产生张量、后处理怎样还原为结果。调用成功不等于已经理解内部机制。</p>
+<p>Token ID只是词表索引，数值大小不代表语义距离。模型输出也可能是分类分数、隐藏表示或生成Token，不同任务头的语义不同。一个分类模型不会因为使用了Transformer就自动运行Agent循环。</p>
+<p>原创练习：用同一意思的中文、英文与代码表达，分别记录输入长度、特殊符号和预期输出形式。不要使用固定汉字/Token比例，真正计数依赖配套Tokenizer。再把工具调用结果加入上下文，指出这是新增输入而不是参数更新。</p>
+<p>完成标准是能把一次调用拆成编码、计算、解释三个阶段，说明错误可能出现在哪一层。课程是基础入口，不需要先读完全部训练内容才开始构建小Agent，但不能把工具库封装当作底层知识的替代。</p>
+</div><p class="source-note">专题目录事实依据 <a aria-label="来源 S001，LLM课程：概念与工具全景" class="source-ref" href="sources.html#S001">[S001]</a>　·　练习与工程推导为本书独立编写。</p></section><section class="lecture" id="m-00-02"><div class="lecture-title"><h3><span class="priority">A</span>0.2 · 图解GPT-2：自回归模型</h3><button aria-pressed="false" data-mark="reading-note-0.2">标记本条已读</button></div><p class="english-title">对应资料：The Illustrated GPT-2</p><div class="prose"><p>图解GPT-2以Decoder-only结构解释自回归生成。已有序列进入模型，当前位置产生下一Token分布，选中的Token又成为后续输入。它是理解聊天生成的桥梁，但不代表所有现代模型保留GPT-2的全部组件与参数。</p>
+<p>逐Token输出不意味着模型一次只利用一个Token。预测可以依赖完整可见前缀；缓存使部分历史计算可复用。第一步处理长提示与后续生成在计算安排上也不同。</p>
+<p>原创练习：为“文件不存在，因此需要……”列出几个合理续写，再问它们是否证明真实文件状态。答案是否定的，模型可以按语言模式补全，而文件存在性需要工具观察。继续把“文件其实存在”的新证据加入，分析下一轮条件分布为何变化。</p>
+<p>完成标准是区分条件生成、证据验证与工具执行。不要把流畅续写解释成模型查过磁盘，也不要把后来依据证据改口描述成模型参数在会话中重新训练。</p>
+</div><p class="source-note">专题目录事实依据 <a aria-label="来源 S002，图解GPT-2：自回归模型" class="source-ref" href="sources.html#S002">[S002]</a>　·　练习与工程推导为本书独立编写。</p></section><section class="lecture" id="m-00-03"><div class="lecture-title"><h3><span class="priority">A</span>0.3 · 构建有效的智能体</h3><button aria-pressed="false" data-mark="reading-note-0.3">标记本条已读</button></div><p class="english-title">对应资料：Building Effective Agents</p><div class="prose"><p>Building Effective Agents区分预设流程与动态Agent，并讨论链式、路由、并行、协调工作者和反馈等模式。文章强调从简单方案开始，复杂性应有任务需要，而不是把所有模式串成固定长流程。</p>
+<p>原创例子：字段提取可用一次模型加校验；未知Bug需要依据观察调整搜索；互不依赖的材料可并行研究。三者都调用LLM，却不应采用相同编排。</p>
+<p>每种模式都有反例。链式会传播前一步错误；路由会分错领域；并行增加整合；评估循环可能没有新证据，只反复修饰表达。只有识别这些代价，才能判断额外步骤是否值得。</p>
+<p>练习是为自己的一个任务画最短可行流程，再逐个提出“去掉这一环会造成什么具体失败”。若不能给出实际风险，就先不要增加。完成标准是依据不确定性与验证成本选模式，而不是依据流行架构名称。</p>
+</div><p class="source-note">专题目录事实依据 <a aria-label="来源 S003，构建有效的智能体" class="source-ref" href="sources.html#S003">[S003]</a>　·　练习与工程推导为本书独立编写。</p></section><section class="lecture" id="m-00-04"><div class="lecture-title"><h3><span class="priority">A</span>0.4 · 展开Codex智能体循环</h3><button aria-pressed="false" data-mark="reading-note-0.4">标记本条已读</button></div><p class="english-title">对应资料：Unrolling the Codex Agent Loop</p><div class="prose"><p>Codex Agent Loop展示模型、工具与用户之间的循环组织：组装输入，接收动作或回答，执行工具，把结果回填，再继续。模型提出动作与环境已经执行是两种状态，必须分开。</p>
+<p>把“用户输入”扩展为“每轮实际输入”，才能解释后期为何出现源码、日志与压缩状态。第一轮不天然拥有整个仓库，工具返回构成增量证据。模型生成Shell参数，也不说明命令成功。</p>
+<p>原创练习：画搜索、读取、修改、测试四次动作之间的消息边界，标明每条边新增的信息。删除测试返回后，指出“通过验证”的结论失去了什么依据。若只保留模型说过的话，而没有执行观察，就无法建立可靠审计链。</p>
+<p>本条用于全局认知，后面产品章进一步讨论会话原语与上下文。它不是对Codex隐藏系统Prompt的猜测，也不声称已审计当前完整源码提交。</p>
+</div><p class="source-note">专题目录事实依据 <a aria-label="来源 S004，展开Codex智能体循环" class="source-ref" href="sources.html#S004">[S004]</a>　·　练习与工程推导为本书独立编写。</p></section><section class="lecture" id="m-00-05"><div class="lecture-title"><h3><span class="priority">B</span>0.5 · 从零构建语言模型的知识版图</h3><button aria-pressed="false" data-mark="reading-note-0.5">标记本条已读</button></div><p class="english-title">对应资料：Stanford CS336</p><div class="prose"><p>CS336从零构建语言模型，把Tokenizer、架构、数据、优化、推理系统和评测串起来。它的价值是展示各组件相互约束，而不是让学习者只背注意力公式或参数量。</p>
+<p>词表影响序列长度，序列影响计算和缓存，数据影响能力，预算决定可行规模，评测决定是否真的进步。某个局部指标更好，不代表整套系统更适合业务。</p>
+<p>原创练习：在有限计算预算下，比较增加参数、增加训练数据、改善清洗和改变序列长度。先说明目标是训练损失、下游任务还是总服务成本，再讨论取舍，不凭空给出提分比例。</p>
+<p>第一轮学习只需掌握依赖关系。深入时再实现优化和系统实验。完成标准是能解释“为什么更大不一定更划算”，并把训练系统知识与后续Agent中的成本、延迟和能力边界联系起来。</p>
+</div><p class="source-note">专题目录事实依据 <a aria-label="来源 S005，从零构建语言模型的知识版图" class="source-ref" href="sources.html#S005">[S005]</a>　·　练习与工程推导为本书独立编写。</p></section><footer class="footer">本书为独立编写的中文教程；教学数值、构造案例与实际软件运行证据分别标注，闭源系统未公开的内部细节不作推断。<br/><a href="../sources.html">资料来源</a> · <a href="../coverage.html">阅读索引</a> · <a href="../about.html">关于本书</a></footer></article></main></div><script src="../assets/app.js"></script></body></html>

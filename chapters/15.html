@@ -1,0 +1,94 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>15｜检索离线链路：文档怎样变成可查询索引｜AI系统工程：从基础到内部实现</title><link rel="stylesheet" href="../assets/style.css" /></head><body><header class="top"><a class="brand" href="../index.html">AI系统工程：从基础到内部实现</a><nav><a href="../guide.html">阅读指南</a><a href="../index.html#twelve">核心专题</a><a href="../questions.html">全文搜索</a><a class="optional" href="../glossary.html">术语</a></nav><div class="tools"><button class="mobile-menu" data-menu aria-expanded="false" aria-label="打开章节目录">目录</button><button data-font="-1" aria-label="缩小字号">A−</button><button data-font="1" aria-label="放大字号">A＋</button></div></header><div class="layout"><aside class="sidebar" aria-label="章节目录"><div class="side-label">阅读</div><a href="../index.html">首页</a><a href="../guide.html">导论与学习方法</a><a href="../index.html#twelve">十二个核心专题</a><a href="../start.html">章末贯通例题</a><a href="../labs.html">实验与运行记录</a><a href="../questions.html">搜索目录与问题</a><div class="side-label">第一编 · 从文字到数值表示</div><a href="../foundations/01.html"><span class="side-num">01</span>先分清：文字、数字、模型和运行它的程序</a><a href="../foundations/02.html"><span class="side-num">02</span>一排数、一张表和一叠表：读懂张量与形状</a><a href="../foundations/03.html"><span class="side-num">03</span>文字为什么要先变成Token编号</a><a href="../foundations/04.html"><span class="side-num">04</span>组批和补齐：为什么两句话变成[2,3]</a><a href="../foundations/05.html"><span class="side-num">05</span>Embedding查表：把一个编号换成一排数</a><a href="../foundations/06.html"><span class="side-num">06</span>“放到设备”是什么：数据类型、内存、CPU与GPU</a><div class="side-label">第二编 · 理解Transformer计算</div><a href="../foundations/07.html"><span class="side-num">07</span>模型最常做的算术：加权求和、点积与矩阵乘法</a><a href="../foundations/08.html"><span class="side-num">08</span>reshape、转轴、广播：形状变了，内容未必算过</a><a href="../foundations/09.html"><span class="side-num">09</span>概率、指数与softmax：把分数变成比例</a><a href="../foundations/10.html"><span class="side-num">10</span>神经网络最小模型：参数、层、前向与隐藏状态</a><a href="../foundations/11.html"><span class="side-num">11</span>Attention慢速版：先算相关分数，再混合内容</a><a href="../foundations/12.html"><span class="side-num">12</span>Mask不是黑箱：把“谁能看谁”写成一张表</a><a href="../foundations/13.html"><span class="side-num">13</span>位置编号与RoPE：先懂位置，再懂旋转</a><a href="../foundations/14.html"><span class="side-num">14</span>把Attention装进一层：残差、归一化与前馈网络</a><a href="../foundations/15.html"><span class="side-num">15</span>从最后一排数到一个Token，再到一句回答</a><a href="../foundations/16.html"><span class="side-num">16</span>KV Cache从零解释：为什么可以少算，又记住了什么</a><div class="side-label">第三编 · 训练与计算效率</div><a href="../foundations/17.html"><span class="side-num">17</span>微积分只学用得上的部分：导数、梯度与链式法则</a><a href="../foundations/18.html"><span class="side-num">18</span>一次训练从头到尾：标签、交叉熵和Adam</a><a href="../foundations/19.html"><span class="side-num">19</span>后训练的前置数学：偏好、奖励、概率比与KL</a><a href="../foundations/20.html"><span class="side-num">20</span>低秩、量化、专家：先看究竟少算了什么</a><a href="../foundations/21.html"><span class="side-num">21</span>算得快与装得下：复杂度、带宽、批处理和并行</a><div class="side-label">第四编 · Agent基础与上下文</div><a href="../foundations/22.html"><span class="side-num">22</span>Agent不是另一个神经网络：用一次读文件讲清循环</a><a href="../foundations/23.html"><span class="side-num">23</span>API与流式协议：请求如何变成可执行数据</a><a href="../foundations/24.html"><span class="side-num">24</span>状态、事件与检查点：模型知道和系统记录的区别</a><a href="../foundations/25.html"><span class="side-num">25</span>工具与MCP：连接、发现、授权、执行四层拆开</a><a href="../foundations/26.html"><span class="side-num">26</span>上下文组装：每轮到底给模型什么，以及为什么</a><a href="../foundations/27.html"><span class="side-num">27</span>压缩不是魔法：摘要、原文和执行状态怎样配合</a><div class="side-label">第五编 · 信息、记忆与可靠执行</div><a href="../foundations/28.html"><span class="side-num">28</span>检索入门：目录、倒排索引、向量与近似搜索</a><a href="../foundations/29.html"><span class="side-num">29</span>从搜索结果到可信答案：召回、重排和证据</a><a href="../foundations/30.html"><span class="side-num">30</span>代码不是普通文档：语法树、调用关系与版本</a><a href="../foundations/31.html"><span class="side-num">31</span>长期记忆的基础：事实、经历、流程和时间</a><a href="../foundations/32.html"><span class="side-num">32</span>Skill、路由和多Agent：先理解谁负责什么</a><a href="../foundations/33.html"><span class="side-num">33</span>重试、幂等和事务：为什么超时不是失败证明</a><a href="../foundations/34.html"><span class="side-num">34</span>工程质量的基础：需求、反例、测试与审查</a><div class="side-label">第六编 · 评测、安全与生产运行</div><a href="../foundations/35.html"><span class="side-num">35</span>评测指标的分母：成功率、精确率、召回率和pass</a><a href="../foundations/36.html"><span class="side-num">36</span>别被几个百分点骗了：随机性、样本与统计判断</a><a href="../foundations/37.html"><span class="side-num">37</span>安全基础：数据能影响模型，但不能因此获得权限</a><a href="../foundations/38.html"><span class="side-num">38</span>看懂生产运行：Trace、队列、成本和回滚</a><a href="../foundations/39.html"><span class="side-num">39</span>多模态与可信度：图片怎样成为输入，解释为什么有限</a><a href="../foundations/40.html"><span class="side-num">40</span>从机制到诊断：定位问题并控制复杂度</a><div class="side-label">第七编 · 模型与推理</div><a href="01.html"><span class="side-num">01</span>输入究竟是什么：从用户的一句话到模型张量</a><a href="02.html"><span class="side-num">02</span>一次Transformer前向：逐张量、逐算子讲明白</a><a href="03.html"><span class="side-num">03</span>注意力的深入追问：位置、掩码、多头与反向传播</a><a href="04.html"><span class="side-num">04</span>输出是怎样一个Token一个Token生成的</a><a href="05.html"><span class="side-num">05</span>训练的一步：从正确标签到参数真正改变</a><a href="06.html"><span class="side-num">06</span>后训练、MoE与模型定制：能力和行为如何改变</a><a href="07.html"><span class="side-num">07</span>KV Cache、FlashAttention与PagedAttention的内部过程</a><a href="08.html"><span class="side-num">08</span>推理服务：调度、吞吐、延迟和并行</a><div class="side-label">第八编 · Agent运行与上下文</div><a href="09.html"><span class="side-num">09</span>Agent一次任务的完整循环：谁在思考，谁在执行</a><a href="10.html"><span class="side-num">10</span>模型输出怎样变成真实工具调用：协议与执行边界</a><a href="11.html"><span class="side-num">11</span>工具设计与MCP：从连接到可控执行</a><a href="12.html"><span class="side-num">12</span>Codex、Claude Code、Copilot：从公开事实到可诊断运行链</a><a href="13.html"><span class="side-num">13</span>每一轮Prompt怎样组装：上下文是一条数据管线</a><a href="14.html"><span class="side-num">14</span>上下文压缩：到底压掉什么，丢失后又如何恢复</a><div class="side-label">第九编 · 检索与记忆</div><a href="15.html" class="active"><span class="side-num">15</span>检索离线链路：文档怎样变成可查询索引</a><a href="16.html"><span class="side-num">16</span>检索在线链路：召回、融合、重排与证据充足性</a><a href="17.html"><span class="side-num">17</span>代码智能：从文本搜索到符号、版本与运行证据</a><a href="18.html"><span class="side-num">18</span>长期记忆：写入、检索、冲突、失效与遗忘</a><a href="19.html"><span class="side-num">19</span>Skills与路由：怎样加载刚好需要的专业能力</a><a href="20.html"><span class="side-num">20</span>多Agent：并行的收益与交接的损失</a><div class="side-label">第十编 · 工程可靠性与生产</div><a href="21.html"><span class="side-num">21</span>可靠执行：重试、幂等、崩溃与状态恢复</a><a href="22.html"><span class="side-num">22</span>工程质量：从需求到测试，再到真正可交付的代码</a><a href="23.html"><span class="side-num">23</span>Evaluation：怎样证明一次优化真有收益</a><a href="24.html"><span class="side-num">24</span>安全：指令边界、沙箱、权限与记忆污染</a><a href="25.html"><span class="side-num">25</span>生产运行：Trace、成本、队列、灰度与回滚</a><a href="26.html"><span class="side-num">26</span>深度应用：把组件组合成能解释的工作系统</a><a href="27.html"><span class="side-num">27</span>事实可靠性、多模态与可解释性：能力边界在哪里</a><a href="28.html"><span class="side-num">28</span>研究深水区与系统综合判断</a><div class="side-label">贯通案例与参考</div><a href="../walkthroughs/a.html">案例A · 从消息输入到逐Token生成</a><a href="../walkthroughs/b.html">案例B · 一次真实可追踪的仓库修复任务</a><a href="../walkthroughs/c.html">案例C · 知识检索与记忆的生命周期</a><a href="../walkthroughs/d.html">案例D · 定位一个速度与质量同时退化的系统故障</a><a href="../coverage.html">206项专题阅读索引</a><a href="../sources.html">一手来源与事实边界</a><a href="../glossary.html">术语与符号速查</a><a href="../questions.html">阅读题检索</a><a href="../checks.html">实验附录</a><a href="../advanced-labs.html">进阶代码附录</a><a href="../complete.html">单页连续阅读</a><a href="../about.html">本书说明</a></aside><main class="main"><article class="article"><div class="eyebrow">进阶编 · 运行机制</div><h1 id="ch15-s0">15｜检索离线链路：文档怎样变成可查询索引</h1><section class="panel"><h3>本章先修知识</h3><p>索引是为了更快找候选的辅助结构，不是文档本身。关键词检索用词项，向量检索用数值距离；两者都可能找错版本或越过权限边界。</p><p class="small">本章涉及以下基础概念，可根据掌握情况查阅对应章节。</p><div class="pillrow"><a class="pill" href="../foundations/03.html">F03 · 文字为什么要先变成Token编号</a><a class="pill" href="../foundations/07.html">F07 · 模型最常做的算术</a><a class="pill" href="../foundations/09.html">F09 · 概率、指数与softmax</a><a class="pill" href="../foundations/28.html">F28 · 检索入门</a><a class="pill" href="../foundations/29.html">F29 · 从搜索结果到可信答案</a><a class="pill" href="../foundations/37.html">F37 · 安全基础</a></div><p class="small"><strong>进入深读前的小检查：</strong>先给三篇短文建立词到文档的倒排表，再对一个查询找候选。随后再看BM25和HNSW为什么不等于完整事实判断。</p></section><p class="term-guide">术语带虚线时可点击速查。公式中的字母先看定义；不要用猜缩写替代推导。</p>
+<p>先把检索分成“离线准备”和“在线查询”。很多所谓<a class="term" href="../glossary.html#g038" title="按输入编号取出对应可学习向量的参数表及操作。 例：E形状[6,4]，编号2取E的第2行。">Embedding</a>效果不好，实际是解析丢失表格、切块断开条件、权限元数据错误或索引过期。</p>
+<nav aria-label="本页目录" class="toc"><p class="toc-title">本页怎么读</p><a href="#Q057">Q057｜RAG建库从原文件到索引经历哪些步骤？Chunk应该怎样切？</a><a href="#Q058">Q058｜BM25的公式每一项做什么？为什么词出现四次不一定比两次得分高？</a><a href="#Q059">Q059｜Embedding检索模型怎样训练？为什么语义相似不等于回答相关？</a><a href="#Q060">Q060｜HNSW怎样近似找最近邻？权限过滤放在哪一步才安全？</a></nav><h2 id="Q057">Q057｜RAG建库从原文件到索引经历哪些步骤？Chunk应该怎样切？</h2><aside class="preq"><span class="label">这题先认识什么</span>先解析文档与元数据，再建立可检索单位。权限与版本属于证据的一部分，不在生成最后一刻才补。<div class="pillrow"><a class="pill" href="../foundations/03.html">F03 · 文字为什么要先变成Token编号</a><a class="pill" href="../foundations/28.html">F28 · 检索入门</a><a class="pill" href="../foundations/37.html">F37 · 安全基础</a></div></aside>
+<h3 id="ch15-s2">核心回答</h3>
+<p>先解析并保留结构与来源，再清理、划分语义单元、附加元数据，最后分别建立稀疏/稠密索引。Chunk是检索单位，不一定等于最终给模型的阅读单位。切得小提高定位精度，切得大保留上下文，两者需要分层协调。<a class="source-ref" href="../sources.html#src-CTXRETRIEVAL" title="来源说明">[CTXRETRIEVAL]</a></p>
+<h3 id="ch15-s3">一份技术文档的两种错误切法</h3>
+<p>文档写：“默认重试三次。对于非幂等写操作，禁止自动重试。”若按固定字符把后半句切到下一块，命中第一块的<a class="term" href="../glossary.html#g136" title="根据任务与观察调用模型和工具、持续推进的执行系统。 例：不只是一次写得很长的Prompt。">Agent</a>可能给出危险建议。切块需要尊重标题、段落、列表、表格和代码边界，至少保留条件与例外。</p>
+<p>另一极端把整篇几万字文档作为一个chunk，向量可能被众多主题平均，短查询难定位具体规则，且把整篇放入上下文代价高。可以采用小块检索、大块阅读：先命中具体段落，再扩展到父节或相邻必要内容。扩展要去重并受预算约束。</p>
+<p>元数据至少考虑doc_id、chunk_id、source_version、章节路径、原文范围、语言、权限和有效时间。向量生成使用的文本可含标题与局部上下文，但用于引用的原文应保持可追溯。摘要增强是派生内容，不能冒充原文事实。</p>
+<p>表格尤其容易出错。只保留单元格数值却丢行列标题，模型不知道“30”是秒、天还是金额。代码块被清洗器折叠缩进，可能改变语义。建库前应抽检解析结果，而不是等检索失败后才调向量模型。</p>
+<h3 id="ch15-s4">追问：Overlap越大，召回越好吗？</h3>
+<p>重叠能缓解边界断裂，但会产生重复候选，挤占<a class="term" href="../glossary.html#g095" title="分别按候选个数或累计概率保留候选的策略。 例：筛选后通常还要重新归一化。">Top-k</a>并增加存储。大量近重复还可能让模型误认为多个独立来源共同支持结论。应评估跨边界问题和候选去重，而不是固定追求高重叠。</p>
+<h3 id="ch15-s5">追问：为什么文档更新不能只新增向量？</h3>
+<p>旧chunk可能仍在索引，查询同时返回新旧规则；长度变化也会使原chunk编号指向不同内容。需要版本化替换、删除/失效旧块，并更新稀疏与稠密索引的一致视图。允许短暂不一致时必须明确读路径如何选择版本。</p>
+<h3 id="ch15-s6">追问：所有内容都适合向量化吗？</h3>
+<p>精确ID、错误码、配置键和数字范围常更适合精确/词法/结构化查询。向量有助于语义召回，但不能取代数据库条件和权限过滤。检索系统应保留多种索引，而非把所有数据压成一个向量后失去结构。</p>
+<h2 id="Q058">Q058｜BM25的公式每一项做什么？为什么词出现四次不一定比两次得分高？</h2><aside class="preq"><span class="label">这题先认识什么</span>分块决定检索最小单元，块太小可能切掉条件，太大可能淹没命中。重叠不是免费且也不能替代结构理解。<div class="pillrow"><a class="pill" href="../foundations/28.html">F28 · 检索入门</a><a class="pill" href="../foundations/29.html">F29 · 从搜索结果到可信答案</a></div></aside>
+<h3 id="ch15-s8">核心回答</h3>
+<p><a class="term" href="../glossary.html#g160" title="基于词频、文档频率及长度校正的一类词项相关性评分。 例：不理解所有同义表达，也不直接校验事实。">BM25</a>结合词的区分度、词频饱和与文档长度归一化。高频出现的查询词有帮助，但收益递减；冗长文档中重复出现不应无限压倒简短相关文档。具体IDF写法和参数由实现而定。<a class="source-ref" href="../sources.html#src-BM25" title="来源说明">[BM25]</a></p>
+<h3 id="ch15-s9">逐项拆公式并计算</h3>
+<p>一个常见正值IDF版本为：</p>
+<pre><code class="language-text">score(q,d)=Σt∈q IDF(t) × tf(t,d)(k1+1)
+                          / [tf(t,d)+k1(1−b+b|d|/avgdl)]
+IDF(t)=ln[1+(N−df(t)+0.5)/(df(t)+0.5)]
+</code></pre>
+<p>N是文档数，df是包含该词的文档数；tf是该词在当前文档出现次数；|d|是长度，avgdl是平均长度。k1影响饱和速度，b控制长度归一化，b=0不按长度调整，b=1更充分按相对长度调整。分词与索引单位会影响所有统计。</p>
+<p>教学例：N=100，df=10，k1=1.2，b=0.75，avgdl=100，则IDF约2.263745。三个文档只考虑一个查询词：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文档</th>
+<th style="text-align:right">tf</th>
+<th style="text-align:right">长度</th>
+<th style="text-align:right">得分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">3.11265</td>
+</tr>
+<tr>
+<td>D2</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">400</td>
+<td style="text-align:right">2.52164</td>
+</tr>
+<tr>
+<td>D3</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">50</td>
+<td style="text-align:right">2.84585</td>
+</tr>
+</tbody>
+</table></div>
+<p>D2出现4次仍低于D1，因为它长四倍；D3只出现1次但较短，得分也高于D2。这不是“长文档一定差”，而是平衡匹配信号与冗长带来的偶然命中。数值已由本包脚本计算。</p>
+<h3 id="ch15-s10">追问：BM25为什么找不到同义表达？</h3>
+<p>基本形式依赖词项重叠，查询“认证过期”与文档“<a class="term" href="../glossary.html#g027" title="模型分词器使用的片段单位。 例：可能是词、词的一部分、标点或部分字节。">token</a>失效”可能没有足够共同词。可通过分词、同义词、查询改写或稠密召回补充，但改写要保留原始精确键，避免把错误码、函数名改没。</p>
+<h3 id="ch15-s11">追问：中文和代码分词有什么特别之处？</h3>
+<p>中文没有天然空格，分词策略会影响词项；代码含snake_case、camelCase、路径与符号，既需要拆词召回，也常需要保留完整标识符用于精确匹配。通用自然语言分词器未必适合代码，应该用真实查询评测。</p>
+<h3 id="ch15-s12">追问：不同查询的BM25分数能当统一置信度吗？</h3>
+<p>一般不能。查询长度、词频与语料分布不同，分数尺度会变化。某查询得10不代表比另一查询得5更有事实依据。排序分数是候选相关性信号，不是答案正确概率。</p>
+<h2 id="Q059">Q059｜Embedding检索模型怎样训练？为什么语义相似不等于回答相关？</h2><aside class="preq"><span class="label">这题先认识什么</span>BM25利用词项统计，稠密向量用学习到的几何相似性。两者打分尺度不同，且都需匹配具体查询。<div class="pillrow"><a class="pill" href="../foundations/07.html">F07 · 模型最常做的算术</a><a class="pill" href="../foundations/09.html">F09 · 概率、指数与softmax</a><a class="pill" href="../foundations/28.html">F28 · 检索入门</a></div></aside>
+<h3 id="ch15-s14">核心回答</h3>
+<p>常见稠密检索用<a class="term" href="../glossary.html#g072" title="当前位置用于与候选比较的一组数。 例：q=[1,0]不是用户原话，而是投影后的表示。">query</a> encoder和document encoder产生向量，通过对比学习拉近相关对、推远负例。查询与文档可以分开编码以便离线建索引。向量相似度是训练目标下的相关性近似，不自动理解否定、版本、权限或精确数值条件。<a class="source-ref" href="../sources.html#src-DPR" title="来源说明">[DPR]</a></p>
+<h3 id="ch15-s15">双塔模型的训练与查询</h3>
+<p>对查询q，正例d⁺和负例d⁻，计算<code>s(q,d)=emb(q)·emb(d)</code>或规范化余弦。一种对比目标是：</p>
+<pre><code class="language-text">L = −log exp(s(q,d⁺)/τ) / Σd∈候选 exp(s(q,d)/τ)
+</code></pre>
+<p>分母中负例迫使模型区分看似相关但不回答问题的段落。随机负例可能太容易；hard negatives更接近真实搜索难题，比如同一函数不同版本、同一产品不同平台。但误把实际相关文档当负例会损害训练。</p>
+<p>离线阶段将每个文档chunk编码并保存；在线只编码query，再做相似度搜索。这比把query与全库每篇文档联合输入大模型便宜得多。若更换embedding模型，旧向量通常不能与新query向量直接混用，需要重建或维护独立索引版本。</p>
+<p>语义相似的两个段落可能观点相反：“允许自动重试”与“禁止自动重试”主题非常接近；旧版与新版接口说明也高度相似。检索之后必须看原文条件和元数据，不能从向量距离直接下结论。</p>
+<h3 id="ch15-s16">追问：为什么必须注意query/document前缀和pooling？</h3>
+<p>某些embedding模型训练时对查询和文档使用不同任务前缀、编码方式或pooling。推理时忽略约定会改变分布。维度正确不代表语义空间正确；部署要固定模型、<a class="term" href="../glossary.html#g029" title="按模型配套规则把文本与Token编号相互转换的工具。 例：不能随意换分词器而保留不相容的模型参数。">Tokenizer</a>、预处理、归一化和版本。</p>
+<h3 id="ch15-s17">追问：向量维度越大越好吗？</h3>
+<p>更高维度可增加表示容量，也增加存储、索引和计算；收益取决于训练与任务。高维未必解决精确ID或时效问题。应在相同语料、查询与Top-k预算下测召回和下游完成率。</p>
+<h3 id="ch15-s18">追问：模型参数里的知识与embedding索引有什么区别？</h3>
+<p>参数知识通过训练压入权重，难逐条更新；索引保存外部文档表示，可定位原文和版本。Embedding本身通常不能无损恢复原文，因此仍要保留原始内容。把向量库当唯一知识备份会丢掉可读证据。</p>
+<h2 id="Q060">Q060｜HNSW怎样近似找最近邻？权限过滤放在哪一步才安全？</h2><aside class="preq"><span class="label">这题先认识什么</span>近似最近邻用索引少比较一些候选，可能漏召回。ACL过滤影响可见候选，应避免无权内容进入后续模型。<div class="pillrow"><a class="pill" href="../foundations/28.html">F28 · 检索入门</a><a class="pill" href="../foundations/29.html">F29 · 从搜索结果到可信答案</a><a class="pill" href="../foundations/37.html">F37 · 安全基础</a></div></aside>
+<h3 id="ch15-s20">核心回答</h3>
+<p><a class="term" href="../glossary.html#g162" title="近似最近邻搜索及其图索引方法之一。 例：加速候选查找可能牺牲部分召回。">HNSW</a>用分层近邻图导航：高层快速靠近目标区域，低层扩大候选搜索，得到近似最近邻。它用速度、内存和召回做取舍。权限过滤属于安全与检索语义，不能只在最终答案里要求模型“不泄露”。<a class="source-ref" href="../sources.html#src-HNSW" title="来源说明">[HNSW]</a></p>
+<h3 id="ch15-s21">从入口节点到候选堆</h3>
+<p>高层图较稀疏，从入口节点比较邻居距离，贪心移动到更接近查询的位置；逐层下降，到底层用更宽的候选集合探索。<code>efSearch</code>类参数控制搜索宽度，增大通常提高<a class="term" href="../glossary.html#g162" title="近似最近邻搜索及其图索引方法之一。 例：加速候选查找可能牺牲部分召回。">ANN</a>召回并增加延迟；建图的连接数和构建搜索宽度影响图质量与内存。不同实现参数名和细节可能变化。</p>
+<p>近似检索有两种不同失败：没有找到向量空间里真正最近的点，是ANN算法召回问题；找到了最近点但它不回答问题，是语义表示/任务相关性问题。调大efSearch只针对前一种，不会自动修复错误embedding或切块。</p>
+<p>权限方面，若先从全库Top10取候选，再删除无权限项，可能剩零条，尽管有权限区域还有很相关的结果；这是后过滤导致的召回损失。更严重的是，如果无权限正文已经送到外部reranker或LLM，最终删掉引用也不能消除泄露。应在受信任边界内按身份过滤，或使用支持安全过滤的索引/命名空间，再把允许内容交给后续模型。</p>
+<h3 id="ch15-s22">追问：预过滤是否一定更快？</h3>
+<p>不一定。复杂过滤会改变图搜索路径或需要额外结构，某些实现可能退回精确搜索。选择应同时满足隔离正确性和性能；不能为了速度跳过授权。小数据集上精确向量扫描可能已足够简单可靠。</p>
+<h3 id="ch15-s23">追问：ANN召回率如何测？</h3>
+<p>固定向量与距离定义，用精确Top-k作为参考，比较ANN返回集合的重合；这只评估索引近似误差。另需人工/任务标注评价真实相关文档召回。两种“<a class="term" href="../glossary.html#g187" title="返回项中正确的比例，和所有该找到项中实际找到的比例。 例：分母不同，必须先定义相关或必需的标签。">recall</a>”分母不同，报告时必须说明。</p>
+<h3 id="ch15-s24">追问：删除文档后向量还在会怎样？</h3>
+<p>可能返回已经撤销的数据、旧权限或失效内容。删除要贯穿原文、稀疏索引、向量索引、缓存、摘要和派生记忆；至少查询时有权威失效检查。仅隐藏UI中的文件名不是完成数据删除。</p>
+<div class="progress-row"><button aria-pressed="false" data-mark="chapters/15.html">标记本节已读</button><span class="read-status">只保存在本机浏览器；不上传阅读数据。</span></div><nav aria-label="前后章节" class="pager"><a href="14.html">← 上一章</a><a href="16.html">下一章 →</a></nav><footer class="footer">本书为独立编写的中文教程；教学数值、构造案例与实际软件运行证据分别标注，闭源系统未公开的内部细节不作推断。<br /><a href="../sources.html">资料来源</a> · <a href="../coverage.html">阅读索引</a> · <a href="../about.html">关于本书</a></footer></article></main></div><script src="../assets/app.js"></script></body></html>

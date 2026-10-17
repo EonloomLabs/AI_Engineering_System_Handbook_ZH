@@ -1,0 +1,150 @@
+{
+  "scope": "Deterministic teaching calculations and state/parser tests; not model capability, autonomous coding or security benchmarks.",
+  "tests_run": 12,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "prefill_tokens": [
+    1,
+    2,
+    3
+  ],
+  "prefill_last_logits": [
+    -0.05213521081293447,
+    -0.10220237449372074,
+    -0.10196599024717498,
+    -0.05154240533366461,
+    0.024250119096522818,
+    0.08810684424358894,
+    0.10859777790010941,
+    0.07563737490754309
+  ],
+  "first_greedy_token": 6,
+  "prefill_cache_lengths": [
+    3,
+    3
+  ],
+  "next_decode_logits": [
+    0.23286701069555507,
+    -0.00978548363288683,
+    -0.24762160703690095,
+    -0.3635794919055762,
+    -0.30058519012431345,
+    -0.08964421300828526,
+    0.1654192415727581,
+    0.33906409127520937
+  ],
+  "decode_cache_lengths": [
+    4,
+    4
+  ],
+  "prefill_trace": [
+    {
+      "layer": 0,
+      "new_query_shape": [
+        3,
+        4
+      ],
+      "key_shape": [
+        3,
+        4
+      ],
+      "visible_counts": [
+        1,
+        2,
+        3
+      ],
+      "attention_rows": [
+        [
+          1.0
+        ],
+        [
+          0.49855731368537987,
+          0.5014426863146201
+        ],
+        [
+          0.32961951424111097,
+          0.329802778203813,
+          0.34057770755507616
+        ]
+      ]
+    },
+    {
+      "layer": 1,
+      "new_query_shape": [
+        3,
+        4
+      ],
+      "key_shape": [
+        3,
+        4
+      ],
+      "visible_counts": [
+        1,
+        2,
+        3
+      ],
+      "attention_rows": [
+        [
+          1.0
+        ],
+        [
+          0.4999676431175557,
+          0.5000323568824442
+        ],
+        [
+          0.36618437504077095,
+          0.3665337853478215,
+          0.2672818396114075
+        ]
+      ]
+    }
+  ],
+  "decode_trace": [
+    {
+      "layer": 0,
+      "new_query_shape": [
+        1,
+        4
+      ],
+      "key_shape": [
+        4,
+        4
+      ],
+      "visible_counts": [
+        4
+      ],
+      "attention_rows": [
+        [
+          0.2876982752593116,
+          0.2856134878939022,
+          0.2557413537400283,
+          0.17094688310675796
+        ]
+      ]
+    },
+    {
+      "layer": 1,
+      "new_query_shape": [
+        1,
+        4
+      ],
+      "key_shape": [
+        4,
+        4
+      ],
+      "visible_counts": [
+        4
+      ],
+      "attention_rows": [
+        [
+          0.23099735408352534,
+          0.23118418043907496,
+          0.30409558832561223,
+          0.2337228771517874
+        ]
+      ]
+    }
+  ],
+  "test_output": "test_attention_hand_calculation (__main__.WitnessTests.test_attention_hand_calculation) ... ok\ntest_causal_mask_is_offset (__main__.WitnessTests.test_causal_mask_is_offset) ... ok\ntest_chunk_decode_equivalence (__main__.WitnessTests.test_chunk_decode_equivalence) ... ok\ntest_online_softmax_merge (__main__.WitnessTests.test_online_softmax_merge) ... ok\ntest_prefill_decode_equivalence (__main__.WitnessTests.test_prefill_decode_equivalence) ... ok\ntest_prefix_edit_invalidates_suffix (__main__.WitnessTests.test_prefix_edit_invalidates_suffix) ... ok\ntest_query_gradient_finite_difference (__main__.WitnessTests.test_query_gradient_finite_difference) ... ok\ntest_sse_every_two_piece_byte_split (__main__.WitnessTests.test_sse_every_two_piece_byte_split) ... ok\ntest_sse_one_byte_chunks (__main__.WitnessTests.test_sse_one_byte_chunks) ... ok\ntest_sse_partial_is_not_complete (__main__.WitnessTests.test_sse_partial_is_not_complete) ... ok\ntest_unknown_is_not_failed (__main__.WitnessTests.test_unknown_is_not_failed) ... ok\ntest_wrong_position_is_detectable (__main__.WitnessTests.test_wrong_position_is_detectable) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 0.003s\n\nOK\n"
+}

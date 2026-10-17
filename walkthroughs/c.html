@@ -1,0 +1,185 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>全程拆解C｜从文档入库到检索、回答、记忆更新和遗忘｜AI系统工程：从基础到内部实现</title><link rel="stylesheet" href="../assets/style.css" /></head><body><header class="top"><a class="brand" href="../index.html">AI系统工程：从基础到内部实现</a><nav><a href="../guide.html">阅读指南</a><a href="../index.html#twelve">核心专题</a><a href="../questions.html">全文搜索</a><a class="optional" href="../glossary.html">术语</a></nav><div class="tools"><button class="mobile-menu" data-menu aria-expanded="false" aria-label="打开章节目录">目录</button><button data-font="-1" aria-label="缩小字号">A−</button><button data-font="1" aria-label="放大字号">A＋</button></div></header><div class="layout"><aside class="sidebar" aria-label="章节目录"><div class="side-label">阅读</div><a href="../index.html">首页</a><a href="../guide.html">导论与学习方法</a><a href="../index.html#twelve">十二个核心专题</a><a href="../start.html">章末贯通例题</a><a href="../labs.html">实验与运行记录</a><a href="../questions.html">搜索目录与问题</a><div class="side-label">第一编 · 从文字到数值表示</div><a href="../foundations/01.html"><span class="side-num">01</span>先分清：文字、数字、模型和运行它的程序</a><a href="../foundations/02.html"><span class="side-num">02</span>一排数、一张表和一叠表：读懂张量与形状</a><a href="../foundations/03.html"><span class="side-num">03</span>文字为什么要先变成Token编号</a><a href="../foundations/04.html"><span class="side-num">04</span>组批和补齐：为什么两句话变成[2,3]</a><a href="../foundations/05.html"><span class="side-num">05</span>Embedding查表：把一个编号换成一排数</a><a href="../foundations/06.html"><span class="side-num">06</span>“放到设备”是什么：数据类型、内存、CPU与GPU</a><div class="side-label">第二编 · 理解Transformer计算</div><a href="../foundations/07.html"><span class="side-num">07</span>模型最常做的算术：加权求和、点积与矩阵乘法</a><a href="../foundations/08.html"><span class="side-num">08</span>reshape、转轴、广播：形状变了，内容未必算过</a><a href="../foundations/09.html"><span class="side-num">09</span>概率、指数与softmax：把分数变成比例</a><a href="../foundations/10.html"><span class="side-num">10</span>神经网络最小模型：参数、层、前向与隐藏状态</a><a href="../foundations/11.html"><span class="side-num">11</span>Attention慢速版：先算相关分数，再混合内容</a><a href="../foundations/12.html"><span class="side-num">12</span>Mask不是黑箱：把“谁能看谁”写成一张表</a><a href="../foundations/13.html"><span class="side-num">13</span>位置编号与RoPE：先懂位置，再懂旋转</a><a href="../foundations/14.html"><span class="side-num">14</span>把Attention装进一层：残差、归一化与前馈网络</a><a href="../foundations/15.html"><span class="side-num">15</span>从最后一排数到一个Token，再到一句回答</a><a href="../foundations/16.html"><span class="side-num">16</span>KV Cache从零解释：为什么可以少算，又记住了什么</a><div class="side-label">第三编 · 训练与计算效率</div><a href="../foundations/17.html"><span class="side-num">17</span>微积分只学用得上的部分：导数、梯度与链式法则</a><a href="../foundations/18.html"><span class="side-num">18</span>一次训练从头到尾：标签、交叉熵和Adam</a><a href="../foundations/19.html"><span class="side-num">19</span>后训练的前置数学：偏好、奖励、概率比与KL</a><a href="../foundations/20.html"><span class="side-num">20</span>低秩、量化、专家：先看究竟少算了什么</a><a href="../foundations/21.html"><span class="side-num">21</span>算得快与装得下：复杂度、带宽、批处理和并行</a><div class="side-label">第四编 · Agent基础与上下文</div><a href="../foundations/22.html"><span class="side-num">22</span>Agent不是另一个神经网络：用一次读文件讲清循环</a><a href="../foundations/23.html"><span class="side-num">23</span>API与流式协议：请求如何变成可执行数据</a><a href="../foundations/24.html"><span class="side-num">24</span>状态、事件与检查点：模型知道和系统记录的区别</a><a href="../foundations/25.html"><span class="side-num">25</span>工具与MCP：连接、发现、授权、执行四层拆开</a><a href="../foundations/26.html"><span class="side-num">26</span>上下文组装：每轮到底给模型什么，以及为什么</a><a href="../foundations/27.html"><span class="side-num">27</span>压缩不是魔法：摘要、原文和执行状态怎样配合</a><div class="side-label">第五编 · 信息、记忆与可靠执行</div><a href="../foundations/28.html"><span class="side-num">28</span>检索入门：目录、倒排索引、向量与近似搜索</a><a href="../foundations/29.html"><span class="side-num">29</span>从搜索结果到可信答案：召回、重排和证据</a><a href="../foundations/30.html"><span class="side-num">30</span>代码不是普通文档：语法树、调用关系与版本</a><a href="../foundations/31.html"><span class="side-num">31</span>长期记忆的基础：事实、经历、流程和时间</a><a href="../foundations/32.html"><span class="side-num">32</span>Skill、路由和多Agent：先理解谁负责什么</a><a href="../foundations/33.html"><span class="side-num">33</span>重试、幂等和事务：为什么超时不是失败证明</a><a href="../foundations/34.html"><span class="side-num">34</span>工程质量的基础：需求、反例、测试与审查</a><div class="side-label">第六编 · 评测、安全与生产运行</div><a href="../foundations/35.html"><span class="side-num">35</span>评测指标的分母：成功率、精确率、召回率和pass</a><a href="../foundations/36.html"><span class="side-num">36</span>别被几个百分点骗了：随机性、样本与统计判断</a><a href="../foundations/37.html"><span class="side-num">37</span>安全基础：数据能影响模型，但不能因此获得权限</a><a href="../foundations/38.html"><span class="side-num">38</span>看懂生产运行：Trace、队列、成本和回滚</a><a href="../foundations/39.html"><span class="side-num">39</span>多模态与可信度：图片怎样成为输入，解释为什么有限</a><a href="../foundations/40.html"><span class="side-num">40</span>从机制到诊断：定位问题并控制复杂度</a><div class="side-label">第七编 · 模型与推理</div><a href="../chapters/01.html"><span class="side-num">01</span>输入究竟是什么：从用户的一句话到模型张量</a><a href="../chapters/02.html"><span class="side-num">02</span>一次Transformer前向：逐张量、逐算子讲明白</a><a href="../chapters/03.html"><span class="side-num">03</span>注意力的深入追问：位置、掩码、多头与反向传播</a><a href="../chapters/04.html"><span class="side-num">04</span>输出是怎样一个Token一个Token生成的</a><a href="../chapters/05.html"><span class="side-num">05</span>训练的一步：从正确标签到参数真正改变</a><a href="../chapters/06.html"><span class="side-num">06</span>后训练、MoE与模型定制：能力和行为如何改变</a><a href="../chapters/07.html"><span class="side-num">07</span>KV Cache、FlashAttention与PagedAttention的内部过程</a><a href="../chapters/08.html"><span class="side-num">08</span>推理服务：调度、吞吐、延迟和并行</a><div class="side-label">第八编 · Agent运行与上下文</div><a href="../chapters/09.html"><span class="side-num">09</span>Agent一次任务的完整循环：谁在思考，谁在执行</a><a href="../chapters/10.html"><span class="side-num">10</span>模型输出怎样变成真实工具调用：协议与执行边界</a><a href="../chapters/11.html"><span class="side-num">11</span>工具设计与MCP：从连接到可控执行</a><a href="../chapters/12.html"><span class="side-num">12</span>Codex、Claude Code、Copilot：从公开事实到可诊断运行链</a><a href="../chapters/13.html"><span class="side-num">13</span>每一轮Prompt怎样组装：上下文是一条数据管线</a><a href="../chapters/14.html"><span class="side-num">14</span>上下文压缩：到底压掉什么，丢失后又如何恢复</a><div class="side-label">第九编 · 检索与记忆</div><a href="../chapters/15.html"><span class="side-num">15</span>检索离线链路：文档怎样变成可查询索引</a><a href="../chapters/16.html"><span class="side-num">16</span>检索在线链路：召回、融合、重排与证据充足性</a><a href="../chapters/17.html"><span class="side-num">17</span>代码智能：从文本搜索到符号、版本与运行证据</a><a href="../chapters/18.html"><span class="side-num">18</span>长期记忆：写入、检索、冲突、失效与遗忘</a><a href="../chapters/19.html"><span class="side-num">19</span>Skills与路由：怎样加载刚好需要的专业能力</a><a href="../chapters/20.html"><span class="side-num">20</span>多Agent：并行的收益与交接的损失</a><div class="side-label">第十编 · 工程可靠性与生产</div><a href="../chapters/21.html"><span class="side-num">21</span>可靠执行：重试、幂等、崩溃与状态恢复</a><a href="../chapters/22.html"><span class="side-num">22</span>工程质量：从需求到测试，再到真正可交付的代码</a><a href="../chapters/23.html"><span class="side-num">23</span>Evaluation：怎样证明一次优化真有收益</a><a href="../chapters/24.html"><span class="side-num">24</span>安全：指令边界、沙箱、权限与记忆污染</a><a href="../chapters/25.html"><span class="side-num">25</span>生产运行：Trace、成本、队列、灰度与回滚</a><a href="../chapters/26.html"><span class="side-num">26</span>深度应用：把组件组合成能解释的工作系统</a><a href="../chapters/27.html"><span class="side-num">27</span>事实可靠性、多模态与可解释性：能力边界在哪里</a><a href="../chapters/28.html"><span class="side-num">28</span>研究深水区与系统综合判断</a><div class="side-label">贯通案例与参考</div><a href="a.html">案例A · 从消息输入到逐Token生成</a><a href="b.html">案例B · 一次真实可追踪的仓库修复任务</a><a href="c.html" class="active">案例C · 知识检索与记忆的生命周期</a><a href="d.html">案例D · 定位一个速度与质量同时退化的系统故障</a><a href="../coverage.html">206项专题阅读索引</a><a href="../sources.html">一手来源与事实边界</a><a href="../glossary.html">术语与符号速查</a><a href="../questions.html">阅读题检索</a><a href="../checks.html">实验附录</a><a href="../advanced-labs.html">进阶代码附录</a><a href="../complete.html">单页连续阅读</a><a href="../about.html">本书说明</a></aside><main class="main"><article class="article"><div class="eyebrow">贯通案例</div><h1 id="walkc-s0">全程拆解C｜从文档入库到检索、回答、记忆更新和遗忘</h1><div class="preq"><span class="label">连续案例的前置</span>先认识相关性、证据充分性、权限和生效时间，再追踪知识怎样流动。<div class="pillrow"><a class="pill" href="../foundations/24.html">F24 · 状态、事件与检查点</a><a class="pill" href="../foundations/28.html">F28 · 检索入门</a><a class="pill" href="../foundations/29.html">F29 · 从搜索结果到可信答案</a><a class="pill" href="../foundations/31.html">F31 · 长期记忆的基础</a><a class="pill" href="../foundations/35.html">F35 · 评测指标的分母</a><a class="pill" href="../foundations/37.html">F37 · 安全基础</a></div></div>
+<p>本例使用虚构的“项目A日志保留规则”，不是任何公司的真实制度。日期、文档和检索排名均为教学数据。目的是跟踪信息在每个对象中的变化，尤其解释为什么“检索到了相关文档”仍不足以正确回答。<a class="source-ref" href="../sources.html#src-BM25" title="来源说明">[BM25]</a><a class="source-ref" href="../sources.html#src-DPR" title="来源说明">[DPR]</a><a class="source-ref" href="../sources.html#src-RRF" title="来源说明">[RRF]</a><a class="source-ref" href="../sources.html#src-LONGMEM" title="来源说明">[LONGMEM]</a></p>
+<p>用户在2026年10月17日问：<strong>“项目A的错误日志应该保留多久？配置项怎么写？”</strong></p>
+<nav aria-label="本页目录" class="toc"><p class="toc-title">本页怎么读</p><a href="#walkc-s1">C.1｜先给出原始资料，不急着生成向量</a><a href="#walkc-s2">C.2｜解析后的对象应该保留哪些语义</a><a href="#walkc-s3">C.3｜Chunk如何划分，为什么要有父子关系</a><a href="#walkc-s4">C.4｜查询进入时，先确定查询条件</a><a href="#walkc-s5">C.5｜BM25和向量检索各自提供什么</a><a href="#walkc-s6">C.6｜Reranking后为什么仍要做适用性检查</a><a href="#walkc-s7">C.7｜模型最终接收的上下文不应是一袋相似段落</a><a href="#walkc-s8">C.8｜回答之后，应该记忆什么</a><a href="#walkc-s9">C.9｜修正规则：不覆盖历史，怎样表达新旧事实</a><a href="#walkc-s10">C.10｜删除与权限撤销怎样传播</a><a href="#walkc-s11">C.11｜怎样设计反例证明系统不是只会答这一题</a><a href="#walkc-s12">C.12｜从本例提炼一个可复述的运行答案</a></nav><h2 id="walkc-s1">C.1｜先给出原始资料，不急着生成向量</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文档</th>
+<th>内容摘要</th>
+<th>生效范围</th>
+<th>可见范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1@v1</td>
+<td>普通项目日志默认90天</td>
+<td>2026-01-01至10-09</td>
+<td>全体研发</td>
+</tr>
+<tr>
+<td>D1@v2</td>
+<td>普通日志默认30天；敏感字段日志7天</td>
+<td>10-10起</td>
+<td>全体研发</td>
+</tr>
+<tr>
+<td>D2@v3</td>
+<td>项目A错误日志含敏感字段，应使用7天规则</td>
+<td>10-12起</td>
+<td>项目A成员</td>
+</tr>
+<tr>
+<td>D3@v1</td>
+<td>配置项<code>retention_days</code>接受整数天数</td>
+<td>09-01起</td>
+<td>全体研发</td>
+</tr>
+<tr>
+<td>D4@v1</td>
+<td>项目B某日志获批保留90天</td>
+<td>10-15起</td>
+<td>仅项目B成员</td>
+</tr>
+<tr>
+<td>D5@v1</td>
+<td>旧迁移记录：曾将A保留期设为90天</td>
+<td>历史记录，不是现行政策</td>
+<td>项目A成员</td>
+</tr>
+</tbody>
+</table></div>
+<p>原始资料已经包含几类易混淆关系：同一文档的新旧版本、一般规则与项目例外、规范与历史执行记录、内容相关但用户无权读取的其他项目资料。</p>
+<p>如果入库时只保留正文文本，删除生效日期、权限和文档类型，后续向量再精确也无法可靠恢复这些条件。深度检索工程从数据建模开始，不是从选择哪款向量数据库开始。</p>
+<h2 id="walkc-s2">C.2｜解析后的对象应该保留哪些语义</h2>
+<p>D1@v2可能被表示为：</p>
+<pre><code class="language-json">{
+ "document_id":"D1","revision":"v2","kind":"policy",
+ "valid_from":"2026-10-10","valid_to":null,
+ "recorded_at":"2026-10-10T09:00:00+08:00",
+ "acl":"engineering",
+ "sections":[
+  {"id":"general","text":"普通日志默认保留30天"},
+  {"id":"exception","text":"包含敏感字段的日志保留7天","depends_on":"general"}
+ ]
+}
+</code></pre>
+<p><code>valid_from</code>表达规则何时适用，<code>recorded_at</code>表达系统何时知道；二者不一定相同。若10月17日才录入一个10月12日生效的修正，历史问答需要区分“当时实际上适用什么”和“系统当时知道什么”。</p>
+<p>解析还应保存来源位置，方便最终引用和人工核查。网页标题、章节标题、表头与脚注不是装饰，它们可能决定段落适用范围。把“除敏感字段外”截到另一个片段，会让剩余正文产生相反含义。</p>
+<h2 id="walkc-s3">C.3｜Chunk如何划分，为什么要有父子关系</h2>
+<p>一种可行教学划分是：C1一般规则、C2敏感例外、C3项目A分类、C4配置语法。每块携带来源文档、版本、有效期和权限；C2指向C1，C3指向所适用的规则族。</p>
+<p>检索时可以先命中小片段，提高定位精度，再读取所属章节或关联例外，避免答案缺条件。不是所有关系都必须构建成大图数据库：小规模项目用文档ID与父段落引用即可。只有跨文档关联复杂且有收益证据时，再增加图结构。</p>
+<p>Chunk边界必须与任务有关。太小容易失去条件，太大稀释词项和语义并消耗上下文。所谓“固定500字最优”没有普遍保证；需要在自己的问题集上测关键证据召回和最终正确率。</p>
+<p>版本变化时，要更新受影响块和索引；不能只追加新版本、永不失效旧块。否则同一个文档越改越多，检索可能同时返回多份互相冲突的规定。</p>
+<h2 id="walkc-s4">C.4｜查询进入时，先确定查询条件</h2>
+<p>问题包含项目A、错误日志、保留时长和配置方式。用户身份通过认证系统得到项目A成员权限，不由模型从措辞猜测。问题未指定历史日期，应用可采用当前日期，但应在内部明确这项解释。</p>
+<pre><code class="language-json">{
+ "principal":"user_in_project_A",
+ "project":"A",
+ "as_of":"2026-10-17",
+ "claims_needed":["日志分类","适用保留时长","配置项语法"],
+ "read_scope":["engineering","project_A"]
+}
+</code></pre>
+<p>D4虽然提到90天、日志、项目，词面上很相关，但用户没有读取权限，应在外发给模型或第三方reranker之前排除。检索系统内部能扫描哪些元数据取决于权限设计，但不应把不可见正文先发出去再靠最终答案遮盖。</p>
+<p>查询改写可以增加“retention”“retention_days”等术语，但改写是搜索辅助，不是事实证据。模型生成的“项目A应为30天”绝不能因进入查询扩展就变成已确认前提。</p>
+<h2 id="walkc-s5">C.5｜BM25和向量检索各自提供什么</h2>
+<p><a class="term" href="../glossary.html#g160" title="基于词频、文档频率及长度校正的一类词项相关性评分。 例：不理解所有同义表达，也不直接校验事实。">BM25</a>对“项目A”“retention_days”等具体词项可能很有效；向量检索能把“留多久”与“保留时长”联系起来。两条路径生成候选，不直接决定事实真伪。</p>
+<p>为了演示融合，假设在已通过权限过滤的候选上得到如下<strong>人工设定排名</strong>，不是实际<a class="term" href="../glossary.html#g038" title="按输入编号取出对应可学习向量的参数表及操作。 例：E形状[6,4]，编号2取E的第2行。">Embedding</a>测试结果：</p>
+<pre><code class="language-text">关键词排名：C4配置语法、C3项目A分类、C1普通规则、C2敏感例外
+语义排名：  C3项目A分类、C2敏感例外、C1普通规则、C4配置语法
+</code></pre>
+<p><a class="term" href="../glossary.html#g165" title="把各路排名的倒数形式相加来融合候选的一种方法。 例：按rank而非直接相加不同模型的原始分数。">RRF</a>对每个候选计算<code>Σ1/(k+rank)</code>。它解决不同评分尺度不可直接相加的问题，但不理解“项目A含敏感字段”这个逻辑条件，也不保证排名靠前的片段能单独回答完整问题。</p>
+<p>若只取最高一块C3，能知道日志分类，却可能不知道配置语法；只取C4，知道怎么写字段，却不知道值应该是多少。检索目标应是覆盖所需主张的最小充分证据集，而不只是选一个最高分片段。</p>
+<h2 id="walkc-s6">C.6｜Reranking后为什么仍要做适用性检查</h2>
+<p>重排模型可能将C3与C2排得更高，但还要检查：D1@v2是否当前生效？D2@v3是否针对项目A错误日志而非访问日志？D5是否只是历史记录？不同证据是否互相支持？</p>
+<p>构造一个证据矩阵：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>待回答主张</th>
+<th>支持片段</th>
+<th>是否充分</th>
+<th>需要补读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A错误日志属于敏感类别</td>
+<td>C3</td>
+<td>当前版本且项目匹配</td>
+<td>无</td>
+</tr>
+<tr>
+<td>敏感类别保留7天</td>
+<td>C2及其父规则</td>
+<td>条件完整</td>
+<td>一般规则上下文</td>
+</tr>
+<tr>
+<td>配置键与值类型</td>
+<td>C4</td>
+<td>语法充分</td>
+<td>无</td>
+</tr>
+<tr>
+<td>修改是否已部署</td>
+<td>无</td>
+<td>不充分</td>
+<td>需运行环境工具</td>
+</tr>
+</tbody>
+</table></div>
+<p>最后一行很重要。知识库能说明应怎样配置，不能证明生产环境已经改好。若用户只问“怎么写”，不需要自动操作；若用户要修改，还需明确资源、授权与核验。</p>
+<h2 id="walkc-s7">C.7｜模型最终接收的上下文不应是一袋相似段落</h2>
+<p>一种教学上下文包可以是：</p>
+<pre><code class="language-text">任务：回答项目A错误日志的保留时长及配置方式；不执行修改。
+时间范围：2026-10-17当前有效规则。
+
+证据E1：D2@v3，项目A，10-12起生效。
+内容：项目A错误日志含敏感字段，应使用敏感日志规则。
+
+证据E2：D1@v2，10-10起生效。
+内容：普通日志30天；含敏感字段日志7天。
+
+证据E3：D3@v1，配置语法。
+内容：retention_days为整数天数。
+
+排除说明：D1@v1已过期；D5是历史执行记录，不能覆盖现行规则。
+未确认：线上当前配置；本任务未授权修改。
+</code></pre>
+<p>这包信息不仅有内容，还有角色、时间、排除原因与边界。模型据此生成：在所给教学资料下，项目A错误日志应保留7天，可配置<code>retention_days: 7</code>；该回答未核验线上现状，也未执行修改。</p>
+<p>如果模型输出30天，检查它是否忽略了C3到C2的条件关系；如果输出90天，检查过期版本是否未过滤或历史记录被误当规范；如果声称“已修改”，检查任务边界与动作事实混淆。不同错误指向不同层，不应统一用“换更强模型”处理。</p>
+<h2 id="walkc-s8">C.8｜回答之后，应该记忆什么</h2>
+<p>不应直接保存“所有项目日志7天”。可保存更窄的条目：项目A错误日志在相应有效期按敏感类别处理，来源D2@v3与D1@v2；用途是后续同类问题的检索线索，使用前检查来源是否仍有效。</p>
+<pre><code class="language-json">{
+ "memory_id":"M17","kind":"semantic",
+ "scope":{"project":"A","log_type":"error"},
+ "claim":"按敏感日志规则保留7天",
+ "sources":["D2@v3","D1@v2"],
+ "valid_from":"2026-10-12","status":"active",
+ "review_on":["D1变更","D2变更","项目A日志字段变更"]
+}
+</code></pre>
+<p>记忆不是另一个无条件权威。下一次问题涉及项目B或访问日志时，M17不适用。若只是复述了当前知识库信息，保存它的价值在于减少重复定位，不在于让模型永久相信一个数字。</p>
+<p>程序性经验则是另一条：“日志保留问题先确认类别与有效日期，再找一般规则和例外。”它可以适用于多项目，但也不应写成必须使用某个固定数据库或强制多<a class="term" href="../glossary.html#g136" title="根据任务与观察调用模型和工具、持续推进的执行系统。 例：不只是一次写得很长的Prompt。">Agent</a>流程。</p>
+<h2 id="walkc-s9">C.9｜修正规则：不覆盖历史，怎样表达新旧事实</h2>
+<p>假设10月20日收到新资料D2@v4，说明项目A从10月18日起已移除敏感字段，新的错误日志改用普通30天规则。系统10月20日才知道这一变化，因此：</p>
+<pre><code class="language-text">旧条目：业务有效 [10-12,10-18)，系统曾在10-17确认
+新条目：业务有效 [10-18,∞)，系统在10-20录入
+</code></pre>
+<p>用户问“10月17日当时该保留多久”，答案仍是7天；问“10月19日规则是什么”，根据当前已知资料是30天；问“系统10月19日当时会怎么回答”，则可能仍依据尚未更新的7天记录。这三种问题不同，不能只用“最后更新时间最新”解决。</p>
+<p>原条目M17不应简单删除到无历史可追溯，也不应一直active。可以关闭有效区间、保留来源，建立替代关系。动态工程事实的记忆需要更新与失效语义，而不是不断追加自然语言。</p>
+<h2 id="walkc-s10">C.10｜删除与权限撤销怎样传播</h2>
+<p>若项目A文档权限撤销，相关缓存、摘要、记忆、搜索结果和引用预览都可能继续暴露旧内容。删除原文只解决一层；需要识别派生对象及其来源关系，按权限与保留策略失效。</p>
+<p>并非所有系统都必须追踪复杂的细粒度数据血缘，但至少应知道哪些记忆来自哪些受控来源。没有来源ID的摘要很难安全撤回，也难以解释为什么某条经验还在被使用。</p>
+<p>对于执行结果日志，保留策略还可能与审计需求冲突，应依据真实组织要求处理，本例不提供法律判断。技术上应把“不可再用于回答”和“为了受控审计保留”分开，而不是把它们混成一个delete布尔值。</p>
+<h2 id="walkc-s11">C.11｜怎样设计反例证明系统不是只会答这一题</h2>
+<p>构造相邻问题：项目A普通运行日志、项目A10月5日错误日志、项目B的例外、未授权用户、缺失分类资料、D2与D1版本冲突、配置键拼写变化。对每个问题写出预期证据和可接受的不确定性。</p>
+<p>如果把D2删掉，系统不应仍自信断言项目A错误日志必为敏感类别；若仍答7天，可能是记忆未失效或模型猜测。如果把D2改成普通类别，答案应随证据改变，而不是受之前Few-shot影响固定输出7。</p>
+<p>这类反事实测试检查数据依赖是否真的发挥作用。只给一题并看到正确答案，不足以证明<a class="term" href="../glossary.html#g163" title="先检索外部材料，再让模型依据材料生成的系统模式。 例：有引用或有检索不自动保证回答被证据支持。">RAG</a>、记忆或权限工程有效。</p>
+<h2 id="walkc-s12">C.12｜从本例提炼一个可复述的运行答案</h2>
+<p>先认证与确定时间，解析保留条件与来源，建立可更新索引，检索候选并在外发前过滤权限，融合和重排，补全关联例外，形成主张证据矩阵，再生成和核验引用。回答后只保存有范围、来源和有效期的必要记忆；源更新时同步处理索引、缓存和派生记忆。</p>
+<p>这个答案之所以比“RAG就是先检索再生成”更深入，是因为每一步都解释了对象、约束和失败。如果某一环缺失，能指出具体后果，而不是泛泛说“准确率可能下降”。</p>
+<div class="progress-row"><button aria-pressed="false" data-mark="walkthroughs/c.html">标记本节已读</button><span class="read-status">只保存在本机浏览器；不上传阅读数据。</span></div><footer class="footer">本书为独立编写的中文教程；教学数值、构造案例与实际软件运行证据分别标注，闭源系统未公开的内部细节不作推断。<br /><a href="../sources.html">资料来源</a> · <a href="../coverage.html">阅读索引</a> · <a href="../about.html">关于本书</a></footer></article></main></div><script src="../assets/app.js"></script></body></html>

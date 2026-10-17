@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>贯通例题：从两条短句到输入张量｜AI系统工程：从基础到内部实现</title><link href="assets/style.css" rel="stylesheet"/></head><body><header class="top"><a class="brand" href="index.html">AI系统工程：从基础到内部实现</a><nav><a href="guide.html">阅读指南</a><a href="index.html#twelve">核心专题</a><a href="questions.html">全文搜索</a><a class="optional" href="glossary.html">术语</a></nav><div class="tools"><button aria-expanded="false" aria-label="打开章节目录" class="mobile-menu" data-menu="">目录</button><button aria-label="缩小字号" data-font="-1">A−</button><button aria-label="放大字号" data-font="1">A＋</button></div></header><div class="layout"><aside aria-label="章节目录" class="sidebar"><div class="side-label">阅读</div><a href="index.html">首页</a><a href="guide.html">导论与学习方法</a><a href="index.html#twelve">十二个核心专题</a><a class="active" href="start.html">章末贯通例题</a><a href="labs.html">实验与运行记录</a><a href="questions.html">搜索目录与问题</a><div class="side-label">第一编 · 从文字到数值表示</div><a href="foundations/01.html"><span class="side-num">01</span>先分清：文字、数字、模型和运行它的程序</a><a href="foundations/02.html"><span class="side-num">02</span>一排数、一张表和一叠表：读懂张量与形状</a><a href="foundations/03.html"><span class="side-num">03</span>文字为什么要先变成Token编号</a><a href="foundations/04.html"><span class="side-num">04</span>组批和补齐：为什么两句话变成[2,3]</a><a href="foundations/05.html"><span class="side-num">05</span>Embedding查表：把一个编号换成一排数</a><a href="foundations/06.html"><span class="side-num">06</span>“放到设备”是什么：数据类型、内存、CPU与GPU</a><div class="side-label">第二编 · 理解Transformer计算</div><a href="foundations/07.html"><span class="side-num">07</span>模型最常做的算术：加权求和、点积与矩阵乘法</a><a href="foundations/08.html"><span class="side-num">08</span>reshape、转轴、广播：形状变了，内容未必算过</a><a href="foundations/09.html"><span class="side-num">09</span>概率、指数与softmax：把分数变成比例</a><a href="foundations/10.html"><span class="side-num">10</span>神经网络最小模型：参数、层、前向与隐藏状态</a><a href="foundations/11.html"><span class="side-num">11</span>Attention慢速版：先算相关分数，再混合内容</a><a href="foundations/12.html"><span class="side-num">12</span>Mask不是黑箱：把“谁能看谁”写成一张表</a><a href="foundations/13.html"><span class="side-num">13</span>位置编号与RoPE：先懂位置，再懂旋转</a><a href="foundations/14.html"><span class="side-num">14</span>把Attention装进一层：残差、归一化与前馈网络</a><a href="foundations/15.html"><span class="side-num">15</span>从最后一排数到一个Token，再到一句回答</a><a href="foundations/16.html"><span class="side-num">16</span>KV Cache从零解释：为什么可以少算，又记住了什么</a><div class="side-label">第三编 · 训练与计算效率</div><a href="foundations/17.html"><span class="side-num">17</span>微积分只学用得上的部分：导数、梯度与链式法则</a><a href="foundations/18.html"><span class="side-num">18</span>一次训练从头到尾：标签、交叉熵和Adam</a><a href="foundations/19.html"><span class="side-num">19</span>后训练的前置数学：偏好、奖励、概率比与KL</a><a href="foundations/20.html"><span class="side-num">20</span>低秩、量化、专家：先看究竟少算了什么</a><a href="foundations/21.html"><span class="side-num">21</span>算得快与装得下：复杂度、带宽、批处理和并行</a><div class="side-label">第四编 · Agent基础与上下文</div><a href="foundations/22.html"><span class="side-num">22</span>Agent不是另一个神经网络：用一次读文件讲清循环</a><a href="foundations/23.html"><span class="side-num">23</span>API与流式协议：请求如何变成可执行数据</a><a href="foundations/24.html"><span class="side-num">24</span>状态、事件与检查点：模型知道和系统记录的区别</a><a href="foundations/25.html"><span class="side-num">25</span>工具与MCP：连接、发现、授权、执行四层拆开</a><a href="foundations/26.html"><span class="side-num">26</span>上下文组装：每轮到底给模型什么，以及为什么</a><a href="foundations/27.html"><span class="side-num">27</span>压缩不是魔法：摘要、原文和执行状态怎样配合</a><div class="side-label">第五编 · 信息、记忆与可靠执行</div><a href="foundations/28.html"><span class="side-num">28</span>检索入门：目录、倒排索引、向量与近似搜索</a><a href="foundations/29.html"><span class="side-num">29</span>从搜索结果到可信答案：召回、重排和证据</a><a href="foundations/30.html"><span class="side-num">30</span>代码不是普通文档：语法树、调用关系与版本</a><a href="foundations/31.html"><span class="side-num">31</span>长期记忆的基础：事实、经历、流程和时间</a><a href="foundations/32.html"><span class="side-num">32</span>Skill、路由和多Agent：先理解谁负责什么</a><a href="foundations/33.html"><span class="side-num">33</span>重试、幂等和事务：为什么超时不是失败证明</a><a href="foundations/34.html"><span class="side-num">34</span>工程质量的基础：需求、反例、测试与审查</a><div class="side-label">第六编 · 评测、安全与生产运行</div><a href="foundations/35.html"><span class="side-num">35</span>评测指标的分母：成功率、精确率、召回率和pass</a><a href="foundations/36.html"><span class="side-num">36</span>别被几个百分点骗了：随机性、样本与统计判断</a><a href="foundations/37.html"><span class="side-num">37</span>安全基础：数据能影响模型，但不能因此获得权限</a><a href="foundations/38.html"><span class="side-num">38</span>看懂生产运行：Trace、队列、成本和回滚</a><a href="foundations/39.html"><span class="side-num">39</span>多模态与可信度：图片怎样成为输入，解释为什么有限</a><a href="foundations/40.html"><span class="side-num">40</span>从机制到诊断：定位问题并控制复杂度</a><div class="side-label">第七编 · 模型与推理</div><a href="chapters/01.html"><span class="side-num">01</span>输入究竟是什么：从用户的一句话到模型张量</a><a href="chapters/02.html"><span class="side-num">02</span>一次Transformer前向：逐张量、逐算子讲明白</a><a href="chapters/03.html"><span class="side-num">03</span>注意力的深入追问：位置、掩码、多头与反向传播</a><a href="chapters/04.html"><span class="side-num">04</span>输出是怎样一个Token一个Token生成的</a><a href="chapters/05.html"><span class="side-num">05</span>训练的一步：从正确标签到参数真正改变</a><a href="chapters/06.html"><span class="side-num">06</span>后训练、MoE与模型定制：能力和行为如何改变</a><a href="chapters/07.html"><span class="side-num">07</span>KV Cache、FlashAttention与PagedAttention的内部过程</a><a href="chapters/08.html"><span class="side-num">08</span>推理服务：调度、吞吐、延迟和并行</a><div class="side-label">第八编 · Agent运行与上下文</div><a href="chapters/09.html"><span class="side-num">09</span>Agent一次任务的完整循环：谁在思考，谁在执行</a><a href="chapters/10.html"><span class="side-num">10</span>模型输出怎样变成真实工具调用：协议与执行边界</a><a href="chapters/11.html"><span class="side-num">11</span>工具设计与MCP：从连接到可控执行</a><a href="chapters/12.html"><span class="side-num">12</span>Codex、Claude Code、Copilot：从公开事实到可诊断运行链</a><a href="chapters/13.html"><span class="side-num">13</span>每一轮Prompt怎样组装：上下文是一条数据管线</a><a href="chapters/14.html"><span class="side-num">14</span>上下文压缩：到底压掉什么，丢失后又如何恢复</a><div class="side-label">第九编 · 检索与记忆</div><a href="chapters/15.html"><span class="side-num">15</span>检索离线链路：文档怎样变成可查询索引</a><a href="chapters/16.html"><span class="side-num">16</span>检索在线链路：召回、融合、重排与证据充足性</a><a href="chapters/17.html"><span class="side-num">17</span>代码智能：从文本搜索到符号、版本与运行证据</a><a href="chapters/18.html"><span class="side-num">18</span>长期记忆：写入、检索、冲突、失效与遗忘</a><a href="chapters/19.html"><span class="side-num">19</span>Skills与路由：怎样加载刚好需要的专业能力</a><a href="chapters/20.html"><span class="side-num">20</span>多Agent：并行的收益与交接的损失</a><div class="side-label">第十编 · 工程可靠性与生产</div><a href="chapters/21.html"><span class="side-num">21</span>可靠执行：重试、幂等、崩溃与状态恢复</a><a href="chapters/22.html"><span class="side-num">22</span>工程质量：从需求到测试，再到真正可交付的代码</a><a href="chapters/23.html"><span class="side-num">23</span>Evaluation：怎样证明一次优化真有收益</a><a href="chapters/24.html"><span class="side-num">24</span>安全：指令边界、沙箱、权限与记忆污染</a><a href="chapters/25.html"><span class="side-num">25</span>生产运行：Trace、成本、队列、灰度与回滚</a><a href="chapters/26.html"><span class="side-num">26</span>深度应用：把组件组合成能解释的工作系统</a><a href="chapters/27.html"><span class="side-num">27</span>事实可靠性、多模态与可解释性：能力边界在哪里</a><a href="chapters/28.html"><span class="side-num">28</span>研究深水区与系统综合判断</a><div class="side-label">贯通案例与参考</div><a href="walkthroughs/a.html">案例A · 从消息输入到逐Token生成</a><a href="walkthroughs/b.html">案例B · 一次真实可追踪的仓库修复任务</a><a href="walkthroughs/c.html">案例C · 知识检索与记忆的生命周期</a><a href="walkthroughs/d.html">案例D · 定位一个速度与质量同时退化的系统故障</a><a href="coverage.html">206项专题阅读索引</a><a href="sources.html">一手来源与事实边界</a><a href="glossary.html">术语与符号速查</a><a href="questions.html">阅读题检索</a><a href="checks.html">实验附录</a><a href="advanced-labs.html">进阶代码附录</a><a href="complete.html">单页连续阅读</a><a href="about.html">本书说明</a></aside><main class="main"><article class="article"><div class="eyebrow">基础篇 · 完整计算过程</div><h1 id="start-s0">贯通例题：从两条短句到输入张量</h1>
+<p>本节使用一个只有六项的教学词表，把两条中文短句完整转换成编号表、补齐后的批次和嵌入表示。所有数字都可以手算，最后再推广到较大的真实模型尺寸。</p>
+<nav aria-label="本页目录" class="toc"><p class="toc-title">本页怎么读</p><a href="#start-s1">1．准备两条输入</a><a href="#start-s2">2．“组批”到底组了什么</a><a href="#start-s3">3．为什么编号表写成[2,3]</a><a href="#start-s4">4．为什么还要把编号换成一排数</a><a href="#start-s5">5．“查Embedding”真的只是先找到对应的行</a><a href="#start-s6">6．现在为什么多出一层[2,3,4]</a><a href="#start-s7">7．扩展到[2,128,4096]</a><a href="#start-s8">8．“放到设备”没有改变这句话的意思</a><a href="#start-s9">9．还要带哪几份“辅助信息”</a><a href="#start-s10">10．用自己的话完整复述计算过程</a><a href="#start-s11">自检：请先口头回答，再看答案</a></nav><h2 id="start-s1">1．准备两条输入</h2>
+<p>我们用两条文字：“我爱学习”和“你爱”。<strong>分词器</strong>是一套把文字片段对应到整数编号的规则。本页人为规定它把第一句分成“我／爱／学习”，第二句分成“你／爱”。这只是为了算得清楚，不是任何商业模型的真实分词结果。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>文本片段</th>
+<th style="text-align:right">我</th>
+<th style="text-align:right">爱</th>
+<th style="text-align:right">学习</th>
+<th style="text-align:right">你</th>
+<th style="text-align:right">！</th>
+<th style="text-align:right">填空用的特殊项PAD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>教学编号</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">0</td>
+</tr>
+</tbody>
+</table></div>
+<p>因此，第一句成为<code>[1,2,3]</code>，第二句成为<code>[4,2]</code>。<strong>一个编号只回答“是哪一项”，不回答“意思是什么”</strong>。4比1大，不表示“你”比“我”更重要。</p>
+<p>现在还没有预测答案。我们只把文字换成了以后可以拿来找位置的编号。</p>
+<h2 id="start-s2">2．“组批”到底组了什么</h2>
+<p>把两条输入交给同一次运算，一起处理，叫<strong>组批</strong>。这一组是一个<strong>批次（batch）</strong>；批里有2条输入，所以<strong>批大小B=2</strong>。</p>
+<p>这里B只是“有几条”的缩写。没有引入神秘数学对象。两条输入依然各算各的，不能把第二条用户输入当成第一条用户的上下文。</p>
+<p>但两条编号列表一条长3、一条长2。为了先用普通规则表格计算，我们给短的那条末尾放一个占位编号0：</p>
+<pre><code class="language-text">第0条输入：1  2  3      真实有3个片段
+第1条输入：4  2  0      真实有2个片段，末尾0只是填空
+</code></pre>
+<p>这个动作叫<strong>补齐（padding）</strong>。补齐后每行安排3个位置，写作<strong>T=3</strong>。T说的是安排了几个位置；第二句话真实长度仍是2。占位项不是模型突然理解出的一个新词。<a class="source-ref" href="sources.html#src-F-PADDING" title="来源说明">[F-PADDING]</a></p>
+<h2 id="start-s3">3．为什么编号表写成[2,3]</h2>
+<p>两行，每行三个编号，所以表的大小写成<code>[2,3]</code>。这种描述大小的写法叫<strong>形状（shape）</strong>。</p>
+<p>“里面存着<code>[[1,2,3],[4,2,0]]</code>”是在说内容；“形状是<code>[2,3]</code>”是在说大小。不要把两者混淆。编号表含<code>2×3=6</code>个整数。</p>
+<p>在机器学习程序中，像这样规则排列的一组数字叫<strong>张量（tensor）</strong>。本页先把它理解成“数字容器”：一排数、表格、若干张同样大的表，都可以用张量来装。两行三列的编号表是一个有两个轴的张量：第一个轴选哪句话，第二个轴选那句话里的哪一个位置。<a class="source-ref" href="sources.html#src-F-TENSOR" title="来源说明">[F-TENSOR]</a></p>
+<h2 id="start-s4">4．为什么还要把编号换成一排数</h2>
+<p>编号可以找到某一项，但直接比较编号大小没有语义意义。模型为每个词表项准备一排可以被后续计算使用的数字，把这些行放成一张表，叫<strong>Embedding表（嵌入表）</strong>。</p>
+<p>先不去猜每个数代表什么意思。本页每行只放4个数，完整表如下。它们是人为设置的教学数字，不是训练好的语言知识：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>查找编号</th>
+<th>对应片段</th>
+<th style="text-align:right">第0个数</th>
+<th style="text-align:right">第1个数</th>
+<th style="text-align:right">第2个数</th>
+<th style="text-align:right">第3个数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>PAD</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>我</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>爱</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td>3</td>
+<td>学习</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>4</td>
+<td>你</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>！</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+</tr>
+</tbody>
+</table></div>
+<p>这张Embedding表有6行、4列，形状是<code>[6,4]</code>。6是<strong>词表项数</strong>：一共有多少种可以查找的编号。4是<strong>表示宽度d</strong>：每项用几个数表示。本页d=4。</p>
+<p><strong>6、3、4分别回答不同问题。</strong> 词表有6种可用项，不意味着一句话必须长6；一句话安排3个位置，不意味着每项只用3个数；每项用4个数，也不意味着一定有4个能人工命名的语义属性。</p>
+<h2 id="start-s5">5．“查Embedding”真的只是先找到对应的行</h2>
+<p>对第一句<code>[1,2,3]</code>，依次取出表中的第1、2、3行：</p>
+<pre><code class="language-text">编号1 → [1,0,0,1]
+编号2 → [0,1,0,1]
+编号3 → [1,1,0,0]
+
+于是第一句成为：
+[[1,0,0,1],
+ [0,1,0,1],
+ [1,1,0,0]]
+</code></pre>
+<p>原来一个位置只存“编号1”，现在这个位置存着4个数。不是把1乘4，也不是把“我”拆成4个词，而是用编号去表里<strong>取一整行</strong>。<a class="source-ref" href="sources.html#src-F-EMBED" title="来源说明">[F-EMBED]</a></p>
+<p>第二句同理。编号4取第4行，编号2仍取第2行，编号0取第0行：</p>
+<pre><code class="language-text">第二句成为：
+[[0,1,1,0],
+ [0,1,0,1],
+ [0,0,0,0]]
+</code></pre>
+<p>注意“爱”在两句话里，初次查表得到同一排数。这不表示它永远不看上下文；后面的网络会把当前位置与允许读取的其他位置结合，产生新的表示。<strong>查表是起点，不是全部理解过程。</strong></p>
+<h2 id="start-s6">6．现在为什么多出一层[2,3,4]</h2>
+<p>把两句话的结果合在一起，是<strong>两张表，每张3行、每行4个数</strong>。于是整体形状为<code>[2,3,4]</code>。</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>形状中的数</th>
+<th>这里具体数什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>两条输入，因此有两张表</td>
+</tr>
+<tr>
+<td>3</td>
+<td>每条输入安排三个位置，因此每张表三行</td>
+</tr>
+<tr>
+<td>4</td>
+<td>每个位置用四个数，因此每行四列</td>
+</tr>
+</tbody>
+</table></div>
+<p>总共<code>2×3×4=24</code>个数。原来6个编号，各自换成4个数，所以也可以算成<code>6×4=24</code>。</p>
+<p>“这是三维张量”说有三个轴；“每个位置是四维向量”说每排有四个数。这里<strong>维</strong>的两种说法要区分。<strong>向量</strong>就是此处有顺序的一排数，不需要先想象四维空间。</p>
+<h2 id="start-s7">7．扩展到[2,128,4096]</h2>
+<p>现在只换三个大小，不换计算道理。</p>
+<ul>
+<li>B=2：本批两条输入。</li>
+<li>T=128：每条输入补齐或安排到128个位置。</li>
+<li>d=4096：每个位置查表后用4096个数表示。</li>
+</ul>
+<p>编号表有两行、每行128个整数，所以是<code>[2,128]</code>。每个整数再换成长度4096的一排数，整体就是<code>[2,128,4096]</code>。</p>
+<p>它含<code>2×128×4096=1,048,576</code>个数。<strong>4096不是Token数，不是词表大小，也不是整个模型的参数总量。</strong> 它叫隐藏维度或隐藏表示宽度，意思是模型用这么宽的一排数来表示每个位置。更深的层通常还沿用这个宽度，但会改变数字内容。</p>
+<p>若每个数用2字节保存，这一份输出约占2MiB。字节是存储大小的单位，MiB是1,048,576字节。这个估算只针对这一份数据，<strong>不包含模型全部参数、缓存或临时计算空间</strong>。F06会完整讲存储精度与设备。</p>
+<h2 id="start-s8">8．“放到设备”没有改变这句话的意思</h2>
+<p><strong>设备</strong>在这里指执行计算的处理器，例如CPU或GPU。CPU是通用处理器，GPU擅长并行执行大量合适的数值运算。为了让运算执行，程序要让输入数据与模型参数位于相容的设备和存储格式中。</p>
+<p>可以把<code>[1,2,3]</code>存到内存，再复制到GPU显存中；它们仍然是相同编号，并没有因为移动就变得更“智能”。<strong>显存</strong>是GPU可直接使用的一类存储空间。移动数据可能花时间，空间也可能不够，所以这是实在的工程步骤。</p>
+<p>在常见输入Embedding层中，查找地址使用整数编号，取出来的参数通常是浮点数；<strong>浮点数</strong>就是可以近似表示0.1、−0.7等数值的计算机数值格式。设备、格式和形状是三种不同属性。</p>
+<h2 id="start-s9">9．还要带哪几份“辅助信息”</h2>
+<p>第一份是<strong>填充掩码</strong>：告诉后续计算哪些位置是真的。</p>
+<pre><code class="language-text">第一句：[1,1,1]   都是真的
+第二句：[1,1,0]   最后是补齐位置
+</code></pre>
+<p>这里的0/1不是Token编号，而是“能不能算作有效内容”的标记。即使PAD的Embedding恰好全0，也不代表后续计算自然会忽略它，因此仍需正确处理这些位置。</p>
+<p>第二份是<strong>注意力掩码（attention mask）</strong>。<strong>注意力</strong>先理解为“为当前这个位置挑出可以参考的位置，再按不同份额结合它们的数字”。掩码决定“能参考谁”，不是决定“参考多少”。后者要到F09–12用加权平均算出来。</p>
+<p>生成下一Token时，训练与运算通常要遵守不能偷看未来的规则。对三位置例子，可以读的位置是：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>当前查询位置</th>
+<th>能参考位置0吗</th>
+<th>位置1吗</th>
+<th>位置2吗</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>位置0</td>
+<td>能</td>
+<td>不能</td>
+<td>不能</td>
+</tr>
+<tr>
+<td>位置1</td>
+<td>能</td>
+<td>能</td>
+<td>不能</td>
+</tr>
+<tr>
+<td>位置2</td>
+<td>能</td>
+<td>能</td>
+<td>能</td>
+</tr>
+</tbody>
+</table></div>
+<p>这是<strong>因果掩码</strong>。第二句话还必须把作为填充项的位置2排除。模型内部不同接口使用的掩码形状和真假含义不一定相同；本页表格只解释可见关系，不冒充某个API的入参。</p>
+<p>第三份是<strong>位置编号（position IDs）</strong>。比如真实的三个位置记为0、1、2。Token ID回答“哪个片段”，位置ID回答“出现在哪里”，二者不是同一列。采用左补齐或缓存时，逻辑位置与表格列号可能不同，F13会分别举例。</p>
+<p>最后可能有<strong>KV缓存（KV Cache）</strong>。缓存就是保存已经算过、后面还能复用的结果。第一次从头处理时通常没有历史缓存；继续生成时，可以带回之前各层算好的部分数字，避免从头重算。这不是长期记忆，也不是新知识进入模型参数。K和V的含义、为什么可以复用、哪些改动让它失效，会先在F11解释注意力，再在F16完整推演；此页不要求先背这两个字母。<a class="source-ref" href="sources.html#src-F-CACHE" title="来源说明">[F-CACHE]</a></p>
+<h2 id="start-s10">10．用自己的话完整复述计算过程</h2>
+<blockquote>
+<p>把两条独立输入一起计算，并把较短的编号列表补到本批安排的长度。由此得到一张两行、每行128个编号的表。模型根据每个编号，从自己的Embedding参数表中取出一排4096个数，所以结果是两张128行、4096列的表。程序同时准备有效位置、哪些位置能互相参考、各个真实片段的位置编号；若这是继续生成，还带入可复用的历史计算结果。随后开始各层的注意力与其他数值变换。<strong>Embedding查表本身已经属于模型数值表示的计算步骤</strong>，不是查完之后才第一次碰到神经网络。</p>
+</blockquote>
+<p>你现在不需要先理解Attention的完整公式，便能解释这一步的每个对象。下一段若直接出现Q、K、V或softmax，先走F07→F09→F11；不是靠猜缩写读下去。</p>
+<h2 id="start-s11">自检：请先口头回答，再看答案</h2>
+<p><strong>问题一：词表1000项、三条输入、每条10个位置、每项用8个数表示，Embedding表和查表结果分别多大？</strong></p>
+<p>答案：参数表是<code>[1000,8]</code>，编号表是<code>[3,10]</code>，查表结果是<code>[3,10,8]</code>。1000决定可以查多少种条目，3和10决定这一批查了多少个位置。</p>
+<p><strong>问题二：为何同样写0，有时表示PAD编号，有时表示掩码里的不能看？</strong></p>
+<p>答案：它们属于不同数据对象。<code>input_ids</code>的0用于找词表行；有效性或可见性表里的0是一条运算标记。不能只看数字相同就混为一谈。</p>
+<p><strong>问题三：Embedding的第2个数是不是永远表示情绪？</strong></p>
+<p>答案：没有这种一般保证。它是训练得到的分布式表示的一部分。教材里的数字只演示读取和计算过程，不给每一列强行贴语义标签。</p>
+<p><strong>问题四：组批时第二个用户会读取第一个用户的内容吗？</strong></p>
+<p>答案：普通独立样本batch不应如此。批轴安排一起运算，不是把样本拼成一条上下文。真实系统还需落实租户和缓存隔离。</p>
+<div class="progress-row"><button aria-pressed="false" data-mark="start.html">标记本节已读</button><span class="read-status">只保存在本机浏览器；不上传阅读数据。</span></div><nav aria-label="前后章节" class="pager"><a href="foundations/07.html">继续阅读第07章 →</a><a href="labs.html">把这个例子改几个数试试 →</a></nav><footer class="footer">本书为独立编写的中文教程；教学数值、构造案例与实际软件运行证据分别标注，闭源系统未公开的内部细节不作推断。<br/><a href="sources.html">资料来源</a> · <a href="coverage.html">阅读索引</a> · <a href="about.html">关于本书</a></footer></article></main></div><script src="assets/app.js"></script></body></html>

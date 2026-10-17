@@ -1,0 +1,108 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>全程拆解D｜一次“变慢且变差”的Agent回归怎样查到根因｜AI系统工程：从基础到内部实现</title><link rel="stylesheet" href="../assets/style.css" /></head><body><header class="top"><a class="brand" href="../index.html">AI系统工程：从基础到内部实现</a><nav><a href="../guide.html">阅读指南</a><a href="../index.html#twelve">核心专题</a><a href="../questions.html">全文搜索</a><a class="optional" href="../glossary.html">术语</a></nav><div class="tools"><button class="mobile-menu" data-menu aria-expanded="false" aria-label="打开章节目录">目录</button><button data-font="-1" aria-label="缩小字号">A−</button><button data-font="1" aria-label="放大字号">A＋</button></div></header><div class="layout"><aside class="sidebar" aria-label="章节目录"><div class="side-label">阅读</div><a href="../index.html">首页</a><a href="../guide.html">导论与学习方法</a><a href="../index.html#twelve">十二个核心专题</a><a href="../start.html">章末贯通例题</a><a href="../labs.html">实验与运行记录</a><a href="../questions.html">搜索目录与问题</a><div class="side-label">第一编 · 从文字到数值表示</div><a href="../foundations/01.html"><span class="side-num">01</span>先分清：文字、数字、模型和运行它的程序</a><a href="../foundations/02.html"><span class="side-num">02</span>一排数、一张表和一叠表：读懂张量与形状</a><a href="../foundations/03.html"><span class="side-num">03</span>文字为什么要先变成Token编号</a><a href="../foundations/04.html"><span class="side-num">04</span>组批和补齐：为什么两句话变成[2,3]</a><a href="../foundations/05.html"><span class="side-num">05</span>Embedding查表：把一个编号换成一排数</a><a href="../foundations/06.html"><span class="side-num">06</span>“放到设备”是什么：数据类型、内存、CPU与GPU</a><div class="side-label">第二编 · 理解Transformer计算</div><a href="../foundations/07.html"><span class="side-num">07</span>模型最常做的算术：加权求和、点积与矩阵乘法</a><a href="../foundations/08.html"><span class="side-num">08</span>reshape、转轴、广播：形状变了，内容未必算过</a><a href="../foundations/09.html"><span class="side-num">09</span>概率、指数与softmax：把分数变成比例</a><a href="../foundations/10.html"><span class="side-num">10</span>神经网络最小模型：参数、层、前向与隐藏状态</a><a href="../foundations/11.html"><span class="side-num">11</span>Attention慢速版：先算相关分数，再混合内容</a><a href="../foundations/12.html"><span class="side-num">12</span>Mask不是黑箱：把“谁能看谁”写成一张表</a><a href="../foundations/13.html"><span class="side-num">13</span>位置编号与RoPE：先懂位置，再懂旋转</a><a href="../foundations/14.html"><span class="side-num">14</span>把Attention装进一层：残差、归一化与前馈网络</a><a href="../foundations/15.html"><span class="side-num">15</span>从最后一排数到一个Token，再到一句回答</a><a href="../foundations/16.html"><span class="side-num">16</span>KV Cache从零解释：为什么可以少算，又记住了什么</a><div class="side-label">第三编 · 训练与计算效率</div><a href="../foundations/17.html"><span class="side-num">17</span>微积分只学用得上的部分：导数、梯度与链式法则</a><a href="../foundations/18.html"><span class="side-num">18</span>一次训练从头到尾：标签、交叉熵和Adam</a><a href="../foundations/19.html"><span class="side-num">19</span>后训练的前置数学：偏好、奖励、概率比与KL</a><a href="../foundations/20.html"><span class="side-num">20</span>低秩、量化、专家：先看究竟少算了什么</a><a href="../foundations/21.html"><span class="side-num">21</span>算得快与装得下：复杂度、带宽、批处理和并行</a><div class="side-label">第四编 · Agent基础与上下文</div><a href="../foundations/22.html"><span class="side-num">22</span>Agent不是另一个神经网络：用一次读文件讲清循环</a><a href="../foundations/23.html"><span class="side-num">23</span>API与流式协议：请求如何变成可执行数据</a><a href="../foundations/24.html"><span class="side-num">24</span>状态、事件与检查点：模型知道和系统记录的区别</a><a href="../foundations/25.html"><span class="side-num">25</span>工具与MCP：连接、发现、授权、执行四层拆开</a><a href="../foundations/26.html"><span class="side-num">26</span>上下文组装：每轮到底给模型什么，以及为什么</a><a href="../foundations/27.html"><span class="side-num">27</span>压缩不是魔法：摘要、原文和执行状态怎样配合</a><div class="side-label">第五编 · 信息、记忆与可靠执行</div><a href="../foundations/28.html"><span class="side-num">28</span>检索入门：目录、倒排索引、向量与近似搜索</a><a href="../foundations/29.html"><span class="side-num">29</span>从搜索结果到可信答案：召回、重排和证据</a><a href="../foundations/30.html"><span class="side-num">30</span>代码不是普通文档：语法树、调用关系与版本</a><a href="../foundations/31.html"><span class="side-num">31</span>长期记忆的基础：事实、经历、流程和时间</a><a href="../foundations/32.html"><span class="side-num">32</span>Skill、路由和多Agent：先理解谁负责什么</a><a href="../foundations/33.html"><span class="side-num">33</span>重试、幂等和事务：为什么超时不是失败证明</a><a href="../foundations/34.html"><span class="side-num">34</span>工程质量的基础：需求、反例、测试与审查</a><div class="side-label">第六编 · 评测、安全与生产运行</div><a href="../foundations/35.html"><span class="side-num">35</span>评测指标的分母：成功率、精确率、召回率和pass</a><a href="../foundations/36.html"><span class="side-num">36</span>别被几个百分点骗了：随机性、样本与统计判断</a><a href="../foundations/37.html"><span class="side-num">37</span>安全基础：数据能影响模型，但不能因此获得权限</a><a href="../foundations/38.html"><span class="side-num">38</span>看懂生产运行：Trace、队列、成本和回滚</a><a href="../foundations/39.html"><span class="side-num">39</span>多模态与可信度：图片怎样成为输入，解释为什么有限</a><a href="../foundations/40.html"><span class="side-num">40</span>从机制到诊断：定位问题并控制复杂度</a><div class="side-label">第七编 · 模型与推理</div><a href="../chapters/01.html"><span class="side-num">01</span>输入究竟是什么：从用户的一句话到模型张量</a><a href="../chapters/02.html"><span class="side-num">02</span>一次Transformer前向：逐张量、逐算子讲明白</a><a href="../chapters/03.html"><span class="side-num">03</span>注意力的深入追问：位置、掩码、多头与反向传播</a><a href="../chapters/04.html"><span class="side-num">04</span>输出是怎样一个Token一个Token生成的</a><a href="../chapters/05.html"><span class="side-num">05</span>训练的一步：从正确标签到参数真正改变</a><a href="../chapters/06.html"><span class="side-num">06</span>后训练、MoE与模型定制：能力和行为如何改变</a><a href="../chapters/07.html"><span class="side-num">07</span>KV Cache、FlashAttention与PagedAttention的内部过程</a><a href="../chapters/08.html"><span class="side-num">08</span>推理服务：调度、吞吐、延迟和并行</a><div class="side-label">第八编 · Agent运行与上下文</div><a href="../chapters/09.html"><span class="side-num">09</span>Agent一次任务的完整循环：谁在思考，谁在执行</a><a href="../chapters/10.html"><span class="side-num">10</span>模型输出怎样变成真实工具调用：协议与执行边界</a><a href="../chapters/11.html"><span class="side-num">11</span>工具设计与MCP：从连接到可控执行</a><a href="../chapters/12.html"><span class="side-num">12</span>Codex、Claude Code、Copilot：从公开事实到可诊断运行链</a><a href="../chapters/13.html"><span class="side-num">13</span>每一轮Prompt怎样组装：上下文是一条数据管线</a><a href="../chapters/14.html"><span class="side-num">14</span>上下文压缩：到底压掉什么，丢失后又如何恢复</a><div class="side-label">第九编 · 检索与记忆</div><a href="../chapters/15.html"><span class="side-num">15</span>检索离线链路：文档怎样变成可查询索引</a><a href="../chapters/16.html"><span class="side-num">16</span>检索在线链路：召回、融合、重排与证据充足性</a><a href="../chapters/17.html"><span class="side-num">17</span>代码智能：从文本搜索到符号、版本与运行证据</a><a href="../chapters/18.html"><span class="side-num">18</span>长期记忆：写入、检索、冲突、失效与遗忘</a><a href="../chapters/19.html"><span class="side-num">19</span>Skills与路由：怎样加载刚好需要的专业能力</a><a href="../chapters/20.html"><span class="side-num">20</span>多Agent：并行的收益与交接的损失</a><div class="side-label">第十编 · 工程可靠性与生产</div><a href="../chapters/21.html"><span class="side-num">21</span>可靠执行：重试、幂等、崩溃与状态恢复</a><a href="../chapters/22.html"><span class="side-num">22</span>工程质量：从需求到测试，再到真正可交付的代码</a><a href="../chapters/23.html"><span class="side-num">23</span>Evaluation：怎样证明一次优化真有收益</a><a href="../chapters/24.html"><span class="side-num">24</span>安全：指令边界、沙箱、权限与记忆污染</a><a href="../chapters/25.html"><span class="side-num">25</span>生产运行：Trace、成本、队列、灰度与回滚</a><a href="../chapters/26.html"><span class="side-num">26</span>深度应用：把组件组合成能解释的工作系统</a><a href="../chapters/27.html"><span class="side-num">27</span>事实可靠性、多模态与可解释性：能力边界在哪里</a><a href="../chapters/28.html"><span class="side-num">28</span>研究深水区与系统综合判断</a><div class="side-label">贯通案例与参考</div><a href="a.html">案例A · 从消息输入到逐Token生成</a><a href="b.html">案例B · 一次真实可追踪的仓库修复任务</a><a href="c.html">案例C · 知识检索与记忆的生命周期</a><a href="d.html" class="active">案例D · 定位一个速度与质量同时退化的系统故障</a><a href="../coverage.html">206项专题阅读索引</a><a href="../sources.html">一手来源与事实边界</a><a href="../glossary.html">术语与符号速查</a><a href="../questions.html">阅读题检索</a><a href="../checks.html">实验附录</a><a href="../advanced-labs.html">进阶代码附录</a><a href="../complete.html">单页连续阅读</a><a href="../about.html">本书说明</a></aside><main class="main"><article class="article"><div class="eyebrow">贯通案例</div><h1 id="walkd-s0">全程拆解D｜一次“变慢且变差”的Agent回归怎样查到根因</h1><div class="preq"><span class="label">连续案例的前置</span>先会区分任务成功与速度指标，再用轨迹找瓶颈；本案例数字是教学对照，不是生产实测。<div class="pillrow"><a class="pill" href="../foundations/21.html">F21 · 算得快与装得下</a><a class="pill" href="../foundations/24.html">F24 · 状态、事件与检查点</a><a class="pill" href="../foundations/32.html">F32 · Skill、路由和多Agent</a><a class="pill" href="../foundations/33.html">F33 · 重试、幂等和事务</a><a class="pill" href="../foundations/34.html">F34 · 工程质量的基础</a><a class="pill" href="../foundations/35.html">F35 · 评测指标的分母</a><a class="pill" href="../foundations/36.html">F36 · 别被几个百分点骗了</a><a class="pill" href="../foundations/38.html">F38 · 看懂生产运行</a></div></div>
+<p>本例是完整的系统诊断题，数据为作者构造。它不是某家公司事故复盘，也不是对任何模型版本的实测评价。目标是练习在多种解释竞争时，逐层排除，而不是凭直觉把一切归因于模型变笨。<a class="source-ref" href="../sources.html#src-EVALS" title="来源说明">[EVALS]</a><a class="source-ref" href="../sources.html#src-SRE" title="来源说明">[SRE]</a><a class="source-ref" href="../sources.html#src-HARNESS" title="来源说明">[HARNESS]</a></p>
+<p>场景：团队更新了上下文策略后，用户反馈同类修复任务更慢，且偶尔重复修改已改好的文件。有人建议换更强模型；有人建议加一个Review <a class="term" href="../glossary.html#g136" title="根据任务与观察调用模型和工具、持续推进的执行系统。 例：不只是一次写得很长的Prompt。">Agent</a>；有人建议把上下文加倍。应该先做什么？</p>
+<nav aria-label="本页目录" class="toc"><p class="toc-title">本页怎么读</p><a href="#walkd-s1">D.1｜把主观反馈变成可观察的目标</a><a href="#walkd-s2">D.2｜先看一条失败任务的时间线</a><a href="#walkd-s3">D.3｜比较三个状态：聊天、运行器、外部世界</a><a href="#walkd-s4">D.4｜设计能区分假设的最小实验</a><a href="#walkd-s5">D.5｜为什么多加载技能可能让成本下降指标产生错觉</a><a href="#walkd-s6">D.6｜把时间拆成关键路径，而不是把所有耗时相加</a><a href="#walkd-s7">D.7｜修复方案应对应根因，不扩大成平台重构</a><a href="#walkd-s8">D.8｜怎样证明修复改善了质量，而不是碰巧多成功几次</a><a href="#walkd-s9">D.9｜上线与回滚：历史状态会不会带着错误继续运行</a><a href="#walkd-s10">D.10｜六个继续追问，以及完整回答方向</a><a href="#walkd-s11">D.11｜把系统诊断答案压缩成一段面试陈述</a></nav><h2 id="walkd-s1">D.1｜把主观反馈变成可观察的目标</h2>
+<p>先定义三个症状：任务完成时间变长、同一逻辑动作重复执行、最终结果是否真的变差。不要只看用户体感，也不要因平均<a class="term" href="../glossary.html#g027" title="模型分词器使用的片段单位。 例：可能是词、词的一部分、标点或部分字节。">Token</a>减少就断言优化成功。</p>
+<p>收集同一组代表性任务的旧版本与新版本轨迹，并记录模型、提示、工具、索引、压缩和运行器版本。若模型也同时变化，就先承认实验混杂，不能把差异全部归给压缩。</p>
+<p>本例假设模型和工具执行器未变，改动包括：更早压缩历史、摘要模板精简、默认加入更多专业技能。三个变化并不是一个变量。接下来需要分别检查。</p>
+<h2 id="walkd-s2">D.2｜先看一条失败任务的时间线</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>事件</th>
+<th style="text-align:right">开始秒</th>
+<th style="text-align:right">结束秒</th>
+<th>观察</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>检索</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">2</td>
+<td>命中正确源码r42</td>
+</tr>
+<tr>
+<td>模型M1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">12</td>
+<td>正确提出补丁p1</td>
+</tr>
+<tr>
+<td>apply c19</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">13</td>
+<td>文件已变r43，响应丢失</td>
+</tr>
+<tr>
+<td>自动压缩</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">20</td>
+<td>摘要把超时写成“修复失败”</td>
+</tr>
+<tr>
+<td>模型M2</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">31</td>
+<td>根据摘要再次提出同类修改</td>
+</tr>
+<tr>
+<td>apply c22</td>
+<td style="text-align:right">31</td>
+<td style="text-align:right">32</td>
+<td>部分重复修改</td>
+</tr>
+<tr>
+<td>测试与返工</td>
+<td style="text-align:right">32</td>
+<td style="text-align:right">50</td>
+<td>新错误，继续修复</td>
+</tr>
+</tbody>
+</table></div>
+<p>这里已经有强线索：原始模型能定位并提出正确补丁，问题发生在外部结果与压缩摘要之间。立即更换模型不一定解决状态语义错误；增加Review可能只是延后发现重复修改。</p>
+<p>还要确认表中的“文件已变r43”来自磁盘或操作日志，不是模型自己说的。如果这一项只是猜测，必须先核验，不能用假设构造一个看似完整的根因故事。</p>
+<h2 id="walkd-s3">D.3｜比较三个状态：聊天、运行器、外部世界</h2>
+<pre><code class="language-text">外部文件：p1已经应用，版本r43
+运行器账本：c19超时，结果尚未确认
+摘要文本：修复失败，需要重试
+</code></pre>
+<p>矛盾发生在摘要把<a class="term" href="../glossary.html#g149" title="无法确认外部动作是否已经完成的状态。 例：超时可能发生在成功执行之后。">unknown</a>转换为failed。unknown表示不知道是否生效；failed通常诱导重试。两者文字只差几个字，执行后果完全不同。</p>
+<p>即使模型本身完全遵守摘要，它也会做错。因此根因不是简单的“模型没听话”，而是它获得了错误状态。系统需要保留未确认操作的结构化状态，压缩不得把其语义改写，并在下一步前核验实际效果。</p>
+<p>再追问：为什么c19响应丢失？可能是网络或进程问题，仍应修复，但分布式环境不可能靠“确保永不超时”消灭所有窗口。可靠设计必须处理响应丢失，而不只祈祷它少发生。</p>
+<h2 id="walkd-s4">D.4｜设计能区分假设的最小实验</h2>
+<p>候选H1：新模型能力下降；H2：摘要丢失状态；H3：技能过载；H4：测试环境噪声。</p>
+<p>针对同一个已知故障轨迹，构造四个受控输入：原始历史、当前错误摘要、保留unknown的修正摘要、修正摘要加原始操作核验结果。保持模型、工具可见集合和任务不变，观察下一步动作选择。若错误主要随摘要状态变化，而非随模型版本变化，H2更有支持。</p>
+<p>还要测试运行器本身：对unknown直接start应拒绝，只有verified_not_applied才允许进入适当重试路径；verified_applied应进入验证而不是再次修改。包内状态机见证测试覆盖这个局部规则，不声称它已经证明商业模型会正确选择动作。</p>
+<p>实验不能只挑一个成功案例。至少覆盖“操作确实已生效”“操作完全未生效”“部分生效”“核验也失败”四类情况。否则修复可能只是把所有unknown都猜成成功，从一种错误跳到另一种错误。</p>
+<h2 id="walkd-s5">D.5｜为什么多加载技能可能让成本下降指标产生错觉</h2>
+<p>假设新策略把原先40K未缓存输入改为20K摘要，但额外常驻技能使每轮又加10K。单次输入仍略降，然而压缩多一次模型调用，重复动作又多两轮，总延迟和总成本可能上升。</p>
+<p>真实成本需要累加每轮未缓存、缓存与输出费用，并包括失败返工。不能比较“压缩前最后一轮”和“压缩后第一轮”的Token就下结论。缓存前缀是否稳定、工具输出是否被裁剪，也会影响实际账单。</p>
+<p>技能加载过多还可能改变任务解释或增加冲突。要看最终请求manifest：哪些技能因何选择、是否互相重叠、有没有本应局部按需读取的长指南。把技能描述改窄之前先收集误加载正例和漏加载反例，防止修一个方向却损害专业召回。</p>
+<h2 id="walkd-s6">D.6｜把时间拆成关键路径，而不是把所有耗时相加</h2>
+<p>若两个只读检索分别耗时3秒和4秒并行执行，用户等的可能约4秒；若它们先后串行就是7秒。任务<a class="term" href="../glossary.html#g197" title="一次任务的执行轨迹与其中有开始结束的操作跨度。 例：并行跨度的耗时不能直接全加成墙钟时间。">Trace</a>应记录实际依赖，而不是仅按操作类别求和。</p>
+<p>本例的压缩13到20秒在关键路径上，无法被后续模型计算隐藏。若压缩后节省的<a class="term" href="../glossary.html#g098" title="处理当前已经知道的一段输入前缀。 例：得到各层表示及可复用的K/V。">Prefill</a>时间小于这7秒，并且任务本来只剩一轮，压缩可能得不偿失。但在更长任务中，压缩可以降低后续上下文成本；是否值得要看剩余工作，而不是所有任务统一在某占用率触发。</p>
+<p>再看M2的20到31秒：其中可能包含排队、Prefill、内部推理和输出传输。没有服务端细分指标时，不应凭11秒猜具体每项。能确认的是端到端调用耗时，其他只能列为待验证原因。</p>
+<h2 id="walkd-s7">D.7｜修复方案应对应根因，不扩大成平台重构</h2>
+<p>最低必要改动可以是：保留结构化pending/unknown操作；压缩摘要把这些状态作为不可丢失事实；恢复时先核验；对修改加版本前提；测试结果绑定最终版本。它们直接对应观察到的失败窗口。</p>
+<p>并不必然需要新增大型记忆数据库、多层合同、每步签名或更多Agent。若系统已有任务状态存储，可以在现有结构上修正。是否增加数据库事务或远程幂等，需要依据真实副作用边界决定，而不是从一个例子推出所有项目必须统一架构。</p>
+<p>对于技能过载，优先减少无关常驻内容，保持必要技能召回；对于过早压缩，考虑任务阶段和近期工具输出，而不只调整阈值数字。每一项优化都应能独立开关，以便定位退化。</p>
+<h2 id="walkd-s8">D.8｜怎样证明修复改善了质量，而不是碰巧多成功几次</h2>
+<p>用固定代表任务做配对比较，同一任务在旧新版本中都运行，控制环境与预算。对于随机执行，增加合理重复并按任务聚类分析，不能把同一任务多次试验当成完全独立的新任务。</p>
+<p>教学二乘二表：100个任务中旧新都成功70个、仅旧成功5个、仅新成功10个、都失败15个。旧成功75，新成功80，表面提升5个百分点；但真正决定配对差异的是5与10这15个不一致任务。样本有限，不能仅凭5个百分点宣称稳定重大提升。</p>
+<p>成本也看全部尝试。若新版本只完成简单任务、放弃复杂任务，成功样本平均耗时可能变短，但用户目标未改善。应同时报告覆盖、成功、失败类型和不同复杂度分层。基础设施异常也要单独标记，避免将机器资源不足归给模型能力。</p>
+<h2 id="walkd-s9">D.9｜上线与回滚：历史状态会不会带着错误继续运行</h2>
+<p>新运行器上线后，旧checkpoint里可能仍有“失败”但实际unknown的记录。只修摘要模板不能自动修复这些存量任务。需要识别相关版本和状态，按受控策略核验或暂停，不能批量盲目重试所有失败操作。</p>
+<p>回滚也不能只切回旧提示。如果新状态<a class="term" href="../glossary.html#g141" title="对数据字段及类型等结构的约束描述。 例：path是字符串，不表示可以读取任意路径。">schema</a>包含unknown而旧版不理解，回退可能重新引入危险重复。兼容读取、状态迁移与明确停止，是比“回滚按钮存在”更实在的恢复能力。</p>
+<p>灰度期间监测未知操作核验率、重复动作、任务成功、总成本和延迟，而不是只盯<a class="term" href="../glossary.html#g139" title="程序之间约定输入、输出与行为的接口。 例：不是人类界面的按钮本身。">API</a>报错数。异常应触发有针对性的降级，例如暂时关闭写操作而保留只读诊断，而不是让系统在不明状态下继续自主推进。</p>
+<h2 id="walkd-s10">D.10｜六个继续追问，以及完整回答方向</h2>
+<p><strong>问：压缩后为什么不直接重读所有文件？</strong> 重读可以恢复部分当前事实，但成本高，也无法重建已经发生却没有落在当前源码里的外部副作用。应优先恢复与下一步有关的证据和待核验操作；当前源码不等于完整历史。</p>
+<p><strong>问：能否让更强模型自动发现摘要错误？</strong> 只有摘要本身或其他证据暴露矛盾时才有机会。如果输入一致地写“失败”，再强模型也无法可靠知道文件已修改。能力不能代替不存在的观察。</p>
+<p><strong>问：给所有工具加重试是否更可靠？</strong> 只读且幂等操作与有副作用操作应区分；超时不代表未执行。需要动作语义、幂等键或结果查询，重试次数本身不创造可靠性。</p>
+<p><strong>问：测试通过是否可以忽略重复动作？</strong> 不能。重复修改可能偶然无害，也可能导致额外外部作用、历史混乱或未来隐患。要分别评估代码结果与执行副作用，不能用一个绿色状态覆盖全部。</p>
+<p><strong>问：为什么不让Reviewer决定unknown是什么？</strong> 它也需要实际证据。Reviewer可以提出核验路径，不能凭角色名称获得外部事实。把状态判定交给另一个模型并不消除信息缺口。</p>
+<p><strong>问：最终真正改进了哪一层？</strong> 主修复是执行状态与上下文交接，辅修复是选择性加载和压缩时机。没有证据表明需要改变模型参数。能够把措施定位到层，才避免了昂贵而无关的优化。</p>
+<h2 id="walkd-s11">D.11｜把系统诊断答案压缩成一段面试陈述</h2>
+<p>先固定任务和版本，把失败定义为可验证现象；用Trace对照模型输入、输出、工具账本与外部状态，找到最早出现事实不一致的位置。再用受控反例区分候选原因，修复必要状态和验证边界，最后做配对回归与灰度。模型、上下文、工具、记忆和工作流都是可调整对象，但不是每次失败都要全部重构。</p>
+<p>这段陈述背后应能展开本例每一个中间对象、时间点与分支。只背最后一段不够；真正理解体现在追问“响应丢了但文件改了怎么办”时，能继续讲出unknown、核验、幂等边界、压缩保留和最终版本验收。</p>
+<div class="progress-row"><button aria-pressed="false" data-mark="walkthroughs/d.html">标记本节已读</button><span class="read-status">只保存在本机浏览器；不上传阅读数据。</span></div><footer class="footer">本书为独立编写的中文教程；教学数值、构造案例与实际软件运行证据分别标注，闭源系统未公开的内部细节不作推断。<br /><a href="../sources.html">资料来源</a> · <a href="../coverage.html">阅读索引</a> · <a href="../about.html">关于本书</a></footer></article></main></div><script src="../assets/app.js"></script></body></html>

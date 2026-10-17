@@ -1,0 +1,115 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>03｜注意力的深入追问：位置、掩码、多头与反向传播｜AI系统工程：从基础到内部实现</title><link rel="stylesheet" href="../assets/style.css" /></head><body><header class="top"><a class="brand" href="../index.html">AI系统工程：从基础到内部实现</a><nav><a href="../guide.html">阅读指南</a><a href="../index.html#twelve">核心专题</a><a href="../questions.html">全文搜索</a><a class="optional" href="../glossary.html">术语</a></nav><div class="tools"><button class="mobile-menu" data-menu aria-expanded="false" aria-label="打开章节目录">目录</button><button data-font="-1" aria-label="缩小字号">A−</button><button data-font="1" aria-label="放大字号">A＋</button></div></header><div class="layout"><aside class="sidebar" aria-label="章节目录"><div class="side-label">阅读</div><a href="../index.html">首页</a><a href="../guide.html">导论与学习方法</a><a href="../index.html#twelve">十二个核心专题</a><a href="../start.html">章末贯通例题</a><a href="../labs.html">实验与运行记录</a><a href="../questions.html">搜索目录与问题</a><div class="side-label">第一编 · 从文字到数值表示</div><a href="../foundations/01.html"><span class="side-num">01</span>先分清：文字、数字、模型和运行它的程序</a><a href="../foundations/02.html"><span class="side-num">02</span>一排数、一张表和一叠表：读懂张量与形状</a><a href="../foundations/03.html"><span class="side-num">03</span>文字为什么要先变成Token编号</a><a href="../foundations/04.html"><span class="side-num">04</span>组批和补齐：为什么两句话变成[2,3]</a><a href="../foundations/05.html"><span class="side-num">05</span>Embedding查表：把一个编号换成一排数</a><a href="../foundations/06.html"><span class="side-num">06</span>“放到设备”是什么：数据类型、内存、CPU与GPU</a><div class="side-label">第二编 · 理解Transformer计算</div><a href="../foundations/07.html"><span class="side-num">07</span>模型最常做的算术：加权求和、点积与矩阵乘法</a><a href="../foundations/08.html"><span class="side-num">08</span>reshape、转轴、广播：形状变了，内容未必算过</a><a href="../foundations/09.html"><span class="side-num">09</span>概率、指数与softmax：把分数变成比例</a><a href="../foundations/10.html"><span class="side-num">10</span>神经网络最小模型：参数、层、前向与隐藏状态</a><a href="../foundations/11.html"><span class="side-num">11</span>Attention慢速版：先算相关分数，再混合内容</a><a href="../foundations/12.html"><span class="side-num">12</span>Mask不是黑箱：把“谁能看谁”写成一张表</a><a href="../foundations/13.html"><span class="side-num">13</span>位置编号与RoPE：先懂位置，再懂旋转</a><a href="../foundations/14.html"><span class="side-num">14</span>把Attention装进一层：残差、归一化与前馈网络</a><a href="../foundations/15.html"><span class="side-num">15</span>从最后一排数到一个Token，再到一句回答</a><a href="../foundations/16.html"><span class="side-num">16</span>KV Cache从零解释：为什么可以少算，又记住了什么</a><div class="side-label">第三编 · 训练与计算效率</div><a href="../foundations/17.html"><span class="side-num">17</span>微积分只学用得上的部分：导数、梯度与链式法则</a><a href="../foundations/18.html"><span class="side-num">18</span>一次训练从头到尾：标签、交叉熵和Adam</a><a href="../foundations/19.html"><span class="side-num">19</span>后训练的前置数学：偏好、奖励、概率比与KL</a><a href="../foundations/20.html"><span class="side-num">20</span>低秩、量化、专家：先看究竟少算了什么</a><a href="../foundations/21.html"><span class="side-num">21</span>算得快与装得下：复杂度、带宽、批处理和并行</a><div class="side-label">第四编 · Agent基础与上下文</div><a href="../foundations/22.html"><span class="side-num">22</span>Agent不是另一个神经网络：用一次读文件讲清循环</a><a href="../foundations/23.html"><span class="side-num">23</span>API与流式协议：请求如何变成可执行数据</a><a href="../foundations/24.html"><span class="side-num">24</span>状态、事件与检查点：模型知道和系统记录的区别</a><a href="../foundations/25.html"><span class="side-num">25</span>工具与MCP：连接、发现、授权、执行四层拆开</a><a href="../foundations/26.html"><span class="side-num">26</span>上下文组装：每轮到底给模型什么，以及为什么</a><a href="../foundations/27.html"><span class="side-num">27</span>压缩不是魔法：摘要、原文和执行状态怎样配合</a><div class="side-label">第五编 · 信息、记忆与可靠执行</div><a href="../foundations/28.html"><span class="side-num">28</span>检索入门：目录、倒排索引、向量与近似搜索</a><a href="../foundations/29.html"><span class="side-num">29</span>从搜索结果到可信答案：召回、重排和证据</a><a href="../foundations/30.html"><span class="side-num">30</span>代码不是普通文档：语法树、调用关系与版本</a><a href="../foundations/31.html"><span class="side-num">31</span>长期记忆的基础：事实、经历、流程和时间</a><a href="../foundations/32.html"><span class="side-num">32</span>Skill、路由和多Agent：先理解谁负责什么</a><a href="../foundations/33.html"><span class="side-num">33</span>重试、幂等和事务：为什么超时不是失败证明</a><a href="../foundations/34.html"><span class="side-num">34</span>工程质量的基础：需求、反例、测试与审查</a><div class="side-label">第六编 · 评测、安全与生产运行</div><a href="../foundations/35.html"><span class="side-num">35</span>评测指标的分母：成功率、精确率、召回率和pass</a><a href="../foundations/36.html"><span class="side-num">36</span>别被几个百分点骗了：随机性、样本与统计判断</a><a href="../foundations/37.html"><span class="side-num">37</span>安全基础：数据能影响模型，但不能因此获得权限</a><a href="../foundations/38.html"><span class="side-num">38</span>看懂生产运行：Trace、队列、成本和回滚</a><a href="../foundations/39.html"><span class="side-num">39</span>多模态与可信度：图片怎样成为输入，解释为什么有限</a><a href="../foundations/40.html"><span class="side-num">40</span>从机制到诊断：定位问题并控制复杂度</a><div class="side-label">第七编 · 模型与推理</div><a href="01.html"><span class="side-num">01</span>输入究竟是什么：从用户的一句话到模型张量</a><a href="02.html"><span class="side-num">02</span>一次Transformer前向：逐张量、逐算子讲明白</a><a href="03.html" class="active"><span class="side-num">03</span>注意力的深入追问：位置、掩码、多头与反向传播</a><a href="04.html"><span class="side-num">04</span>输出是怎样一个Token一个Token生成的</a><a href="05.html"><span class="side-num">05</span>训练的一步：从正确标签到参数真正改变</a><a href="06.html"><span class="side-num">06</span>后训练、MoE与模型定制：能力和行为如何改变</a><a href="07.html"><span class="side-num">07</span>KV Cache、FlashAttention与PagedAttention的内部过程</a><a href="08.html"><span class="side-num">08</span>推理服务：调度、吞吐、延迟和并行</a><div class="side-label">第八编 · Agent运行与上下文</div><a href="09.html"><span class="side-num">09</span>Agent一次任务的完整循环：谁在思考，谁在执行</a><a href="10.html"><span class="side-num">10</span>模型输出怎样变成真实工具调用：协议与执行边界</a><a href="11.html"><span class="side-num">11</span>工具设计与MCP：从连接到可控执行</a><a href="12.html"><span class="side-num">12</span>Codex、Claude Code、Copilot：从公开事实到可诊断运行链</a><a href="13.html"><span class="side-num">13</span>每一轮Prompt怎样组装：上下文是一条数据管线</a><a href="14.html"><span class="side-num">14</span>上下文压缩：到底压掉什么，丢失后又如何恢复</a><div class="side-label">第九编 · 检索与记忆</div><a href="15.html"><span class="side-num">15</span>检索离线链路：文档怎样变成可查询索引</a><a href="16.html"><span class="side-num">16</span>检索在线链路：召回、融合、重排与证据充足性</a><a href="17.html"><span class="side-num">17</span>代码智能：从文本搜索到符号、版本与运行证据</a><a href="18.html"><span class="side-num">18</span>长期记忆：写入、检索、冲突、失效与遗忘</a><a href="19.html"><span class="side-num">19</span>Skills与路由：怎样加载刚好需要的专业能力</a><a href="20.html"><span class="side-num">20</span>多Agent：并行的收益与交接的损失</a><div class="side-label">第十编 · 工程可靠性与生产</div><a href="21.html"><span class="side-num">21</span>可靠执行：重试、幂等、崩溃与状态恢复</a><a href="22.html"><span class="side-num">22</span>工程质量：从需求到测试，再到真正可交付的代码</a><a href="23.html"><span class="side-num">23</span>Evaluation：怎样证明一次优化真有收益</a><a href="24.html"><span class="side-num">24</span>安全：指令边界、沙箱、权限与记忆污染</a><a href="25.html"><span class="side-num">25</span>生产运行：Trace、成本、队列、灰度与回滚</a><a href="26.html"><span class="side-num">26</span>深度应用：把组件组合成能解释的工作系统</a><a href="27.html"><span class="side-num">27</span>事实可靠性、多模态与可解释性：能力边界在哪里</a><a href="28.html"><span class="side-num">28</span>研究深水区与系统综合判断</a><div class="side-label">贯通案例与参考</div><a href="../walkthroughs/a.html">案例A · 从消息输入到逐Token生成</a><a href="../walkthroughs/b.html">案例B · 一次真实可追踪的仓库修复任务</a><a href="../walkthroughs/c.html">案例C · 知识检索与记忆的生命周期</a><a href="../walkthroughs/d.html">案例D · 定位一个速度与质量同时退化的系统故障</a><a href="../coverage.html">206项专题阅读索引</a><a href="../sources.html">一手来源与事实边界</a><a href="../glossary.html">术语与符号速查</a><a href="../questions.html">阅读题检索</a><a href="../checks.html">实验附录</a><a href="../advanced-labs.html">进阶代码附录</a><a href="../complete.html">单页连续阅读</a><a href="../about.html">本书说明</a></aside><main class="main"><article class="article"><div class="eyebrow">进阶编 · 运行机制</div><h1 id="ch03-s0">03｜注意力的深入追问：位置、掩码、多头与反向传播</h1><section class="panel"><h3>本章先修知识</h3><p>掩码规定哪些位置可见，位置编码帮助区分顺序，多头把表示分组处理；反向传播则追踪最终误差怎样沿原计算回传。它们解决不同问题，不能靠一张架构图一起猜。</p><p class="small">本章涉及以下基础概念，可根据掌握情况查阅对应章节。</p><div class="pillrow"><a class="pill" href="../foundations/08.html">F08 · reshape、转轴、广播</a><a class="pill" href="../foundations/11.html">F11 · Attention慢速版</a><a class="pill" href="../foundations/12.html">F12 · Mask不是黑箱</a><a class="pill" href="../foundations/13.html">F13 · 位置编号与RoPE</a><a class="pill" href="../foundations/14.html">F14 · 把Attention装进一层</a><a class="pill" href="../foundations/17.html">F17 · 微积分只学用得上的部分</a><a class="pill" href="../foundations/18.html">F18 · 一次训练从头到尾</a></div><p class="small"><strong>进入深读前的小检查：</strong>先画3个历史位置后再加2个位置的可见表：新位置3能看0到3，新位置4能看0到4。随后再读非方阵mask与缓存偏移。</p></section><p class="term-guide">术语带虚线时可点击速查。公式中的字母先看定义；不要用猜缩写替代推导。</p>
+<p>本章把看起来类似的维度和概念拆开：序列索引、逻辑位置、缓存槽位不是一回事；Q头数、KV头数也不是一回事。理解这些差别，才能解释“<a class="term" href="../glossary.html#g010" title="各个轴分别有多长，不是数据内容。 例：内容[[1,2],[3,4]]的形状是[2,2]。">shape</a>完全对，生成却错了”的故障。</p>
+<nav aria-label="本页目录" class="toc"><p class="toc-title">本页怎么读</p><a href="#Q009">Q009｜因果mask、padding mask、分块解码mask到底如何构造？</a><a href="#Q010">Q010｜RoPE如何让注意力知道位置？为什么缓存位置不能每轮从零开始？</a><a href="#Q011">Q011｜MHA、MQA、GQA到底少了什么？是不是把多头删掉了？</a><a href="#Q012">Q012｜Attention如何反向传播？为什么自动求导正常不等于模型实现正确？</a></nav><h2 id="Q009">Q009｜因果mask、padding mask、分块解码mask到底如何构造？</h2><aside class="preq"><span class="label">这题先认识什么</span>因果掩码禁止未来位置，填充掩码排除占位项；有旧缓存时，查询行数和可读列数不同，不能照抄方阵三角表。<div class="pillrow"><a class="pill" href="../foundations/04.html">F04 · 组批和补齐</a><a class="pill" href="../foundations/12.html">F12 · Mask不是黑箱</a><a class="pill" href="../foundations/16.html">F16 · KV Cache从零解释</a></div></aside>
+<h3 id="ch03-s2">核心回答</h3>
+<p>因果mask禁止读取未来位置；<a class="term" href="../glossary.html#g079" title="排除补齐项作为有效内容的标记。 例：PAD向量全0仍不保证其softmax权重自动为0。">padding mask</a>排除没有实际内容的补齐位置；分块解码还要把新块的局部索引映射到已有前缀后的全局位置。判断某个键可否被读取，应看逻辑位置和有效性，而不是只画一个左上角三角形。<a class="source-ref" href="../sources.html#src-TR" title="来源说明">[TR]</a><a class="source-ref" href="../sources.html#src-CACHE" title="来源说明">[CACHE]</a></p>
+<h3 id="ch03-s3">先看完整输入，再看缓存场景</h3>
+<p>一个4-<a class="term" href="../glossary.html#g027" title="模型分词器使用的片段单位。 例：可能是词、词的一部分、标点或部分字节。">Token</a>序列，行是查询位置，列是键位置，1表示允许读取：</p>
+<pre><code class="language-text">       k0 k1 k2 k3
+q0     1  0  0  0
+q1     1  1  0  0
+q2     1  1  1  0
+q3     1  1  1  1
+</code></pre>
+<p>这里下三角是因为查询与键从相同的全局位置0开始。现在已有3个Token的缓存，新来2个Token。Q长度是2，K长度是5；新查询的全局位置是3与4，正确mask为：</p>
+<pre><code class="language-text">       old0 old1 old2 new3 new4
+new3     1    1    1    1    0
+new4     1    1    1    1    1
+</code></pre>
+<p>通式是<code>key_position ≤ past_length + local_query_index</code>。如果直接创建<code>tril(ones(2,5))</code>，第一行只会看old0，第二行只会看old0与old1，历史的大部分被错误遮住。它仍是一个合法的2×5矩阵，所以不会靠shape检查暴露问题。</p>
+<p>再加入<a class="term" href="../glossary.html#g035" title="给短序列增加占位项，使指定组织方式可用。 例：[4,2]右补齐为[4,2,0]。">padding</a>。两条序列长度分别为3和5，组批时短序列补齐。被补齐的键位置不应获得注意力权重；padding查询位置可能仍被算子计算，但不应作为有效答案或训练目标使用。左padding时，数组下标和真实Token位置更容易分离，位置编号应服从模型与实现约定，不能只用数组下标。</p>
+<h3 id="ch03-s4">追问：训练时一次输入整段答案，不就是偷看答案吗？</h3>
+<p>不是，只要每个位置的可见范围正确。位置i的隐藏状态只能读到<code>x≤i</code>，拿它预测<code>x(i+1)</code>。标签存在于<a class="term" href="../glossary.html#g034" title="一起组织计算的一组输入。 例：普通样本batch不让不同用户相互读取内容。">batch</a>里不等于前向可以读取它。多个位置的预测可同时计算，因为正确前缀已经由训练数据提供。若mask删掉，训练loss可能异常漂亮，却学习了不符合部署条件的任务。</p>
+<h3 id="ch03-s5">追问：两份文档拼接训练，只放一个EOS就完全隔离了吗？</h3>
+<p>不一定。<a class="term" href="../glossary.html#g096" title="模型约定的一种结束序列Token。 例：与最大输出长度、用户取消是不同结束原因。">EOS</a>是序列内容标记，不自动禁止注意力跨文档边界。若目标是严格隔离样本，需要分段<a class="term" href="../glossary.html#g077" title="规定哪些位置间的读取被允许的约束。 例：接口可能用布尔值或加性负无穷，真假约定要核对。">attention mask</a>，并同步处理位置和loss范围。若允许跨文档上下文，则可以有不同策略；关键是明确训练目标，不能把“出现分隔符”当成确定性隔离。</p>
+<h3 id="ch03-s6">追问：如何写一个能抓住mask错误的测试？</h3>
+<p>固定权重、关闭dropout，先保存前缀输出；然后只改变未来Token，前缀对应<a class="term" href="../glossary.html#g091" title="输出投影给各词表候选的未归一化分数。 例：可以是负数，还不是概率或Token编号。">logits</a>不应变化。再比较整段、逐Token和多种分块推理的输出，三者应在合理浮点容差内一致。故意移除mask或重置位置，测试应失败；否则测试很可能没有覆盖目标错误。</p>
+<h2 id="Q010">Q010｜RoPE如何让注意力知道位置？为什么缓存位置不能每轮从零开始？</h2><aside class="preq"><span class="label">这题先认识什么</span>位置不是Token身份。RoPE将一对坐标旋转与位置相关的角度，使点积中出现相对位置关系，不是把位置数字直接加到词表编号。<div class="pillrow"><a class="pill" href="../foundations/07.html">F07 · 模型最常做的算术</a><a class="pill" href="../foundations/13.html">F13 · 位置编号与RoPE</a></div></aside>
+<h3 id="ch03-s8">核心回答</h3>
+<p><a class="term" href="../glossary.html#g082" title="通过按位置旋转成对坐标来引入位置信息的方法。 例：二维90度旋转把[2,3]变为[-3,2]。">RoPE</a>把Q/K每一对分量按位置相关角度旋转，使两位置旋转后点积包含相对位置差。它不是简单把位置整数加到<a class="term" href="../glossary.html#g028" title="某Token在对应词表中的整数地址。 例：[1,2,3]先是编号列表，不是三个语义强度。">Token ID</a>上。缓存推理必须保持新旧Token的逻辑位置连续或符合指定位置策略，否则相对关系被改变。<a class="source-ref" href="../sources.html#src-ROPE" title="来源说明">[ROPE]</a></p>
+<h3 id="ch03-s9">从二维旋转推导相对位置</h3>
+<p>对二维向量<code>x=[a,b]</code>，位置p与频率θ对应：</p>
+<pre><code class="language-text">R(pθ) x = [a cos(pθ) − b sin(pθ), a sin(pθ) + b cos(pθ)]
+</code></pre>
+<p>Q在位置p、K在位置t时，点积为<code>(R(pθ)q)ᵀ(R(tθ)k)</code>。利用<code>R(pθ)ᵀ=R(-pθ)</code>与旋转的组合性质，得到<code>qᵀR((t-p)θ)k</code>。因此位置信息通过差<code>t-p</code>进入相关性。高维向量按分量对应用不同频率，提供多尺度位置变化。</p>
+<p>这并不意味着注意力只依赖位置差：q与k本身仍由文本内容和前层表示决定。RoPE提供相对位置结构，内容匹配仍由学习得到的投影负责。也不能说它让模型对任意长度天然泛化；超过训练分布的相位组合仍可能带来退化。</p>
+<p>假设前缀长度P=100，新Token本应在位置100。如果错误地把它的Q/K按位置0旋转，而旧K仍按0到99存储，那么模型读到的“距离”已不是真实距离。张量长度、<a class="term" href="../glossary.html#g041" title="规定每个元素如何存储与运算。 例：整数编号与浮点表示通常不是同一dtype。">dtype</a>、缓存拼接轴都可能正确，但logits已经偏离整段前向。</p>
+<h3 id="ch03-s10">追问：可以把全部位置同时平移吗？</h3>
+<p>在理想纯RoPE点积中，同时给Q/K位置加同一偏移，会保留相对差。但完整模型可能还有其他位置相关机制、滑窗规则、特殊位置或缩放策略；已旋转的缓存也不能只改一个position counter就完成一致变换。数学上的整体平移性质不能直接当任意缓存截断实现的安全证明。</p>
+<h3 id="ch03-s11">追问：长上下文扩展是怎么做的？</h3>
+<p>常见思路包括位置插值、频率缩放、特定频段调整和长序列继续训练。它们试图让超出原训练长度的位置模式更接近可学习范围，同时保留局部区分。局部精度与长距离覆盖可能发生取舍，因此需测检索、跨段组合、代码定位等真实任务，不只测“接口是否接受更多Token”。</p>
+<h3 id="ch03-s12">追问：为什么通常旋转Q/K而不是V？</h3>
+<p>这种设计把相对位置信号主要放到读取权重的计算里，<a class="term" href="../glossary.html#g074" title="每个可读位置将被加权汇集的内容表示。 例：这里V不是词表大小。">Value</a>仍提供被混合的内容。不同架构可有其他方案；不能把这个实现选择扩展成数学上所有模型都必须遵守的定理。阅读源码时应检查缓存里保存的是旋转前还是旋转后的K，以及重用时是否重复旋转。</p>
+<h2 id="Q011">Q011｜MHA、MQA、GQA到底少了什么？是不是把多头删掉了？</h2><aside class="preq"><span class="label">这题先认识什么</span>多头把表示分组；MQA/GQA让多个查询头共享较少的K/V头。查多少组和存多少组分开数。<div class="pillrow"><a class="pill" href="../foundations/08.html">F08 · reshape、转轴、广播</a><a class="pill" href="../foundations/11.html">F11 · Attention慢速版</a><a class="pill" href="../foundations/16.html">F16 · KV Cache从零解释</a></div></aside>
+<h3 id="ch03-s14">核心回答</h3>
+<p><a class="term" href="../glossary.html#g127" title="不同查询头与K/V头共享方式的注意力结构。 例：共享更多K/V可减少缓存，但不保证质量完全相同。">MHA</a>通常每个Q头有对应K/V头；<a class="term" href="../glossary.html#g127" title="不同查询头与K/V头共享方式的注意力结构。 例：共享更多K/V可减少缓存，但不保证质量完全相同。">MQA</a>让多个Q头共享一组K/V；<a class="term" href="../glossary.html#g127" title="不同查询头与K/V头共享方式的注意力结构。 例：共享更多K/V可减少缓存，但不保证质量完全相同。">GQA</a>在两者之间，让一组Q头共享一个K/V头。主要减少K/V投影输出和缓存量，不等于所有查询头变成同一注意力分布。<a class="source-ref" href="../sources.html#src-GQA" title="来源说明">[GQA]</a><a class="source-ref" href="../sources.html#src-CACHE" title="来源说明">[CACHE]</a></p>
+<h3 id="ch03-s15">逐形状比较</h3>
+<p>设隐藏维度4096，查询头H=32，每头Dh=128。MHA有32个KV头；GQA假设只有8个KV头；MQA只有1个。忽略bias时：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>MHA</th>
+<th>GQA（8 KV头）</th>
+<th>MQA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wq输出宽度</td>
+<td>4096</td>
+<td>4096</td>
+<td>4096</td>
+</tr>
+<tr>
+<td>Wk/Wv各自输出宽度</td>
+<td>4096</td>
+<td>1024</td>
+<td>128</td>
+</tr>
+<tr>
+<td>单层K缓存</td>
+<td><code>[B,32,T,128]</code></td>
+<td><code>[B,8,T,128]</code></td>
+<td><code>[B,1,T,128]</code></td>
+</tr>
+<tr>
+<td>每个Q头的注意力权重</td>
+<td>各自计算</td>
+<td>各自计算</td>
+<td>各自计算</td>
+</tr>
+</tbody>
+</table></div>
+<p>GQA中可以把Q头0—3分给KV头0、Q头4—7分给KV头1，以此类推。共享K不意味着Q相同；不同Q与同一K点积，仍可产生不同权重。共享V也不意味着输出相同，因为加权比例不同。</p>
+<p>缓存空间从32组降为8组，理论上这部分减少为四分之一。但总显存还有权重、激活、工作空间和调度元数据，不会因此整机显存必然减少四倍。QKᵀ和AV仍需服务32个Q头；实际计算效率还依赖kernel如何避免重复加载共享KV。</p>
+<h3 id="ch03-s16">追问：能否把一个训练好的MHA模型直接改配置成GQA？</h3>
+<p>不能只改头数。参数形状、权重组合和学习到的功能会变化。GQA论文研究了从多头检查点转换并继续训练的方式；这不是修改一个配置就获得等价模型。模型部署必须匹配权重与架构。</p>
+<h3 id="ch03-s17">追问：为什么有的GQA代码还把KV重复成H个头？</h3>
+<p>这可能是为了兼容普通<a class="term" href="../glossary.html#g071" title="计算查询与可读候选的匹配份额，再加权组合内容。 例：先计算分数和权重，再用权重混合V。">attention</a>接口而做概念展开。若物理复制长缓存，会抵消内存收益；高效实现应通过映射、视图或专用kernel共享数据。阅读代码时要看实际内存分配与<a class="term" href="../glossary.html#g058" title="沿某轴移动一个索引时底层存储要跨过的元素间距。 例：转置后的视图可能不连续，后续reshape可能需复制。">stride</a>，而不是只看注释写了“共享”。</p>
+<h3 id="ch03-s18">追问：MQA缓存最小，为什么不全部用MQA？</h3>
+<p>共享程度提高会改变表示容量与模型质量，硬件收益也受工作负载影响。GQA是在质量、训练成本与推理资源之间的一种折中。不存在不看模型与任务就永远最优的KV头数。</p>
+<h2 id="Q012">Q012｜Attention如何反向传播？为什么自动求导正常不等于模型实现正确？</h2><aside class="preq"><span class="label">这题先认识什么</span>反向传播沿前向计算逐步计算梯度；转置用于把输出变化传回输入维度，softmax的不同候选因归一化彼此耦合。<div class="pillrow"><a class="pill" href="../foundations/07.html">F07 · 模型最常做的算术</a><a class="pill" href="../foundations/09.html">F09 · 概率、指数与softmax</a><a class="pill" href="../foundations/17.html">F17 · 微积分只学用得上的部分</a><a class="pill" href="../foundations/18.html">F18 · 一次训练从头到尾</a></div></aside>
+<h3 id="ch03-s20">核心回答</h3>
+<p>反向传播把输出误差沿Value内容路径和Q/K权重路径传回。自动求导能忠实计算当前计算图的梯度，却不能知道你的mask、标签或维度是否表达了正确任务。必须把数学梯度检查和语义不变性测试分开。<a class="source-ref" href="../sources.html#src-TR" title="来源说明">[TR]</a></p>
+<h3 id="ch03-s21">沿计算图逐步求导</h3>
+<p>定义<code>S=QKᵀ/√d</code>、<code>A=softmax(S)</code>、<code>O=AV</code>，设上游梯度<code>G=∂L/∂O</code>。先对最后一步矩阵乘法：</p>
+<pre><code class="language-text">dV = AᵀG
+dA = GVᵀ
+</code></pre>
+<p>第一个式子表示某历史Value从所有读取它的查询位置累计误差；第二个式子衡量某个读取权重改变时损失如何变化。接着对<a class="term" href="../glossary.html#g062" title="将各分数取指数，再除以所有指数之和。 例：[0,ln2,ln3]变成[1/6,1/3,1/2]。">softmax</a>，某行概率a与上游g对应：</p>
+<pre><code class="language-text">ds = a ⊙ (g − sum(a ⊙ g))
+</code></pre>
+<p>这里减的是整行加权和，不能省略。其结果各分量之和为0，与“给整行分数加常数不改变softmax”的性质一致。最后：</p>
+<pre><code class="language-text">dQ = dS K / √d
+dK = dSᵀ Q / √d
+</code></pre>
+<p>若Q/K/V由同一X投影而来，X梯度是三条支路分别乘投影转置后的和，再加上残差直接回传的梯度。多头的换轴、拼接在反向中要走对应的逆变换。</p>
+<p>一个有用的诊断：只让第一位置输出参与损失，在因果mask下，未来K/V不应通过这一损失得到梯度。如果未来位置有非零依赖，可能mask或索引错误。这个测试关注任务语义，不只是数值求导。</p>
+<h3 id="ch03-s22">追问：有限差分怎样检查梯度？</h3>
+<p>对某输入维度j，把它分别改为<code>xj+ε</code>和<code>xj-ε</code>，用<code>[L(x+εej)-L(x-εej)]/(2ε)</code>近似导数。小矩阵用float64更容易定位错误。ε太大会有截断误差，太小则舍入误差占主导；不能仅通过不断放宽容差让测试通过。</p>
+<h3 id="ch03-s23">追问：有限差分通过，是否证明模型对了？</h3>
+<p>它证明解析或自动梯度与当前前向函数一致；如果前向错误地允许看未来，两者仍可能一致。还需要标签移动、因果性、整段与缓存一致性等测试。因此“梯度正确”和“目标正确”是不同证据。</p>
+<h3 id="ch03-s24">追问：推理时为什么不需要反向传播？</h3>
+<p>普通部署生成使用固定参数，只计算条件分布并选择Token，不需要计算损失和更新权重。长推理或多次工具调用增加的是前向计算与输入信息，不自动变成梯度训练。特定在线学习系统可以额外更新参数，但必须显式设计，不能从“模型越来越了解当前任务”推断发生了训练。</p>
+<div class="progress-row"><button aria-pressed="false" data-mark="chapters/03.html">标记本节已读</button><span class="read-status">只保存在本机浏览器；不上传阅读数据。</span></div><nav aria-label="前后章节" class="pager"><a href="02.html">← 上一章</a><a href="04.html">下一章 →</a></nav><footer class="footer">本书为独立编写的中文教程；教学数值、构造案例与实际软件运行证据分别标注，闭源系统未公开的内部细节不作推断。<br /><a href="../sources.html">资料来源</a> · <a href="../coverage.html">阅读索引</a> · <a href="../about.html">关于本书</a></footer></article></main></div><script src="../assets/app.js"></script></body></html>
