@@ -1,0 +1,762 @@
+[
+  {
+    "id": "TR",
+    "title": "Attention Is All You Need",
+    "url": "https://arxiv.org/html/1706.03762v7",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "Transformer原始架构与注意力；现代Decoder变体另作说明。"
+  },
+  {
+    "id": "CHAT",
+    "title": "Hugging Face：Chat templates",
+    "url": "https://huggingface.co/docs/transformers/chat_templating",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "消息序列化与模型模板；不等于闭源产品完整Prompt。"
+  },
+  {
+    "id": "BPE",
+    "title": "Hugging Face：Byte-Pair Encoding tokenization",
+    "url": "https://huggingface.co/learn/llm-course/chapter6/5",
+    "kind": "官方教程",
+    "checked": "2026-10-17",
+    "scope": "BPE训练与编码机制；本书字符串例子为原创教学数据。"
+  },
+  {
+    "id": "UNIGRAM",
+    "title": "Subword Regularization",
+    "url": "https://arxiv.org/abs/1804.10959",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "Unigram子词模型与分词方案；不声称所有Tokenizer使用同一算法。"
+  },
+  {
+    "id": "ROPE",
+    "title": "RoFormer: Enhanced Transformer with Rotary Position Embedding",
+    "url": "https://arxiv.org/abs/2104.09864",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "旋转位置表示与相对位置关系。"
+  },
+  {
+    "id": "GQA",
+    "title": "GQA: Training Generalized Multi-Query Transformer Models",
+    "url": "https://arxiv.org/abs/2305.13245",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "Query分组与KV共享；缓存算例为本书独立计算。"
+  },
+  {
+    "id": "CACHE",
+    "title": "Hugging Face：KV cache strategies",
+    "url": "https://huggingface.co/docs/transformers/kv_cache",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "缓存类别与使用条件；具体形状和位置须按模型实现。"
+  },
+  {
+    "id": "FLASH",
+    "title": "FlashAttention: Fast and Memory-Efficient Exact Attention",
+    "url": "https://arxiv.org/abs/2205.14135",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "分块、IO优化和在线归一化；不移植论文加速倍率。"
+  },
+  {
+    "id": "PAGED",
+    "title": "Efficient Memory Management for LLM Serving with PagedAttention",
+    "url": "https://arxiv.org/abs/2309.06180",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "KV分页管理与共享思想；块号示例为教学构造。"
+  },
+  {
+    "id": "SPECULATIVE",
+    "title": "Fast Inference from Transformers via Speculative Decoding",
+    "url": "https://arxiv.org/abs/2211.17192",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "接受与残差采样机制；不保证相同随机种子输出相同文本。"
+  },
+  {
+    "id": "RLHF",
+    "title": "Training language models to follow instructions with human feedback",
+    "url": "https://arxiv.org/abs/2203.02155",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "SFT、奖励模型和偏好优化的基础流程。"
+  },
+  {
+    "id": "DPO",
+    "title": "Direct Preference Optimization",
+    "url": "https://arxiv.org/abs/2305.18290",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "相对参考模型的偏好目标；公式解释不等于复现训练。"
+  },
+  {
+    "id": "R1",
+    "title": "DeepSeek-R1",
+    "url": "https://arxiv.org/abs/2501.12948",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "强化学习与推理训练；不把某一报告结论泛化到全部模型。"
+  },
+  {
+    "id": "LORA",
+    "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+    "url": "https://arxiv.org/abs/2106.09685",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "低秩增量与参数高效适配。"
+  },
+  {
+    "id": "V3",
+    "title": "DeepSeek-V3 Technical Report v2",
+    "url": "https://arxiv.org/html/2412.19437v2",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "MLA、MoE与相关架构；仅解释所用机制，不声称复现报告全部实验。"
+  },
+  {
+    "id": "CODEX",
+    "title": "Unrolling the Codex agent loop",
+    "url": "https://openai.com/index/unrolling-the-codex-agent-loop/",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "模型调用、工具反馈与上下文；历史架构文章与固定源码分开引用。"
+  },
+  {
+    "id": "CODEX-SRC",
+    "title": "Codex固定源码：工具路由与压缩",
+    "url": "https://github.com/openai/codex/tree/ce0323f2f2d3b25e82806cd555237da3db4e1897",
+    "kind": "源码快照",
+    "checked": "2026-10-17",
+    "scope": "读取router.rs 80–220、252–407与compact.rs 270–451；未编译或审计整个Codex。"
+  },
+  {
+    "id": "TOOLS",
+    "title": "OpenAI：Function calling",
+    "url": "https://developers.openai.com/api/docs/guides/function-calling",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "工具调用与结果回填；教学JSON不是逐字段API参考。"
+  },
+  {
+    "id": "COMPACT",
+    "title": "OpenAI：Compaction",
+    "url": "https://developers.openai.com/api/docs/guides/compaction",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "压缩与不透明状态的接口边界；不推测内部编码。"
+  },
+  {
+    "id": "PCACHE",
+    "title": "OpenAI：Prompt caching",
+    "url": "https://developers.openai.com/api/docs/guides/prompt-caching",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "重复前缀复用；规则会变化，正文不固定价格或保留期。"
+  },
+  {
+    "id": "CLAUDE",
+    "title": "How Claude Code works",
+    "url": "https://code.claude.com/docs/en/how-claude-code-works",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "公开运行、工具和上下文机制；闭源内部实现不作补造。"
+  },
+  {
+    "id": "COPILOT",
+    "title": "About custom agents for GitHub Copilot CLI",
+    "url": "https://docs.github.com/en/copilot/concepts/agents/copilot-cli/about-custom-agents",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "CLI自定义Agent；不推广到全部IDE和云端形态。"
+  },
+  {
+    "id": "CONTEXT",
+    "title": "Effective context engineering for AI agents",
+    "url": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "选择、卸载、摘要与长任务；状态结构和例子由本书设计。"
+  },
+  {
+    "id": "CTXRETRIEVAL",
+    "title": "Introducing Contextual Retrieval",
+    "url": "https://www.anthropic.com/engineering/contextual-retrieval",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "上下文增强检索与组合检索；不声称本书取得论文或文章收益。"
+  },
+  {
+    "id": "MCP",
+    "title": "MCP Architecture overview",
+    "url": "https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture",
+    "kind": "协议文档",
+    "checked": "2026-10-17",
+    "scope": "Host、Client、Server职责；协议时序使用单独固定版规范。"
+  },
+  {
+    "id": "MCP-LIFE",
+    "title": "MCP Lifecycle，2025-11-25",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle",
+    "kind": "固定版本规范",
+    "checked": "2026-10-17",
+    "scope": "初始化、能力协商、版本与会话生命周期。"
+  },
+  {
+    "id": "MCP-TOOLS",
+    "title": "MCP Tools，2025-11-25",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools",
+    "kind": "固定版本规范",
+    "checked": "2026-10-17",
+    "scope": "工具发现、分页、调用与错误层次。"
+  },
+  {
+    "id": "SKILLS",
+    "title": "Agent Skills specification",
+    "url": "https://agentskills.io/specification",
+    "kind": "规范",
+    "checked": "2026-10-17",
+    "scope": "技能文件、元数据与按需资源；格式存在不代表路由效果保证。"
+  },
+  {
+    "id": "SUBAGENTS",
+    "title": "Claude Code：Subagents",
+    "url": "https://code.claude.com/docs/en/sub-agents",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "独立上下文与工具配置；权限行为需要按版本确认。"
+  },
+  {
+    "id": "CLAUDEMEM",
+    "title": "Claude Code：Memory",
+    "url": "https://code.claude.com/docs/en/memory",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "项目指引与记忆机制；不等于在线参数更新。"
+  },
+  {
+    "id": "COPILOTSKILL",
+    "title": "GitHub Copilot：Agent Skills",
+    "url": "https://docs.github.com/en/copilot/concepts/agents/about-agent-skills",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "Copilot技能概念与加载；不把模型自报当作已执行证明。"
+  },
+  {
+    "id": "AGENTS",
+    "title": "Building effective agents",
+    "url": "https://www.anthropic.com/engineering/building-effective-agents",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "工作流、Agent及常见编排模式。"
+  },
+  {
+    "id": "LONGHARNESS",
+    "title": "Effective harnesses for long-running agents",
+    "url": "https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "跨会话长任务、环境与状态连续性。"
+  },
+  {
+    "id": "MULTI",
+    "title": "How we built our multi-agent research system",
+    "url": "https://www.anthropic.com/engineering/multi-agent-research-system",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "委派、并行探索与整合；本书DAG数字为教学假设。"
+  },
+  {
+    "id": "MEMGPT",
+    "title": "MemGPT: Towards LLMs as Operating Systems",
+    "url": "https://arxiv.org/abs/2310.08560",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "分层状态与外部记忆；不是通用最优记忆架构。"
+  },
+  {
+    "id": "COALA",
+    "title": "Cognitive Architectures for Language Agents",
+    "url": "https://arxiv.org/abs/2309.02427",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "工作、长期、程序性等记忆分类的概念框架。"
+  },
+  {
+    "id": "LONGMEM",
+    "title": "LongMemEval",
+    "url": "https://arxiv.org/abs/2410.10813",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "长期记忆检索、时间与更新等评测问题；本书未运行该基准。"
+  },
+  {
+    "id": "DPR",
+    "title": "Dense Passage Retrieval",
+    "url": "https://arxiv.org/abs/2004.04906",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "双编码器与稠密检索训练。"
+  },
+  {
+    "id": "COLBERT",
+    "title": "ColBERT",
+    "url": "https://arxiv.org/abs/2004.12832",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "Late interaction与细粒度匹配。"
+  },
+  {
+    "id": "HNSW",
+    "title": "Efficient and robust approximate nearest neighbor search using HNSW",
+    "url": "https://arxiv.org/abs/1603.09320",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "近邻图搜索与搜索宽度取舍；不是语义正确性证明。"
+  },
+  {
+    "id": "BM25",
+    "title": "Stanford IR Book：Okapi BM25",
+    "url": "https://nlp.stanford.edu/IR-book/html/htmledition/okapi-bm25-a-non-binary-model-1.html",
+    "kind": "教材",
+    "checked": "2026-10-17",
+    "scope": "BM25机制；正文明确采用正值IDF变体与教学参数。"
+  },
+  {
+    "id": "RRF",
+    "title": "Elasticsearch：Reciprocal rank fusion",
+    "url": "https://www.elastic.co/docs/reference/elasticsearch/rest-apis/reciprocal-rank-fusion",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "基于排名融合；融合分数不是概率。"
+  },
+  {
+    "id": "TREESITTER",
+    "title": "Tree-sitter：Using parsers",
+    "url": "https://tree-sitter.github.io/tree-sitter/using-parsers/",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "解析树与结构定位；不代替类型和运行时分析。"
+  },
+  {
+    "id": "LSP",
+    "title": "Language Server Protocol 3.17",
+    "url": "https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/",
+    "kind": "固定版本规范",
+    "checked": "2026-10-17",
+    "scope": "定义、引用、文档版本与诊断的协议边界。"
+  },
+  {
+    "id": "SWEBENCH",
+    "title": "SWE-bench",
+    "url": "https://arxiv.org/abs/2310.06770",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "真实仓库问题的测试式评价；未运行基准。"
+  },
+  {
+    "id": "OTEL",
+    "title": "OpenTelemetry：GenAI agent and framework spans",
+    "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md",
+    "kind": "规范文档",
+    "checked": "2026-10-17",
+    "scope": "GenAI约定已迁移；部分为Development。正文使用概念，不固定全部属性名。"
+  },
+  {
+    "id": "GENERATION",
+    "title": "Hugging Face：Generation strategies",
+    "url": "https://huggingface.co/docs/transformers/generation_strategies",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "生成与解码策略。"
+  },
+  {
+    "id": "SPEC",
+    "title": "OpenAI Model Spec，2025-12-18",
+    "url": "https://model-spec.openai.com/2025-12-18.html",
+    "kind": "固定版本说明",
+    "checked": "2026-10-17",
+    "scope": "用于指令层级与来源边界，不声称是最新完整产品实现。"
+  },
+  {
+    "id": "REASON",
+    "title": "OpenAI：Reasoning models",
+    "url": "https://developers.openai.com/api/docs/guides/reasoning",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "推理输出、预算和状态接口；不访问或伪造隐藏思维链。"
+  },
+  {
+    "id": "STRUCTURED",
+    "title": "OpenAI：Structured outputs",
+    "url": "https://developers.openai.com/api/docs/guides/structured-outputs",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "结构约束、拒绝和不完整结果；结构正确不等于事实正确。"
+  },
+  {
+    "id": "STREAM",
+    "title": "OpenAI：Streaming responses",
+    "url": "https://developers.openai.com/api/docs/guides/streaming-responses",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "增量事件与响应状态；按当前接口处理。"
+  },
+  {
+    "id": "SSE",
+    "title": "WHATWG HTML：Server-sent events",
+    "url": "https://html.spec.whatwg.org/multipage/server-sent-events.html",
+    "kind": "标准",
+    "checked": "2026-10-17",
+    "scope": "事件流与解析边界；包内LF示例解析器不是完整标准实现。"
+  },
+  {
+    "id": "ADAMW",
+    "title": "Decoupled Weight Decay Regularization",
+    "url": "https://arxiv.org/abs/1711.05101",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "权重衰减与优化器更新的区别。"
+  },
+  {
+    "id": "CHINCHILLA",
+    "title": "Training Compute-Optimal Large Language Models",
+    "url": "https://arxiv.org/abs/2203.15556",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "计算预算下的规模与数据分配；不固定普适比例。"
+  },
+  {
+    "id": "QLORA",
+    "title": "QLoRA",
+    "url": "https://arxiv.org/abs/2305.14314",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "量化基础上的参数高效微调。"
+  },
+  {
+    "id": "REACT",
+    "title": "ReAct: Synergizing Reasoning and Acting",
+    "url": "https://arxiv.org/abs/2210.03629",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "推理、动作与观察的交替。"
+  },
+  {
+    "id": "LOST",
+    "title": "Lost in the Middle",
+    "url": "https://arxiv.org/abs/2307.03172",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "特定模型与任务中的长上下文位置效应，不是所有模型恒定规律。"
+  },
+  {
+    "id": "HYDE",
+    "title": "Precise Zero-Shot Dense Retrieval without Relevance Labels",
+    "url": "https://arxiv.org/abs/2212.10496",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "用假设文档辅助检索；生成文本不是事实证据。"
+  },
+  {
+    "id": "RAPTOR",
+    "title": "RAPTOR",
+    "url": "https://arxiv.org/abs/2401.18059",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "分层摘要检索。"
+  },
+  {
+    "id": "GRAPHRAG",
+    "title": "From Local to Global: A Graph RAG Approach",
+    "url": "https://arxiv.org/abs/2404.16130",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "图与社区摘要支持跨文档问题；不是所有代码检索默认选项。"
+  },
+  {
+    "id": "SELFRAG",
+    "title": "Self-RAG",
+    "url": "https://arxiv.org/abs/2310.11511",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "检索、生成与反思机制及训练；不是简单多写一句自检提示。"
+  },
+  {
+    "id": "CRAG",
+    "title": "Corrective Retrieval Augmented Generation",
+    "url": "https://arxiv.org/abs/2401.15884",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "检索质量评估与纠正策略。"
+  },
+  {
+    "id": "TP",
+    "title": "PyTorch：Tensor Parallel tutorial",
+    "url": "https://docs.pytorch.org/tutorials/intermediate/TP_tutorial.html",
+    "kind": "官方教程",
+    "checked": "2026-10-17",
+    "scope": "矩阵分片与通信；收益依赖硬件和并行规模。"
+  },
+  {
+    "id": "ZERO",
+    "title": "ZeRO: Memory Optimizations Toward Training Trillion Parameter Models",
+    "url": "https://arxiv.org/abs/1910.02054",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "优化器状态、梯度和参数分片。"
+  },
+  {
+    "id": "SRE",
+    "title": "Google SRE：Monitoring Distributed Systems",
+    "url": "https://sre.google/sre-book/monitoring-distributed-systems/",
+    "kind": "工程教材",
+    "checked": "2026-10-17",
+    "scope": "监控、延迟与系统运行指标。"
+  },
+  {
+    "id": "SLO",
+    "title": "Google SRE Workbook：Implementing SLOs",
+    "url": "https://sre.google/workbook/implementing-slos/",
+    "kind": "工程教材",
+    "checked": "2026-10-17",
+    "scope": "面向用户目标的可靠性设计。"
+  },
+  {
+    "id": "IDEMPOTENT",
+    "title": "AWS Builders Library：Making retries safe with idempotent APIs",
+    "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "幂等键、重试与意图边界；不推导本地表等于分布式原子性。"
+  },
+  {
+    "id": "SQLITE",
+    "title": "SQLite：Isolation",
+    "url": "https://www.sqlite.org/isolation.html",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "数据库事务与隔离；不扩展为数据库外副作用事务。"
+  },
+  {
+    "id": "LATENCY",
+    "title": "OpenAI：Latency optimization",
+    "url": "https://developers.openai.com/api/docs/guides/latency-optimization",
+    "kind": "官方文档",
+    "checked": "2026-10-17",
+    "scope": "调用数量、Token和并行的延迟取舍。"
+  },
+  {
+    "id": "SANDBOX",
+    "title": "Beyond permission prompts: Claude Code sandboxing",
+    "url": "https://www.anthropic.com/engineering/claude-code-sandboxing",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "文件系统和网络边界；本书不宣称完成安全审计。"
+  },
+  {
+    "id": "A2A",
+    "title": "Agent2Agent Protocol specification",
+    "url": "https://a2a-protocol.org/latest/specification/",
+    "kind": "协议文档",
+    "checked": "2026-10-17",
+    "scope": "跨Agent任务与通信；不自动赋予权限或业务一致性。"
+  },
+  {
+    "id": "JUDGE",
+    "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+    "url": "https://arxiv.org/abs/2306.05685",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "模型评分的偏差与评价问题。"
+  },
+  {
+    "id": "HUMANEVAL",
+    "title": "Evaluating Large Language Models Trained on Code",
+    "url": "https://arxiv.org/abs/2107.03374",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "代码评价与pass@k估计；数值由本书独立计算。"
+  },
+  {
+    "id": "TAU",
+    "title": "τ-bench",
+    "url": "https://arxiv.org/abs/2406.12045",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "多次运行可靠性和工具任务评价。"
+  },
+  {
+    "id": "EVALS",
+    "title": "Demystifying evals for AI agents",
+    "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "任务、试验、轨迹、评分和回归；本书不声称运行商业模型评测。"
+  },
+  {
+    "id": "REVIEW",
+    "title": "Google Engineering Practices：The Standard of Code Review",
+    "url": "https://google.github.io/eng-practices/review/reviewer/standard.html",
+    "kind": "工程规范",
+    "checked": "2026-10-17",
+    "scope": "代码健康、适度审查和改进标准。"
+  },
+  {
+    "id": "OWASP",
+    "title": "OWASP LLM01：Prompt Injection",
+    "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+    "kind": "安全资料",
+    "checked": "2026-10-17",
+    "scope": "不可信内容、间接注入与边界；不是安全认证。"
+  },
+  {
+    "id": "HIERARCHY",
+    "title": "The Instruction Hierarchy",
+    "url": "https://arxiv.org/abs/2404.13208",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "训练模型区分不同权威级别；模型行为不能替代执行权限。"
+  },
+  {
+    "id": "SCALING",
+    "title": "Scaling Laws for Neural Language Models",
+    "url": "https://arxiv.org/abs/2001.08361",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "规模、数据和计算关系；数学例子标明假设。"
+  },
+  {
+    "id": "GPT3",
+    "title": "Language Models are Few-Shot Learners",
+    "url": "https://arxiv.org/abs/2005.14165",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "上下文任务适应，与梯度更新区分。"
+  },
+  {
+    "id": "CALIBRATION",
+    "title": "Language Models (Mostly) Know What They Know",
+    "url": "https://arxiv.org/abs/2207.05221",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "特定条件下自评与校准；不能推广为通用可靠置信度。"
+  },
+  {
+    "id": "TRUTHQA",
+    "title": "TruthfulQA",
+    "url": "https://arxiv.org/abs/2109.07958",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "真实性与模仿错误信念的评测问题。"
+  },
+  {
+    "id": "CLIP",
+    "title": "Learning Transferable Visual Models From Natural Language Supervision",
+    "url": "https://arxiv.org/abs/2103.00020",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "图文对比学习；不等同完整生成式多模态聊天系统。"
+  },
+  {
+    "id": "OSWORLD",
+    "title": "OSWorld",
+    "url": "https://arxiv.org/abs/2404.07972",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "真实桌面环境中的多模态Agent评价；本书未运行基准。"
+  },
+  {
+    "id": "SAE",
+    "title": "Scaling and evaluating sparse autoencoders",
+    "url": "https://arxiv.org/abs/2406.04093",
+    "kind": "论文",
+    "checked": "2026-10-17",
+    "scope": "稀疏特征、重构与解释局限。"
+  },
+  {
+    "id": "HARNESS",
+    "title": "Harness engineering: leveraging Codex in an agent-first world",
+    "url": "https://openai.com/index/harness-engineering/",
+    "kind": "官方工程文章",
+    "checked": "2026-10-17",
+    "scope": "仓库知识、环境反馈与工程约束；本文蓝图为独立教学设计。"
+  },
+  {
+    "id": "F-TENSOR",
+    "title": "PyTorch：Tensors",
+    "url": "https://docs.pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "张量的shape、dtype、device与基本运算；本书二维三维数表为原创教学例。"
+  },
+  {
+    "id": "F-EMBED",
+    "title": "PyTorch：Embedding",
+    "url": "https://docs.pytorch.org/docs/2.14/generated/torch.nn.modules.sparse.Embedding.html",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "按整数索引取参数表行；输入形状后追加embedding_dim。教学表不来自预训练模型。"
+  },
+  {
+    "id": "F-PADDING",
+    "title": "Hugging Face：Padding and truncation",
+    "url": "https://huggingface.co/docs/transformers/main/en/pad_truncation",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "批输入补齐、截断及模型相关配置；本书右补齐演示需取末个有效位置。"
+  },
+  {
+    "id": "F-CACHE",
+    "title": "Hugging Face：How caching works",
+    "url": "https://huggingface.co/docs/transformers/cache_explanation",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "因果条件下逐层K/V复用与历史加新Token的长度关系。具体mask按实际实现核对。"
+  },
+  {
+    "id": "F-LINALG",
+    "title": "动手学深度学习：Linear Algebra",
+    "url": "https://d2l.ai/chapter_preliminaries/linear-algebra.html",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "向量矩阵、点积、矩阵乘法及相关基础；数字推导独立编写。"
+  },
+  {
+    "id": "F-PROB",
+    "title": "动手学深度学习：Probability and Statistics",
+    "url": "https://d2l.ai/chapter_preliminaries/probability.html",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "概率、随机变量、期望等基础；不照搬原文教学例。"
+  },
+  {
+    "id": "F-CALC",
+    "title": "动手学深度学习：Calculus",
+    "url": "https://d2l.ai/chapter_preliminaries/calculus.html",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "导数、偏导与链式法则；本书标量训练手算独立构造。"
+  },
+  {
+    "id": "F-AUTOGRAD",
+    "title": "PyTorch：Automatic Differentiation",
+    "url": "https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "前向计算图、梯度和反向传播；标准库实验不调用autograd。"
+  },
+  {
+    "id": "F-IR",
+    "title": "Stanford IR Book：Evaluation of Ranked Retrieval Results",
+    "url": "https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-ranked-retrieval-results-1.html",
+    "kind": "一手教材／官方文档",
+    "checked": "2026-10-17",
+    "scope": "排序检索评价、Precision/Recall及指标边界；不要将其替代回答正确性。"
+  }
+]

@@ -18,13 +18,13 @@ class FoundationTests(unittest.TestCase):
     def test_padding_does_not_truncate(self):
         with self.assertRaises(ValueError): pad([[1,2,3]],2)
     def test_embedding_shape(self): self.assertEqual(shape(lookup([[1,2,3],[4,2,0]])),(2,3,4))
-    def test_embedding_exact_row(self): self.assertEqual(lookup(4),[0,1,1,0])
+    def test_embedding_exact_row(self): self.assertEqual(lookup(4),[0.1,-0.5,0.9,0.3])
     def test_same_token_same_initial_row(self): self.assertEqual(lookup([[1,2],[4,2]])[0][1],lookup(2))
     def test_invalid_id_rejected(self):
         for v in [-1,6,1.5,True]:
             with self.assertRaises(ValueError): lookup(v)
     def test_lookup_does_not_modify_parameter(self):
-        a=lookup(1); a[0]=999; self.assertEqual(E[1][0],1)
+        a=lookup(1); a[0]=999; self.assertEqual(E[1][0],0.2)
     def test_independent_batch(self):
         h=lookup([[1,2,3],[4,2,0]]); other=lookup([[5,5,5],[4,2,0]])
         self.assertEqual(h[1],other[1])
