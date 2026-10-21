@@ -1,0 +1,80 @@
+{
+  "SDPA-213": [
+    "PyTorch SDPA接口",
+    "https://docs.pytorch.org/docs/2.13/generated/torch.nn.functional.scaled_dot_product_attention.html",
+    "固定文档版本2.13",
+    "核对掩码允许语义、非方阵因果对齐和dropout参数。本文显式构造位置允许表，数值为教学输入，不是性能实测。"
+  ],
+  "TOOLS-API": [
+    "OpenAI Function calling",
+    "https://developers.openai.com/api/docs/guides/function-calling",
+    "2026-10-21读取的官方文档",
+    "客户端函数调用由应用处理，并以调用标识返回结果。本文消息表是教学宿主，不是闭源系统Prompt。"
+  ],
+  "CACHE-HF": [
+    "Transformers Cache explanation",
+    "https://huggingface.co/docs/transformers/cache_explanation",
+    "2026-10-21读取的官方文档",
+    "核对各层历史K/V复用、新Token位置和缓存与训练的边界；不据此承诺任意框架接收同一种输入形式。"
+  ],
+  "GA-FIX": [
+    "Fixing Gradient Accumulation",
+    "https://huggingface.co/blog/gradient_accumulation",
+    "2024-10-16历史修复；2026-10-21复核",
+    "解释按有效Token归一化与平均微批均值的区别。保留其历史语境，不指称当前版本仍有该缺陷。"
+  ],
+  "MCP-LIFE-JUN": [
+    "MCP Lifecycle",
+    "https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle",
+    "固定规范2025-06-18",
+    "initialize、版本/能力协商、notifications/initialized之后进入常规通信。本图刻意固定规范版本，不称它为最新版本。"
+  ],
+  "MCP-TOOLS-JUN": [
+    "MCP Tools",
+    "https://modelcontextprotocol.io/specification/2025-06-18/server/tools",
+    "固定规范2025-06-18",
+    "核对工具发现、分页和tools/call对象。工具描述与连接成功都不是额外授权。"
+  ],
+  "CONTEXT-ANT": [
+    "Effective context engineering for AI agents",
+    "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+    "2025-09-29文章；2026-10-21复核",
+    "用于上下文选择和压缩的机制背景。版本条件更新、证据约束等为本教材工程推导与构造实验，不冒充厂商内部实现。"
+  ],
+  "RESPONSE-STATE": [
+    "OpenAI Conversation state",
+    "https://developers.openai.com/api/docs/guides/conversation-state",
+    "2026-10-21读取的官方文档",
+    "区分消息历史管理与会话引用。应用仍应检查每轮所需规则、工具与证据是否可用。"
+  ],
+  "RRF-ELASTIC": [
+    "Elasticsearch Reciprocal rank fusion",
+    "https://www.elastic.co/docs/reference/elasticsearch/rest-apis/reciprocal-rank-fusion",
+    "2026-10-21读取的官方文档",
+    "核对按1/(k+rank)累加和排名从1开始；本文候选排名是独立教学设定。"
+  ],
+  "SQLITE-ATOMIC": [
+    "SQLite Atomic Commit",
+    "https://sqlite.org/atomiccommit.html",
+    "2026-10-21读取的官方文档",
+    "说明数据库提交边界；跨外部副作用的unknown与幂等设计为工程推导，不能把本地事务扩大为远端恰好一次。"
+  ],
+  "OTEL-TRACE": [
+    "OpenTelemetry Traces",
+    "https://opentelemetry.io/docs/concepts/signals/traces/",
+    "2026-10-21读取的官方文档",
+    "Span记录操作及因果关联；示例耗时为本书设定，不代表平台实测。"
+  ],
+  "PROM-HIST": [
+    "Prometheus Histograms and summaries",
+    "https://prometheus.io/docs/practices/histograms/",
+    "2026-10-21读取的官方文档",
+    "核对分位数聚合边界；不直接平均各组p95。"
+  ],
+  "SLO-SRE": [
+    "Google SRE Implementing SLOs",
+    "https://sre.google/workbook/implementing-slos/",
+    "2026-10-21读取的一手工程资料",
+    "区分服务目标、用户体验和错误预算；教材阈值若为示例会显式声明，不是通用标准。"
+  ]
+}

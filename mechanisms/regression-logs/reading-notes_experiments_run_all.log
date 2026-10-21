@@ -1,0 +1,399 @@
+{
+  "all_passed": true,
+  "count": 10,
+  "results": [
+    {
+      "file": "01_tokenization.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "字符级教学 BPE，非真实模型计费",
+        "合并规则": [
+          [
+            "c",
+            "l"
+          ],
+          [
+            "cl",
+            "u"
+          ],
+          [
+            "clu",
+            "d"
+          ],
+          [
+            "clud",
+            "e"
+          ],
+          [
+            "clude",
+            "_"
+          ],
+          [
+            "a",
+            "t"
+          ],
+          [
+            "at",
+            "h"
+          ],
+          [
+            "clude_",
+            "p"
+          ],
+          [
+            "clude_p",
+            "ath"
+          ],
+          [
+            "e",
+            "x"
+          ]
+        ],
+        "文本": "exclude_paths",
+        "字符数": 13,
+        "教学Token": [
+          "ex",
+          "clude_path",
+          "s"
+        ],
+        "教学Token数": 3,
+        "可逆": true
+      }
+    },
+    {
+      "file": "02_attention.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "原创小矩阵，无训练模型",
+        "softmax_0_1_2": [
+          0.09003057317038046,
+          0.24472847105479764,
+          0.6652409557748218
+        ],
+        "加权10_20_30": 25.75210382604441,
+        "因果权重": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.3302384506733431,
+            0.6697615493266569,
+            0.0
+          ],
+          [
+            0.2482550782577231,
+            0.2482550782577231,
+            0.5034898434845538
+          ]
+        ],
+        "输出": [
+          [
+            10.0
+          ],
+          [
+            16.697615493266568
+          ],
+          [
+            22.55234765226831
+          ]
+        ]
+      }
+    },
+    {
+      "file": "03_cache_budget.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "简化公式，不含分配器和其他状态，不适用所有架构",
+        "8个KV头_GiB": 1.0,
+        "32个KV头_GiB": 4.0,
+        "仅尾部变化_共同前缀项": 2,
+        "首部插入变化_共同前缀项": 0,
+        "限制": "共同前缀项不是实际缓存Token；产品还有阈值和其他条件"
+      }
+    },
+    {
+      "file": "04_retrieval.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "人工相关性标签，非真实搜索基准",
+        "融合": [
+          [
+            "B",
+            0.03252247488101534
+          ],
+          [
+            "A",
+            0.032266458495966696
+          ],
+          [
+            "D",
+            0.016129032258064516
+          ],
+          [
+            "C",
+            0.015873015873015872
+          ]
+        ],
+        "缺少必要证据B": {
+          "precision_at_k": 0.3333333333333333,
+          "recall_at_k": 0.5,
+          "reciprocal_rank_at_k": 1.0,
+          "ndcg_at_k": 0.6131471927654584
+        },
+        "说明": "单查询倒数排名；MRR需要在多个查询上取平均"
+      }
+    },
+    {
+      "file": "05_compaction_fidelity.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "人工标注命题上的确定性校验，不会自动判断自然语言",
+        "基准": {
+          "public_api": {
+            "value": "unchanged",
+            "certainty": "required",
+            "version": "all"
+          },
+          "config_loaded": {
+            "value": true,
+            "certainty": "verified",
+            "evidence": "T1"
+          },
+          "path_cause": {
+            "value": "base_mismatch",
+            "certainty": "hypothesis",
+            "evidence": null
+          },
+          "patch": {
+            "value": "not_applied",
+            "certainty": "observed",
+            "version": "v3"
+          },
+          "tests": {
+            "value": "pending",
+            "certainty": "observed",
+            "version": "v3"
+          }
+        },
+        "错误压缩": {
+          "config_loaded": {
+            "value": true,
+            "certainty": "verified",
+            "evidence": "T1"
+          },
+          "path_cause": {
+            "value": "base_mismatch",
+            "certainty": "verified",
+            "evidence": null
+          },
+          "patch": {
+            "value": "applied",
+            "certainty": "observed",
+            "version": "v3"
+          },
+          "tests": {
+            "value": "passed",
+            "certainty": "observed",
+            "version": "v2"
+          }
+        },
+        "差异": {
+          "preserved": false,
+          "missing": [
+            "public_api"
+          ],
+          "extra": [],
+          "changed": [
+            {
+              "claim": "patch",
+              "field": "value",
+              "expected": "not_applied",
+              "actual": "applied"
+            },
+            {
+              "claim": "path_cause",
+              "field": "certainty",
+              "expected": "hypothesis",
+              "actual": "verified"
+            },
+            {
+              "claim": "tests",
+              "field": "value",
+              "expected": "pending",
+              "actual": "passed"
+            },
+            {
+              "claim": "tests",
+              "field": "version",
+              "expected": "v3",
+              "actual": "v2"
+            }
+          ]
+        },
+        "限制": "真实压缩仍需人工/模型抽取校准，以及继续执行任务的测试"
+      }
+    },
+    {
+      "file": "06_memory_lifecycle.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "固定教学日期；进程内存储；未连接真实用户记忆",
+        "正常检索": {
+          "status": "usable",
+          "value": "repo_root",
+          "evidence": [
+            "D2",
+            "T2"
+          ]
+        },
+        "加入冲突后": {
+          "status": "conflict",
+          "value": null,
+          "candidates": [
+            "config_dir",
+            "repo_root"
+          ]
+        },
+        "过期条目": {
+          "status": "not_found",
+          "value": null,
+          "evidence": []
+        }
+      }
+    },
+    {
+      "file": "07_agent_loop.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "模拟模型与内存工具，不代表真实Agent性能",
+        "最终状态": "completed",
+        "实际模拟写入次数": 1,
+        "事件": [
+          {
+            "call": {
+              "id": "op-1",
+              "tool": "read",
+              "args": {
+                "scope": "toy-project"
+              }
+            },
+            "result": {
+              "status": "ok",
+              "evidence": "toy:T1"
+            }
+          },
+          {
+            "call": {
+              "id": "op-2",
+              "tool": "patch",
+              "args": {
+                "scope": "toy-project"
+              }
+            },
+            "result": {
+              "status": "ok",
+              "version": "toy:v2"
+            }
+          },
+          {
+            "call": {
+              "id": "op-3",
+              "tool": "test",
+              "args": {
+                "scope": "toy-project"
+              }
+            },
+            "result": {
+              "status": "passed"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "file": "08_evaluation.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "全部结果为合成数据；费用单位是假想单位",
+        "独立p08_k3": {
+          "at_least_one": 0.992,
+          "all_success": 0.5120000000000001
+        },
+        "n10_c2_k3": 0.5333333333333333,
+        "配对比较": {
+          "difference": 0.2,
+          "percentile_95_interval": [
+            -0.2,
+            0.6
+          ],
+          "assumption": "按任务配对重采样；不是对真实产品的显著性结论"
+        },
+        "含失败成本的每成功任务成本": 1.25
+      }
+    },
+    {
+      "file": "09_exclude_contract.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "虚构契约，不代表PSBuild或任何真实项目",
+        "输入": [
+          "src/generated/a.py",
+          "src/generated2/keep.py",
+          "src/main.py",
+          "build/out.txt"
+        ],
+        "规则": [
+          "src/generated",
+          "build"
+        ],
+        "有缺陷基线保留": [
+          "src/generated/a.py",
+          "src/generated2/keep.py",
+          "src/main.py"
+        ],
+        "修复后保留": [
+          "src/generated2/keep.py",
+          "src/main.py"
+        ],
+        "关键反例": "src/generated2 不能被 src/generated 误排除"
+      }
+    },
+    {
+      "file": "10_trace_timing.py",
+      "tests": "passed",
+      "demo": {
+        "性质": "人工时间线，只统计叶子Span，不混入父Span重复计时",
+        "时间线": [
+          {
+            "name": "准备",
+            "start": 0,
+            "end": 1
+          },
+          {
+            "name": "搜索A",
+            "start": 1,
+            "end": 5
+          },
+          {
+            "name": "搜索B",
+            "start": 1,
+            "end": 4
+          },
+          {
+            "name": "验证",
+            "start": 5,
+            "end": 9
+          }
+        ],
+        "统计": {
+          "wall_time": 9,
+          "sum_leaf_durations": 12,
+          "peak_concurrency": 2
+        },
+        "说明": "时间单位任意；墙钟9与操作总量12不是同一指标"
+      }
+    }
+  ]
+}

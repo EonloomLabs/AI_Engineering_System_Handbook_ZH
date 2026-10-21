@@ -1,0 +1,468 @@
+[
+  {
+    "id": "CHAT",
+    "title": "Hugging Face · Chat templates",
+    "url": "https://huggingface.co/docs/transformers/main/en/chat_templating",
+    "edition": "main动态文档；核对日期2026-10-21；不将main等同于某个已发布安装版本",
+    "section": "Special tokens / add_generation_prompt / continue_final_message",
+    "checked": "2026-10-21",
+    "supported": "消息模板与tokenizer的特殊标记处理必须一致；模板已插入标记时，再tokenize不应重复添加；开启新助手轮与续写末条消息是不同任务。",
+    "limit": "不同模型模板不同；本书未运行商业聊天服务隐藏模板。"
+  },
+  {
+    "id": "TOKEN",
+    "title": "Hugging Face · Tokenizer",
+    "url": "https://huggingface.co/docs/transformers/main_classes/tokenizer",
+    "edition": "查询日文档",
+    "section": "add_tokens / add_special_tokens",
+    "checked": "2026-10-21",
+    "supported": "新增词表项后需同步调整模型嵌入容量；resize_token_embeddings传入完整词表长度，不是本次新增数量。",
+    "limit": "具体模型是否绑定输入输出权重及如何初始化新行，须查相应实现。"
+  },
+  {
+    "id": "SDPA",
+    "title": "PyTorch · scaled_dot_product_attention",
+    "url": "https://docs.pytorch.org/docs/2.10/generated/torch.nn.functional.scaled_dot_product_attention.html",
+    "edition": "2.10；与本书本次CPU实验版本一致",
+    "section": "attn_mask / dropout_p / is_causal / backend warning",
+    "checked": "2026-10-21",
+    "supported": "布尔True表示可参与；函数按dropout_p应用dropout；非方阵is_causal采用左上对齐；融合内核与数学实现存在浮点差异。",
+    "limit": "这里描述2.10接口，不把所有Attention库都视为同一契约；CPU实验不能证明GPU速度。"
+  },
+  {
+    "id": "MHA",
+    "title": "PyTorch · MultiheadAttention",
+    "url": "https://docs.pytorch.org/docs/stable/generated/torch.nn.modules.activation.MultiheadAttention.html",
+    "edition": "查询日stable动态文档；本地实验另记录2.10",
+    "section": "attn_mask / key_padding_mask / need_weights",
+    "checked": "2026-10-21",
+    "supported": "MHA的布尔掩码True表示禁止对应位置，与SDPA语义相反。",
+    "limit": "高层MHA包含投影；不能把高层接口参数名当成已投影张量的证明。"
+  },
+  {
+    "id": "CACHE",
+    "title": "Transformers · Cache explanation",
+    "url": "https://huggingface.co/docs/transformers/v5.0.0/cache_explanation",
+    "edition": "固定5.0.0文档",
+    "section": "Cache position / attention mask",
+    "checked": "2026-10-21",
+    "supported": "增量注意力读取历史和当前K/V；mask覆盖过去与当前长度；文档的cache_position不受padding内容语义影响。",
+    "limit": "缓存实现可能是动态、静态、滑窗；槽位、绝对位置与真实有效Token数不能混为一谈。"
+  },
+  {
+    "id": "GENERATE",
+    "title": "Transformers · LLM generation tutorial",
+    "url": "https://huggingface.co/docs/transformers/main/en/llm_tutorial",
+    "edition": "main动态文档",
+    "section": "Wrong padding side / Generation configuration",
+    "checked": "2026-10-21",
+    "supported": "常见decoder-only generate需要左补齐；只给attention_mask并不能替代正确选取最后有效位置的logits。",
+    "limit": "这是该生成调用路径的约定，不是右补齐在所有自定义前向中都不合法。"
+  },
+  {
+    "id": "GRAD",
+    "title": "Hugging Face · Fixing Gradient Accumulation",
+    "url": "https://huggingface.co/blog/gradient_accumulation",
+    "edition": "2024-10-16发布；2026-10-21重新核对",
+    "section": "Causal LM loss normalization / fix",
+    "checked": "2026-10-21",
+    "supported": "公开修复案例指出，累计不同有效Token数的小批次时，应按总token损失与总有效Token数归一化，而不是简单平均各批平均损失。",
+    "limit": "历史事故不表示当前版本仍有该bug；分布式缩放需另看DDP/Trainer实现。"
+  },
+  {
+    "id": "AMP",
+    "title": "PyTorch · Automatic Mixed Precision examples",
+    "url": "https://docs.pytorch.org/docs/2.10/notes/amp_examples.html",
+    "edition": "2.10",
+    "section": "Gradient clipping / Gradient accumulation",
+    "checked": "2026-10-21",
+    "supported": "裁剪应在unscale之后；一轮累计更新的缩放与unscale时机必须一致。",
+    "limit": "本次用CPU数值反例验证缩放代数，不声称执行了CUDA GradScaler训练。"
+  },
+  {
+    "id": "CHECKPOINT",
+    "title": "PyTorch · torch.utils.checkpoint",
+    "url": "https://docs.pytorch.org/docs/2.10/checkpoint.html",
+    "edition": "2.10",
+    "section": "use_reentrant / RNG state / recomputation",
+    "checked": "2026-10-21",
+    "supported": "激活检查点会在反向时重算；随机状态与重算函数一致性影响正确性；重算不是纯省内存开关。",
+    "limit": "重入/非重入行为不同；不要依赖函数只执行一次。"
+  },
+  {
+    "id": "LORA",
+    "title": "PEFT · LoRA conceptual guide",
+    "url": "https://huggingface.co/docs/peft/main/en/conceptual_guides/lora",
+    "edition": "main动态文档",
+    "section": "Initialization options",
+    "checked": "2026-10-21",
+    "supported": "默认参考初始化使用A的Kaiming-uniform与零B，使增量初始为零。",
+    "limit": "文档中的“identity”指不改变基座路径，不表示基座W本身是单位矩阵；其他初始化并不必然B=0。"
+  },
+  {
+    "id": "DPO",
+    "title": "Rafailov et al. · Direct Preference Optimization",
+    "url": "https://arxiv.org/abs/2305.18290",
+    "edition": "原始论文；v3",
+    "section": "Preference objective / reference policy",
+    "checked": "2026-10-21",
+    "supported": "偏好目标比较策略与参考策略对成对回答的相对对数概率。",
+    "limit": "本书给出的掩码/缓存/长度反例为独立工程推导，不是复现论文训练成绩。"
+  },
+  {
+    "id": "SPEC",
+    "title": "Leviathan et al. · Fast Inference from Transformers via Speculative Decoding",
+    "url": "https://arxiv.org/abs/2211.17192",
+    "edition": "原始论文；v2",
+    "section": "Exact speculative sampling",
+    "checked": "2026-10-21",
+    "supported": "正确的推测采样通过接受/拒绝校正保持目标分布。",
+    "limit": "本书枚举有限分布验证正确性，不复现论文硬件加速比。"
+  },
+  {
+    "id": "PREFIX",
+    "title": "vLLM · Automatic Prefix Caching",
+    "url": "https://docs.vllm.ai/en/latest/design/prefix_caching/",
+    "edition": "latest动态文档，描述v1",
+    "section": "Block hash / extra hashes / cache_salt / operations",
+    "checked": "2026-10-21",
+    "supported": "块身份依赖前缀链和附加信息；请求盐支持限制跨信任域复用；共享块需要生命周期管理。",
+    "limit": "盐不是用户身份认证；本书只模拟身份和别名，不声称运行vLLM服务。"
+  },
+  {
+    "id": "SCHED",
+    "title": "vLLM · Optimization and Tuning",
+    "url": "https://docs.vllm.ai/en/latest/configuration/optimization/",
+    "edition": "latest动态文档",
+    "section": "Preemption / Chunked Prefill",
+    "checked": "2026-10-21",
+    "supported": "KV空间不足可导致抢占和重算；调度和分块prefill影响吞吐、TTFT与token间延迟的取舍。",
+    "limit": "默认值随版本变化；本书不提供未经压测的万能配置或加速百分比。"
+  },
+  {
+    "id": "RESP",
+    "title": "OpenAI · Migrate to the Responses API",
+    "url": "https://developers.openai.com/api/docs/guides/migrate-to-responses",
+    "edition": "查询日公开API指南",
+    "section": "Map Messages to Items / Update multi-turn conversations",
+    "checked": "2026-10-21",
+    "supported": "previous_response_id不携带上轮顶层instructions；手动管理上下文需处理有类型的output项，不能只保留output_text。",
+    "limit": "没有调用付费API，也没有访问闭源隐藏提示。"
+  },
+  {
+    "id": "TOOLS",
+    "title": "OpenAI · Function calling",
+    "url": "https://developers.openai.com/api/docs/guides/function-calling",
+    "edition": "查询日公开API指南",
+    "section": "Streaming / call_id / tool outputs",
+    "checked": "2026-10-21",
+    "supported": "调用与结果通过call_id关联；流式参数分片需按项组装；模型提出调用不等于应用已执行。",
+    "limit": "不同协议终止事件不同；本书协议实验是本地适配器，不伪装真实API回包。"
+  },
+  {
+    "id": "STRUCT",
+    "title": "OpenAI · Structured Outputs",
+    "url": "https://developers.openai.com/api/docs/guides/structured-outputs",
+    "edition": "查询日公开API指南",
+    "section": "Refusals / Incomplete responses / Supported schemas",
+    "checked": "2026-10-21",
+    "supported": "Schema约束不等于事实与权限正确；拒绝和不完整响应需要分支处理。",
+    "limit": "不能据此声称任意schema、任意模型都支持同一严格输出能力。"
+  },
+  {
+    "id": "COMPACT",
+    "title": "OpenAI · Compaction",
+    "url": "https://developers.openai.com/api/docs/guides/compaction",
+    "edition": "查询日公开API指南",
+    "section": "Standalone compaction / canonical output window",
+    "checked": "2026-10-21",
+    "supported": "压缩响应中的完整规范输出窗口应一起传递；其中可能同时有保留内容与不透明压缩项，不能随意只保留一项。",
+    "limit": "不解读或编造不透明压缩状态的内部内容；接口支持范围需以实际模型为准。"
+  },
+  {
+    "id": "PCACHE",
+    "title": "OpenAI · Prompt caching",
+    "url": "https://developers.openai.com/api/docs/guides/prompt-caching",
+    "edition": "查询日动态指南",
+    "section": "Exact prefix / model-dependent caching controls",
+    "checked": "2026-10-21",
+    "supported": "缓存依赖可复用前缀与服务规则；缓存不是删除输入上下文。",
+    "limit": "计费、阈值、保留时间和支持模型是易变参数，教材不写成永久常量。"
+  },
+  {
+    "id": "MCPTOOLS",
+    "title": "MCP · Tools",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/server/tools",
+    "edition": "明确固定2025-11-25，不声称最新版本",
+    "section": "tools/list / pagination / isError",
+    "checked": "2026-10-21",
+    "supported": "工具列表可分页；能力变更需按协商处理；协议错误与工具执行返回isError分属不同层。",
+    "limit": "发现能力不等于授权执行；工具注解来自服务，不天然可信。"
+  },
+  {
+    "id": "MCPLIFE",
+    "title": "MCP · Lifecycle",
+    "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle",
+    "edition": "固定2025-11-25",
+    "section": "Initialization / capability negotiation / shutdown",
+    "checked": "2026-10-21",
+    "supported": "初始化需要协商协议版本和能力；开始业务调用前应完成生命周期约定。",
+    "limit": "超时与取消不自动撤销已完成的外部副作用。"
+  },
+  {
+    "id": "MCPSEC",
+    "title": "MCP · Security Best Practices",
+    "url": "https://modelcontextprotocol.io/docs/2025-11-25/tutorials/security/security_best_practices",
+    "edition": "固定2025-11-25",
+    "section": "Token passthrough / confused deputy / session hijacking",
+    "checked": "2026-10-21",
+    "supported": "必须处理令牌受众、权限范围和代理信任边界，不能用会话标识代替身份验证或透传不合受众的令牌。",
+    "limit": "本书不执行真实OAuth服务或安全渗透测试。"
+  },
+  {
+    "id": "CLAUDE",
+    "title": "Claude Code · Subagents",
+    "url": "https://code.claude.com/docs/en/sub-agents",
+    "edition": "查询日产品公开文档",
+    "section": "Skills / permission modes / context",
+    "checked": "2026-10-21",
+    "supported": "子Agent的上下文、预加载skills和权限需按实际配置核对；不能仅凭主会话已加载就假设子Agent继承。",
+    "limit": "产品可能提供不同的fork/委派模式；未公开内部实现保持未知。"
+  },
+  {
+    "id": "SKILLS",
+    "title": "Claude Code · Skills",
+    "url": "https://code.claude.com/docs/en/skills",
+    "edition": "查询日产品公开文档",
+    "section": "Discovery / invocation / progressive loading",
+    "checked": "2026-10-21",
+    "supported": "技能描述用于发现与选择，正文和附属资源按运行方式加载，发现并不等于真正执行了建议流程。",
+    "limit": "这不是所有CLI都完全相同的规范保证。"
+  },
+  {
+    "id": "COPILOT",
+    "title": "GitHub · Custom agents configuration",
+    "url": "https://docs.github.com/en/copilot/reference/custom-agents-configuration",
+    "edition": "查询日产品公开文档",
+    "section": "tools / tool availability",
+    "checked": "2026-10-21",
+    "supported": "tools字段省略、通配符与空数组有不同语义；文档说明不识别的工具名会被忽略。",
+    "limit": "工具名、别名和支持面随Copilot入口不同；需检查CLI/IDE/云Agent各自配置。"
+  },
+  {
+    "id": "CODEX",
+    "title": "Codex · ToolRouter源码",
+    "url": "https://github.com/openai/codex/blob/d571eaf1f61d0d93a797506335a99a9950ffe37b/codex-rs/core/src/tools/router.rs",
+    "edition": "commit d571eaf1f61d0d93a797506335a99a9950ffe37b；提交2026-10-21 02:02:49Z；blob 3c01ab98187227561c3a4220ed8277b7317f21ce",
+    "section": "ToolRouter / exposes_tool / build_tool_call / dispatch_tool_call_with_code_mode_result_inner",
+    "checked": "2026-10-21",
+    "supported": "注册表、模型可见规格与可达分派是不同对象；延迟发现、Code Mode、直接调用有不同路径；分派携带call_id和运行上下文。",
+    "limit": "仅静态阅读该文件指定函数；未构建Rust客户端，不能把可见性函数当成完整授权系统。"
+  },
+  {
+    "id": "E5",
+    "title": "intfloat · e5-base-v2模型卡",
+    "url": "https://huggingface.co/intfloat/e5-base-v2",
+    "edition": "查询日作者模型卡",
+    "section": "Usage / FAQ",
+    "checked": "2026-10-21",
+    "supported": "检索用途按模型要求添加query:/passage:前缀，并使用配套池化和归一化。",
+    "limit": "该模型是英文模型；前缀规则不能推广为所有embedding模型的通用格式。"
+  },
+  {
+    "id": "PGVECTOR",
+    "title": "pgvector · README",
+    "url": "https://github.com/pgvector/pgvector/blob/master/README.md",
+    "edition": "master动态文档；迭代索引扫描条目标示0.8.0起",
+    "section": "Filtering / Iterative index scans",
+    "checked": "2026-10-21",
+    "supported": "近似索引候选扫描后应用过滤可导致数量不足；支持迭代扫描的版本可扩大扫描以改善该现象。",
+    "limit": "本书用小列表演示候选截断，不声称运行了PostgreSQL向量索引或复现性能。"
+  },
+  {
+    "id": "LSP",
+    "title": "Microsoft · Language Server Protocol 3.17",
+    "url": "https://github.com/microsoft/language-server-protocol/blob/gh-pages/_specifications/lsp/3.17/specification.md",
+    "edition": "固定协议3.17；仓库gh-pages正文",
+    "section": "PositionEncodingKind（position.md blob 49f13964bc12c6e65c35a349c33e7e3314245c60）及文档版本",
+    "checked": "2026-10-21",
+    "supported": "位置编码、文档版本和文本编辑范围必须一致；传输内容字节数与文档字符位置是不同计量。",
+    "limit": "3.17并非查询日最新协议；本书显式按协商编码解释，不硬编码所有服务器都用UTF-16。",
+    "also_read": [
+      "https://github.com/microsoft/language-server-protocol/blob/gh-pages/_specifications/lsp/3.17/types/position.md"
+    ]
+  },
+  {
+    "id": "GIT",
+    "title": "Git · git-worktree",
+    "url": "https://git-scm.com/docs/git-worktree",
+    "edition": "查询日手册",
+    "section": "Linked working trees / shared repository data",
+    "checked": "2026-10-21",
+    "supported": "工作树隔离工作目录，但共享部分仓库数据；环境端口、外部数据库与缓存仍需额外隔离。",
+    "limit": "后半句是由隔离范围得出的工程推论，不把worktree描述成完整沙箱。"
+  },
+  {
+    "id": "SQLITE",
+    "title": "SQLite · Transactions",
+    "url": "https://sqlite.org/lang_transaction.html",
+    "edition": "查询日官方手册",
+    "section": "Transactions / BEGIN IMMEDIATE / busy",
+    "checked": "2026-10-21",
+    "supported": "数据库事务控制本数据库的状态；写竞争与事务起点需明确。",
+    "limit": "SQLite事务不能回滚外部文件或网络副作用；本书故障实验只用本地临时目录。"
+  },
+  {
+    "id": "IDEMP",
+    "title": "AWS Builders Library · Making retries safe with idempotent APIs",
+    "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "edition": "作者工程实践文章；查询日重新阅读",
+    "section": "Caller request identifiers / late requests / same token different intent",
+    "checked": "2026-10-21",
+    "supported": "幂等标识要代表同一次调用意图；超时不能证明操作未执行；重复调用的语义与返回必须定义清楚。",
+    "limit": "本书未接入AWS业务API；数据库外部副作用实验是自建模型。"
+  },
+  {
+    "id": "PYTEST",
+    "title": "pytest · Exit codes",
+    "url": "https://docs.pytest.org/en/stable/reference/exit-codes.html",
+    "edition": "查询日stable文档；本地版本写入结果",
+    "section": "Exit codes 0–5",
+    "checked": "2026-10-21",
+    "supported": "退出码5表示没有收集到测试；0不能单独证明测试数量、覆盖度或最终代码版本正确。",
+    "limit": "全部skip退出0的行为由本次本地子进程另外验证。"
+  },
+  {
+    "id": "EVAL",
+    "title": "Anthropic · Demystifying evals for AI agents",
+    "url": "https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents",
+    "edition": "2026-01-09发布；查询日阅读",
+    "section": "Tasks / trials / graders / transcripts / outcomes",
+    "checked": "2026-10-21",
+    "supported": "需要区分任务、试跑、评分器、执行轨迹与环境中的实际结果。",
+    "limit": "本书自建配对数据只用于说明评测错误，不是商业Agent排名。"
+  },
+  {
+    "id": "NOISE",
+    "title": "Anthropic · Quantifying infrastructure noise in agentic coding evals",
+    "url": "https://www.anthropic.com/engineering/infrastructure-noise",
+    "edition": "2026年公开工程研究；查询日阅读",
+    "section": "Infrastructure configuration / resource effects",
+    "checked": "2026-10-21",
+    "supported": "执行基础设施变化可以影响编码Agent评测结果，比较模型时应控制环境与资源。",
+    "limit": "不把某实验中的幅度推广到所有Agent，不伪造自身线上观测。"
+  },
+  {
+    "id": "JUDGE",
+    "title": "Zheng et al. · Judging LLM-as-a-Judge",
+    "url": "https://arxiv.org/abs/2306.05685",
+    "edition": "原始论文v4",
+    "section": "Position / verbosity / self-enhancement bias",
+    "checked": "2026-10-21",
+    "supported": "模型裁判存在位置与篇幅等偏差，不能仅因答案由强模型评分就当成客观真值。",
+    "limit": "论文中的具体模型结论不自动适用于当前所有模型。"
+  },
+  {
+    "id": "OPENAT",
+    "title": "Linux man-pages · openat2(2)",
+    "url": "https://man7.org/linux/man-pages/man2/openat2.2.html",
+    "edition": "查询日手册",
+    "section": "RESOLVE_BENEATH / RESOLVE_IN_ROOT / symlinks",
+    "checked": "2026-10-21",
+    "supported": "目录句柄与解析约束用于限制路径解析范围；字符串检查不能替代执行时边界。",
+    "limit": "这些是Linux接口，不声称同样代码可直接用于Windows/macOS；本地symlink实验仅说明攻击面。"
+  },
+  {
+    "id": "SRE",
+    "title": "Google SRE · Handling overload",
+    "url": "https://sre.google/sre-book/handling-overload/",
+    "edition": "作者工程实践章节",
+    "section": "Queue management / overload / load shedding",
+    "checked": "2026-10-21",
+    "supported": "排队和资源限制需以有效工作量和截止时间考虑；堆积请求可使系统进入更差状态。",
+    "limit": "本书时间线是明确设定的示例，不是生产压测。"
+  },
+  {
+    "id": "GUI",
+    "title": "Anthropic · Computer use tool",
+    "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool",
+    "edition": "查询日工具指南",
+    "section": "Screenshots / coordinates / environment / security",
+    "checked": "2026-10-21",
+    "supported": "截图、坐标和执行环境必须对应；动作之后需要重新观察状态并处理不可信界面内容。",
+    "limit": "本书坐标实验不启动真实GUI Agent或自动点击外部应用。"
+  },
+  {
+    "id": "CAL",
+    "title": "scikit-learn · Probability calibration",
+    "url": "https://scikit-learn.org/stable/modules/calibration.html",
+    "edition": "查询日stable指南",
+    "section": "Calibration curves / proper scoring / calibration data",
+    "checked": "2026-10-21",
+    "supported": "校准评估需要预测与实际结果的匹配及独立数据；区分可靠性、分辨能力和总体误差。",
+    "limit": "本书不把Token softmax当作整段回答正确率，也不从教学表推出真实模型校准程度。"
+  },
+  {
+    "id": "CIRCUIT",
+    "title": "Anthropic · Tracing the thoughts of a large language model",
+    "url": "https://www.anthropic.com/research/tracing-thoughts-language-model",
+    "edition": "2025-03-27；查询日阅读",
+    "section": "Circuit tracing / limitations",
+    "checked": "2026-10-21",
+    "supported": "可解释研究通过内部机制和干预探索部分路径；自然语言解释与真实内部因果机制不能直接画等号。",
+    "limit": "不声称完整解释模型，也不将本文人工因果图当成真实神经网络发现。"
+  },
+  {
+    "id": "SCALE",
+    "title": "Hoffmann et al. · Training Compute-Optimal Large Language Models",
+    "url": "https://arxiv.org/abs/2203.15556",
+    "edition": "2022年原始研究",
+    "section": "Compute-optimal training allocation",
+    "checked": "2026-10-21",
+    "supported": "在研究设置中比较参数量、数据量与训练计算预算的分配。",
+    "limit": "训练预算最优不等于生命周期成本最优；本书盈亏平衡是原创代数例，不是论文实测。"
+  },
+  {
+    "id": "RRF",
+    "title": "Elastic · Reciprocal rank fusion",
+    "url": "https://www.elastic.co/docs/reference/elasticsearch/rest-apis/reciprocal-rank-fusion",
+    "edition": "查询日官方文档",
+    "section": "Formula / rank_constant / rank_window_size",
+    "checked": "2026-10-21",
+    "supported": "RRF按各候选的排名而非原始相关分数融合；窗口截断决定哪些候选能参与。",
+    "limit": "相关来源重复计票的反例为本书构造，不是Elastic事故报告。"
+  },
+  {
+    "id": "MEMEVAL",
+    "title": "Wu et al. · LongMemEval",
+    "url": "https://arxiv.org/abs/2410.10813v2",
+    "edition": "v2，2025-03-04",
+    "section": "Temporal reasoning / knowledge updates / abstention",
+    "checked": "2026-10-21",
+    "supported": "长期记忆评测需要覆盖时序推理、知识更新和拒答，不能只检查内容能否被召回。",
+    "limit": "本书双时间表与撤销传播是原创工程方案，不声称原论文规定该数据库结构。"
+  },
+  {
+    "id": "TRACE",
+    "title": "OpenTelemetry · Traces",
+    "url": "https://opentelemetry.io/docs/concepts/signals/traces/",
+    "edition": "查询日官方概念指南",
+    "section": "Spans / context / events / links",
+    "checked": "2026-10-21",
+    "supported": "Trace由相关Span组成，Span包含运行时间与上下文关系；跨并行路径不能把持续时间直接视为总等待。",
+    "limit": "p95和成本例为本书数学例；不声称在生产部署了OpenTelemetry。"
+  },
+  {
+    "id": "HFPR",
+    "title": "Transformers PR #34191 与合并后的损失实现",
+    "url": "https://github.com/huggingface/transformers/pull/34191",
+    "edition": "2024-10-17已合并；commit c1c7e89620b43f0924148e267a6da5d38450ce1f",
+    "section": "src/transformers/loss/loss_utils.py；fixed_cross_entropy / ForCausalLMLoss；blob efa23d24e360b4dce21121a301e8ba7a6f79230b",
+    "checked": "2026-10-21",
+    "supported": "PR已合并；该提交中提供num_items_in_batch时使用损失总和再除以该数；CausalLM损失先移动logits与labels。",
+    "limit": "仅核对固定历史源码，不将其当成当前全部Trainer实现；未重新执行历史完整训练套件。",
+    "also_read": [
+      "https://github.com/huggingface/transformers/blob/c1c7e89620b43f0924148e267a6da5d38450ce1f/src/transformers/loss/loss_utils.py"
+    ]
+  }
+]

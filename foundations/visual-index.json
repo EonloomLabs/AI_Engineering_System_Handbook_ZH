@@ -1,0 +1,2615 @@
+[
+  {
+    "chapter": 1,
+    "section": "从信息对象认识AI系统",
+    "figure": "fdiag-01-01",
+    "kind": "flow",
+    "stages": [
+      "用户一句话",
+      "宿主整理规则与资料",
+      "模型收到有限的输入"
+    ],
+    "explanation": "聊天窗口写下的只是一部分；是否附上源码、工具定义和历史由外围程序决定。",
+    "pitfall": "不能因为模型说“已阅读”就认定真实文件已经被它读到。"
+  },
+  {
+    "chapter": 1,
+    "section": "模型不是一位住在电脑里、直接看见所有文件的人",
+    "figure": "fdiag-01-02",
+    "kind": "compare",
+    "stages": [
+      "用户输入：修复报错",
+      "模型内部：数值运算",
+      "工具执行：真实读文件"
+    ],
+    "explanation": "这里有三种不同对象：用户意图、模型计算和外部环境的真实变化。",
+    "pitfall": "模型输出“已修改”不等于磁盘文件实际变化。"
+  },
+  {
+    "chapter": 1,
+    "section": "用三个容易混淆的句子检查边界",
+    "figure": "fdiag-01-03",
+    "kind": "flow",
+    "stages": [
+      "模型回答“已修好”",
+      "读取当前文件并运行测试",
+      "获得可验证的结果"
+    ],
+    "explanation": "想证明Bug修好，必须接上环境检查；语言输出本身不是测试结果。",
+    "pitfall": "测试的版本必须是最终提交或交付的代码版本。"
+  },
+  {
+    "chapter": 1,
+    "section": "本书的数字是怎么来的",
+    "figure": "fdiag-01-04",
+    "kind": "roles",
+    "stages": [
+      "片段“我”→编号1",
+      "编号1→可学习向量",
+      "隐藏层继续加工向量"
+    ],
+    "explanation": "编号是索引，向量是运算材料，后续隐藏状态又是另一种表示。",
+    "pitfall": "不要拿Token编号的大小表示语义强弱。"
+  },
+  {
+    "chapter": 1,
+    "section": "阅读准备",
+    "figure": "fdiag-01-05",
+    "kind": "flow",
+    "stages": [
+      "加减乘除与行列",
+      "编号表与小矩阵",
+      "逐步进入网络计算"
+    ],
+    "explanation": "数学基础从小例子逐层增加，不需要一开始背大型模型公式。",
+    "pitfall": "未认识的符号先看对象和单位，再看公式。"
+  },
+  {
+    "chapter": 2,
+    "section": "先不背“张量是多维数组”",
+    "figure": "fdiag-02-01",
+    "kind": "roles",
+    "stages": [
+      "标量：7",
+      "向量：[2,4,6]",
+      "矩阵：两行三列"
+    ],
+    "explanation": "同样是数字容器，只是定位一个元素时需要的“坐标数量”不同。",
+    "pitfall": "维数指轴的个数，不是里面最大数字的大小。"
+  },
+  {
+    "chapter": 2,
+    "section": "从两张表理解三个轴",
+    "figure": "fdiag-02-02",
+    "kind": "transform",
+    "stages": [
+      "两句话，每句3个位置",
+      "每个位置4个特征",
+      "形状[2,3,4]"
+    ],
+    "explanation": "三个轴依次代表样本、位置、特征；没有凭空多出一句话。",
+    "pitfall": "最后一个轴不是二进制编码的位数。"
+  },
+  {
+    "chapter": 2,
+    "section": "方括号中的数字不是同一种“维度”",
+    "figure": "fdiag-02-03",
+    "kind": "compare",
+    "stages": [
+      "二维：[2,3]",
+      "三维：[2,3,4]",
+      "六个编号→二十四个特征数"
+    ],
+    "explanation": "[2,3]中2和3分别是两个轴的长度；[2,3,4]增加的是每个位置的表示宽度。",
+    "pitfall": "形状只是布局说明，不是数组真实内容。"
+  },
+  {
+    "chapter": 2,
+    "section": "怎么找到里面的一个数",
+    "figure": "fdiag-02-04",
+    "kind": "transform",
+    "stages": [
+      "第0条样本",
+      "第1个Token",
+      "第2项特征"
+    ],
+    "explanation": "给定[2,3,4]，需要三个下标才定位到某个具体数字。",
+    "pitfall": "访问下标时一般从0开始，且每个下标不得越过该轴长度。"
+  },
+  {
+    "chapter": 2,
+    "section": "符号不认识时怎样读公式",
+    "figure": "fdiag-02-05",
+    "kind": "roles",
+    "stages": [
+      "B=批大小",
+      "T=每条输入位置数",
+      "d=每位置特征数"
+    ],
+    "explanation": "把英文缩写转换成可数的实体，再读[B,T,d]就能知道每个轴对应什么。",
+    "pitfall": "B、T、d是命名约定，不是模型计算出的变量。"
+  },
+  {
+    "chapter": 3,
+    "section": "字符、字节和Token先分开",
+    "figure": "fdiag-03-01",
+    "kind": "flow",
+    "stages": [
+      "字符：我 爱 学习",
+      "Token片段：我/爱/学习",
+      "词表编号：[1,2,3]"
+    ],
+    "explanation": "这套对应表是教材人为设定的最小词表；真实分词器可能切出不同片段。",
+    "pitfall": "一个汉字不一定等于一个Token。"
+  },
+  {
+    "chapter": 3,
+    "section": "一张教学词表和两条输入",
+    "figure": "fdiag-03-02",
+    "kind": "compare",
+    "stages": [
+      "字符：人读的字",
+      "字节：存储的编码",
+      "Token：模型分词单位"
+    ],
+    "explanation": "中文字节编码、Unicode字符与Tokenizer切分边界是三种不同概念。",
+    "pitfall": "不要用字符数直接估算精确Token消耗。"
+  },
+  {
+    "chapter": 3,
+    "section": "BPE的“学习词表”和“编码输入”不是同一阶段",
+    "figure": "fdiag-03-03",
+    "kind": "transform",
+    "stages": [
+      "“我爱学习”",
+      "切成“我／爱／学习”",
+      "映射到[1,2,3]"
+    ],
+    "explanation": "第一步决定切分边界，第二步才根据词表给片段取整数编号。",
+    "pitfall": "编号是地址，1不意味着比3更重要。"
+  },
+  {
+    "chapter": 3,
+    "section": "聊天角色怎样成为输入的一部分",
+    "figure": "fdiag-03-04",
+    "kind": "flow",
+    "stages": [
+      "训练阶段统计片段",
+      "固定词表与合并规则",
+      "新输入按固定规则编码"
+    ],
+    "explanation": "BPE等方法先学规则，再使用规则；在线推理一般不是当场重新训练词表。",
+    "pitfall": "遇到新词不会每次重排已有词表编号。"
+  },
+  {
+    "chapter": 3,
+    "section": "编码后还没发生什么",
+    "figure": "fdiag-03-05",
+    "kind": "roles",
+    "stages": [
+      "用户消息",
+      "系统/开发者规则",
+      "工具定义与历史"
+    ],
+    "explanation": "这些内容由宿主按消息角色和模型接口组织后，再进入模型输入序列。",
+    "pitfall": "聊天气泡没有显示的内容不应被猜成具体厂商内部模板。"
+  },
+  {
+    "chapter": 4,
+    "section": "“组批”就是让若干条输入一起处理",
+    "figure": "fdiag-04-01",
+    "kind": "flow",
+    "stages": [
+      "样本A：“我爱学习”",
+      "样本B：“你爱”",
+      "一批两条独立输入"
+    ],
+    "explanation": "组批是把多条输入组织在同一次设备运算里；不是把两条句子接成一句话。",
+    "pitfall": "同批的不同用户输入不能因此共享注意力上下文。"
+  },
+  {
+    "chapter": 4,
+    "section": "真实长度与安排长度不是一回事",
+    "figure": "fdiag-04-02",
+    "kind": "transform",
+    "stages": [
+      "句A有3个Token",
+      "句B有2个Token",
+      "补PAD后每行3个位置"
+    ],
+    "explanation": "把短句补到相同长度，得到[[1,2,3],[4,2,0]]。",
+    "pitfall": "PAD是占位，不是原句里的文字。"
+  },
+  {
+    "chapter": 4,
+    "section": "补左边和补右边有什么区别",
+    "figure": "fdiag-04-03",
+    "kind": "compare",
+    "stages": [
+      "真实长度：[3,2]",
+      "张量安排长度：3",
+      "有效位置：111／110"
+    ],
+    "explanation": "真实有效长度与占位后的数组宽度都要保留；掩码依赖有效位置。",
+    "pitfall": "数组有3列不代表第二句有3个真实Token。"
+  },
+  {
+    "chapter": 4,
+    "section": "补齐不等于截断，更不等于上下文压缩",
+    "figure": "fdiag-04-04",
+    "kind": "compare",
+    "stages": [
+      "右补齐：4,2,0",
+      "左补齐：0,4,2",
+      "位置与读出位置不同"
+    ],
+    "explanation": "补齐方向改变有效Token在数组中的下标，解码时需要相应处理。",
+    "pitfall": "不该盲目取最后一列当成最后有效Token。"
+  },
+  {
+    "chapter": 4,
+    "section": "为什么组批可能快，也可能让一个人等更久",
+    "figure": "fdiag-04-05",
+    "kind": "roles",
+    "stages": [
+      "Padding：补占位",
+      "Truncation：丢一段内容",
+      "Compaction：保留摘要"
+    ],
+    "explanation": "三个操作都可能改变输入长度，但丢失信息的机制完全不同。",
+    "pitfall": "不要把“短了”就统一称为压缩。"
+  },
+  {
+    "chapter": 5,
+    "section": "为什么不能直接拿“编号大小”理解文字",
+    "figure": "fdiag-05-01",
+    "kind": "compare",
+    "stages": [
+      "Token编号2",
+      "二进制存储0010",
+      "向量[-0.3,0.8,0.1,0.5]"
+    ],
+    "explanation": "三个写法服务不同目的：找词表行、机器存储整数、作为神经网络特征。",
+    "pitfall": "Embedding不是把整数展开成几个0/1二进制位。"
+  },
+  {
+    "chapter": 5,
+    "section": "用6行4列的表，表示“我爱学习”和“你爱”",
+    "figure": "fdiag-05-02",
+    "kind": "transform",
+    "stages": [
+      "“我爱学习”→[1,2,3]",
+      "分别取E[1],E[2],E[3]",
+      "得到3×4特征表"
+    ],
+    "explanation": "取编号1得到“我”的四个特征，编号2得到“爱”的四个特征，依次按原顺序排列。",
+    "pitfall": "两个相同Token的初始查表结果可以相同，但后续上下文化状态可能不同。"
+  },
+  {
+    "chapter": 5,
+    "section": "为什么从两个轴变成三个轴",
+    "figure": "fdiag-05-03",
+    "kind": "transform",
+    "stages": [
+      "编号表形状[2,3]",
+      "每个格子换成4个浮点数",
+      "结果形状[2,3,4]"
+    ],
+    "explanation": "新增最后一轴，是每个位置不再只保存一个编号，而保存一排长度为4的数。",
+    "pitfall": "没有多出Token，也不是引入一个新句子。"
+  },
+  {
+    "chapter": 5,
+    "section": "隐藏维度到底“隐藏”了什么",
+    "figure": "fdiag-05-04",
+    "kind": "roles",
+    "stages": [
+      "词表项数量V",
+      "隐藏维度d",
+      "总表大小V×d"
+    ],
+    "explanation": "V决定参数表有多少行，d决定每行多少特征；与实际输入长度T不同。",
+    "pitfall": "V、T、d不能互换，也不能把d当成词表长度。"
+  },
+  {
+    "chapter": 5,
+    "section": "PAD行是零，就能不用mask吗",
+    "figure": "fdiag-05-05",
+    "kind": "compare",
+    "stages": [
+      "PAD向量全为0",
+      "注意力仍会给位置打分",
+      "需要位置掩码"
+    ],
+    "explanation": "初始数值为0不保证经过投影、归一化后自动保持“没有贡献”。",
+    "pitfall": "不能因为Padding行是零，就删除attention mask和loss mask。"
+  },
+  {
+    "chapter": 6,
+    "section": "同一个数有三种不同的问题",
+    "figure": "fdiag-06-01",
+    "kind": "roles",
+    "stages": [
+      "数值：2",
+      "类型：整数/浮点",
+      "位置：CPU/GPU内存"
+    ],
+    "explanation": "同一个值可以用不同类型保存，也可以位于不同设备；它们是不同属性。",
+    "pitfall": "搬到GPU不会自动把整数变成语义向量。"
+  },
+  {
+    "chapter": 6,
+    "section": "整数编号与浮点特征为何类型不同",
+    "figure": "fdiag-06-02",
+    "kind": "compare",
+    "stages": [
+      "input_ids：整数编号",
+      "Embedding权重：浮点数",
+      "后续隐藏状态：浮点数"
+    ],
+    "explanation": "编号用于索引，参数和激活用于乘加，常见数据类型由用途决定。",
+    "pitfall": "不是所有模型数据都是一个dtype，也不是所有东西都在显存。"
+  },
+  {
+    "chapter": 6,
+    "section": "对较大规模的表示算一遍存储",
+    "figure": "fdiag-06-03",
+    "kind": "transform",
+    "stages": [
+      "B=2,T=128,d=4096",
+      "共有1,048,576个特征数",
+      "每项2字节→2MiB"
+    ],
+    "explanation": "先算元素数量再乘每个元素所占字节，得到这份激活张量占用。",
+    "pitfall": "这个2MiB只描述一份张量，不能代替整个模型显存预算。"
+  },
+  {
+    "chapter": 6,
+    "section": "一次常见执行的实际顺序",
+    "figure": "fdiag-06-04",
+    "kind": "flow",
+    "stages": [
+      "准备输入编号",
+      "把参数/数据放到执行设备",
+      "Embedding查表得到向量"
+    ],
+    "explanation": "“放设备”和“查表”是可拆开的操作；实际实现和内存移动策略因框架不同。",
+    "pitfall": "不要写死“先复制所有数据然后才开始算”作为所有系统唯一流程。"
+  },
+  {
+    "chapter": 6,
+    "section": "为什么小任务放GPU有时不快",
+    "figure": "fdiag-06-05",
+    "kind": "compare",
+    "stages": [
+      "小规模CPU计算",
+      "GPU计算需传输/调度",
+      "总耗时可能不降"
+    ],
+    "explanation": "GPU单次算得快，但小任务的启动、搬运和同步可能占主导。",
+    "pitfall": "单看理论算力不能预测端到端请求延迟。"
+  },
+  {
+    "chapter": 7,
+    "section": "从你已经会的平均数开始",
+    "figure": "fdiag-07-01",
+    "kind": "transform",
+    "stages": [
+      "数字2和6",
+      "权重0.25、0.75",
+      "加权平均5"
+    ],
+    "explanation": "先分别乘权重，再相加：0.25×2+0.75×6=5。权重是贡献比例。",
+    "pitfall": "只有非负且总和1的权重才适合解释成“占比”。"
+  },
+  {
+    "chapter": 7,
+    "section": "点积是怎样把两排数变成一个数",
+    "figure": "fdiag-07-02",
+    "kind": "transform",
+    "stages": [
+      "向量[1,2,3]",
+      "逐项乘[4,5,6]",
+      "点积32"
+    ],
+    "explanation": "计算1×4+2×5+3×6，最后得到的是一个数。",
+    "pitfall": "点积不是把每个位置单独保留成三排结果。"
+  },
+  {
+    "chapter": 7,
+    "section": "矩阵乘法是“一次做很多个点积”",
+    "figure": "fdiag-07-03",
+    "kind": "transform",
+    "stages": [
+      "X[2,3] × W[3,2]",
+      "每行对每列做点积",
+      "Y=[[4,5],[10,11]]"
+    ],
+    "explanation": "X的一行与W的一列配对，填入Y一个格子；重复后得到2行2列。",
+    "pitfall": "内侧维度必须相同，矩阵乘法不等于按格相乘。"
+  },
+  {
+    "chapter": 7,
+    "section": "一个Token从4096个数变成另外4096个数，究竟是什么动作",
+    "figure": "fdiag-07-04",
+    "kind": "transform",
+    "stages": [
+      "输入宽度4096",
+      "乘[4096,4096]权重表",
+      "输出仍宽4096"
+    ],
+    "explanation": "每个输出特征来自4096个输入特征的加权组合；数量可以不变，但内容已变。",
+    "pitfall": "“投影”不必把维度变小。"
+  },
+  {
+    "chapter": 7,
+    "section": "转置怎样帮助“一排数分别与多行比较”",
+    "figure": "fdiag-07-05",
+    "kind": "transform",
+    "stages": [
+      "K有3行、每行2个数",
+      "转置成2行3列",
+      "Q[1,2]×Kᵀ[2,3]→3分数"
+    ],
+    "explanation": "转置后每个Key都变成一列，方便一个Query一次与全部Key做点积。",
+    "pitfall": "ᵀ在Kᵀ中表示转置，不是序列长度T。"
+  },
+  {
+    "chapter": 8,
+    "section": "为什么深度学习代码里反复改变形状",
+    "figure": "fdiag-08-01",
+    "kind": "roles",
+    "stages": [
+      "值的排列",
+      "张量shape",
+      "内存步幅stride"
+    ],
+    "explanation": "shape说明逻辑轴长；stride说明移动一个下标时底层地址跳多少。",
+    "pitfall": "逻辑上变形成功不等于物理内存重新排序。"
+  },
+  {
+    "chapter": 8,
+    "section": "reshape是重新分组，不是交换行列",
+    "figure": "fdiag-08-02",
+    "kind": "transform",
+    "stages": [
+      "一排[1,2,3,4]",
+      "reshape成2×2",
+      "[[1,2],[3,4]]"
+    ],
+    "explanation": "reshape改变分组规则，默认并未做把行列相互交换的运算。",
+    "pitfall": "视图能否零拷贝由连续性和stride决定。"
+  },
+  {
+    "chapter": 8,
+    "section": "多头只是把特征轴分组吗",
+    "figure": "fdiag-08-03",
+    "kind": "compare",
+    "stages": [
+      "reshape重新分组",
+      "transpose交换行列",
+      "结果可以shape相同但值不同"
+    ],
+    "explanation": "对[[1,2],[3,4]]，转置是[[1,3],[2,4]]，不是原样重新分组。",
+    "pitfall": "不能用“输出形状相同”判定两个算子等价。"
+  },
+  {
+    "chapter": 8,
+    "section": "广播：用一个小对象作用到许多位置",
+    "figure": "fdiag-08-04",
+    "kind": "transform",
+    "stages": [
+      "宽4的特征[1,2,3,4]",
+      "按2头各2个特征拆分",
+      "头0[1,2]，头1[3,4]"
+    ],
+    "explanation": "多头拆分首先是轴重组；真正信息交互发生在各头的注意力运算里。",
+    "pitfall": "拆分并不会自动让两个头读取不同位置或产生Attention分数。"
+  },
+  {
+    "chapter": 8,
+    "section": "内存布局与视图只需先懂一个原则",
+    "figure": "fdiag-08-05",
+    "kind": "transform",
+    "stages": [
+      "矩阵[[1,2],[3,4]]",
+      "每行加偏置[10,20]",
+      "[[11,22],[13,24]]"
+    ],
+    "explanation": "广播把同一排偏置应用到每行，随后逐元素相加。",
+    "pitfall": "广播与矩阵乘法不同，某轴需能对齐或长度为1。"
+  },
+  {
+    "chapter": 9,
+    "section": "分数不是概率",
+    "figure": "fdiag-09-01",
+    "kind": "compare",
+    "stages": [
+      "分数[2,1,0]",
+      "概率必须非负",
+      "三项总和=1"
+    ],
+    "explanation": "logits可为任意实数，概率是满足总和约束的比例，不可直接混读。",
+    "pitfall": "分数2不是200%概率。"
+  },
+  {
+    "chapter": 9,
+    "section": "先学指数和对数需要的那一点",
+    "figure": "fdiag-09-02",
+    "kind": "roles",
+    "stages": [
+      "exp(0)=1",
+      "exp(1)≈2.718",
+      "exp(-1)≈0.368"
+    ],
+    "explanation": "指数函数把正负分数转成正数，再用于归一化。",
+    "pitfall": "exp会放大高分差距，不能当普通线性比例。"
+  },
+  {
+    "chapter": 9,
+    "section": "softmax一步不跳地算",
+    "figure": "fdiag-09-03",
+    "kind": "transform",
+    "stages": [
+      "logits[2,1,0]",
+      "减2→[0,-1,-2]再取exp",
+      "概率约[0.6652,0.2447,0.0900]"
+    ],
+    "explanation": "指数[1,0.3679,0.1353]总和1.5032；各项除以总和。",
+    "pitfall": "本节两个示例应使用同一组三个分数，否则必须标为独立对照。"
+  },
+  {
+    "chapter": 9,
+    "section": "为什么要减最大值",
+    "figure": "fdiag-09-04",
+    "kind": "transform",
+    "stages": [
+      "原始exp(2),exp(1),exp(0)",
+      "全部先减最大值2",
+      "概率保持不变"
+    ],
+    "explanation": "指数平移对应公共倍数，归一化时会约掉，因此数值更稳定。",
+    "pitfall": "减最大值不是重新排序候选或人为提高某项概率。"
+  },
+  {
+    "chapter": 9,
+    "section": "取最大与按概率抽样不是一回事",
+    "figure": "fdiag-09-05",
+    "kind": "compare",
+    "stages": [
+      "Argmax总选A",
+      "按分布抽样可能选B",
+      "概率[0.6652,0.2447,0.0900]"
+    ],
+    "explanation": "随机数0.70落入B的累计区间，所以这次选B并不矛盾。",
+    "pitfall": "概率最大的项不是每次抽样都必然选中的项。"
+  },
+  {
+    "chapter": 10,
+    "section": "从一条可调的规则认识“模型”",
+    "figure": "fdiag-10-01",
+    "kind": "transform",
+    "stages": [
+      "输入x=3",
+      "用参数w=2,b=1",
+      "输出y=7"
+    ],
+    "explanation": "参数决定可调的映射规则；推理时通常使用已有参数。",
+    "pitfall": "输入变化不意味着模型刚完成了参数训练。"
+  },
+  {
+    "chapter": 10,
+    "section": "从一个系数w到一张参数表W",
+    "figure": "fdiag-10-02",
+    "kind": "transform",
+    "stages": [
+      "输入x=[1,2]",
+      "参数W1与偏置b1",
+      "中间状态h=[3,-1]（激活前）"
+    ],
+    "explanation": "“参数表”存的是训练得到的系数；本次输入乘加得到中间值。",
+    "pitfall": "W与h不是同一种对象：W是参数，h是本轮激活值。"
+  },
+  {
+    "chapter": 10,
+    "section": "一个有两层的完整数值例子",
+    "figure": "fdiag-10-03",
+    "kind": "transform",
+    "stages": [
+      "原始计算[3,1]",
+      "加偏置得到[3,-1]",
+      "ReLU变成[3,0]"
+    ],
+    "explanation": "先乘矩阵，再加偏置，再经过非线性。每一步需要保留正确的运算顺序。",
+    "pitfall": "不应把每层写成直接“输入→答案”，省略中间状态。"
+  },
+  {
+    "chapter": 10,
+    "section": "为什么中间需要非线性函数",
+    "figure": "fdiag-10-04",
+    "kind": "compare",
+    "stages": [
+      "线性层叠加",
+      "中间插入ReLU",
+      "可表达不同函数形状"
+    ],
+    "explanation": "没有非线性的多个线性层可以合并成一次仿射变换，表达能力受到限制。",
+    "pitfall": "ReLU不是“只为了把负数删掉”的任意装饰。"
+  },
+  {
+    "chapter": 10,
+    "section": "隐藏状态不是隐藏的中文草稿",
+    "figure": "fdiag-10-05",
+    "kind": "compare",
+    "stages": [
+      "隐藏状态：运行中算出",
+      "模型权重：训练后保存",
+      "输出文字：经解码得到"
+    ],
+    "explanation": "内部数值表示、固定参数和人能看到的句子属于不同阶段。",
+    "pitfall": "不能把隐藏状态解释成“模型已经写好的中文草稿”。"
+  },
+  {
+    "chapter": 11,
+    "section": "它想解决什么问题",
+    "figure": "fdiag-11-01",
+    "kind": "flow",
+    "stages": [
+      "当前位置“爱”的表示",
+      "比较前面可见位置",
+      "混入相关信息形成新表示"
+    ],
+    "explanation": "单独查Embedding不能表达前后关系；注意力让当前位置参考其他可读位置。",
+    "pitfall": "“参考”是数值加权，不是直接复制一句文本。"
+  },
+  {
+    "chapter": 11,
+    "section": "进入注意力之前，X到底是什么",
+    "figure": "fdiag-11-02",
+    "kind": "roles",
+    "stages": [
+      "X是各位置当前向量",
+      "Wq/Wk/Wv是训练参数",
+      "Q/K/V是本轮投影结果"
+    ],
+    "explanation": "参数表作用于X后，分别形成查询、匹配、内容三类内部表示。",
+    "pitfall": "不要把Wq（参数）误当成Q（运行时结果）。"
+  },
+  {
+    "chapter": 11,
+    "section": "W是什么：先认识“乘法系数表”，再认识三个名字",
+    "figure": "fdiag-11-03",
+    "kind": "transform",
+    "stages": [
+      "x=[1,1]",
+      "乘Wq等参数表",
+      "得到对应q、k、v"
+    ],
+    "explanation": "投影是在每个位置沿特征轴做矩阵乘法；相同X与不同W可以得到不同结果。",
+    "pitfall": "Q/K/V不是把X简单复制成三份并贴标签。"
+  },
+  {
+    "chapter": 11,
+    "section": "Query、Key、Value各做哪一件事",
+    "figure": "fdiag-11-04",
+    "kind": "roles",
+    "stages": [
+      "Query：想找的特征",
+      "Key：供比较的特征",
+      "Value：被混入的内容"
+    ],
+    "explanation": "用Q与K打分，softmax给出份额，再按份额对V加权求和。",
+    "pitfall": "注意力“权重”是本轮动态份额，不等于Wq等模型参数。"
+  },
+  {
+    "chapter": 11,
+    "section": "用同一份X，把三张参数表完整乘一次",
+    "figure": "fdiag-11-05",
+    "kind": "transform",
+    "stages": [
+      "当前Query与全部Key",
+      "打分→缩放→softmax",
+      "以份额混合Value"
+    ],
+    "explanation": "先决定从哪些可见位置读多少，再决定读进什么内容。",
+    "pitfall": "不能把最大注意力份额直接当成最终答案概率。"
+  },
+  {
+    "chapter": 11,
+    "section": "对“爱”这个位置，从打分一直算到新表示",
+    "figure": "fdiag-11-06",
+    "kind": "transform",
+    "stages": [
+      "X同一份输入",
+      "分别乘Wq、Wk、Wv",
+      "Q/K/V不是同一矩阵"
+    ],
+    "explanation": "设计三组投影，允许“匹配条件”和“内容表达”使用不同特征组合。",
+    "pitfall": "独立示例的参数要明确说明，不可悄悄混用F05四维Embedding表。"
+  },
+  {
+    "chapter": 12,
+    "section": "先给掩码一个不神秘的定义",
+    "figure": "fdiag-12-01",
+    "kind": "roles",
+    "stages": [
+      "Mask是规则表",
+      "注意力分数是模型计算",
+      "Value是被混入的内容"
+    ],
+    "explanation": "Mask不代表新的语义，而是限制哪些位置的分数能参与softmax。",
+    "pitfall": "把Mask当作新的词向量，会混淆规则和内容。"
+  },
+  {
+    "chapter": 12,
+    "section": "因果限制怎样防止读未来",
+    "figure": "fdiag-12-02",
+    "kind": "transform",
+    "stages": [
+      "位置0只能读位置0",
+      "位置1可读0、1",
+      "位置2可读0、1、2"
+    ],
+    "explanation": "因果掩码形成下三角“可见性表”，阻止未来信息泄漏。",
+    "pitfall": "真实缓存时必须按绝对位置对齐，而不是机械复用左上三角。"
+  },
+  {
+    "chapter": 12,
+    "section": "填充限制与因果限制怎样合在一起",
+    "figure": "fdiag-12-03",
+    "kind": "compare",
+    "stages": [
+      "有效Token：1,1,1",
+      "PAD位置：1,1,0",
+      "因果与PAD限制取交集"
+    ],
+    "explanation": "两个掩码限制的原因不同，可以同时存在。",
+    "pitfall": "允许的集合是两者同时允许，不是相加后自动扩大范围。"
+  },
+  {
+    "chapter": 12,
+    "section": "“禁止”具体怎样改变softmax",
+    "figure": "fdiag-12-04",
+    "kind": "transform",
+    "stages": [
+      "禁止位置的logit",
+      "加−∞后参与softmax",
+      "对应概率变0"
+    ],
+    "explanation": "被禁止项的exp变0，剩下项再重新归一化。",
+    "pitfall": "所有项都被禁止时会有无效归一化风险，必须特殊处理。"
+  },
+  {
+    "chapter": 12,
+    "section": "已有缓存时，表为什么不再是小正方形",
+    "figure": "fdiag-12-05",
+    "kind": "transform",
+    "stages": [
+      "缓存已有3个位置",
+      "新来2个Query、总Key数5",
+      "允许表形状[2,5]"
+    ],
+    "explanation": "每个新Query可看它自己的绝对位置及更早位置；不是只看左上角2×2。",
+    "pitfall": "形状正确也可能错位，尤其是Q长度与K长度不同时。"
+  },
+  {
+    "chapter": 13,
+    "section": "Token是谁，和它出现在第几位，是两个问题",
+    "figure": "fdiag-13-01",
+    "kind": "roles",
+    "stages": [
+      "Token ID：是哪一项",
+      "Position ID：位于第几位",
+      "向量：这一位的数值表示"
+    ],
+    "explanation": "“谁”和“在哪里”是两类信息，模型需要把它们结合起来处理。",
+    "pitfall": "相同Token在不同位置不必产生相同注意力行为。"
+  },
+  {
+    "chapter": 13,
+    "section": "为什么不能只靠查Embedding",
+    "figure": "fdiag-13-02",
+    "kind": "compare",
+    "stages": [
+      "仅按Token身份查表",
+      "不区分先后顺序",
+      "“AB”与“BA”难以按序表达"
+    ],
+    "explanation": "没有位置信息时，纯内容匹配不能完整表达词序差异。",
+    "pitfall": "并非所有位置编码都通过简单加法写入Embedding。"
+  },
+  {
+    "chapter": 13,
+    "section": "只用平面上的点认识sin与cos",
+    "figure": "fdiag-13-03",
+    "kind": "transform",
+    "stages": [
+      "二维向量[1,0]",
+      "按位置角度旋转",
+      "得到[cosθ,sinθ]"
+    ],
+    "explanation": "RoPE可先用平面旋转理解：长度不变，但方向随位置改变。",
+    "pitfall": "实际RoPE作用于Q/K的成对维度，不是旋转屏幕上的文字。"
+  },
+  {
+    "chapter": 13,
+    "section": "RoPE怎样用位置改变匹配",
+    "figure": "fdiag-13-04",
+    "kind": "transform",
+    "stages": [
+      "Q/K按绝对位置旋转",
+      "比较旋转后的Q与K",
+      "相对位置影响点积"
+    ],
+    "explanation": "旋转能让位置差异进入匹配分数，而不必改变Value的全部内容。",
+    "pitfall": "不能把RoPE直接当成一个独立的“记忆库”。"
+  },
+  {
+    "chapter": 13,
+    "section": "为什么缓存位置不能每次从0开始",
+    "figure": "fdiag-13-05",
+    "kind": "transform",
+    "stages": [
+      "已有缓存位置0,1,2",
+      "下一Token真实位置3",
+      "新Q/K用位置3编码"
+    ],
+    "explanation": "缓存继续生成时，位置编号与历史长度必须一致。",
+    "pitfall": "每轮从位置0重新计数会破坏新旧K/V的一致性。"
+  },
+  {
+    "chapter": 14,
+    "section": "先把一层写成两段，而不是一大堆缩写",
+    "figure": "fdiag-14-01",
+    "kind": "flow",
+    "stages": [
+      "本层输入X",
+      "注意力读取可见历史",
+      "FFN逐位置加工"
+    ],
+    "explanation": "Transformer层既有跨位置读取，也有逐位置的非线性变换。",
+    "pitfall": "注意力不是整层网络的全部。"
+  },
+  {
+    "chapter": 14,
+    "section": "残差连接：保留一条直接通路",
+    "figure": "fdiag-14-02",
+    "kind": "transform",
+    "stages": [
+      "输入X",
+      "Norm→Attention→残差",
+      "得到中间表示H"
+    ],
+    "explanation": "顺序因模型结构而异；通过残差把原通路和新计算的调整合并。",
+    "pitfall": "Pre-Norm与Post-Norm不是一个固定不变的顺序。"
+  },
+  {
+    "chapter": 14,
+    "section": "均值、方差和标准差从两个数算起",
+    "figure": "fdiag-14-03",
+    "kind": "transform",
+    "stages": [
+      "主路X",
+      "分支计算F(X)",
+      "两者相加：X+F(X)"
+    ],
+    "explanation": "残差让信息和梯度具有更直接的通路，深层网络通常更易训练。",
+    "pitfall": "残差不是完全保留每一项数值不变，后续仍会继续变换。"
+  },
+  {
+    "chapter": 14,
+    "section": "LayerNorm实际规范化哪一排数",
+    "figure": "fdiag-14-04",
+    "kind": "transform",
+    "stages": [
+      "数值[2,4]",
+      "均值3、偏差[-1,1]",
+      "标准差1（忽略ε）"
+    ],
+    "explanation": "方差来自平方偏差的平均，标准差是其平方根。",
+    "pitfall": "实际LayerNorm常加ε并含可学习缩放、平移参数。"
+  },
+  {
+    "chapter": 14,
+    "section": "FFN到底做了什么",
+    "figure": "fdiag-14-05",
+    "kind": "transform",
+    "stages": [
+      "一排隐藏向量",
+      "减均值、除标准差",
+      "再乘γ、加β"
+    ],
+    "explanation": "LayerNorm常沿一个位置的特征维归一化，然后做可学习仿射调整。",
+    "pitfall": "不能简单把一个Batch里的所有Token一起当成同一归一化组。"
+  },
+  {
+    "chapter": 15,
+    "section": "最后一层还不是文字",
+    "figure": "fdiag-15-01",
+    "kind": "transform",
+    "stages": [
+      "最后隐藏状态h=[1,2]",
+      "乘Wout得到候选分数",
+      "对词表每项评分"
+    ],
+    "explanation": "输出层是把内部特征投影到词表候选，而不是直接从隐藏向量打印中文字。",
+    "pitfall": "logits不是概率，仍需选择或采样。"
+  },
+  {
+    "chapter": 15,
+    "section": "为什么看最后一个有效位置",
+    "figure": "fdiag-15-02",
+    "kind": "compare",
+    "stages": [
+      "位置0用于预测后续第1项",
+      "最后有效位置用于预测下一项",
+      "PAD不是有效结束位置"
+    ],
+    "explanation": "自回归模型每个位置预测其后继；当前生成要从最后有效位置读。",
+    "pitfall": "右PAD的Batch里，数组最后一列不一定是最后有效位置。"
+  },
+  {
+    "chapter": 15,
+    "section": "Prefill和Decode只是两种运行阶段",
+    "figure": "fdiag-15-03",
+    "kind": "flow",
+    "stages": [
+      "Prefill处理已有提示",
+      "用最后位置分数选一个Token",
+      "Decode将新Token送入模型"
+    ],
+    "explanation": "一个输出Token的选出，和它被送进模型处理，是前后两个不同事件。",
+    "pitfall": "模型不是一次生成整句再逐字打印。"
+  },
+  {
+    "chapter": 15,
+    "section": "选出来不等于已经处理过",
+    "figure": "fdiag-15-04",
+    "kind": "transform",
+    "stages": [
+      "已处理[a,b,c]",
+      "采样得到新d",
+      "此刻缓存仍只含[a,b,c]"
+    ],
+    "explanation": "d刚选出尚未作为输入通过各层，下一轮处理d后才会写入对应KV。",
+    "pitfall": "缓存长度不能在采样完的瞬间就无条件加1。"
+  },
+  {
+    "chapter": 15,
+    "section": "生成Token与界面显示字符的关系",
+    "figure": "fdiag-15-05",
+    "kind": "compare",
+    "stages": [
+      "Token输出编号",
+      "Tokenizer解码为文字字节",
+      "界面按字符渐进显示"
+    ],
+    "explanation": "Token与UTF-8字符及网络分片的边界未必一一对应。",
+    "pitfall": "流式传来半个UTF-8字符不能立即当成完整字符。"
+  },
+  {
+    "chapter": 16,
+    "section": "先从普通缓存的含义说起",
+    "figure": "fdiag-16-01",
+    "kind": "roles",
+    "stages": [
+      "普通缓存：保留结果",
+      "KV缓存：保留每层K/V",
+      "长期记忆：保留外部知识"
+    ],
+    "explanation": "名字都叫缓存或记忆，但保存目标、生命周期和复用条件完全不同。",
+    "pitfall": "KV缓存不是模型“已经学会”这段历史。"
+  },
+  {
+    "chapter": 16,
+    "section": "为什么追加Token通常不改变旧K/V",
+    "figure": "fdiag-16-02",
+    "kind": "transform",
+    "stages": [
+      "已算Token0,1,2",
+      "追加新Token3",
+      "历史K/V通常可直接复用"
+    ],
+    "explanation": "在因果条件和位置不变时，旧Token看不到未来，因此旧K/V不必因追加而重算。",
+    "pitfall": "编辑前缀中间内容会让受影响后缀缓存不再可靠。"
+  },
+  {
+    "chapter": 16,
+    "section": "用两层、三个历史位置数清缓存",
+    "figure": "fdiag-16-03",
+    "kind": "transform",
+    "stages": [
+      "层数2、长度3",
+      "每层存K和V各一份",
+      "共同缓存覆盖6个位置×2份"
+    ],
+    "explanation": "KV数据是分层保存的；每层的K/V来自各自的隐藏状态。",
+    "pitfall": "不能只保存最后一层K/V就认为后续层都可复用。"
+  },
+  {
+    "chapter": 16,
+    "section": "为什么通常不保存历史Q来做后续注意力",
+    "figure": "fdiag-16-04",
+    "kind": "compare",
+    "stages": [
+      "本轮Query仅用于本轮打分",
+      "历史Key需被新Query比较",
+      "历史Value需被取内容"
+    ],
+    "explanation": "生成下一Token时要复用的是历史K/V；旧Q通常不再被下一步Query使用。",
+    "pitfall": "“不缓存旧Q”不是绝对不允许，而是通常没必要。"
+  },
+  {
+    "chapter": 16,
+    "section": "有缓存为什么仍然不是常数时间",
+    "figure": "fdiag-16-05",
+    "kind": "transform",
+    "stages": [
+      "上下文长度T增加",
+      "新Query与T个Key比较",
+      "单次Decode仍随T增长"
+    ],
+    "explanation": "KV缓存减少重复处理旧Token，但新Token仍要读历史K/V。",
+    "pitfall": "有KV缓存不等于生成每个Token都是常数成本。"
+  },
+  {
+    "chapter": 17,
+    "section": "导数是在问：稍微改一下输入，结果怎样变",
+    "figure": "fdiag-17-01",
+    "kind": "transform",
+    "stages": [
+      "f(x)=x²，x=3",
+      "x增加0.01",
+      "结果约增加0.0601"
+    ],
+    "explanation": "用很小改变量的“结果变化/输入变化”去接近局部导数。",
+    "pitfall": "一次大跨度的斜率不能直接当作任意位置的导数。"
+  },
+  {
+    "chapter": 17,
+    "section": "参数训练为什么需要变化率",
+    "figure": "fdiag-17-02",
+    "kind": "roles",
+    "stages": [
+      "预测y",
+      "目标值y*",
+      "损失L(y,y*)"
+    ],
+    "explanation": "训练目标不是最大化预测数值，而是使损失按定义减小。",
+    "pitfall": "必须先定义损失，才有“哪个方向更好”。"
+  },
+  {
+    "chapter": 17,
+    "section": "用一个参数手算一次完整更新",
+    "figure": "fdiag-17-03",
+    "kind": "transform",
+    "stages": [
+      "x=2,w=1,目标4",
+      "梯度∂L/∂w=−4",
+      "学习率0.2后w=1.8"
+    ],
+    "explanation": "损失从2降到0.08；负梯度让参数向增加的方向更新。",
+    "pitfall": "“梯度下降”不表示所有参数数值一定下降。"
+  },
+  {
+    "chapter": 17,
+    "section": "反向传播与优化器不是同一个步骤",
+    "figure": "fdiag-17-04",
+    "kind": "flow",
+    "stages": [
+      "前向保存依赖",
+      "反向按链式法则算梯度",
+      "优化器按梯度更新参数"
+    ],
+    "explanation": "反向传播计算变化率，参数更新发生在优化器步骤。",
+    "pitfall": "调用backward不一定等于已经修改权重。"
+  },
+  {
+    "chapter": 17,
+    "section": "有限差分怎样核对解析梯度",
+    "figure": "fdiag-17-05",
+    "kind": "transform",
+    "stages": [
+      "在w两侧取w±ε",
+      "分别计算损失",
+      "中心差分近似解析梯度"
+    ],
+    "explanation": "用数值扰动验证导数公式，适合小模型与调试。",
+    "pitfall": "ε太小会受浮点误差影响，太大则不够局部。"
+  },
+  {
+    "chapter": 18,
+    "section": "先把“要预测什么”对齐",
+    "figure": "fdiag-18-01",
+    "kind": "flow",
+    "stages": [
+      "训练句子：我／爱／学习",
+      "位置0预测“爱”",
+      "位置1预测“学习”"
+    ],
+    "explanation": "训练时目标向右移动一个Token，模型不能靠看未来标签偷答案。",
+    "pitfall": "输入位置与监督目标位置的对齐错误会训练到错误任务。"
+  },
+  {
+    "chapter": 18,
+    "section": "交叉熵从一个正确候选开始",
+    "figure": "fdiag-18-02",
+    "kind": "transform",
+    "stages": [
+      "正确候选概率p",
+      "负对数损失−ln(p)",
+      "p越接近1，损失越小"
+    ],
+    "explanation": "正确项概率越低，惩罚越大；损失衡量模型对正确项分配的概率。",
+    "pitfall": "交叉熵不是“分数直接减正确标签编号”。"
+  },
+  {
+    "chapter": 18,
+    "section": "多位置与填充怎样评分",
+    "figure": "fdiag-18-03",
+    "kind": "compare",
+    "stages": [
+      "有效位置有3个",
+      "PAD或忽略标签不计数",
+      "分母应为有效Token总数"
+    ],
+    "explanation": "跨微批或分布式累积时，应按总有效Token数归一化。",
+    "pitfall": "分别算每批平均再无权平均，在长度不等时可能改变目标。"
+  },
+  {
+    "chapter": 18,
+    "section": "把一个优化步写完整",
+    "figure": "fdiag-18-04",
+    "kind": "flow",
+    "stages": [
+      "取一批样本",
+      "前向求loss再backward",
+      "优化器step并清梯度"
+    ],
+    "explanation": "训练一次更新有明确顺序；累积梯度时清零与缩放尤其重要。",
+    "pitfall": "零梯度与更新参数不要在步骤图中互换。"
+  },
+  {
+    "chapter": 18,
+    "section": "Adam为什么会保存额外状态",
+    "figure": "fdiag-18-05",
+    "kind": "roles",
+    "stages": [
+      "一阶动量m",
+      "二阶矩v",
+      "偏差修正后的更新量"
+    ],
+    "explanation": "Adam维护梯度历史统计，不只是直接减去本轮梯度。",
+    "pitfall": "Adam附加状态会增加训练内存，不能只按权重字节估算。"
+  },
+  {
+    "chapter": 19,
+    "section": "同一个“更好”，至少有三种含义",
+    "figure": "fdiag-19-01",
+    "kind": "roles",
+    "stages": [
+      "正确性：是否满足事实",
+      "偏好：两个回答哪个好",
+      "奖励：训练信号的分数"
+    ],
+    "explanation": "对齐方法常利用人类或AI偏好，但偏好高分不是事实真值保证。",
+    "pitfall": "不能把奖励模型当成外部事实校验器。"
+  },
+  {
+    "chapter": 19,
+    "section": "奖励、策略、轨迹不要一起背缩写",
+    "figure": "fdiag-19-02",
+    "kind": "flow",
+    "stages": [
+      "给定同一问题",
+      "模型产生候选回答",
+      "评价偏好与奖励"
+    ],
+    "explanation": "比较必须有共同的上下文条件，奖励不是与现实隔绝的单独数字。",
+    "pitfall": "跨不同任务比较偏好时应注意可比性。"
+  },
+  {
+    "chapter": 19,
+    "section": "概率比到底比较什么",
+    "figure": "fdiag-19-03",
+    "kind": "compare",
+    "stages": [
+      "旧策略πref",
+      "新策略πθ",
+      "同一回复的概率比"
+    ],
+    "explanation": "同一回复在两种策略下的概率变化，才能表达相对倾向。",
+    "pitfall": "概率比不是“模型回答长度的比值”。"
+  },
+  {
+    "chapter": 19,
+    "section": "KL散度为什么像一个“不离原来太远”的约束",
+    "figure": "fdiag-19-04",
+    "kind": "transform",
+    "stages": [
+      "策略可能漂移",
+      "计算新旧分布差异KL",
+      "限制偏离幅度"
+    ],
+    "explanation": "KL提供一种对分布变化程度的约束，避免只追某一类奖励把行为推得过远。",
+    "pitfall": "KL不是两段中文回答的字符差异。"
+  },
+  {
+    "chapter": 19,
+    "section": "DPO的式子先用两份答案解释",
+    "figure": "fdiag-19-05",
+    "kind": "flow",
+    "stages": [
+      "同一Prompt",
+      "较好回答与较差回答",
+      "更新策略偏向较好回答"
+    ],
+    "explanation": "DPO等偏好方法比较的是给定输入下整段回复概率的相对关系。",
+    "pitfall": "不要把“较好回答”直接当成下一Token的唯一正确标签。"
+  },
+  {
+    "chapter": 20,
+    "section": "“低秩”先用一张重复结构的表理解",
+    "figure": "fdiag-20-01",
+    "kind": "transform",
+    "stages": [
+      "矩阵两行成比例",
+      "可分解为列×行",
+      "低秩表示更紧凑"
+    ],
+    "explanation": "只有足够的线性依赖时，低秩才能在小维度下准确表示。",
+    "pitfall": "所有矩阵不一定都能无损变成秩1。"
+  },
+  {
+    "chapter": 20,
+    "section": "LoRA改的不是整个基础模型",
+    "figure": "fdiag-20-02",
+    "kind": "transform",
+    "stages": [
+      "冻结W形状[8,8]",
+      "训练A[8,2]与B[2,8]",
+      "增量参数32个"
+    ],
+    "explanation": "LoRA保留原W，只学习低秩增量；需要训练的参数从64减至32。",
+    "pitfall": "不等于运行时完全不需要原来的64个权重。"
+  },
+  {
+    "chapter": 20,
+    "section": "量化是在有限刻度上表示数字",
+    "figure": "fdiag-20-03",
+    "kind": "transform",
+    "stages": [
+      "原值0.26、尺度0.1",
+      "round(0.26/0.1)=3",
+      "还原0.3，误差0.04"
+    ],
+    "explanation": "量化把连续数值映射到有限刻度，节省存储但引入近似误差。",
+    "pitfall": "实际还可能有裁剪、偏移量与分组尺度。"
+  },
+  {
+    "chapter": 20,
+    "section": "MoE为什么很多参数但只调用部分",
+    "figure": "fdiag-20-04",
+    "kind": "flow",
+    "stages": [
+      "8个专家模块",
+      "每个Token选出2个",
+      "只运行选中的专家"
+    ],
+    "explanation": "MoE可增加总参数容量，同时降低每Token激活的专家计算。",
+    "pitfall": "所有专家的参数仍需可用，并可能存在负载不均。"
+  },
+  {
+    "chapter": 20,
+    "section": "蒸馏与微调究竟在干什么",
+    "figure": "fdiag-20-05",
+    "kind": "compare",
+    "stages": [
+      "蒸馏：学生学教师行为",
+      "微调：在已有模型上再训练",
+      "检索：查询外部最新资料"
+    ],
+    "explanation": "三个办法解决不同问题；实时事实通常更适合检索而非微调。",
+    "pitfall": "教师答案可能错，蒸馏需要独立验证。"
+  },
+  {
+    "chapter": 21,
+    "section": "先区分三本账",
+    "figure": "fdiag-21-01",
+    "kind": "roles",
+    "stages": [
+      "计算量：做多少运算",
+      "存储量：占多少字节",
+      "搬运量：读写多少字节"
+    ],
+    "explanation": "算得快、装得下、搬得动是三本账，瓶颈可能完全不同。",
+    "pitfall": "减少参数量不一定成比例减少端到端耗时。"
+  },
+  {
+    "chapter": 21,
+    "section": "O(T²)到底是什么意思",
+    "figure": "fdiag-21-02",
+    "kind": "transform",
+    "stages": [
+      "T个Query与T个Key",
+      "需要T×T次位置配对",
+      "T翻倍，配对数约4倍"
+    ],
+    "explanation": "这里说的是注意力分数配对数随长度的增长，不是所有计算都恰好4倍。",
+    "pitfall": "Big-O描述增长级别，不是实际运行秒数。"
+  },
+  {
+    "chapter": 21,
+    "section": "为什么存储足够也可能算不快",
+    "figure": "fdiag-21-03",
+    "kind": "compare",
+    "stages": [
+      "计算下界：C/R",
+      "带宽下界：M/BW",
+      "总耗时至少受较大者约束"
+    ],
+    "explanation": "想优化前先问真正瓶颈是运算能力还是内存带宽。",
+    "pitfall": "实际还会有排队、调度与同步开销。"
+  },
+  {
+    "chapter": 21,
+    "section": "FlashAttention省的是什么",
+    "figure": "fdiag-21-04",
+    "kind": "transform",
+    "stages": [
+      "注意力完整T×T中间表",
+      "按块累计归一化统计",
+      "减少显存读写"
+    ],
+    "explanation": "FlashAttention重排计算和数据访问，避免反复存取整张注意力矩阵。",
+    "pitfall": "它不是“只读前几个Token”的近似注意力。"
+  },
+  {
+    "chapter": 21,
+    "section": "PagedAttention与连续组批",
+    "figure": "fdiag-21-05",
+    "kind": "transform",
+    "stages": [
+      "逻辑KV按序编号",
+      "物理上按块映射",
+      "可复用零散缓存块"
+    ],
+    "explanation": "PagedAttention让逻辑位置连续、物理块可分散，降低分配浪费。",
+    "pitfall": "它不等于把整个神经网络都放进操作系统分页。"
+  },
+  {
+    "chapter": 22,
+    "section": "先还原成普通程序",
+    "figure": "fdiag-22-01",
+    "kind": "roles",
+    "stages": [
+      "用户任务",
+      "模型：提议下一步",
+      "宿主：真正调用工具"
+    ],
+    "explanation": "Agent是一种组织模型、工具、状态和反馈的程序系统。",
+    "pitfall": "不是多了一种独立的新神经网络。"
+  },
+  {
+    "chapter": 22,
+    "section": "一个三次模型调用的完整例子",
+    "figure": "fdiag-22-02",
+    "kind": "flow",
+    "stages": [
+      "收到“读文件”请求",
+      "宿主调用读文件工具",
+      "文件内容回填模型"
+    ],
+    "explanation": "模型先给出调用意图，宿主执行后下一轮才有新证据。",
+    "pitfall": "模型写出工具名称不等于工具已执行。"
+  },
+  {
+    "chapter": 22,
+    "section": "一轮、一回合和一个任务为什么要区分",
+    "figure": "fdiag-22-03",
+    "kind": "flow",
+    "stages": [
+      "第一轮：提议读文件",
+      "第二轮：根据内容判断",
+      "第三轮：返回结论或再操作"
+    ],
+    "explanation": "一次任务可以跨多轮模型调用；每轮输入都会受到前序工具结果影响。",
+    "pitfall": "一个用户问题不等于一次模型调用。"
+  },
+  {
+    "chapter": 22,
+    "section": "工作流与自由Agent的区别",
+    "figure": "fdiag-22-04",
+    "kind": "roles",
+    "stages": [
+      "Task：整个目标",
+      "Turn：用户或代理的阶段",
+      "Tool call：一次动作"
+    ],
+    "explanation": "三个粒度必须分开记录，否则重试与恢复无法定位具体步骤。",
+    "pitfall": "不同产品的Turn命名可能不同，需按当前系统定义理解。"
+  },
+  {
+    "chapter": 22,
+    "section": "什么叫工具，什么叫副作用",
+    "figure": "fdiag-22-05",
+    "kind": "compare",
+    "stages": [
+      "Workflow：预设步骤",
+      "Agent：动态决策步骤",
+      "两者可以组合"
+    ],
+    "explanation": "明确任务通常用确定性流程更简单；复杂探索可让模型选择下一步。",
+    "pitfall": "并非使用Agent越自由就一定越好。"
+  },
+  {
+    "chapter": 23,
+    "section": "API只是程序间约定，不是智能本身",
+    "figure": "fdiag-23-01",
+    "kind": "roles",
+    "stages": [
+      "UTF-8字节边界",
+      "SSE事件边界",
+      "工具参数JSON完整性"
+    ],
+    "explanation": "三种边界可能落在不同位置；收到网络分片不表示收到了完整事件。",
+    "pitfall": "不能对半截JSON立刻执行工具。"
+  },
+  {
+    "chapter": 23,
+    "section": "Schema在检查什么",
+    "figure": "fdiag-23-02",
+    "kind": "roles",
+    "stages": [
+      "API：接口契约",
+      "Schema：结构要求",
+      "Authorization：权限判断"
+    ],
+    "explanation": "字段合法只能说明结构符合约定，不证明动作获得授权或业务正确。",
+    "pitfall": "JSON解析通过不代表磁盘文件存在。"
+  },
+  {
+    "chapter": 23,
+    "section": "为什么网络一次读到的不是一个完整回答",
+    "figure": "fdiag-23-03",
+    "kind": "flow",
+    "stages": [
+      "原始字节流",
+      "按换行与空行解析事件",
+      "得到完整SSE事件"
+    ],
+    "explanation": "网络read可以在任意字节处切断，必须缓冲直到事件边界满足协议。",
+    "pitfall": "不能把每次read返回的块当成一个完整消息。"
+  },
+  {
+    "chapter": 23,
+    "section": "SSE的事件边界",
+    "figure": "fdiag-23-04",
+    "kind": "flow",
+    "stages": [
+      "事件片段累计",
+      "遇到SSE空行",
+      "分派完整事件"
+    ],
+    "explanation": "SSE按事件帧组织数据；多个网络包可能组成一个事件，一个包也可包含多个事件。",
+    "pitfall": "流式输出并不保证一个Token对应一个网络事件。"
+  },
+  {
+    "chapter": 23,
+    "section": "call_id为什么比工具名称重要",
+    "figure": "fdiag-23-05",
+    "kind": "transform",
+    "stages": [
+      "工具名称read_file",
+      "同时有call_id=abc",
+      "结果以call_id配对"
+    ],
+    "explanation": "同一个工具可以被多次调用，必须用调用ID识别哪份结果属于哪个请求。",
+    "pitfall": "只按工具名匹配会混淆并发调用的响应。"
+  },
+  {
+    "chapter": 24,
+    "section": "“做到哪了”必须有具体对象",
+    "figure": "fdiag-24-01",
+    "kind": "roles",
+    "stages": [
+      "模型说“完成了”",
+      "持久状态记“已提交”",
+      "环境验证“文件确实改变”"
+    ],
+    "explanation": "文字承诺、保存的进度和真实外部副作用是三类证据。",
+    "pitfall": "恢复时不能只靠最后一条聊天摘要。"
+  },
+  {
+    "chapter": 24,
+    "section": "状态机从最小表开始",
+    "figure": "fdiag-24-02",
+    "kind": "flow",
+    "stages": [
+      "待处理pending",
+      "执行中running",
+      "已完成committed或结果未知"
+    ],
+    "explanation": "任务状态机明确允许哪些转换，避免一个异常被随意当成完成。",
+    "pitfall": "未知状态不可直接等同失败。"
+  },
+  {
+    "chapter": 24,
+    "section": "事件与快照分别保存什么",
+    "figure": "fdiag-24-03",
+    "kind": "roles",
+    "stages": [
+      "事件：发生了什么",
+      "快照：当前是什么",
+      "证据：怎么确认"
+    ],
+    "explanation": "事件适合追溯，快照利于快速恢复，二者可互相校验。",
+    "pitfall": "快照本身不能证明外部世界没有并发变化。"
+  },
+  {
+    "chapter": 24,
+    "section": "版本号为什么重要",
+    "figure": "fdiag-24-04",
+    "kind": "transform",
+    "stages": [
+      "读到版本v7",
+      "尝试修改v7",
+      "写入前检查是否还是v7"
+    ],
+    "explanation": "版本比较防止基于过期证据覆盖他人更新。",
+    "pitfall": "先检查后另行写入，可能出现TOCTOU竞争。"
+  },
+  {
+    "chapter": 24,
+    "section": "检查点保存恢复所需信息",
+    "figure": "fdiag-24-05",
+    "kind": "flow",
+    "stages": [
+      "任务运行中",
+      "持久化检查点",
+      "崩溃后从可信状态恢复"
+    ],
+    "explanation": "检查点应包含足以恢复的进度、输入版本和未确认动作。",
+    "pitfall": "仅保存自然语言摘要通常不够。"
+  },
+  {
+    "chapter": 25,
+    "section": "先别把MCP理解成“给模型装了一个新大脑”",
+    "figure": "fdiag-25-01",
+    "kind": "flow",
+    "stages": [
+      "Agent工具目录",
+      "发现MCP资源与工具",
+      "宿主决定暴露与授权"
+    ],
+    "explanation": "MCP提供连接结构，是否可调用和可执行仍由宿主控制。",
+    "pitfall": "连上MCP Server不等于模型拥有全部权限。"
+  },
+  {
+    "chapter": 25,
+    "section": "一次从连接到工具结果的逻辑次序",
+    "figure": "fdiag-25-02",
+    "kind": "roles",
+    "stages": [
+      "MCP Host",
+      "MCP Client",
+      "MCP Server"
+    ],
+    "explanation": "Host负责整体应用，Client连接服务器，Server提供工具或资源。",
+    "pitfall": "三者不是三个独立LLM模型。"
+  },
+  {
+    "chapter": 25,
+    "section": "Tools、Resources、Prompts各是什么",
+    "figure": "fdiag-25-03",
+    "kind": "roles",
+    "stages": [
+      "Tools：可执行动作",
+      "Resources：可读数据",
+      "Prompts：提示模板"
+    ],
+    "explanation": "三类能力的用途不同，不应全部当作可写入工具。",
+    "pitfall": "读到一份Resources内容，不代表取得执行权限。"
+  },
+  {
+    "chapter": 25,
+    "section": "工具Schema不应替代业务判断",
+    "figure": "fdiag-25-04",
+    "kind": "flow",
+    "stages": [
+      "发现工具Schema",
+      "模型生成参数",
+      "宿主做业务校验"
+    ],
+    "explanation": "Schema约束字段和类型，但真实业务边界仍要二次检查。",
+    "pitfall": "参数符合类型不等于安全。"
+  },
+  {
+    "chapter": 25,
+    "section": "stdio、HTTP与JSON-RPC先只懂职责",
+    "figure": "fdiag-25-05",
+    "kind": "roles",
+    "stages": [
+      "stdio：进程管道",
+      "HTTP：网络传输",
+      "JSON-RPC：调用格式"
+    ],
+    "explanation": "传输通道与消息结构是两层，换传输不必改变每个工具的业务含义。",
+    "pitfall": "不要把HTTP和JSON-RPC当成同一层的东西。"
+  },
+  {
+    "chapter": 26,
+    "section": "上下文不是“整台电脑都在模型脑里”",
+    "figure": "fdiag-26-01",
+    "kind": "roles",
+    "stages": [
+      "系统与项目规则",
+      "用户目标",
+      "工具证据与历史"
+    ],
+    "explanation": "Context Assembly是在安排每轮提供哪些资料以及它们的优先级和来源。",
+    "pitfall": "本轮未提供的文件不能算模型已经读过。"
+  },
+  {
+    "chapter": 26,
+    "section": "先算一本简化Token账",
+    "figure": "fdiag-26-02",
+    "kind": "transform",
+    "stages": [
+      "模型窗口限制",
+      "分配规则/证据/工具预算",
+      "给生成留出空间"
+    ],
+    "explanation": "如果全部窗口都塞成输入，可能没有足够预算生成输出或工具调用。",
+    "pitfall": "Token预算不是简单等于字符数。"
+  },
+  {
+    "chapter": 26,
+    "section": "怎样选证据，不是越多越好",
+    "figure": "fdiag-26-03",
+    "kind": "flow",
+    "stages": [
+      "任务问题明确",
+      "先精准检索证据",
+      "必要时扩大范围"
+    ],
+    "explanation": "从最相关资料开始，按缺口升级检索，比先读全仓库更经济。",
+    "pitfall": "读取量大不等于证据更充分。"
+  },
+  {
+    "chapter": 26,
+    "section": "顺序、角色、来源是三种不同标签",
+    "figure": "fdiag-26-04",
+    "kind": "roles",
+    "stages": [
+      "指令角色",
+      "证据来源路径",
+      "版本与时间"
+    ],
+    "explanation": "三个标签回答“谁在要求”“证据从哪来”“是否仍有效”，不能互相替代。",
+    "pitfall": "网页正文即便声称system，也仍是不可信数据。"
+  },
+  {
+    "chapter": 26,
+    "section": "Prompt Cache为什么需要稳定前缀",
+    "figure": "fdiag-26-05",
+    "kind": "transform",
+    "stages": [
+      "稳定系统前缀",
+      "保持相同序列与工具定义",
+      "可能获得Prompt Cache命中"
+    ],
+    "explanation": "前缀缓存依赖足够一致的输入前段，改动早期内容可能降低复用。",
+    "pitfall": "缓存命中不代表模型永久记住了规则。"
+  },
+  {
+    "chapter": 27,
+    "section": "先区分四种动作",
+    "figure": "fdiag-27-01",
+    "kind": "roles",
+    "stages": [
+      "裁剪：删旧内容",
+      "摘要：写较短替代",
+      "检索：之后再拿回"
+    ],
+    "explanation": "这些方法都是管理上下文，但信息保留与恢复能力不同。",
+    "pitfall": "压缩并不总能逆向恢复丢掉的事实。"
+  },
+  {
+    "chapter": 27,
+    "section": "一个不能再被缩短成“任务快完成”的状态",
+    "figure": "fdiag-27-02",
+    "kind": "transform",
+    "stages": [
+      "“禁止修改生产配置”",
+      "摘要应完整保留禁止约束",
+      "继续任务仍受限"
+    ],
+    "explanation": "压缩最怕把禁止、未完成、否定条件丢掉，导致后续行动反向。",
+    "pitfall": "把“不能改”摘要成“改配置”会导致严重误解。"
+  },
+  {
+    "chapter": 27,
+    "section": "一次压缩应该怎样进行",
+    "figure": "fdiag-27-03",
+    "kind": "flow",
+    "stages": [
+      "提取已确认事实",
+      "列出待完成动作和证据引用",
+      "生成新上下文并核验"
+    ],
+    "explanation": "一次合理压缩除了减少长度，还需记录来源、版本、未决事项。",
+    "pitfall": "只看摘要是否流畅无法证明压缩保真。"
+  },
+  {
+    "chapter": 27,
+    "section": "原文如何重新找回",
+    "figure": "fdiag-27-04",
+    "kind": "transform",
+    "stages": [
+      "摘要只保留证据ID",
+      "需要细节时回查原文",
+      "证据可重新追溯"
+    ],
+    "explanation": "外置原始证据能补回摘要中无法保留的详细条件。",
+    "pitfall": "原文件若已变化，应校验版本而非盲读当前最新。"
+  },
+  {
+    "chapter": 27,
+    "section": "为什么不透明压缩块不能当普通摘要",
+    "figure": "fdiag-27-05",
+    "kind": "roles",
+    "stages": [
+      "原始消息",
+      "文字摘要",
+      "不透明压缩状态"
+    ],
+    "explanation": "不同压缩接口可能产出不同类型对象；不可把不透明状态当成可人工逐字核对的总结。",
+    "pitfall": "不能假设所有厂商的Compaction都输出可读文本。"
+  },
+  {
+    "chapter": 28,
+    "section": "检索先解决“从哪里找到候选”",
+    "figure": "fdiag-28-01",
+    "kind": "flow",
+    "stages": [
+      "用户提出问题",
+      "检索系统找候选",
+      "再判断候选够不够回答"
+    ],
+    "explanation": "检索只是找证据的前半段，相关片段不一定足够支持具体结论。",
+    "pitfall": "不要把检索分数当作事实真实性。"
+  },
+  {
+    "chapter": 28,
+    "section": "倒排索引为什么叫“倒排”",
+    "figure": "fdiag-28-02",
+    "kind": "transform",
+    "stages": [
+      "词项→含文档列表",
+      "查询“缓存”",
+      "直接得到出现该词的文档ID"
+    ],
+    "explanation": "倒排索引把“哪个词在哪些文档”预先存好，查询不必全文扫描。",
+    "pitfall": "未命中的同义表达可能需要语义检索补充。"
+  },
+  {
+    "chapter": 28,
+    "section": "TF、IDF与BM25先认识职责",
+    "figure": "fdiag-28-03",
+    "kind": "roles",
+    "stages": [
+      "TF：词出现多少",
+      "IDF：词有多稀有",
+      "BM25：综合词匹配"
+    ],
+    "explanation": "术语频率和稀有度帮助排序，但不是文章内容的真实性评分。",
+    "pitfall": "BM25分数并不天然是0到1的概率。"
+  },
+  {
+    "chapter": 28,
+    "section": "向量检索为什么能找同义表达",
+    "figure": "fdiag-28-04",
+    "kind": "flow",
+    "stages": [
+      "问题变成查询向量",
+      "与文档向量比较",
+      "召回语义相近候选"
+    ],
+    "explanation": "向量检索能找到不同用词但语义相近的资料，但会受嵌入模型影响。",
+    "pitfall": "向量接近不等于文档确实回答了问题。"
+  },
+  {
+    "chapter": 28,
+    "section": "精确最近邻与近似最近邻",
+    "figure": "fdiag-28-05",
+    "kind": "compare",
+    "stages": [
+      "精确最近邻：找真前k",
+      "近似ANN：更快但可能漏",
+      "需要召回率/延迟取舍"
+    ],
+    "explanation": "ANN牺牲部分检索精度换规模性能，仍应评估具体数据分布。",
+    "pitfall": "过滤条件很严格时，ANN后的候选可能不足。"
+  },
+  {
+    "chapter": 29,
+    "section": "召回和重排为什么分两步",
+    "figure": "fdiag-29-01",
+    "kind": "flow",
+    "stages": [
+      "多路召回候选",
+      "粗筛与融合",
+      "精细重排再给LLM"
+    ],
+    "explanation": "先扩大相关候选覆盖，再用成本更高的方法排序，可平衡成本和质量。",
+    "pitfall": "重排不能凭空找回从未召回的资料。"
+  },
+  {
+    "chapter": 29,
+    "section": "关键词和向量怎样一起用",
+    "figure": "fdiag-29-02",
+    "kind": "roles",
+    "stages": [
+      "关键词检索",
+      "向量检索",
+      "融合排序RRF"
+    ],
+    "explanation": "关键词擅长精确术语，向量擅长语义相近，用融合减少单一路径偏差。",
+    "pitfall": "不同来源的同一文档应注意去重与版本。"
+  },
+  {
+    "chapter": 29,
+    "section": "Cross-encoder为什么更细也更贵",
+    "figure": "fdiag-29-03",
+    "kind": "transform",
+    "stages": [
+      "候选文章与查询",
+      "Cross-encoder联合编码",
+      "逐候选计算相关性分数"
+    ],
+    "explanation": "重排可更细看查询与文章交互，但每个候选都计算，成本通常更高。",
+    "pitfall": "不要把重排分数直接当最终答案真值。"
+  },
+  {
+    "chapter": 29,
+    "section": "相关不等于足够回答",
+    "figure": "fdiag-29-04",
+    "kind": "compare",
+    "stages": [
+      "“相关”：提到主题",
+      "“充分”：含关键条件",
+      "真正回答要满足后者"
+    ],
+    "explanation": "一段文档即使高度相关，也可能没给出版本、单位或例外条件。",
+    "pitfall": "只引用高相似度片段，不能自动补齐缺失事实。"
+  },
+  {
+    "chapter": 29,
+    "section": "查询改写和假设文档的边界",
+    "figure": "fdiag-29-05",
+    "kind": "flow",
+    "stages": [
+      "问题模糊",
+      "查询改写或扩展",
+      "扩大召回并核对原意"
+    ],
+    "explanation": "改写能找到不同说法，但必须保留用户原约束与实体。",
+    "pitfall": "改写扩大主题范围也可能引入虚假相关。"
+  },
+  {
+    "chapter": 30,
+    "section": "先从一行代码看不同观察层",
+    "figure": "fdiag-30-01",
+    "kind": "roles",
+    "stages": [
+      "文本层：字符串匹配",
+      "语法层：AST结构",
+      "语义层：符号和类型"
+    ],
+    "explanation": "代码可以从文本、结构、符号三层观察；每层能回答的问题不同。",
+    "pitfall": "找到同名函数不等于找到调用时实际绑定的实现。"
+  },
+  {
+    "chapter": 30,
+    "section": "LSP不是自动懂业务的模型",
+    "figure": "fdiag-30-02",
+    "kind": "transform",
+    "stages": [
+      "函数定义foo",
+      "LSP查询引用",
+      "得到调用点清单"
+    ],
+    "explanation": "语言服务使用项目结构和语言规则定位定义与引用，不是“理解业务需求”的模型。",
+    "pitfall": "宏、动态反射和生成代码仍可能超出静态分析能力。"
+  },
+  {
+    "chapter": 30,
+    "section": "图、节点和边怎样读",
+    "figure": "fdiag-30-03",
+    "kind": "flow",
+    "stages": [
+      "函数节点",
+      "调用/依赖边",
+      "构建局部关系图"
+    ],
+    "explanation": "代码依赖图把“谁调用谁”“谁影响谁”表示为节点与边。",
+    "pitfall": "图上连通不等于运行时必然执行该路径。"
+  },
+  {
+    "chapter": 30,
+    "section": "Git的几种状态为什么都重要",
+    "figure": "fdiag-30-04",
+    "kind": "roles",
+    "stages": [
+      "工作区未提交文件",
+      "暂存区Index",
+      "Git提交快照"
+    ],
+    "explanation": "看到哪个版本代码必须交代清楚，否则验证可能针对不同对象。",
+    "pitfall": "Git历史记录不包含未提交修改。"
+  },
+  {
+    "chapter": 30,
+    "section": "一次Bug定位的具体顺序",
+    "figure": "fdiag-30-05",
+    "kind": "flow",
+    "stages": [
+      "复现报错与日志",
+      "精确搜索/符号定位",
+      "阅读最小充分源码并验证"
+    ],
+    "explanation": "Bug定位优先用低成本确定性工具收缩范围，再逐步扩大。",
+    "pitfall": "先扫全仓库可能降低信息密度。"
+  },
+  {
+    "chapter": 31,
+    "section": "先说什么值得跨会话保存",
+    "figure": "fdiag-31-01",
+    "kind": "roles",
+    "stages": [
+      "事实记忆：当前规则",
+      "情景记忆：过去发生",
+      "程序性记忆：怎么做"
+    ],
+    "explanation": "三类信息适用范围不同，不能把一次经历直接升格为永久流程。",
+    "pitfall": "长期记忆不是所有聊天记录的无差别复制。"
+  },
+  {
+    "chapter": 31,
+    "section": "四种记忆不只是一组名称",
+    "figure": "fdiag-31-02",
+    "kind": "compare",
+    "stages": [
+      "当前任务临时状态",
+      "长期复用知识",
+      "两者需要不同保存策略"
+    ],
+    "explanation": "任务Checkpoint解决恢复，长期Memory解决跨任务取用。",
+    "pitfall": "一个会话历史存在，不代表已经形成可靠长期经验。"
+  },
+  {
+    "chapter": 31,
+    "section": "一条可用记忆至少问哪些问题",
+    "figure": "fdiag-31-03",
+    "kind": "flow",
+    "stages": [
+      "候选事实",
+      "附证据、时间与范围",
+      "存为可检索记忆"
+    ],
+    "explanation": "有价值的记忆至少回答“从哪里来、何时有效、什么时候不该用”。",
+    "pitfall": "来源不明的总结会积累虚假规则。"
+  },
+  {
+    "chapter": 31,
+    "section": "Valid time与Recorded time为什么不同",
+    "figure": "fdiag-31-04",
+    "kind": "roles",
+    "stages": [
+      "事实生效时间",
+      "系统记录时间",
+      "用户查询时间"
+    ],
+    "explanation": "新资料可能晚到；有效时间和被系统获知的时间并不总相同。",
+    "pitfall": "只保留一个更新时间，无法重建历史判断依据。"
+  },
+  {
+    "chapter": 31,
+    "section": "更新不是只追加一条新向量",
+    "figure": "fdiag-31-05",
+    "kind": "flow",
+    "stages": [
+      "旧记忆与新证据冲突",
+      "比较来源和适用条件",
+      "更新、并存或失效"
+    ],
+    "explanation": "记忆更新需要显式处理冲突，并使依赖旧事实的派生条目重新验证。",
+    "pitfall": "新增一条“更正”不代表旧记忆自动不再被检索到。"
+  },
+  {
+    "chapter": 32,
+    "section": "五种扩展能力不要混成一个大Prompt",
+    "figure": "fdiag-32-01",
+    "kind": "roles",
+    "stages": [
+      "Prompt：本轮指令",
+      "Skill：可复用做法",
+      "MCP：连接外部工具"
+    ],
+    "explanation": "这些都是扩展Agent的方式，但解决的信息类型和执行边界不同。",
+    "pitfall": "把所有内容塞成一个永久Prompt会造成干扰。"
+  },
+  {
+    "chapter": 32,
+    "section": "路由是在作选择",
+    "figure": "fdiag-32-02",
+    "kind": "flow",
+    "stages": [
+      "识别用户任务",
+      "选择相关Skill",
+      "按需加载内容与资源"
+    ],
+    "explanation": "技能路由是选择与加载问题，不能只检查Skill是否存在于磁盘。",
+    "pitfall": "相关技能未进入本轮上下文时，模型不一定会遵循它。"
+  },
+  {
+    "chapter": 32,
+    "section": "漏加载与过度加载为何都不好",
+    "figure": "fdiag-32-03",
+    "kind": "compare",
+    "stages": [
+      "漏加载：缺必要流程",
+      "过度加载：增加无关文本",
+      "目标是恰到好处"
+    ],
+    "explanation": "技能召回率和误加载率都影响质量与效率，不能只追求“加载越多”。",
+    "pitfall": "语义相似不代表必须加载。"
+  },
+  {
+    "chapter": 32,
+    "section": "子Agent不是主Agent的一份完全复制",
+    "figure": "fdiag-32-04",
+    "kind": "flow",
+    "stages": [
+      "主Agent委派任务",
+      "子Agent独立上下文执行",
+      "结果汇回主Agent"
+    ],
+    "explanation": "子Agent的工具权限、上下文和记忆不应假设与主Agent完全相同。",
+    "pitfall": "交接时若省掉关键证据，会导致子任务误判。"
+  },
+  {
+    "chapter": 32,
+    "section": "用一个DAG算并行是否值得",
+    "figure": "fdiag-32-05",
+    "kind": "flow",
+    "stages": [
+      "任务A与B相互独立",
+      "两者并行",
+      "关键路径决定总耗时"
+    ],
+    "explanation": "并行省的是墙钟时间，不必然减少总Token或总工作量。",
+    "pitfall": "有依赖的任务强行并行会制造冲突。"
+  },
+  {
+    "chapter": 33,
+    "section": "先看最危险的一条时间线",
+    "figure": "fdiag-33-01",
+    "kind": "flow",
+    "stages": [
+      "提交请求",
+      "外部副作用完成",
+      "回复丢失／超时"
+    ],
+    "explanation": "超时只证明调用方没得到结果，不证明远端没执行。",
+    "pitfall": "盲目重试可能导致重复付款、重复写入。"
+  },
+  {
+    "chapter": 33,
+    "section": "幂等不是“重试时最好别出错”",
+    "figure": "fdiag-33-02",
+    "kind": "roles",
+    "stages": [
+      "成功：可证实",
+      "失败：可证实未完成",
+      "未知：证据不足"
+    ],
+    "explanation": "状态语义越清楚，故障恢复越安全；未知不应被静默转换成失败。",
+    "pitfall": "日志缺失不代表外部世界未变。"
+  },
+  {
+    "chapter": 33,
+    "section": "数据库事务保证到哪里",
+    "figure": "fdiag-33-03",
+    "kind": "transform",
+    "stages": [
+      "相同操作和幂等键",
+      "重复发送两次",
+      "下游只产生一次副作用"
+    ],
+    "explanation": "幂等设计要由目标系统实现或核验，客户端重复调用不自动安全。",
+    "pitfall": "仅在日志里写“已执行”不等于保证幂等。"
+  },
+  {
+    "chapter": 33,
+    "section": "CAS怎样避免覆盖新版本",
+    "figure": "fdiag-33-04",
+    "kind": "compare",
+    "stages": [
+      "数据库事务可原子提交",
+      "Shell文件修改在事务外",
+      "需要额外协调或补偿"
+    ],
+    "explanation": "本地数据库的ACID保障不自动覆盖网络调用或Shell副作用。",
+    "pitfall": "不能用“用了事务”推断所有外部动作一同回滚。"
+  },
+  {
+    "chapter": 33,
+    "section": "原子替换能做什么，不能做什么",
+    "figure": "fdiag-33-05",
+    "kind": "flow",
+    "stages": [
+      "先读版本v7",
+      "想写新v8",
+      "写入时再次校验v7"
+    ],
+    "explanation": "条件更新/CAS把比较与替换放在一个受控原子边界内。",
+    "pitfall": "先查版本再独立写入，仍有竞争窗口。"
+  },
+  {
+    "chapter": 34,
+    "section": "正确性首先相对于什么",
+    "figure": "fdiag-34-01",
+    "kind": "flow",
+    "stages": [
+      "用户要求",
+      "可验证验收条件",
+      "实现与测试"
+    ],
+    "explanation": "工程正确性要相对于明确的目标和约束，而不是看起来专业。",
+    "pitfall": "复杂设计若没有解决实际失败模式，可能只增加维护成本。"
+  },
+  {
+    "chapter": 34,
+    "section": "一条测试包含什么",
+    "figure": "fdiag-34-02",
+    "kind": "transform",
+    "stages": [
+      "输入与环境",
+      "动作/函数执行",
+      "实际输出与期望比较"
+    ],
+    "explanation": "一条好测试要有清晰的前提、操作、断言；否则通过也不一定有意义。",
+    "pitfall": "测试名字像“覆盖全部”不表示实际断言充分。"
+  },
+  {
+    "chapter": 34,
+    "section": "单元、集成和端到端测试各看哪层",
+    "figure": "fdiag-34-03",
+    "kind": "roles",
+    "stages": [
+      "单元测试：局部规则",
+      "集成测试：模块协作",
+      "E2E：整条用户路径"
+    ],
+    "explanation": "测试层级解决不同错误，互相不能简单代替。",
+    "pitfall": "E2E多并不代表单元验证可以完全不要。"
+  },
+  {
+    "chapter": 34,
+    "section": "用反例识别弱测试",
+    "figure": "fdiag-34-04",
+    "kind": "compare",
+    "stages": [
+      "普通例子能通过",
+      "反例揭示边界缺陷",
+      "修改后要重新跑反例"
+    ],
+    "explanation": "反例能证伪过度宽泛的实现假设，例如空输入、重复请求、权限不足。",
+    "pitfall": "不能只收集“做对了”的漂亮样例。"
+  },
+  {
+    "chapter": 34,
+    "section": "测试通过也必须绑定版本",
+    "figure": "fdiag-34-05",
+    "kind": "flow",
+    "stages": [
+      "代码版本v10测试通过",
+      "之后再改为v11",
+      "需要重跑受影响验证"
+    ],
+    "explanation": "测试结论绑定被测试对象，不能凭旧记录证明新文件仍正确。",
+    "pitfall": "即便只是格式化，也应检查它是否改变了交付对象。"
+  },
+  {
+    "chapter": 35,
+    "section": "先给评测单位起清楚名字",
+    "figure": "fdiag-35-01",
+    "kind": "roles",
+    "stages": [
+      "样本单位：一次任务",
+      "成功次数：分子",
+      "总任务数：分母"
+    ],
+    "explanation": "指标解释前要说清分母，否则百分比几乎没有比较价值。",
+    "pitfall": "不能把工具调用成功率冒充端到端任务成功率。"
+  },
+  {
+    "chapter": 35,
+    "section": "成功率先用真实次数算",
+    "figure": "fdiag-35-02",
+    "kind": "transform",
+    "stages": [
+      "20个任务",
+      "其中16个通过",
+      "成功率16/20=80%"
+    ],
+    "explanation": "成功率的基本单位是任务还是运行，应在统计前固定。",
+    "pitfall": "某一次任务重复跑很多次会改变样本权重。"
+  },
+  {
+    "chapter": 35,
+    "section": "精确率和召回率用集合手算",
+    "figure": "fdiag-35-03",
+    "kind": "compare",
+    "stages": [
+      "Precision：预测为真中多少真",
+      "Recall：真实应找到中找回多少",
+      "两个分母不同"
+    ],
+    "explanation": "精确率在乎误报，召回率在乎漏报；检索和路由经常需要二者平衡。",
+    "pitfall": "两个指标不是简单互补到100%。"
+  },
+  {
+    "chapter": 35,
+    "section": "排得靠前也有区别",
+    "figure": "fdiag-35-04",
+    "kind": "roles",
+    "stages": [
+      "Recall@k",
+      "MRR",
+      "nDCG"
+    ],
+    "explanation": "前k个有没有找回、首个相关结果排第几、相关结果排序质量，是不同问题。",
+    "pitfall": "只看召回不一定反映下游能否得到足够证据。"
+  },
+  {
+    "chapter": 35,
+    "section": "pass@1、pass@k、pass^k的区别",
+    "figure": "fdiag-35-05",
+    "kind": "compare",
+    "stages": [
+      "pass@1：单次成功",
+      "pass@k：至少一次成功",
+      "pass^k：多次都成功"
+    ],
+    "explanation": "它们衡量不同的可靠性要求，不能因为数字都含k就混在一起。",
+    "pitfall": "若各次运行不独立，简单的理论公式可能不适用。"
+  },
+  {
+    "chapter": 36,
+    "section": "概率与一次观察不是同一个数",
+    "figure": "fdiag-36-01",
+    "kind": "transform",
+    "stages": [
+      "旧版50个任务成功40",
+      "新版50个任务成功45",
+      "表面提升10个百分点"
+    ],
+    "explanation": "差异可能来自抽样波动或任务构成；要看配对任务和重复运行。",
+    "pitfall": "不应只报两列总分就宣布因果收益。"
+  },
+  {
+    "chapter": 36,
+    "section": "为什么重复同一题也会不同",
+    "figure": "fdiag-36-02",
+    "kind": "roles",
+    "stages": [
+      "概率模型预期",
+      "一次实际观测",
+      "重复运行分布"
+    ],
+    "explanation": "概率是对可能结果的描述，一次结果不能完全代表稳定能力。",
+    "pitfall": "不要把单次成功当成必然成功。"
+  },
+  {
+    "chapter": 36,
+    "section": "配对比较比只看两列总分更有信息",
+    "figure": "fdiag-36-03",
+    "kind": "flow",
+    "stages": [
+      "固定同一任务",
+      "换随机种子或运行环境",
+      "观察成功次数分布"
+    ],
+    "explanation": "即使输入相同，模型抽样、工具网络、环境竞争也可能导致结果差异。",
+    "pitfall": "公平对比应尽量控制模型、工具和任务条件。"
+  },
+  {
+    "chapter": 36,
+    "section": "标准误差怎样理解",
+    "figure": "fdiag-36-04",
+    "kind": "compare",
+    "stages": [
+      "旧版与新版分别总分",
+      "同一任务配对结果",
+      "看谁在哪些题上变好变坏"
+    ],
+    "explanation": "配对比较保留“同一道题”的变化，比仅看两列平均更能定位回归。",
+    "pitfall": "旧版对一组任务、新版对另一组任务不适合作因果比较。"
+  },
+  {
+    "chapter": 36,
+    "section": "置信区间不是“模型有95%自信”",
+    "figure": "fdiag-36-05",
+    "kind": "transform",
+    "stages": [
+      "样本均值",
+      "样本间波动",
+      "标准误差衡量均值不确定性"
+    ],
+    "explanation": "样本越少、结果波动越大，均值的不确定性往往越高。",
+    "pitfall": "标准误差不是每条样本本身的标准差。"
+  },
+  {
+    "chapter": 37,
+    "section": "先区分指令来源",
+    "figure": "fdiag-37-01",
+    "kind": "roles",
+    "stages": [
+      "用户授权指令",
+      "外部网页正文",
+      "模型的工具请求"
+    ],
+    "explanation": "不可信资料可以提供事实，却不能靠写“system”就获得更高权限。",
+    "pitfall": "引用文本里的命令不自动变成用户的新指令。"
+  },
+  {
+    "chapter": 37,
+    "section": "可信边界具体是什么",
+    "figure": "fdiag-37-02",
+    "kind": "flow",
+    "stages": [
+      "内容从外部进入",
+      "标记数据来源和可信度",
+      "执行时独立检查权限"
+    ],
+    "explanation": "信任边界在数据和执行层同时存在：模型说要做，还得由执行器决定能不能做。",
+    "pitfall": "单靠Prompt劝告不能代替系统权限控制。"
+  },
+  {
+    "chapter": 37,
+    "section": "沙箱不是一个神奇开关",
+    "figure": "fdiag-37-03",
+    "kind": "compare",
+    "stages": [
+      "允许写src目录",
+      "禁止写secrets目录",
+      "沙箱/权限阻止越权"
+    ],
+    "explanation": "模型产生的路径要规范化并核验允许范围。",
+    "pitfall": "只比较原始路径字符串可能被../等绕过。"
+  },
+  {
+    "chapter": 37,
+    "section": "最小权限与审批到底批准什么",
+    "figure": "fdiag-37-04",
+    "kind": "flow",
+    "stages": [
+      "高风险动作参数",
+      "审批覆盖具体动作",
+      "参数变化后要重新审批"
+    ],
+    "explanation": "审批应绑定目标、参数、权限与版本，而不是一次性给所有未来动作放行。",
+    "pitfall": "审批完改变路径再执行属于越过已批准范围。"
+  },
+  {
+    "chapter": 37,
+    "section": "记忆污染如何让风险跨会话传播",
+    "figure": "fdiag-37-05",
+    "kind": "flow",
+    "stages": [
+      "恶意网页内容",
+      "被当作记忆写入",
+      "以后任务再次检索到"
+    ],
+    "explanation": "记忆污染可把一次外部注入变成跨会话风险。",
+    "pitfall": "对不可信来源抽取的记忆也应受审核与过期治理。"
+  },
+  {
+    "chapter": 38,
+    "section": "一次任务到底慢在哪里",
+    "figure": "fdiag-38-01",
+    "kind": "roles",
+    "stages": [
+      "Trace：请求链路",
+      "Log：具体事件",
+      "Metrics：整体量化"
+    ],
+    "explanation": "三类观测互相补充，Trace帮助定位一项任务在哪个步骤耗时或出错。",
+    "pitfall": "只有一串时间戳但缺调用ID，很难还原因果顺序。"
+  },
+  {
+    "chapter": 38,
+    "section": "用一条教学轨迹分账",
+    "figure": "fdiag-38-02",
+    "kind": "transform",
+    "stages": [
+      "模型推理时间",
+      "工具与排队时间",
+      "端到端墙钟时间"
+    ],
+    "explanation": "总耗时可能被工具等待、网络和排队主导，不一定是模型生成慢。",
+    "pitfall": "并行跨度不能把各操作耗时直接相加当墙钟时间。"
+  },
+  {
+    "chapter": 38,
+    "section": "TTFT、TPOT与端到端延迟",
+    "figure": "fdiag-38-03",
+    "kind": "transform",
+    "stages": [
+      "一次任务耗时：模型+工具+等待",
+      "逐项记录时间",
+      "找出最大的实际瓶颈"
+    ],
+    "explanation": "优化前必须测量，不应仅凭Token数量判断慢在哪里。",
+    "pitfall": "微优化非关键路径步骤不一定降低最终完成时间。"
+  },
+  {
+    "chapter": 38,
+    "section": "吞吐与延迟不是一对同义词",
+    "figure": "fdiag-38-04",
+    "kind": "roles",
+    "stages": [
+      "TTFT：首Token延迟",
+      "TPOT：每输出Token耗时",
+      "E2E：任务总延迟"
+    ],
+    "explanation": "三个指标观察不同层面，TTFT和TPOT好也不保证多工具任务快。",
+    "pitfall": "不能把端到端任务耗时归因成单次Decode速度。"
+  },
+  {
+    "chapter": 38,
+    "section": "成本应算整个任务",
+    "figure": "fdiag-38-05",
+    "kind": "compare",
+    "stages": [
+      "吞吐：单位时间总产出",
+      "延迟：单请求等多久",
+      "并发提高时两者可能背离"
+    ],
+    "explanation": "更大batch通常提高吞吐，但排队和长短请求竞争可能拖慢个别请求。",
+    "pitfall": "只看tokens/s会忽略用户体验。"
+  },
+  {
+    "chapter": 39,
+    "section": "图片在计算机里也是有形状的数据",
+    "figure": "fdiag-39-01",
+    "kind": "roles",
+    "stages": [
+      "图像像素[H,W,C]",
+      "图像Patch",
+      "视觉Token向量"
+    ],
+    "explanation": "图像经过切块、编码和投影，才变成模型可联合处理的向量。",
+    "pitfall": "图片不是先“翻译成一句文字”才一定能进入模型。"
+  },
+  {
+    "chapter": 39,
+    "section": "图像Patch怎样变成一串向量",
+    "figure": "fdiag-39-02",
+    "kind": "transform",
+    "stages": [
+      "图像16×16×3一块",
+      "展平得到768个数",
+      "投影到模型需要的特征宽度d"
+    ],
+    "explanation": "从像素块到向量是数值映射，不是按文字词表给每个像素编号。",
+    "pitfall": "不同视觉编码器的Patch策略并不统一。"
+  },
+  {
+    "chapter": 39,
+    "section": "视觉表示怎样交给语言模型",
+    "figure": "fdiag-39-03",
+    "kind": "flow",
+    "stages": [
+      "多个视觉Patch",
+      "视觉编码器提取特征",
+      "语言侧可利用的表示"
+    ],
+    "explanation": "视觉模型可能有单独的编码器和连接模块，具体集成取决于架构。",
+    "pitfall": "不能假设图像与文字共用一个原始Tokenizer。"
+  },
+  {
+    "chapter": 39,
+    "section": "GUI Agent为什么要反复观察",
+    "figure": "fdiag-39-04",
+    "kind": "flow",
+    "stages": [
+      "屏幕截图",
+      "定位可交互区域",
+      "执行点击再观察"
+    ],
+    "explanation": "GUI Agent必须闭环观察，因为界面状态可能在操作后改变。",
+    "pitfall": "截图识别的按钮坐标不一定在下一时刻仍有效。"
+  },
+  {
+    "chapter": 39,
+    "section": "模型自信、概率与校准",
+    "figure": "fdiag-39-05",
+    "kind": "roles",
+    "stages": [
+      "模型概率",
+      "真实正确率",
+      "校准度"
+    ],
+    "explanation": "模型给出高概率不代表答案的事实正确率经过验证，尤其是整段回答。",
+    "pitfall": "Token概率不能直接读成“这篇报告有80%正确”。"
+  },
+  {
+    "chapter": 40,
+    "section": "先问失败发生在哪一层",
+    "figure": "fdiag-40-01",
+    "kind": "flow",
+    "stages": [
+      "观察失败现象",
+      "定位输入/模型/工具/状态层",
+      "再决定修复哪一处"
+    ],
+    "explanation": "先找责任层，才能避免看到质量问题就马上换模型或叠加Review。",
+    "pitfall": "未经证据就优化，可能把简单任务复杂化。"
+  },
+  {
+    "chapter": 40,
+    "section": "一个完整但不过度复杂的调查",
+    "figure": "fdiag-40-02",
+    "kind": "flow",
+    "stages": [
+      "明确用户原目标",
+      "检查关键Trace与证据",
+      "最小修复后做回归"
+    ],
+    "explanation": "调查要能复现，不应在无界搜索中循环。",
+    "pitfall": "工具失败反复重试不能代替升级或跳过策略。"
+  },
+  {
+    "chapter": 40,
+    "section": "Prompt、RAG、Memory、Skill和Fine-tuning怎样选",
+    "figure": "fdiag-40-03",
+    "kind": "roles",
+    "stages": [
+      "Prompt：表达任务",
+      "RAG：取外部事实",
+      "Memory：跨任务保留"
+    ],
+    "explanation": "不同机制解决不同缺口，选错工具只会增添上下文与维护负担。",
+    "pitfall": "需要最新代码时应先查仓库，不是去微调模型记住它。"
+  },
+  {
+    "chapter": 40,
+    "section": "为什么读完基础还需要高级追问",
+    "figure": "fdiag-40-04",
+    "kind": "compare",
+    "stages": [
+      "基础课：会解释对象",
+      "高级课：会看实现细节",
+      "工程实践：会设计与验证"
+    ],
+    "explanation": "学习深度体现在从概念推到代码状态、失效边界和可复现证据。",
+    "pitfall": "名词数量多不代表理解了系统内部。"
+  },
+  {
+    "chapter": 40,
+    "section": "面试式回答怎样不变成背口诀",
+    "figure": "fdiag-40-05",
+    "kind": "flow",
+    "stages": [
+      "先说明问题与约束",
+      "给出机制与小例子",
+      "再谈边界和验证"
+    ],
+    "explanation": "面试式回答最好有可追问的推导链，而不是只给术语定义。",
+    "pitfall": "背结论时不懂适用条件容易给出错误工程建议。"
+  }
+]

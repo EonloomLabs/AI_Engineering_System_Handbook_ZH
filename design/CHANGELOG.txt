@@ -110,3 +110,50 @@ questions.html 并入 search.html · 本轮改动
 - design/check_local_links.py：243 页、84419 条本地引用、0 处错误。
 - 全站 242 个计入目录的页面，每页目录链接 242 条，当前项唯一。
 - 浏览器检查：按 Q025 检索返回 4 项并正确定位；控制台无错误。
+
+并入 Desktop 导出版（图解与工程深挖）· 本轮改动
+
+1. 合并背景
+- 来源：/Users/chuhemiao/Desktop/AI_Systems_Engineering_Textbook_ZH。
+- 该导出基于 45dda0c，不含此前的阅读界面改动，双方各自改动了同样的 245 个文件，
+  主要都是向每页目录那一行插入内容。按三方合并处理：
+  以 45dda0c 为基，导出版为一支，本仓库为另一支。
+- 239 个冲突全部是同一类（双方都改了目录行），统一取导出版，
+  再用脚本把本仓库一侧的改动重放到新外壳上。
+
+2. 导出版带来的新内容
+- 正文图解：基础篇 40 节共 201 张节内 SVG 图解（id 形如 fdiag-05-02），
+  逐节嵌在对应解释附近；系统篇与专题页同步接入。
+- mechanisms/：正文图解与细算索引、来源与适用条件、复算与验证记录，
+  含 test_mechanisms.py、figures.py、walk_cases.py 与 11 份回归日志。
+- engineering/：工程深挖目录、依据与版本、故障实验，64 篇 D 系列讲义、
+  14 份运行结果、validate_package.py 与故障注入实验程序。
+- foundation-atlas.html：基础篇逐节图解索引。
+- 新增 assets/mechanisms.css、assets/mechanisms.js、assets/engineering.css；
+  目录新增「工程深挖」「正文图解」两组。
+
+3. 本仓库一侧重放的改动
+- guide / about / advanced-labs / coverage 四页重新套用导出版外壳，
+  正文内容逐字保留（含 coverage 的 17 模块分组与 206 条链接修复）。
+- examples/input-representation.html 的先修链接与条目类别重新应用。
+- search.html 重新并入 questions.html 的条目类型表与编号对照表，
+  编号对照新增 fdiag 一行，指向基础篇逐节图解索引。
+- index.html 增加「阅读导论」与图解索引入口；contents.html 附录补入四条。
+- 全站目录补回四页，并新增 foundation-atlas 条目（放在「正文图解」组）。
+- catalog.js 由 244 条增至 249 条。
+- assets/atelier.css 导出版未改动，本仓库的追加保留，另补一条分编标题计数样式。
+
+4. foundation-atlas.html 的版面
+- 导出版用的是旧版 .top 外壳且不在目录中，与其余页面不一致；
+  改为统一外壳，并把 40 个小节按全书六编分组，每组标注张数，
+  顶部加分编跳转条，右提纲指向六编。201 条链接与原文一一对应。
+
+5. 验证
+- design/check_local_links.py：250 页、92495 条本地引用、0 处错误。
+- 249 个计入目录的页面，每页目录链接 249 条，当前项唯一。
+- mechanisms/test_mechanisms.py：56 项通过。
+- foundations/verify_diagram_math.py：21 项通过。
+- 浏览器检查：图解索引、节内图解锚点、工程深挖、正文图解各页正常，
+  宽度 375px 与 1680px 均无横向溢出，控制台无错误。
+- 未重跑导出版自带的 engineering/QA.json、mechanisms/*.json 等历史记录，
+  那些数值仍指导出时的那一轮。
