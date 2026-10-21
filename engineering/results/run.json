@@ -1,0 +1,796 @@
+{
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+    "torch": "2.10.0+cpu",
+    "cuda_available": false,
+    "sqlite": "3.46.1",
+    "pytest": "9.0.2",
+    "git": "git version 2.47.3",
+    "ran_at_utc": "2026-10-21T02:54:49.850270+00:00",
+    "claims": "CPU and local temporary resources only; no commercial model/GPU/production service benchmarks."
+  },
+  "tests": 69,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "observations": {
+    "E09-xent": {
+      "full_gradient": [
+        [
+          0.33608508110046387,
+          -0.33608511090278625
+        ],
+        [
+          -0.21314038336277008,
+          0.2131403535604477
+        ]
+      ],
+      "sum_normalized_gradient": [
+        [
+          0.33608508110046387,
+          -0.33608511090278625
+        ],
+        [
+          -0.21314038336277008,
+          0.2131403535604477
+        ]
+      ],
+      "mean_of_means_gradient": [
+        [
+          0.06571647524833679,
+          -0.06571649014949799
+        ],
+        [
+          -0.4587741494178772,
+          0.4587740898132324
+        ]
+      ],
+      "loss": 0.8043063879013062
+    },
+    "E28-sql": {
+      "stale_revision": 10,
+      "changed_rows": 0,
+      "preserved": [
+        11,
+        "c7 succeeded"
+      ]
+    },
+    "E34-git": {
+      "same_head": true,
+      "diff": "diff --git a/a.py b/a.py\nindex bafc5d9..7a56633 100644\n--- a/a.py\n+++ b/a.py\n@@ -1 +1 @@\n-x=1\n+x=2",
+      "scope": "actual local temporary Git repository"
+    },
+    "E45-bootstrap": {
+      "trials": 10000,
+      "seed": 20261021,
+      "paired_task_delta": [
+        0,
+        0,
+        -1,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "mean": 0.125,
+      "percentile_interval": [
+        -0.25,
+        0.5
+      ],
+      "scope": "teaching 8-task dataset, not population certification"
+    },
+    "E50-schema": {
+      "v1_ms": 5000,
+      "v2_ms": 5000,
+      "unknown_version_rejected": true
+    },
+    "E56-mutants": {
+      "killed": [
+        "mean-of-means",
+        "unconditional-compaction-commit",
+        "cache-position-reset"
+      ]
+    },
+    "E01": {
+      "correct": [
+        1,
+        8,
+        9,
+        2
+      ],
+      "wrong": [
+        1,
+        1,
+        8,
+        9,
+        2,
+        2
+      ],
+      "scope": "teaching token list, not HF tokenizer"
+    },
+    "E02": {
+      "before": [
+        6,
+        4
+      ],
+      "after": [
+        7,
+        4
+      ],
+      "new_id": 6
+    },
+    "E03-dropout": {
+      "eval_without_dropout": [
+        [
+          [
+            [
+              1.0
+            ]
+          ]
+        ]
+      ],
+      "outputs_with_p_half": [
+        0.5,
+        2.0,
+        0.5,
+        1.5,
+        1.0,
+        1.5,
+        0.5,
+        1.0,
+        1.0,
+        1.5,
+        0.5,
+        0.5,
+        1.0,
+        1.0,
+        1.0,
+        2.0
+      ]
+    },
+    "E03-linear": {
+      "correct": [
+        [
+          5.0,
+          11.0
+        ]
+      ],
+      "wrong": [
+        [
+          7.0,
+          10.0
+        ]
+      ]
+    },
+    "E04": {
+      "finite_fill_result": [
+        0.5,
+        0.5
+      ],
+      "manual_minus_inf_nan": true,
+      "native_sdpa_observed": [
+        [
+          [
+            [
+              0.0
+            ]
+          ]
+        ]
+      ],
+      "scope": "native result not generalized to all backends"
+    },
+    "E05-polarity": {
+      "correct": [
+        [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.3302384614944458,
+            0.6697615385055542
+          ]
+        ]
+      ],
+      "inverted": [
+        [
+          [
+            0.0,
+            1.0
+          ],
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      ]
+    },
+    "E05-offset": {
+      "mask": [
+        [
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      ],
+      "correct": [
+        2.5,
+        3.0
+      ],
+      "upper_left": [
+        1.0,
+        1.5
+      ]
+    },
+    "E06": {
+      "once": [
+        6.123233995736766e-17,
+        1.0
+      ],
+      "twice": [
+        -1.0,
+        1.2246467991473532e-16
+      ],
+      "cache_slots": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "valid_positions": [
+        0,
+        1,
+        2
+      ]
+    },
+    "E07": {
+      "indices": [
+        1,
+        2
+      ],
+      "correct": [
+        1,
+        1
+      ],
+      "last_column": [
+        0,
+        1
+      ]
+    },
+    "E08": {
+      "p_temperature1": [
+        0.6652409557748218,
+        0.24472847105479764,
+        0.09003057317038046
+      ],
+      "p_temperature2": [
+        0.506480391055654,
+        0.3071958857184984,
+        0.1863237232258476
+      ],
+      "top_p": 0.6,
+      "keep_before_temperature": [
+        0
+      ],
+      "keep_after_temperature": [
+        0,
+        1
+      ]
+    },
+    "E09-ddp": {
+      "rank_sum_gradients": [
+        2.0,
+        -6.0
+      ],
+      "counts": [
+        1,
+        3
+      ],
+      "correct": -1.0,
+      "wrong": 0.0,
+      "scope": "algebra simulation; no distributed process group launched"
+    },
+    "E09": {
+      "token_counts": [
+        1,
+        3
+      ],
+      "correct_gradient": -1.0,
+      "mean_of_means_gradient": 0.0,
+      "scalar_loss_counterexample": {
+        "loss_sums": [
+          2.0,
+          3.0
+        ],
+        "counts": [
+          1,
+          3
+        ],
+        "correct": 1.25,
+        "wrong": 1.5
+      }
+    },
+    "E10-checkpoint": {
+      "calls": 2,
+      "gradient": 0.9182168245315552
+    },
+    "E10": {
+      "correct_unscaled_clipping": 1.0,
+      "wrong_clip_then_unscale": 0.01
+    },
+    "E11": {
+      "policy_gap": 2.0,
+      "reference_gap": 2.0,
+      "margin": 0.0,
+      "loss": 0.6931471805599453
+    },
+    "E12": {
+      "A_gradient": [
+        [
+          0.0
+        ],
+        [
+          0.0
+        ]
+      ],
+      "B_gradient": [
+        [
+          -10.0,
+          -10.0
+        ]
+      ],
+      "delta_initial": [
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    },
+    "E13": {
+      "aliased_b": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "copy_on_write_b": [
+        1,
+        2,
+        3
+      ],
+      "keys_differ": true
+    },
+    "E14": {
+      "correct": [
+        1.461030113080697,
+        0.5380588357249021
+      ],
+      "wrong_block_average": [
+        0.8655292893150024,
+        0.6344707106849976
+      ]
+    },
+    "E15": {
+      "capacity_positions": 12,
+      "before": 11,
+      "after": 14,
+      "requests": 3
+    },
+    "E16": {
+      "target": [
+        0.8,
+        0.2
+      ],
+      "draft": [
+        0.2,
+        0.8
+      ],
+      "accepted_mass": [
+        0.2,
+        0.2
+      ],
+      "rejection_mass": 0.6,
+      "residual": [
+        1.0,
+        0.0
+      ],
+      "correct": [
+        0.8,
+        0.2
+      ],
+      "wrong_redraw_p": [
+        0.6799999999999999,
+        0.32
+      ]
+    },
+    "E17": {
+      "typed_items": [
+        {
+          "type": "function_call",
+          "call_id": "c7",
+          "arguments": "{}"
+        },
+        {
+          "type": "function_call_output",
+          "call_id": "c7",
+          "output": "ok"
+        }
+      ],
+      "lossy_text_items": []
+    },
+    "E18": {
+      "current": {
+        "epoch": 2,
+        "target": "b.py"
+      },
+      "late": {
+        "epoch": 1,
+        "target": "a.py",
+        "status": "ok"
+      },
+      "accepted": false
+    },
+    "E19-status": {
+      "item": {
+        "arguments": "{\"path\":\"a.py\"}",
+        "done": true,
+        "response_status": "incomplete"
+      },
+      "execute": false,
+      "scope": "conservative local policy; actual protocol contract still required"
+    },
+    "E19": {
+      "byte_count": 14,
+      "unicode_length": 12,
+      "assembled": {
+        "a": "{\"x\":1}",
+        "b": "{\"y\":2}"
+      }
+    },
+    "E20": {
+      "missing_field_valid": false,
+      "null_field_valid": true,
+      "unauthorized_path_executable": false
+    },
+    "E21": {
+      "first_page": [
+        "read"
+      ],
+      "all": [
+        "read",
+        "write"
+      ]
+    },
+    "E22": {
+      "audience": "service-A",
+      "resource": "service-B",
+      "accepted": false
+    },
+    "E23": {
+      "registered": [
+        "read",
+        "write"
+      ],
+      "visible": [
+        "read"
+      ],
+      "authorized": [
+        "read"
+      ],
+      "scope": "illustration, not Rust integration test"
+    },
+    "E24": {
+      "omitted": [
+        "read",
+        "write"
+      ],
+      "empty": [],
+      "unknown": [],
+      "scope": "documented Copilot rule modeled locally"
+    },
+    "E25": {
+      "semantically_equal": true,
+      "byte_identical": false
+    },
+    "E26": {
+      "total": 1000,
+      "static": 200,
+      "reserved_generation": 200,
+      "reserved_tool": 250,
+      "evidence_budget": 350,
+      "required_pair": 500
+    },
+    "E27": {
+      "canonical_types": [
+        "message",
+        "compaction"
+      ],
+      "lossy_types": [
+        "compaction"
+      ]
+    },
+    "E28": {
+      "snapshot": 10,
+      "current": 11,
+      "commit_allowed": false,
+      "summary": {
+        "version": 10,
+        "pending": [
+          "c7"
+        ]
+      }
+    },
+    "E29": {
+      "old_space_result": "A",
+      "mixed_space_result": "B",
+      "dimension": 2,
+      "scope": "basis counterexample, not e5 inference"
+    },
+    "E30": {
+      "post_filter_top2": [],
+      "eligible_top2": [
+        [
+          "a",
+          "mine"
+        ],
+        [
+          "b",
+          "mine"
+        ]
+      ],
+      "scope": "candidate model, not pgvector index execution"
+    },
+    "E31": {
+      "two_independent_lists": {
+        "A": 0.03252247488101534,
+        "B": 0.03252247488101534
+      },
+      "duplicated_one_source": {
+        "A": 0.04891591750396616,
+        "B": 0.048651507139079855
+      }
+    },
+    "E32": {
+      "evidence": {
+        "tier": "pro",
+        "version": 3,
+        "limit": 100
+      },
+      "claim_scope": {
+        "tier": "free",
+        "version": 3
+      },
+      "supports": false
+    },
+    "E33": {
+      "text": "a😀b",
+      "position_of_b_codepoints": 2,
+      "utf16_units": 3,
+      "utf8_bytes": 5
+    },
+    "E34": {
+      "head": "same-commit",
+      "old_hash": "0e587b1d65d6bb203adbe6b9d1d0fbd820d1bba03ea0d54e1bc61585dcbd5458",
+      "new_hash": "eb55118f6a7e3d350d3e51189c6d475f85d53e79a4c0f9542b36f48a34ed69e2",
+      "scope": "actual file edit; Git HEAD represented by fixed label"
+    },
+    "E35": {
+      "at_day6_known_day6": 10,
+      "at_day6_known_day9": 20
+    },
+    "E36": {
+      "invalidated": [
+        "answer_cache",
+        "chunk",
+        "doc",
+        "memory",
+        "summary"
+      ]
+    },
+    "E37": {
+      "exists": true,
+      "discovered": true,
+      "selected": false,
+      "body_loaded": false,
+      "used": false
+    },
+    "E38": {
+      "cheap_cost": 1.0,
+      "fallback_cost": 5.0,
+      "rate": 0.4,
+      "expected_cost": 3.0,
+      "synthetic": true
+    },
+    "E39": {
+      "producer_key": "timeout_ms",
+      "consumer_key": "timeout_s",
+      "text_overlap": false,
+      "integration_fails": true
+    },
+    "E40": {
+      "observed_joint": 0.2,
+      "independence_guess": 0.04000000000000001,
+      "synthetic": true
+    },
+    "E41": {
+      "crash_exit": 17,
+      "unsafe_effects": 2,
+      "keyed_effects": 1,
+      "scope": "two local SQLite stores + actual subprocess os._exit; not network service"
+    },
+    "E42": {
+      "per_layer_attempts": [
+        3,
+        3,
+        3
+      ],
+      "max_leaf_calls": 27
+    },
+    "E42-key": {
+      "reuse_allowed": false
+    },
+    "E43": {
+      "no_tests_exit": 5,
+      "all_skip_exit": 0,
+      "all_skip_output": "s                                                                        [100%]\n1 skipped in 0.00s"
+    },
+    "E44": {
+      "weak_inputs": [
+        1,
+        2
+      ],
+      "mutant_survives": true,
+      "strong_inputs": [
+        -1,
+        0,
+        1
+      ],
+      "mutant_killed": true
+    },
+    "E45": {
+      "old": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0
+      ],
+      "new": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "improvements": 2,
+      "regressions": 1,
+      "mean_delta": 0.125,
+      "synthetic": true
+    },
+    "E46": {
+      "original_order_winner": "A",
+      "swapped_order_winner": "B",
+      "synthetic_judge": "always chooses left"
+    },
+    "E47": {
+      "lexical_inside": true,
+      "resolved_inside": false,
+      "read_observed": "harmless",
+      "scope": "harmless temporary symlink, not race-safe sandbox implementation"
+    },
+    "E48": {
+      "unchanged_accepted": true,
+      "changed_accepted": false
+    },
+    "E49-cost": {
+      "cost_per_success": 6.0,
+      "successes_only_wrong": 1.0
+    },
+    "E49": {
+      "wall": 7.0,
+      "sum_spans": 10.0,
+      "mean_group_p95": 50.5,
+      "pooled_p95": 100
+    },
+    "E50": {
+      "old": {
+        "model": "m1",
+        "template": "t1",
+        "index": "i1",
+        "tools": "s1"
+      },
+      "new": {
+        "model": "m1",
+        "template": "t1",
+        "index": "i2",
+        "tools": "s1"
+      },
+      "same_model": true,
+      "same_system": false
+    },
+    "E51": {
+      "planned_version": 7,
+      "current_version": 8,
+      "execute": false
+    },
+    "E52": {
+      "screenshot": [
+        1600,
+        1200
+      ],
+      "css_viewport": [
+        800,
+        600
+      ],
+      "pixel_point": [
+        1000,
+        600
+      ],
+      "css_point": [
+        500.0,
+        300.0
+      ],
+      "invariant": "coordinate mapping alone does not validate current DOM state"
+    },
+    "E53": {
+      "overall_accuracy": 0.5,
+      "selective_accuracy": 0.8,
+      "coverage": 0.5,
+      "synthetic": true
+    },
+    "E54": {
+      "weights": [
+        0.9,
+        0.1
+      ],
+      "values": [
+        0.0,
+        100.0
+      ],
+      "contributions": [
+        0.0,
+        10.0
+      ],
+      "scope": "scalar aggregation counterexample, not real causal interpretability"
+    },
+    "E55": {
+      "extra_training_cost": 1000.0,
+      "inference_saving": 0.01,
+      "break_even_calls": 100000.0,
+      "synthetic": true
+    },
+    "E56": {
+      "factorial": {
+        "old_old": 0.6,
+        "new_old": 0.6,
+        "old_new": 0.6,
+        "new_new": 0.9
+      },
+      "interaction": 0.30000000000000004,
+      "synthetic": true
+    }
+  },
+  "source_sha256": {
+    "test_engineering.py": "9ee81e26a2ef4e75301ecd8dc001814e148e0a8475f08e908816e1bfd2013094",
+    "run.py": "c01e6983ee6a9028f0c4c203b2454cb676e25187c44102431a0236bc547b59d0",
+    "crash_worker.py": "4bbe19ed20b08909c6226e0fc3a5faca980bb18f8037c2cf4400a4e455c85639"
+  }
+}
