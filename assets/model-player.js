@@ -1,6 +1,12 @@
 /* Local numerical record viewer. No network, model execution, or automatic playback. */
 (()=>{'use strict';
 const frames=window.MODEL_FRAMES||[];const hosts=[...document.querySelectorAll('.mc-player')];
+const SHARED=window.__bookPlayers||(window.__bookPlayers=[]);
+const stops=[];
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stops.forEach(s=>s());});
+const watcher='IntersectionObserver'in window
+ ?new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)e.target.__mcStop?.();}),{threshold:0})
+ :null;
 const ns='http://www.w3.org/2000/svg';
 const fmt=(x,precision=6)=>typeof x==='boolean'?(x?'允许':'禁止'):Number.isInteger(x)?String(x):Number(x).toPrecision(precision).replace(/(\.\d*?[1-9])0+(?=e|$)/,'$1').replace(/\.0+(?=e|$)/,'');
 function node(name,attrs={},text){const e=document.createElementNS(ns,name);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e;}
@@ -9,7 +15,7 @@ for(const host of hosts){let group='',i=0,list=[],timer=null;
  const requested=(host.dataset.allowedGroups||'').split(',').filter(Boolean);const available=[...new Set(frames.map(f=>f.group))];const groups=requested.length?available.filter(g=>requested.some(r=>g.includes(r))):available; if(!groups.length)groups.push(...available);
  groups.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;select.append(o);});
  function stop(){if(timer!==null)clearInterval(timer);timer=null;play.textContent='播放';play.setAttribute('aria-pressed','false');}
- function render(){if(!list.length)return;const f=list[i];host.dataset.frame=String(i);host.dataset.group=group;
+ function render(){if(!list.length){host.querySelector('.mc-count').textContent='0 / 0';return;}const f=list[i];host.dataset.frame=String(i);host.dataset.group=group;
   host.querySelector('.mc-count').textContent=`${i+1} / ${list.length}`;range.max=String(list.length-1);range.value=String(i);
   host.querySelector('.mc-run-label').textContent=f.input;
   host.querySelector('.mc-frame-title').textContent=f.title;
@@ -31,10 +37,10 @@ for(const host of hosts){let group='',i=0,list=[],timer=null;
  function choose(g){stop();group=g;list=frames.filter(f=>f.group===g);i=0;render();}
  select.addEventListener('change',()=>choose(select.value));range.addEventListener('input',()=>{stop();i=Number(range.value);render();});
  host.addEventListener('click',e=>{const b=e.target.closest('[data-mc]');if(!b)return;const act=b.dataset.mc;
-  if(act==='play'){if(timer!==null){stop();return;}if(i===list.length-1)i=0;render();play.textContent='暂停';play.setAttribute('aria-pressed','true');timer=setInterval(()=>{if(i>=list.length-1){stop();return;}i++;render();if(i===list.length-1)stop();},2300);return;}
+  if(act==='play'){if(timer!==null){stop();return;}SHARED.forEach(s=>s());if(i===list.length-1)i=0;render();play.textContent='暂停';play.setAttribute('aria-pressed','true');timer=setInterval(()=>{if(i>=list.length-1){stop();return;}i++;render();if(i===list.length-1)stop();},2300);return;}
   stop();if(act==='prev')i=Math.max(0,i-1);if(act==='next')i=Math.min(list.length-1,i+1);if(act==='reset')i=0;render();
  });
  host.addEventListener('keydown',e=>{if(['INPUT','SELECT','BUTTON'].includes(e.target.tagName))return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();stop();i=Math.max(0,Math.min(list.length-1,i+(e.key==='ArrowRight'?1:-1)));render();}});
- document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});choose(groups[0]);
+ stops.push(stop);SHARED.push(stop);host.__mcStop=stop;watcher?.observe(host);choose(groups[0]);
 }
 })();

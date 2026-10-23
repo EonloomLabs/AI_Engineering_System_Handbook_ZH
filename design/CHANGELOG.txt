@@ -74,3 +74,49 @@
 - diagrams/test_diagrams.py 需要 lxml、engineering/labs/test_engineering.py
   需要 torch，本机未安装，两者未执行；这与本轮改动无关。
 - 本轮未启动本地服务、未做浏览器渲染检查，全部结论来自静态检查与上述测试。
+
+动画与交互修复 · 本轮改动
+
+1. 自动播放的互斥与停止
+- visual-player 与 model-player 各自维护播放器列表，互不知情。
+  complete.html 同页有 4 个 model 播放器与 77 个图解播放器，
+  同时按下多个「播放」会一起自动推进。
+- 两者改为共用一个登记表 window.__bookPlayers：任一播放器开始前
+  先停下其余全部。visual-player 原本只停自己那一类，现在覆盖两类。
+- model-player 补上 visual-player 已有、而它缺少的两条：
+  离屏自动停止（IntersectionObserver），以及整页只注册一个
+  visibilitychange 监听（原先每个播放器各注册一个，同页 4 份）。
+- model-player 的 render 在分组为空时不再静默返回，改为把步数显示为 0 / 0。
+
+2. 回到顶部的动效一致性
+- 右侧提纲的「回到章节顶部」用 behavior:'smooth' 硬编码，
+  而同页浮动的「回到顶部」按钮会读取 prefers-reduced-motion。
+  同一动作两种行为，且前者忽略系统设置。
+- 两者改为共用 scrollToTop()，统一按 prefers-reduced-motion 决定。
+
+3. 图解放大对话框
+- mechanisms.js 的对话框关闭后不归还焦点，键盘用户会被丢回文档开头；
+  对话框没有可访问名；.mx-art 不可聚焦，提示写着「滚动查看」但键盘滚不动；
+  取标题时直接解引用 .mx-figure-head span，缺失即抛错。
+- 按同仓库较新的 diagrams.js 的做法补齐：关闭后归还触发元素焦点、
+  aria-labelledby 指向标题、.mx-art 加 tabindex、空值保护、点击遮罩关闭。
+- diagrams.js 的对话框同样缺可访问名，补 aria-labelledby。
+
+4. 同步范围
+- complete.html 逐字内联了这些脚本，同一批替换已同步应用，
+  单文件版与分页版行为一致。
+
+5. 未改
+- prefers-reduced-motion 的 CSS 覆盖经检查已完整（atelier.css 内有
+  作用于 * 的 animation/transition 置空规则），本轮未改样式。
+- 播放仍由用户按下「播放」才开始，没有任何自动播放；因此未因
+  prefers-reduced-motion 而禁用播放功能本身。
+
+6. 验证范围
+- assets 下全部脚本通过 node --check；complete.html 的 12 个内联脚本块
+  逐块提取后同样通过。
+- design/check_local_links.py：257 页、101190 条本地引用、0 处错误。
+- verify_diagram_math 21 项、test_mechanisms 56 项、test_foundations 39 项、
+  test_visual 97 项全部通过。
+- 本轮未启动本地服务、未做浏览器渲染与真实交互验证；以上结论来自
+  静态检查、语法校验与既有测试，实际点击行为需在浏览器中确认。

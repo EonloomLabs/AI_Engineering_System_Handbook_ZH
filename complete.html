@@ -57751,8 +57751,10 @@ if(!body.classList.contains('is-home')&&body.dataset.page){pref.set('last',JSON.
 try{const last=JSON.parse(pref.get('last')||'null');if(last&&body.classList.contains('is-home')&&last.path!=='index.html'){const resume=$('[data-resume]');if(resume){resume.href=resolve(last.path);resume.hidden=false;resume.textContent='继续上次阅读';resume.title=last.title}}}catch(_){}
 const indicator=$('.page-progress span'),topButton=$('[data-top]');let scrollQueued=false;
 function track(){scrollQueued=false;const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);if(indicator)indicator.style.transform=`scaleX(${Math.min(1,scrollY/max)})`;topButton?.classList.toggle('visible',scrollY>850)}
-addEventListener('scroll',()=>{if(!scrollQueued){scrollQueued=true;requestAnimationFrame(track)}},{passive:true});addEventListener('resize',track);track();topButton?.addEventListener('click',()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
-$$('[data-outline-top]').forEach(b=>b.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'})));
+addEventListener('scroll',()=>{if(!scrollQueued){scrollQueued=true;requestAnimationFrame(track)}},{passive:true});addEventListener('resize',track);track();const calmMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const scrollToTop=()=>window.scrollTo({top:0,behavior:calmMotion()?'auto':'smooth'});
+topButton?.addEventListener('click',scrollToTop);
+$$('[data-outline-top]').forEach(b=>b.addEventListener('click',scrollToTop));
 const tocLinks=$$('.chapter-outline .toc a[href^="#"]');if(tocLinks.length&&'IntersectionObserver'in window){const watched=new Map();tocLinks.forEach(a=>{let id;try{id=decodeURIComponent(a.hash.slice(1))}catch(_){id=a.hash.slice(1)}const h=document.getElementById(id);if(h)watched.set(h,a)});let current=null;const obs=new IntersectionObserver(entries=>{for(const e of entries){if(e.isIntersecting){current?.classList.remove('is-current');current=watched.get(e.target);current?.classList.add('is-current')}}},{rootMargin:'-100px 0px -64% 0px',threshold:0});watched.forEach((_,h)=>obs.observe(h))}
 // Code remains selectable even if clipboard permission is unavailable.
 $$('.article pre').forEach(pre=>{if(pre.closest('.vb-player')||pre.querySelector('.copy-code'))return;const code=pre.querySelector('code');if(!code||code.textContent.length<25)return;const b=document.createElement('button');b.type='button';b.className='copy-code';b.textContent='复制';b.setAttribute('aria-label','复制代码');b.addEventListener('click',async()=>{const text=code.textContent;try{if(!navigator.clipboard?.writeText)throw new Error('clipboard unavailable');await navigator.clipboard.writeText(text);toast('代码已复制')}catch(_){const range=document.createRange();range.selectNodeContents(code);const sel=getSelection();sel.removeAllRanges();sel.addRange(range);try{if(document.execCommand('copy'))toast('代码已复制');else toast('代码已选中，请手动复制')}catch(_){toast('代码已选中，请手动复制')}}});pre.append(b)});
@@ -57837,9 +57839,31 @@ const mo=new MutationObserver(()=>{if(body.classList.contains('nav-open'))reques
 requestAnimationFrame(()=>{restore();document.fonts?.ready.then(()=>requestAnimationFrame(()=>reveal()));});
 window.ReaderNavigation={reveal,save,restore,activate(path){if(mark(path))reveal({force:true})},current(){return current},selectedPathForHash,diagnostics(){const a=active(),v=viewport.getBoundingClientRect(),r=a?.getBoundingClientRect();return {page,current,scrollTop:viewport.scrollTop,height:viewport.clientHeight,total:viewport.scrollHeight,selected:entries.filter(a=>a.getAttribute('aria-current')==='page').length,visible:!!r&&r.top>=Math.max(v.top,rail.getBoundingClientRect().top,0)&&r.bottom<=Math.min(v.bottom,rail.getBoundingClientRect().bottom,innerHeight)&&r.left>=0&&r.right<=innerWidth,documentY:scrollY}}};
 })();
-</script><script>(()=>{'use strict';const d=document.createElement('dialog');d.className='mx-dialog';d.innerHTML='<header><h2>正文图解</h2><button type="button">关闭图解</button></header><div class="mx-art"></div><p>拖动或滚动查看；Esc关闭。图形与正文使用相同输入。</p>';document.body.append(d);d.querySelector('button').addEventListener('click',()=>d.close());document.addEventListener('click',e=>{const b=e.target.closest('.mx-zoom');if(!b)return;const f=b.closest('.mx-figure');const svg=f.querySelector('.mx-desktop svg')||f.querySelector('svg');if(!svg)return;d.querySelector('h2').textContent=f.querySelector('.mx-figure-head span').textContent;d.querySelector('.mx-art').innerHTML=svg.outerHTML;if(d.showModal)d.showModal();});})();</script><script>/* No network, no eval, no auto-play. All frames use the same checked dataset. */
+</script><script>/* Local figure viewer: user-controlled zoom dialog. No network or auto-play. */
+(()=>{'use strict';
+const d=document.createElement('dialog');d.className='mx-dialog';
+d.setAttribute('aria-labelledby','mx-dialog-title');
+d.innerHTML='<header><h2 id="mx-dialog-title">正文图解</h2><button type="button" data-mx-close>关闭图解</button></header><div class="mx-art" tabindex="0"></div><p>拖动或滚动查看；Esc关闭。图形与正文使用相同输入。</p>';
+document.body.append(d);
+let returnFocus=null;
+d.querySelector('[data-mx-close]').addEventListener('click',()=>d.close());
+// Give the trigger its focus back, otherwise keyboard users land at the top of the page.
+d.addEventListener('close',()=>{returnFocus?.focus({preventScroll:true});returnFocus=null;});
+d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();});
+document.addEventListener('click',e=>{
+ const b=e.target.closest('.mx-zoom');if(!b)return;
+ const f=b.closest('.mx-figure');if(!f)return;
+ const svg=f.querySelector('.mx-desktop svg')||f.querySelector('svg');if(!svg)return;
+ returnFocus=b;
+ d.querySelector('h2').textContent=f.querySelector('.mx-figure-head span')?.textContent?.trim()||'正文图解';
+ d.querySelector('.mx-art').innerHTML=svg.outerHTML;
+ if(typeof d.showModal==='function')d.showModal();
+});
+})();</script><script>/* No network, no eval, no auto-play. All frames use the same checked dataset. */
 (()=>{'use strict';
  const DB=window.VISUAL_LESSONS||{}; const players=[];
+ // One auto-advancing player at a time, across every kind of player on the page.
+ const SHARED=window.__bookPlayers||(window.__bookPlayers=[]);
  const dialog=document.createElement('dialog');dialog.className='vb-dialog';dialog.innerHTML='<header><h2></h2><button type="button">关闭图形</button></header><div class="vb-art"></div><p class="vb-caption"></p>';
  document.body.append(dialog);dialog.querySelector('button').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
  function init(el){if(el.dataset.ready)return;const id=el.dataset.vb, lesson=DB[id];if(!lesson||!lesson.frames?.length)return;el.dataset.ready='true';let i=0,timer=null;const $=s=>el.querySelector(s);
@@ -57847,12 +57871,12 @@ window.ReaderNavigation={reveal,save,restore,activate(path){if(mark(path))reveal
   const stop=()=>{if(timer!==null){clearInterval(timer);timer=null;}play.textContent='播放';play.setAttribute('aria-pressed','false');el.dataset.playing='false';};
   function render(){const f=lesson.frames[i];art.innerHTML=(matchMedia('(max-width:680px)').matches&&f.mobileSvg)?f.mobileSvg:f.svg;title.textContent=`${i+1} / ${lesson.frames.length} · ${f.title}`;caption.textContent=f.explain;state.textContent=f.state||'本步状态由图形与说明共同给出。';equation.textContent=f.equation||'';equation.hidden=!f.equation;range.value=String(i);range.setAttribute('aria-valuetext',`${i+1} / ${lesson.frames.length}：${f.title}`);status.textContent=`第 ${i+1} 步，共 ${lesson.frames.length} 步`;prev.disabled=i===0;next.disabled=i===lesson.frames.length-1;el.dataset.frame=String(i);if(i===lesson.frames.length-1)stop();}
   function go(v){stop();i=Math.max(0,Math.min(lesson.frames.length-1,Number(v)||0));render();}
-  function start(){if(timer!==null){stop();return;}players.forEach(p=>p.stop());if(i===lesson.frames.length-1)i=0;render();el.dataset.playing='true';play.textContent='暂停';play.setAttribute('aria-pressed','true');timer=setInterval(()=>{if(document.hidden){stop();return;}i=Math.min(i+1,lesson.frames.length-1);render();},Number(speed.value)||4200);}
+  function start(){if(timer!==null){stop();return;}SHARED.forEach(s=>s());if(i===lesson.frames.length-1)i=0;render();el.dataset.playing='true';play.textContent='暂停';play.setAttribute('aria-pressed','true');timer=setInterval(()=>{if(document.hidden){stop();return;}i=Math.min(i+1,lesson.frames.length-1);render();},Number(speed.value)||4200);}
   prev.addEventListener('click',()=>go(i-1));next.addEventListener('click',()=>go(i+1));play.addEventListener('click',start);$('[data-vb-action="reset"]').addEventListener('click',()=>go(0));range.addEventListener('input',()=>go(range.value));speed.addEventListener('change',()=>{const active=timer!==null;stop();if(active)start();});
   $('[data-vb-action="zoom"]').addEventListener('click',()=>{stop();dialog.querySelector('h2').textContent=lesson.title+' · '+lesson.frames[i].title;dialog.querySelector('.vb-art').innerHTML=lesson.frames[i].svg;dialog.querySelector('.vb-caption').textContent=lesson.frames[i].explain;if(dialog.showModal)dialog.showModal();else art.classList.toggle('vb-expanded');});
   el.addEventListener('keydown',e=>{if(e.target.matches('input,select,button,a'))return;if(e.key==='ArrowRight'){e.preventDefault();go(i+1);}if(e.key==='ArrowLeft'){e.preventDefault();go(i-1);}if(e.key===' '){e.preventDefault();start();}});
   const container=el.closest('.vb-block')||el.parentElement;container.querySelectorAll('[data-vb-jump]').forEach(b=>b.addEventListener('click',()=>{go(b.dataset.vbJump);el.scrollIntoView({block:'nearest',behavior:'auto'});el.focus({preventScroll:true});}));
-  const p={el,stop,go,get index(){return i;}};players.push(p);render();return p;
+  const p={el,stop,go,get index(){return i;}};players.push(p);SHARED.push(stop);render();return p;
  }
  document.querySelectorAll('[data-vb]').forEach(init);document.addEventListener('visibilitychange',()=>{if(document.hidden)players.forEach(p=>p.stop());});
  if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(en=>{if(!en.isIntersecting)players.find(p=>p.el===en.target)?.stop();}),{threshold:0});players.forEach(p=>observer.observe(p.el));}
@@ -57861,6 +57885,12 @@ window.ReaderNavigation={reveal,save,restore,activate(path){if(mark(path))reveal
 </script><script>/* Local numerical record viewer. No network, model execution, or automatic playback. */
 (()=>{'use strict';
 const frames=window.MODEL_FRAMES||[];const hosts=[...document.querySelectorAll('.mc-player')];
+const SHARED=window.__bookPlayers||(window.__bookPlayers=[]);
+const stops=[];
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stops.forEach(s=>s());});
+const watcher='IntersectionObserver'in window
+ ?new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)e.target.__mcStop?.();}),{threshold:0})
+ :null;
 const ns='http://www.w3.org/2000/svg';
 const fmt=(x,precision=6)=>typeof x==='boolean'?(x?'允许':'禁止'):Number.isInteger(x)?String(x):Number(x).toPrecision(precision).replace(/(\.\d*?[1-9])0+(?=e|$)/,'$1').replace(/\.0+(?=e|$)/,'');
 function node(name,attrs={},text){const e=document.createElementNS(ns,name);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;return e;}
@@ -57869,7 +57899,7 @@ for(const host of hosts){let group='',i=0,list=[],timer=null;
  const requested=(host.dataset.allowedGroups||'').split(',').filter(Boolean);const available=[...new Set(frames.map(f=>f.group))];const groups=requested.length?available.filter(g=>requested.some(r=>g.includes(r))):available; if(!groups.length)groups.push(...available);
  groups.forEach(g=>{const o=document.createElement('option');o.value=g;o.textContent=g;select.append(o);});
  function stop(){if(timer!==null)clearInterval(timer);timer=null;play.textContent='播放';play.setAttribute('aria-pressed','false');}
- function render(){if(!list.length)return;const f=list[i];host.dataset.frame=String(i);host.dataset.group=group;
+ function render(){if(!list.length){host.querySelector('.mc-count').textContent='0 / 0';return;}const f=list[i];host.dataset.frame=String(i);host.dataset.group=group;
   host.querySelector('.mc-count').textContent=`${i+1} / ${list.length}`;range.max=String(list.length-1);range.value=String(i);
   host.querySelector('.mc-run-label').textContent=f.input;
   host.querySelector('.mc-frame-title').textContent=f.title;
@@ -57891,11 +57921,11 @@ for(const host of hosts){let group='',i=0,list=[],timer=null;
  function choose(g){stop();group=g;list=frames.filter(f=>f.group===g);i=0;render();}
  select.addEventListener('change',()=>choose(select.value));range.addEventListener('input',()=>{stop();i=Number(range.value);render();});
  host.addEventListener('click',e=>{const b=e.target.closest('[data-mc]');if(!b)return;const act=b.dataset.mc;
-  if(act==='play'){if(timer!==null){stop();return;}if(i===list.length-1)i=0;render();play.textContent='暂停';play.setAttribute('aria-pressed','true');timer=setInterval(()=>{if(i>=list.length-1){stop();return;}i++;render();if(i===list.length-1)stop();},2300);return;}
+  if(act==='play'){if(timer!==null){stop();return;}SHARED.forEach(s=>s());if(i===list.length-1)i=0;render();play.textContent='暂停';play.setAttribute('aria-pressed','true');timer=setInterval(()=>{if(i>=list.length-1){stop();return;}i++;render();if(i===list.length-1)stop();},2300);return;}
   stop();if(act==='prev')i=Math.max(0,i-1);if(act==='next')i=Math.min(list.length-1,i+1);if(act==='reset')i=0;render();
  });
  host.addEventListener('keydown',e=>{if(['INPUT','SELECT','BUTTON'].includes(e.target.tagName))return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();stop();i=Math.max(0,Math.min(list.length-1,i+(e.key==='ArrowRight'?1:-1)));render();}});
- document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});choose(groups[0]);
+ stops.push(stop);SHARED.push(stop);host.__mcStop=stop;watcher?.observe(host);choose(groups[0]);
 }
 })();
 </script><script>(()=>{'use strict';
@@ -57922,8 +57952,8 @@ document.querySelectorAll('[data-qkv-lab]').forEach(lab=>{
 </script><script>
 /* Local diagram viewer: user-controlled zoom. No network or auto-play. */
 (()=>{"use strict";
-const dlg=document.createElement("dialog");dlg.className="d-dialog";
-dlg.innerHTML='<div class="d-tools"><h2>图解</h2><button type="button" data-dzoom="-25" aria-label="缩小图形">−</button><button type="button" data-dzoom="reset">适合窗口</button><button type="button" data-dzoom="25" aria-label="放大图形">＋</button><button type="button" data-dclose>关闭</button></div><div class="d-art" tabindex="0"></div><p class="d-source-note">图形与正文采用同一组输入。可滚动查看；Esc关闭。</p>';
+const dlg=document.createElement("dialog");dlg.className="d-dialog";dlg.setAttribute("aria-labelledby","d-dialog-title");
+dlg.innerHTML='<div class="d-tools"><h2 id="d-dialog-title">图解</h2><button type="button" data-dzoom="-25" aria-label="缩小图形">−</button><button type="button" data-dzoom="reset">适合窗口</button><button type="button" data-dzoom="25" aria-label="放大图形">＋</button><button type="button" data-dclose>关闭</button></div><div class="d-art" tabindex="0"></div><p class="d-source-note">图形与正文采用同一组输入。可滚动查看；Esc关闭。</p>';
 document.body.append(dlg);let z=100,returnFocus=null;
 const setZoom=()=>dlg.querySelector('.d-art').style.setProperty('--diagram-zoom',z+'%');
 dlg.querySelector('[data-dclose]').onclick=()=>dlg.close();
