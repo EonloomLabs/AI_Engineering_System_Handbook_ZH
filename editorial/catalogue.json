@@ -1,0 +1,823 @@
+{
+  "title": "AI系统工程：从基础到内部",
+  "language": "zh-CN",
+  "source_context": "local",
+  "entry": "index.html",
+  "ordering": "共通计算 → 训练与验证 → 训练后推理 → 工程实践",
+  "items": [
+    {
+      "title": "前言与阅读方法",
+      "name": "preface",
+      "prompt": "First-time reader goals and a single learning route",
+      "children": []
+    },
+    {
+      "title": "基础课程",
+      "name": "foundations",
+      "prompt": "One canonical learning path, no separate M series",
+      "children": [
+        {
+          "title": "输入表示",
+          "name": "输入表示",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F01｜先分清：文字、数字、模型和运行它的程序",
+              "name": "foundations/01",
+              "prompt": "Integrate evidence-backed explanations into foundations/01.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F02｜一排数、一张表和一叠表：读懂张量与形状",
+              "name": "foundations/02",
+              "prompt": "Integrate evidence-backed explanations into foundations/02.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F03｜文字为什么要先变成Token编号",
+              "name": "foundations/03",
+              "prompt": "Integrate evidence-backed explanations into foundations/03.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F04｜组批和补齐：为什么两句话变成[2,3]",
+              "name": "foundations/04",
+              "prompt": "Integrate evidence-backed explanations into foundations/04.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F05｜Embedding查表：把一个编号换成一排数",
+              "name": "foundations/05",
+              "prompt": "Integrate evidence-backed explanations into foundations/05.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F06｜“放到设备”是什么：数据类型、内存、CPU与GPU",
+              "name": "foundations/06",
+              "prompt": "Integrate evidence-backed explanations into foundations/06.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "共通计算",
+          "name": "共通计算",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F07｜模型最常做的算术：加权求和、点积与矩阵乘法",
+              "name": "foundations/07",
+              "prompt": "Integrate evidence-backed explanations into foundations/07.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F08｜reshape、转轴、广播：形状变了，内容未必算过",
+              "name": "foundations/08",
+              "prompt": "Integrate evidence-backed explanations into foundations/08.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F09｜概率、指数与softmax：把分数变成比例",
+              "name": "foundations/09",
+              "prompt": "Integrate evidence-backed explanations into foundations/09.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F10｜神经网络最小模型：参数、层、前向与隐藏状态",
+              "name": "foundations/10",
+              "prompt": "Integrate evidence-backed explanations into foundations/10.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F11｜Attention逐步计算：先算相关分数，再混合内容",
+              "name": "foundations/11",
+              "prompt": "Integrate evidence-backed explanations into foundations/11.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F12｜Mask不是黑箱：把“谁能看谁”写成一张表",
+              "name": "foundations/12",
+              "prompt": "Integrate evidence-backed explanations into foundations/12.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F13｜位置编号与RoPE：先懂位置，再懂旋转",
+              "name": "foundations/13",
+              "prompt": "Integrate evidence-backed explanations into foundations/13.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F14｜把Attention装进一层：残差、归一化与前馈网络",
+              "name": "foundations/14",
+              "prompt": "Integrate evidence-backed explanations into foundations/14.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "训练与验证",
+          "name": "训练与验证",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F17｜微积分只学用得上的部分：导数、梯度与链式法则",
+              "name": "foundations/15",
+              "prompt": "Integrate evidence-backed explanations into foundations/15.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F18｜一次训练从头到尾：标签、交叉熵和Adam",
+              "name": "foundations/16",
+              "prompt": "Integrate evidence-backed explanations into foundations/16.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F19｜后训练的前置数学：偏好、奖励、概率比与KL",
+              "name": "foundations/17",
+              "prompt": "Integrate evidence-backed explanations into foundations/17.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "训练后推理",
+          "name": "训练后推理",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F15｜从最后一排数到一个Token，再到一句回答",
+              "name": "foundations/18",
+              "prompt": "Integrate evidence-backed explanations into foundations/18.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F16｜KV Cache从零解释：为什么可以少算，又记住了什么",
+              "name": "foundations/19",
+              "prompt": "Integrate evidence-backed explanations into foundations/19.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "结构与资源",
+          "name": "结构与资源",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F20｜低秩、量化、专家：先看究竟少算了什么",
+              "name": "foundations/20",
+              "prompt": "Integrate evidence-backed explanations into foundations/20.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "F21｜算得快与装得下：复杂度、带宽、批处理和并行",
+              "name": "foundations/21",
+              "prompt": "Integrate evidence-backed explanations into foundations/21.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Agent与上下文",
+          "name": "Agent与上下文",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F22｜Agent不是另一个神经网络：用一次读文件讲清循环",
+              "name": "foundations/22",
+              "prompt": "Integrate evidence-backed explanations into foundations/22.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/22.html"
+              ]
+            },
+            {
+              "title": "F23｜API与流式协议：请求如何变成可执行数据",
+              "name": "foundations/23",
+              "prompt": "Integrate evidence-backed explanations into foundations/23.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/23.html"
+              ]
+            },
+            {
+              "title": "F24｜状态、事件与检查点：模型知道和系统记录的区别",
+              "name": "foundations/24",
+              "prompt": "Integrate evidence-backed explanations into foundations/24.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/24.html"
+              ]
+            },
+            {
+              "title": "F25｜工具与MCP：连接、发现、授权、执行四层拆开",
+              "name": "foundations/25",
+              "prompt": "Integrate evidence-backed explanations into foundations/25.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/25.html"
+              ]
+            },
+            {
+              "title": "F26｜上下文组装：每轮到底给模型什么，以及为什么",
+              "name": "foundations/26",
+              "prompt": "Integrate evidence-backed explanations into foundations/26.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/26.html"
+              ]
+            },
+            {
+              "title": "F27｜压缩不是魔法：摘要、原文和执行状态怎样配合",
+              "name": "foundations/27",
+              "prompt": "Integrate evidence-backed explanations into foundations/27.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/27.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "检索与可靠交付",
+          "name": "检索与可靠交付",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F28｜检索入门：目录、倒排索引、向量与近似搜索",
+              "name": "foundations/28",
+              "prompt": "Integrate evidence-backed explanations into foundations/28.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/28.html"
+              ]
+            },
+            {
+              "title": "F29｜从搜索结果到可信答案：召回、重排和证据",
+              "name": "foundations/29",
+              "prompt": "Integrate evidence-backed explanations into foundations/29.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/29.html"
+              ]
+            },
+            {
+              "title": "F30｜代码不是普通文档：语法树、调用关系与版本",
+              "name": "foundations/30",
+              "prompt": "Integrate evidence-backed explanations into foundations/30.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/30.html"
+              ]
+            },
+            {
+              "title": "F31｜长期记忆的基础：事实、经历、流程和时间",
+              "name": "foundations/31",
+              "prompt": "Integrate evidence-backed explanations into foundations/31.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/31.html"
+              ]
+            },
+            {
+              "title": "F32｜Skill、路由和多Agent：先理解谁负责什么",
+              "name": "foundations/32",
+              "prompt": "Integrate evidence-backed explanations into foundations/32.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/32.html"
+              ]
+            },
+            {
+              "title": "F33｜重试、幂等和事务：为什么超时不是失败证明",
+              "name": "foundations/33",
+              "prompt": "Integrate evidence-backed explanations into foundations/33.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/33.html"
+              ]
+            },
+            {
+              "title": "F34｜工程质量的基础：需求、反例、测试与审查",
+              "name": "foundations/34",
+              "prompt": "Integrate evidence-backed explanations into foundations/34.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/34.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "评测与生产",
+          "name": "评测与生产",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F35｜评测指标的分母：成功率、精确率、召回率和pass",
+              "name": "foundations/35",
+              "prompt": "Integrate evidence-backed explanations into foundations/35.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/35.html"
+              ]
+            },
+            {
+              "title": "F36｜别被几个百分点骗了：随机性、样本与统计判断",
+              "name": "foundations/36",
+              "prompt": "Integrate evidence-backed explanations into foundations/36.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/36.html"
+              ]
+            },
+            {
+              "title": "F37｜安全基础：数据能影响模型，但不能因此获得权限",
+              "name": "foundations/37",
+              "prompt": "Integrate evidence-backed explanations into foundations/37.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/37.html"
+              ]
+            },
+            {
+              "title": "F38｜看懂生产运行：Trace、队列、成本和回滚",
+              "name": "foundations/38",
+              "prompt": "Integrate evidence-backed explanations into foundations/38.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/38.html"
+              ]
+            },
+            {
+              "title": "F39｜多模态与可信度：图片怎样成为输入，解释为什么有限",
+              "name": "foundations/39",
+              "prompt": "Integrate evidence-backed explanations into foundations/39.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/39.html"
+              ]
+            },
+            {
+              "title": "F40｜从基础概念到系统分析：怎样定位问题，而不是再堆技术",
+              "name": "foundations/40",
+              "prompt": "Integrate evidence-backed explanations into foundations/40.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "foundations/40.html"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "系统机制",
+      "name": "chapters",
+      "prompt": "One canonical learning path, no separate M series",
+      "children": [
+        {
+          "title": "模型数据与前向",
+          "name": "模型数据与前向",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "01｜输入究竟是什么：从用户的一句话到模型张量",
+              "name": "chapters/01",
+              "prompt": "Integrate evidence-backed explanations into chapters/01.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "02｜一次Transformer前向：逐张量、逐算子讲明白",
+              "name": "chapters/02",
+              "prompt": "Integrate evidence-backed explanations into chapters/02.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "03｜注意力的深入追问：位置、掩码、多头与反向传播",
+              "name": "chapters/03",
+              "prompt": "Integrate evidence-backed explanations into chapters/03.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "模型训练",
+          "name": "模型训练",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "05｜训练的一步：从正确标签到参数真正改变",
+              "name": "chapters/04",
+              "prompt": "Integrate evidence-backed explanations into chapters/04.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "06｜后训练、MoE与模型定制：能力和行为如何改变",
+              "name": "chapters/05",
+              "prompt": "Integrate evidence-backed explanations into chapters/05.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "模型推理",
+          "name": "模型推理",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "04｜输出是怎样一个Token一个Token生成的",
+              "name": "chapters/06",
+              "prompt": "Integrate evidence-backed explanations into chapters/06.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "07｜KV Cache、FlashAttention与PagedAttention的内部过程",
+              "name": "chapters/07",
+              "prompt": "Integrate evidence-backed explanations into chapters/07.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            },
+            {
+              "title": "08｜推理服务：调度、吞吐、延迟和并行",
+              "name": "chapters/08",
+              "prompt": "Integrate evidence-backed explanations into chapters/08.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "labs/model/lab/tiny_model.py",
+                "labs/model/lab/test_model.py",
+                "labs/model/data/run.json"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Agent与工具",
+          "name": "Agent与工具",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "09｜Agent一次任务的完整循环：谁在思考，谁在执行",
+              "name": "chapters/09",
+              "prompt": "Integrate evidence-backed explanations into chapters/09.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/09.html"
+              ]
+            },
+            {
+              "title": "10｜模型输出怎样变成真实工具调用：协议与执行边界",
+              "name": "chapters/10",
+              "prompt": "Integrate evidence-backed explanations into chapters/10.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/10.html"
+              ]
+            },
+            {
+              "title": "11｜工具设计与MCP：从连接到可控执行",
+              "name": "chapters/11",
+              "prompt": "Integrate evidence-backed explanations into chapters/11.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/11.html"
+              ]
+            },
+            {
+              "title": "12｜Codex、Claude Code、Copilot：从公开事实到可诊断运行链",
+              "name": "chapters/12",
+              "prompt": "Integrate evidence-backed explanations into chapters/12.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/12.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "上下文",
+          "name": "上下文",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "13｜每一轮Prompt怎样组装：上下文是一条数据管线",
+              "name": "chapters/13",
+              "prompt": "Integrate evidence-backed explanations into chapters/13.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/13.html"
+              ]
+            },
+            {
+              "title": "14｜上下文压缩：到底压掉什么，丢失后又如何恢复",
+              "name": "chapters/14",
+              "prompt": "Integrate evidence-backed explanations into chapters/14.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/14.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "知识与记忆",
+          "name": "知识与记忆",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "15｜检索离线链路：文档怎样变成可查询索引",
+              "name": "chapters/15",
+              "prompt": "Integrate evidence-backed explanations into chapters/15.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/15.html"
+              ]
+            },
+            {
+              "title": "16｜检索在线链路：召回、融合、重排与证据充足性",
+              "name": "chapters/16",
+              "prompt": "Integrate evidence-backed explanations into chapters/16.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/16.html"
+              ]
+            },
+            {
+              "title": "17｜代码智能：从文本搜索到符号、版本与运行证据",
+              "name": "chapters/17",
+              "prompt": "Integrate evidence-backed explanations into chapters/17.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/17.html"
+              ]
+            },
+            {
+              "title": "18｜长期记忆：写入、检索、冲突、失效与遗忘",
+              "name": "chapters/18",
+              "prompt": "Integrate evidence-backed explanations into chapters/18.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/18.html"
+              ]
+            },
+            {
+              "title": "19｜Skills与路由：怎样加载刚好需要的专业能力",
+              "name": "chapters/19",
+              "prompt": "Integrate evidence-backed explanations into chapters/19.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/19.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "协作与交付",
+          "name": "协作与交付",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "20｜多Agent：并行的收益与交接的损失",
+              "name": "chapters/20",
+              "prompt": "Integrate evidence-backed explanations into chapters/20.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/20.html"
+              ]
+            },
+            {
+              "title": "21｜可靠执行：重试、幂等、崩溃与状态恢复",
+              "name": "chapters/21",
+              "prompt": "Integrate evidence-backed explanations into chapters/21.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/21.html"
+              ]
+            },
+            {
+              "title": "22｜工程质量：从需求到测试，再到真正可交付的代码",
+              "name": "chapters/22",
+              "prompt": "Integrate evidence-backed explanations into chapters/22.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/22.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "评价与应用",
+          "name": "评价与应用",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "23｜Evaluation：怎样证明一次优化真有收益",
+              "name": "chapters/23",
+              "prompt": "Integrate evidence-backed explanations into chapters/23.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/23.html"
+              ]
+            },
+            {
+              "title": "24｜安全：指令边界、沙箱、权限与记忆污染",
+              "name": "chapters/24",
+              "prompt": "Integrate evidence-backed explanations into chapters/24.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/24.html"
+              ]
+            },
+            {
+              "title": "25｜生产运行：Trace、成本、队列、灰度与回滚",
+              "name": "chapters/25",
+              "prompt": "Integrate evidence-backed explanations into chapters/25.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/25.html"
+              ]
+            },
+            {
+              "title": "26｜深度应用：把组件组合成能解释的工作系统",
+              "name": "chapters/26",
+              "prompt": "Integrate evidence-backed explanations into chapters/26.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/26.html"
+              ]
+            },
+            {
+              "title": "27｜事实可靠性、多模态与可解释性：能力边界在哪里",
+              "name": "chapters/27",
+              "prompt": "Integrate evidence-backed explanations into chapters/27.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/27.html"
+              ]
+            },
+            {
+              "title": "28｜研究深水区与系统综合判断",
+              "name": "chapters/28",
+              "prompt": "Integrate evidence-backed explanations into chapters/28.html; preserve matching numeric examples and reference bundled code rather than create a parallel course.",
+              "children": [],
+              "source_files": [
+                "chapters/28.html"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "综合案例与实验",
+      "name": "labs",
+      "prompt": "Executable evidence rather than a parallel curriculum",
+      "children": []
+    },
+    {
+      "title": "专题研修与资料索引",
+      "name": "studies",
+      "prompt": "Retain existing advanced references and source boundaries",
+      "children": []
+    }
+  ]
+}

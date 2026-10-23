@@ -1,0 +1,12 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart TB
+ N["n1: 同一位置表示"] --> WQ["参数Wq -> q"]
+ N --> WK["参数Wk -> k"]
+ N --> WV["参数Wv -> v"]
+ WQ --> Dot["q@k^T / sqrt(4)"]
+ WK --> Dot
+ Dot --> Mask["不允许的位置置为-inf"]
+ Mask --> A["逐行softmax -> 读取份额A"]
+ A --> AV["A@v: 跨位置混合"]
+ WV --> AV
+%% Sources: labs/model/lab/tiny_model.py:63-81

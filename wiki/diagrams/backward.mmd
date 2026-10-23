@@ -1,0 +1,21 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart TB
+ Z["dz = (p-onehot) * valid / count"] --> U["dU; dfinal = dz@U^T"]
+ U --> Nf["RMSNorm反向 -> dhidden"]
+ Nf -->|残差直接路径| DR["dresidual = dhidden + drnorm"]
+ Nf --> FF["W2 / ReLU / W1反向"]
+ FF --> N2["RMSNorm反向 -> drnorm"]
+ N2 --> DR
+ DR --> Wo["Wo反向 -> dmix"]
+ Wo --> AV["dA = dmix@V^T; dV=A^T@dmix"]
+ AV --> SM["softmax反向 -> ds"]
+ SM --> QK["dQ / dK"]
+ QK --> Proj["Wq/Wk反向"]
+ AV --> VProj["Wv反向"]
+ Proj --> Sum["dn1 = dQ@Wq^T+dK@Wk^T+dV@Wv^T"]
+ VProj --> Sum
+ Sum --> N1["RMSNorm反向 -> dxnorm"]
+ DR -->|残差直接路径| DX["dx = dresidual + dxnorm"]
+ N1 --> DX
+ DX --> EP["按ID/position scatter-add到dE/dP"]
+%% Sources: labs/model/lab/tiny_model.py:117-153

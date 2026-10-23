@@ -1,0 +1,1462 @@
+{
+  "E17": {
+    "path": "chapters/09.html",
+    "title": "有previous_response_id，为什么仍可能丢失规则或工具上下文？",
+    "results": {
+      "E17": {
+        "typed_items": [
+          {
+            "type": "function_call",
+            "call_id": "c7",
+            "arguments": "{}"
+          },
+          {
+            "type": "function_call_output",
+            "call_id": "c7",
+            "output": "ok"
+          }
+        ],
+        "lossy_text_items": []
+      }
+    }
+  },
+  "E18": {
+    "path": "chapters/09.html",
+    "title": "模型结束、工具结束、任务完成：三种“完成”不能用同一布尔值",
+    "results": {
+      "E18": {
+        "current": {
+          "epoch": 2,
+          "target": "b.py"
+        },
+        "late": {
+          "epoch": 1,
+          "target": "a.py",
+          "status": "ok"
+        },
+        "accepted": false
+      }
+    }
+  },
+  "E13": {
+    "path": "chapters/07.html",
+    "title": "缓存共享的两个危险：身份不完整与可变对象别名",
+    "results": {
+      "E13": {
+        "aliased_b": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "copy_on_write_b": [
+          1,
+          2,
+          3
+        ],
+        "keys_differ": true
+      }
+    }
+  },
+  "E14": {
+    "path": "chapters/07.html",
+    "title": "在线softmax为什么必须重标定旧累积量，而不是平均各块答案？",
+    "results": {
+      "E14": {
+        "correct": [
+          1.461030113080697,
+          0.5380588357249021
+        ],
+        "wrong_block_average": [
+          0.8655292893150024,
+          0.6344707106849976
+        ]
+      }
+    }
+  },
+  "E47": {
+    "path": "chapters/24.html",
+    "title": "路径在允许目录下，为什么仍可能越界？symlink与检查后替换",
+    "results": {
+      "E47": {
+        "lexical_inside": true,
+        "resolved_inside": false,
+        "read_observed": "harmless",
+        "scope": "harmless temporary symlink, not race-safe sandbox implementation"
+      }
+    }
+  },
+  "E48": {
+    "path": "chapters/24.html",
+    "title": "用户确认过一次，模型改了参数还能沿用批准吗？",
+    "results": {
+      "E48": {
+        "unchanged_accepted": true,
+        "changed_accepted": false
+      }
+    }
+  },
+  "E29": {
+    "path": "chapters/15.html",
+    "title": "向量维度相同，为什么查询和索引仍可能根本不在一个空间？",
+    "results": {
+      "E29": {
+        "old_space_result": "A",
+        "mixed_space_result": "B",
+        "dimension": 2,
+        "scope": "basis counterexample, not e5 inference"
+      }
+    }
+  },
+  "E30": {
+    "path": "chapters/15.html",
+    "title": "向量查询带了WHERE，为什么仍可能返回不足k条？",
+    "results": {
+      "E30": {
+        "post_filter_top2": [],
+        "eligible_top2": [
+          [
+            "a",
+            "mine"
+          ],
+          [
+            "b",
+            "mine"
+          ]
+        ],
+        "scope": "candidate model, not pgvector index execution"
+      }
+    }
+  },
+  "E26": {
+    "path": "chapters/13.html",
+    "title": "上下文预算不只算已读文件：工具结果、生成与证据依赖还要预留",
+    "results": {
+      "E26": {
+        "total": 1000,
+        "static": 200,
+        "reserved_generation": 200,
+        "reserved_tool": 250,
+        "evidence_budget": 350,
+        "required_pair": 500
+      }
+    }
+  },
+  "E25": {
+    "path": "chapters/13.html",
+    "title": "语义没变却缓存失效：精确前缀、工具规格与动态字段怎样相互影响？",
+    "results": {
+      "E25": {
+        "semantically_equal": true,
+        "byte_identical": false
+      }
+    }
+  },
+  "E45": {
+    "path": "chapters/23.html",
+    "title": "成功率涨了几个点，为什么还不能宣布优化有效？",
+    "results": {
+      "E45-bootstrap": {
+        "trials": 10000,
+        "seed": 20261021,
+        "paired_task_delta": [
+          0,
+          0,
+          -1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "mean": 0.125,
+        "percentile_interval": [
+          -0.25,
+          0.5
+        ],
+        "scope": "teaching 8-task dataset, not population certification"
+      },
+      "E45": {
+        "old": [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "new": [
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        "improvements": 2,
+        "regressions": 1,
+        "mean_delta": 0.125,
+        "synthetic": true
+      }
+    }
+  },
+  "E46": {
+    "path": "chapters/23.html",
+    "title": "LLM裁判的盲点：换个左右顺序，冠军就变了",
+    "results": {
+      "E46": {
+        "original_order_winner": "A",
+        "swapped_order_winner": "B",
+        "synthetic_judge": "always chooses left"
+      }
+    }
+  },
+  "E49": {
+    "path": "chapters/25.html",
+    "title": "墙钟、Span总时长、p95、成功成本：指标名字相似，算错就会选错优化",
+    "results": {
+      "E49-cost": {
+        "cost_per_success": 6.0,
+        "successes_only_wrong": 1.0
+      },
+      "E49": {
+        "wall": 7.0,
+        "sum_spans": 10.0,
+        "mean_group_p95": 50.5,
+        "pooled_p95": 100
+      }
+    }
+  },
+  "E50": {
+    "path": "chapters/25.html",
+    "title": "只回滚模型名为什么可能越滚越乱？系统版本是一组向量",
+    "results": {
+      "E50-schema": {
+        "v1_ms": 5000,
+        "v2_ms": 5000,
+        "unknown_version_rejected": true
+      },
+      "E50": {
+        "old": {
+          "model": "m1",
+          "template": "t1",
+          "index": "i1",
+          "tools": "s1"
+        },
+        "new": {
+          "model": "m1",
+          "template": "t1",
+          "index": "i2",
+          "tools": "s1"
+        },
+        "same_model": true,
+        "same_system": false
+      }
+    }
+  },
+  "E10": {
+    "path": "chapters/05.html",
+    "title": "混合精度与重计算：顺序错误会让优化器悄悄走错一步",
+    "results": {
+      "E10-checkpoint": {
+        "calls": 2,
+        "gradient": 0.9182168245315552
+      },
+      "E10": {
+        "correct_unscaled_clipping": 1.0,
+        "wrong_clip_then_unscale": 0.01
+      }
+    }
+  },
+  "E09": {
+    "path": "chapters/05.html",
+    "title": "梯度累积的隐蔽偏差：平均的是批次，还是有效Token？",
+    "results": {
+      "E09-xent": {
+        "full_gradient": [
+          [
+            0.33608508110046387,
+            -0.33608511090278625
+          ],
+          [
+            -0.21314038336277008,
+            0.2131403535604477
+          ]
+        ],
+        "sum_normalized_gradient": [
+          [
+            0.33608508110046387,
+            -0.33608511090278625
+          ],
+          [
+            -0.21314038336277008,
+            0.2131403535604477
+          ]
+        ],
+        "mean_of_means_gradient": [
+          [
+            0.06571647524833679,
+            -0.06571649014949799
+          ],
+          [
+            -0.4587741494178772,
+            0.4587740898132324
+          ]
+        ],
+        "loss": 0.8043063879013062
+      },
+      "E09-ddp": {
+        "rank_sum_gradients": [
+          2.0,
+          -6.0
+        ],
+        "counts": [
+          1,
+          3
+        ],
+        "correct": -1.0,
+        "wrong": 0.0,
+        "scope": "algebra simulation; no distributed process group launched"
+      }
+    }
+  },
+  "E55": {
+    "path": "chapters/28.html",
+    "title": "训练计算最优，为什么不一定是产品全生命周期最便宜？",
+    "results": {
+      "E55": {
+        "extra_training_cost": 1000.0,
+        "inference_saving": 0.01,
+        "break_even_calls": 100000.0,
+        "synthetic": true
+      }
+    }
+  },
+  "E56": {
+    "path": "chapters/28.html",
+    "title": "深度排障的终点不是“换更强模型”，而是找出失效的不变量",
+    "results": {
+      "E56-mutants": {
+        "killed": [
+          "mean-of-means",
+          "unconditional-compaction-commit",
+          "cache-position-reset"
+        ]
+      },
+      "E56": {
+        "factorial": {
+          "old_old": 0.6,
+          "new_old": 0.6,
+          "old_new": 0.6,
+          "new_new": 0.9
+        },
+        "interaction": 0.30000000000000004,
+        "synthetic": true
+      }
+    }
+  },
+  "E41": {
+    "path": "chapters/21.html",
+    "title": "外部动作成功、日志没来得及确认：为什么本地事务无法保证只执行一次？",
+    "results": {
+      "E41": {
+        "crash_exit": 17,
+        "unsafe_effects": 2,
+        "keyed_effects": 1,
+        "scope": "two local SQLite stores + actual subprocess os._exit; not network service"
+      }
+    }
+  },
+  "E42": {
+    "path": "chapters/21.html",
+    "title": "三层各重试三次，为什么最底层会被打27次？",
+    "results": {
+      "E42": {
+        "per_layer_attempts": [
+          3,
+          3,
+          3
+        ],
+        "max_leaf_calls": 27
+      },
+      "E42-key": {
+        "reuse_allowed": false
+      }
+    }
+  },
+  "E05": {
+    "path": "chapters/03.html",
+    "title": "布尔mask语义相反，加缓存后is_causal还可能对齐错边",
+    "results": {
+      "E05-polarity": {
+        "correct": [
+          [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.3302384614944458,
+              0.6697615385055542
+            ]
+          ]
+        ],
+        "inverted": [
+          [
+            [
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "E05-offset": {
+        "mask": [
+          [
+            true,
+            true,
+            true,
+            true,
+            false
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ],
+        "correct": [
+          2.5,
+          3.0
+        ],
+        "upper_left": [
+          1.0,
+          1.5
+        ]
+      }
+    }
+  },
+  "E06": {
+    "path": "chapters/03.html",
+    "title": "位置编号、缓存槽位和RoPE：同叫position却不是同一个数",
+    "results": {
+      "E06": {
+        "once": [
+          6.123233995736766e-17,
+          1.0
+        ],
+        "twice": [
+          -1.0,
+          1.2246467991473532e-16
+        ],
+        "cache_slots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "valid_positions": [
+          0,
+          1,
+          2
+        ]
+      }
+    }
+  },
+  "E01": {
+    "path": "chapters/01.html",
+    "title": "模板已经加了BOS，再分词一次为什么会悄悄改变任务？",
+    "results": {
+      "E01": {
+        "correct": [
+          1,
+          8,
+          9,
+          2
+        ],
+        "wrong": [
+          1,
+          1,
+          8,
+          9,
+          2,
+          2
+        ],
+        "scope": "teaching token list, not HF tokenizer"
+      }
+    }
+  },
+  "E02": {
+    "path": "chapters/01.html",
+    "title": "新增Token、绑定输出头与优化器：为什么“能查到”还不等于“能学会”？",
+    "results": {
+      "E02": {
+        "before": [
+          6,
+          4
+        ],
+        "after": [
+          7,
+          4
+        ],
+        "new_id": 6
+      }
+    }
+  },
+  "E27": {
+    "path": "chapters/14.html",
+    "title": "压缩结果为什么不能只留下那个“看起来最浓缩”的项目？",
+    "results": {
+      "E27": {
+        "canonical_types": [
+          "message",
+          "compaction"
+        ],
+        "lossy_types": [
+          "compaction"
+        ]
+      }
+    }
+  },
+  "E28": {
+    "path": "chapters/14.html",
+    "title": "压缩期间工具结果刚好回来：一次历史替换如何丢掉真实进展？",
+    "results": {
+      "E28-sql": {
+        "stale_revision": 10,
+        "changed_rows": 0,
+        "preserved": [
+          11,
+          "c7 succeeded"
+        ]
+      },
+      "E28": {
+        "snapshot": 10,
+        "current": 11,
+        "commit_allowed": false,
+        "summary": {
+          "version": 10,
+          "pending": [
+            "c7"
+          ]
+        }
+      }
+    }
+  },
+  "E15": {
+    "path": "chapters/08.html",
+    "title": "吞吐下降但GPU很忙：可能是KV抢占重算，而不是算力不够",
+    "results": {
+      "E15": {
+        "capacity_positions": 12,
+        "before": 11,
+        "after": 14,
+        "requests": 3
+      }
+    }
+  },
+  "E16": {
+    "path": "chapters/08.html",
+    "title": "推测采样拒绝草稿后，为什么不能直接按目标分布再抽一次？",
+    "results": {
+      "E16": {
+        "target": [
+          0.8,
+          0.2
+        ],
+        "draft": [
+          0.2,
+          0.8
+        ],
+        "accepted_mass": [
+          0.2,
+          0.2
+        ],
+        "rejection_mass": 0.6,
+        "residual": [
+          1.0,
+          0.0
+        ],
+        "correct": [
+          0.8,
+          0.2
+        ],
+        "wrong_redraw_p": [
+          0.6799999999999999,
+          0.32
+        ]
+      }
+    }
+  },
+  "E19": {
+    "path": "chapters/10.html",
+    "title": "流式工具调用：UTF-8完整、JSON完整、调用完整是三件事",
+    "results": {
+      "E19-status": {
+        "item": {
+          "arguments": "{\"path\":\"a.py\"}",
+          "done": true,
+          "response_status": "incomplete"
+        },
+        "execute": false,
+        "scope": "conservative local policy; actual protocol contract still required"
+      },
+      "E19": {
+        "byte_count": 14,
+        "unicode_length": 12,
+        "assembled": {
+          "a": "{\"x\":1}",
+          "b": "{\"y\":2}"
+        }
+      }
+    }
+  },
+  "E20": {
+    "path": "chapters/10.html",
+    "title": "严格JSON为什么仍不能直接驱动数据库写入？",
+    "results": {
+      "E20": {
+        "missing_field_valid": false,
+        "null_field_valid": true,
+        "unauthorized_path_executable": false
+      }
+    }
+  },
+  "E39": {
+    "path": "chapters/20.html",
+    "title": "两个人改不同文件，为什么合并后仍会坏？",
+    "results": {
+      "E39": {
+        "producer_key": "timeout_ms",
+        "consumer_key": "timeout_s",
+        "text_overlap": false,
+        "integration_fails": true
+      }
+    }
+  },
+  "E40": {
+    "path": "chapters/20.html",
+    "title": "两个审查Agent都通过，为什么不能把错误率直接相乘？",
+    "results": {
+      "E40": {
+        "observed_joint": 0.2,
+        "independence_guess": 0.04000000000000001,
+        "synthetic": true
+      }
+    }
+  },
+  "E33": {
+    "path": "chapters/17.html",
+    "title": "代码位置的单位错一个，编辑就可能改错字符：UTF-8、UTF-16与版本号",
+    "results": {
+      "E33": {
+        "text": "a😀b",
+        "position_of_b_codepoints": 2,
+        "utf16_units": 3,
+        "utf8_bytes": 5
+      }
+    }
+  },
+  "E34": {
+    "path": "chapters/17.html",
+    "title": "HEAD没变为什么证据已经过期？工作树、未保存buffer与索引快照",
+    "results": {
+      "E34-git": {
+        "same_head": true,
+        "diff": "diff --git a/a.py b/a.py\nindex bafc5d9..7a56633 100644\n--- a/a.py\n+++ b/a.py\n@@ -1 +1 @@\n-x=1\n+x=2",
+        "scope": "actual local temporary Git repository"
+      },
+      "E34": {
+        "head": "same-commit",
+        "old_hash": "0e587b1d65d6bb203adbe6b9d1d0fbd820d1bba03ea0d54e1bc61585dcbd5458",
+        "new_hash": "eb55118f6a7e3d350d3e51189c6d475f85d53e79a4c0f9542b36f48a34ed69e2",
+        "scope": "actual file edit; Git HEAD represented by fixed label"
+      }
+    }
+  },
+  "E23": {
+    "path": "chapters/12.html",
+    "title": "Codex源码追问：注册、可见、可达、获授权为什么要分四步？",
+    "results": {
+      "E23": {
+        "registered": [
+          "read",
+          "write"
+        ],
+        "visible": [
+          "read"
+        ],
+        "authorized": [
+          "read"
+        ],
+        "scope": "illustration, not Rust integration test"
+      }
+    }
+  },
+  "E24": {
+    "path": "chapters/12.html",
+    "title": "同样叫子Agent，为什么Claude与Copilot的“继承”不能凭感觉？",
+    "results": {
+      "E24": {
+        "omitted": [
+          "read",
+          "write"
+        ],
+        "empty": [],
+        "unknown": [],
+        "scope": "documented Copilot rule modeled locally"
+      }
+    }
+  },
+  "E07": {
+    "path": "chapters/04.html",
+    "title": "给了attention_mask，为什么右补齐生成仍可能读错logits？",
+    "results": {
+      "E07": {
+        "indices": [
+          1,
+          2
+        ],
+        "correct": [
+          1,
+          1
+        ],
+        "last_column": [
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "E08": {
+    "path": "chapters/04.html",
+    "title": "温度、Top-p、禁词：为什么“参数都一样”也可能不是同一采样算法？",
+    "results": {
+      "E08": {
+        "p_temperature1": [
+          0.6652409557748218,
+          0.24472847105479764,
+          0.09003057317038046
+        ],
+        "p_temperature2": [
+          0.506480391055654,
+          0.3071958857184984,
+          0.1863237232258476
+        ],
+        "top_p": 0.6,
+        "keep_before_temperature": [
+          0
+        ],
+        "keep_after_temperature": [
+          0,
+          1
+        ]
+      }
+    }
+  },
+  "E35": {
+    "path": "chapters/18.html",
+    "title": "“什么时候是真的”与“什么时候知道的”：记忆时间必须拆开",
+    "results": {
+      "E35": {
+        "at_day6_known_day6": 10,
+        "at_day6_known_day9": 20
+      }
+    }
+  },
+  "E36": {
+    "path": "chapters/18.html",
+    "title": "删掉原文不等于遗忘：摘要、缓存与经验条目也有依赖",
+    "results": {
+      "E36": {
+        "invalidated": [
+          "answer_cache",
+          "chunk",
+          "doc",
+          "memory",
+          "summary"
+        ]
+      }
+    }
+  },
+  "E51": {
+    "path": "chapters/26.html",
+    "title": "“根据材料可退款”与“现在可以执行退款”中间还缺什么？",
+    "results": {
+      "E51": {
+        "planned_version": 7,
+        "current_version": 8,
+        "execute": false
+      }
+    }
+  },
+  "E52": {
+    "path": "chapters/26.html",
+    "title": "截图坐标为什么不能直接拿去点击？缩放、DPR与页面变化",
+    "results": {
+      "E52": {
+        "screenshot": [
+          1600,
+          1200
+        ],
+        "css_viewport": [
+          800,
+          600
+        ],
+        "pixel_point": [
+          1000,
+          600
+        ],
+        "css_point": [
+          500.0,
+          300.0
+        ],
+        "invariant": "coordinate mapping alone does not validate current DOM state"
+      }
+    }
+  },
+  "E37": {
+    "path": "chapters/19.html",
+    "title": "Skill未生效时，为什么反复改description常常改错层？",
+    "results": {
+      "E37": {
+        "exists": true,
+        "discovered": true,
+        "selected": false,
+        "body_loaded": false,
+        "used": false
+      }
+    }
+  },
+  "E38": {
+    "path": "chapters/19.html",
+    "title": "小模型加回退真的省钱吗？关键在错误能否被发现",
+    "results": {
+      "E38": {
+        "cheap_cost": 1.0,
+        "fallback_cost": 5.0,
+        "rate": 0.4,
+        "expected_cost": 3.0,
+        "synthetic": true
+      }
+    }
+  },
+  "E21": {
+    "path": "chapters/11.html",
+    "title": "MCP能连接却少了工具：初始化、分页和错误层级怎样逐项查？",
+    "results": {
+      "E21": {
+        "first_page": [
+          "read"
+        ],
+        "all": [
+          "read",
+          "write"
+        ]
+      }
+    }
+  },
+  "E22": {
+    "path": "chapters/11.html",
+    "title": "令牌受众、权限范围与会话ID：三种“凭证”不能互相替代",
+    "results": {
+      "E22": {
+        "audience": "service-A",
+        "resource": "service-B",
+        "accepted": false
+      }
+    }
+  },
+  "E43": {
+    "path": "chapters/22.html",
+    "title": "测试命令退出0，为什么仍可能一条有效测试都没做？",
+    "results": {
+      "E43": {
+        "no_tests_exit": 5,
+        "all_skip_exit": 0,
+        "all_skip_output": "s                                                                        [100%]\n1 skipped in 0.00s"
+      }
+    }
+  },
+  "E44": {
+    "path": "chapters/22.html",
+    "title": "快照看着没变不等于性质没坏：怎样让测试能杀死错误实现？",
+    "results": {
+      "E44": {
+        "weak_inputs": [
+          1,
+          2
+        ],
+        "mutant_survives": true,
+        "strong_inputs": [
+          -1,
+          0,
+          1
+        ],
+        "mutant_killed": true
+      }
+    }
+  },
+  "E53": {
+    "path": "chapters/27.html",
+    "title": "只回答有把握的问题，准确率上升为何可能只是覆盖率下降？",
+    "results": {
+      "E53": {
+        "overall_accuracy": 0.5,
+        "selective_accuracy": 0.8,
+        "coverage": 0.5,
+        "synthetic": true
+      }
+    }
+  },
+  "E54": {
+    "path": "chapters/27.html",
+    "title": "注意力热图最亮的位置，为什么不一定是答案的主要原因？",
+    "results": {
+      "E54": {
+        "weights": [
+          0.9,
+          0.1
+        ],
+        "values": [
+          0.0,
+          100.0
+        ],
+        "contributions": [
+          0.0,
+          10.0
+        ],
+        "scope": "scalar aggregation counterexample, not real causal interpretability"
+      }
+    }
+  },
+  "E11": {
+    "path": "chapters/06.html",
+    "title": "DPO真正比较的不是“好答案概率”，而是相对参考策略的改变量",
+    "results": {
+      "E11": {
+        "policy_gap": 2.0,
+        "reference_gap": 2.0,
+        "margin": 0.0,
+        "loss": 0.6931471805599453
+      }
+    }
+  },
+  "E12": {
+    "path": "chapters/06.html",
+    "title": "LoRA第一步A梯度为零，可能是设计正常，不是反传断了",
+    "results": {
+      "E12": {
+        "A_gradient": [
+          [
+            0.0
+          ],
+          [
+            0.0
+          ]
+        ],
+        "B_gradient": [
+          [
+            -10.0,
+            -10.0
+          ]
+        ],
+        "delta_initial": [
+          [
+            0.0,
+            0.0
+          ]
+        ]
+      }
+    }
+  },
+  "E03": {
+    "path": "chapters/02.html",
+    "title": "投影两次、缩放两次、eval仍随机：同名Attention接口的三种陷阱",
+    "results": {
+      "E03-dropout": {
+        "eval_without_dropout": [
+          [
+            [
+              [
+                1.0
+              ]
+            ]
+          ]
+        ],
+        "outputs_with_p_half": [
+          0.5,
+          2.0,
+          0.5,
+          1.5,
+          1.0,
+          1.5,
+          0.5,
+          1.0,
+          1.0,
+          1.5,
+          0.5,
+          0.5,
+          1.0,
+          1.0,
+          1.0,
+          2.0
+        ]
+      },
+      "E03-linear": {
+        "correct": [
+          [
+            5.0,
+            11.0
+          ]
+        ],
+        "wrong": [
+          [
+            7.0,
+            10.0
+          ]
+        ]
+      }
+    }
+  },
+  "E04": {
+    "path": "chapters/02.html",
+    "title": "一整行都被遮住时，减最大值为什么仍救不了softmax？",
+    "results": {
+      "E04": {
+        "finite_fill_result": [
+          0.5,
+          0.5
+        ],
+        "manual_minus_inf_nan": true,
+        "native_sdpa_observed": [
+          [
+            [
+              [
+                0.0
+              ]
+            ]
+          ]
+        ],
+        "scope": "native result not generalized to all backends"
+      }
+    }
+  },
+  "E31": {
+    "path": "chapters/16.html",
+    "title": "RRF不看原始分数，为什么重复来源仍会把排名带偏？",
+    "results": {
+      "E31": {
+        "two_independent_lists": {
+          "A": 0.03252247488101534,
+          "B": 0.03252247488101534
+        },
+        "duplicated_one_source": {
+          "A": 0.04891591750396616,
+          "B": 0.048651507139079855
+        }
+      }
+    }
+  },
+  "E32": {
+    "path": "chapters/16.html",
+    "title": "相关、可引用、足以支持结论：证据要过三道不同的门",
+    "results": {
+      "E32": {
+        "evidence": {
+          "tier": "pro",
+          "version": 3,
+          "limit": 100
+        },
+        "claim_scope": {
+          "tier": "free",
+          "version": 3
+        },
+        "supports": false
+      }
+    }
+  },
+  "D06": {
+    "path": "studies/chapters/15.html",
+    "title": "记忆诊断：错误不在“没搜到”，而在拿错时间、拿到已撤销结论",
+    "results": {
+      "E35": {
+        "at_day6_known_day6": 10,
+        "at_day6_known_day9": 20
+      },
+      "E36": {
+        "invalidated": [
+          "answer_cache",
+          "chunk",
+          "doc",
+          "memory",
+          "summary"
+        ]
+      }
+    }
+  },
+  "D05": {
+    "path": "studies/chapters/13.html",
+    "title": "检索诊断：先查表示空间，再查授权候选，最后查融合排序",
+    "results": {
+      "E29": {
+        "old_space_result": "A",
+        "mixed_space_result": "B",
+        "dimension": 2,
+        "scope": "basis counterexample, not e5 inference"
+      },
+      "E30": {
+        "post_filter_top2": [],
+        "eligible_top2": [
+          [
+            "a",
+            "mine"
+          ],
+          [
+            "b",
+            "mine"
+          ]
+        ],
+        "scope": "candidate model, not pgvector index execution"
+      },
+      "E31": {
+        "two_independent_lists": {
+          "A": 0.03252247488101534,
+          "B": 0.03252247488101534
+        },
+        "duplicated_one_source": {
+          "A": 0.04891591750396616,
+          "B": 0.048651507139079855
+        }
+      },
+      "E32": {
+        "evidence": {
+          "tier": "pro",
+          "version": 3,
+          "limit": 100
+        },
+        "claim_scope": {
+          "tier": "free",
+          "version": 3
+        },
+        "supports": false
+      }
+    }
+  },
+  "D08": {
+    "path": "studies/chapters/21.html",
+    "title": "运行诊断：关键路径、重试放大与回滚后的状态兼容",
+    "results": {
+      "E42": {
+        "per_layer_attempts": [
+          3,
+          3,
+          3
+        ],
+        "max_leaf_calls": 27
+      },
+      "E49": {
+        "wall": 7.0,
+        "sum_spans": 10.0,
+        "mean_group_p95": 50.5,
+        "pooled_p95": 100
+      },
+      "E49-cost": {
+        "cost_per_success": 6.0,
+        "successes_only_wrong": 1.0
+      },
+      "E50-schema": {
+        "v1_ms": 5000,
+        "v2_ms": 5000,
+        "unknown_version_rejected": true
+      }
+    }
+  },
+  "D02": {
+    "path": "studies/chapters/03.html",
+    "title": "真实修复阅读：从梯度累积事故到一份可区分错误目标的测试",
+    "results": {
+      "E09": {
+        "token_counts": [
+          1,
+          3
+        ],
+        "correct_gradient": -1.0,
+        "mean_of_means_gradient": 0.0,
+        "scalar_loss_counterexample": {
+          "loss_sums": [
+            2.0,
+            3.0
+          ],
+          "counts": [
+            1,
+            3
+          ],
+          "correct": 1.25,
+          "wrong": 1.5
+        }
+      },
+      "E09-xent": {
+        "full_gradient": [
+          [
+            0.33608508110046387,
+            -0.33608511090278625
+          ],
+          [
+            -0.21314038336277008,
+            0.2131403535604477
+          ]
+        ],
+        "sum_normalized_gradient": [
+          [
+            0.33608508110046387,
+            -0.33608511090278625
+          ],
+          [
+            -0.21314038336277008,
+            0.2131403535604477
+          ]
+        ],
+        "mean_of_means_gradient": [
+          [
+            0.06571647524833679,
+            -0.06571649014949799
+          ],
+          [
+            -0.4587741494178772,
+            0.4587740898132324
+          ]
+        ],
+        "loss": 0.8043063879013062
+      },
+      "E09-ddp": {
+        "rank_sum_gradients": [
+          2.0,
+          -6.0
+        ],
+        "counts": [
+          1,
+          3
+        ],
+        "correct": -1.0,
+        "wrong": 0.0,
+        "scope": "algebra simulation; no distributed process group launched"
+      },
+      "E10-checkpoint": {
+        "calls": 2,
+        "gradient": 0.9182168245315552
+      }
+    }
+  },
+  "D03": {
+    "path": "studies/chapters/08.html",
+    "title": "故障注入：在副作用提交之后立刻杀掉执行进程",
+    "results": {
+      "E41": {
+        "crash_exit": 17,
+        "unsafe_effects": 2,
+        "keyed_effects": 1,
+        "scope": "two local SQLite stores + actual subprocess os._exit; not network service"
+      },
+      "E42-key": {
+        "reuse_allowed": false
+      }
+    }
+  },
+  "D04": {
+    "path": "studies/chapters/12.html",
+    "title": "故障实验：用两条数据库连接抓住压缩覆盖新事件",
+    "results": {
+      "E27": {
+        "canonical_types": [
+          "message",
+          "compaction"
+        ],
+        "lossy_types": [
+          "compaction"
+        ]
+      },
+      "E28-sql": {
+        "stale_revision": 10,
+        "changed_rows": 0,
+        "preserved": [
+          11,
+          "c7 succeeded"
+        ]
+      }
+    }
+  },
+  "D07": {
+    "path": "studies/chapters/19.html",
+    "title": "评测诊断：净增一题、一次Bootstrap与一个永远选左边的裁判",
+    "results": {
+      "E43": {
+        "no_tests_exit": 5,
+        "all_skip_exit": 0,
+        "all_skip_output": "s                                                                        [100%]\n1 skipped in 0.00s"
+      },
+      "E45": {
+        "old": [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "new": [
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        "improvements": 2,
+        "regressions": 1,
+        "mean_delta": 0.125,
+        "synthetic": true
+      },
+      "E45-bootstrap": {
+        "trials": 10000,
+        "seed": 20261021,
+        "paired_task_delta": [
+          0,
+          0,
+          -1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        "mean": 0.125,
+        "percentile_interval": [
+          -0.25,
+          0.5
+        ],
+        "scope": "teaching 8-task dataset, not population certification"
+      },
+      "E46": {
+        "original_order_winner": "A",
+        "swapped_order_winner": "B",
+        "synthetic_judge": "always chooses left"
+      },
+      "E53": {
+        "overall_accuracy": 0.5,
+        "selective_accuracy": 0.8,
+        "coverage": 0.5,
+        "synthetic": true
+      }
+    }
+  },
+  "D01": {
+    "path": "studies/chapters/02.html",
+    "title": "故障实验：为什么无缓存前向正确、增量前向却失真？",
+    "results": {
+      "E03-linear": {
+        "correct": [
+          [
+            5.0,
+            11.0
+          ]
+        ],
+        "wrong": [
+          [
+            7.0,
+            10.0
+          ]
+        ]
+      },
+      "E05-polarity": {
+        "correct": [
+          [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.3302384614944458,
+              0.6697615385055542
+            ]
+          ]
+        ],
+        "inverted": [
+          [
+            [
+              0.0,
+              1.0
+            ],
+            [
+              0.0,
+              0.0
+            ]
+          ]
+        ]
+      },
+      "E05-offset": {
+        "mask": [
+          [
+            true,
+            true,
+            true,
+            true,
+            false
+          ],
+          [
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        ],
+        "correct": [
+          2.5,
+          3.0
+        ],
+        "upper_left": [
+          1.0,
+          1.5
+        ]
+      },
+      "E06": {
+        "once": [
+          6.123233995736766e-17,
+          1.0
+        ],
+        "twice": [
+          -1.0,
+          1.2246467991473532e-16
+        ],
+        "cache_slots": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "valid_positions": [
+          0,
+          1,
+          2
+        ]
+      }
+    }
+  }
+}

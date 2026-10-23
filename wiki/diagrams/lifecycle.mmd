@@ -1,0 +1,17 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart TB
+ Init["TinyLM: 固定结构与参数初始化"] --> F["共享前向 forward(ids, cache)"]
+ Train["训练批次: input_ids + targets"] --> F
+ Prompt["推理前缀 / 新Token"] --> F
+ F --> Logits["logits"]
+ Logits -->|训练: 已知targets| Loss["training_loss"]
+ Loss --> Back["backward: 计算grad"]
+ Back --> Step["AdamW.step: 改参数"]
+ Step -->|下一批| F
+ Step --> Save["保存参数与结构"]
+ Save --> Load["重新加载; 参数固定"]
+ Load --> Prompt
+ Logits -->|推理: 没有targets| Select["选择下一Token"]
+ Select -->|不是EOS且未触发上限| Prompt
+ Select -->|EOS / 上限| Stop["停止"]
+%% Sources: labs/model/lab/tiny_model.py:33-98,101-110,156-175,195-244

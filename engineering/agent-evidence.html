@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="从基础概念到大语言模型内部机制、智能体执行与工程实践的中文学习教材。" name="description"/><title>Agent与工程机制：证据、知识关系与覆盖 · AI系统工程</title><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/visual.css" rel="stylesheet"/><link href="../assets/atelier.css" rel="stylesheet"/><link href="../assets/mechanisms.css" rel="stylesheet"/><link href="../assets/model-course.css" rel="stylesheet"/><link href="../assets/integrated-course.css" rel="stylesheet"/><link href="../assets/diagrams.css" rel="stylesheet"/><link href="../assets/agent-practice.css" rel="stylesheet"/></head><body class="is-reader" data-page="engineering/agent-evidence.html" data-root="../"><a class="skip-link" href="#main-content">跳到正文</a><header class="site-header"><button aria-controls="book-sidebar" aria-expanded="false" aria-label="打开全书目录" class="icon-button menu-trigger" data-studio-menu="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a class="site-brand" href="../index.html"><span>AI 系统工程</span><span class="brand-detail">技术参考</span></a><nav aria-label="主要导航" class="site-links"><a class="section-active" href="../contents.html">文档</a><a href="../visual-guides.html">图解</a><a href="../studies/index.html">专题</a></nav><div class="site-actions"><button aria-label="搜索教材" class="search-trigger" data-search="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><span>搜索全文…</span><kbd>⌘ K</kbd></button><button aria-label="切换专注模式" aria-pressed="false" class="icon-button focus-trigger" data-focus="" title="专注模式" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"></path></svg></button><button aria-label="阅读设置" class="icon-button settings-trigger" data-settings="" title="阅读设置" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"></path><circle cx="9" cy="7" fill="var(--paper)" r="2.5"></circle><circle cx="15" cy="17" fill="var(--paper)" r="2.5"></circle></svg></button></div></header><div aria-hidden="true" class="page-progress"><span></span></div><aside aria-label="全书章节目录" class="book-rail sidebar" id="book-sidebar"><div class="rail-top"><strong>章节目录</strong><div class="rail-actions"><button aria-label="将目录滚动到当前章节" class="rail-locate" data-locate-current="" title="定位当前章节" type="button">定位当前</button><button aria-label="关闭目录" class="rail-close icon-button" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div></div><nav aria-label="教材章节" class="rail-scroll" tabindex="0"><a class="rail-home" data-section="index" data-target="index.html" href="../index.html" title="AI 系统工程"><span class="rail-name">教材概览</span></a><a class="rail-home" data-section="preface" data-target="preface.html" href="../preface.html" title="前言与使用指南"><span class="rail-name">前言与使用指南</span></a><a class="rail-home" data-section="contents" data-target="contents.html" href="../contents.html" title="目录与学习路径"><span class="rail-name">完整目录</span></a><a class="rail-home" data-section="search" data-target="search.html" href="../search.html" title="全文搜索"><span class="rail-name">全文搜索</span></a><details class="rail-group" data-group="foundations"><summary>基础课程</summary><div class="rail-links"><div class="rail-section-name">输入与表示</div><a class="" data-section="foundations--01" data-target="foundations/01.html" href="../foundations/01.html" title="F01｜模型的生命周期：对象、参数、训练与推理"><span class="rail-code">F01</span><span class="rail-name">模型的生命周期：对象、参数、训练与推理</span></a><a class="" data-section="foundations--02" data-target="foundations/02.html" href="../foundations/02.html" title="F02｜一排数、一张表和一叠表：读懂张量与形状"><span class="rail-code">F02</span><span class="rail-name">一排数、一张表和一叠表：读懂张量与形状</span></a><a class="" data-section="foundations--03" data-target="foundations/03.html" href="../foundations/03.html" title="F03｜文字怎样成为编号：分词、词表与序列边界"><span class="rail-code">F03</span><span class="rail-name">文字怎样成为编号：分词、词表与序列边界</span></a><a class="" data-section="foundations--04" data-target="foundations/04.html" href="../foundations/04.html" title="F04｜从多句话到训练批次：组批、补齐与标签位置"><span class="rail-code">F04</span><span class="rail-name">从多句话到训练批次：组批、补齐与标签位置</span></a><a class="" data-section="foundations--05" data-target="foundations/05.html" href="../foundations/05.html" title="F05｜Embedding与位置：从编号查表到模型输入"><span class="rail-code">F05</span><span class="rail-name">Embedding与位置：从编号查表到模型输入</span></a><a class="" data-section="foundations--06" data-target="foundations/06.html" href="../foundations/06.html" title="F06｜“放到设备”是什么：数据类型、内存、CPU与GPU"><span class="rail-code">F06</span><span class="rail-name">“放到设备”是什么：数据类型、内存、CPU与GPU</span></a><div class="rail-section-name">共通计算</div><a class="" data-section="foundations--07" data-target="foundations/07.html" href="../foundations/07.html" title="F07｜模型最常做的算术：加权求和、点积与矩阵乘法"><span class="rail-code">F07</span><span class="rail-name">模型最常做的算术：加权求和、点积与矩阵乘法</span></a><a class="" data-section="foundations--08" data-target="foundations/08.html" href="../foundations/08.html" title="F08｜reshape、转轴、广播：形状变了，内容未必算过"><span class="rail-code">F08</span><span class="rail-name">reshape、转轴、广播：形状变了，内容未必算过</span></a><a class="" data-section="foundations--09" data-target="foundations/09.html" href="../foundations/09.html" title="F09｜概率、指数与softmax：把分数变成比例"><span class="rail-code">F09</span><span class="rail-name">概率、指数与softmax：把分数变成比例</span></a><a class="" data-section="foundations--10" data-target="foundations/10.html" href="../foundations/10.html" title="F10｜参数、前向与归一化：同一输入如何变成可用表示"><span class="rail-code">F10</span><span class="rail-name">参数、前向与归一化：同一输入如何变成可用表示</span></a><a class="" data-section="foundations--11" data-target="foundations/11.html" href="../foundations/11.html" title="F11｜Attention逐步计算：先算相关分数，再混合内容"><span class="rail-code">F11</span><span class="rail-name">Attention逐步计算：先算相关分数，再混合内容</span></a><a class="" data-section="foundations--12" data-target="foundations/12.html" href="../foundations/12.html" title="F12｜Mask不是黑箱：把“谁能看谁”写成一张表"><span class="rail-code">F12</span><span class="rail-name">Mask不是黑箱：把“谁能看谁”写成一张表</span></a><a class="" data-section="foundations--13" data-target="foundations/13.html" href="../foundations/13.html" title="F13｜位置编号与RoPE：先懂位置，再懂旋转"><span class="rail-code">F13</span><span class="rail-name">位置编号与RoPE：先懂位置，再懂旋转</span></a><a class="" data-section="foundations--14" data-target="foundations/14.html" href="../foundations/14.html" title="F14｜完成一次前向：残差、前馈网络与词表分数"><span class="rail-code">F14</span><span class="rail-name">完成一次前向：残差、前馈网络与词表分数</span></a><div class="rail-section-name">训练与验证</div><a class="" data-section="foundations--15" data-target="foundations/15.html" href="../foundations/15.html" title="F15｜导数、梯度与链式法则：训练怎样找到调整方向"><span class="rail-code">F15</span><span class="rail-name">导数、梯度与链式法则：训练怎样找到调整方向</span></a><a class="" data-section="foundations--16" data-target="foundations/16.html" href="../foundations/16.html" title="F16｜一次训练从头到尾：标签、损失、更新、验证与保存"><span class="rail-code">F16</span><span class="rail-name">一次训练从头到尾：标签、损失、更新、验证与保存</span></a><a class="" data-section="foundations--17" data-target="foundations/17.html" href="../foundations/17.html" title="F17｜后训练：监督微调、偏好、奖励与参数适配"><span class="rail-code">F17</span><span class="rail-name">后训练：监督微调、偏好、奖励与参数适配</span></a><div class="rail-section-name">训练后的推理</div><a class="" data-section="foundations--18" data-target="foundations/18.html" href="../foundations/18.html" title="F18｜加载训练结果：逐个预测、选择与停止"><span class="rail-code">F18</span><span class="rail-name">加载训练结果：逐个预测、选择与停止</span></a><a class="" data-section="foundations--19" data-target="foundations/19.html" href="../foundations/19.html" title="F19｜KV缓存：在同一结果下复用历史计算"><span class="rail-code">F19</span><span class="rail-name">KV缓存：在同一结果下复用历史计算</span></a><div class="rail-section-name">结构与资源</div><a class="" data-section="foundations--20" data-target="foundations/20.html" href="../foundations/20.html" title="F20｜低秩、量化、专家：先看究竟少算了什么"><span class="rail-code">F20</span><span class="rail-name">低秩、量化、专家：先看究竟少算了什么</span></a><a class="" data-section="foundations--21" data-target="foundations/21.html" href="../foundations/21.html" title="F21｜算得快与装得下：复杂度、带宽、批处理和并行"><span class="rail-code">F21</span><span class="rail-name">算得快与装得下：复杂度、带宽、批处理和并行</span></a><div class="rail-section-name">Agent与上下文</div><a class="" data-section="foundations--22" data-target="foundations/22.html" href="../foundations/22.html" title="F22｜Agent不是另一个神经网络：用一次读文件讲清循环"><span class="rail-code">F22</span><span class="rail-name">Agent不是另一个神经网络：用一次读文件讲清循环</span></a><a class="" data-section="foundations--23" data-target="foundations/23.html" href="../foundations/23.html" title="F23｜API与流式协议：请求如何变成可执行数据"><span class="rail-code">F23</span><span class="rail-name">API与流式协议：请求如何变成可执行数据</span></a><a class="" data-section="foundations--24" data-target="foundations/24.html" href="../foundations/24.html" title="F24｜状态、事件与检查点：模型知道和系统记录的区别"><span class="rail-code">F24</span><span class="rail-name">状态、事件与检查点：模型知道和系统记录的区别</span></a><a class="" data-section="foundations--25" data-target="foundations/25.html" href="../foundations/25.html" title="F25｜工具与MCP：连接、发现、授权、执行四层拆开"><span class="rail-code">F25</span><span class="rail-name">工具与MCP：连接、发现、授权、执行四层拆开</span></a><a class="" data-section="foundations--26" data-target="foundations/26.html" href="../foundations/26.html" title="F26｜上下文组装：每轮到底给模型什么，以及为什么"><span class="rail-code">F26</span><span class="rail-name">上下文组装：每轮到底给模型什么，以及为什么</span></a><a class="" data-section="foundations--27" data-target="foundations/27.html" href="../foundations/27.html" title="F27｜压缩不是魔法：摘要、原文和执行状态怎样配合"><span class="rail-code">F27</span><span class="rail-name">压缩不是魔法：摘要、原文和执行状态怎样配合</span></a><div class="rail-section-name">检索与可靠交付</div><a class="" data-section="foundations--28" data-target="foundations/28.html" href="../foundations/28.html" title="F28｜检索入门：目录、倒排索引、向量与近似搜索"><span class="rail-code">F28</span><span class="rail-name">检索入门：目录、倒排索引、向量与近似搜索</span></a><a class="" data-section="foundations--29" data-target="foundations/29.html" href="../foundations/29.html" title="F29｜从搜索结果到可信答案：召回、重排和证据"><span class="rail-code">F29</span><span class="rail-name">从搜索结果到可信答案：召回、重排和证据</span></a><a class="" data-section="foundations--30" data-target="foundations/30.html" href="../foundations/30.html" title="F30｜代码不是普通文档：语法树、调用关系与版本"><span class="rail-code">F30</span><span class="rail-name">代码不是普通文档：语法树、调用关系与版本</span></a><a class="" data-section="foundations--31" data-target="foundations/31.html" href="../foundations/31.html" title="F31｜长期记忆的基础：事实、经历、流程和时间"><span class="rail-code">F31</span><span class="rail-name">长期记忆的基础：事实、经历、流程和时间</span></a><a class="" data-section="foundations--32" data-target="foundations/32.html" href="../foundations/32.html" title="F32｜Skill、路由和多Agent：先理解谁负责什么"><span class="rail-code">F32</span><span class="rail-name">Skill、路由和多Agent：先理解谁负责什么</span></a><a class="" data-section="foundations--33" data-target="foundations/33.html" href="../foundations/33.html" title="F33｜重试、幂等和事务：为什么超时不是失败证明"><span class="rail-code">F33</span><span class="rail-name">重试、幂等和事务：为什么超时不是失败证明</span></a><a class="" data-section="foundations--34" data-target="foundations/34.html" href="../foundations/34.html" title="F34｜工程质量的基础：需求、反例、测试与审查"><span class="rail-code">F34</span><span class="rail-name">工程质量的基础：需求、反例、测试与审查</span></a><div class="rail-section-name">评价与生产</div><a class="" data-section="foundations--35" data-target="foundations/35.html" href="../foundations/35.html" title="F35｜评测指标的分母：成功率、精确率、召回率和pass"><span class="rail-code">F35</span><span class="rail-name">评测指标的分母：成功率、精确率、召回率和pass</span></a><a class="" data-section="foundations--36" data-target="foundations/36.html" href="../foundations/36.html" title="F36｜别被几个百分点骗了：随机性、样本与统计判断"><span class="rail-code">F36</span><span class="rail-name">别被几个百分点骗了：随机性、样本与统计判断</span></a><a class="" data-section="foundations--37" data-target="foundations/37.html" href="../foundations/37.html" title="F37｜安全基础：数据能影响模型，但不能因此获得权限"><span class="rail-code">F37</span><span class="rail-name">安全基础：数据能影响模型，但不能因此获得权限</span></a><a class="" data-section="foundations--38" data-target="foundations/38.html" href="../foundations/38.html" title="F38｜看懂生产运行：Trace、队列、成本和回滚"><span class="rail-code">F38</span><span class="rail-name">看懂生产运行：Trace、队列、成本和回滚</span></a><a class="" data-section="foundations--39" data-target="foundations/39.html" href="../foundations/39.html" title="F39｜多模态与可信度：图片怎样成为输入，解释为什么有限"><span class="rail-code">F39</span><span class="rail-name">多模态与可信度：图片怎样成为输入，解释为什么有限</span></a><a class="" data-section="foundations--40" data-target="foundations/40.html" href="../foundations/40.html" title="F40｜从基础概念到系统分析：怎样定位问题，而不是再堆技术"><span class="rail-code">F40</span><span class="rail-name">从基础概念到系统分析：怎样定位问题，而不是再堆技术</span></a></div></details><details class="rail-group" data-group="chapters"><summary>系统机制</summary><div class="rail-links"><div class="rail-section-name">模型数据与前向</div><a class="" data-section="chapters--01" data-target="chapters/01.html" href="../chapters/01.html" title="01｜输入究竟是什么：从用户的一句话到模型张量"><span class="rail-code">01</span><span class="rail-name">输入究竟是什么：从用户的一句话到模型张量</span></a><a class="" data-section="chapters--02" data-target="chapters/02.html" href="../chapters/02.html" title="02｜一次Transformer前向：逐张量、逐算子讲明白"><span class="rail-code">02</span><span class="rail-name">一次Transformer前向：逐张量、逐算子讲明白</span></a><a class="" data-section="chapters--03" data-target="chapters/03.html" href="../chapters/03.html" title="03｜注意力的深入追问：位置、掩码、多头与反向传播"><span class="rail-code">03</span><span class="rail-name">注意力的深入追问：位置、掩码、多头与反向传播</span></a><div class="rail-section-name">训练与适配</div><a class="" data-section="chapters--04" data-target="chapters/04.html" href="../chapters/04.html" title="04｜训练机制：损失、完整反向传播与参数更新"><span class="rail-code">04</span><span class="rail-name">训练机制：损失、完整反向传播与参数更新</span></a><a class="" data-section="chapters--05" data-target="chapters/05.html" href="../chapters/05.html" title="05｜后训练与模型定制：目标、结构和参数适配"><span class="rail-code">05</span><span class="rail-name">后训练与模型定制：目标、结构和参数适配</span></a><div class="rail-section-name">推理与资源</div><a class="" data-section="chapters--06" data-target="chapters/06.html" href="../chapters/06.html" title="06｜推理机制：加载、解码策略与连续生成"><span class="rail-code">06</span><span class="rail-name">推理机制：加载、解码策略与连续生成</span></a><a class="" data-section="chapters--07" data-target="chapters/07.html" href="../chapters/07.html" title="07｜KV Cache、FlashAttention与PagedAttention的内部过程"><span class="rail-code">07</span><span class="rail-name">KV Cache、FlashAttention与PagedAttention的内部过程</span></a><a class="" data-section="chapters--08" data-target="chapters/08.html" href="../chapters/08.html" title="08｜推理服务：调度、吞吐、延迟和并行"><span class="rail-code">08</span><span class="rail-name">推理服务：调度、吞吐、延迟和并行</span></a><div class="rail-section-name">Agent与工具</div><a class="" data-section="chapters--09" data-target="chapters/09.html" href="../chapters/09.html" title="09｜Agent一次任务的完整循环：谁在思考，谁在执行"><span class="rail-code">09</span><span class="rail-name">Agent一次任务的完整循环：谁在思考，谁在执行</span></a><a class="" data-section="chapters--10" data-target="chapters/10.html" href="../chapters/10.html" title="10｜模型输出怎样变成真实工具调用：协议与执行边界"><span class="rail-code">10</span><span class="rail-name">模型输出怎样变成真实工具调用：协议与执行边界</span></a><a class="" data-section="chapters--11" data-target="chapters/11.html" href="../chapters/11.html" title="11｜工具设计与MCP：从连接到可控执行"><span class="rail-code">11</span><span class="rail-name">工具设计与MCP：从连接到可控执行</span></a><a class="" data-section="chapters--12" data-target="chapters/12.html" href="../chapters/12.html" title="12｜Codex、Claude Code、Copilot：从公开事实到可诊断运行链"><span class="rail-code">12</span><span class="rail-name">Codex、Claude Code、Copilot：从公开事实到可诊断运行链</span></a><div class="rail-section-name">上下文与知识</div><a class="" data-section="chapters--13" data-target="chapters/13.html" href="../chapters/13.html" title="13｜每一轮Prompt怎样组装：上下文是一条数据管线"><span class="rail-code">13</span><span class="rail-name">每一轮Prompt怎样组装：上下文是一条数据管线</span></a><a class="" data-section="chapters--14" data-target="chapters/14.html" href="../chapters/14.html" title="14｜上下文压缩：到底压掉什么，丢失后又如何恢复"><span class="rail-code">14</span><span class="rail-name">上下文压缩：到底压掉什么，丢失后又如何恢复</span></a><a class="" data-section="chapters--15" data-target="chapters/15.html" href="../chapters/15.html" title="15｜检索离线链路：文档怎样变成可查询索引"><span class="rail-code">15</span><span class="rail-name">检索离线链路：文档怎样变成可查询索引</span></a><a class="" data-section="chapters--16" data-target="chapters/16.html" href="../chapters/16.html" title="16｜检索在线链路：召回、融合、重排与证据充足性"><span class="rail-code">16</span><span class="rail-name">检索在线链路：召回、融合、重排与证据充足性</span></a><a class="" data-section="chapters--17" data-target="chapters/17.html" href="../chapters/17.html" title="17｜代码智能：从文本搜索到符号、版本与运行证据"><span class="rail-code">17</span><span class="rail-name">代码智能：从文本搜索到符号、版本与运行证据</span></a><a class="" data-section="chapters--18" data-target="chapters/18.html" href="../chapters/18.html" title="18｜长期记忆：写入、检索、冲突、失效与遗忘"><span class="rail-code">18</span><span class="rail-name">长期记忆：写入、检索、冲突、失效与遗忘</span></a><a class="" data-section="chapters--19" data-target="chapters/19.html" href="../chapters/19.html" title="19｜Skills与路由：怎样加载刚好需要的专业能力"><span class="rail-code">19</span><span class="rail-name">Skills与路由：怎样加载刚好需要的专业能力</span></a><div class="rail-section-name">协作、交付与生产</div><a class="" data-section="chapters--20" data-target="chapters/20.html" href="../chapters/20.html" title="20｜多Agent：并行的收益与交接的损失"><span class="rail-code">20</span><span class="rail-name">多Agent：并行的收益与交接的损失</span></a><a class="" data-section="chapters--21" data-target="chapters/21.html" href="../chapters/21.html" title="21｜可靠执行：重试、幂等、崩溃与状态恢复"><span class="rail-code">21</span><span class="rail-name">可靠执行：重试、幂等、崩溃与状态恢复</span></a><a class="" data-section="chapters--22" data-target="chapters/22.html" href="../chapters/22.html" title="22｜工程质量：从需求到测试，再到真正可交付的代码"><span class="rail-code">22</span><span class="rail-name">工程质量：从需求到测试，再到真正可交付的代码</span></a><a class="" data-section="chapters--23" data-target="chapters/23.html" href="../chapters/23.html" title="23｜Evaluation：怎样证明一次优化真有收益"><span class="rail-code">23</span><span class="rail-name">Evaluation：怎样证明一次优化真有收益</span></a><a class="" data-section="chapters--24" data-target="chapters/24.html" href="../chapters/24.html" title="24｜安全：指令边界、沙箱、权限与记忆污染"><span class="rail-code">24</span><span class="rail-name">安全：指令边界、沙箱、权限与记忆污染</span></a><a class="" data-section="chapters--25" data-target="chapters/25.html" href="../chapters/25.html" title="25｜生产运行：Trace、成本、队列、灰度与回滚"><span class="rail-code">25</span><span class="rail-name">生产运行：Trace、成本、队列、灰度与回滚</span></a><a class="" data-section="chapters--26" data-target="chapters/26.html" href="../chapters/26.html" title="26｜深度应用：把组件组合成能解释的工作系统"><span class="rail-code">26</span><span class="rail-name">深度应用：把组件组合成能解释的工作系统</span></a><a class="" data-section="chapters--27" data-target="chapters/27.html" href="../chapters/27.html" title="27｜事实可靠性、多模态与可解释性：能力边界在哪里"><span class="rail-code">27</span><span class="rail-name">事实可靠性、多模态与可解释性：能力边界在哪里</span></a><a class="" data-section="chapters--28" data-target="chapters/28.html" href="../chapters/28.html" title="28｜研究深水区与系统综合判断"><span class="rail-code">28</span><span class="rail-name">研究深水区与系统综合判断</span></a></div></details><details class="rail-group" data-group="walkthroughs"><summary>贯通案例</summary><div class="rail-links"><a class="" data-section="walkthroughs--a" data-target="walkthroughs/a.html" href="../walkthroughs/a.html" title="全程拆解A｜一次输入怎样变成三个输出Token"><span class="rail-name">一次输入怎样变成三个输出Token</span></a><a class="" data-section="walkthroughs--b" data-target="walkthroughs/b.html" href="../walkthroughs/b.html" title="全程拆解B｜一次仓库修复的每轮输入、输出、工具和恢复"><span class="rail-name">一次仓库修复的每轮输入、输出、工具和恢复</span></a><a class="" data-section="walkthroughs--c" data-target="walkthroughs/c.html" href="../walkthroughs/c.html" title="全程拆解C｜从文档入库到检索、回答、记忆更新和遗忘"><span class="rail-name">从文档入库到检索、回答、记忆更新和遗忘</span></a><a class="" data-section="walkthroughs--d" data-target="walkthroughs/d.html" href="../walkthroughs/d.html" title="全程拆解D｜一次“变慢且变差”的Agent回归怎样查到根因"><span class="rail-name">一次“变慢且变差”的Agent回归怎样查到根因</span></a></div></details><details class="rail-group" data-group="labs"><summary>实验与核验</summary><div class="rail-links"><a class="" data-section="labs" data-target="labs.html" href="../labs.html" title="把数字改一下，看每一步怎样变化"><span class="rail-name">把数字改一下，看每一步怎样变化</span></a><a class="" data-section="labs--model-viewer" data-target="labs/model-viewer.html" href="../labs/model-viewer.html" title="模型实验：逐步查看训练与推理的中间值"><span class="rail-name">模型实验：逐步查看训练与推理的中间值</span></a><a class="" data-section="labs--model-values" data-target="labs/model-values.html" href="../labs/model-values.html" title="模型实验：参数、前向与梯度记录"><span class="rail-name">模型实验：参数、前向与梯度记录</span></a><a class="" data-section="labs--model-run" data-target="labs/model-run.html" href="../labs/model-run.html" title="模型实验：完整代码与运行结果"><span class="rail-name">模型实验：完整代码与运行结果</span></a><a class="" data-section="reference--model-code" data-target="reference/model-code.html" href="../reference/model-code.html" title="模型实验源码与原始参数"><span class="rail-name">模型实验源码与原始参数</span></a><a class="" data-section="checks" data-target="checks.html" href="../checks.html" title="代码、数值与验证边界"><span class="rail-name">代码、数值与验证边界</span></a><a class="" data-section="example-verification" data-target="example-verification.html" href="../example-verification.html" title="示例核验：数值、状态与代码"><span class="rail-name">示例核验：数值、状态与代码</span></a></div></details><details class="rail-group" data-group="visual"><summary>图解与动画</summary><div class="rail-links"><a class="" data-section="visual-guides" data-target="visual-guides.html" href="../visual-guides.html" title="动态图解：把每一步看清楚"><span class="rail-name">动态图解：把每一步看清楚</span></a><a class="" data-section="worked-examples" data-target="worked-examples.html" href="../worked-examples.html" title="运行示例索引"><span class="rail-name">运行示例索引</span></a><a class="" data-section="worked-model" data-target="worked-model.html" href="../worked-model.html" title="贯通算例：两句话怎样穿过一层模型"><span class="rail-name">贯通算例：两句话怎样穿过一层模型</span></a><a class="" data-section="foundation-atlas" data-target="foundation-atlas.html" href="../foundation-atlas.html" title="基础篇逐节图解索引"><span class="rail-name">基础篇逐节图解索引</span></a><a class="" data-section="mechanisms--index" data-target="mechanisms/index.html" href="../mechanisms/index.html" title="正文图解与细算索引"><span class="rail-name">正文图解与细算索引</span></a><a class="" data-section="examples--input-representation" data-target="examples/input-representation.html" href="../examples/input-representation.html" title="示例：从两句话到三维表示"><span class="rail-name">示例：从两句话到三维表示</span></a><a class="" data-section="visual--F01" data-target="visual/F01.html" href="../visual/F01.html" title="一句话经过了哪些不同的对象"><span class="rail-name">一句话经过了哪些不同的对象</span></a><a class="" data-section="visual--F02" data-target="visual/F02.html" href="../visual/F02.html" title="新增一个轴，究竟多了什么"><span class="rail-name">新增一个轴，究竟多了什么</span></a><a class="" data-section="visual--F03" data-target="visual/F03.html" href="../visual/F03.html" title="文字、字节、Token、编号是四件事"><span class="rail-name">文字、字节、Token、编号是四件事</span></a><a class="" data-section="visual--F04" data-target="visual/F04.html" href="../visual/F04.html" title="组批没有把两句话混成一句"><span class="rail-name">组批没有把两句话混成一句</span></a><a class="" data-section="visual--F05" data-target="visual/F05.html" href="../visual/F05.html" title="Embedding是查一行，不是把编号转二进制"><span class="rail-name">Embedding是查一行，不是把编号转二进制</span></a><a class="" data-section="visual--F06" data-target="visual/F06.html" href="../visual/F06.html" title="数据搬到GPU，改变的是位置而不是含义"><span class="rail-name">数据搬到GPU，改变的是位置而不是含义</span></a><a class="" data-section="visual--F07" data-target="visual/F07.html" href="../visual/F07.html" title="矩阵乘法像逐格填写配方结果"><span class="rail-name">矩阵乘法像逐格填写配方结果</span></a><a class="" data-section="visual--F08" data-target="visual/F08.html" href="../visual/F08.html" title="改摆法与改数值，分开看"><span class="rail-name">改摆法与改数值，分开看</span></a><a class="" data-section="visual--F09" data-target="visual/F09.html" href="../visual/F09.html" title="Softmax不是直接把分数除以它们的和"><span class="rail-name">Softmax不是直接把分数除以它们的和</span></a><a class="" data-section="visual--F10" data-target="visual/F10.html" href="../visual/F10.html" title="网络层是在重组数值，不是在生成隐藏句子"><span class="rail-name">网络层是在重组数值，不是在生成隐藏句子</span></a><a class="" data-section="visual--F11" data-target="visual/F11.html" href="../visual/F11.html" title="Q/K/V：先算从哪读，再算读进多少"><span class="rail-name">Q/K/V：先算从哪读，再算读进多少</span></a><a class="" data-section="visual--F12" data-target="visual/F12.html" href="../visual/F12.html" title="Mask是可见性表，不是额外语义"><span class="rail-name">Mask是可见性表，不是额外语义</span></a><a class="" data-section="visual--F13" data-target="visual/F13.html" href="../visual/F13.html" title="位置怎样进入数值计算"><span class="rail-name">位置怎样进入数值计算</span></a><a class="" data-section="visual--F14" data-target="visual/F14.html" href="../visual/F14.html" title="一层Transformer不是只有Attention"><span class="rail-name">一层Transformer不是只有Attention</span></a><a class="" data-section="visual--F15" data-target="visual/F15.html" href="../visual/F15.html" title="一次输入如何连着预测，直到结束"><span class="rail-name">一次输入如何连着预测，直到结束</span></a><a class="" data-section="visual--F16" data-target="visual/F16.html" href="../visual/F16.html" title="KV Cache：留下算过的，不省掉该读的"><span class="rail-name">KV Cache：留下算过的，不省掉该读的</span></a><a class="" data-section="visual--F17" data-target="visual/F17.html" href="../visual/F17.html" title="梯度像坡度，学习率像迈步大小"><span class="rail-name">梯度像坡度，学习率像迈步大小</span></a><a class="" data-section="visual--F18" data-target="visual/F18.html" href="../visual/F18.html" title="训练：给每个位置一道“下一项”题"><span class="rail-name">训练：给每个位置一道“下一项”题</span></a><a class="" data-section="visual--F19" data-target="visual/F19.html" href="../visual/F19.html" title="后训练改变行为，奖励不是事实裁判"><span class="rail-name">后训练改变行为，奖励不是事实裁判</span></a><a class="" data-section="visual--F20" data-target="visual/F20.html" href="../visual/F20.html" title="省参数、省位数、少激活不是同一种优化"><span class="rail-name">省参数、省位数、少激活不是同一种优化</span></a><a class="" data-section="visual--F21" data-target="visual/F21.html" href="../visual/F21.html" title="算得慢，可能是东西搬得慢"><span class="rail-name">算得慢，可能是东西搬得慢</span></a><a class="" data-section="visual--F22" data-target="visual/F22.html" href="../visual/F22.html" title="把一个Agent任务拆成真正发生的几轮"><span class="rail-name">把一个Agent任务拆成真正发生的几轮</span></a><a class="" data-section="visual--F23" data-target="visual/F23.html" href="../visual/F23.html" title="字符完整、事件完整、工具参数完整是三道关"><span class="rail-name">字符完整、事件完整、工具参数完整是三道关</span></a><a class="" data-section="visual--F24" data-target="visual/F24.html" href="../visual/F24.html" title="任务状态不是聊天里的一句总结"><span class="rail-name">任务状态不是聊天里的一句总结</span></a><a class="" data-section="visual--F25" data-target="visual/F25.html" href="../visual/F25.html" title="MCP连起接口，不自动交出权限"><span class="rail-name">MCP连起接口，不自动交出权限</span></a><a class="" data-section="visual--F26" data-target="visual/F26.html" href="../visual/F26.html" title="每轮上下文像一份有边界的工作资料"><span class="rail-name">每轮上下文像一份有边界的工作资料</span></a><a class="" data-section="visual--F27" data-target="visual/F27.html" href="../visual/F27.html" title="压缩要保留行动所依赖的事实"><span class="rail-name">压缩要保留行动所依赖的事实</span></a><a class="" data-section="visual--F28" data-target="visual/F28.html" href="../visual/F28.html" title="检索先找候选，再判断能否回答"><span class="rail-name">检索先找候选，再判断能否回答</span></a><a class="" data-section="visual--F29" data-target="visual/F29.html" href="../visual/F29.html" title="从两个候选列表，走到可用证据"><span class="rail-name">从两个候选列表，走到可用证据</span></a><a class="" data-section="visual--F30" data-target="visual/F30.html" href="../visual/F30.html" title="代码检索不能只靠“语义相近”"><span class="rail-name">代码检索不能只靠“语义相近”</span></a><a class="" data-section="visual--F31" data-target="visual/F31.html" href="../visual/F31.html" title="长期记忆不是永远正确的小纸条"><span class="rail-name">长期记忆不是永远正确的小纸条</span></a><a class="" data-section="visual--F32" data-target="visual/F32.html" href="../visual/F32.html" title="Skill存在，为什么仍可能完全没用？"><span class="rail-name">Skill存在，为什么仍可能完全没用？</span></a><a class="" data-section="visual--F33" data-target="visual/F33.html" href="../visual/F33.html" title="超时告诉你没收到，不告诉你没发生"><span class="rail-name">超时告诉你没收到，不告诉你没发生</span></a><a class="" data-section="visual--F34" data-target="visual/F34.html" href="../visual/F34.html" title="测试是找反例，不是给代码盖绿章"><span class="rail-name">测试是找反例，不是给代码盖绿章</span></a><a class="" data-section="visual--F35" data-target="visual/F35.html" href="../visual/F35.html" title="读指标，先问它的分母是谁"><span class="rail-name">读指标，先问它的分母是谁</span></a><a class="" data-section="visual--F36" data-target="visual/F36.html" href="../visual/F36.html" title="涨了10个百分点，为什么还不能急着下结论？"><span class="rail-name">涨了10个百分点，为什么还不能急着下结论？</span></a><a class="" data-section="visual--F37" data-target="visual/F37.html" href="../visual/F37.html" title="资料能影响模型，不代表获得了权限"><span class="rail-name">资料能影响模型，不代表获得了权限</span></a><a class="" data-section="visual--F38" data-target="visual/F38.html" href="../visual/F38.html" title="Trace要告诉你因果，不只是时间戳"><span class="rail-name">Trace要告诉你因果，不只是时间戳</span></a><a class="" data-section="visual--F39" data-target="visual/F39.html" href="../visual/F39.html" title="图像表示与界面行动，是两层不同问题"><span class="rail-name">图像表示与界面行动，是两层不同问题</span></a><a class="" data-section="visual--F40" data-target="visual/F40.html" href="../visual/F40.html" title="先找错误发生在哪层，再谈换模型"><span class="rail-name">先找错误发生在哪层，再谈换模型</span></a><a class="" data-section="visual--O01" data-target="visual/O01.html" href="../visual/O01.html" title="GQA/MQA：减少的是K/V组数"><span class="rail-name">GQA/MQA：减少的是K/V组数</span></a><a class="" data-section="visual--O02" data-target="visual/O02.html" href="../visual/O02.html" title="量化：省存储，也引入近似"><span class="rail-name">量化：省存储，也引入近似</span></a><a class="" data-section="visual--O03" data-target="visual/O03.html" href="../visual/O03.html" title="LoRA：冻结大表，学习小增量"><span class="rail-name">LoRA：冻结大表，学习小增量</span></a><a class="" data-section="visual--O04" data-target="visual/O04.html" href="../visual/O04.html" title="FlashAttention：一边读一边累计，不攒整张表"><span class="rail-name">FlashAttention：一边读一边累计，不攒整张表</span></a><a class="" data-section="visual--O05" data-target="visual/O05.html" href="../visual/O05.html" title="PagedAttention：逻辑连续，物理可以分块"><span class="rail-name">PagedAttention：逻辑连续，物理可以分块</span></a><a class="" data-section="visual--O06" data-target="visual/O06.html" href="../visual/O06.html" title="连续组批：有座位空出来，就接下一位"><span class="rail-name">连续组批：有座位空出来，就接下一位</span></a><a class="" data-section="visual--O07" data-target="visual/O07.html" href="../visual/O07.html" title="推测解码：草稿可以快，但必须正确校验"><span class="rail-name">推测解码：草稿可以快，但必须正确校验</span></a><a class="" data-section="visual--O08" data-target="visual/O08.html" href="../visual/O08.html" title="MoE：每个Token选部分计算路径"><span class="rail-name">MoE：每个Token选部分计算路径</span></a><a class="" data-section="visual--O09" data-target="visual/O09.html" href="../visual/O09.html" title="Activation Checkpointing：少存一点，反向时重算"><span class="rail-name">Activation Checkpointing：少存一点，反向时重算</span></a><a class="" data-section="visual--O10" data-target="visual/O10.html" href="../visual/O10.html" title="压缩、检索与Prompt Cache：三种不同的“省”"><span class="rail-name">压缩、检索与Prompt Cache：三种不同的“省”</span></a><a class="" data-section="visual--O11" data-target="visual/O11.html" href="../visual/O11.html" title="多Agent：可并行的工作，比Agent数量重要"><span class="rail-name">多Agent：可并行的工作，比Agent数量重要</span></a><a class="" data-section="visual--O12" data-target="visual/O12.html" href="../visual/O12.html" title="模型路由：便宜一次，不一定便宜一项成功任务"><span class="rail-name">模型路由：便宜一次，不一定便宜一项成功任务</span></a><a class="" data-section="visual--coverage" data-target="visual/coverage.html" href="../visual/coverage.html" title="章节与图解对应表"><span class="rail-name">章节与图解对应表</span></a><a class="" data-section="visual--optimizations" data-target="visual/optimizations.html" href="../visual/optimizations.html" title="优化选择：收益与代价一起看"><span class="rail-name">优化选择：收益与代价一起看</span></a><a class="" data-section="visual--sources" data-target="visual/sources.html" href="../visual/sources.html" title="图解的来源与适用边界"><span class="rail-name">图解的来源与适用边界</span></a><a class="" data-section="visual--verification" data-target="visual/verification.html" href="../visual/verification.html" title="图解的数值与程序"><span class="rail-name">图解的数值与程序</span></a></div></details><details class="rail-group" data-group="engineering"><summary>工程深挖</summary><div class="rail-links"><a class="" data-section="engineering--index" data-target="engineering/index.html" href="index.html" title="工程深挖：从机制到故障边界"><span class="rail-name">工程深挖：从机制到故障边界</span></a><a class="" data-section="engineering--labs" data-target="engineering/labs.html" href="labs.html" title="故障反例、实际结果与完整代码"><span class="rail-name">故障反例、实际结果与完整代码</span></a><a class="" data-section="engineering--sources" data-target="engineering/sources.html" href="sources.html" title="工程深挖的依据与适用范围"><span class="rail-name">工程深挖的依据与适用范围</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="agent-evidence.html"><span class="rail-name">Agent机制证据</span></a></div></details><details class="rail-group" data-group="studies"><summary>专题研修</summary><div class="rail-links"><a class="" data-section="studies--chapters--01" data-target="studies/chapters/01.html" href="../studies/chapters/01.html" title="01｜文本怎样成为概率：Tokenizer、模板、目标函数与梯度"><span class="rail-name">文本怎样成为概率：Tokenizer、模板、目标函数与梯度</span></a><a class="" data-section="studies--chapters--02" data-target="studies/chapters/02.html" href="../studies/chapters/02.html" title="02｜进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性"><span class="rail-name">进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性</span></a><a class="" data-section="studies--chapters--03" data-target="studies/chapters/03.html" href="../studies/chapters/03.html" title="03｜训练系统内部：数据、优化器、显存与分布式代价"><span class="rail-name">训练系统内部：数据、优化器、显存与分布式代价</span></a><a class="" data-section="studies--chapters--04" data-target="studies/chapters/04.html" href="../studies/chapters/04.html" title="04｜后训练与推理模型：从偏好目标到可验证能力"><span class="rail-name">后训练与推理模型：从偏好目标到可验证能力</span></a><a class="" data-section="studies--chapters--05" data-target="studies/chapters/05.html" href="../studies/chapters/05.html" title="05｜输出怎样被选中：采样、推测解码与停止条件"><span class="rail-name">输出怎样被选中：采样、推测解码与停止条件</span></a><a class="" data-section="studies--chapters--06" data-target="studies/chapters/06.html" href="../studies/chapters/06.html" title="06｜推理服务的真实瓶颈：内存、FlashAttention、分页与调度"><span class="rail-name">推理服务的真实瓶颈：内存、FlashAttention、分页与调度</span></a><a class="" data-section="studies--chapters--07" data-target="studies/chapters/07.html" href="../studies/chapters/07.html" title="07｜模型接口内部：消息、输出项、SSE与工具调用协议"><span class="rail-name">模型接口内部：消息、输出项、SSE与工具调用协议</span></a><a class="" data-section="studies--chapters--08" data-target="studies/chapters/08.html" href="../studies/chapters/08.html" title="08｜Harness内部：决策、执行、持久化与崩溃恢复"><span class="rail-name">Harness内部：决策、执行、持久化与崩溃恢复</span></a><a class="" data-section="studies--chapters--09" data-target="studies/chapters/09.html" href="../studies/chapters/09.html" title="09｜Codex源码追踪：从仓库规则到历史、循环和压缩"><span class="rail-name">Codex源码追踪：从仓库规则到历史、循环和压缩</span></a><a class="" data-section="studies--chapters--10" data-target="studies/chapters/10.html" href="../studies/chapters/10.html" title="10｜Claude Code与Copilot：公开机制、可验证行为与未知内部"><span class="rail-name">Claude Code与Copilot：公开机制、可验证行为与未知内部</span></a><a class="" data-section="studies--chapters--11" data-target="studies/chapters/11.html" href="../studies/chapters/11.html" title="11｜上下文编译器：信息选择、依赖闭包与预算"><span class="rail-name">上下文编译器：信息选择、依赖闭包与预算</span></a><a class="" data-section="studies--chapters--12" data-target="studies/chapters/12.html" href="../studies/chapters/12.html" title="12｜压缩的深层问题：有损状态、证据恢复与继续执行"><span class="rail-name">压缩的深层问题：有损状态、证据恢复与继续执行</span></a><a class="" data-section="studies--chapters--13" data-target="studies/chapters/13.html" href="../studies/chapters/13.html" title="13｜检索系统内部：BM25、向量、ANN、融合与索引新鲜度"><span class="rail-name">检索系统内部：BM25、向量、ANN、融合与索引新鲜度</span></a><a class="" data-section="studies--chapters--14" data-target="studies/chapters/14.html" href="../studies/chapters/14.html" title="14｜代码智能内部：AST、LSP、依赖图与版本化证据"><span class="rail-name">代码智能内部：AST、LSP、依赖图与版本化证据</span></a><a class="" data-section="studies--chapters--15" data-target="studies/chapters/15.html" href="../studies/chapters/15.html" title="15｜记忆系统内部：双时间、冲突、来源与有用的遗忘"><span class="rail-name">记忆系统内部：双时间、冲突、来源与有用的遗忘</span></a><a class="" data-section="studies--chapters--16" data-target="studies/chapters/16.html" href="../studies/chapters/16.html" title="16｜Skills、工具与模型路由：专业能力如何真正进入任务"><span class="rail-name">Skills、工具与模型路由：专业能力如何真正进入任务</span></a><a class="" data-section="studies--chapters--17" data-target="studies/chapters/17.html" href="../studies/chapters/17.html" title="17｜多Agent内部：DAG、上下文交接、并发冲突与相关错误"><span class="rail-name">多Agent内部：DAG、上下文交接、并发冲突与相关错误</span></a><a class="" data-section="studies--chapters--18" data-target="studies/chapters/18.html" href="../studies/chapters/18.html" title="18｜工程质量的核心：契约、测试、反例、Review与交付证据"><span class="rail-name">工程质量的核心：契约、测试、反例、Review与交付证据</span></a><a class="" data-section="studies--chapters--19" data-target="studies/chapters/19.html" href="../studies/chapters/19.html" title="19｜高级评测：配对实验、可靠性、因果归因与判分偏差"><span class="rail-name">高级评测：配对实验、可靠性、因果归因与判分偏差</span></a><a class="" data-section="studies--chapters--20" data-target="studies/chapters/20.html" href="../studies/chapters/20.html" title="20｜安全内部：可信边界、MCP授权、沙箱与副作用控制"><span class="rail-name">安全内部：可信边界、MCP授权、沙箱与副作用控制</span></a><a class="" data-section="studies--chapters--21" data-target="studies/chapters/21.html" href="../studies/chapters/21.html" title="21｜生产可观测性与可靠运行：Trace、队列、取消和恢复"><span class="rail-name">生产可观测性与可靠运行：Trace、队列、取消和恢复</span></a><a class="" data-section="studies--chapters--22" data-target="studies/chapters/22.html" href="../studies/chapters/22.html" title="22｜成本与性能决策：每个成功任务，而不是每个Token"><span class="rail-name">成本与性能决策：每个成功任务，而不是每个Token</span></a><a class="" data-section="studies--chapters--23" data-target="studies/chapters/23.html" href="../studies/chapters/23.html" title="23｜微调、量化与蒸馏：改变模型，还是改变输入系统"><span class="rail-name">微调、量化与蒸馏：改变模型，还是改变输入系统</span></a><a class="" data-section="studies--chapters--24" data-target="studies/chapters/24.html" href="../studies/chapters/24.html" title="24｜多模态与计算机操作：表示、定位、观察—行动闭环"><span class="rail-name">多模态与计算机操作：表示、定位、观察—行动闭环</span></a><a class="" data-section="studies--chapters--25" data-target="studies/chapters/25.html" href="../studies/chapters/25.html" title="25｜可信答案与可解释性：校准、拒答、证据与因果干预"><span class="rail-name">可信答案与可解释性：校准、拒答、证据与因果干预</span></a><a class="" data-section="studies--chapters--26" data-target="studies/chapters/26.html" href="../studies/chapters/26.html" title="26｜高级研究分支：架构、搜索、RAG与记忆方法的选择逻辑"><span class="rail-name">高级研究分支：架构、搜索、RAG与记忆方法的选择逻辑</span></a><a class="" data-section="studies--chapters--27" data-target="studies/chapters/27.html" href="../studies/chapters/27.html" title="27｜贯穿案例：修复exclude，从原始失败到可恢复交付"><span class="rail-name">贯穿案例：修复exclude，从原始失败到可恢复交付</span></a><a class="" data-section="studies--chapters--28" data-target="studies/chapters/28.html" href="../studies/chapters/28.html" title="28｜深度应用蓝图：企业问答、仓库诊断、研究与受控自动化"><span class="rail-name">深度应用蓝图：企业问答、仓库诊断、研究与受控自动化</span></a><a class="" data-section="studies--chapters--29" data-target="studies/chapters/29.html" href="../studies/chapters/29.html" title="29｜故障诊断手册：从现象到最小有效修复"><span class="rail-name">故障诊断手册：从现象到最小有效修复</span></a><a class="" data-section="studies--chapters--30" data-target="studies/chapters/30.html" href="../studies/chapters/30.html" title="30｜资深能力验收：开放题、参考答案与毕业项目"><span class="rail-name">资深能力验收：开放题、参考答案与毕业项目</span></a><a class="" data-section="studies--chapters--31" data-target="studies/chapters/31.html" href="../studies/chapters/31.html" title="31｜推导附章：注意力反向传播与可训练检索"><span class="rail-name">推导附章：注意力反向传播与可训练检索</span></a><a class="" data-section="studies--index" data-target="studies/index.html" href="../studies/index.html" title="专题研修：实现、验证与应用"><span class="rail-name">专题研修：实现、验证与应用</span></a><a class="" data-section="studies--experiments" data-target="studies/experiments.html" href="../studies/experiments.html" title="实验手册：实现、反例与实测边界"><span class="rail-name">实验手册：实现、反例与实测边界</span></a><a class="" data-section="studies--results" data-target="studies/results.html" href="../studies/results.html" title="实际结果 · 记录与轨迹全部展开"><span class="rail-name">实际结果 · 记录与轨迹全部展开</span></a><a class="" data-section="studies--roadmap" data-target="studies/roadmap.html" href="../studies/roadmap.html" title="专题研修的阅读方法"><span class="rail-name">专题研修的阅读方法</span></a><a class="" data-section="studies--source-code" data-target="studies/source-code.html" href="../studies/source-code.html" title="完整实验源码 · 12个Python文件"><span class="rail-name">完整实验源码 · 12个Python文件</span></a><a class="" data-section="studies--sources" data-target="studies/sources.html" href="../studies/sources.html" title="来源、版本与事实边界"><span class="rail-name">来源、版本与事实边界</span></a></div></details><details class="rail-group" data-group="reading-notes"><summary>拓展阅读</summary><div class="rail-links"><a class="" data-section="reading-notes--chapter-00" data-target="reading-notes/chapter-00.html" href="../reading-notes/chapter-00.html" title="全局认知"><span class="rail-name">全局认知</span></a><a class="" data-section="reading-notes--chapter-01" data-target="reading-notes/chapter-01.html" href="../reading-notes/chapter-01.html" title="模型内部"><span class="rail-name">模型内部</span></a><a class="" data-section="reading-notes--chapter-02" data-target="reading-notes/chapter-02.html" href="../reading-notes/chapter-02.html" title="能力形成"><span class="rail-name">能力形成</span></a><a class="" data-section="reading-notes--chapter-03" data-target="reading-notes/chapter-03.html" href="../reading-notes/chapter-03.html" title="推理与服务"><span class="rail-name">推理与服务</span></a><a class="" data-section="reading-notes--chapter-04" data-target="reading-notes/chapter-04.html" href="../reading-notes/chapter-04.html" title="输入输出接口"><span class="rail-name">输入输出接口</span></a><a class="" data-section="reading-notes--chapter-05" data-target="reading-notes/chapter-05.html" href="../reading-notes/chapter-05.html" title="Agent基础"><span class="rail-name">Agent基础</span></a><a class="" data-section="reading-notes--chapter-06" data-target="reading-notes/chapter-06.html" href="../reading-notes/chapter-06.html" title="真实编码Agent"><span class="rail-name">真实编码Agent</span></a><a class="" data-section="reading-notes--chapter-07" data-target="reading-notes/chapter-07.html" href="../reading-notes/chapter-07.html" title="上下文工程"><span class="rail-name">上下文工程</span></a><a class="" data-section="reading-notes--chapter-08" data-target="reading-notes/chapter-08.html" href="../reading-notes/chapter-08.html" title="检索与代码智能"><span class="rail-name">检索与代码智能</span></a><a class="" data-section="reading-notes--chapter-09" data-target="reading-notes/chapter-09.html" href="../reading-notes/chapter-09.html" title="长期记忆"><span class="rail-name">长期记忆</span></a><a class="" data-section="reading-notes--chapter-10" data-target="reading-notes/chapter-10.html" href="../reading-notes/chapter-10.html" title="Skills与多Agent"><span class="rail-name">Skills与多Agent</span></a><a class="" data-section="reading-notes--chapter-11" data-target="reading-notes/chapter-11.html" href="../reading-notes/chapter-11.html" title="AI软件工程"><span class="rail-name">AI软件工程</span></a><a class="" data-section="reading-notes--chapter-12" data-target="reading-notes/chapter-12.html" href="../reading-notes/chapter-12.html" title="评测方法"><span class="rail-name">评测方法</span></a><a class="" data-section="reading-notes--chapter-13" data-target="reading-notes/chapter-13.html" href="../reading-notes/chapter-13.html" title="安全与权限"><span class="rail-name">安全与权限</span></a><a class="" data-section="reading-notes--chapter-14" data-target="reading-notes/chapter-14.html" href="../reading-notes/chapter-14.html" title="运行与性能"><span class="rail-name">运行与性能</span></a><a class="" data-section="reading-notes--chapter-15" data-target="reading-notes/chapter-15.html" href="../reading-notes/chapter-15.html" title="高级专题"><span class="rail-name">高级专题</span></a><a class="" data-section="reading-notes--chapter-16" data-target="reading-notes/chapter-16.html" href="../reading-notes/chapter-16.html" title="数学与实现补充"><span class="rail-name">数学与实现补充</span></a><a class="" data-section="reading-notes--guide-01" data-target="reading-notes/guide-01.html" href="../reading-notes/guide-01.html" title="图解 Transformer"><span class="rail-name">图解 Transformer</span></a><a class="" data-section="reading-notes--guide-02" data-target="reading-notes/guide-02.html" href="../reading-notes/guide-02.html" title="注意力机制，逐步算清"><span class="rail-name">注意力机制，逐步算清</span></a><a class="" data-section="reading-notes--guide-03" data-target="reading-notes/guide-03.html" href="../reading-notes/guide-03.html" title="LLM 的完整使用链路"><span class="rail-name">LLM 的完整使用链路</span></a><a class="" data-section="reading-notes--guide-04" data-target="reading-notes/guide-04.html" href="../reading-notes/guide-04.html" title="怎样构建有效的 Agent"><span class="rail-name">怎样构建有效的 Agent</span></a><a class="" data-section="reading-notes--guide-05" data-target="reading-notes/guide-05.html" href="../reading-notes/guide-05.html" title="展开 Codex 的执行循环"><span class="rail-name">展开 Codex 的执行循环</span></a><a class="" data-section="reading-notes--guide-06" data-target="reading-notes/guide-06.html" href="../reading-notes/guide-06.html" title="Claude Code 怎样工作"><span class="rail-name">Claude Code 怎样工作</span></a><a class="" data-section="reading-notes--guide-07" data-target="reading-notes/guide-07.html" href="../reading-notes/guide-07.html" title="上下文工程的核心方法"><span class="rail-name">上下文工程的核心方法</span></a><a class="" data-section="reading-notes--guide-08" data-target="reading-notes/guide-08.html" href="../reading-notes/guide-08.html" title="压缩后，怎样保持任务连续"><span class="rail-name">压缩后，怎样保持任务连续</span></a><a class="" data-section="reading-notes--guide-09" data-target="reading-notes/guide-09.html" href="../reading-notes/guide-09.html" title="让检索提供真正需要的证据"><span class="rail-name">让检索提供真正需要的证据</span></a><a class="" data-section="reading-notes--guide-10" data-target="reading-notes/guide-10.html" href="../reading-notes/guide-10.html" title="从 CoALA 理解有效记忆"><span class="rail-name">从 CoALA 理解有效记忆</span></a><a class="" data-section="reading-notes--guide-11" data-target="reading-notes/guide-11.html" href="../reading-notes/guide-11.html" title="用工程环境提高交付质量"><span class="rail-name">用工程环境提高交付质量</span></a><a class="" data-section="reading-notes--guide-12" data-target="reading-notes/guide-12.html" href="../reading-notes/guide-12.html" title="怎样证明 Agent 优化有效"><span class="rail-name">怎样证明 Agent 优化有效</span></a><a class="" data-section="reading-notes--index" data-target="reading-notes/index.html" href="../reading-notes/index.html" title="拓展阅读：研究主题与中文讲义"><span class="rail-name">拓展阅读：研究主题与中文讲义</span></a><a class="" data-section="reading-notes--about" data-target="reading-notes/about.html" href="../reading-notes/about.html" title="拓展阅读的来源与示例约定"><span class="rail-name">拓展阅读的来源与示例约定</span></a><a class="" data-section="reading-notes--glossary" data-target="reading-notes/glossary.html" href="../reading-notes/glossary.html" title="中英术语表"><span class="rail-name">中英术语表</span></a><a class="" data-section="reading-notes--lab-01" data-target="reading-notes/lab-01.html" href="../reading-notes/lab-01.html" title="教学 BPE：字符怎样合并成 Token"><span class="rail-name">教学 BPE：字符怎样合并成 Token</span></a><a class="" data-section="reading-notes--lab-02" data-target="reading-notes/lab-02.html" href="../reading-notes/lab-02.html" title="手算注意力与因果掩码"><span class="rail-name">手算注意力与因果掩码</span></a><a class="" data-section="reading-notes--lab-03" data-target="reading-notes/lab-03.html" href="../reading-notes/lab-03.html" title="KV缓存估算与前缀复用"><span class="rail-name">KV缓存估算与前缀复用</span></a><a class="" data-section="reading-notes--lab-04" data-target="reading-notes/lab-04.html" href="../reading-notes/lab-04.html" title="RRF与检索指标"><span class="rail-name">RRF与检索指标</span></a><a class="" data-section="reading-notes--lab-05" data-target="reading-notes/lab-05.html" href="../reading-notes/lab-05.html" title="压缩保真：状态与否定不能丢"><span class="rail-name">压缩保真：状态与否定不能丢</span></a><a class="" data-section="reading-notes--lab-06" data-target="reading-notes/lab-06.html" href="../reading-notes/lab-06.html" title="记忆范围、版本、过期与冲突"><span class="rail-name">记忆范围、版本、过期与冲突</span></a><a class="" data-section="reading-notes--lab-07" data-target="reading-notes/lab-07.html" href="../reading-notes/lab-07.html" title="模型提议与程序执行分离"><span class="rail-name">模型提议与程序执行分离</span></a><a class="" data-section="reading-notes--lab-08" data-target="reading-notes/lab-08.html" href="../reading-notes/lab-08.html" title="成功率、配对比较与真实成本口径"><span class="rail-name">成功率、配对比较与真实成本口径</span></a><a class="" data-section="reading-notes--lab-09" data-target="reading-notes/lab-09.html" href="../reading-notes/lab-09.html" title="从契约到补丁与反例测试"><span class="rail-name">从契约到补丁与反例测试</span></a><a class="" data-section="reading-notes--lab-10" data-target="reading-notes/lab-10.html" href="../reading-notes/lab-10.html" title="并行Trace：墙钟与操作总量不同"><span class="rail-name">并行Trace：墙钟与操作总量不同</span></a><a class="" data-section="reading-notes--labs" data-target="reading-notes/labs.html" href="../reading-notes/labs.html" title="10个离线机制实验"><span class="rail-name">10个离线机制实验</span></a><a class="" data-section="reading-notes--roadmap" data-target="reading-notes/roadmap.html" href="../reading-notes/roadmap.html" title="拓展阅读方法"><span class="rail-name">拓展阅读方法</span></a><a class="" data-section="reading-notes--sources" data-target="reading-notes/sources.html" href="../reading-notes/sources.html" title="来源与版本说明"><span class="rail-name">来源与版本说明</span></a></div></details><details class="rail-group" data-group="reference" open=""><summary>索引与来源</summary><div class="rail-links"><a class="" data-section="glossary" data-target="glossary.html" href="../glossary.html" title="术语与符号速查"><span class="rail-name">术语与符号速查</span></a><a class="" data-section="concepts" data-target="concepts.html" href="../concepts.html" title="公式与术语：先认识对象，再理解运算"><span class="rail-name">公式与术语：先认识对象，再理解运算</span></a><a class="" data-section="topics" data-target="topics.html" href="../topics.html" title="知识主题索引"><span class="rail-name">知识主题索引</span></a><a class="" data-section="sources" data-target="sources.html" href="../sources.html" title="参考资料与适用范围"><span class="rail-name">参考资料与适用范围</span></a><a class="" data-section="reference--model-sources" data-target="reference/model-sources.html" href="../reference/model-sources.html" title="模型机制：原理来源与接口版本"><span class="rail-name">模型机制：原理来源与接口版本</span></a><a class="" data-section="example-sources" data-target="example-sources.html" href="../example-sources.html" title="运行示例：依据、参数与范围"><span class="rail-name">运行示例：依据、参数与范围</span></a><a class="" data-section="mechanisms--sources" data-target="mechanisms/sources.html" href="../mechanisms/sources.html" title="正文图解的来源与适用条件"><span class="rail-name">正文图解的来源与适用条件</span></a><a class="" data-section="mechanisms--verification" data-target="mechanisms/verification.html" href="../mechanisms/verification.html" title="图解计算与验证记录"><span class="rail-name">图解计算与验证记录</span></a></div></details><details class="rail-group" data-group="implementation"><summary>完整实验源码</summary><div class="rail-links"><a class="" data-section="studies--code--attention_gradients" data-target="studies/code/attention_gradients.html" href="../studies/code/attention_gradients.html" title="attention_gradients.py"><span class="rail-name">attention_gradients.py</span></a><a class="" data-section="studies--code--capstone" data-target="studies/code/capstone.html" href="../studies/code/capstone.html" title="capstone.py"><span class="rail-name">capstone.py</span></a><a class="" data-section="studies--code--context_memory" data-target="studies/code/context_memory.html" href="../studies/code/context_memory.html" title="context_memory.py"><span class="rail-name">context_memory.py</span></a><a class="" data-section="studies--code--journal" data-target="studies/code/journal.html" href="../studies/code/journal.html" title="journal.py"><span class="rail-name">journal.py</span></a><a class="" data-section="studies--code--live_readonly" data-target="studies/code/live_readonly.html" href="../studies/code/live_readonly.html" title="live_readonly.py"><span class="rail-name">live_readonly.py</span></a><a class="" data-section="studies--code--numerics" data-target="studies/code/numerics.html" href="../studies/code/numerics.html" title="numerics.py"><span class="rail-name">numerics.py</span></a><a class="" data-section="studies--code--retrieval" data-target="studies/code/retrieval.html" href="../studies/code/retrieval.html" title="retrieval.py"><span class="rail-name">retrieval.py</span></a><a class="" data-section="studies--code--run_all" data-target="studies/code/run_all.html" href="../studies/code/run_all.html" title="run_all.py"><span class="rail-name">run_all.py</span></a><a class="" data-section="studies--code--sse_protocol" data-target="studies/code/sse_protocol.html" href="../studies/code/sse_protocol.html" title="sse_protocol.py"><span class="rail-name">sse_protocol.py</span></a><a class="" data-section="studies--code--statistics_lab" data-target="studies/code/statistics_lab.html" href="../studies/code/statistics_lab.html" title="statistics_lab.py"><span class="rail-name">statistics_lab.py</span></a><a class="" data-section="studies--code--test_suite" data-target="studies/code/test_suite.html" href="../studies/code/test_suite.html" title="test_suite.py"><span class="rail-name">test_suite.py</span></a><a class="" data-section="studies--code--train_tiny_lm" data-target="studies/code/train_tiny_lm.html" href="../studies/code/train_tiny_lm.html" title="train_tiny_lm.py"><span class="rail-name">train_tiny_lm.py</span></a></div></details></nav><div class="rail-foot"><span>当前 <span data-nav-current-label=""></span></span><a href="../contents.html">查看完整目录</a></div></aside><div class="reading-layout"><main class="reading-main" id="main-content"><article class="article"><h1>Agent与工程机制：已取得的证据、阅读范围与核验</h1><p class="lead">正文仍按基础课程与系统机制阅读。本页用于追溯来源，不是另建一套课程。Codex固定提交：<code>86e17e98c7f901277aeeb4649cf1b01462b082f2</code>。</p><h2 id="acquisition">资料确实取得了什么</h2><p>上一轮42项来源的直接下载全部失败，却仍保留带源码口吻的推导。这不能算来源核验。本轮先通过GitHub连接器取得指定源码，通过官方网页文本接口取得工程文章，再修订对应教材。旧失败记录没有被覆盖成成功。</p><table><thead><tr><th>资料</th><th>本轮取得及阅读</th><th>不作的声明</th></tr></thead><tbody><tr><td>Codex 18个文件</td><td>4份完整源文件落盘并与Git blob哈希一致；其余按所列行范围阅读，保留可确认的摘录与研读笔记</td><td>不是完整仓库下载；未执行Rust工程测试</td></tr><tr><td>Anthropic 17篇工程文章</td><td>官方正文通过网页文本工具取得并阅读；保存中文笔记、日期与边界</td><td>不镜像整篇版权原文；配图、视频及外链不算全读</td></tr><tr><td>Claude Code 7份文档</td><td>与课程主张相关章节取得并核对</td><td>不是整个文档站或全部Hook事件逐项验证</td></tr></tbody></table><p>容器直连下载仍因DNS失败；逐文件/官方文本读取则成功，二者在取得记录中分别保留。<a href="agent-practice/verified/manifest.json">机器可读来源清单</a> · <a href="agent-practice/verified/ACQUISITION.md">取得方法与限制</a> · <a href="agent-practice/prior-failed-source-retrieval.json">上一轮失败记录</a></p><h2 id="reading-map">正文入口</h2><p>所有更新仍嵌入原来的课程位置。</p><ul><li><a href="../chapters/09.html#agent-practice-loop">一次回答结束，为什么任务仍未完成？</a></li><li><a href="../chapters/09.html#agent-practice-snapshot">为什么每次模型调用都需要一致的上下文快照？</a></li><li><a href="../chapters/10.html#agent-practice-stream">流式返回：什么时候参数真的可以执行？</a></li><li><a href="../chapters/11.html#agent-practice-tools">工具存在、模型看见、能调用、获授权：四层检查</a></li><li><a href="../chapters/10.html#agent-practice-hooks">前置检查、后置检查为什么不能互相替代？</a></li><li><a href="../chapters/20.html#agent-practice-parallel">并行工具为什么可能先执行完、后显示结果？</a></li><li><a href="../chapters/21.html#agent-practice-recovery">成功写入但没有确认：重试怎样变成重复副作用</a></li><li><a href="../chapters/13.html#agent-practice-context">上下文组装为什么不能只做“取前N条”？</a></li><li><a href="../chapters/14.html#agent-practice-compaction">异步摘要生成期间又来了工具结果，怎样不丢数据？</a></li><li><a href="../chapters/12.html#agent-practice-rules">规则文件加载与子Agent继承，为什么不能只说“自动继承”？</a></li><li><a href="../chapters/19.html#agent-practice-skills">渐进加载的Skill怎样从“文件”变成实际能力？</a></li><li><a href="../chapters/18.html#agent-practice-memory">记忆写入为什么是一条带租约与验收的流水线？</a></li><li><a href="../chapters/16.html#agent-practice-retrieval">相关不等于可用：从召回到证据闭合</a></li><li><a href="../chapters/17.html#agent-practice-code">代码证据为什么需要工作树版本，而不只是commit？</a></li><li><a href="../chapters/20.html#agent-practice-delegation">多Agent怎样并行，又怎样避免交接损失？</a></li><li><a href="../chapters/22.html#agent-practice-quality">长期任务如何避免每次重新开始或虚假完成？</a></li><li><a href="../chapters/23.html#agent-practice-eval">pass@k、pass^k和一次成功率为什么不能混用？</a></li><li><a href="../chapters/24.html#agent-practice-security">读到一条“指令”，为什么不代表它有权限？</a></li><li><a href="../chapters/25.html#agent-practice-production">用一条Trace算清等待、用量和失败成本</a></li><li><a href="../chapters/26.html#agent-practice-optimization">优化先定位瓶颈，不能只追求更少Token</a></li><li><a href="../chapters/12.html#agent-practice-products">开源Codex与Claude工程文章怎样对照，才不制造冲突？</a></li><li><a href="../chapters/27.html#agent-practice-multimodal">界面看对了，为什么动作仍然可能点错？</a></li><li><a href="../chapters/26.html#agent-practice-research">研究型Agent怎样避免“搜了很多，却没有形成结论”？</a></li><li><a href="../chapters/15.html#agent-practice-indexing">索引构建时，哪些元数据一旦丢失就很难补回来？</a></li><li><a href="../chapters/28.html#agent-practice-synthesis">怎样把知识图谱变成工程判断，而不是概念大全？</a></li></ul><h2 id="graph">带证据等级的知识关系</h2><div class="table-wrap"><table><thead><tr><th>起点</th><th>关系</th><th>终点</th><th>等级与依据</th></tr></thead><tbody><tr><td>用户目标</td><td>约束并提供任务</td><td>模型请求</td><td>source_observation <a href="#source-C01">[C01]</a> <a href="#source-A01">[A01]</a></td></tr><tr><td>请求快照</td><td>绑定本次声明与分派</td><td>工具路由器</td><td>source_observation <a href="#source-C02">[C02]</a> <a href="#source-C03">[C03]</a></td></tr><tr><td>工具注册</td><td>不等价</td><td>模型可见性</td><td>source_observation <a href="#source-C03">[C03]</a></td></tr><tr><td>模型可见性</td><td>不等价</td><td>执行授权</td><td>source_observation <a href="#source-C09">[C09]</a> <a href="#source-D05">[D05]</a></td></tr><tr><td>完成工具项</td><td>先记录</td><td>会话历史</td><td>source_observation <a href="#source-C05">[C05]</a></td></tr><tr><td>完成工具项</td><td>校验后准入</td><td>工具执行</td><td>source_observation <a href="#source-C05">[C05]</a> <a href="#source-C09">[C09]</a></td></tr><tr><td>工具执行</td><td>可能改变</td><td>外部副作用</td><td>source_observation <a href="#source-C09">[C09]</a></td></tr><tr><td>后置钩子</td><td>不能自动回滚</td><td>外部副作用</td><td>source_observation <a href="#source-C09">[C09]</a></td></tr><tr><td>并行任务</td><td>执行与结果消费属于不同阶段</td><td>有序收集</td><td>source_observation <a href="#source-C04">[C04]</a> <a href="#source-C01">[C01]</a></td></tr><tr><td>取消请求</td><td>不证明从未发生</td><td>外部副作用</td><td>source_observation <a href="#source-C04">[C04]</a></td></tr><tr><td>摘要候选</td><td>依赖版本</td><td>历史快照</td><td>source_observation <a href="#source-C06">[C06]</a> <a href="#source-C08">[C08]</a></td></tr><tr><td>摘要安装</td><td>需要保留或拒绝候选</td><td>实时后缀</td><td>source_observation <a href="#source-C07">[C07]</a> <a href="#source-C16">[C16]</a></td></tr><tr><td>授权代际</td><td>变化可使候选失效</td><td>摘要候选</td><td>source_observation <a href="#source-C06">[C06]</a></td></tr><tr><td>记忆候选</td><td>经筛选进入</td><td>整合工作者</td><td>source_observation <a href="#source-C14">[C14]</a> <a href="#source-C15">[C15]</a></td></tr><tr><td>租约所有者</td><td>条件验证</td><td>记忆发布</td><td>source_observation <a href="#source-C15">[C15]</a></td></tr><tr><td>工作者完成</td><td>并不等价</td><td>记忆发布</td><td>source_observation <a href="#source-C15">[C15]</a></td></tr><tr><td>子Agent消息提交</td><td>并不等价</td><td>子任务完成</td><td>source_observation <a href="#source-C11">[C11]</a></td></tr><tr><td>技能文件</td><td>需要发现选择加载与执行</td><td>实际应用</td><td>source_observation <a href="#source-C01">[C01]</a> <a href="#source-A05">[A05]</a></td></tr><tr><td>文档块</td><td>需版本条件与覆盖核验</td><td>回答主张</td><td>engineering_inference <a href="#source-A08">[A08]</a> <a href="#source-A02">[A02]</a></td></tr><tr><td>工作树版本</td><td>决定验证对象</td><td>测试结果</td><td>engineering_inference <a href="#source-A06">[A06]</a> <a href="#source-D07">[D07]</a></td></tr><tr><td>任务结果</td><td>依赖判分口径</td><td>评测指标</td><td>engineering_inference <a href="#source-A07">[A07]</a></td></tr><tr><td>环境噪声</td><td>可能造成混淆</td><td>评测差异</td><td>engineering_inference <a href="#source-A12">[A12]</a></td></tr><tr><td>失败与废弃工作</td><td>仍应计入</td><td>任务成本</td><td>source_observation <a href="#source-C06">[C06]</a> <a href="#source-A14">[A14]</a></td></tr><tr><td>Trace</td><td>定位关键路径</td><td>优化决策</td><td>source_observation <a href="#source-C04">[C04]</a> <a href="#source-A07">[A07]</a></td></tr><tr><td>StepContext</td><td>快照访问器仍组合当前授权</td><td>实时授权</td><td>source_observation <a href="#source-C02">[C02]</a></td></tr><tr><td>摘要安装接受</td><td>不等价</td><td>持久化成功</td><td>source_observation <a href="#source-C16">[C16]</a></td></tr><tr><td>Claude后置block</td><td>仍可提供原结果并添加原因</td><td>原工具结果</td><td>official_documentation <a href="#source-D04">[D04]</a></td></tr><tr><td>后置结果替换</td><td>不自动改写先前记录</td><td>原始日志</td><td>official_documentation <a href="#source-D04">[D04]</a></td></tr><tr><td>技能正文保留</td><td>寿命不同</td><td>临时工具许可</td><td>official_documentation <a href="#source-D06">[D06]</a></td></tr><tr><td>整合工作者终态</td><td>还需关停、产物校验及租约确认</td><td>产物发布</td><td>source_observation <a href="#source-C15">[C15]</a></td></tr><tr><td>历史think工具建议</td><td>2025-12-15更新多数场景改荐后者</td><td>扩展思考</td><td>dated_article_update <a href="#source-A17">[A17]</a></td></tr><tr><td>增加编排机制</td><td>须经单项对照，不能假定单调改善</td><td>任务质量</td><td>engineering_inference <a href="#source-A13">[A13]</a></td></tr></tbody></table></div><h2 id="coverage">现有目录中的插入与修订位置</h2><div class="table-wrap"><table><thead><tr><th>页面</th><th>机制</th><th>处理</th></tr></thead><tbody><tr><td><a href="../foundations/22.html#agent-foundation-loop">foundations/22.html</a></td><td>一次回答结束，为什么任务仍未完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/23.html#agent-foundation-stream">foundations/23.html</a></td><td>流式返回：什么时候参数真的可以执行？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/24.html#agent-foundation-loop">foundations/24.html</a></td><td>一次回答结束，为什么任务仍未完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/25.html#agent-foundation-tools">foundations/25.html</a></td><td>工具存在、模型看见、能调用、获授权：四层检查</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/26.html#agent-foundation-context">foundations/26.html</a></td><td>上下文组装为什么不能只做“取前N条”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/27.html#agent-foundation-compaction">foundations/27.html</a></td><td>异步摘要生成期间又来了工具结果，怎样不丢数据？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/28.html#agent-foundation-retrieval">foundations/28.html</a></td><td>相关不等于可用：从召回到证据闭合</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/29.html#agent-foundation-retrieval">foundations/29.html</a></td><td>相关不等于可用：从召回到证据闭合</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/30.html#agent-foundation-code">foundations/30.html</a></td><td>代码证据为什么需要工作树版本，而不只是commit？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/31.html#agent-foundation-memory">foundations/31.html</a></td><td>记忆写入为什么是一条带租约与验收的流水线？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/32.html#agent-foundation-skills">foundations/32.html</a></td><td>渐进加载的Skill怎样从“文件”变成实际能力？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/33.html#agent-foundation-recovery">foundations/33.html</a></td><td>成功写入但没有确认：重试怎样变成重复副作用</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/34.html#agent-foundation-quality">foundations/34.html</a></td><td>长期任务如何避免每次重新开始或虚假完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/35.html#agent-foundation-eval">foundations/35.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/36.html#agent-foundation-eval">foundations/36.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/37.html#agent-foundation-security">foundations/37.html</a></td><td>读到一条“指令”，为什么不代表它有权限？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/38.html#agent-foundation-production">foundations/38.html</a></td><td>用一条Trace算清等待、用量和失败成本</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/39.html#agent-foundation-multimodal">foundations/39.html</a></td><td>界面看对了，为什么动作仍然可能点错？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../foundations/40.html#agent-foundation-research">foundations/40.html</a></td><td>研究型Agent怎样避免“搜了很多，却没有形成结论”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../chapters/09.html#agent-practice-loop">chapters/09.html</a></td><td>一次回答结束，为什么任务仍未完成？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/09.html#agent-practice-snapshot">chapters/09.html</a></td><td>为什么每次模型调用都需要一致的上下文快照？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/10.html#agent-practice-stream">chapters/10.html</a></td><td>流式返回：什么时候参数真的可以执行？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/11.html#agent-practice-tools">chapters/11.html</a></td><td>工具存在、模型看见、能调用、获授权：四层检查</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/10.html#agent-practice-hooks">chapters/10.html</a></td><td>前置检查、后置检查为什么不能互相替代？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/20.html#agent-practice-parallel">chapters/20.html</a></td><td>并行工具为什么可能先执行完、后显示结果？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/21.html#agent-practice-recovery">chapters/21.html</a></td><td>成功写入但没有确认：重试怎样变成重复副作用</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/13.html#agent-practice-context">chapters/13.html</a></td><td>上下文组装为什么不能只做“取前N条”？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/14.html#agent-practice-compaction">chapters/14.html</a></td><td>异步摘要生成期间又来了工具结果，怎样不丢数据？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/12.html#agent-practice-rules">chapters/12.html</a></td><td>规则文件加载与子Agent继承，为什么不能只说“自动继承”？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/19.html#agent-practice-skills">chapters/19.html</a></td><td>渐进加载的Skill怎样从“文件”变成实际能力？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/18.html#agent-practice-memory">chapters/18.html</a></td><td>记忆写入为什么是一条带租约与验收的流水线？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/16.html#agent-practice-retrieval">chapters/16.html</a></td><td>相关不等于可用：从召回到证据闭合</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/15.html#agent-practice-indexing">chapters/15.html</a></td><td>索引构建时，哪些元数据一旦丢失就很难补回来？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/17.html#agent-practice-code">chapters/17.html</a></td><td>代码证据为什么需要工作树版本，而不只是commit？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/20.html#agent-practice-delegation">chapters/20.html</a></td><td>多Agent怎样并行，又怎样避免交接损失？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/22.html#agent-practice-quality">chapters/22.html</a></td><td>长期任务如何避免每次重新开始或虚假完成？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/23.html#agent-practice-eval">chapters/23.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/24.html#agent-practice-security">chapters/24.html</a></td><td>读到一条“指令”，为什么不代表它有权限？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/25.html#agent-practice-production">chapters/25.html</a></td><td>用一条Trace算清等待、用量和失败成本</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/26.html#agent-practice-optimization">chapters/26.html</a></td><td>优化先定位瓶颈，不能只追求更少Token</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/12.html#agent-practice-products">chapters/12.html</a></td><td>开源Codex与Claude工程文章怎样对照，才不制造冲突？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/27.html#agent-practice-multimodal">chapters/27.html</a></td><td>界面看对了，为什么动作仍然可能点错？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/26.html#agent-practice-research">chapters/26.html</a></td><td>研究型Agent怎样避免“搜了很多，却没有形成结论”？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../chapters/28.html#agent-practice-synthesis">chapters/28.html</a></td><td>怎样把知识图谱变成工程判断，而不是概念大全？</td><td>核验后更新完整机制</td></tr><tr><td><a href="../studies/chapters/07.html#agent-study-stream">studies/chapters/07.html</a></td><td>流式返回：什么时候参数真的可以执行？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/08.html#agent-study-recovery">studies/chapters/08.html</a></td><td>成功写入但没有确认：重试怎样变成重复副作用</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/08.html#agent-study-hooks">studies/chapters/08.html</a></td><td>前置检查、后置检查为什么不能互相替代？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/09.html#agent-study-snapshot">studies/chapters/09.html</a></td><td>为什么每次模型调用都需要一致的上下文快照？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/09.html#agent-study-compaction">studies/chapters/09.html</a></td><td>异步摘要生成期间又来了工具结果，怎样不丢数据？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/10.html#agent-study-products">studies/chapters/10.html</a></td><td>开源Codex与Claude工程文章怎样对照，才不制造冲突？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/10.html#agent-study-rules">studies/chapters/10.html</a></td><td>规则文件加载与子Agent继承，为什么不能只说“自动继承”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/11.html#agent-study-context">studies/chapters/11.html</a></td><td>上下文组装为什么不能只做“取前N条”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/12.html#agent-study-compaction">studies/chapters/12.html</a></td><td>异步摘要生成期间又来了工具结果，怎样不丢数据？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/13.html#agent-study-retrieval">studies/chapters/13.html</a></td><td>相关不等于可用：从召回到证据闭合</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/13.html#agent-study-indexing">studies/chapters/13.html</a></td><td>索引构建时，哪些元数据一旦丢失就很难补回来？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/14.html#agent-study-code">studies/chapters/14.html</a></td><td>代码证据为什么需要工作树版本，而不只是commit？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/15.html#agent-study-memory">studies/chapters/15.html</a></td><td>记忆写入为什么是一条带租约与验收的流水线？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/16.html#agent-study-skills">studies/chapters/16.html</a></td><td>渐进加载的Skill怎样从“文件”变成实际能力？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/16.html#agent-study-tools">studies/chapters/16.html</a></td><td>工具存在、模型看见、能调用、获授权：四层检查</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/17.html#agent-study-delegation">studies/chapters/17.html</a></td><td>多Agent怎样并行，又怎样避免交接损失？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/17.html#agent-study-parallel">studies/chapters/17.html</a></td><td>并行工具为什么可能先执行完、后显示结果？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/18.html#agent-study-quality">studies/chapters/18.html</a></td><td>长期任务如何避免每次重新开始或虚假完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/19.html#agent-study-eval">studies/chapters/19.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/20.html#agent-study-security">studies/chapters/20.html</a></td><td>读到一条“指令”，为什么不代表它有权限？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/21.html#agent-study-production">studies/chapters/21.html</a></td><td>用一条Trace算清等待、用量和失败成本</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/22.html#agent-study-optimization">studies/chapters/22.html</a></td><td>优化先定位瓶颈，不能只追求更少Token</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/24.html#agent-study-multimodal">studies/chapters/24.html</a></td><td>界面看对了，为什么动作仍然可能点错？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/25.html#agent-study-research">studies/chapters/25.html</a></td><td>研究型Agent怎样避免“搜了很多，却没有形成结论”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/26.html#agent-study-synthesis">studies/chapters/26.html</a></td><td>怎样把知识图谱变成工程判断，而不是概念大全？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/27.html#agent-study-code">studies/chapters/27.html</a></td><td>代码证据为什么需要工作树版本，而不只是commit？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/27.html#agent-study-recovery">studies/chapters/27.html</a></td><td>成功写入但没有确认：重试怎样变成重复副作用</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/28.html#agent-study-quality">studies/chapters/28.html</a></td><td>长期任务如何避免每次重新开始或虚假完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/29.html#agent-study-recovery">studies/chapters/29.html</a></td><td>成功写入但没有确认：重试怎样变成重复副作用</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/29.html#agent-study-snapshot">studies/chapters/29.html</a></td><td>为什么每次模型调用都需要一致的上下文快照？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/30.html#agent-study-eval">studies/chapters/30.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../studies/chapters/30.html#agent-study-synthesis">studies/chapters/30.html</a></td><td>怎样把知识图谱变成工程判断，而不是概念大全？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-00.html#agent-reading-loop">reading-notes/chapter-00.html</a></td><td>一次回答结束，为什么任务仍未完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-04.html#agent-reading-stream">reading-notes/chapter-04.html</a></td><td>流式返回：什么时候参数真的可以执行？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-04.html#agent-reading-tools">reading-notes/chapter-04.html</a></td><td>工具存在、模型看见、能调用、获授权：四层检查</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-05.html#agent-reading-loop">reading-notes/chapter-05.html</a></td><td>一次回答结束，为什么任务仍未完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-05.html#agent-reading-recovery">reading-notes/chapter-05.html</a></td><td>成功写入但没有确认：重试怎样变成重复副作用</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-06.html#agent-reading-products">reading-notes/chapter-06.html</a></td><td>开源Codex与Claude工程文章怎样对照，才不制造冲突？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-06.html#agent-reading-rules">reading-notes/chapter-06.html</a></td><td>规则文件加载与子Agent继承，为什么不能只说“自动继承”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-07.html#agent-reading-context">reading-notes/chapter-07.html</a></td><td>上下文组装为什么不能只做“取前N条”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-07.html#agent-reading-compaction">reading-notes/chapter-07.html</a></td><td>异步摘要生成期间又来了工具结果，怎样不丢数据？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-08.html#agent-reading-indexing">reading-notes/chapter-08.html</a></td><td>索引构建时，哪些元数据一旦丢失就很难补回来？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-08.html#agent-reading-retrieval">reading-notes/chapter-08.html</a></td><td>相关不等于可用：从召回到证据闭合</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-08.html#agent-reading-code">reading-notes/chapter-08.html</a></td><td>代码证据为什么需要工作树版本，而不只是commit？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-09.html#agent-reading-memory">reading-notes/chapter-09.html</a></td><td>记忆写入为什么是一条带租约与验收的流水线？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-10.html#agent-reading-skills">reading-notes/chapter-10.html</a></td><td>渐进加载的Skill怎样从“文件”变成实际能力？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-10.html#agent-reading-delegation">reading-notes/chapter-10.html</a></td><td>多Agent怎样并行，又怎样避免交接损失？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-11.html#agent-reading-quality">reading-notes/chapter-11.html</a></td><td>长期任务如何避免每次重新开始或虚假完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-12.html#agent-reading-eval">reading-notes/chapter-12.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-13.html#agent-reading-security">reading-notes/chapter-13.html</a></td><td>读到一条“指令”，为什么不代表它有权限？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-14.html#agent-reading-production">reading-notes/chapter-14.html</a></td><td>用一条Trace算清等待、用量和失败成本</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-14.html#agent-reading-optimization">reading-notes/chapter-14.html</a></td><td>优化先定位瓶颈，不能只追求更少Token</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-15.html#agent-reading-multimodal">reading-notes/chapter-15.html</a></td><td>界面看对了，为什么动作仍然可能点错？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/chapter-15.html#agent-reading-synthesis">reading-notes/chapter-15.html</a></td><td>怎样把知识图谱变成工程判断，而不是概念大全？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-04.html#agent-guide-loop">reading-notes/guide-04.html</a></td><td>一次回答结束，为什么任务仍未完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-05.html#agent-guide-snapshot">reading-notes/guide-05.html</a></td><td>为什么每次模型调用都需要一致的上下文快照？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-06.html#agent-guide-products">reading-notes/guide-06.html</a></td><td>开源Codex与Claude工程文章怎样对照，才不制造冲突？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-07.html#agent-guide-context">reading-notes/guide-07.html</a></td><td>上下文组装为什么不能只做“取前N条”？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-08.html#agent-guide-compaction">reading-notes/guide-08.html</a></td><td>异步摘要生成期间又来了工具结果，怎样不丢数据？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-09.html#agent-guide-retrieval">reading-notes/guide-09.html</a></td><td>相关不等于可用：从召回到证据闭合</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-10.html#agent-guide-memory">reading-notes/guide-10.html</a></td><td>记忆写入为什么是一条带租约与验收的流水线？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-11.html#agent-guide-quality">reading-notes/guide-11.html</a></td><td>长期任务如何避免每次重新开始或虚假完成？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../reading-notes/guide-12.html#agent-guide-eval">reading-notes/guide-12.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/b.html#agent-walkthrough-stream">walkthroughs/b.html</a></td><td>流式返回：什么时候参数真的可以执行？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/b.html#agent-walkthrough-hooks">walkthroughs/b.html</a></td><td>前置检查、后置检查为什么不能互相替代？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/b.html#agent-walkthrough-recovery">walkthroughs/b.html</a></td><td>成功写入但没有确认：重试怎样变成重复副作用</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/b.html#agent-walkthrough-code">walkthroughs/b.html</a></td><td>代码证据为什么需要工作树版本，而不只是commit？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/c.html#agent-walkthrough-indexing">walkthroughs/c.html</a></td><td>索引构建时，哪些元数据一旦丢失就很难补回来？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/c.html#agent-walkthrough-retrieval">walkthroughs/c.html</a></td><td>相关不等于可用：从召回到证据闭合</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/c.html#agent-walkthrough-memory">walkthroughs/c.html</a></td><td>记忆写入为什么是一条带租约与验收的流水线？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/d.html#agent-walkthrough-snapshot">walkthroughs/d.html</a></td><td>为什么每次模型调用都需要一致的上下文快照？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/d.html#agent-walkthrough-eval">walkthroughs/d.html</a></td><td>pass@k、pass^k和一次成功率为什么不能混用？</td><td>保留原例并补证据边界</td></tr><tr><td><a href="../walkthroughs/d.html#agent-walkthrough-production">walkthroughs/d.html</a></td><td>用一条Trace算清等待、用量和失败成本</td><td>保留原例并补证据边界</td></tr></tbody></table></div><h2 id="source-status">逐项来源与阅读结果</h2><section class="source-card" id="source-C01"><h3>C01 · 采样循环、请求组装、工具收集与停止</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/session/turn.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C01.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 250], [400, 1000], [1000, 1350], [1600, 1900]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>32fdf7bd27d02e3b04b26174034f5210fe94c9ce</code>。</p><p>先沿run_turn识别接收输入、构造StepContext、请求模型、回填工具和停止钩子的边界，再读build_prompt与显式Skills加载。增量工具模式会让本次tools/base_instructions字段为空，不能仅看该字段就断言规则未提供。停止钩子没有继续输入时会警告而非无限续跑；内部记忆整合另有拒绝路径。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>pub(crate) fn build_prompt(
+    input: Vec&lt;ResponseItem&gt;,
+    step_context: &amp;StepContext,
+    base_instructions: BaseInstructions,
+    incremental_tools: bool,
+) -&gt; Prompt {
+    let turn_context = &amp;step_context.turn;
+    Prompt {
+        input,
+        tools: if incremental_tools {
+            Arc::default()
+        } else {
+            step_context.tool_router.model_visible_specs()
+        },
+        parallel_tool_calls: true,
+        base_instructions: if incremental_tools {
+            BaseInstructions {
+                text: String::new(),
+                provenance: None,
+            }
+        } else {
+            base_instructions
+        },
+        output_schema: turn_context.final_output_json_schema.clone(),
+        output_schema_strict: !crate::guardian::is_basic_session_source(
+            &amp;turn_context.session_source,
+        ),
+        cyber_access_program: turn_context.cyber_access_program,
+    }
+}
+</code></pre></section><section class="source-card" id="source-C02"><h3>C02 · 请求级设置、环境、规则与工具快照</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/session/step_context.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C02.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 90]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>ac96683d40352cf7ac96595a7e057aa5a0184077</code>。</p><p>StepContext绑定发出本次请求所用的模型设置、MCP、环境和工具路由；文件系统访问器仍结合实时会话/本轮授权。快照一致性不等于所有权限永久冻结。</p><p><strong>完整文件已保存，Git blob校验一致。</strong>以下原代码可离线核对，未作为独立模块执行。</p><pre><code>//! Request-scoped settings and capabilities, with live grants bound to the originating turn.
+
+use std::sync::Arc;
+
+use crate::agents_md::LoadedAgentsMd;
+use crate::config::TokenBudgetConfig;
+use crate::environment_selection::TurnEnvironmentSnapshot;
+use crate::realtime_conversation::RealtimeConversationSnapshot;
+use crate::session::step_settings::ResolvedStepSettings;
+use crate::session::turn_context::TurnContext;
+use crate::session::turn_context::TurnEnvironment;
+use crate::tools::router::ToolRouter;
+use codex_extension_api::ExtensionData;
+use codex_file_system::EnvironmentAccess;
+use codex_mcp::McpBinding;
+use codex_otel::SessionTelemetry;
+use codex_plugin::ExecutorPluginHookSource;
+use codex_protocol::items::ModelInvocationContext;
+use codex_protocol::protocol::TurnContextItem;
+use tokio_util::sync::CancellationToken;
+
+/// Request-scoped state that may change between model sampling requests.
+pub(crate) struct StepContext {
+    pub(crate) turn: Arc&lt;TurnContext&gt;,
+    /// Preempts this request and yields its code-mode observations when user input arrives.
+    pub(crate) preempt: Option&lt;CancellationToken&gt;,
+    /// Realtime call activity and instructions captured for this sampling request.
+    pub(crate) realtime: RealtimeConversationSnapshot,
+    /// One immutable settings version captured before request preparation.
+    pub(crate) settings: Arc&lt;ResolvedStepSettings&gt;,
+    /// Frozen turn preferences resolved against this step's captured model.
+    pub(crate) token_budget: Option&lt;TokenBudgetConfig&gt;,
+    /// Telemetry context tagged with this sampling request's model.
+    pub(crate) session_telemetry: SessionTelemetry,
+    pub(crate) environments: TurnEnvironmentSnapshot,
+    /// Child bindings captured with this step; configured-only when opted in.
+    pub(crate) inherited_environments: TurnEnvironmentSnapshot,
+    /// Admitted executor hooks bound to this step's discovery, plugin policy, and MCP routing.
+    pub(crate) executor_hook_sources: Vec&lt;ExecutorPluginHookSource&gt;,
+    /// Keeps the extension inputs used to build this step's tools for its World State as well.
+    pub(crate) extension_data: ExtensionData,
+    /// The exact MCP connections, configuration, and catalog captured for this step.
+    pub(crate) mcp: Arc&lt;McpBinding&gt;,
+    /// The finalized tool plan advertised and executed for this exact sampling request.
+    pub(crate) tool_router: Arc&lt;ToolRouter&gt;,
+    /// The canonical AGENTS.md value observed with this environment snapshot.
+    pub(crate) loaded_agents_md: Option&lt;Arc&lt;LoadedAgentsMd&gt;&gt;,
+}
+
+impl StepContext {
+    /// Whether new context windows should record tool declarations in history.
+    pub(crate) fn incremental_tools_enabled(&amp;self) -&gt; bool {
+        self.settings.model_info.use_responses_lite
+            &amp;&amp; self
+                .turn
+                .config
+                .features
+                .enabled(codex_features::Feature::IncrementalTools)
+    }
+
+    /// Pairs the step's environments with access using current session and originating-turn grants.
+    pub(crate) fn environments(&amp;self) -&gt; Vec&lt;(&amp;TurnEnvironment, impl EnvironmentAccess + '_)&gt; {
+        self.environments
+            .turn_environments()
+            .map(|environment| {
+                let grants = self
+                    .turn
+                    .granted_permissions(&amp;environment.selection.environment_id);
+                (environment, environment.fs_accessor(grants))
+            })
+            .collect()
+    }
+
+    /// Persist the context captured for this request, even after a live update.
+    pub(crate) fn to_turn_context_item(&amp;self) -&gt; TurnContextItem {
+        let mut item = self.turn.to_turn_context_item();
+        item.realtime_active = Some(self.realtime.active);
+        item
+    }
+
+    pub(crate) fn model_context(&amp;self) -&gt; ModelInvocationContext {
+        ModelInvocationContext {
+            model_slug: self.settings.model_info.slug.clone(),
+            reasoning_effort: self
+                .settings
+                .effective_reasoning_effort()
+                .map(|effort| effort.to_string()),
+        }
+    }
+}
+</code></pre></section><section class="source-card" id="source-C03"><h3>C03 · 工具可见性、调用转换与路由</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/tools/router.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C03.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 449]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>3c01ab98187227561c3a4220ed8277b7317f21ce</code>。</p><p>工具注册、直接暴露、延迟发现与Code Mode是不同表面。exposes_tool覆盖多条路径；build_tool_call区分本地与托管搜索，分派携带call_id和原StepContext。注册指标不证明可见或可执行。</p><p><strong>完整文件已保存，Git blob校验一致。</strong>以下原代码可离线核对，未作为独立模块执行。</p><pre><code>use crate::function_tool::FunctionCallError;
+use crate::responses_metadata::TurnToolNamespacesInfo;
+use crate::session::session::Session;
+use crate::session::step_context::StepContext;
+#[cfg(test)]
+use crate::session::turn_context::TurnContext;
+use crate::tools::context::SharedTurnDiffTracker;
+use crate::tools::context::ToolCallState;
+use crate::tools::context::ToolInvocation;
+use crate::tools::context::ToolPayload;
+#[cfg(test)]
+use crate::tools::handlers::ToolSearchHandlerCache;
+use crate::tools::registry::AnyToolResult;
+use crate::tools::registry::RegisteredTool;
+use crate::tools::registry::ToolArgumentDiffConsumer;
+use crate::tools::registry::ToolExposure;
+use crate::tools::registry::ToolRegistry;
+#[cfg(test)]
+use crate::tools::spec_plan::finalize_tool_router;
+use codex_otel::SessionTelemetry;
+use codex_otel::TOOL_REGISTRATIONS_METRIC;
+use codex_otel::TOOL_REGISTRATIONS_METRIC_BUCKETS;
+use codex_protocol::models::ResponseItem;
+use codex_protocol::models::SearchToolCallParams;
+#[cfg(test)]
+use codex_protocol::openai_models::ModelInfo;
+use codex_protocol::openai_models::ToolMode;
+use codex_tools::DiscoverableTool;
+use codex_tools::ResponsesApiNamespaceTool;
+use codex_tools::ToolName;
+use codex_tools::ToolSpec;
+use std::borrow::Cow;
+use std::collections::BTreeMap;
+use std::sync::Arc;
+use tokio_util::sync::CancellationToken;
+use tracing::instrument;
+
+pub use crate::tools::context::ToolCallSource;
+
+const EXPOSURE_DIRECT: &amp;str = "direct";
+const EXPOSURE_DIRECT_MODEL_ONLY: &amp;str = "direct_model_only";
+const EXPOSURE_DEFERRED: &amp;str = "deferred";
+const EXPOSURE_DEFERRED_MODEL_ONLY: &amp;str = "deferred_model_only";
+const EXPOSURE_CODE_MODE_ONLY: &amp;str = "code_mode_only";
+const EXPOSURE_HIDDEN: &amp;str = "hidden";
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ToolCall {
+    pub tool_name: ToolName,
+    pub call_id: String,
+    pub payload: ToolPayload,
+    pub encrypted_function_args: Option&lt;Vec&lt;String&gt;&gt;,
+}
+
+impl ToolCall {
+    pub(crate) fn direct_source(&amp;self) -&gt; ToolCallSource {
+        if self.tool_name.namespace.as_deref() == Some("collaboration")
+            &amp;&amp; matches!(
+                self.tool_name.name.as_str(),
+                "spawn_agent" | "send_message" | "followup_task"
+            )
+            &amp;&amp; self
+                .encrypted_function_args
+                .as_ref()
+                .is_some_and(Vec::is_empty)
+        {
+            ToolCallSource::DirectPlaintextMessage
+        } else {
+            ToolCallSource::Direct
+        }
+    }
+}
+
+pub(crate) fn tool_log_payload&lt;'a&gt;(
+    payload: &amp;'a ToolPayload,
+    source: &amp;ToolCallSource,
+) -&gt; Cow&lt;'a, str&gt; {
+    if matches!(source, ToolCallSource::DirectPlaintextMessage) {
+        return Cow::Borrowed("[plaintext arguments]");
+    }
+    payload.log_payload()
+}
+
+/// One finalized tool plan: its advertised surfaces and matching executable runtimes.
+pub struct ToolRouter {
+    registry: ToolRegistry,
+    model_visible_specs: Arc&lt;[ToolSpec]&gt;,
+    tool_mode: ToolMode,
+    code_mode_tool_names: BTreeMap&lt;String, ToolName&gt;,
+    tool_namespaces_info: Option&lt;TurnToolNamespacesInfo&gt;,
+    can_manage_children: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum ToolSuggestPresentation {
+    ListTool,
+    RecommendationContext,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct ToolSuggestCandidates {
+    pub(crate) tools: Vec&lt;DiscoverableTool&gt;,
+    pub(crate) presentation: ToolSuggestPresentation,
+}
+
+impl ToolRouter {
+    #[cfg(test)]
+    pub(crate) fn from_registry(
+        turn_context: &amp;TurnContext,
+        model_info: &amp;ModelInfo,
+        registry: ToolRegistry,
+        hosted_specs: Vec&lt;ToolSpec&gt;,
+        tool_search_handler_cache: &amp;ToolSearchHandlerCache,
+    ) -&gt; Self {
+        finalize_tool_router(
+            turn_context,
+            model_info,
+            registry,
+            hosted_specs,
+            tool_search_handler_cache,
+        )
+        .expect("test tool registry should not contain duplicate tools")
+    }
+
+    pub(crate) fn from_parts(
+        registry: ToolRegistry,
+        model_visible_specs: Vec&lt;ToolSpec&gt;,
+        tool_mode: ToolMode,
+        code_mode_tool_names: BTreeMap&lt;String, ToolName&gt;,
+        tool_namespaces_info: Option&lt;TurnToolNamespacesInfo&gt;,
+        child_management_tools: &amp;[ToolName],
+    ) -&gt; Self {
+        let mut router = Self {
+            registry,
+            model_visible_specs: model_visible_specs.into(),
+            tool_mode,
+            code_mode_tool_names,
+            tool_namespaces_info,
+            can_manage_children: false,
+        };
+        router.can_manage_children = !child_management_tools.is_empty()
+            &amp;&amp; child_management_tools
+                .iter()
+                .all(|name| router.exposes_tool(name));
+        router
+    }
+
+    pub(crate) fn model_visible_specs(&amp;self) -&gt; Arc&lt;[ToolSpec]&gt; {
+        Arc::clone(&amp;self.model_visible_specs)
+    }
+
+    pub(crate) fn tool_mode(&amp;self) -&gt; ToolMode {
+        self.tool_mode
+    }
+
+    /// Code Mode still needs its dispatcher when the nested tool set is empty.
+    pub(crate) fn requires_code_mode_worker(&amp;self) -&gt; bool {
+        matches!(self.tool_mode, ToolMode::CodeMode | ToolMode::CodeModeOnly)
+    }
+
+    /// The normalized nested identities chosen after exclusions and collisions.
+    pub(crate) fn code_mode_tool_names(&amp;self) -&gt; &amp;BTreeMap&lt;String, ToolName&gt; {
+        &amp;self.code_mode_tool_names
+    }
+
+    /// Optional request inventory for this exact plan, without publishing it to turn state.
+    pub(crate) fn tool_namespaces_info(&amp;self) -&gt; Option&lt;&amp;TurnToolNamespacesInfo&gt; {
+        self.tool_namespaces_info.as_ref()
+    }
+
+    /// Whether the model can both start and interact with a terminal process.
+    #[cfg_attr(not(test), allow(dead_code))]
+    pub(crate) fn has_terminal_controls(&amp;self) -&gt; bool {
+        self.exposes_tool(&amp;ToolName::plain("exec_command"))
+            &amp;&amp; self.exposes_tool(&amp;ToolName::plain("write_stdin"))
+    }
+
+    /// Whether the configured collaboration backend's child-management tools remain exposed.
+    #[cfg_attr(not(test), allow(dead_code))]
+    pub(crate) fn can_manage_children(&amp;self) -&gt; bool {
+        self.can_manage_children
+    }
+
+    // Answers if the tool plan lets the model invoke the tool directly, through code mode, or deferred tool search.
+    pub(crate) fn exposes_tool(&amp;self, name: &amp;ToolName) -&gt; bool {
+        let name = name.clone().with_default_namespace();
+        if self
+            .code_mode_tool_names
+            .values()
+            .any(|nested| nested.clone().with_default_namespace() == name)
+            || self.model_visible_specs.iter().any(|spec| match spec {
+                ToolSpec::Function(_) | ToolSpec::Freeform(_) =&gt; {
+                    name.is_default_namespace() &amp;&amp; spec.name() == name.name
+                }
+                ToolSpec::Namespace(namespace) =&gt; {
+                    name.namespace.as_deref() == Some(namespace.name.as_str())
+                        &amp;&amp; namespace.tools.iter().any(|tool| match tool {
+                            ResponsesApiNamespaceTool::Function(tool) =&gt; tool.name == name.name,
+                            ResponsesApiNamespaceTool::Custom(tool) =&gt; tool.name == name.name,
+                        })
+                }
+                ToolSpec::ToolSearch { .. } | ToolSpec::WebSearch { .. } =&gt; false,
+            })
+        {
+            return true;
+        }
+        self.model_visible_specs
+            .iter()
+            .any(|spec| matches!(spec, ToolSpec::ToolSearch { .. }))
+            &amp;&amp; self.registry.entries().any(|tool| {
+                tool.exposure.is_deferred()
+                    &amp;&amp; tool.runtime.tool_name().with_default_namespace() == name
+                    &amp;&amp; (tool.runtime.immutable_spec().is_some()
+                        || tool.runtime.search_info().is_some())
+            })
+    }
+
+    pub(crate) fn deferred_tool_namespaces(&amp;self) -&gt; BTreeMap&lt;String, String&gt; {
+        self.registry.deferred_tool_namespaces()
+    }
+
+    pub(crate) fn mcp_namespaces(&amp;self) -&gt; impl Iterator&lt;Item = (&amp;str, &amp;str)&gt; {
+        self.registry.mcp_namespaces()
+    }
+
+    #[cfg(test)]
+    pub(crate) fn registered_tool_names_for_test(&amp;self) -&gt; Vec&lt;ToolName&gt; {
+        self.registry.tool_names_for_test()
+    }
+
+    #[cfg(test)]
+    pub(crate) fn tool_exposure_for_test(
+        &amp;self,
+        name: &amp;ToolName,
+    ) -&gt; Option&lt;crate::tools::registry::ToolExposure&gt; {
+        self.registry.tool_exposure(name)
+    }
+
+    pub(crate) fn create_diff_consumer(
+        &amp;self,
+        tool_name: &amp;ToolName,
+    ) -&gt; Option&lt;Box&lt;dyn ToolArgumentDiffConsumer&gt;&gt; {
+        self.registry.create_diff_consumer(tool_name)
+    }
+
+    pub fn tool_supports_parallel(&amp;self, call: &amp;ToolCall) -&gt; bool {
+        self.registry
+            .supports_parallel_tool_calls(&amp;call.tool_name)
+            .unwrap_or(false)
+    }
+
+    pub(crate) fn registered_tool(&amp;self, tool_name: &amp;ToolName) -&gt; Option&lt;&amp;RegisteredTool&gt; {
+        self.registry.registered_tool(tool_name)
+    }
+
+    #[instrument(level = "trace", skip_all, err)]
+    pub fn build_tool_call(item: ResponseItem) -&gt; Result&lt;Option&lt;ToolCall&gt;, FunctionCallError&gt; {
+        match item {
+            ResponseItem::FunctionCall {
+                name,
+                namespace,
+                arguments,
+                encrypted_function_args,
+                call_id,
+                ..
+            } =&gt; {
+                let tool_name = ToolName::new(namespace, name).with_default_namespace();
+                Ok(Some(ToolCall {
+                    tool_name,
+                    call_id,
+                    payload: ToolPayload::Function { arguments },
+                    encrypted_function_args,
+                }))
+            }
+            ResponseItem::ToolSearchCall {
+                call_id: Some(call_id),
+                execution,
+                arguments,
+                ..
+            } if execution == "client" =&gt; {
+                let arguments: SearchToolCallParams =
+                    serde_json::from_value(arguments).map_err(|err| {
+                        FunctionCallError::RespondToModel(format!(
+                            "failed to parse tool_search arguments: {err}"
+                        ))
+                    })?;
+                Ok(Some(ToolCall {
+                    tool_name: ToolName::plain("tool_search"),
+                    call_id,
+                    payload: ToolPayload::ToolSearch { arguments },
+                    encrypted_function_args: None,
+                }))
+            }
+            ResponseItem::ToolSearchCall { .. } =&gt; Ok(None),
+            ResponseItem::CustomToolCall {
+                name,
+                namespace,
+                input,
+                call_id,
+                ..
+            } =&gt; Ok(Some(ToolCall {
+                tool_name: ToolName::new(namespace, name).with_default_namespace(),
+                call_id,
+                payload: ToolPayload::Custom { input },
+                encrypted_function_args: None,
+            })),
+            _ =&gt; Ok(None),
+        }
+    }
+
+    #[allow(dead_code)]
+    #[instrument(level = "trace", skip_all, err)]
+    pub async fn dispatch_tool_call_with_code_mode_result(
+        &amp;self,
+        session: Arc&lt;Session&gt;,
+        step_context: Arc&lt;StepContext&gt;,
+        cancellation_token: CancellationToken,
+        tracker: SharedTurnDiffTracker,
+        call: ToolCall,
+        source: ToolCallSource,
+    ) -&gt; Result&lt;AnyToolResult, FunctionCallError&gt; {
+        self.dispatch_tool_call_with_code_mode_result_inner(
+            session,
+            step_context,
+            cancellation_token,
+            tracker,
+            call,
+            source,
+            /*call_state*/ None,
+        )
+        .await
+    }
+
+    #[instrument(level = "trace", skip_all, err)]
+    #[allow(clippy::too_many_arguments)]
+    pub(crate) async fn dispatch_tool_call_with_state(
+        &amp;self,
+        session: Arc&lt;Session&gt;,
+        step_context: Arc&lt;StepContext&gt;,
+        cancellation_token: CancellationToken,
+        tracker: SharedTurnDiffTracker,
+        call: ToolCall,
+        source: ToolCallSource,
+        call_state: Arc&lt;ToolCallState&gt;,
+    ) -&gt; Result&lt;AnyToolResult, FunctionCallError&gt; {
+        self.dispatch_tool_call_with_code_mode_result_inner(
+            session,
+            step_context,
+            cancellation_token,
+            tracker,
+            call,
+            source,
+            Some(call_state),
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    async fn dispatch_tool_call_with_code_mode_result_inner(
+        &amp;self,
+        session: Arc&lt;Session&gt;,
+        step_context: Arc&lt;StepContext&gt;,
+        cancellation_token: CancellationToken,
+        tracker: SharedTurnDiffTracker,
+        call: ToolCall,
+        source: ToolCallSource,
+        call_state: Option&lt;Arc&lt;ToolCallState&gt;&gt;,
+    ) -&gt; Result&lt;AnyToolResult, FunctionCallError&gt; {
+        let ToolCall {
+            tool_name,
+            call_id,
+            payload,
+            ..
+        } = call;
+
+        // Keep the legacy ToolInvocation.turn field tied to the same request state until handlers migrate.
+        let turn = Arc::clone(&amp;step_context.turn);
+        let invocation = ToolInvocation {
+            session,
+            turn,
+            step_context,
+            cancellation_token,
+            tracker,
+            call_id,
+            tool_name,
+            source,
+            payload,
+        };
+
+        self.registry
+            .dispatch_any_with_state(invocation, call_state)
+            .await
+    }
+}
+
+/// Records the registered inventory once per sampling request, before transport retries.
+/// Registrations do not imply model visibility or reachability; hosted tools are excluded.
+pub(crate) fn record_registration_metrics(
+    router: &amp;ToolRouter,
+    telemetry: &amp;SessionTelemetry,
+    incremental_tools: bool,
+) {
+    let mut direct = 0usize;
+    let mut direct_model_only = 0usize;
+    let mut deferred = 0usize;
+    let mut deferred_model_only = 0usize;
+    let mut code_mode_only = 0usize;
+    let mut hidden = 0usize;
+    for tool in router.registry.entries() {
+        match tool.exposure {
+            ToolExposure::Direct =&gt; direct += 1,
+            ToolExposure::DirectModelOnly =&gt; direct_model_only += 1,
+            ToolExposure::Deferred =&gt; deferred += 1,
+            ToolExposure::DeferredModelOnly =&gt; deferred_model_only += 1,
+            ToolExposure::CodeModeOnly =&gt; code_mode_only += 1,
+            ToolExposure::Hidden =&gt; hidden += 1,
+        }
+    }
+
+    let tool_mode = match router.tool_mode {
+        ToolMode::Direct =&gt; "direct",
+        ToolMode::CodeMode =&gt; "code_mode",
+        ToolMode::CodeModeOnly =&gt; "code_mode_only",
+    };
+    let incremental_tools = if incremental_tools { "true" } else { "false" };
+    for (exposure, count) in [
+        (EXPOSURE_DIRECT, direct),
+        (EXPOSURE_DIRECT_MODEL_ONLY, direct_model_only),
+        (EXPOSURE_DEFERRED, deferred),
+        (EXPOSURE_DEFERRED_MODEL_ONLY, deferred_model_only),
+        (EXPOSURE_CODE_MODE_ONLY, code_mode_only),
+        (EXPOSURE_HIDDEN, hidden),
+    ] {
+        telemetry.histogram_with_boundaries(
+            TOOL_REGISTRATIONS_METRIC,
+            i64::try_from(count).unwrap_or(i64::MAX),
+            TOOL_REGISTRATIONS_METRIC_BUCKETS,
+            &amp;[
+                ("exposure", exposure),
+                ("tool_mode", tool_mode),
+                ("incremental_tools", incremental_tools),
+            ],
+        );
+    }
+}
+
+#[cfg(test)]
+#[path = "router_tests.rs"]
+mod tests;
+</code></pre></section><section class="source-card" id="source-C04"><h3>C04 · 并行准入、执行、取消与结果</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/tools/parallel.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C04.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 310]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>cc8beb4e3091eaaa0460eead9b05186af71f5513</code>。</p><p>阅读ToolCallRuntime的创建、准入、执行与取消；调用可以立即启动，消费结果的future不代表实际开始时间。并行允许标志只决定调度方式，不证明读写目标彼此独立。</p><p>该文件按列出的范围取得并阅读，包内保留原始定位与中文笔记，没有伪造或拼凑全文副本。</p></section><section class="source-card" id="source-C05"><h3>C05 · 输出项记录、分派与回填</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/stream_events_utils.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C05.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 280], [310, 580]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>1b668ea4bb56e5dd22e99e1827bab085b494bc51</code>。</p><p>完整输出项到达后先记录调用，再选择即时或延期分派。已记入历史但还未执行就取消的调用仍需对应中止结果，避免恢复后的孤立调用。工具项完成不等于整次响应或业务任务完成。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>fn response_item_may_include_external_context(item: &amp;ResponseItem) -&gt; bool {
+    matches!(
+        item,
+        ResponseItem::ToolSearchCall { .. }
+            | ResponseItem::ToolSearchOutput { .. }
+            | ResponseItem::WebSearchCall { .. }
+            | ResponseItem::FunctionCallOutput { call_id: None, .. }
+    )
+}
+
+pub(crate) async fn mark_thread_memory_mode_polluted_if_external_context(
+    sess: &amp;Session,
+    turn_context: &amp;TurnContext,
+    item: &amp;ResponseItem,
+) {
+    if !turn_context.config.memories.disable_on_external_context
+        || !response_item_may_include_external_context(item)
+    {
+        return;
+    }
+    state_db::mark_thread_memory_mode_polluted(
+        sess.services.state_db.as_deref(),
+        sess.thread_id,
+        "record_completed_response_item",
+    )
+    .await;
+}
+</code></pre></section><section class="source-card" id="source-C06"><h3>C06 · 异步压缩生命周期与候选验证</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/session/async_compaction.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C06.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 222]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>a9bba346d829ce0881240a7279a58af3a2d569e6</code>。</p><p>后台压缩受功能标记、TokenBudget禁用和远端V2支持共同约束。启动身份包括历史重写代际、模型与压缩版本、授权代际。取消本轮仅拦新工作，已有工作由会话管理；丢弃结果并不抹掉费用。</p><p><strong>完整文件已保存，Git blob校验一致。</strong>以下原代码可离线核对，未作为独立模块执行。</p><pre><code>//! Holds the current speculative request, polled at checkpoints or awaited when compaction is due.
+//! Discarded requests still charge completed usage; session shutdown cancels remaining network work.
+
+use std::sync::Arc;
+
+use crate::compact_remote_v2::BackgroundCompactionCandidate;
+use crate::compact_remote_v2::capture_background_input;
+use crate::compact_remote_v2::run_background_compaction;
+use crate::context::world_state::WorldState;
+use crate::session::context_window::ContextWindowTokenStatus;
+use crate::session::session::Session;
+use crate::session::step_context::StepContext;
+use crate::session::turn_context::TurnContext;
+use codex_analytics::CompactionPhase;
+use codex_features::Feature;
+use codex_model_provider::RemoteCompactionSupport;
+use codex_otel::auth_storage::AuthStorageOriginator;
+use tokio::sync::oneshot;
+use tokio_util::sync::CancellationToken;
+use tokio_util::task::TaskTracker;
+use tracing::debug;
+
+#[derive(PartialEq, Eq)]
+struct CompactionAttempt {
+    history_version: u64,
+    model_slug: String,
+    compaction_hash: Option&lt;String&gt;,
+    auth_owner_generation: Option&lt;u64&gt;,
+}
+
+#[derive(Default)]
+pub(crate) struct AsyncCompactionState {
+    last_attempt: Option&lt;CompactionAttempt&gt;,
+    // Keep prepared request state off the turn stack while checkpoints await adoption.
+    result: Option&lt;oneshot::Receiver&lt;Box&lt;BackgroundCompactionCandidate&gt;&gt;&gt;,
+    tasks: TaskTracker,
+    shutdown_cancellation: CancellationToken,
+}
+
+pub(super) fn enabled(turn_context: &amp;TurnContext) -&gt; bool {
+    turn_context
+        .config
+        .features
+        .enabled(Feature::AsyncCompaction)
+        &amp;&amp; !turn_context.config.features.enabled(Feature::TokenBudget)
+        &amp;&amp; matches!(
+            turn_context.provider.capabilities().remote_compaction,
+            RemoteCompactionSupport::V2
+        )
+}
+
+pub(super) async fn maybe_start(
+    sess: &amp;Arc&lt;Session&gt;,
+    step_context: &amp;Arc&lt;StepContext&gt;,
+    world_state: &amp;Arc&lt;WorldState&gt;,
+    phase: CompactionPhase,
+    turn_cancellation: &amp;CancellationToken,
+    token_status: &amp;ContextWindowTokenStatus,
+    (turn_state, auth_owner_generation): (Option&lt;String&gt;, Option&lt;u64&gt;),
+) {
+    let turn_context = &amp;step_context.turn;
+    // Let the foreground establish the backend's model pin before starting a parallel request.
+    if matches!(phase, CompactionPhase::PreTurn) &amp;&amp; turn_state.is_none() {
+        return;
+    }
+    if !enabled(turn_context)
+        || token_status.token_limit_reached
+        || (matches!(phase, CompactionPhase::PostTurn)
+            &amp;&amp; token_status.turn_end_compaction_threshold_reached)
+        || step_context
+            .settings
+            .model_info
+            .resolved_context_window()
+            .is_none_or(|limit| {
+                i128::from(token_status.active_context_tokens) * 100
+                    &lt; i128::from(limit)
+                        * i128::from(turn_context.config.async_compaction_threshold_percent)
+            })
+    {
+        return;
+    }
+
+    let base_instructions = sess.get_prompt_base_instructions().await;
+    let mut state = sess.state.lock().await;
+    let model_info = &amp;step_context.settings.model_info;
+    let attempt = CompactionAttempt {
+        history_version: state.history.history_version(),
+        model_slug: model_info.slug.clone(),
+        compaction_hash: model_info.comp_hash.clone(),
+        auth_owner_generation,
+    };
+    // Stop blocks new launches; already-running compaction remains session-owned.
+    if turn_cancellation.is_cancelled()
+        || state.shutting_down
+        || state.async_compaction.last_attempt.as_ref() == Some(&amp;attempt)
+        || state.history.annotated_items().is_empty()
+        || sess.services.model_client.auth_owner_generation() != auth_owner_generation
+    {
+        return;
+    }
+
+    // Capture and register without yielding, so shutdown or history replacement cannot
+    // overtake this request. Tool attribution still belongs to the foreground's current step.
+    let prepared_input = capture_background_input(
+        sess,
+        step_context,
+        state.history.clone(),
+        base_instructions,
+        turn_state,
+        auth_owner_generation,
+        sess.current_window_from_state(&amp;state),
+    );
+    let task_session = Arc::clone(sess);
+    let task_step = Arc::clone(step_context);
+    let cutoff_world_state = Arc::clone(world_state);
+    let storage_originator = AuthStorageOriginator::from_client_name(&amp;turn_context.originator);
+    state.async_compaction.last_attempt = Some(attempt);
+    let (send, result) = oneshot::channel();
+    state.async_compaction.result = Some(result);
+    let task = async move {
+        match run_background_compaction(
+            &amp;task_session,
+            task_step,
+            cutoff_world_state,
+            phase,
+            prepared_input,
+        )
+        .await
+        {
+            Ok(candidate) =&gt; {
+                let _ = send.send(Box::new(candidate));
+            }
+            Err(error) =&gt; {
+                debug!(%error, "discarding unsuccessful background compaction");
+            }
+        }
+    };
+    state
+        .async_compaction
+        .tasks
+        .spawn(storage_originator.scope(task));
+}
+
+pub(super) async fn take_ready(
+    sess: &amp;Session,
+    turn_context: &amp;TurnContext,
+) -&gt; Option&lt;Box&lt;BackgroundCompactionCandidate&gt;&gt; {
+    if !enabled(turn_context) {
+        return None;
+    }
+    let mut state = sess.state.lock().await;
+    let mut result = state.async_compaction.result.take()?;
+    let candidate = match result.try_recv() {
+        Ok(candidate) =&gt; candidate,
+        Err(oneshot::error::TryRecvError::Empty) =&gt; {
+            state.async_compaction.result = Some(result);
+            return None;
+        }
+        // try_recv consumes a closed receiver; awaiting it later would panic.
+        Err(oneshot::error::TryRecvError::Closed) =&gt; return None,
+    };
+    (candidate.prefix.generation == state.history.history_version()).then_some(candidate)
+}
+
+pub(crate) async fn wait_for_pending(
+    sess: &amp;Session,
+    step_context: &amp;StepContext,
+) -&gt; Option&lt;Box&lt;BackgroundCompactionCandidate&gt;&gt; {
+    if !enabled(&amp;step_context.turn) {
+        return None;
+    }
+    let result = {
+        let mut state = sess.state.lock().await;
+        let result = state.async_compaction.result.take()?;
+        let model = &amp;step_context.settings.model_info;
+        let attempt = state.async_compaction.last_attempt.as_ref()?;
+        if attempt.history_version != state.history.history_version()
+            || attempt.model_slug != model.slug
+            || attempt.compaction_hash != model.comp_hash
+            || attempt.auth_owner_generation != sess.services.model_client.auth_owner_generation()
+        {
+            return None;
+        }
+        result
+    };
+    // Release session state while the request finishes and charges its usage.
+    result.await.ok()
+}
+
+pub(crate) async fn shutdown_cancellation(sess: &amp;Session) -&gt; CancellationToken {
+    sess.state
+        .lock()
+        .await
+        .async_compaction
+        .shutdown_cancellation
+        .clone()
+}
+
+pub(super) async fn shutdown(sess: &amp;Session) {
+    let tasks = {
+        let mut state = sess.state.lock().await;
+        let async_compaction = &amp;mut state.async_compaction;
+        async_compaction.result = None;
+        async_compaction.tasks.close();
+        async_compaction.shutdown_cancellation.cancel();
+        async_compaction.tasks.clone()
+    };
+    // Drain completed usage charging before shutdown finishes.
+    tasks.wait().await;
+}
+
+/// Test barrier: callers must gate foreground work so it cannot launch another attempt.
+pub(crate) async fn wait_for_background_compaction_for_test(sess: &amp;Session) {
+    let tasks = sess.state.lock().await.async_compaction.tasks.clone();
+    // Closing only enables waiting; it neither cancels tasks nor prevents future launches.
+    tasks.close();
+    tasks.wait().await;
+}
+
+#[cfg(test)]
+#[path = "async_compaction_tests.rs"]
+mod tests;
+</code></pre></section><section class="source-card" id="source-C07"><h3>C07 · 压缩候选安装及回退</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/compact_remote_v2_installation.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C07.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 320]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>a13b18ba448680976c0ce047aeb296e5c2c9d1ee</code>。</p><p>安装先核对模型与压缩哈希，经共同路径转换候选，再交给历史替换原语。候选安装后实时后缀可能令窗口仍超预算，允许一次前台回退；这不是无限重试。</p><p>该文件按列出的范围取得并阅读，包内保留原始定位与中文笔记，没有伪造或拼凑全文副本。</p></section><section class="source-card" id="source-C08"><h3>C08 · 历史版本、重写与基线</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/context_manager/history.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C08.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 300]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>f39be3fb41fee1371036f393d5d1f62057225b60</code>。</p><p>history_version记录重写；reset_version用于破坏性重置；user_message_revision独立。模型历史、保留事实和审查上下文还分别存在。不能把消息条数或一个版本号当作全部状态身份。</p><p>该文件按列出的范围取得并阅读，包内保留原始定位与中文笔记，没有伪造或拼凑全文副本。</p></section><section class="source-card" id="source-C09"><h3>C09 · 注册冲突、准入、钩子及结果</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/tools/registry.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C09.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 180], [430, 1030]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>ebde5a7bdc449a11dc9c1fc1d8475c8e4432010f</code>。</p><p>前置钩子可阻止handler或重建入参；handler执行后才有后置检查。固定源码明确后置阻止拒绝结果、不撤销执行；on_tool_result_accepted在后置接受之后调用。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>        let post_tool_use_payload = if success {
+            result
+                .as_ref()
+                .ok()
+                .and_then(|result| result.post_tool_use_payload.clone())
+        } else {
+            None
+        };
+</code></pre></section><section class="source-card" id="source-C10"><h3>C10 · 规则刷新、缓存与子线程共享</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/agents_md_manager.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C10.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 320]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>ee80cebce50a98248f4503c3861797e86c54d882</code>。</p><p>规则刷新串行化但外部provider调用不占状态锁。环境或信任变化先失效旧缓存，避免刷新失败继续暴露旧规则。子Agent继承已应用文本，动态thread provider需要显式允许共享。</p><p>该文件按列出的范围取得并阅读，包内保留原始定位与中文笔记，没有伪造或拼凑全文副本。</p></section><section class="source-card" id="source-C11"><h3>C11 · 子Agent输入与消息提交</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/agent/control.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C11.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 480]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>765725df7b278acd308fbcf9a544b8963c63e941</code>。</p><p>提交或邮箱排队只返回接受标识。未装载接收者且trigger_turn=false时可仅排队，不意味着启动，更不意味着子任务完成。会话身份与树运行时分开。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>            // Keep unloaded delivery atomic with publication of a reloaded session.
+            let threads = state.threads.read().await;
+            if !communication.trigger_turn &amp;&amp; !threads.contains_key(&amp;agent_id) {
+                let _membership = self.runtime.admit_start()?;
+                self.runtime.ensure_agent_known(agent_id)?;
+                let submission_id = uuid::Uuid::now_v7().to_string();
+                self.runtime.mailboxes.enqueue(
+                    agent_id,
+                    Some(submission_id.clone()),
+                    vec![crate::PendingAgentMessage::new(communication, delivery)],
+                )?;
+</code></pre></section><section class="source-card" id="source-C12"><h3>C12 · 子线程创建及历史过滤</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/agent/control/spawn.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C12.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 280]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>22cd725605272a5e4e3b475c8ad2fb2835df0203</code>。</p><p>所读fork过滤函数对不同消息类型有不同保留规则，并移除父线程累计用量。某一路径能复制历史，不代表每种子Agent都完整复制父上下文、工具、权限和缓存。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>        // Full-history forks preserve the cached prompt prefix and can keep diffing
+        // from the parent's durable baseline unless legacy compaction requires rebuilding it.
+        RolloutItem::TurnContext(_) | RolloutItem::WorldState(_) =&gt; preserve_context_baselines,
+        // Child threads inherit model context, not the parent's cumulative usage state.
+        RolloutItem::TokenUsageRecord(_) =&gt; false,
+</code></pre></section><section class="source-card" id="source-C13"><h3>C13 · 记忆流水线启动条件</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/memories/write/src/start.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C13.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 95]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>102881cf6fde44782cc0779920a3f75d37f93b92</code>。</p><p>启动记忆有根线程、非临时会话、功能标记、数据库和目录等条件；清理与阶段任务顺序可追踪。不能写成每次对话都会永久学习。</p><p><strong>完整文件已保存，Git blob校验一致。</strong>以下原代码可离线核对，未作为独立模块执行。</p><pre><code>use crate::ensure_layout;
+use crate::extensions::seed_extension_instructions;
+use crate::guard;
+use crate::metrics::MEMORY_STARTUP;
+use crate::phase1;
+use crate::phase2;
+use crate::runtime::MemoryStartupContext;
+use codex_core::CodexThread;
+use codex_core::ThreadManager;
+use codex_core::config::Config;
+use codex_features::Feature;
+use codex_login::AuthManager;
+use codex_protocol::MemoryVersion;
+use codex_protocol::ThreadId;
+use codex_protocol::models::PermissionProfile;
+use codex_protocol::protocol::SessionSource;
+use std::sync::Arc;
+use tracing::warn;
+
+/// Starts the asynchronous startup memory pipeline for an eligible root session.
+///
+/// The pipeline is skipped for ephemeral sessions, disabled feature flags, and
+/// subagent sessions.
+pub fn start_memories_startup_task(
+    thread_manager: Arc&lt;ThreadManager&gt;,
+    auth_manager: Arc&lt;AuthManager&gt;,
+    thread_id: ThreadId,
+    thread: Arc&lt;CodexThread&gt;,
+    config: Arc&lt;Config&gt;,
+    parent_permission_profile: PermissionProfile,
+    source: &amp;SessionSource,
+) {
+    if config.ephemeral
+        || !config.features.enabled(Feature::MemoryTool)
+        || source.is_non_root_agent()
+    {
+        return;
+    }
+
+    // Dual-write warms v2 while v1 is selected; it is no longer needed after cutover.
+    let versions = if config.memories.dual_write &amp;&amp; config.memories.version == MemoryVersion::V1 {
+        vec![MemoryVersion::V1, MemoryVersion::V2]
+    } else {
+        vec![config.memories.version]
+    };
+    for version in versions {
+        let mut pipeline_config = config.as_ref().clone();
+        pipeline_config.memories.version = version;
+        let config = Arc::new(pipeline_config);
+        let auth_manager = Arc::clone(&amp;auth_manager);
+        let parent_permission_profile = parent_permission_profile.clone();
+        let context = Arc::new(MemoryStartupContext::new(
+            Arc::clone(&amp;thread_manager),
+            Arc::clone(&amp;auth_manager),
+            thread_id,
+            Arc::clone(&amp;thread),
+            config.as_ref(),
+            source.clone(),
+        ));
+        tokio::spawn(async move {
+            if context.memory_store().await.is_none() {
+                warn!("state db unavailable for memories startup pipeline; skipping");
+                return;
+            }
+            let root = config
+                .codex_home
+                .join(config.memories.version.directory_name());
+            if let Err(err) = ensure_layout(&amp;root).await {
+                warn!("failed preparing memories root: {err}");
+                return;
+            }
+            if let Err(err) = seed_extension_instructions(&amp;root).await {
+                warn!("failed seeding memory extension instructions: {err}");
+            }
+
+            // Clean memories to make preserve DB size. This does not consume tokens so can be
+            // done before the quota check.
+            phase1::prune(context.as_ref(), &amp;config).await;
+
+            if !guard::rate_limits_ok(&amp;auth_manager, &amp;config).await {
+                context.counter(
+                    MEMORY_STARTUP,
+                    /*inc*/ 1,
+                    &amp;[("status", "skipped_rate_limit")],
+                );
+                return;
+            }
+
+            // Run phase 1.
+            phase1::run(Arc::clone(&amp;context), Arc::clone(&amp;config)).await;
+            // Run phase 2.
+            phase2::run(context, config, parent_permission_profile).await;
+        });
+    }
+}
+</code></pre></section><section class="source-card" id="source-C14"><h3>C14 · 记忆抽取与候选状态</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/memories/write/src/phase1.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C14.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 280]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>cddb20dadcc62eac3896666b585fa851c7f00cfb</code>。</p><p>实际run先创建stage-one请求上下文再领取候选，不能盲从注释步骤。候选受来源、年龄、空闲时间、上限和租约约束；并发提取含“成功但无产出”结果，不应当成异常重试。</p><p>该文件按列出的范围取得并阅读，包内保留原始定位与中文笔记，没有伪造或拼凑全文副本。</p></section><section class="source-card" id="source-C15"><h3>C15 · 记忆整合、租约与产物核验</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/memories/write/src/phase2.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C15.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 660]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>d6d245f5917da5ad610119400df92efa2ac41a42</code>。</p><p>阶段二先取全局租约并准备Git基线，必要时才启动整合Agent；完成后先关停，检查产物，重新确认租约，再重置基线、登记成功。文件基线和数据库完成登记不是同一原子事务；关闭失败会保留租约等待过期。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>                if still_owns_lock {
+                    if let Err(err) = reset_memory_workspace_baseline(&amp;memory_root).await {
+                        tracing::error!("failed resetting memory workspace baseline: {err}");
+                        job::failed(context.as_ref(), &amp;db, &amp;claim, "failed_workspace_commit").await;
+                    } else if !job::succeed(
+                        context.as_ref(),
+                        &amp;db,
+                        &amp;claim,
+                        new_watermark,
+                        &amp;selected_outputs,
+                        "succeeded",
+                    )
+                    .await
+                    {
+                        tracing::error!(
+                            "failed marking global memory consolidation job succeeded after resetting workspace baseline"
+                        );
+                    } else {
+                        drop(phase_two_e2e_timer);
+                        context.record_storage_size(&amp;memory_root).await;
+                    }
+                }
+</code></pre></section><section class="source-card" id="source-C16"><h3>C16 · 会话历史替换与持久化入口</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/session/mod.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C16.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 210], [800, 1150], [1450, 2300], [2300, 4530], [4600, 5200], [5350, 5750]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>96cfaa19707c13ed0bd5e7c7d3ab9f7c908226ca</code>。</p><p>捕获模型/环境时有锁顺序，耗时准备移到锁外。前缀安装在状态锁内核验代际、长度、授权并保留实时后缀；随后才持久化。返回true表示该路径接受了内存替换，不能单独当作断电恢复成功的证据。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>                    // Validate immediately before slicing and replacing the captured prefix.
+                    if state.history.history_version() != prefix.generation
+                        || state.history.annotated_items().len() &lt; prefix.len
+                        || self.services.model_client.auth_owner_generation()
+                            != prefix.auth_owner_generation
+                    {
+                        return false;
+                    }
+                    let current = state.history.annotated_items();
+                    let suffix = &amp;current[prefix.len..];
+</code></pre></section><section class="source-card" id="source-C17"><h3>C17 · 远程压缩参数、钩子与回退</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/compact_remote_v2.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C17.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 220]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>bacf8c3a5c5453051a20c57df1c3275c57ac27c3</code>。</p><p>区分前台、后台候选、是否前台回退与前置钩子。常量2是此快照中压缩传输重试上限，不是通用Agent重试标准。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>// Compact attempts can run much longer than normal turns, so keep the per-transport
+// retry budget smaller than the general Responses stream retry budget.
+const MAX_REMOTE_COMPACTION_V2_STREAM_RETRIES: u64 = 2;
+</code></pre></section><section class="source-card" id="source-C18"><h3>C18 · 取消与复用的固定测试案例</h3><p><a href="https://github.com/openai/codex/blob/86e17e98c7f901277aeeb4649cf1b01462b082f2/codex-rs/core/src/session/async_compaction_tests.rs">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/C18.md">本地中文研读笔记</a></p><p><strong>已取得范围：</strong><code>[[1, 210]]</code>（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：</strong><code>e4a048124b83f15ab2c5d23c33e39cfff556d70e</code>。</p><p>已读取参数化Rust测试，检查取消前不发请求、已启动请求在轮次取消后仍可复用，并断言只收到一次请求。没有在本环境执行该Rust测试。</p><p><strong>选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。</p><pre><code>    assert_eq!(summaries, ["prepared-summary"]);
+    assert_eq!(request.requests().len(), 1);
+    shutdown(&amp;sess).await;
+</code></pre></section><section class="source-card" id="source-A01"><h3>A01 · Building effective agents</h3><p><a href="https://www.anthropic.com/engineering/building-effective-agents">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A01.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2024-12-19。<strong>实际范围：</strong>完整正文的架构、工具设计与何时使用Agent部分。</p><p>流程预定与动态行动需要分开。先用满足目标的简单方案，出现真实的不确定步骤后再增加动态编排；原文列出的是可组合模式，不是所有任务必走的审批链。</p><p><strong>边界：</strong>不要推成“复杂任务必用多Agent”或固定角色数量。</p></section><section class="source-card" id="source-A02"><h3>A02 · Effective context engineering</h3><p><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A02.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-09-29。<strong>实际范围：</strong>上下文管理、按需取证、压缩和长任务部分。</p><p>信息选择既可提前组织，也可按需检索。压缩优先保留后续判断要用的事实和约束，再减少冗余；原始证据应能重读。</p><p><strong>边界：</strong>压缩保真是需要测量的能力，不是摘要长度达标就成立。</p></section><section class="source-card" id="source-A03"><h3>A03 · Writing tools for agents</h3><p><a href="https://www.anthropic.com/engineering/writing-tools-for-agents">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A03.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-09-11。<strong>实际范围：</strong>工具原型、评测、命名、响应格式与有效描述部分。</p><p>工具接口应减少猜测与无用返回，按任务选择简明或详细结果，同时保留后续调用必需的标识。工具改进要在代表性任务上验证。</p><p><strong>边界：</strong>简短响应不等于可以删除来源、版本或机器所需ID。</p></section><section class="source-card" id="source-A04"><h3>A04 · Multi-agent research system</h3><p><a href="https://www.anthropic.com/engineering/multi-agent-research-system">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A04.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-06-13。<strong>实际范围：</strong>多Agent架构、委派、工具、评测和生产经验部分。</p><p>并行研究需要明确子任务范围、资源预算和产物要求，用可追溯产物减少层层转述。协调和整合也有成本，适用性取决于问题能否分开。</p><p><strong>边界：</strong>研究系统的测量结果不直接证明代码修改任务同样获益。</p></section><section class="source-card" id="source-A05"><h3>A05 · Agent Skills</h3><p><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A05.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-10-16；原文注明2025-12-18更新。<strong>实际范围：</strong>技能结构、渐进发现、资源和安全部分。</p><p>技能先暴露概述，再按需读取正文及附属资源；可复用程序能降低重复生成的不稳定性。执行第三方脚本前仍要核实来源和权限。</p><p><strong>边界：</strong>技能描述不等于已经读取正文；技能文件不自动取得外部权限。</p></section><section class="source-card" id="source-A06"><h3>A06 · Long-running agent harnesses</h3><p><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A06.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-11-26。<strong>实际范围：</strong>初始化、增量工作、交接、测试和剩余挑战部分。</p><p>长任务需要可恢复的功能状态、工作记录和实际验收；每轮开始重建当前情况，结束留下可检查产物。进度声明不应代替测试。</p><p><strong>边界：</strong>初始化/编码角色是该案例设计，不是强制每个简单修改都分两Agent。</p></section><section class="source-card" id="source-A07"><h3>A07 · Agent evals</h3><p><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A07.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-01-09。<strong>实际范围：</strong>全文正文：任务/试验/判分定义、判分器、实施步骤与边界。</p><p>评测对象包括模型和Harness，最终环境结果与输出文本要区分。任务可有多个判分维度，样本应包含不该行动的反例，并用人工核对裁判。</p><p><strong>边界：</strong>不能把调用轨迹必须一模一样当成通用成功标准；关键安全顺序可单独检查。</p></section><section class="source-card" id="source-A08"><h3>A08 · Contextual Retrieval</h3><p><a href="https://www.anthropic.com/engineering/contextual-retrieval">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A08.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2024-09-19。<strong>实际范围：</strong>上下文增强、检索组合、重排和实验限制部分。</p><p>为块补充上下文再建立关键词及向量索引，可缓解块失去背景的问题；混合检索与重排各解决不同阶段。生成的上下文仍应与原文分开。</p><p><strong>边界：</strong>原文检索实验不是任意知识库的保证收益，也不是最终回答事实准确率。</p></section><section class="source-card" id="source-A09"><h3>A09 · Code execution with MCP</h3><p><a href="https://www.anthropic.com/engineering/code-execution-with-mcp">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A09.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-11-04。<strong>实际范围：</strong>工具发现、代码执行、数据处理与基础设施部分。</p><p>由代码组合工具并在执行环境过滤中间数据，可以少让模型阅读大批结果。工具网络请求不一定减少；执行环境仍需隔离、权限和资源限制。</p><p><strong>边界：</strong>减少模型可见内容不自动保证日志、工具服务器或外部服务不接触敏感数据。</p></section><section class="source-card" id="source-A10"><h3>A10 · Advanced tool use</h3><p><a href="https://www.anthropic.com/engineering/advanced-tool-use">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A10.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-11-24。<strong>实际范围：</strong>工具搜索、程序化调用、调用示例、取舍与上手部分。</p><p>工具搜索应对大量定义，程序化调用应对数据中转，示例应对复杂参数约定。应根据实际瓶颈分别评估，不把三个功能捆成默认流程。</p><p><strong>边界：</strong>旧文章中的Beta参数和模型支持不能直接复制为当前可运行接口。</p></section><section class="source-card" id="source-A11"><h3>A11 · Claude Code sandboxing</h3><p><a href="https://www.anthropic.com/engineering/claude-code-sandboxing">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A11.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-10-20。<strong>实际范围：</strong>文件系统/网络隔离、许可交互及实现说明部分。</p><p>文件系统与网络限制约束工具执行的破坏范围；批准对话和运行时隔离承担不同职责。模型指令无法替代系统边界。</p><p><strong>边界：</strong>有沙箱不等于所有远端工具和授权内的数据都安全，不能宣称彻底消除注入。</p></section><section class="source-card" id="source-A12"><h3>A12 · Infrastructure noise in coding evals</h3><p><a href="https://www.anthropic.com/engineering/infrastructure-noise">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A12.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-02-05。<strong>实际范围：</strong>资源上限、评测噪声及实验建议部分。</p><p>执行资源上限改变会改变任务可完成性。比较模型/Harness前，应固定或记录资源、超时与环境；失败分类要保留在统计口径里。</p><p><strong>边界：</strong>文章中的特定资源倍数不是所有任务的最优配置。</p></section><section class="source-card" id="source-A13"><h3>A13 · Harness design for long-running apps</h3><p><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A13.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-03-24。<strong>实际范围：</strong>规划/生成/评价、模型升级后简化、实验及附录正文。</p><p>独立评价可减少自评偏宽，但仍需要标准与校准。文章也展示随着模型变化移除重置和阶段编排；因此流程必须跟随任务与模型重新验证。</p><p><strong>边界：</strong>角色分离不是统计独立保证，也不证明更多Agent总是更优。</p></section><section class="source-card" id="source-A14"><h3>A14 · Managed agents</h3><p><a href="https://www.anthropic.com/engineering/managed-agents">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A14.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-04-08。<strong>实际范围：</strong>模型、Harness、会话和执行环境分离部分。</p><p>将可持久会话记录、推理控制和执行环境分开，可以分别处理故障和资源调度。日志仍需转成有用的模型上下文。</p><p><strong>边界：</strong>产品案例的首Token延迟改善不是本教材实测，也不是普遍性能结论。</p></section><section class="source-card" id="source-A15"><h3>A15 · Building a C compiler</h3><p><a href="https://www.anthropic.com/engineering/building-c-compiler">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A15.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-02-05。<strong>实际范围：</strong>并行编译器案例的任务划分、验证、瓶颈与局限部分。</p><p>多个工作者需要共享可检查任务、稳定测试和合并纪律。当全部工作者被同一问题阻塞时，调整测试与任务划分比继续增加并发更有意义。</p><p><strong>边界：</strong>实验产物的能力和缺点均需保留，不能写成生产级编译器已经被普遍替代。</p></section><section class="source-card" id="source-A16"><h3>A16 · Claude Code quality postmortem</h3><p><a href="https://www.anthropic.com/engineering/april-23-postmortem">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A16.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-04-23。<strong>实际范围：</strong>质量事件说明、三个原因、修复时间与后续措施。</p><p>这份复盘将具体质量变化关联到推理设置、上下文管理和产品提示变更。教材据此要求记录产品配置和版本，避免仅依据感受归因模型。</p><p><strong>边界：</strong>这是已披露的历史事件，不表示现在相同缺陷仍存在，也不适用于所有API用户。</p></section><section class="source-card" id="source-A17"><h3>A17 · Historical think-tool design</h3><p><a href="https://www.anthropic.com/engineering/claude-think-tool">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/A17.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2025-03-20；2025-12-15更新。<strong>实际范围：</strong>历史think工具设计、评测与文首更新声明。</p><p>历史上独立think工具用于复杂工具任务的中间整理。作者后来说明多数场景优先使用改进后的扩展思考，故教材保留历史方法而不列为必备步骤。</p><p><strong>边界：</strong>不把隐藏推理全文当交付证据；更长思考或更多调用本身不是正确性保证。</p></section><section class="source-card" id="source-D01"><h3>D01 · How Claude Code works</h3><p><a href="https://code.claude.com/docs/en/how-claude-code-works">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/D01.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-10-22检索快照。<strong>实际范围：</strong>Agent循环、上下文管理、工具与检查点相关小节。</p><p>会话历史、自动整理、工具和文件检查点是不同机制。检查点可恢复哪些文件应查具体产品文档，不能把它扩大成对任意远端副作用的事务回滚。</p><p><strong>边界：</strong>未读取该网站所有页面；公开产品说明不等于闭源服务源码。</p></section><section class="source-card" id="source-D02"><h3>D02 · Claude Code memory</h3><p><a href="https://code.claude.com/docs/en/memory">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/D02.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-10-22检索快照。<strong>实际范围：</strong>CLAUDE.md、AGENTS.md、导入、目录与记忆相关小节。</p><p>Claude Code文档明确CLAUDE.md与自动记忆的用途；AGENTS.md不是同等自动发现文件，需要显式引入等配置。目录被授权访问，也不意味着相关规则都已加载。</p><p><strong>边界：</strong>不把Codex的AGENTS规则自动套到Claude。</p></section><section class="source-card" id="source-D03"><h3>D03 · Claude Code subagents</h3><p><a href="https://code.claude.com/docs/en/sub-agents">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/D03.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-10-22检索快照。<strong>实际范围：</strong>上下文隔离、tools/skills、权限与内置Agent相关小节。</p><p>非fork子Agent从独立上下文开始；工具、预加载技能和权限有各自配置。所读文档注明Explore/Plan的精简规则行为，不能承诺自动继承主Agent所有已读内容。</p><p><strong>边界：</strong>fork/普通子Agent、不同版本及内置角色不可混为一谈。</p></section><section class="source-card" id="source-D04"><h3>D04 · Claude Code hooks</h3><p><a href="https://code.claude.com/docs/en/hooks">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/D04.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-10-22检索快照。<strong>实际范围：</strong>PreToolUse、PostToolUse、PostToolUseFailure及输出/日志相关小节。</p><p>前置改写与后置结果处理是不同时间点；Claude后置block追加原因并保留原结果，替换使用单独字段。原始结果可能在后置修改前已经记录。</p><p><strong>边界：</strong>文档有3271行，本轮核验上述相关小节，不声称逐项审查全部Hook事件。</p></section><section class="source-card" id="source-D05"><h3>D05 · Claude Code permissions</h3><p><a href="https://code.claude.com/docs/en/permissions">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/D05.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-10-22检索快照。<strong>实际范围：</strong>规则顺序、工具与运行时权限匹配小节。</p><p>读取的文档给出deny/ask/allow等规则评估顺序；工具是否出现在模型上下文与参数级执行时检查不能混同。最终行动仍受授权边界限制。</p><p><strong>边界：</strong>具体模式和配置属于检索时版本，不当成不可变标准。</p></section><section class="source-card" id="source-D06"><h3>D06 · Claude Code Skills</h3><p><a href="https://code.claude.com/docs/en/skills">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/D06.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-10-22检索快照。<strong>实际范围：</strong>技能发现、invocation控制、allowed-tools与子Agent预载小节。</p><p>菜单可见、允许模型调用、正文已加载和工具使用许可是不同状态；文档还区分正文保留与临时工具许可的生命周期。</p><p><strong>边界：</strong>按具体版本检查allowed-tools和禁用规则，不能只说“技能永远不能影响权限”。</p></section><section class="source-card" id="source-D07"><h3>D07 · Claude Code best practices</h3><p><a href="https://code.claude.com/docs/en/best-practices">官方出处／固定提交定位</a> · <a href="agent-practice/verified/reading-notes/D07.md">本地中文研读笔记</a></p><p><strong>日期／版本：</strong>2026-10-22检索快照。<strong>实际范围：</strong>可验证标准、探索/计划/实现与上下文管理小节。</p><p>先给可检查的完成标准，再根据问题是否不明、是否跨模块选择规划和验证深度。简单明确修改不应为了形式重复计划/评审。</p><p><strong>边界：</strong>这些是工程实践建议，不是产品对每次任务的强制控制流程。</p></section><h2 id="verification">可重复检查与未覆盖范围</h2><p>新增Python程序检查的是教学状态与资料清单，不是Codex Rust测试，也没有调用付费LLM或生产服务。旧测试记录标为历史；本次实际重跑结果另存。<a href="agent-practice/verified/test_verified_contracts.py">新增完整代码</a> · <a href="agent-practice/verified/test-results.json">本轮结果</a> · <a href="agent-practice/verified/QA.json">包内完整性检查</a></p><p><a href="agent-practice/verified/LICENSE-CODEX-APACHE-2.0.txt">Codex摘录Apache 2.0许可证</a> · <a href="agent-practice/verified/ATTRIBUTION.txt">署名与编辑说明</a>。本文是原创中文讲解，不是厂商原文的逐字翻译。</p></article></main></div><button aria-label="关闭目录" class="nav-backdrop" tabindex="-1" type="button"></button><button aria-label="回到顶部" class="back-top icon-button" data-top="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M12 20V5m-6 6 6-6 6 6"></path></svg></button><div aria-live="polite" class="toast" id="studio-toast" role="status"></div><dialog aria-label="搜索教材" class="studio-dialog" id="command-search"><div class="command-head"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><input aria-label="搜索概念、章节或题号" autocomplete="off" id="command-input" placeholder="搜索概念、章节或题号" spellcheck="false"/><button aria-label="关闭搜索" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><p class="command-hint" id="command-hint">输入关键词即可检索。</p><div class="command-results" id="command-results"></div><div class="command-foot"><span>↑ ↓ 选择　Enter 打开</span><span>Esc 关闭 · 仅本地搜索</span></div></dialog><dialog aria-labelledby="reading-settings-title" class="studio-dialog settings-dialog" id="reading-settings"><div class="settings-header"><h2 id="reading-settings-title">阅读设置</h2><button aria-label="关闭阅读设置" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><div class="setting-row"><label>正文字号</label><div class="setting-picks"><button aria-label="缩小正文字号" data-font="-1" type="button">A− 缩小</button><button aria-label="放大正文字号" data-font="1" type="button">A＋ 放大</button></div></div><div class="setting-row"><label>页面底色</label><div class="setting-picks"><button aria-pressed="true" data-paper-choice="sage" type="button">浅灰纸面</button><button aria-pressed="false" data-paper-choice="white" type="button">标准白纸</button></div></div><div class="setting-row"><label>正文宽度</label><div class="setting-picks"><button aria-pressed="false" data-width-choice="narrow" type="button">紧凑</button><button aria-pressed="true" data-width-choice="comfortable" type="button">舒适</button><button aria-pressed="false" data-width-choice="wide" type="button">宽幅</button></div></div><p class="setting-info">阅读设置仅保存在本机浏览器，不上传任何数据。</p></dialog><script src="../assets/app.js"></script><script src="../assets/visual-data.js"></script><script src="../assets/visual-player.js"></script><script src="../assets/catalog.js"></script><script src="../assets/atelier.js"></script><script src="../assets/reader-navigation.js"></script><script src="../assets/mechanisms.js"></script><script src="../assets/diagrams.js"></script></body></html>

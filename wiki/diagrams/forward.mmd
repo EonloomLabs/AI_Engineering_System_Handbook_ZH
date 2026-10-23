@@ -1,0 +1,19 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart TB
+ ID["ids, position_ids"] --> X["x = E[ids] + P[position_ids]"]
+ X --> N1["RMSNorm(x,g1)"]
+ N1 --> QKV["q=n1@Wq; k=n1@Wk; v=n1@Wv"]
+ QKV --> A["allowed mask + softmax(q@k^T / sqrt(4))"]
+ QKV --> V["v"]
+ A --> Mix["mix = A@v"]
+ V --> Mix
+ Mix --> Proj["attn_delta = mix@Wo"]
+ X -->|主路| R["residual = x + attn_delta"]
+ Proj --> R
+ R --> N2["RMSNorm(residual,g2)"]
+ N2 --> FF["ReLU(n2@W1)@W2"]
+ R -->|主路| H["hidden = residual + ff_delta"]
+ FF --> H
+ H --> NF["RMSNorm(hidden,gf)"]
+ NF --> Z["logits = final@U"]
+%% Sources: labs/model/lab/tiny_model.py:62-90

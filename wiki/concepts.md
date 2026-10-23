@@ -1,0 +1,2126 @@
+---
+title: "公式与术语：先认识对象，再理解运算"
+description: "AI系统工程：本地教学正文与可追溯图表"
+---
+
+概念与符号
+
+# 公式与术语：先认识对象，再理解运算
+
+
+<span id="reading-objects-1"></span>
+
+
+## 阅读数学式之前，先分清五类对象
+
+公式不是缩写词竞赛。一个符号可能是**本次输入、模型参数、计算出的中间值、尺寸或下标、执行规则或函数**。先给对象分类，再读它们的关系。下面的例子只解释记号，是独立的符号微例，不替换任何课程的主算例。
+
+| 类别 | 一般由谁提供 | 是否随本次输入改变 | 典型对象 |
+| --- | --- | --- | --- |
+| 输入与标签 | 用户数据、分词器或训练样本 | 会 | 输入编号、X、正确下一Token |
+| 模型参数 | 初始化程序、训练、已保存的权重文件 | 普通推理中通常不更新 | Embedding表、Wq/Wk/Wv、偏置、归一化参数 |
+| 中间计算结果 | 当前一轮前向运算 | 通常会 | Q/K/V、分数S、份额A、隐藏状态、logits |
+| 结构与尺寸 | 模型设计及当前请求长度 | 有些固定，有些随请求改变 | 层数、头数、每头宽度、当前有效长度 |
+| 操作与状态约束 | 程序、协议及任务规则 | 依具体条件构造 | Norm函数、softmax、mask、执行状态 |
+
+**“权重”有两种常见含义。** 参数矩阵W中的权重是模型保存的系数；注意力表A中的权重是当前输入算出的信息份额。它们都参与乘法，但来源和生命周期不同。“参数”一词也有两层：模型参数是学习出来的数；工具调用参数则是一次请求的字段，不能混同。
+
+
+<span id="reading-objects-2"></span>
+
+
+## 先用一句中文读完XW，再看矩阵尺寸
+
+`Y=XW`读作：“把X的每一行，按W每一列提供的系数组合，产生Y的各列。”例如X有两行、每行三个数，W有三行、每行两个数：
+
+```
+X[2,3] @ W[3,2] → Y[2,2]
+Y[i,j] = X[i,0]W[0,j] + X[i,1]W[1,j] + X[i,2]W[2,j]
+```
+
+这里i选X的哪一行，j选输出哪一列。不是把i和j传给另外一个模型。若X表示两个Token的位置，**一个输出格子的来源仍可追溯到同一输入位置的三个特征**。如果要跨Token混合，还需要另外沿位置轴进行的运算，例如注意力份额表乘Value表。
+
+`Wq`、`W_Q`和某些资料的`W^Q`都可能用来命名查询投影参数。它们是记号写法，不是三种独立算法。反过来，长得相同的字母在另一章节可能承担不同角色，因此本书不以字母外观代替局部定义。
+
+
+<span id="reading-objects-3"></span>
+
+
+## 大小写、下标、上标怎样读
+
+| 写法 | 逐字解释 | 小例子 |
+| --- | --- | --- |
+| `X`与`x_i` | 大写表包含多行，小写取一行 | X=[两行]；x₁是第1号位置那一排数 |
+| `x_{i,j}` | 先选第i行，再选第j个特征 | `X=[[1,2],[3,4]]`时x₁,₀=3 |
+| `W_Q` | Q是这张W的用途标签 | 用来生成Query，不是W乘Q |
+| `W_Q^(ℓ)` | ℓ标第几层的参数 | 第0层和第1层通常各自有W\_Q |
+| `Kᵀ` | 把K指定的行列轴交换 | 不是K的T次方 |
+| `∈ℝ^{m×n}` | 是一张m行n列的实数表 | 可以包含小数和负数 |
+| `Σ_j` | 对j列出的全部项相加 | 不代表把其他未列的轴也求和 |
+| `⊙` | 对应格子逐元素相乘 | `[1,2]⊙[3,4]=[3,8]` |
+| `@`或矩阵并排 | 矩阵乘法，乘后沿内侧维度相加 | `[1,2]@[3,4]ᵀ=11` |
+| `∂L/∂W`、`∇L` | 损失相对参数的变化率 | 算出梯度，不等于已经更新参数 |
+| `←` | 将右侧结果存回左侧 | w←w−ηg是一次更新 |
+
+从0开始的下标是一种编程约定。若另一个算例明确从1开始，就按它的声明读；不要把“第1号位置”和“第一项”未经说明地视为同一个对象。
+
+
+<span id="reading-objects-4"></span>
+
+
+## 不能把重复出现的字母永久固定成一个意思
+
+| 符号 | 常见的不同用法 | 怎样消除歧义 |
+| --- | --- | --- |
+| T | 序列长度；另有转置上标ᵀ | 看它是尺寸还是操作；温度优先写τ |
+| V | Value表；一些论文用V表示词表大小 | 看形状；本书词表规模尽量写Vocab或n\_vocab |
+| H、h | 头数；隐藏向量；图像高度 | 每个公式先注明对象，不能只凭字母判断 |
+| L | 层数；损失；排队系统平均任务数 | 看是不是一个计数、目标函数或运行统计量 |
+| W | 模型权重矩阵；Little定律中的平均停留时间 | 两种场景单位和对象类型都不同 |
+| β | LayerNorm偏移；Adam平滑系数；DPO设置系数 | 各章必须重新按当前公式解释 |
+| ε | 规范化稳定常数；有限差分步幅 | 都是小正数，但用途、取值和影响不同 |
+| A | 注意力份额表；LoRA的一个因子；比较方案A | 不能跨公式自动沿用形状或语义 |
+| π | 圆周率；概率策略符号π\_θ | 旋转角与策略概率分属不同计算 |
+| q、k | 注意力的一行；检索问题；Top-k保留数量 | 字母相同不等于数据相同 |
+
+如果一个章节从“两个Token的向量”转向“十篇文档的检索排名”，应当明确建立新输入。数学上两组数字都可以求和，不代表它们来自同一个运行过程。
+
+
+<span id="reading-objects-5"></span>
+
+
+## 函数名不是另一个神秘数据表
+
+`Norm(X)`表示调用规范化运算；`FFN(X)`表示调用前馈网络；`softmax(S)`表示按指定轴把分数转为份额。函数可能内部使用可学习参数，但函数名本身不是一排权重。
+
+以`U=X+Attention(Norm(X))`为例，应按顺序读：先对X规范化，Attention处理该结果，把注意力输出与原X相加，最后把整份结果叫U。**U只是给临时结果起名**。另一段公式也用U，不代表数值自动共享。连续算例若沿用U，会明确指向上一行。
+
+高级接口还可能把投影前的数据命名为`query/key/value`；底层接口的同名参数则可能是投影后的数据。查看“接口内部是否已经做了W变换”比只看参数名重要。公式与程序还可能分别采用右乘参数表和存转置后的权重布局；应先对齐布局，再对比数值。
+
+
+<span id="reading-objects-6"></span>
+
+
+## 程序里的数据、请求与状态也需要身份
+
+| 对象 | 例如 | 来自哪里 | 能证明什么 |
+| --- | --- | --- | --- |
+| 任务文字 | “检查a.py” | 用户 | 表达目标，不是文件内容 |
+| Schema | path必须是字符串 | 工具或API定义 | 结构约束，不证明文件存在 |
+| 调用参数 | `{"path":"a.py"}` | 模型提出、宿主校验 | 要调用的对象，不是执行结果 |
+| 调用标识 | `call_id="c7"` | 协议参与者 | 用来配对，不自动等于业务幂等键 |
+| 工具返回 | 文件内容、退出码 | 实际执行器 | 本次运行证据，需注明版本与范围 |
+| 任务状态 | pending、running、unknown、succeeded | 宿主状态管理 | 目前确认到了哪一步 |
+| 派生摘要 | “已修改，待测试” | 摘要过程 | 便于恢复，但不能替代原始证据 |
+
+“模型记住了”也至少分三层：推理缓存里的一组K/V、当前会话中的事实与摘要、跨会话检索出的长期记忆。应该问它保存的是哪种对象、什么时候写入、什么时候失效，而不是把三个层次都当成模型参数更新。
+
+
+<span id="reading-objects-7"></span>
+
+
+## 从基础到系统的依赖路径
+
+**模型计算路径：** 数字容器与形状 → Token编号与Embedding → 行列乘法 → 参数与中间结果 → Query/Key/Value → 分数与读取份额 → 掩码与位置 → 多头、输出投影、残差与前馈 → 输出Token与缓存。
+
+**训练路径：** 前向结果 → 正确标签与损失 → 导数和链式法则 → 各参数梯度 → 优化器状态与更新 → 后训练目标。不会导数时仍可以先读懂W怎样参与前向，不需要把“权重来自训练”误认为“必须先理解所有强化学习算法”。
+
+**Agent路径：** 请求与结构化数据 → 模型输出项 → 工具调用标识 → 权限与执行 → 事件与状态 → 上下文再组装 → 压缩恢复 → 多Agent协作。
+
+**知识和质量路径：** 原始证据 → 分块及索引 → 召回与重排 → 版本和权限 → 生成与引用 → 记忆生命周期 → 可检查的任务结果 → 统计比较与运行成本。
+
+进入一个新机制时，能回答“输入是哪个对象、参数从哪里来、实际算什么、结果供哪一步用”，再进入公式。下方概念索引为本书容易混淆的术语提供就地可读的定义、独立微例和对应的完整课程。
+
+
+<span id="concept-index"></span>
+
+
+## 概念索引：对象、来源、用途与独立微例
+
+以下微例只解释术语，不接续其他章节的输入。点击课程入口可阅读完整计算链。
+
+[线性投影与权重矩阵](concepts.md#concept-projection) [Wq / W\_Q：查询投影参数](concepts.md#concept-q-projection) [Wk / W\_K：键投影参数](concepts.md#concept-k-projection) [Wv / W\_V：值投影参数](concepts.md#concept-v-projection) [Query、Key、Value：三种中间数值表示](concepts.md#concept-qkv) [Wo / W\_O：注意力输出投影](concepts.md#concept-wo) [Wout、LM head：词表打分参数](concepts.md#concept-wout) [I：单位矩阵](concepts.md#concept-identity) [b / bias：加法偏置](concepts.md#concept-bias) [Σ：按下标逐项求和](concepts.md#concept-sum) [ᵀ、transpose：交换矩阵行列](concepts.md#concept-transpose) [⊙：逐元素乘，不是矩阵乘](concepts.md#concept-elementwise) [ReLU：逐格保留正数](concepts.md#concept-relu) [sigmoid：把单个数映射到0与1之间](concepts.md#concept-sigmoid) [SiLU：输入乘一份门控系数](concepts.md#concept-silu) [GELU：按输入大小平滑调节](concepts.md#concept-gelu) [SwiGLU、Wg/Wu/Wd：两路变换再合成](concepts.md#concept-swiglu) [FFN / MLP：逐位置前馈网络](concepts.md#concept-ffn) [Norm、LayerNorm、RMSNorm：不是概率归一化](concepts.md#concept-norm) [γ、β、ε：参数与稳定常数要分开](concepts.md#concept-norm-params) [pre-norm / post-norm：归一化放在何处](concepts.md#concept-prenorm) [残差连接：相加保留主路径](concepts.md#concept-residual) [√ / sqrt：平方根](concepts.md#concept-sqrt) [d\_k、d\_v、Dh：每行表示的宽度](concepts.md#concept-dk) [MHA、MQA、GQA：头怎样共享](concepts.md#concept-heads) [RoPE、旋转位置编码](concepts.md#concept-rope) [MoE、专家与路由器](concepts.md#concept-moe) [∂、∇：偏导与梯度](concepts.md#concept-gradient) [Jacobian：多输出的导数表](concepts.md#concept-jacobian) [loss、交叉熵、负对数似然](concepts.md#concept-loss) [标签、teacher forcing与shift](concepts.md#concept-labels) [优化器、Adam及AdamW](concepts.md#concept-optimizer) [π、π\_ref与β：偏好目标的符号](concepts.md#concept-beta-policy) [SFT：监督微调](concepts.md#concept-sft) [RLHF、奖励模型与策略](concepts.md#concept-rlhf) [DPO：由偏好对构造训练目标](concepts.md#concept-dpo) [PPO、GRPO、advantage](concepts.md#concept-ppo) [KL散度：有方向的分布差异](concepts.md#concept-kl) [LoRA、低秩及r](concepts.md#concept-lora) [量化、scale与zero point](concepts.md#concept-quantization) [FP32、FP16、BF16：存储数值的格式](concepts.md#concept-dtypes) [混合精度、loss scaling与主权重](concepts.md#concept-mixed) [checkpoint：必须看保存的对象](concepts.md#concept-checkpoint) [KV Cache与Prompt Cache](concepts.md#concept-cache) [Prefill / Decode：两种计算阶段](concepts.md#concept-prefill) [FlashAttention：改变中间数据存取方式](concepts.md#concept-flash) [PagedAttention：分页管理K/V存储](concepts.md#concept-paged) [HBM、SRAM与带宽](concepts.md#concept-memory-hardware) [FLOPs与FLOP/s：数量与速率](concepts.md#concept-flops) [DP、TP、PP、ZeRO与FSDP](concepts.md#concept-parallel) [temperature / τ：生成分布的温度](concepts.md#concept-temperature) [Top-k、Top-p与重新归一化](concepts.md#concept-topk) [推测解码：草稿与目标验证](concepts.md#concept-speculative) [Harness / 宿主程序](concepts.md#concept-harness) [API、SDK与调用边界](concepts.md#concept-api) [Schema与Structured Outputs](concepts.md#concept-schema) [SSE、chunk、delta：不同的分片层](concepts.md#concept-sse) [call\_id、item\_id、request\_id](concepts.md#concept-identifiers) [MCP、Host、Client、Server](concepts.md#concept-mcp) [JSON-RPC、stdio与HTTP](concepts.md#concept-jsonrpc) [OAuth、scope与授权](concepts.md#concept-oauth) [上下文组装与预算](concepts.md#concept-context) [Compaction：有损上下文缩减](concepts.md#concept-compaction) [Thread、Turn、Session：运行层次](concepts.md#concept-threadturn) [状态、事件与reducer](concepts.md#concept-state) [unknown / reconcile：缺少确认时先核验](concepts.md#concept-unknown) [幂等与idempotency key](concepts.md#concept-idempotent) [CAS、版本检查与TOCTOU](concepts.md#concept-cas) [ACID、事务与隔离](concepts.md#concept-transaction) [WAL、fsync与原子替换](concepts.md#concept-wal) [Outbox、Saga与补偿](concepts.md#concept-outbox) [退避、jitter与取消](concepts.md#concept-backoff) [TF、DF、IDF：词项统计量](concepts.md#concept-tfidf) [BM25及N、df、k₁、b](concepts.md#concept-bm25) [RRF：按排名融合](concepts.md#concept-rrf) [范数与余弦相似度](concepts.md#concept-cosine) [ANN与HNSW：近似检索结构](concepts.md#concept-ann) [bi-encoder、cross-encoder与重排](concepts.md#concept-rerank) [ColBERT与MaxSim](concepts.md#concept-colbert) [RAG与生成证据](concepts.md#concept-rag) [HyDE：假设文本只用于找材料](concepts.md#concept-hyde) [GraphRAG、RAPTOR与组织层次](concepts.md#concept-graphrag) [AST、LSP与调用关系](concepts.md#concept-astlsp) [TTL、有效时间与记录时间](concepts.md#concept-ttl) [semantic、episodic、procedural记忆](concepts.md#concept-memory-types) [Skill、JIT与触发描述](concepts.md#concept-skills) [DAG、依赖与关键路径](concepts.md#concept-dag) [Handoff与agent-as-tool](concepts.md#concept-handoff) [oracle、断言与变异测试](concepts.md#concept-tests) [Precision、Recall、MRR与nDCG](concepts.md#concept-metrics) [pass@k与pass^k](concepts.md#concept-passk) [Bootstrap、配对比较与置信区间](concepts.md#concept-bootstrap) [二项、标准误差与Wilson区间](concepts.md#concept-stats) [Trace、Span、Log、Metric](concepts.md#concept-trace) [TTFT、TPOT、p95与吞吐](concepts.md#concept-latency) [SLI、SLO与错误预算](concepts.md#concept-slo) [Little定律：L=λW的局部记号](concepts.md#concept-little) [Prompt Injection、沙箱与权限](concepts.md#concept-security) [Patch、图像通道与视觉投影](concepts.md#concept-patch) [CLIP与图文对比学习](concepts.md#concept-clip) [SAE、激活与可解释特征](concepts.md#concept-sae) [校准、置信度与弃答](concepts.md#concept-calibration) [σ：看清函数符号与统计量](concepts.md#concept-sigma)[G、dQ、dW：反传里的中间梯度](concepts.md#concept-upstream)[Concat、split与chunk：拼接与拆分](concepts.md#concept-concat)[Dropout：训练中的随机置零规则](concepts.md#concept-dropout)[logsumexp：先求指数和，再取对数](concepts.md#concept-logsumexp)[BatchNorm：跨样本统计不同于LayerNorm](concepts.md#concept-batchnorm)[C(n,k)、!：组合数量与阶乘](concepts.md#concept-combination)[O(·)：随规模增长的数量级](concepts.md#concept-big-o)[E、Π、∼、∝：概率式的常用记号](concepts.md#concept-probability-symbols)[BOS / EOS：序列边界标记](concepts.md#concept-bos-eos)[JSON：结构化文本，不是执行动作](concepts.md#concept-json)[LF、CRLF与EventSource](concepts.md#concept-linebreak)[ToolRouter、ToolCall、ToolInvocation](concepts.md#concept-tool-objects)[HEAD、工作树、ETag与内容指纹](concepts.md#concept-version-tools)[IDE、CLI、UI与DOM](concepts.md#concept-interface-environment)[DPR、DPI与坐标单位](concepts.md#concept-pixels)[MLA：学习得到的低维K/V表示](concepts.md#concept-mla)[SQL、SQLite与事务对象](concepts.md#concept-databases)
+
+
+<span id="concept-projection"></span>
+
+
+
+<span id="topic-1"></span>
+
+
+### 线性投影与权重矩阵
+
+投影是把输入特征按系数重新组合的运算；W是保存这些系数的模型参数表。输入X是本次数据，XW是本次计算结果。参数表常在训练中更新，在普通推理中从权重文件加载后保持固定。
+
+独立微例：x=[1,2]、W=[[3],[4]]，xW=[11]。W并不是11本身，也不是该词的ID。
+
+[进入对应完整课程](foundations/10.md)
+
+
+<span id="concept-q-projection"></span>
+
+
+
+<span id="topic-2"></span>
+
+
+### Wq / W\_Q：查询投影参数
+
+这是把输入表示变为Query的参数矩阵，不是Query本身。按本书右乘约定，输入每行d个数、Wq有d行d\_k列，Q=XWq后每行有d\_k个数。下标q表示用途，不表示再乘一个q。
+
+同一Wq可处理多个位置；每个位置得到自己的q。F11给出X、Wq和每个乘加结果。
+
+[进入对应完整课程](foundations/11.md)
+
+
+<span id="concept-k-projection"></span>
+
+
+
+<span id="topic-3"></span>
+
+
+### Wk / W\_K：键投影参数
+
+这是生成Key表示的模型参数表。K=XWk中的X来自当前注意力输入，K是这次算出的结果；Wk不是保存文档关键词或密钥的表。Q与K每行宽度要相同，才能做点积。
+
+在F11，x₁=[1,-1]乘Wk得到k₁=[0,1]。不是把原来的Token ID拿来当Key。
+
+[进入对应完整课程](foundations/11.md)
+
+
+<span id="concept-v-projection"></span>
+
+
+
+<span id="topic-4"></span>
+
+
+### Wv / W\_V：值投影参数
+
+这是从输入生成Value内容向量的模型参数表。V=XWv之后，Attention按读取份额混合V的各行。Value的宽度d\_v可与Query/Key宽度d\_k不同；它不是最终词表答案。
+
+F11中同一x₁=[1,-1]乘Wv得到v₁=[0,20]，再参与加权求和。
+
+[进入对应完整课程](foundations/11.md)
+
+
+<span id="concept-qkv"></span>
+
+
+
+<span id="topic-5"></span>
+
+
+### Query、Key、Value：三种中间数值表示
+
+q是接收信息的一行查询表示；k是可读位置提供的一行匹配表示；v是该位置供混合的一行内容表示。大写Q/K/V把多行收集成表。它们由输入与参数计算得到，分别承担打分与提供内容的职责。
+
+某个q与两个k点积得到两个分数；softmax得到两个份额；这些份额分别乘两行v，再相加。这里不生成搜索词，也不直接选答案。
+
+[进入对应完整课程](foundations/11.md)
+
+
+<span id="concept-wo"></span>
+
+
+
+<span id="topic-6"></span>
+
+
+### Wo / W\_O：注意力输出投影
+
+把各注意力头输出拼接后，再转换成主网络需要宽度的参数矩阵。它仍是一张系数表，不是softmax的份额，也不是词表输出头Wout。
+
+若两个头各输出2个数，拼接宽度4；右乘形状[4,6]的Wo，可得到6个数以匹配残差宽度。此为独立形状例。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-wout"></span>
+
+
+
+<span id="topic-7"></span>
+
+
+### Wout、LM head：词表打分参数
+
+把最后隐藏表示转换为每个词表候选分数的参数层。输入宽度d，词表有Vocab项，右乘的参数形状是[d,Vocab]。生成概率需再对这些分数归一化。
+
+注意力Wo输出的是隐藏特征；Wout输出的是词表候选分数。名字都含output，输出对象却不同。
+
+[进入对应完整课程](foundations/18.md)
+
+
+<span id="concept-identity"></span>
+
+
+
+<span id="topic-8"></span>
+
+
+### I：单位矩阵
+
+I在矩阵公式里通常是单位矩阵：对角线为1，其他位置为0。尺寸合适时，向量或矩阵乘I保持数值不变。Wq=Wk=I是人为选择的特例，不能推断真实模型的投影都相同。
+
+独立微例：I=[[1,0],[0,1]]，[3,-2]I=[3,-2]。这里I不是字母i表示的位置下标。
+
+[进入对应完整课程](foundations/07.md)
+
+
+<span id="concept-bias"></span>
+
+
+
+<span id="topic-9"></span>
+
+
+### b / bias：加法偏置
+
+偏置是线性乘法结果上再加的一排参数，按输出特征对齐。它和W一样可学习，但执行的是加法。省略偏置表示该例或该层没有这条加法，不是忘记乘某个矩阵。
+
+独立微例：xW=[3,1]、b=[0,-2]，xW+b=[3,-1]。
+
+[进入对应完整课程](foundations/10.md)
+
+
+<span id="concept-sum"></span>
+
+
+
+<span id="topic-10"></span>
+
+
+### Σ：按下标逐项求和
+
+Σ是加法的简写。下标指出哪项在变化；没有被求和的下标保持不变。它不是一个额外参数，也不表示把数组拼在一起。
+
+独立微例：Σᵢ xᵢyᵢ，x=[1,2]、y=[3,4]，就是1×3+2×4=11。
+
+[进入对应完整课程](foundations/07.md)
+
+
+<span id="concept-transpose"></span>
+
+
+
+<span id="topic-11"></span>
+
+
+### ᵀ、transpose：交换矩阵行列
+
+转置把原来的行变为列。QKᵀ的目的，是让Q的每一行分别和K的每一行做点积。高维张量一般只转置明确指定的两个轴。上标ᵀ不是序列长度T，也不是幂。
+
+独立微例：[[1,2],[3,4]]ᵀ=[[1,3],[2,4]]；它不等于保持顺序的reshape。
+
+[进入对应完整课程](foundations/08.md)
+
+
+<span id="concept-elementwise"></span>
+
+
+
+<span id="topic-12"></span>
+
+
+### ⊙：逐元素乘，不是矩阵乘
+
+逐元素乘把形状对齐后的同位置数相乘，不沿某个维度再求和。公式的并排矩阵或@通常表示矩阵乘，二者不可互换。
+
+独立微例：[1,2]⊙[3,4]=[3,8]，点积则为11。门控前馈里的⊙是在每个特征上调节另一路。
+
+[进入对应完整课程](foundations/07.md)
+
+
+<span id="concept-relu"></span>
+
+
+
+<span id="topic-13"></span>
+
+
+### ReLU：逐格保留正数
+
+ReLU是一个函数，规则是max(0,x)：负数改0，非负数保留。作用于一排数时逐格执行。它不是参数表，也不需要从别的Token取信息。
+
+独立微例：ReLU([3,-1])=[3,0]。去掉它就保留[3,-1]，后续乘法会不同。
+
+[进入对应完整课程](foundations/10.md)
+
+
+<span id="concept-sigmoid"></span>
+
+
+
+<span id="topic-14"></span>
+
+
+### sigmoid：把单个数映射到0与1之间
+
+函数规则是sigmoid(x)=1/(1+exp(-x))。它逐个数计算，不要求同一行结果的总和为1，所以不能用它直接代替多候选softmax。
+
+独立微例：sigmoid(0)=0.5；分别算两个0，得到[0.5,0.5]只是巧合，输入[1,1]的两项之和就大于1。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-silu"></span>
+
+
+
+<span id="topic-15"></span>
+
+
+### SiLU：输入乘一份门控系数
+
+SiLU(x)=x×sigmoid(x)。先把x映射到0与1之间，再乘回x本身，形成非线性。负数不会像ReLU那样一律变为0。
+
+独立微例：SiLU(0)=0；SiLU(1)约0.731059；SiLU(-1)约-0.268941。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-gelu"></span>
+
+
+
+<span id="topic-16"></span>
+
+
+### GELU：按输入大小平滑调节
+
+常用定义是GELU(x)=xΦ(x)，Φ是标准正态分布的累计概率函数。它让负输入和正输入受到不同程度的保留，并不是随机抽样。实现也可能采用近似公式。
+
+独立微例：Φ(0)=0.5，所以GELU(0)=0。这里Φ不是模型可学习的参数表。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-swiglu"></span>
+
+
+
+<span id="topic-17"></span>
+
+
+### SwiGLU、Wg/Wu/Wd：两路变换再合成
+
+这是门控前馈结构。Wg生成要过SiLU的一路，Wu生成另一条内容路径，两路逐元素相乘，再用Wd映回原宽度。这些W是三组参数，不是三个Agent。
+
+读(SiLU(XWg)⊙XWu)Wd时，先算XWg和XWu，再SiLU，再⊙，最后乘Wd。每个位置独立用同一组参数。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-ffn"></span>
+
+
+
+<span id="topic-18"></span>
+
+
+### FFN / MLP：逐位置前馈网络
+
+在Transformer语境里通常指对每个位置分别做线性变换、非线性、再线性变换的子网络。它加工特征，不在这一步直接给其他Token位置打权重。
+
+独立形状例：[B,T,4]→[B,T,8]→[B,T,4]。位置数T不变，改变的是每个位置的表示。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-norm"></span>
+
+
+
+<span id="topic-19"></span>
+
+
+### Norm、LayerNorm、RMSNorm：不是概率归一化
+
+Norm在层公式中表示一个规范化函数。LayerNorm通常按一个Token的特征减均值、除标准差，再缩放平移；RMSNorm通常不减均值，按均方根缩放。它们不等于softmax。
+
+独立微例，忽略稳定分母用的小正数ε与可学缩放：LayerNorm([1,3])=[-1,1]；RMSNorm([1,3])=[1/√5,3/√5]。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-norm-params"></span>
+
+
+
+<span id="topic-20"></span>
+
+
+### γ、β、ε：参数与稳定常数要分开
+
+在LayerNorm式子中，γ是一排可学习乘法系数，β是一排可学习加法系数；ε是人为设置的小正数，放在分母相关项中避免除零等问题。计算得到的均值μ、方差σ²又是本次数据的统计量。
+
+γ=1、β=0常表示每个特征都用1和0，不是一份输入词义。DPO里的β另指目标函数系数，不能套用这里的意思。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-prenorm"></span>
+
+
+
+<span id="topic-21"></span>
+
+
+### pre-norm / post-norm：归一化放在何处
+
+pre-norm是先规范化再进入子层，残差从原输入直接相加；post-norm是子层结果与原输入相加之后再规范化。这描述运算顺序，不是训练前后两个阶段。
+
+独立结构对照：x+F(Norm(x)) 与 Norm(x+F(x))一般不相等。F代表这里被包裹的子层函数。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-residual"></span>
+
+
+
+<span id="topic-22"></span>
+
+
+### 残差连接：相加保留主路径
+
+残差输出是原输入加上子层计算的结果。F(x)是该分支算出的数组，不是另一份历史文档。两边的形状与特征含义要适合相加。
+
+独立微例：x=[1,2]、F(x)=[0.3,-0.1]，得到[1.3,1.9]；用F(x)覆盖x会换掉函数。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-sqrt"></span>
+
+
+
+<span id="topic-23"></span>
+
+
+### √ / sqrt：平方根
+
+对非负数a，√a是平方等于a的非负数。sqrt(a)是代码中常见写法。除以√d\_k是用Query/Key特征数量的平方根缩放分数，不是再算一次softmax。
+
+独立微例：√4=2；√2约1.414214。d\_k=2时把分数1除以√2得到约0.707107。
+
+[进入对应完整课程](foundations/11.md)
+
+
+<span id="concept-dk"></span>
+
+
+
+<span id="topic-24"></span>
+
+
+### d\_k、d\_v、Dh：每行表示的宽度
+
+d\_k表示一个Query/Key向量有多少个分量；d\_v表示一个Value向量有多少个分量。Dh或d\_h在一些章节中是单头宽度。它们是尺寸整数，不是第k个Key或某个Value数值。
+
+形状微例：Q[2,3]、K[5,3]、V[5,4]，则分数[2,5]，输出[2,4]。Q/K配对宽度3，Value宽度4仍合法。
+
+[进入对应完整课程](foundations/11.md)
+
+
+<span id="concept-heads"></span>
+
+
+
+<span id="topic-25"></span>
+
+
+### MHA、MQA、GQA：头怎样共享
+
+一个注意力头是一套匹配并聚合内容的路径。MHA常让每个Query头有自己的K/V头；MQA让多个Query头共用一组K/V；GQA在两者之间，分组共享。它们是结构选择，不是运行时随便改一个开关。
+
+独立形状例：8个Query头、2个K/V头，若均匀分组，每4个Query头共享1组K/V；缓存按K/V头数记账。
+
+[进入对应完整课程](chapters/03.md)
+
+
+<span id="concept-rope"></span>
+
+
+
+<span id="topic-26"></span>
+
+
+### RoPE、旋转位置编码
+
+将Query和Key的特征两两组成二维组，按位置决定的角度旋转，再比较它们。R是旋转矩阵，θ是角度或角频率；位置编号不是Token ID。
+
+独立二维例：把[1,0]旋转90°得到[0,1]。实际模型常给不同特征对设置不同旋转频率，并非一律90°。
+
+[进入对应完整课程](foundations/13.md)
+
+
+<span id="concept-moe"></span>
+
+
+
+<span id="topic-27"></span>
+
+
+### MoE、专家与路由器
+
+MoE是包含多套子网络的模型结构；路由器为当前Token表示选择或加权少数专家。专家通常是数值子网络，不是被赋予“数学老师”等提示词的聊天Agent。
+
+独立例：有4个专家，每Token选2个，表示某次只激活其中2条专家路径；仍需保存模型设计要求的参数与路由状态。
+
+[进入对应完整课程](foundations/20.md)
+
+
+<span id="concept-gradient"></span>
+
+
+
+<span id="topic-28"></span>
+
+
+### ∂、∇：偏导与梯度
+
+∂L/∂w询问保持其他独立变量不变时，w小幅改变会让损失L怎样变化。多个参数的这些变化率合成梯度∇L。它们是导数记号，不是把两个普通数直接相除。
+
+独立微例：L=w²时，w=3处的梯度为6。最简单更新w←w−η×6中，η是学习率。
+
+[进入对应完整课程](foundations/15.md)
+
+
+<span id="concept-jacobian"></span>
+
+
+
+<span id="topic-29"></span>
+
+
+### Jacobian：多输出的导数表
+
+当函数有多个输入和输出，Jacobian用一张表记录每个输出对每个输入的偏导。J\_F表示函数F的这张表，不是训练数据里的新矩阵。
+
+独立微例：F([x₁,x₂])=[2x₁,3x₂]，J\_F=[[2,0],[0,3]]。残差x+F(x)的导数表为I+J\_F。
+
+[进入对应完整课程](foundations/15.md)
+
+
+<span id="concept-loss"></span>
+
+
+
+<span id="topic-30"></span>
+
+
+### loss、交叉熵、负对数似然
+
+损失是训练中衡量预测与目标差别的标量。单一正确Token标签的交叉熵等于它的负对数概率−ln p\_target。它是目标函数值，不是模型又输出的一个Token。
+
+独立微例：正确项概率0.8，损失约0.223144；若概率0.2，损失约1.609438。概率越偏离正确项，惩罚越大。
+
+[进入对应完整课程](foundations/16.md)
+
+
+<span id="concept-labels"></span>
+
+
+
+<span id="topic-31"></span>
+
+
+### 标签、teacher forcing与shift
+
+标签是要比较的正确目标；下一Token训练让输入位置对准后一Token。Teacher forcing使用数据中的真实前缀计算，而非用刚采样的结果替换它。
+
+独立例：完整序列[a,b,c,d]，可用输入[a,b,c]对标签[b,c,d]。接口已做移位时不能外面再移一次。
+
+[进入对应完整课程](foundations/16.md)
+
+
+<span id="concept-optimizer"></span>
+
+
+
+<span id="topic-32"></span>
+
+
+### 优化器、Adam及AdamW
+
+优化器把梯度转换为参数更新。Adam还保存每个参数的梯度滑动平均m和平方梯度滑动平均v；它们是训练状态，不是注意力Value。AdamW把权重衰减与自适应梯度更新解耦。
+
+独立首步例：g=2、m旧=0、β₁=0.9，则m新=0.2，偏差修正后m\_hat=2。不能把0.2直接当完整更新量。
+
+[进入对应完整课程](foundations/16.md)
+
+
+<span id="concept-beta-policy"></span>
+
+
+
+<span id="topic-33"></span>
+
+
+### π、π\_ref与β：偏好目标的符号
+
+在策略与偏好优化中，π表示条件概率策略，π\_ref表示固定参考策略；β是控制目标尺度或约束强度的设置系数。完整回答的概率由各Token条件概率构成。
+
+这里π不是圆周率，β不是LayerNorm的偏移参数。DPO式子的w/l是偏好与非偏好答案标记，不是权重w与层数L。
+
+[进入对应完整课程](foundations/17.md)
+
+
+<span id="concept-sft"></span>
+
+
+
+<span id="topic-34"></span>
+
+
+### SFT：监督微调
+
+用任务输入和期望回答作为训练样本，继续调整已有模型参数。它是训练过程，不是临时把例子塞进一次Prompt。
+
+独立例：输入“把时间换成UTC”，标签给正确转换结果，训练根据标签计算损失并改参数。只在对话里展示例子属于上下文提示。
+
+[进入对应完整课程](foundations/17.md)
+
+
+<span id="concept-rlhf"></span>
+
+
+
+<span id="topic-35"></span>
+
+
+### RLHF、奖励模型与策略
+
+RLHF泛指利用人类反馈训练行为的流程。奖励模型是对回答等行为打分的模型；策略是实际生成动作的概率模型。两者职责不同，得高奖励不自动等于事实正确。
+
+独立例：奖励器偏爱长回答，策略可能学会写长而不更准确；因此奖励判据需要验证。
+
+[进入对应完整课程](foundations/17.md)
+
+
+<span id="concept-dpo"></span>
+
+
+
+<span id="topic-36"></span>
+
+
+### DPO：由偏好对构造训练目标
+
+DPO根据同一输入的较优/较差回答及参考策略，直接构造偏好训练损失。它改变模型参数，不是一个叫“再想想”的提示词。
+
+先分清当前策略给两个回答的概率、参考策略的概率与偏好标签，再理解它们如何进入对数比。
+
+[进入对应完整课程](foundations/17.md)
+
+
+<span id="concept-ppo"></span>
+
+
+
+<span id="topic-37"></span>
+
+
+### PPO、GRPO、advantage
+
+这些是策略优化相关概念。PPO常用新旧动作概率比和裁剪来限制更新；GRPO类方法使用组内奖励比较构造优势。优势是相对基线的表现，不是答案正确概率。
+
+独立原始差值例：奖励[0,1,1]，减组均值2/3得到[-2/3,1/3,1/3]。算法还可能再归一化，不能直接混用。
+
+[进入对应完整课程](foundations/17.md)
+
+
+<span id="concept-kl"></span>
+
+
+
+<span id="topic-38"></span>
+
+
+### KL散度：有方向的分布差异
+
+对同一候选集合上的分布p和q，KL(p∥q)=Σpᵢln(pᵢ/qᵢ)。它衡量分布差异，通常不对称；q在p有正概率处为0时还会出现无限代价。
+
+独立例：p=[0.5,0.5]、q=[0.25,0.75]时约0.143841；不要当成欧氏距离或概率。
+
+[进入对应完整课程](foundations/17.md)
+
+
+<span id="concept-lora"></span>
+
+
+
+<span id="topic-39"></span>
+
+
+### LoRA、低秩及r
+
+LoRA用两个较小矩阵的乘积表示一部分权重增量，而不是重新训练整个大矩阵。r是中间维度，限制这个乘积的最大秩。不同资料采用行/列向量约定时，A、B的左右次序可能不同。
+
+右乘约定微例：W[4,6]，增量A[4,2]B[2,6]仍为[4,6]；r=2。A在这里不是注意力份额表。
+
+[进入对应完整课程](foundations/20.md)
+
+
+<span id="concept-quantization"></span>
+
+
+
+<span id="topic-40"></span>
+
+
+### 量化、scale与zero point
+
+量化用较少位的整数加尺度等元数据近似原浮点数。scale把整数刻度对应回实数，zero point把实数0映射到某个整数。它不是把语义特征改成one-hot。
+
+独立对称例：scale=0.1，0.26四舍五入为整数3，再反量化约0.3，已有近似误差。
+
+[进入对应完整课程](foundations/20.md)
+
+
+<span id="concept-dtypes"></span>
+
+
+
+<span id="topic-41"></span>
+
+
+### FP32、FP16、BF16：存储数值的格式
+
+这些名字描述浮点表示的位分配。FP32通常每数4字节，FP16和BF16每数2字节；两种16位格式的指数范围与尾数精度不同。位数不是模型隐藏维度。
+
+独立大小例：100个FP16数的数据本体是200字节，不含对象、分配器和对齐开销。
+
+[进入对应完整课程](foundations/06.md)
+
+
+<span id="concept-mixed"></span>
+
+
+
+<span id="topic-42"></span>
+
+
+### 混合精度、loss scaling与主权重
+
+混合精度在不同计算或状态中采用不同数值格式。主权重可用较高精度保存更新基准；loss scaling在反传前放大损失，随后再把梯度缩回，降低某些低精度下溢风险。
+
+并不是把学习率随意乘大。实际是否需要主权重或loss scaling取决于精度格式、优化器和实现。
+
+[进入对应完整课程](foundations/21.md)
+
+
+<span id="concept-checkpoint"></span>
+
+
+
+<span id="topic-43"></span>
+
+
+### checkpoint：必须看保存的对象
+
+模型检查点保存权重或训练状态；激活检查点保存少量中间节点以便反向时重算；Agent任务检查点保存执行进展。三者同名，但恢复对象完全不同。
+
+看到checkpoint先问“恢复参数、重算激活，还是继续任务”。Agent保存摘要不会更新模型权重。
+
+[进入对应完整课程](foundations/24.md)
+
+
+<span id="concept-cache"></span>
+
+
+
+<span id="topic-44"></span>
+
+
+### KV Cache与Prompt Cache
+
+KV缓存保存特定模型、前缀与位置条件下各层的K/V数值；Prompt Cache是服务在满足条件时复用相同前缀计算的机制。它们都不是长期事实记忆。
+
+追加新Token且旧因果前缀未变时，旧K/V可复用；把历史改写为摘要通常改变输入，不能当作原缓存不变。
+
+[进入对应完整课程](foundations/19.md)
+
+
+<span id="concept-prefill"></span>
+
+
+
+<span id="topic-45"></span>
+
+
+### Prefill / Decode：两种计算阶段
+
+Prefill处理已经给定的一段输入，形成表示与缓存；Decode把刚选出的新Token送入，预测再下一个。选出来的新Token要到下一次前向才产生自己的K/V。
+
+独立时序：先处理[a,b,c]选d，此刻缓存覆盖3个已处理位置；处理d之后才覆盖4个，再选e。
+
+[进入对应完整课程](foundations/18.md)
+
+
+<span id="concept-flash"></span>
+
+
+
+<span id="topic-46"></span>
+
+
+### FlashAttention：改变中间数据存取方式
+
+通过分块和在线归一化等方式，避免把完整注意力分数/权重矩阵长期写到较慢显存；目标仍是同一个注意力运算，浮点舍入可随运算次序变化。
+
+它不是把Token永久压缩，也不是跳过所有Key。区分“不把整张表落显存”与“没有进行这些数学计算”。
+
+[进入对应完整课程](chapters/07.md)
+
+
+<span id="concept-paged"></span>
+
+
+
+<span id="topic-47"></span>
+
+
+### PagedAttention：分页管理K/V存储
+
+把逻辑连续的K/V序列存到多个物理块，通过块表定位。它主要改变存储管理与共享方式，不把注意力公式替换成另一种语义算法。
+
+独立例：逻辑位置0—3在物理块7、4—7在块2；逻辑第4个位置不必物理紧跟第3个位置。
+
+[进入对应完整课程](chapters/07.md)
+
+
+<span id="concept-memory-hardware"></span>
+
+
+
+<span id="topic-48"></span>
+
+
+### HBM、SRAM与带宽
+
+HBM在此指GPU较大容量的高带宽显存；SRAM相关片上存储通常更小、访问更近。带宽是一段时间能搬多少字节；算术强度是计算量相对于数据搬运量的比值。
+
+独立记账：执行100次运算搬10字节，约10次运算/字节。它不是实际硬件性能测量。
+
+[进入对应完整课程](foundations/21.md)
+
+
+<span id="concept-flops"></span>
+
+
+
+<span id="topic-49"></span>
+
+
+### FLOPs与FLOP/s：数量与速率
+
+FLOPs通常表示浮点运算数量；FLOP/s表示每秒的运算速率。论文或厂商对乘加计一次还是两次可能不同，需要固定口径。
+
+不能只用总运算量除理论峰值就承诺真实耗时：搬运、排队、通信和实际利用率也有成本。
+
+[进入对应完整课程](foundations/21.md)
+
+
+<span id="concept-parallel"></span>
+
+
+
+<span id="topic-50"></span>
+
+
+### DP、TP、PP、ZeRO与FSDP
+
+数据并行让多份模型处理不同样本并同步梯度；张量并行拆分一次算子的参数/计算；流水线并行把不同层放不同设备。ZeRO/FSDP类技术还会切分参数、梯度或优化器状态。
+
+它们拆的对象不同：一层矩阵分两块，不等于把两个独立用户任务分给两位Agent。
+
+[进入对应完整课程](foundations/21.md)
+
+
+<span id="concept-temperature"></span>
+
+
+
+<span id="topic-51"></span>
+
+
+### temperature / τ：生成分布的温度
+
+正温度τ通常用来把logits除以τ后再softmax。τ小会使分布更集中，τ大更平缓；全部分数减同一常数则不改变数学分布。
+
+独立对照：[2,1,0]在τ=2时先变[1,0.5,0]；不能把τ=1的概率接作这一步结果。
+
+[进入对应完整课程](chapters/06.md)
+
+
+<span id="concept-topk"></span>
+
+
+
+<span id="topic-52"></span>
+
+
+### Top-k、Top-p与重新归一化
+
+Top-k保留概率最高的k项；Top-p按概率降序保留累计概率达到阈值的候选前缀。用于抽样时，被保留的候选需按剩余总质量重新归一化。
+
+这里k是候选数量，p是累计概率阈值；不是注意力Key表K，也不是表示维度d\_k。
+
+[进入对应完整课程](chapters/06.md)
+
+
+<span id="concept-speculative"></span>
+
+
+
+<span id="topic-53"></span>
+
+
+### 推测解码：草稿与目标验证
+
+先由较便宜的草稿机制提出若干Token，再由目标模型验证。保持目标分布的算法需要规定接受概率和拒绝后的纠正分布，而不是只检查文字“看起来对”。
+
+一次验证可检查多个候选的条件分布；是否提速取决于接受率、计算与调度成本。教学分布例不等于真实吞吐测试。
+
+[进入对应完整课程](chapters/06.md)
+
+
+<span id="concept-harness"></span>
+
+
+
+<span id="topic-54"></span>
+
+
+### Harness / 宿主程序
+
+这是围绕模型运行的程序：准备请求、解析模型输出、检查工具权限、执行动作、保存状态并再次调用模型。它不是模型参数内部的一层。
+
+同一句“读文件”，模型产出的是调用数据；Harness才调用文件接口，把实际返回内容放进下一轮输入。
+
+[进入对应完整课程](foundations/22.md)
+
+
+<span id="concept-api"></span>
+
+
+
+<span id="topic-55"></span>
+
+
+### API、SDK与调用边界
+
+API是程序之间可调用的接口约定；SDK是便于调用这些接口的一组程序库。安装SDK不会自动训练模型、获得权限或保证任务正确。
+
+请求“读取路径a.py”与返回“该文件的字节内容”，是通过接口交互的两个对象。
+
+[进入对应完整课程](foundations/23.md)
+
+
+<span id="concept-schema"></span>
+
+
+
+<span id="topic-56"></span>
+
+
+### Schema与Structured Outputs
+
+Schema是一份字段和类型等结构规则；结构化输出机制让模型更容易返回符合规则的数据。字段合法仍不等于目标文件存在、已授权或业务正确。
+
+独立例：要求path为字符串；{"path":3}类型不合规则，{"path":"missing.py"}虽结构合规则仍可能找不到文件。
+
+[进入对应完整课程](foundations/23.md)
+
+
+<span id="concept-sse"></span>
+
+
+
+<span id="topic-57"></span>
+
+
+### SSE、chunk、delta：不同的分片层
+
+SSE是服务端发送事件的文本协议；网络chunk是这次收到的一段字节；delta是某个输出项的增量内容。三者边界不保证重合。一个完整事件也未必意味着完整工具参数。
+
+参数可能先收到{"path":"a，后收到.py"}；必须组装并等协议规定的完成条件，不能见到片段就执行。
+
+[进入对应完整课程](foundations/23.md)
+
+
+<span id="concept-identifiers"></span>
+
+
+
+<span id="topic-58"></span>
+
+
+### call\_id、item\_id、request\_id
+
+这些是不同层对象的标识：工具调用、输出项、请求或响应。用来把增量和结果配回正确对象，不是模型输入的Token ID，也不天然是业务幂等键。
+
+两次read\_file可分别有c1与c2；结果返回顺序颠倒时仍按调用标识配对，而不是按工具名称猜。
+
+[进入对应完整课程](foundations/23.md)
+
+
+<span id="concept-mcp"></span>
+
+
+
+<span id="topic-59"></span>
+
+
+### MCP、Host、Client、Server
+
+MCP是一种让AI宿主连接工具和资源的协议。Host是应用，Client是它内部的协议连接参与者，Server提供能力。连接、发现、向模型暴露、授权与实际调用是不同步骤。
+
+工具在Server上存在，不意味着子Agent的请求里已经有它的描述，也不意味着当前用户可执行。
+
+[进入对应完整课程](foundations/25.md)
+
+
+<span id="concept-jsonrpc"></span>
+
+
+
+<span id="topic-60"></span>
+
+
+### JSON-RPC、stdio与HTTP
+
+JSON-RPC约定怎样用JSON表示方法、参数、标识和结果；stdio使用进程标准输入输出通信；HTTP是另一层网络请求协议。协议名称并不自带权限。
+
+用stdout承载协议消息时，普通调试日志应避免混入该数据流，通常写stderr；否则合法日志也可能破坏消息解析。
+
+[进入对应完整课程](foundations/25.md)
+
+
+<span id="concept-oauth"></span>
+
+
+
+<span id="topic-61"></span>
+
+
+### OAuth、scope与授权
+
+在授权场景，OAuth使应用能按授权取得访问凭据；scope声明一类访问范围，资源服务仍应检查具体权限。在记忆或任务场景，scope又可只表示适用范围，不能混成登录凭据。
+
+获准“读取日历”不等于获准删除所有事件；连接成功也不证明操作被批准。
+
+[进入对应完整课程](foundations/25.md)
+
+
+<span id="concept-context"></span>
+
+
+
+<span id="topic-62"></span>
+
+
+### 上下文组装与预算
+
+从指令、任务、检索证据、工具结果和当前状态中选取内容，整理为本次模型请求。预算是能容纳多少输入及预留输出等限制，不是让模型永久记住全部材料。
+
+一条证据要连同来源、适用版本和关键条件进入请求；只保留一句结论可能改变其含义。
+
+[进入对应完整课程](foundations/26.md)
+
+
+<span id="concept-compaction"></span>
+
+
+
+<span id="topic-63"></span>
+
+
+### Compaction：有损上下文缩减
+
+在上下文过长时，以摘要、选取或特定压缩状态替换一部分历史。它保存的表示不等于所有原始细节；可恢复的执行状态和原始证据仍应分开管理。
+
+“未测试”不能压成“测试通过”；“调用超时，效果未知”也不能压成“调用失败”。
+
+[进入对应完整课程](foundations/27.md)
+
+
+<span id="concept-threadturn"></span>
+
+
+
+<span id="topic-64"></span>
+
+
+### Thread、Turn、Session：运行层次
+
+这些通常是宿主对会话和工作轮次的划分，不是神经网络的层。Thread可指一条会话，Turn可包含响应一次用户任务所需的多次模型/工具循环；具体边界取决于产品。
+
+不能把“本轮完成”直接等同“所有外部工具都已结束”；需要看实际事件和结果。
+
+[进入对应完整课程](foundations/24.md)
+
+
+<span id="concept-state"></span>
+
+
+
+<span id="topic-65"></span>
+
+
+### 状态、事件与reducer
+
+状态表示现在知道和完成了什么；事件记录发生过什么；reducer是把旧状态与事件合成新状态的程序规则。它不必调用模型。事件溯源可用事件重建状态。
+
+独立例：旧状态pending，收到带operation\_id的确认事件后改为succeeded；没有确认时不能仅据生成的总结改状态。
+
+[进入对应完整课程](foundations/24.md)
+
+
+<span id="concept-unknown"></span>
+
+
+
+<span id="topic-66"></span>
+
+
+### unknown / reconcile：缺少确认时先核验
+
+unknown表示观察者尚不能确认效果，不代表现实中动作半成功。Reconcile是根据目标系统的实际状态、操作标识等进行核验，使记录重新与事实一致。
+
+写文件后响应丢失：文件可能已改。应先读回核验，而不是把超时解释为“肯定没写”并重复追加。
+
+[进入对应完整课程](foundations/33.md)
+
+
+<span id="concept-idempotent"></span>
+
+
+
+<span id="topic-67"></span>
+
+
+### 幂等与idempotency key
+
+幂等表示重复相同逻辑操作，在规定语义下与执行一次具有同样预期效果。幂等键标识同一操作意图；系统须在可靠边界上去重并核验请求含义。
+
+把值设为10可设计为幂等；把值加10重复执行会累加。每次重试换新键，就不能利用原键去重。
+
+[进入对应完整课程](foundations/33.md)
+
+
+<span id="concept-cas"></span>
+
+
+
+<span id="topic-68"></span>
+
+
+### CAS、版本检查与TOCTOU
+
+CAS是比较预期版本/值仍匹配后再更新的受控操作。TOCTOU是检查与使用之间发生变化的竞态：分开的“先看版本再写”不自动等价原子CAS。
+
+读到版本7生成补丁，提交时已是8，应拒绝直接覆盖并重新处理；比较与写入间也要防并发插入。
+
+[进入对应完整课程](foundations/33.md)
+
+
+<span id="concept-transaction"></span>
+
+
+
+<span id="topic-69"></span>
+
+
+### ACID、事务与隔离
+
+事务把一组数据库操作放在规定的提交边界内。ACID分别指原子性、一致性、隔离性、持久性；实际保证还依赖隔离级别、配置及资源边界。
+
+数据库事务提交不代表另一个邮件服务也同步提交。把两种操作写进同一函数，并不会自动构成跨系统事务。
+
+[进入对应完整课程](foundations/33.md)
+
+
+<span id="concept-wal"></span>
+
+
+
+<span id="topic-70"></span>
+
+
+### WAL、fsync与原子替换
+
+WAL是先记录日志再按协议更新数据的思路；fsync请求同步文件相关数据到存储；原子重命名在支持条件下使读者不见半截替换。可见性与崩溃后的持久性不是同一保证。
+
+一个文件rename成功，不意味着多个文件和数据库一起提交；持久性还需核对平台、目录及存储行为。
+
+[进入对应完整课程](foundations/33.md)
+
+
+<span id="concept-outbox"></span>
+
+
+
+<span id="topic-71"></span>
+
+
+### Outbox、Saga与补偿
+
+Outbox把业务变更和待发送消息一起持久化，再由投递器转发；Saga把跨服务步骤组织为可补偿流程。它们是解决跨边界可靠性的设计，不是天然保证远端恰好执行一次。
+
+发过的邮件通常不能让收件人“没看过”。补偿可能是发更正通知，不能等同真正撤销历史效果。
+
+[进入对应完整课程](chapters/21.md)
+
+
+<span id="concept-backoff"></span>
+
+
+
+<span id="topic-72"></span>
+
+
+### 退避、jitter与取消
+
+退避让重试间隔增加；jitter加入随机扰动避免请求同时重试。取消信号是请求停止的通知，不自动撤回已经提交的外部副作用。
+
+只读请求暂时连接失败可重试；写请求结果未知时先核验。不能用“重试更久”代替权限或幂等设计。
+
+[进入对应完整课程](foundations/33.md)
+
+
+<span id="concept-tfidf"></span>
+
+
+
+<span id="topic-73"></span>
+
+
+### TF、DF、IDF：词项统计量
+
+TF计某词在当前文档出现次数；DF计包含它的文档数；IDF根据全库统计降低常见词、提高较罕见词的区分贡献。三者是统计量，不是模型的学习率。
+
+10篇文档只有2篇含某词时DF=2；该词在其中一篇出现3次，该篇TF=3。两个数字不能互换。
+
+[进入对应完整课程](foundations/28.md)
+
+
+<span id="concept-bm25"></span>
+
+
+
+<span id="topic-74"></span>
+
+
+### BM25及N、df、k₁、b
+
+BM25是词项检索打分公式。常见记号N是文档总数，df是含该词的文档数，tf是当前文档词频，|D|是当前文档长度，avgdl是平均长度；k₁和b是词频饱和与长度修正的设置。
+
+k₁不是Key向量k₁，b也不是神经网络偏置。分数只用于给候选排序，不能把8.2解释为82%正确率。
+
+[进入对应完整课程](foundations/28.md)
+
+
+<span id="concept-rrf"></span>
+
+
+
+<span id="topic-75"></span>
+
+
+### RRF：按排名融合
+
+RRF对某文档在每条召回路径上的排名r贡献1/(c+r)，再相加。c是平滑常数，r通常从1开始；没进入某条路径的候选不凭空获得该路贡献。
+
+独立例：c=10，某文档两路排名1、3，得1/11+1/13约0.167832。不是把BM25和余弦的原始分数相加。
+
+[进入对应完整课程](foundations/29.md)
+
+
+<span id="concept-cosine"></span>
+
+
+
+<span id="topic-76"></span>
+
+
+### 范数与余弦相似度
+
+向量的常用L2范数是各分量平方求和后开方。余弦相似度是点积除以两个范数的乘积，主要比较方向；任一向量为零时需明确处理。
+
+独立例：[1,0]与[2,0]点积2、范数乘积2，余弦1。它不是Attention未经归一化的原始点积。
+
+[进入对应完整课程](foundations/28.md)
+
+
+<span id="concept-ann"></span>
+
+
+
+<span id="topic-77"></span>
+
+
+### ANN与HNSW：近似检索结构
+
+ANN在这里指近似最近邻搜索，不是泛指人工神经网络。HNSW是一种用分层近邻图缩小搜索范围的结构；参数影响召回、速度和内存。
+
+查得快不代表一定找全精确最近邻；ANN召回率也不等于最终回答正确率。
+
+[进入对应完整课程](foundations/28.md)
+
+
+<span id="concept-rerank"></span>
+
+
+
+<span id="topic-78"></span>
+
+
+### bi-encoder、cross-encoder与重排
+
+双编码器分别编码查询与文档，可以预存文档向量；交叉编码器共同处理一对查询与文档，做更细判断，通常每对都要算。重排仅排序已经召回的候选。
+
+遗漏的正确文档不在候选集内，再强的重排器也不能直接把它排第一；需要先补召回。
+
+[进入对应完整课程](foundations/29.md)
+
+
+<span id="concept-colbert"></span>
+
+
+
+<span id="topic-79"></span>
+
+
+### ColBERT与MaxSim
+
+ColBERT类方法为查询和文档保留多个Token向量，再做后期交互。常见MaxSim让每个查询Token取与文档Token的最大相似度，再汇总。
+
+它不是“整篇文档只有一个向量”的双编码检索，也不是生成模型每层的自注意力输出。
+
+[进入对应完整课程](chapters/16.md)
+
+
+<span id="concept-rag"></span>
+
+
+
+<span id="topic-80"></span>
+
+
+### RAG与生成证据
+
+检索增强生成是一条应用流程：先获得外部材料，再让生成模型据此回答。检索材料不是用户新指令；有引用也仍需检查引用是否真的支持断言。
+
+查到“重试概述”不等于足够回答“这一版本写操作是否可自动重试”；还需适用条件、版本和例外。
+
+[进入对应完整课程](foundations/29.md)
+
+
+<span id="concept-hyde"></span>
+
+
+
+<span id="topic-81"></span>
+
+
+### HyDE：假设文本只用于找材料
+
+用模型生成一份假设性的回答或文档，将其表示用于检索。这份生成文本是寻找证据的辅助，不是已经找到的事实来源。
+
+模型猜“可能是缓存失效”，可以据此扩大搜索；没有真实证据前不能写成“缓存失效已确认”。
+
+[进入对应完整课程](foundations/29.md)
+
+
+<span id="concept-graphrag"></span>
+
+
+
+<span id="topic-82"></span>
+
+
+### GraphRAG、RAPTOR与组织层次
+
+GraphRAG类方法利用实体关系及社区等组织信息；RAPTOR利用分层聚类与摘要支持检索。它们引入额外派生信息，也引入更新、来源和错误传播问题。
+
+源文档改变时，旧摘要或图中的关系可能过期。改了原文并不证明所有派生索引已同步更新。
+
+[进入对应完整课程](foundations/29.md)
+
+
+<span id="concept-astlsp"></span>
+
+
+
+<span id="topic-83"></span>
+
+
+### AST、LSP与调用关系
+
+AST是代码语法结构树；LSP是编辑器与语言服务交换定义、引用、诊断等信息的协议。语法树可从代码解析得到，跨文件语义常还需语言和项目环境。
+
+出现同名字符串不一定调用同一个函数；字符串拼接、反射等动态行为也可能超出静态分析能确定的范围。
+
+[进入对应完整课程](foundations/30.md)
+
+
+<span id="concept-ttl"></span>
+
+
+
+<span id="topic-84"></span>
+
+
+### TTL、有效时间与记录时间
+
+TTL是存储或缓存的到期设置；有效时间指事实何时适用；记录时间指系统何时知道。到期策略不能代替事实和来源核验。
+
+10月10日才读到10月1日生效的规则：业务有效时间从1日算，系统知道这件事的时间从10日算。
+
+[进入对应完整课程](foundations/31.md)
+
+
+<span id="concept-memory-types"></span>
+
+
+
+<span id="topic-85"></span>
+
+
+### semantic、episodic、procedural记忆
+
+语义记忆保存事实，情景记忆保存经历，程序性记忆保存有条件的方法；工作记忆服务当前任务。CoALA是分析这类认知架构的框架，MemGPT研究有限上下文与外部存储的组织。
+
+“p7补丁漏测失败”是经历；“当前需支持Windows”是事实；“改路径规则时检查分隔符”是有条件流程，不可直接升级成所有任务都跑全量测试。
+
+[进入对应完整课程](foundations/31.md)
+
+
+<span id="concept-skills"></span>
+
+
+
+<span id="topic-86"></span>
+
+
+### Skill、JIT与触发描述
+
+在能力加载场景，Skill是一组可复用指导与资源；JIT表示需要时再加载，不是必然指编译器即时编译。触发描述帮助模型判断适用性，不自动授予工具权限。
+
+应先判断任务需不需要某技能，再读详细内容；已加载技能不等于它的要求已实际执行。
+
+[进入对应完整课程](foundations/32.md)
+
+
+<span id="concept-dag"></span>
+
+
+
+<span id="topic-87"></span>
+
+
+### DAG、依赖与关键路径
+
+DAG是有方向且没有环的任务依赖图。箭头A→B表示B依赖A完成；关键路径是在给定任务时长与依赖下决定最早完成时间的最长依赖链。
+
+独立例：A需2秒，B/C依赖A分别需3/5秒且可并行，则A后两者完成至少7秒，不是把2+3+5=10当墙钟时间。
+
+[进入对应完整课程](foundations/32.md)
+
+
+<span id="concept-handoff"></span>
+
+
+
+<span id="topic-88"></span>
+
+
+### Handoff与agent-as-tool
+
+Handoff是把控制权交给另一个Agent；agent-as-tool把子Agent当作可调用组件，结果返回当前控制者。Orchestrator是负责分配与整合的协调程序或Agent。
+
+委派时需要任务、边界、证据和完成条件；不要求把主会话所有历史照搬过去。
+
+[进入对应完整课程](foundations/32.md)
+
+
+<span id="concept-tests"></span>
+
+
+
+<span id="topic-89"></span>
+
+
+### oracle、断言与变异测试
+
+断言比较实际结果与预期；oracle是预期来自什么可靠判据；性质测试检查一般规律；变异测试故意放入小错误，看测试是否会失败。
+
+始终返回True的排除函数能通过单个正例；“src/a.py不应被排除”这个反例才可能揭穿它。
+
+[进入对应完整课程](foundations/34.md)
+
+
+<span id="concept-metrics"></span>
+
+
+
+<span id="topic-90"></span>
+
+
+### Precision、Recall、MRR与nDCG
+
+精确率看返回结果中有多少相关；召回率看应找相关中找到了多少；MRR平均第一个正确项的排名倒数；nDCG考虑相关程度和排序位置并相对理想排序归一化。
+
+独立例：应找5篇，返回4篇其中3篇相关，精确率3/4，召回率3/5。不要把这两个分母互换。
+
+[进入对应完整课程](foundations/35.md)
+
+
+<span id="concept-passk"></span>
+
+
+
+<span id="topic-91"></span>
+
+
+### pass@k与pass^k
+
+pass@k类指标通常关心k次尝试至少一次成功；pass^k类指标强调多次全成功。具体估计口径看基准，不能把一次成功后停止与每次都可靠混为一谈。
+
+独立同概率假设p=0.8，3次至少一成=0.992，3次全成=0.512。真实任务相关或难度不同则需另算。
+
+[进入对应完整课程](foundations/35.md)
+
+
+<span id="concept-bootstrap"></span>
+
+
+
+<span id="topic-92"></span>
+
+
+### Bootstrap、配对比较与置信区间
+
+Bootstrap从已有样本有放回重抽以观察指标波动；配对比较应把同一任务的A/B结果一起抽取。置信区间来自规定抽样程序，不是模型对答案的自信程度。
+
+把A/B任务配对拆散，会额外混入题目难度差异；更多重采样也不能修复原任务集不代表真实业务的问题。
+
+[进入对应完整课程](foundations/36.md)
+
+
+<span id="concept-stats"></span>
+
+
+
+<span id="topic-93"></span>
+
+
+### 二项、标准误差与Wilson区间
+
+二项模型常用于固定次数独立成功/失败试验；标准误差描述估计量的波动尺度；Wilson是一种比例区间构造。McNemar关注配对分类结果中两种方向的不一致。
+
+样本依赖、任务难度混合或挑选题目会改变可解释范围；统计公式不是“成绩提高必定来自这个改动”的证据。
+
+[进入对应完整课程](foundations/36.md)
+
+
+<span id="concept-trace"></span>
+
+
+
+<span id="topic-94"></span>
+
+
+### Trace、Span、Log、Metric
+
+Trace串起一个任务的相关操作，Span记录其中一次操作的时间和属性，Log记录事件细节，Metric汇总许多运行。它们记录可观察执行，不等于模型真实内部思维。
+
+并行Span的时长不能盲目相加当作用户等待时间；应看依赖和起止时间。
+
+[进入对应完整课程](foundations/38.md)
+
+
+<span id="concept-latency"></span>
+
+
+
+<span id="topic-95"></span>
+
+
+### TTFT、TPOT、p95与吞吐
+
+TTFT是请求到首个输出Token的延迟；TPOT描述后续每Token时间的统计；p95是某窗口里约95%观测不超过的分位数；吞吐是单位时间完成量。要说明计时起止。
+
+首字快不代表任务快：工具执行可能还要很久。理论峰值吞吐也不等于某个用户的延迟。
+
+[进入对应完整课程](foundations/38.md)
+
+
+<span id="concept-slo"></span>
+
+
+
+<span id="topic-96"></span>
+
+
+### SLI、SLO与错误预算
+
+SLI是实际测量的服务水平指标；SLO是该指标的目标；错误预算是相应目标允许的失败空间。它们是服务运行管理对象，不是模型参数。
+
+“API返回200”可能不是用户成功；有些业务应以限定时间内正确完成任务的比例定义指标。
+
+[进入对应完整课程](foundations/38.md)
+
+
+<span id="concept-little"></span>
+
+
+
+<span id="topic-97"></span>
+
+
+### Little定律：L=λW的局部记号
+
+队列记账中，L表示平均在系统中的任务数，λ是平均到达率，W是平均停留时间；在稳定等适用条件下L=λW。这里W不是投影矩阵，L不是模型层数。
+
+独立例：每秒平均到达2项、平均停留3秒，则平均在系统约6项；不能拿瞬时尖峰直接替代长期平均。
+
+[进入对应完整课程](foundations/38.md)
+
+
+<span id="concept-security"></span>
+
+
+
+<span id="topic-98"></span>
+
+
+### Prompt Injection、沙箱与权限
+
+提示注入是通过进入上下文的内容试图改变模型行为。沙箱限制程序可访问的资源；授权决定实际允许做什么。把文本标“不可信”不等于操作系统已隔离。
+
+读取文档中的“把密钥发出”仍是文档内容，不是用户新授权。工具执行边界应独立判断权限。
+
+[进入对应完整课程](foundations/37.md)
+
+
+<span id="concept-patch"></span>
+
+
+
+<span id="topic-99"></span>
+
+
+### Patch、图像通道与视觉投影
+
+图像中的patch是切分的小块，RGB是红绿蓝3个通道；软件工程中的patch则是代码补丁，两者同名。图像块展开后可通过可学习变换成为向量，不是查文字词表。
+
+独立图像例：16×16×3的一块含768个数，投影后可以变成d个特征。d由模型设计决定。
+
+[进入对应完整课程](foundations/39.md)
+
+
+<span id="concept-clip"></span>
+
+
+
+<span id="topic-100"></span>
+
+
+### CLIP与图文对比学习
+
+对比学习通过目标函数让配对表示更易匹配、非配对表示相对区分。CLIP式训练学习图文关联，不自动提供完整聊天生成能力或可靠桌面操作。
+
+同一图像与正确描述可作为正对，其他描述作为对照；相关性训练不等于每次生成结论都事实正确。
+
+[进入对应完整课程](foundations/39.md)
+
+
+<span id="concept-sae"></span>
+
+
+
+<span id="topic-101"></span>
+
+
+### SAE、激活与可解释特征
+
+SAE是稀疏自编码器，用较少活跃特征的组合重构模型激活。激活是本次计算的中间数值，不是完整自然语言推理记录。重构成功不自动证明某特征具有唯一因果含义。
+
+观察某特征与输出一起变化是线索；要判断因果，还需控制其他条件、干预与对照。
+
+[进入对应完整课程](foundations/39.md)
+
+
+<span id="concept-calibration"></span>
+
+
+
+<span id="topic-102"></span>
+
+
+### 校准、置信度与弃答
+
+校准检查预测可信度与实际正确频率是否相符；ECE和Brier等度量采用不同记账。局部Token概率、语言上说“确定”与整份答案正确率不是同一对象。
+
+独立例：100项都标80%可信，其中约80项正确，只支持这一组的统计校准，不证明每项都对。
+
+[进入对应完整课程](foundations/39.md)
+
+
+<span id="concept-sigma"></span>
+
+
+
+<span id="topic-103"></span>
+
+
+### σ：看清函数符号与统计量
+
+在σ(XW+b)中，σ常泛指这一层选定的非线性函数；具体可以是ReLU等，不能仅凭σ认定是sigmoid。统计公式中σ常指标准差，σ²是方差。它们不是同一对象。
+
+独立例：σ若指定为ReLU，σ(-1)=0；若指定为sigmoid，则约0.268941。必须先给函数定义，才能算结果。
+
+[进入对应完整课程](foundations/14.md)
+
+
+<span id="concept-upstream"></span>
+
+
+
+<span id="topic-104"></span>
+
+
+### G、dQ、dW：反传里的中间梯度
+
+G=∂L/∂O通常是后续运算传回的损失对当前输出O的梯度。反传伪代码把∂L/∂Q简写成dQ、∂L/∂W简写成dW；它们形状与被求导的对象对应，不是特征维度d乘Q。
+
+先有前向O=AV，再接收G，才能算dV=AᵀG和dA=GVᵀ；dA改变的是份额路径，dV改变的是内容路径。
+
+[进入对应完整课程](chapters/03.md)
+
+
+<span id="concept-concat"></span>
+
+
+
+<span id="topic-105"></span>
+
+
+### Concat、split与chunk：拼接与拆分
+
+Concat把多份数组沿指定轴连接起来，不把元素相加；split或chunk按规定边界分组。所有未拼接轴需相容。这里chunk指数组块；网络中的chunk则是字节分片。
+
+独立例：两头各[2,3]，沿特征轴拼成[2,6]；沿位置轴拼会变[4,3]，语义已经不同。
+
+[进入对应完整课程](foundations/08.md)
+
+
+<span id="concept-dropout"></span>
+
+
+
+<span id="topic-106"></span>
+
+
+### Dropout：训练中的随机置零规则
+
+常用倒置Dropout在训练时按丢弃概率p随机将元素置零，保留项除以1-p以保持期望量级。评估模式通常关闭这一随机操作；底层函数可能要求调用者显式传p=0。
+
+独立例：p=0.5，某值2在一次掩码中被保留则输出4，被丢弃则0。这不是训练把对应模型参数永久删掉。
+
+[进入对应完整课程](chapters/03.md)
+
+
+<span id="concept-logsumexp"></span>
+
+
+
+<span id="topic-107"></span>
+
+
+### logsumexp：先求指数和，再取对数
+
+logsumexp(z)=ln(Σexp(zᵢ))。稳定实现先减最大值m，再算m+ln(Σexp(zᵢ-m))。它是一项标量，可用于计算log-softmax和交叉熵，不是再一次随机抽样。
+
+独立例：z=[0,0]，logsumexp=ln2；两个log-softmax值都是−ln2。这里结果可以是负数，而softmax概率不能负。
+
+[进入对应完整课程](chapters/06.md)
+
+
+<span id="concept-batchnorm"></span>
+
+
+
+<span id="topic-108"></span>
+
+
+### BatchNorm：跨样本统计不同于LayerNorm
+
+BatchNorm常对同一特征/通道，沿批次和适用空间轴计算统计量；LayerNorm沿指定的样本内部特征维度计算。BatchNorm的训练与评估可使用不同来源的统计，具体还取决于配置。
+
+只见Norm这个词，不能把不同规范化层的统计轴混用；两个独立用户不应该因此共享会话上下文。
+
+[进入对应完整课程](chapters/02.md)
+
+
+<span id="concept-combination"></span>
+
+
+
+<span id="topic-109"></span>
+
+
+### C(n,k)、!：组合数量与阶乘
+
+n!表示1到n整数连乘，0!=1；C(n,k)=n!/(k!(n-k)!)表示从n个不同对象中无放回选k个且不计顺序的数量。它不是模型置信度C。
+
+独立例：C(4,2)=6。n=10、c=3、k=2时，1−C(7,2)/C(10,2)=24/45约0.533333。
+
+[进入对应完整课程](chapters/23.md)
+
+
+<span id="concept-big-o"></span>
+
+
+
+<span id="topic-110"></span>
+
+
+### O(·)：随规模增长的数量级
+
+大O用于表达规模增长时的上界量级，常省略常数及较小项。必须说明哪些变量在增大、是在算单步还是整个序列。这里O不是注意力输出矩阵。
+
+长度翻倍时，主项T²会变四倍，但实际耗时还受固定开销、内存和硬件利用率影响，不能仅用大O承诺测速结果。
+
+[进入对应完整课程](foundations/21.md)
+
+
+<span id="concept-probability-symbols"></span>
+
+
+
+<span id="topic-111"></span>
+
+
+### E、Π、∼、∝：概率式的常用记号
+
+x∼p表示按分布p抽样，E表示依指定分布求期望，Π表示把指定项连乘，∝表示相差一个公共比例因子而非已经相等。这里E不是Embedding参数表。
+
+独立例：pᵢ∝exp(zᵢ)还需除以所有候选指数的总和；写∝时不能把未归一化值直接读作概率。
+
+[进入对应完整课程](foundations/09.md)
+
+
+<span id="concept-bos-eos"></span>
+
+
+
+<span id="topic-112"></span>
+
+
+### BOS / EOS：序列边界标记
+
+BOS通常表示序列起始，EOS表示结束的特殊Token；具体模型和消息模板可能使用不同名称、数量及结束标记。它们是输入/输出协议中的符号，不是语义正确性的证明。
+
+遇到EOS不自动切断两个训练样本之间的注意力；要隔离读取还需mask或实现支持的样本边界。
+
+[进入对应完整课程](foundations/18.md)
+
+
+<span id="concept-json"></span>
+
+
+
+<span id="topic-113"></span>
+
+
+### JSON：结构化文本，不是执行动作
+
+JSON是一种用对象、数组、字符串、数字等表达数据的文本格式。花括号对象把字段名映射到值，方括号数组保留项目顺序。解析JSON只得到数据，不会自动执行其中的工具名称。
+
+独立例：{"path":"a.py","limit":3}有两个字段；"3"是字符串而3是数值，Schema可以要求其中一种。
+
+[进入对应完整课程](foundations/23.md)
+
+
+<span id="concept-linebreak"></span>
+
+
+
+<span id="topic-114"></span>
+
+
+### LF、CRLF与EventSource
+
+LF是换行字符，CRLF是回车再换行的组合。SSE规定事件行与空行的解释；EventSource是浏览器接收SSE的接口。只解析一种分隔符的教学代码不等于完整协议实现。
+
+实际网络片段可能恰好把CR和LF分开送达，解析器应按已实现的协议规则组装，不能直接把每个网络片段当一条事件。
+
+[进入对应完整课程](foundations/23.md)
+
+
+<span id="concept-tool-objects"></span>
+
+
+
+<span id="topic-115"></span>
+
+
+### ToolRouter、ToolCall、ToolInvocation
+
+这些是所引用Codex源码快照中的程序类型名。ResponseItem表示一项模型响应；ToolCall表示待调用数据；ToolInvocation把调用与会话、取消等执行上下文组合；ToolRouter负责相关工具路径。
+
+这些对象由程序构造和分派，不是模型内部Q/K/V那样的张量。字段和权限处理需跟随所引用的固定源码，不凭名字推断。
+
+[进入对应完整课程](chapters/12.md)
+
+
+<span id="concept-version-tools"></span>
+
+
+
+<span id="topic-116"></span>
+
+
+### HEAD、工作树、ETag与内容指纹
+
+Git的HEAD标识当前检出的提交或分支位置；工作树还可能有未提交修改。ETag是HTTP资源表示的校验标识，其保证取决于服务。内容指纹按字节计算；几种版本身份不能互换。
+
+索引来自提交v7，而文件已本地修改时，同一文件名不代表同一内容。执行补丁或引用证据应核对实际版本。
+
+[进入对应完整课程](foundations/30.md)
+
+
+<span id="concept-interface-environment"></span>
+
+
+
+<span id="topic-117"></span>
+
+
+### IDE、CLI、UI与DOM
+
+IDE是集成开发环境，CLI是命令行界面，UI是用户界面，DOM是网页文档的结构对象树。不同入口自动附带的代码、选区和页面信息可能不同。
+
+模型在IDE里看到选中函数，不代表同一任务在CLI里也已收到该函数；先检查本轮输入对象。
+
+[进入对应完整课程](foundations/22.md)
+
+
+<span id="concept-pixels"></span>
+
+
+
+<span id="topic-118"></span>
+
+
+### DPR、DPI与坐标单位
+
+DPR常表示设备像素与CSS像素的比例；DPI表示每英寸的点数。截图像素、界面逻辑坐标和屏幕坐标不一定同单位，还可能有缩放、裁剪与偏移。
+
+在明确DPR=2且其他映射一致的独立例中，CSS横坐标100对应200个设备像素；不能把这条条件化关系直接套到所有截图。
+
+[进入对应完整课程](foundations/39.md)
+
+
+<span id="concept-mla"></span>
+
+
+
+<span id="topic-119"></span>
+
+
+### MLA：学习得到的低维K/V表示
+
+MLA指多头潜在注意力的一类架构。用较低维的潜在表示联合组织K/V相关内容，并按设计处理位置部分。它改变模型表示与参数结构，不只是把普通KV文件用ZIP压缩。
+
+读c=xW\_down时，c是这次计算的潜在向量，W\_down是学到的降维系数表；后续如何重构或吸收投影须按具体架构解释。
+
+[进入对应完整课程](chapters/28.md)
+
+
+<span id="concept-databases"></span>
+
+
+
+<span id="topic-120"></span>
+
+
+### SQL、SQLite与事务对象
+
+SQL是操作关系数据的语言；SQLite是可嵌入应用的数据库引擎。将操作状态写入数据库，是宿主程序的持久化动作，不会修改模型神经网络参数。
+
+一次事务可以同时保存本数据库中的业务行与待发送记录，但不能因此推断邮件服务也已一起原子提交。
+
+[进入对应完整课程](foundations/33.md)
+
+
+<span id="sources"></span>
+
+
+## 定义的依据与边界
+
+
+<span id="source-attention"></span>
+
+
+
+<span id="topic-121"></span>
+
+
+### 注意力投影与聚合
+
+依据原始Transformer论文的3.2节：投影参数、Query/Key/Value的分工、缩放点积、多头拼接及输出投影。正文矩阵是本书自行构造的小算例，不是论文训练权重。
+
+[Attention Is All You Need · 原论文](https://arxiv.org/html/1706.03762v7)
+
+
+<span id="source-linear"></span>
+
+
+
+<span id="topic-122"></span>
+
+
+### 参数存储与线性层
+
+对照PyTorch文档中的可学习weight/bias及y=xAᵀ+b布局。教材统一解释输入行向量右乘参数表的约定，必要时显式转置。训练参数、临时激活与张量形状的身份不能混用。
+
+[PyTorch Linear · 参数与形状](https://docs.pytorch.org/docs/2.14/generated/torch.nn.Linear.html)
+
+
+<span id="source-mha"></span>
+
+
+
+<span id="topic-123"></span>
+
+
+### 高级接口与底层算子
+
+MultiheadAttention包含投影等完整层级逻辑；scaled\_dot\_product\_attention直接计算给定Query/Key/Value之间的注意力。核对接口负责的阶段，可避免重复投影及掩码极性误用。这里不承诺所有库采用相同布局。
+
+[PyTorch MultiheadAttention](https://docs.pytorch.org/docs/2.14/generated/torch.nn.MultiheadAttention.html) · [PyTorch scaled\_dot\_product\_attention](https://docs.pytorch.org/docs/2.14/generated/torch.nn.functional.scaled_dot_product_attention.html)
+
+
+<span id="source-general"></span>
+
+
+
+<span id="topic-124"></span>
+
+
+### 其他基础与工程概念
+
+数学微例为按所列条件的直接推导；训练、检索、协议与工程术语沿用对应课程列出的原始研究和官方资料。术语说明解释对象与职责，不把教学数值当作商业产品实测，也不为闭源系统补造内部实现。
+
+[全书来源与适用范围](sources.md) · [运行示例来源](example-sources.md)
+
+Dropout、BatchNorm及logsumexp补充对照：[PyTorch Dropout](https://docs.pytorch.org/docs/2.14/generated/torch.nn.Dropout.html) · [PyTorch BatchNorm1d](https://docs.pytorch.org/docs/2.14/generated/torch.nn.BatchNorm1d.html) · [PyTorch logsumexp](https://docs.pytorch.org/docs/2.14/generated/torch.logsumexp.html)。正文以中文解释为主；外部链接仅供追溯。

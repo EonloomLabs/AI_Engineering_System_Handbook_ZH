@@ -1,0 +1,9 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart TB
+ A["原前缀: BOS 我 爱 学习"] --> Same["0号位置BOS相同"]
+ B["新前缀: BOS 你 爱 学习"] --> Same
+ Same --> Keep["可复用相同模型配置下的位置0"]
+ B --> Changed["位置1首次不同"]
+ Changed --> Recompute["从位置1起重算后缀所有相关层"]
+ Recompute --> Why["后续Token相同也可能依赖改变的历史"]
+%% Sources: labs/model/lab/tiny_model.py:62-81; canonical deterministic causal-prefix reasoning

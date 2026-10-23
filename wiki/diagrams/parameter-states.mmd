@@ -1,0 +1,11 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+stateDiagram-v2
+ [*] --> Initialized: TinyLM()
+ Initialized --> Fixed: forward
+ Fixed --> GradientReady: loss.backward()
+ GradientReady --> Updated: AdamW.step()
+ Updated --> Fixed: 下一轮forward
+ Updated --> Saved: save
+ Saved --> FixedInference: load + inference_mode
+ FixedInference --> FixedInference: generate每轮forward
+%% Sources: labs/model/lab/tiny_model.py:33-98,156-175,195-244

@@ -1,0 +1,19 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+sequenceDiagram
+ autonumber
+ participant H as 生成循环
+ participant M as TinyLM.forward
+ participant C as 各层KV状态
+ H->>M: 首次输入[BOS,我,爱]
+ M->>C: 处理3个位置
+ M-->>H: logits; cache_after=3
+ H->>H: argmax选择学习
+ H->>M: 只输入学习 + cache
+ M->>C: 增加位置3
+ M-->>H: logits; cache_after=4
+ H->>H: argmax选择！
+ H->>M: 只输入！ + cache
+ M->>C: 增加位置4
+ M-->>H: logits; cache_after=5
+ H->>H: 选择EOS，停止，不再处理EOS
+%% Sources: labs/model/lab/tiny_model.py:156-175; labs/model/data/run.json:generation.steps

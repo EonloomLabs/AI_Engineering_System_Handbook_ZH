@@ -1,0 +1,104 @@
+{
+  "diagram_contract": "Narration and declared frame state unchanged; F22/MCP logical messages explicitly specified.",
+  "F22": {
+    "title": "把一个Agent任务拆成真正发生的几轮",
+    "rows": [
+      [
+        "用户→宿主",
+        "读config.txt中的timeout",
+        "未读取文件"
+      ],
+      [
+        "宿主→模型",
+        "任务 + read_file工具定义",
+        "提供可用工具"
+      ],
+      [
+        "模型→宿主",
+        "call_id=c1，path=config.txt",
+        "请求待执行；不等于已经读取"
+      ],
+      [
+        "宿主→文件工具",
+        "校验c1后读取文件",
+        "正在读取"
+      ],
+      [
+        "文件工具→宿主",
+        "c1结果：timeout=30",
+        "读取成功"
+      ],
+      [
+        "宿主→模型",
+        "原任务 + c1调用 + c1结果",
+        "证据进入下一轮上下文"
+      ],
+      [
+        "模型→宿主",
+        "回答：配置的timeout为30",
+        "模型回答完成"
+      ],
+      [
+        "宿主→用户",
+        "显示回答",
+        "任务结束；没有修改文件"
+      ]
+    ]
+  },
+  "F25": {
+    "title": "MCP连起接口，不自动交出权限",
+    "rows": [
+      [
+        "Host→Client",
+        "建立连接并与Server协商能力",
+        "只得到连接/能力，不等于授权"
+      ],
+      [
+        "Client→Server",
+        "请求工具列表",
+        "发起发现"
+      ],
+      [
+        "Server→Client",
+        "返回工具描述与输入结构",
+        "描述被获知，尚未执行"
+      ],
+      [
+        "Client→Host",
+        "交付工具描述供Host选择",
+        "Host决定向模型暴露的集合"
+      ],
+      [
+        "Client→Server",
+        "Host批准后发送调用",
+        "独立核对参数和权限"
+      ],
+      [
+        "Server→Client",
+        "返回结果或错误",
+        "执行结果可被回填"
+      ],
+      [
+        "Client→Host",
+        "把结果加入下一轮输入",
+        "LLM才得到新观察"
+      ]
+    ]
+  },
+  "native_transcripts": [
+    "F01",
+    "F19",
+    "F20",
+    "F30",
+    "F32",
+    "F34",
+    "F40"
+  ],
+  "redrawn": [
+    "F22",
+    "F25",
+    "F24",
+    "F27",
+    "F37"
+  ]
+}

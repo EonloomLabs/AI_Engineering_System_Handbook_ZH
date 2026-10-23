@@ -1,0 +1,66 @@
+{
+  "engine": "Chromium",
+  "delivery": "local HTML/CSS/JS inlined with page.set_content; file:// and test-host navigation blocked by administrator; disk references separately audited",
+  "checks": [
+    {
+      "test": "canonical navigation target and page selection",
+      "pass": true
+    },
+    {
+      "test": "search AdamW",
+      "results": [
+        {
+          "text": "基础课程小节共同的计算，先训练，再推理 同一个模型经历训练、保存、加载和使用 放大图解 固定结构与初始化： TinyLM()：12组参数，共236个数。 训练批次： input_ids=前5项；targets=后5项。 训练更新： forward → training_loss → backward → AdamW.step。 保存并重新加载： weights_trained.json 同时保存结构和参数。 推理生成： generate() 内使用已加载参数；不调用backward或step。 代码路径： tiny_model.py:33–258  ·  Mermaid源文件 。图的排布只表达数据／调用顺序，不代表计算耗时。…ining_loss → backward → AdamW.step。 保存并重新加载： weights_trained.json 同时保存结构和参数。 推理生成： generate() 内使用已加载…",
+          "href": "../foundations/01.html#course-connection"
+        },
+        {
+          "text": "基础课程小节AdamW多保存了哪两张表AdamW多保存了哪两张表 每个参数格都对应两个历史状态：m为梯度的指数移动平均；v为梯度平方的指数移动平均。β越接近1，通常保留历史越多。v保存的是平方梯度，不是参数方差，也不是Value矩阵。 m…",
+          "href": "../foundations/16.html#core-optimizer-3--mc-section-3"
+        },
+        {
+          "text": "系统机制小节Q018｜Loss算出来后，参数怎样更新？为什么AdamW不只是梯度乘学习率？Q018｜Loss算出来后，参数怎样更新？为什么AdamW不只是梯度乘学习率？ 这题先认识什么 梯度指出局部上升方向；优化器沿反方向调整参数。AdamW还维护梯度统计与权重衰减，所以恢复训练不只加载权…",
+          "href": "../chapters/04.html#Q018"
+        }
+      ]
+    },
+    {
+      "test": "self-check toggles",
+      "pass": true
+    },
+    {
+      "test": "standalone inline browser rendering",
+      "sections": 250,
+      "coreSteps": 180,
+      "nav": {
+        "page": "complete.html",
+        "current": "foundations/18.html",
+        "scrollTop": 1004,
+        "height": 832,
+        "total": 3300,
+        "selected": 1,
+        "visible": true,
+        "documentY": 245812
+      },
+      "openAnswers": 0,
+      "groups": [
+        "加载后生成"
+      ],
+      "Mmenu": 0,
+      "overflow": false,
+      "network_requests": []
+    },
+    {
+      "test": "standalone player advances",
+      "pass": true
+    },
+    {
+      "test": "standalone search anchors",
+      "first": [
+        "#chapters--04",
+        "#contents",
+        "#contents--chapters"
+      ]
+    }
+  ],
+  "errors": []
+}

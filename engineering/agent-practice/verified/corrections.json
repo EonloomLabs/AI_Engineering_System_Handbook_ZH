@@ -1,0 +1,56 @@
+{
+  "replacements": {
+    "hooks": [
+      [
+        "在固定Codex registry实现里，前置钩子可以阻止或改写工具输入；真正的handler执行之后，PostToolUse可以拒收或替换交给模型的结果。源码明确区分了后置拒收与已经执行的动作。[C09:dispatch]",
+        "在本轮固定Codex的 `dispatch_any_with_state` 路径中，前置钩子可在handler之前阻止调用；改写输入还需要对应工具支持重建调用对象。handler成功且提供后置元数据时，才运行后置钩子；后置阻止拒绝的是结果，反馈路径可改变模型可见文本。不能把它扩写成所有工具都支持任意结果替换。[C09:dispatch_any_with_state]"
+      ]
+    ],
+    "parallel": [
+      [
+        "另一端使用有序队列收集结果，因此必须区分“动作已完成”和“结果已写回历史”。[C01:drain_in_flight]",
+        "该路径把执行与future结果消费分开，并记录执行结果就绪。这里A/B有序回填的具体时间线是教学对照，不将它冒充所有Codex客户端、消息类型的统一显示顺序。应分别核对动作完成、结果消费和回填的时间。[C04]"
+      ]
+    ],
+    "compaction": [
+      [
+        "安装阶段验证候选，再通过历史替换原语维护前缀与实时后缀；安装后仍可能因超预算进入前台压缩。[C07]",
+        "安装阶段还要核对模型与压缩哈希；随后在 `replace_compacted_history` 的锁内核对历史重写代际、前缀长度和授权所有者代际，保留此时的实时后缀。安装后若窗口仍超预算，可能继续前台处理；不是盲目丢掉后缀。[C07][C16:replace_compacted_history]"
+      ]
+    ],
+    "products": [
+      [
+        "本书把来源固定到具体文件与函数，并在实验旁标明CPU确定性模拟、真实程序运行、阅读源码但未运行三种状态。",
+        "这组机制的源码依据固定到2026-10-22取得的提交 `86e17e98c7f901277aeeb4649cf1b01462b082f2`，并区分完整文件校验、指定行范围阅读、官方文章/文档说明和原创教学推导。其他旧章节保留原来的历史提交；二者不能拼成同一个版本。"
+      ]
+    ]
+  },
+  "supplemented_topics": [
+    "loop",
+    "snapshot",
+    "stream",
+    "tools",
+    "hooks",
+    "parallel",
+    "recovery",
+    "context",
+    "compaction",
+    "rules",
+    "skills",
+    "memory",
+    "retrieval",
+    "indexing",
+    "code",
+    "delegation",
+    "quality",
+    "eval",
+    "security",
+    "production",
+    "optimization",
+    "products",
+    "multimodal",
+    "research",
+    "synthesis"
+  ],
+  "scope": "25 integrated mechanism modules; no whole repository or commercial end-to-end claim"
+}

@@ -1,0 +1,15 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+sequenceDiagram
+ autonumber
+ participant Loop as 训练循环
+ participant M as TinyLM
+ participant O as AdamW
+ Loop->>O: zero_grad(set_to_none=True)
+ Loop->>M: forward(input_ids)
+ M-->>Loop: logits
+ Loop->>Loop: training_loss(logits,targets)
+ Loop->>M: loss.backward()
+ M-->>Loop: 参数的.grad
+ Loop->>O: step()
+ O->>M: 更新参数
+%% Sources: labs/model/lab/tiny_model.py:195-219

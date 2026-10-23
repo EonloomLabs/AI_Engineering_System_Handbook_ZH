@@ -1,0 +1,10 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart LR
+ Z["logits[B,T,8]"] --> CE["按每个有效target取负对数概率"]
+ Y["targets[B,T]"] --> CE
+ Y --> Valid["valid: target != -100"]
+ CE --> Sum["有效项损失求和"]
+ Valid --> Count["有效项个数"]
+ Sum --> Mean["总损失 / 有效项个数"]
+ Count --> Mean
+%% Sources: labs/model/lab/tiny_model.py:101-110

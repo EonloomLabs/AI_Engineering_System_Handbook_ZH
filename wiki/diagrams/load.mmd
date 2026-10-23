@@ -1,0 +1,14 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+sequenceDiagram
+ autonumber
+ participant D as 参数文件
+ participant P as 加载程序
+ participant M as TinyLM
+ P->>M: 创建相同结构
+ P->>D: 读取结构与参数
+ D-->>P: 序列化数值
+ P->>M: 复制参数
+ P->>M: eval + inference_mode
+ P->>M: generate(prompt)
+ M-->>P: steps与停止原因
+%% Sources: labs/model/lab/tiny_model.py:156-175,221-244

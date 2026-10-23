@@ -1,0 +1,9 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart LR
+ I1["第一句ids: 1 2 3"] --> E["同一参数表 E"]
+ I2["第二句ids: 4 2 0"] --> E
+ E -->|选行，不按ID大小计算语义| A1["E[1],E[2],E[3]"]
+ E --> A2["E[4],E[2],E[0]"]
+ A1 --> Batch["[2,3,4]: 两条序列,三位置,四特征"]
+ A2 --> Batch
+%% Sources: labs/model/lab/tiny_model.py:38-42,62

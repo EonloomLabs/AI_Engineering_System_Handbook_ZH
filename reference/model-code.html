@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="从基础概念到大语言模型内部机制、智能体执行与工程实践的中文学习教材。" name="description"/><title>模型实验源码与原始参数 — AI系统工程</title><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/visual.css" rel="stylesheet"/><link href="../assets/atelier.css" rel="stylesheet"/><link href="../assets/mechanisms.css" rel="stylesheet"/><link href="../assets/model-course.css" rel="stylesheet"/><link href="../assets/integrated-course.css" rel="stylesheet"/><link href="../assets/diagrams.css" rel="stylesheet"/></head><body class="is-reader is-model-core" data-page="reference/model-code.html" data-root="../"><a class="skip-link" href="#main-content">跳到正文</a><header class="site-header"><button aria-controls="book-sidebar" aria-expanded="false" aria-label="打开全书目录" class="icon-button menu-trigger" data-studio-menu="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a class="site-brand" href="../index.html"><span>AI 系统工程</span><span class="brand-detail">技术参考</span></a><nav aria-label="主要导航" class="site-links"><a class="section-active" href="../contents.html">文档</a><a href="../visual-guides.html">图解</a><a href="../studies/index.html">专题</a></nav><div class="site-actions"><button aria-label="搜索教材" class="search-trigger" data-search="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><span>搜索全文…</span><kbd>⌘ K</kbd></button><button aria-label="切换专注模式" aria-pressed="false" class="icon-button focus-trigger" data-focus="" title="专注模式" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"></path></svg></button><button aria-label="阅读设置" class="icon-button settings-trigger" data-settings="" title="阅读设置" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"></path><circle cx="9" cy="7" fill="var(--paper)" r="2.5"></circle><circle cx="15" cy="17" fill="var(--paper)" r="2.5"></circle></svg></button></div></header><div aria-hidden="true" class="page-progress"><span></span></div><aside aria-label="全书章节目录" class="book-rail sidebar" id="book-sidebar"><div class="rail-top"><strong>章节目录</strong><div class="rail-actions"><button aria-label="将目录滚动到当前章节" class="rail-locate" data-locate-current="" title="定位当前章节" type="button">定位当前</button><button aria-label="关闭目录" class="rail-close icon-button" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div></div><nav aria-label="教材章节" class="rail-scroll" tabindex="0"><a class="rail-home" data-section="index" data-target="index.html" href="../index.html" title="AI 系统工程"><span class="rail-name">教材概览</span></a><a class="rail-home" data-section="preface" data-target="preface.html" href="../preface.html" title="前言与使用指南"><span class="rail-name">前言与使用指南</span></a><a class="rail-home" data-section="contents" data-target="contents.html" href="../contents.html" title="目录与学习路径"><span class="rail-name">完整目录</span></a><a class="rail-home" data-section="search" data-target="search.html" href="../search.html" title="全文搜索"><span class="rail-name">全文搜索</span></a><details class="rail-group" data-group="foundations"><summary>基础课程</summary><div class="rail-links"><div class="rail-section-name">输入与表示</div><a class="" data-section="foundations--01" data-target="foundations/01.html" href="../foundations/01.html" title="F01｜模型的生命周期：对象、参数、训练与推理"><span class="rail-code">F01</span><span class="rail-name">模型的生命周期：对象、参数、训练与推理</span></a><a class="" data-section="foundations--02" data-target="foundations/02.html" href="../foundations/02.html" title="F02｜一排数、一张表和一叠表：读懂张量与形状"><span class="rail-code">F02</span><span class="rail-name">一排数、一张表和一叠表：读懂张量与形状</span></a><a class="" data-section="foundations--03" data-target="foundations/03.html" href="../foundations/03.html" title="F03｜文字怎样成为编号：分词、词表与序列边界"><span class="rail-code">F03</span><span class="rail-name">文字怎样成为编号：分词、词表与序列边界</span></a><a class="" data-section="foundations--04" data-target="foundations/04.html" href="../foundations/04.html" title="F04｜从多句话到训练批次：组批、补齐与标签位置"><span class="rail-code">F04</span><span class="rail-name">从多句话到训练批次：组批、补齐与标签位置</span></a><a class="" data-section="foundations--05" data-target="foundations/05.html" href="../foundations/05.html" title="F05｜Embedding与位置：从编号查表到模型输入"><span class="rail-code">F05</span><span class="rail-name">Embedding与位置：从编号查表到模型输入</span></a><a class="" data-section="foundations--06" data-target="foundations/06.html" href="../foundations/06.html" title="F06｜“放到设备”是什么：数据类型、内存、CPU与GPU"><span class="rail-code">F06</span><span class="rail-name">“放到设备”是什么：数据类型、内存、CPU与GPU</span></a><div class="rail-section-name">共通计算</div><a class="" data-section="foundations--07" data-target="foundations/07.html" href="../foundations/07.html" title="F07｜模型最常做的算术：加权求和、点积与矩阵乘法"><span class="rail-code">F07</span><span class="rail-name">模型最常做的算术：加权求和、点积与矩阵乘法</span></a><a class="" data-section="foundations--08" data-target="foundations/08.html" href="../foundations/08.html" title="F08｜reshape、转轴、广播：形状变了，内容未必算过"><span class="rail-code">F08</span><span class="rail-name">reshape、转轴、广播：形状变了，内容未必算过</span></a><a class="" data-section="foundations--09" data-target="foundations/09.html" href="../foundations/09.html" title="F09｜概率、指数与softmax：把分数变成比例"><span class="rail-code">F09</span><span class="rail-name">概率、指数与softmax：把分数变成比例</span></a><a class="" data-section="foundations--10" data-target="foundations/10.html" href="../foundations/10.html" title="F10｜参数、前向与归一化：同一输入如何变成可用表示"><span class="rail-code">F10</span><span class="rail-name">参数、前向与归一化：同一输入如何变成可用表示</span></a><a class="" data-section="foundations--11" data-target="foundations/11.html" href="../foundations/11.html" title="F11｜Attention逐步计算：先算相关分数，再混合内容"><span class="rail-code">F11</span><span class="rail-name">Attention逐步计算：先算相关分数，再混合内容</span></a><a class="" data-section="foundations--12" data-target="foundations/12.html" href="../foundations/12.html" title="F12｜Mask不是黑箱：把“谁能看谁”写成一张表"><span class="rail-code">F12</span><span class="rail-name">Mask不是黑箱：把“谁能看谁”写成一张表</span></a><a class="" data-section="foundations--13" data-target="foundations/13.html" href="../foundations/13.html" title="F13｜位置编号与RoPE：先懂位置，再懂旋转"><span class="rail-code">F13</span><span class="rail-name">位置编号与RoPE：先懂位置，再懂旋转</span></a><a class="" data-section="foundations--14" data-target="foundations/14.html" href="../foundations/14.html" title="F14｜完成一次前向：残差、前馈网络与词表分数"><span class="rail-code">F14</span><span class="rail-name">完成一次前向：残差、前馈网络与词表分数</span></a><div class="rail-section-name">训练与验证</div><a class="" data-section="foundations--15" data-target="foundations/15.html" href="../foundations/15.html" title="F15｜导数、梯度与链式法则：训练怎样找到调整方向"><span class="rail-code">F15</span><span class="rail-name">导数、梯度与链式法则：训练怎样找到调整方向</span></a><a class="" data-section="foundations--16" data-target="foundations/16.html" href="../foundations/16.html" title="F16｜一次训练从头到尾：标签、损失、更新、验证与保存"><span class="rail-code">F16</span><span class="rail-name">一次训练从头到尾：标签、损失、更新、验证与保存</span></a><a class="" data-section="foundations--17" data-target="foundations/17.html" href="../foundations/17.html" title="F17｜后训练：监督微调、偏好、奖励与参数适配"><span class="rail-code">F17</span><span class="rail-name">后训练：监督微调、偏好、奖励与参数适配</span></a><div class="rail-section-name">训练后的推理</div><a class="" data-section="foundations--18" data-target="foundations/18.html" href="../foundations/18.html" title="F18｜加载训练结果：逐个预测、选择与停止"><span class="rail-code">F18</span><span class="rail-name">加载训练结果：逐个预测、选择与停止</span></a><a class="" data-section="foundations--19" data-target="foundations/19.html" href="../foundations/19.html" title="F19｜KV缓存：在同一结果下复用历史计算"><span class="rail-code">F19</span><span class="rail-name">KV缓存：在同一结果下复用历史计算</span></a><div class="rail-section-name">结构与资源</div><a class="" data-section="foundations--20" data-target="foundations/20.html" href="../foundations/20.html" title="F20｜低秩、量化、专家：先看究竟少算了什么"><span class="rail-code">F20</span><span class="rail-name">低秩、量化、专家：先看究竟少算了什么</span></a><a class="" data-section="foundations--21" data-target="foundations/21.html" href="../foundations/21.html" title="F21｜算得快与装得下：复杂度、带宽、批处理和并行"><span class="rail-code">F21</span><span class="rail-name">算得快与装得下：复杂度、带宽、批处理和并行</span></a><div class="rail-section-name">Agent与上下文</div><a class="" data-section="foundations--22" data-target="foundations/22.html" href="../foundations/22.html" title="F22｜Agent不是另一个神经网络：用一次读文件讲清循环"><span class="rail-code">F22</span><span class="rail-name">Agent不是另一个神经网络：用一次读文件讲清循环</span></a><a class="" data-section="foundations--23" data-target="foundations/23.html" href="../foundations/23.html" title="F23｜API与流式协议：请求如何变成可执行数据"><span class="rail-code">F23</span><span class="rail-name">API与流式协议：请求如何变成可执行数据</span></a><a class="" data-section="foundations--24" data-target="foundations/24.html" href="../foundations/24.html" title="F24｜状态、事件与检查点：模型知道和系统记录的区别"><span class="rail-code">F24</span><span class="rail-name">状态、事件与检查点：模型知道和系统记录的区别</span></a><a class="" data-section="foundations--25" data-target="foundations/25.html" href="../foundations/25.html" title="F25｜工具与MCP：连接、发现、授权、执行四层拆开"><span class="rail-code">F25</span><span class="rail-name">工具与MCP：连接、发现、授权、执行四层拆开</span></a><a class="" data-section="foundations--26" data-target="foundations/26.html" href="../foundations/26.html" title="F26｜上下文组装：每轮到底给模型什么，以及为什么"><span class="rail-code">F26</span><span class="rail-name">上下文组装：每轮到底给模型什么，以及为什么</span></a><a class="" data-section="foundations--27" data-target="foundations/27.html" href="../foundations/27.html" title="F27｜压缩不是魔法：摘要、原文和执行状态怎样配合"><span class="rail-code">F27</span><span class="rail-name">压缩不是魔法：摘要、原文和执行状态怎样配合</span></a><div class="rail-section-name">检索与可靠交付</div><a class="" data-section="foundations--28" data-target="foundations/28.html" href="../foundations/28.html" title="F28｜检索入门：目录、倒排索引、向量与近似搜索"><span class="rail-code">F28</span><span class="rail-name">检索入门：目录、倒排索引、向量与近似搜索</span></a><a class="" data-section="foundations--29" data-target="foundations/29.html" href="../foundations/29.html" title="F29｜从搜索结果到可信答案：召回、重排和证据"><span class="rail-code">F29</span><span class="rail-name">从搜索结果到可信答案：召回、重排和证据</span></a><a class="" data-section="foundations--30" data-target="foundations/30.html" href="../foundations/30.html" title="F30｜代码不是普通文档：语法树、调用关系与版本"><span class="rail-code">F30</span><span class="rail-name">代码不是普通文档：语法树、调用关系与版本</span></a><a class="" data-section="foundations--31" data-target="foundations/31.html" href="../foundations/31.html" title="F31｜长期记忆的基础：事实、经历、流程和时间"><span class="rail-code">F31</span><span class="rail-name">长期记忆的基础：事实、经历、流程和时间</span></a><a class="" data-section="foundations--32" data-target="foundations/32.html" href="../foundations/32.html" title="F32｜Skill、路由和多Agent：先理解谁负责什么"><span class="rail-code">F32</span><span class="rail-name">Skill、路由和多Agent：先理解谁负责什么</span></a><a class="" data-section="foundations--33" data-target="foundations/33.html" href="../foundations/33.html" title="F33｜重试、幂等和事务：为什么超时不是失败证明"><span class="rail-code">F33</span><span class="rail-name">重试、幂等和事务：为什么超时不是失败证明</span></a><a class="" data-section="foundations--34" data-target="foundations/34.html" href="../foundations/34.html" title="F34｜工程质量的基础：需求、反例、测试与审查"><span class="rail-code">F34</span><span class="rail-name">工程质量的基础：需求、反例、测试与审查</span></a><div class="rail-section-name">评价与生产</div><a class="" data-section="foundations--35" data-target="foundations/35.html" href="../foundations/35.html" title="F35｜评测指标的分母：成功率、精确率、召回率和pass"><span class="rail-code">F35</span><span class="rail-name">评测指标的分母：成功率、精确率、召回率和pass</span></a><a class="" data-section="foundations--36" data-target="foundations/36.html" href="../foundations/36.html" title="F36｜别被几个百分点骗了：随机性、样本与统计判断"><span class="rail-code">F36</span><span class="rail-name">别被几个百分点骗了：随机性、样本与统计判断</span></a><a class="" data-section="foundations--37" data-target="foundations/37.html" href="../foundations/37.html" title="F37｜安全基础：数据能影响模型，但不能因此获得权限"><span class="rail-code">F37</span><span class="rail-name">安全基础：数据能影响模型，但不能因此获得权限</span></a><a class="" data-section="foundations--38" data-target="foundations/38.html" href="../foundations/38.html" title="F38｜看懂生产运行：Trace、队列、成本和回滚"><span class="rail-code">F38</span><span class="rail-name">看懂生产运行：Trace、队列、成本和回滚</span></a><a class="" data-section="foundations--39" data-target="foundations/39.html" href="../foundations/39.html" title="F39｜多模态与可信度：图片怎样成为输入，解释为什么有限"><span class="rail-code">F39</span><span class="rail-name">多模态与可信度：图片怎样成为输入，解释为什么有限</span></a><a class="" data-section="foundations--40" data-target="foundations/40.html" href="../foundations/40.html" title="F40｜从基础概念到系统分析：怎样定位问题，而不是再堆技术"><span class="rail-code">F40</span><span class="rail-name">从基础概念到系统分析：怎样定位问题，而不是再堆技术</span></a></div></details><details class="rail-group" data-group="chapters"><summary>系统机制</summary><div class="rail-links"><div class="rail-section-name">模型数据与前向</div><a class="" data-section="chapters--01" data-target="chapters/01.html" href="../chapters/01.html" title="01｜输入究竟是什么：从用户的一句话到模型张量"><span class="rail-code">01</span><span class="rail-name">输入究竟是什么：从用户的一句话到模型张量</span></a><a class="" data-section="chapters--02" data-target="chapters/02.html" href="../chapters/02.html" title="02｜一次Transformer前向：逐张量、逐算子讲明白"><span class="rail-code">02</span><span class="rail-name">一次Transformer前向：逐张量、逐算子讲明白</span></a><a class="" data-section="chapters--03" data-target="chapters/03.html" href="../chapters/03.html" title="03｜注意力的深入追问：位置、掩码、多头与反向传播"><span class="rail-code">03</span><span class="rail-name">注意力的深入追问：位置、掩码、多头与反向传播</span></a><div class="rail-section-name">训练与适配</div><a class="" data-section="chapters--04" data-target="chapters/04.html" href="../chapters/04.html" title="04｜训练机制：损失、完整反向传播与参数更新"><span class="rail-code">04</span><span class="rail-name">训练机制：损失、完整反向传播与参数更新</span></a><a class="" data-section="chapters--05" data-target="chapters/05.html" href="../chapters/05.html" title="05｜后训练与模型定制：目标、结构和参数适配"><span class="rail-code">05</span><span class="rail-name">后训练与模型定制：目标、结构和参数适配</span></a><div class="rail-section-name">推理与资源</div><a class="" data-section="chapters--06" data-target="chapters/06.html" href="../chapters/06.html" title="06｜推理机制：加载、解码策略与连续生成"><span class="rail-code">06</span><span class="rail-name">推理机制：加载、解码策略与连续生成</span></a><a class="" data-section="chapters--07" data-target="chapters/07.html" href="../chapters/07.html" title="07｜KV Cache、FlashAttention与PagedAttention的内部过程"><span class="rail-code">07</span><span class="rail-name">KV Cache、FlashAttention与PagedAttention的内部过程</span></a><a class="" data-section="chapters--08" data-target="chapters/08.html" href="../chapters/08.html" title="08｜推理服务：调度、吞吐、延迟和并行"><span class="rail-code">08</span><span class="rail-name">推理服务：调度、吞吐、延迟和并行</span></a><div class="rail-section-name">Agent与工具</div><a class="" data-section="chapters--09" data-target="chapters/09.html" href="../chapters/09.html" title="09｜Agent一次任务的完整循环：谁在思考，谁在执行"><span class="rail-code">09</span><span class="rail-name">Agent一次任务的完整循环：谁在思考，谁在执行</span></a><a class="" data-section="chapters--10" data-target="chapters/10.html" href="../chapters/10.html" title="10｜模型输出怎样变成真实工具调用：协议与执行边界"><span class="rail-code">10</span><span class="rail-name">模型输出怎样变成真实工具调用：协议与执行边界</span></a><a class="" data-section="chapters--11" data-target="chapters/11.html" href="../chapters/11.html" title="11｜工具设计与MCP：从连接到可控执行"><span class="rail-code">11</span><span class="rail-name">工具设计与MCP：从连接到可控执行</span></a><a class="" data-section="chapters--12" data-target="chapters/12.html" href="../chapters/12.html" title="12｜Codex、Claude Code、Copilot：从公开事实到可诊断运行链"><span class="rail-code">12</span><span class="rail-name">Codex、Claude Code、Copilot：从公开事实到可诊断运行链</span></a><div class="rail-section-name">上下文与知识</div><a class="" data-section="chapters--13" data-target="chapters/13.html" href="../chapters/13.html" title="13｜每一轮Prompt怎样组装：上下文是一条数据管线"><span class="rail-code">13</span><span class="rail-name">每一轮Prompt怎样组装：上下文是一条数据管线</span></a><a class="" data-section="chapters--14" data-target="chapters/14.html" href="../chapters/14.html" title="14｜上下文压缩：到底压掉什么，丢失后又如何恢复"><span class="rail-code">14</span><span class="rail-name">上下文压缩：到底压掉什么，丢失后又如何恢复</span></a><a class="" data-section="chapters--15" data-target="chapters/15.html" href="../chapters/15.html" title="15｜检索离线链路：文档怎样变成可查询索引"><span class="rail-code">15</span><span class="rail-name">检索离线链路：文档怎样变成可查询索引</span></a><a class="" data-section="chapters--16" data-target="chapters/16.html" href="../chapters/16.html" title="16｜检索在线链路：召回、融合、重排与证据充足性"><span class="rail-code">16</span><span class="rail-name">检索在线链路：召回、融合、重排与证据充足性</span></a><a class="" data-section="chapters--17" data-target="chapters/17.html" href="../chapters/17.html" title="17｜代码智能：从文本搜索到符号、版本与运行证据"><span class="rail-code">17</span><span class="rail-name">代码智能：从文本搜索到符号、版本与运行证据</span></a><a class="" data-section="chapters--18" data-target="chapters/18.html" href="../chapters/18.html" title="18｜长期记忆：写入、检索、冲突、失效与遗忘"><span class="rail-code">18</span><span class="rail-name">长期记忆：写入、检索、冲突、失效与遗忘</span></a><a class="" data-section="chapters--19" data-target="chapters/19.html" href="../chapters/19.html" title="19｜Skills与路由：怎样加载刚好需要的专业能力"><span class="rail-code">19</span><span class="rail-name">Skills与路由：怎样加载刚好需要的专业能力</span></a><div class="rail-section-name">协作、交付与生产</div><a class="" data-section="chapters--20" data-target="chapters/20.html" href="../chapters/20.html" title="20｜多Agent：并行的收益与交接的损失"><span class="rail-code">20</span><span class="rail-name">多Agent：并行的收益与交接的损失</span></a><a class="" data-section="chapters--21" data-target="chapters/21.html" href="../chapters/21.html" title="21｜可靠执行：重试、幂等、崩溃与状态恢复"><span class="rail-code">21</span><span class="rail-name">可靠执行：重试、幂等、崩溃与状态恢复</span></a><a class="" data-section="chapters--22" data-target="chapters/22.html" href="../chapters/22.html" title="22｜工程质量：从需求到测试，再到真正可交付的代码"><span class="rail-code">22</span><span class="rail-name">工程质量：从需求到测试，再到真正可交付的代码</span></a><a class="" data-section="chapters--23" data-target="chapters/23.html" href="../chapters/23.html" title="23｜Evaluation：怎样证明一次优化真有收益"><span class="rail-code">23</span><span class="rail-name">Evaluation：怎样证明一次优化真有收益</span></a><a class="" data-section="chapters--24" data-target="chapters/24.html" href="../chapters/24.html" title="24｜安全：指令边界、沙箱、权限与记忆污染"><span class="rail-code">24</span><span class="rail-name">安全：指令边界、沙箱、权限与记忆污染</span></a><a class="" data-section="chapters--25" data-target="chapters/25.html" href="../chapters/25.html" title="25｜生产运行：Trace、成本、队列、灰度与回滚"><span class="rail-code">25</span><span class="rail-name">生产运行：Trace、成本、队列、灰度与回滚</span></a><a class="" data-section="chapters--26" data-target="chapters/26.html" href="../chapters/26.html" title="26｜深度应用：把组件组合成能解释的工作系统"><span class="rail-code">26</span><span class="rail-name">深度应用：把组件组合成能解释的工作系统</span></a><a class="" data-section="chapters--27" data-target="chapters/27.html" href="../chapters/27.html" title="27｜事实可靠性、多模态与可解释性：能力边界在哪里"><span class="rail-code">27</span><span class="rail-name">事实可靠性、多模态与可解释性：能力边界在哪里</span></a><a class="" data-section="chapters--28" data-target="chapters/28.html" href="../chapters/28.html" title="28｜研究深水区与系统综合判断"><span class="rail-code">28</span><span class="rail-name">研究深水区与系统综合判断</span></a></div></details><details class="rail-group" data-group="walkthroughs"><summary>贯通案例</summary><div class="rail-links"><a class="" data-section="walkthroughs--a" data-target="walkthroughs/a.html" href="../walkthroughs/a.html" title="全程拆解A｜一次输入怎样变成三个输出Token"><span class="rail-name">一次输入怎样变成三个输出Token</span></a><a class="" data-section="walkthroughs--b" data-target="walkthroughs/b.html" href="../walkthroughs/b.html" title="全程拆解B｜一次仓库修复的每轮输入、输出、工具和恢复"><span class="rail-name">一次仓库修复的每轮输入、输出、工具和恢复</span></a><a class="" data-section="walkthroughs--c" data-target="walkthroughs/c.html" href="../walkthroughs/c.html" title="全程拆解C｜从文档入库到检索、回答、记忆更新和遗忘"><span class="rail-name">从文档入库到检索、回答、记忆更新和遗忘</span></a><a class="" data-section="walkthroughs--d" data-target="walkthroughs/d.html" href="../walkthroughs/d.html" title="全程拆解D｜一次“变慢且变差”的Agent回归怎样查到根因"><span class="rail-name">一次“变慢且变差”的Agent回归怎样查到根因</span></a></div></details><details class="rail-group" data-group="labs" open=""><summary>实验与核验</summary><div class="rail-links"><a class="" data-section="labs" data-target="labs.html" href="../labs.html" title="把数字改一下，看每一步怎样变化"><span class="rail-name">把数字改一下，看每一步怎样变化</span></a><a class="" data-section="labs--model-viewer" data-target="labs/model-viewer.html" href="../labs/model-viewer.html" title="模型实验：逐步查看训练与推理的中间值"><span class="rail-name">模型实验：逐步查看训练与推理的中间值</span></a><a class="" data-section="labs--model-values" data-target="labs/model-values.html" href="../labs/model-values.html" title="模型实验：参数、前向与梯度记录"><span class="rail-name">模型实验：参数、前向与梯度记录</span></a><a class="" data-section="labs--model-run" data-target="labs/model-run.html" href="../labs/model-run.html" title="模型实验：完整代码与运行结果"><span class="rail-name">模型实验：完整代码与运行结果</span></a><a aria-current="page" class="active" data-section="reference--model-code" data-target="reference/model-code.html" href="model-code.html" title="模型实验源码与原始参数"><span class="rail-name">模型实验源码与原始参数</span></a><a class="" data-section="checks" data-target="checks.html" href="../checks.html" title="代码、数值与验证边界"><span class="rail-name">代码、数值与验证边界</span></a><a class="" data-section="example-verification" data-target="example-verification.html" href="../example-verification.html" title="示例核验：数值、状态与代码"><span class="rail-name">示例核验：数值、状态与代码</span></a></div></details><details class="rail-group" data-group="visual"><summary>图解与动画</summary><div class="rail-links"><a class="" data-section="visual-guides" data-target="visual-guides.html" href="../visual-guides.html" title="动态图解：把每一步看清楚"><span class="rail-name">动态图解：把每一步看清楚</span></a><a class="" data-section="worked-examples" data-target="worked-examples.html" href="../worked-examples.html" title="运行示例索引"><span class="rail-name">运行示例索引</span></a><a class="" data-section="worked-model" data-target="worked-model.html" href="../worked-model.html" title="贯通算例：两句话怎样穿过一层模型"><span class="rail-name">贯通算例：两句话怎样穿过一层模型</span></a><a class="" data-section="foundation-atlas" data-target="foundation-atlas.html" href="../foundation-atlas.html" title="基础篇逐节图解索引"><span class="rail-name">基础篇逐节图解索引</span></a><a class="" data-section="mechanisms--index" data-target="mechanisms/index.html" href="../mechanisms/index.html" title="正文图解与细算索引"><span class="rail-name">正文图解与细算索引</span></a><a class="" data-section="examples--input-representation" data-target="examples/input-representation.html" href="../examples/input-representation.html" title="示例：从两句话到三维表示"><span class="rail-name">示例：从两句话到三维表示</span></a><a class="" data-section="visual--F01" data-target="visual/F01.html" href="../visual/F01.html" title="一句话经过了哪些不同的对象"><span class="rail-name">一句话经过了哪些不同的对象</span></a><a class="" data-section="visual--F02" data-target="visual/F02.html" href="../visual/F02.html" title="新增一个轴，究竟多了什么"><span class="rail-name">新增一个轴，究竟多了什么</span></a><a class="" data-section="visual--F03" data-target="visual/F03.html" href="../visual/F03.html" title="文字、字节、Token、编号是四件事"><span class="rail-name">文字、字节、Token、编号是四件事</span></a><a class="" data-section="visual--F04" data-target="visual/F04.html" href="../visual/F04.html" title="组批没有把两句话混成一句"><span class="rail-name">组批没有把两句话混成一句</span></a><a class="" data-section="visual--F05" data-target="visual/F05.html" href="../visual/F05.html" title="Embedding是查一行，不是把编号转二进制"><span class="rail-name">Embedding是查一行，不是把编号转二进制</span></a><a class="" data-section="visual--F06" data-target="visual/F06.html" href="../visual/F06.html" title="数据搬到GPU，改变的是位置而不是含义"><span class="rail-name">数据搬到GPU，改变的是位置而不是含义</span></a><a class="" data-section="visual--F07" data-target="visual/F07.html" href="../visual/F07.html" title="矩阵乘法像逐格填写配方结果"><span class="rail-name">矩阵乘法像逐格填写配方结果</span></a><a class="" data-section="visual--F08" data-target="visual/F08.html" href="../visual/F08.html" title="改摆法与改数值，分开看"><span class="rail-name">改摆法与改数值，分开看</span></a><a class="" data-section="visual--F09" data-target="visual/F09.html" href="../visual/F09.html" title="Softmax不是直接把分数除以它们的和"><span class="rail-name">Softmax不是直接把分数除以它们的和</span></a><a class="" data-section="visual--F10" data-target="visual/F10.html" href="../visual/F10.html" title="网络层是在重组数值，不是在生成隐藏句子"><span class="rail-name">网络层是在重组数值，不是在生成隐藏句子</span></a><a class="" data-section="visual--F11" data-target="visual/F11.html" href="../visual/F11.html" title="Q/K/V：先算从哪读，再算读进多少"><span class="rail-name">Q/K/V：先算从哪读，再算读进多少</span></a><a class="" data-section="visual--F12" data-target="visual/F12.html" href="../visual/F12.html" title="Mask是可见性表，不是额外语义"><span class="rail-name">Mask是可见性表，不是额外语义</span></a><a class="" data-section="visual--F13" data-target="visual/F13.html" href="../visual/F13.html" title="位置怎样进入数值计算"><span class="rail-name">位置怎样进入数值计算</span></a><a class="" data-section="visual--F14" data-target="visual/F14.html" href="../visual/F14.html" title="一层Transformer不是只有Attention"><span class="rail-name">一层Transformer不是只有Attention</span></a><a class="" data-section="visual--F15" data-target="visual/F15.html" href="../visual/F15.html" title="一次输入如何连着预测，直到结束"><span class="rail-name">一次输入如何连着预测，直到结束</span></a><a class="" data-section="visual--F16" data-target="visual/F16.html" href="../visual/F16.html" title="KV Cache：留下算过的，不省掉该读的"><span class="rail-name">KV Cache：留下算过的，不省掉该读的</span></a><a class="" data-section="visual--F17" data-target="visual/F17.html" href="../visual/F17.html" title="梯度像坡度，学习率像迈步大小"><span class="rail-name">梯度像坡度，学习率像迈步大小</span></a><a class="" data-section="visual--F18" data-target="visual/F18.html" href="../visual/F18.html" title="训练：给每个位置一道“下一项”题"><span class="rail-name">训练：给每个位置一道“下一项”题</span></a><a class="" data-section="visual--F19" data-target="visual/F19.html" href="../visual/F19.html" title="后训练改变行为，奖励不是事实裁判"><span class="rail-name">后训练改变行为，奖励不是事实裁判</span></a><a class="" data-section="visual--F20" data-target="visual/F20.html" href="../visual/F20.html" title="省参数、省位数、少激活不是同一种优化"><span class="rail-name">省参数、省位数、少激活不是同一种优化</span></a><a class="" data-section="visual--F21" data-target="visual/F21.html" href="../visual/F21.html" title="算得慢，可能是东西搬得慢"><span class="rail-name">算得慢，可能是东西搬得慢</span></a><a class="" data-section="visual--F22" data-target="visual/F22.html" href="../visual/F22.html" title="把一个Agent任务拆成真正发生的几轮"><span class="rail-name">把一个Agent任务拆成真正发生的几轮</span></a><a class="" data-section="visual--F23" data-target="visual/F23.html" href="../visual/F23.html" title="字符完整、事件完整、工具参数完整是三道关"><span class="rail-name">字符完整、事件完整、工具参数完整是三道关</span></a><a class="" data-section="visual--F24" data-target="visual/F24.html" href="../visual/F24.html" title="任务状态不是聊天里的一句总结"><span class="rail-name">任务状态不是聊天里的一句总结</span></a><a class="" data-section="visual--F25" data-target="visual/F25.html" href="../visual/F25.html" title="MCP连起接口，不自动交出权限"><span class="rail-name">MCP连起接口，不自动交出权限</span></a><a class="" data-section="visual--F26" data-target="visual/F26.html" href="../visual/F26.html" title="每轮上下文像一份有边界的工作资料"><span class="rail-name">每轮上下文像一份有边界的工作资料</span></a><a class="" data-section="visual--F27" data-target="visual/F27.html" href="../visual/F27.html" title="压缩要保留行动所依赖的事实"><span class="rail-name">压缩要保留行动所依赖的事实</span></a><a class="" data-section="visual--F28" data-target="visual/F28.html" href="../visual/F28.html" title="检索先找候选，再判断能否回答"><span class="rail-name">检索先找候选，再判断能否回答</span></a><a class="" data-section="visual--F29" data-target="visual/F29.html" href="../visual/F29.html" title="从两个候选列表，走到可用证据"><span class="rail-name">从两个候选列表，走到可用证据</span></a><a class="" data-section="visual--F30" data-target="visual/F30.html" href="../visual/F30.html" title="代码检索不能只靠“语义相近”"><span class="rail-name">代码检索不能只靠“语义相近”</span></a><a class="" data-section="visual--F31" data-target="visual/F31.html" href="../visual/F31.html" title="长期记忆不是永远正确的小纸条"><span class="rail-name">长期记忆不是永远正确的小纸条</span></a><a class="" data-section="visual--F32" data-target="visual/F32.html" href="../visual/F32.html" title="Skill存在，为什么仍可能完全没用？"><span class="rail-name">Skill存在，为什么仍可能完全没用？</span></a><a class="" data-section="visual--F33" data-target="visual/F33.html" href="../visual/F33.html" title="超时告诉你没收到，不告诉你没发生"><span class="rail-name">超时告诉你没收到，不告诉你没发生</span></a><a class="" data-section="visual--F34" data-target="visual/F34.html" href="../visual/F34.html" title="测试是找反例，不是给代码盖绿章"><span class="rail-name">测试是找反例，不是给代码盖绿章</span></a><a class="" data-section="visual--F35" data-target="visual/F35.html" href="../visual/F35.html" title="读指标，先问它的分母是谁"><span class="rail-name">读指标，先问它的分母是谁</span></a><a class="" data-section="visual--F36" data-target="visual/F36.html" href="../visual/F36.html" title="涨了10个百分点，为什么还不能急着下结论？"><span class="rail-name">涨了10个百分点，为什么还不能急着下结论？</span></a><a class="" data-section="visual--F37" data-target="visual/F37.html" href="../visual/F37.html" title="资料能影响模型，不代表获得了权限"><span class="rail-name">资料能影响模型，不代表获得了权限</span></a><a class="" data-section="visual--F38" data-target="visual/F38.html" href="../visual/F38.html" title="Trace要告诉你因果，不只是时间戳"><span class="rail-name">Trace要告诉你因果，不只是时间戳</span></a><a class="" data-section="visual--F39" data-target="visual/F39.html" href="../visual/F39.html" title="图像表示与界面行动，是两层不同问题"><span class="rail-name">图像表示与界面行动，是两层不同问题</span></a><a class="" data-section="visual--F40" data-target="visual/F40.html" href="../visual/F40.html" title="先找错误发生在哪层，再谈换模型"><span class="rail-name">先找错误发生在哪层，再谈换模型</span></a><a class="" data-section="visual--O01" data-target="visual/O01.html" href="../visual/O01.html" title="GQA/MQA：减少的是K/V组数"><span class="rail-name">GQA/MQA：减少的是K/V组数</span></a><a class="" data-section="visual--O02" data-target="visual/O02.html" href="../visual/O02.html" title="量化：省存储，也引入近似"><span class="rail-name">量化：省存储，也引入近似</span></a><a class="" data-section="visual--O03" data-target="visual/O03.html" href="../visual/O03.html" title="LoRA：冻结大表，学习小增量"><span class="rail-name">LoRA：冻结大表，学习小增量</span></a><a class="" data-section="visual--O04" data-target="visual/O04.html" href="../visual/O04.html" title="FlashAttention：一边读一边累计，不攒整张表"><span class="rail-name">FlashAttention：一边读一边累计，不攒整张表</span></a><a class="" data-section="visual--O05" data-target="visual/O05.html" href="../visual/O05.html" title="PagedAttention：逻辑连续，物理可以分块"><span class="rail-name">PagedAttention：逻辑连续，物理可以分块</span></a><a class="" data-section="visual--O06" data-target="visual/O06.html" href="../visual/O06.html" title="连续组批：有座位空出来，就接下一位"><span class="rail-name">连续组批：有座位空出来，就接下一位</span></a><a class="" data-section="visual--O07" data-target="visual/O07.html" href="../visual/O07.html" title="推测解码：草稿可以快，但必须正确校验"><span class="rail-name">推测解码：草稿可以快，但必须正确校验</span></a><a class="" data-section="visual--O08" data-target="visual/O08.html" href="../visual/O08.html" title="MoE：每个Token选部分计算路径"><span class="rail-name">MoE：每个Token选部分计算路径</span></a><a class="" data-section="visual--O09" data-target="visual/O09.html" href="../visual/O09.html" title="Activation Checkpointing：少存一点，反向时重算"><span class="rail-name">Activation Checkpointing：少存一点，反向时重算</span></a><a class="" data-section="visual--O10" data-target="visual/O10.html" href="../visual/O10.html" title="压缩、检索与Prompt Cache：三种不同的“省”"><span class="rail-name">压缩、检索与Prompt Cache：三种不同的“省”</span></a><a class="" data-section="visual--O11" data-target="visual/O11.html" href="../visual/O11.html" title="多Agent：可并行的工作，比Agent数量重要"><span class="rail-name">多Agent：可并行的工作，比Agent数量重要</span></a><a class="" data-section="visual--O12" data-target="visual/O12.html" href="../visual/O12.html" title="模型路由：便宜一次，不一定便宜一项成功任务"><span class="rail-name">模型路由：便宜一次，不一定便宜一项成功任务</span></a><a class="" data-section="visual--coverage" data-target="visual/coverage.html" href="../visual/coverage.html" title="章节与图解对应表"><span class="rail-name">章节与图解对应表</span></a><a class="" data-section="visual--optimizations" data-target="visual/optimizations.html" href="../visual/optimizations.html" title="优化选择：收益与代价一起看"><span class="rail-name">优化选择：收益与代价一起看</span></a><a class="" data-section="visual--sources" data-target="visual/sources.html" href="../visual/sources.html" title="图解的来源与适用边界"><span class="rail-name">图解的来源与适用边界</span></a><a class="" data-section="visual--verification" data-target="visual/verification.html" href="../visual/verification.html" title="图解的数值与程序"><span class="rail-name">图解的数值与程序</span></a></div></details><details class="rail-group" data-group="engineering"><summary>工程深挖</summary><div class="rail-links"><a class="" data-section="engineering--index" data-target="engineering/index.html" href="../engineering/index.html" title="工程深挖：从机制到故障边界"><span class="rail-name">工程深挖：从机制到故障边界</span></a><a class="" data-section="engineering--labs" data-target="engineering/labs.html" href="../engineering/labs.html" title="故障反例、实际结果与完整代码"><span class="rail-name">故障反例、实际结果与完整代码</span></a><a class="" data-section="engineering--sources" data-target="engineering/sources.html" href="../engineering/sources.html" title="工程深挖的依据与适用范围"><span class="rail-name">工程深挖的依据与适用范围</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="../engineering/agent-evidence.html"><span class="rail-name">Agent机制证据</span></a></div></details><details class="rail-group" data-group="studies"><summary>专题研修</summary><div class="rail-links"><a class="" data-section="studies--chapters--01" data-target="studies/chapters/01.html" href="../studies/chapters/01.html" title="01｜文本怎样成为概率：Tokenizer、模板、目标函数与梯度"><span class="rail-name">文本怎样成为概率：Tokenizer、模板、目标函数与梯度</span></a><a class="" data-section="studies--chapters--02" data-target="studies/chapters/02.html" href="../studies/chapters/02.html" title="02｜进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性"><span class="rail-name">进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性</span></a><a class="" data-section="studies--chapters--03" data-target="studies/chapters/03.html" href="../studies/chapters/03.html" title="03｜训练系统内部：数据、优化器、显存与分布式代价"><span class="rail-name">训练系统内部：数据、优化器、显存与分布式代价</span></a><a class="" data-section="studies--chapters--04" data-target="studies/chapters/04.html" href="../studies/chapters/04.html" title="04｜后训练与推理模型：从偏好目标到可验证能力"><span class="rail-name">后训练与推理模型：从偏好目标到可验证能力</span></a><a class="" data-section="studies--chapters--05" data-target="studies/chapters/05.html" href="../studies/chapters/05.html" title="05｜输出怎样被选中：采样、推测解码与停止条件"><span class="rail-name">输出怎样被选中：采样、推测解码与停止条件</span></a><a class="" data-section="studies--chapters--06" data-target="studies/chapters/06.html" href="../studies/chapters/06.html" title="06｜推理服务的真实瓶颈：内存、FlashAttention、分页与调度"><span class="rail-name">推理服务的真实瓶颈：内存、FlashAttention、分页与调度</span></a><a class="" data-section="studies--chapters--07" data-target="studies/chapters/07.html" href="../studies/chapters/07.html" title="07｜模型接口内部：消息、输出项、SSE与工具调用协议"><span class="rail-name">模型接口内部：消息、输出项、SSE与工具调用协议</span></a><a class="" data-section="studies--chapters--08" data-target="studies/chapters/08.html" href="../studies/chapters/08.html" title="08｜Harness内部：决策、执行、持久化与崩溃恢复"><span class="rail-name">Harness内部：决策、执行、持久化与崩溃恢复</span></a><a class="" data-section="studies--chapters--09" data-target="studies/chapters/09.html" href="../studies/chapters/09.html" title="09｜Codex源码追踪：从仓库规则到历史、循环和压缩"><span class="rail-name">Codex源码追踪：从仓库规则到历史、循环和压缩</span></a><a class="" data-section="studies--chapters--10" data-target="studies/chapters/10.html" href="../studies/chapters/10.html" title="10｜Claude Code与Copilot：公开机制、可验证行为与未知内部"><span class="rail-name">Claude Code与Copilot：公开机制、可验证行为与未知内部</span></a><a class="" data-section="studies--chapters--11" data-target="studies/chapters/11.html" href="../studies/chapters/11.html" title="11｜上下文编译器：信息选择、依赖闭包与预算"><span class="rail-name">上下文编译器：信息选择、依赖闭包与预算</span></a><a class="" data-section="studies--chapters--12" data-target="studies/chapters/12.html" href="../studies/chapters/12.html" title="12｜压缩的深层问题：有损状态、证据恢复与继续执行"><span class="rail-name">压缩的深层问题：有损状态、证据恢复与继续执行</span></a><a class="" data-section="studies--chapters--13" data-target="studies/chapters/13.html" href="../studies/chapters/13.html" title="13｜检索系统内部：BM25、向量、ANN、融合与索引新鲜度"><span class="rail-name">检索系统内部：BM25、向量、ANN、融合与索引新鲜度</span></a><a class="" data-section="studies--chapters--14" data-target="studies/chapters/14.html" href="../studies/chapters/14.html" title="14｜代码智能内部：AST、LSP、依赖图与版本化证据"><span class="rail-name">代码智能内部：AST、LSP、依赖图与版本化证据</span></a><a class="" data-section="studies--chapters--15" data-target="studies/chapters/15.html" href="../studies/chapters/15.html" title="15｜记忆系统内部：双时间、冲突、来源与有用的遗忘"><span class="rail-name">记忆系统内部：双时间、冲突、来源与有用的遗忘</span></a><a class="" data-section="studies--chapters--16" data-target="studies/chapters/16.html" href="../studies/chapters/16.html" title="16｜Skills、工具与模型路由：专业能力如何真正进入任务"><span class="rail-name">Skills、工具与模型路由：专业能力如何真正进入任务</span></a><a class="" data-section="studies--chapters--17" data-target="studies/chapters/17.html" href="../studies/chapters/17.html" title="17｜多Agent内部：DAG、上下文交接、并发冲突与相关错误"><span class="rail-name">多Agent内部：DAG、上下文交接、并发冲突与相关错误</span></a><a class="" data-section="studies--chapters--18" data-target="studies/chapters/18.html" href="../studies/chapters/18.html" title="18｜工程质量的核心：契约、测试、反例、Review与交付证据"><span class="rail-name">工程质量的核心：契约、测试、反例、Review与交付证据</span></a><a class="" data-section="studies--chapters--19" data-target="studies/chapters/19.html" href="../studies/chapters/19.html" title="19｜高级评测：配对实验、可靠性、因果归因与判分偏差"><span class="rail-name">高级评测：配对实验、可靠性、因果归因与判分偏差</span></a><a class="" data-section="studies--chapters--20" data-target="studies/chapters/20.html" href="../studies/chapters/20.html" title="20｜安全内部：可信边界、MCP授权、沙箱与副作用控制"><span class="rail-name">安全内部：可信边界、MCP授权、沙箱与副作用控制</span></a><a class="" data-section="studies--chapters--21" data-target="studies/chapters/21.html" href="../studies/chapters/21.html" title="21｜生产可观测性与可靠运行：Trace、队列、取消和恢复"><span class="rail-name">生产可观测性与可靠运行：Trace、队列、取消和恢复</span></a><a class="" data-section="studies--chapters--22" data-target="studies/chapters/22.html" href="../studies/chapters/22.html" title="22｜成本与性能决策：每个成功任务，而不是每个Token"><span class="rail-name">成本与性能决策：每个成功任务，而不是每个Token</span></a><a class="" data-section="studies--chapters--23" data-target="studies/chapters/23.html" href="../studies/chapters/23.html" title="23｜微调、量化与蒸馏：改变模型，还是改变输入系统"><span class="rail-name">微调、量化与蒸馏：改变模型，还是改变输入系统</span></a><a class="" data-section="studies--chapters--24" data-target="studies/chapters/24.html" href="../studies/chapters/24.html" title="24｜多模态与计算机操作：表示、定位、观察—行动闭环"><span class="rail-name">多模态与计算机操作：表示、定位、观察—行动闭环</span></a><a class="" data-section="studies--chapters--25" data-target="studies/chapters/25.html" href="../studies/chapters/25.html" title="25｜可信答案与可解释性：校准、拒答、证据与因果干预"><span class="rail-name">可信答案与可解释性：校准、拒答、证据与因果干预</span></a><a class="" data-section="studies--chapters--26" data-target="studies/chapters/26.html" href="../studies/chapters/26.html" title="26｜高级研究分支：架构、搜索、RAG与记忆方法的选择逻辑"><span class="rail-name">高级研究分支：架构、搜索、RAG与记忆方法的选择逻辑</span></a><a class="" data-section="studies--chapters--27" data-target="studies/chapters/27.html" href="../studies/chapters/27.html" title="27｜贯穿案例：修复exclude，从原始失败到可恢复交付"><span class="rail-name">贯穿案例：修复exclude，从原始失败到可恢复交付</span></a><a class="" data-section="studies--chapters--28" data-target="studies/chapters/28.html" href="../studies/chapters/28.html" title="28｜深度应用蓝图：企业问答、仓库诊断、研究与受控自动化"><span class="rail-name">深度应用蓝图：企业问答、仓库诊断、研究与受控自动化</span></a><a class="" data-section="studies--chapters--29" data-target="studies/chapters/29.html" href="../studies/chapters/29.html" title="29｜故障诊断手册：从现象到最小有效修复"><span class="rail-name">故障诊断手册：从现象到最小有效修复</span></a><a class="" data-section="studies--chapters--30" data-target="studies/chapters/30.html" href="../studies/chapters/30.html" title="30｜资深能力验收：开放题、参考答案与毕业项目"><span class="rail-name">资深能力验收：开放题、参考答案与毕业项目</span></a><a class="" data-section="studies--chapters--31" data-target="studies/chapters/31.html" href="../studies/chapters/31.html" title="31｜推导附章：注意力反向传播与可训练检索"><span class="rail-name">推导附章：注意力反向传播与可训练检索</span></a><a class="" data-section="studies--index" data-target="studies/index.html" href="../studies/index.html" title="专题研修：实现、验证与应用"><span class="rail-name">专题研修：实现、验证与应用</span></a><a class="" data-section="studies--experiments" data-target="studies/experiments.html" href="../studies/experiments.html" title="实验手册：实现、反例与实测边界"><span class="rail-name">实验手册：实现、反例与实测边界</span></a><a class="" data-section="studies--results" data-target="studies/results.html" href="../studies/results.html" title="实际结果 · 记录与轨迹全部展开"><span class="rail-name">实际结果 · 记录与轨迹全部展开</span></a><a class="" data-section="studies--roadmap" data-target="studies/roadmap.html" href="../studies/roadmap.html" title="专题研修的阅读方法"><span class="rail-name">专题研修的阅读方法</span></a><a class="" data-section="studies--source-code" data-target="studies/source-code.html" href="../studies/source-code.html" title="完整实验源码 · 12个Python文件"><span class="rail-name">完整实验源码 · 12个Python文件</span></a><a class="" data-section="studies--sources" data-target="studies/sources.html" href="../studies/sources.html" title="来源、版本与事实边界"><span class="rail-name">来源、版本与事实边界</span></a></div></details><details class="rail-group" data-group="reading-notes"><summary>拓展阅读</summary><div class="rail-links"><a class="" data-section="reading-notes--chapter-00" data-target="reading-notes/chapter-00.html" href="../reading-notes/chapter-00.html" title="全局认知"><span class="rail-name">全局认知</span></a><a class="" data-section="reading-notes--chapter-01" data-target="reading-notes/chapter-01.html" href="../reading-notes/chapter-01.html" title="模型内部"><span class="rail-name">模型内部</span></a><a class="" data-section="reading-notes--chapter-02" data-target="reading-notes/chapter-02.html" href="../reading-notes/chapter-02.html" title="能力形成"><span class="rail-name">能力形成</span></a><a class="" data-section="reading-notes--chapter-03" data-target="reading-notes/chapter-03.html" href="../reading-notes/chapter-03.html" title="推理与服务"><span class="rail-name">推理与服务</span></a><a class="" data-section="reading-notes--chapter-04" data-target="reading-notes/chapter-04.html" href="../reading-notes/chapter-04.html" title="输入输出接口"><span class="rail-name">输入输出接口</span></a><a class="" data-section="reading-notes--chapter-05" data-target="reading-notes/chapter-05.html" href="../reading-notes/chapter-05.html" title="Agent基础"><span class="rail-name">Agent基础</span></a><a class="" data-section="reading-notes--chapter-06" data-target="reading-notes/chapter-06.html" href="../reading-notes/chapter-06.html" title="真实编码Agent"><span class="rail-name">真实编码Agent</span></a><a class="" data-section="reading-notes--chapter-07" data-target="reading-notes/chapter-07.html" href="../reading-notes/chapter-07.html" title="上下文工程"><span class="rail-name">上下文工程</span></a><a class="" data-section="reading-notes--chapter-08" data-target="reading-notes/chapter-08.html" href="../reading-notes/chapter-08.html" title="检索与代码智能"><span class="rail-name">检索与代码智能</span></a><a class="" data-section="reading-notes--chapter-09" data-target="reading-notes/chapter-09.html" href="../reading-notes/chapter-09.html" title="长期记忆"><span class="rail-name">长期记忆</span></a><a class="" data-section="reading-notes--chapter-10" data-target="reading-notes/chapter-10.html" href="../reading-notes/chapter-10.html" title="Skills与多Agent"><span class="rail-name">Skills与多Agent</span></a><a class="" data-section="reading-notes--chapter-11" data-target="reading-notes/chapter-11.html" href="../reading-notes/chapter-11.html" title="AI软件工程"><span class="rail-name">AI软件工程</span></a><a class="" data-section="reading-notes--chapter-12" data-target="reading-notes/chapter-12.html" href="../reading-notes/chapter-12.html" title="评测方法"><span class="rail-name">评测方法</span></a><a class="" data-section="reading-notes--chapter-13" data-target="reading-notes/chapter-13.html" href="../reading-notes/chapter-13.html" title="安全与权限"><span class="rail-name">安全与权限</span></a><a class="" data-section="reading-notes--chapter-14" data-target="reading-notes/chapter-14.html" href="../reading-notes/chapter-14.html" title="运行与性能"><span class="rail-name">运行与性能</span></a><a class="" data-section="reading-notes--chapter-15" data-target="reading-notes/chapter-15.html" href="../reading-notes/chapter-15.html" title="高级专题"><span class="rail-name">高级专题</span></a><a class="" data-section="reading-notes--chapter-16" data-target="reading-notes/chapter-16.html" href="../reading-notes/chapter-16.html" title="数学与实现补充"><span class="rail-name">数学与实现补充</span></a><a class="" data-section="reading-notes--guide-01" data-target="reading-notes/guide-01.html" href="../reading-notes/guide-01.html" title="图解 Transformer"><span class="rail-name">图解 Transformer</span></a><a class="" data-section="reading-notes--guide-02" data-target="reading-notes/guide-02.html" href="../reading-notes/guide-02.html" title="注意力机制，逐步算清"><span class="rail-name">注意力机制，逐步算清</span></a><a class="" data-section="reading-notes--guide-03" data-target="reading-notes/guide-03.html" href="../reading-notes/guide-03.html" title="LLM 的完整使用链路"><span class="rail-name">LLM 的完整使用链路</span></a><a class="" data-section="reading-notes--guide-04" data-target="reading-notes/guide-04.html" href="../reading-notes/guide-04.html" title="怎样构建有效的 Agent"><span class="rail-name">怎样构建有效的 Agent</span></a><a class="" data-section="reading-notes--guide-05" data-target="reading-notes/guide-05.html" href="../reading-notes/guide-05.html" title="展开 Codex 的执行循环"><span class="rail-name">展开 Codex 的执行循环</span></a><a class="" data-section="reading-notes--guide-06" data-target="reading-notes/guide-06.html" href="../reading-notes/guide-06.html" title="Claude Code 怎样工作"><span class="rail-name">Claude Code 怎样工作</span></a><a class="" data-section="reading-notes--guide-07" data-target="reading-notes/guide-07.html" href="../reading-notes/guide-07.html" title="上下文工程的核心方法"><span class="rail-name">上下文工程的核心方法</span></a><a class="" data-section="reading-notes--guide-08" data-target="reading-notes/guide-08.html" href="../reading-notes/guide-08.html" title="压缩后，怎样保持任务连续"><span class="rail-name">压缩后，怎样保持任务连续</span></a><a class="" data-section="reading-notes--guide-09" data-target="reading-notes/guide-09.html" href="../reading-notes/guide-09.html" title="让检索提供真正需要的证据"><span class="rail-name">让检索提供真正需要的证据</span></a><a class="" data-section="reading-notes--guide-10" data-target="reading-notes/guide-10.html" href="../reading-notes/guide-10.html" title="从 CoALA 理解有效记忆"><span class="rail-name">从 CoALA 理解有效记忆</span></a><a class="" data-section="reading-notes--guide-11" data-target="reading-notes/guide-11.html" href="../reading-notes/guide-11.html" title="用工程环境提高交付质量"><span class="rail-name">用工程环境提高交付质量</span></a><a class="" data-section="reading-notes--guide-12" data-target="reading-notes/guide-12.html" href="../reading-notes/guide-12.html" title="怎样证明 Agent 优化有效"><span class="rail-name">怎样证明 Agent 优化有效</span></a><a class="" data-section="reading-notes--index" data-target="reading-notes/index.html" href="../reading-notes/index.html" title="拓展阅读：研究主题与中文讲义"><span class="rail-name">拓展阅读：研究主题与中文讲义</span></a><a class="" data-section="reading-notes--about" data-target="reading-notes/about.html" href="../reading-notes/about.html" title="拓展阅读的来源与示例约定"><span class="rail-name">拓展阅读的来源与示例约定</span></a><a class="" data-section="reading-notes--glossary" data-target="reading-notes/glossary.html" href="../reading-notes/glossary.html" title="中英术语表"><span class="rail-name">中英术语表</span></a><a class="" data-section="reading-notes--lab-01" data-target="reading-notes/lab-01.html" href="../reading-notes/lab-01.html" title="教学 BPE：字符怎样合并成 Token"><span class="rail-name">教学 BPE：字符怎样合并成 Token</span></a><a class="" data-section="reading-notes--lab-02" data-target="reading-notes/lab-02.html" href="../reading-notes/lab-02.html" title="手算注意力与因果掩码"><span class="rail-name">手算注意力与因果掩码</span></a><a class="" data-section="reading-notes--lab-03" data-target="reading-notes/lab-03.html" href="../reading-notes/lab-03.html" title="KV缓存估算与前缀复用"><span class="rail-name">KV缓存估算与前缀复用</span></a><a class="" data-section="reading-notes--lab-04" data-target="reading-notes/lab-04.html" href="../reading-notes/lab-04.html" title="RRF与检索指标"><span class="rail-name">RRF与检索指标</span></a><a class="" data-section="reading-notes--lab-05" data-target="reading-notes/lab-05.html" href="../reading-notes/lab-05.html" title="压缩保真：状态与否定不能丢"><span class="rail-name">压缩保真：状态与否定不能丢</span></a><a class="" data-section="reading-notes--lab-06" data-target="reading-notes/lab-06.html" href="../reading-notes/lab-06.html" title="记忆范围、版本、过期与冲突"><span class="rail-name">记忆范围、版本、过期与冲突</span></a><a class="" data-section="reading-notes--lab-07" data-target="reading-notes/lab-07.html" href="../reading-notes/lab-07.html" title="模型提议与程序执行分离"><span class="rail-name">模型提议与程序执行分离</span></a><a class="" data-section="reading-notes--lab-08" data-target="reading-notes/lab-08.html" href="../reading-notes/lab-08.html" title="成功率、配对比较与真实成本口径"><span class="rail-name">成功率、配对比较与真实成本口径</span></a><a class="" data-section="reading-notes--lab-09" data-target="reading-notes/lab-09.html" href="../reading-notes/lab-09.html" title="从契约到补丁与反例测试"><span class="rail-name">从契约到补丁与反例测试</span></a><a class="" data-section="reading-notes--lab-10" data-target="reading-notes/lab-10.html" href="../reading-notes/lab-10.html" title="并行Trace：墙钟与操作总量不同"><span class="rail-name">并行Trace：墙钟与操作总量不同</span></a><a class="" data-section="reading-notes--labs" data-target="reading-notes/labs.html" href="../reading-notes/labs.html" title="10个离线机制实验"><span class="rail-name">10个离线机制实验</span></a><a class="" data-section="reading-notes--roadmap" data-target="reading-notes/roadmap.html" href="../reading-notes/roadmap.html" title="拓展阅读方法"><span class="rail-name">拓展阅读方法</span></a><a class="" data-section="reading-notes--sources" data-target="reading-notes/sources.html" href="../reading-notes/sources.html" title="来源与版本说明"><span class="rail-name">来源与版本说明</span></a></div></details><details class="rail-group" data-group="reference"><summary>索引与来源</summary><div class="rail-links"><a class="" data-section="glossary" data-target="glossary.html" href="../glossary.html" title="术语与符号速查"><span class="rail-name">术语与符号速查</span></a><a class="" data-section="concepts" data-target="concepts.html" href="../concepts.html" title="公式与术语：先认识对象，再理解运算"><span class="rail-name">公式与术语：先认识对象，再理解运算</span></a><a class="" data-section="topics" data-target="topics.html" href="../topics.html" title="知识主题索引"><span class="rail-name">知识主题索引</span></a><a class="" data-section="sources" data-target="sources.html" href="../sources.html" title="参考资料与适用范围"><span class="rail-name">参考资料与适用范围</span></a><a class="" data-section="reference--model-sources" data-target="reference/model-sources.html" href="model-sources.html" title="模型机制：原理来源与接口版本"><span class="rail-name">模型机制：原理来源与接口版本</span></a><a class="" data-section="example-sources" data-target="example-sources.html" href="../example-sources.html" title="运行示例：依据、参数与范围"><span class="rail-name">运行示例：依据、参数与范围</span></a><a class="" data-section="mechanisms--sources" data-target="mechanisms/sources.html" href="../mechanisms/sources.html" title="正文图解的来源与适用条件"><span class="rail-name">正文图解的来源与适用条件</span></a><a class="" data-section="mechanisms--verification" data-target="mechanisms/verification.html" href="../mechanisms/verification.html" title="图解计算与验证记录"><span class="rail-name">图解计算与验证记录</span></a></div></details><details class="rail-group" data-group="implementation"><summary>完整实验源码</summary><div class="rail-links"><a class="" data-section="studies--code--attention_gradients" data-target="studies/code/attention_gradients.html" href="../studies/code/attention_gradients.html" title="attention_gradients.py"><span class="rail-name">attention_gradients.py</span></a><a class="" data-section="studies--code--capstone" data-target="studies/code/capstone.html" href="../studies/code/capstone.html" title="capstone.py"><span class="rail-name">capstone.py</span></a><a class="" data-section="studies--code--context_memory" data-target="studies/code/context_memory.html" href="../studies/code/context_memory.html" title="context_memory.py"><span class="rail-name">context_memory.py</span></a><a class="" data-section="studies--code--journal" data-target="studies/code/journal.html" href="../studies/code/journal.html" title="journal.py"><span class="rail-name">journal.py</span></a><a class="" data-section="studies--code--live_readonly" data-target="studies/code/live_readonly.html" href="../studies/code/live_readonly.html" title="live_readonly.py"><span class="rail-name">live_readonly.py</span></a><a class="" data-section="studies--code--numerics" data-target="studies/code/numerics.html" href="../studies/code/numerics.html" title="numerics.py"><span class="rail-name">numerics.py</span></a><a class="" data-section="studies--code--retrieval" data-target="studies/code/retrieval.html" href="../studies/code/retrieval.html" title="retrieval.py"><span class="rail-name">retrieval.py</span></a><a class="" data-section="studies--code--run_all" data-target="studies/code/run_all.html" href="../studies/code/run_all.html" title="run_all.py"><span class="rail-name">run_all.py</span></a><a class="" data-section="studies--code--sse_protocol" data-target="studies/code/sse_protocol.html" href="../studies/code/sse_protocol.html" title="sse_protocol.py"><span class="rail-name">sse_protocol.py</span></a><a class="" data-section="studies--code--statistics_lab" data-target="studies/code/statistics_lab.html" href="../studies/code/statistics_lab.html" title="statistics_lab.py"><span class="rail-name">statistics_lab.py</span></a><a class="" data-section="studies--code--test_suite" data-target="studies/code/test_suite.html" href="../studies/code/test_suite.html" title="test_suite.py"><span class="rail-name">test_suite.py</span></a><a class="" data-section="studies--code--train_tiny_lm" data-target="studies/code/train_tiny_lm.html" href="../studies/code/train_tiny_lm.html" title="train_tiny_lm.py"><span class="rail-name">train_tiny_lm.py</span></a></div></details></nav><div class="rail-foot"><span>当前 <span data-nav-current-label=""></span></span><a href="../contents.html">查看完整目录</a></div></aside><div class="reading-layout"><main class="reading-main" id="main-content"><article class="article"><div class="breadcrumb"><a href="../index.html">首页</a> / <a href="../labs.html">实验与来源</a></div><h1>模型实验源码与原始参数</h1><details class="mobile-outline"><summary>本章提纲</summary><nav aria-label="本章提纲" class="toc"><a href="#tiny_model">lab/tiny_model.py</a><a href="#reference_inference">lab/reference_inference.py</a><a href="#test_model">lab/test_model.py</a><a href="#weights_initial">data/weights_initial.json</a><a href="#weights_trained">data/weights_trained.json</a></nav></details><p class="lead">代码可在本地逐行核对。正文中的实现引用直接定位到这里；本页不是另一套课程。</p><h2 id="tiny_model">lab/tiny_model.py</h2><p><a href="../labs/model/lab/tiny_model.py">原文件：labs/model/lab/tiny_model.py</a></p><pre class="source-lines"><code class="language-python"><span data-line="1" id="tiny_model-L1">"""可检查的单层因果语言模型 M。CPU/float64；无外部模型、网络或隐式标签移位。</span>
+<span data-line="2" id="tiny_model-L2"> </span>
+<span data-line="3" id="tiny_model-L3">运行: python tiny_model.py --out ../data</span>
+<span data-line="4" id="tiny_model-L4">不是 Llama/GPT 的逐层复刻；结构约定在 MODEL_SPEC 中固定。</span>
+<span data-line="5" id="tiny_model-L5">"""</span>
+<span data-line="6" id="tiny_model-L6">from __future__ import annotations</span>
+<span data-line="7" id="tiny_model-L7">import argparse, copy, hashlib, json, math, platform, sys</span>
+<span data-line="8" id="tiny_model-L8">from pathlib import Path</span>
+<span data-line="9" id="tiny_model-L9">from typing import Optional</span>
+<span data-line="10" id="tiny_model-L10">import torch</span>
+<span data-line="11" id="tiny_model-L11">from torch import nn</span>
+<span data-line="12" id="tiny_model-L12">from torch.nn import functional as F</span>
+<span data-line="13" id="tiny_model-L13"> </span>
+<span data-line="14" id="tiny_model-L14">VOCAB = ['PAD','我','爱','学习','你','！','BOS','EOS']</span>
+<span data-line="15" id="tiny_model-L15">PAD, BOS, EOS = 0, 6, 7</span>
+<span data-line="16" id="tiny_model-L16">MODEL_SPEC = dict(vocab=VOCAB, vocab_size=8, width=4, ffn_width=8,</span>
+<span data-line="17" id="tiny_model-L17">                  layers=1, heads=1, context=8, norm='RMSNorm', eps=1e-5,</span>
+<span data-line="18" id="tiny_model-L18">                  position='learned absolute position', activation='ReLU',</span>
+<span data-line="19" id="tiny_model-L19">                  bias=False, dropout=0.0, tied_embeddings=False,</span>
+<span data-line="20" id="tiny_model-L20">                  dtype='float64', seed=23)</span>
+<span data-line="21" id="tiny_model-L21">SEQUENCES = torch.tensor([[6,1,2,3,5,7],[6,4,2,3,5,7]], dtype=torch.long)</span>
+<span data-line="22" id="tiny_model-L22"> </span>
+<span data-line="23" id="tiny_model-L23">def jval(x):</span>
+<span data-line="24" id="tiny_model-L24">    if isinstance(x, torch.Tensor): return x.detach().cpu().tolist()</span>
+<span data-line="25" id="tiny_model-L25">    if isinstance(x, dict): return {k:jval(v) for k,v in x.items()}</span>
+<span data-line="26" id="tiny_model-L26">    if isinstance(x, (tuple,list)): return [jval(y) for y in x]</span>
+<span data-line="27" id="tiny_model-L27">    return x</span>
+<span data-line="28" id="tiny_model-L28"> </span>
+<span data-line="29" id="tiny_model-L29">def fingerprint(m):</span>
+<span data-line="30" id="tiny_model-L30">    data={k:jval(v) for k,v in m.state_dict().items()}</span>
+<span data-line="31" id="tiny_model-L31">    return hashlib.sha256(json.dumps(data,sort_keys=True,separators=(',',':')).encode()).hexdigest()</span>
+<span data-line="32" id="tiny_model-L32"> </span>
+<span data-line="33" id="tiny_model-L33">class TinyLM(nn.Module):</span>
+<span data-line="34" id="tiny_model-L34">    """所有 W 按右乘 [in,out] 保存；没有调用含隐式转置的 nn.Linear。"""</span>
+<span data-line="35" id="tiny_model-L35">    def __init__(self):</span>
+<span data-line="36" id="tiny_model-L36">        super().__init__()</span>
+<span data-line="37" id="tiny_model-L37">        g=torch.Generator().manual_seed(23)</span>
+<span data-line="38" id="tiny_model-L38">        E=torch.tensor([[0,0,0,0],[.2,-.1,.7,.4],[-.3,.8,.1,.5],</span>
+<span data-line="39" id="tiny_model-L39">                        [.6,.2,-.4,.9],[.1,-.5,.9,.3],[-.2,.4,.5,-.6],</span>
+<span data-line="40" id="tiny_model-L40">                        [.4,-.2,.3,.1],[.1,.2,-.3,.4]],dtype=torch.float64)</span>
+<span data-line="41" id="tiny_model-L41">        self.E=nn.Parameter(E)</span>
+<span data-line="42" id="tiny_model-L42">        self.P=nn.Parameter(torch.randint(-2,3,(8,4),generator=g).double()*.05)</span>
+<span data-line="43" id="tiny_model-L43">        for name, shape in [('Wq',(4,4)),('Wk',(4,4)),('Wv',(4,4)),('Wo',(4,4)),</span>
+<span data-line="44" id="tiny_model-L44">                            ('W1',(4,8)),('W2',(8,4)),('U',(4,8))]:</span>
+<span data-line="45" id="tiny_model-L45">            self.register_parameter(name,nn.Parameter(torch.randint(-3,4,shape,generator=g).double()*.1))</span>
+<span data-line="46" id="tiny_model-L46">        for name in ('g1','g2','gf'): self.register_parameter(name,nn.Parameter(torch.ones(4,dtype=torch.float64)))</span>
+<span data-line="47" id="tiny_model-L47"> </span>
+<span data-line="48" id="tiny_model-L48">    @staticmethod</span>
+<span data-line="49" id="tiny_model-L49">    def norm(x,g):</span>
+<span data-line="50" id="tiny_model-L50">        r=torch.sqrt(x.square().mean(dim=-1,keepdim=True)+MODEL_SPEC['eps'])</span>
+<span data-line="51" id="tiny_model-L51">        return x/r*g,r</span>
+<span data-line="52" id="tiny_model-L52"> </span>
+<span data-line="53" id="tiny_model-L53">    def forward(self, ids: torch.Tensor, *, cache=None, key_valid=None,</span>
+<span data-line="54" id="tiny_model-L54">                position_ids=None, causal=True, return_trace=False):</span>
+<span data-line="55" id="tiny_model-L55">        if ids.ndim!=2 or ids.dtype!=torch.long: raise ValueError('ids必须是[B,T] long tensor')</span>
+<span data-line="56" id="tiny_model-L56">        B,T=ids.shape</span>
+<span data-line="57" id="tiny_model-L57">        if T==0 or (ids&lt;0).any() or (ids&gt;=8).any(): raise ValueError('空输入或词表ID越界')</span>
+<span data-line="58" id="tiny_model-L58">        past=0 if cache is None else cache[0].shape[1]</span>
+<span data-line="59" id="tiny_model-L59">        if position_ids is None: position_ids=torch.arange(past,past+T,device=ids.device).expand(B,-1)</span>
+<span data-line="60" id="tiny_model-L60">        if position_ids.shape!=ids.shape or (position_ids&lt;0).any() or (position_ids&gt;=8).any():</span>
+<span data-line="61" id="tiny_model-L61">            raise ValueError('position_ids形状或范围错误')</span>
+<span data-line="62" id="tiny_model-L62">        e=self.E[ids]; pos=self.P[position_ids]; x=e+pos</span>
+<span data-line="63" id="tiny_model-L63">        n1,r1=self.norm(x,self.g1)</span>
+<span data-line="64" id="tiny_model-L64">        q=n1@self.Wq; k_new=n1@self.Wk; v_new=n1@self.Wv</span>
+<span data-line="65" id="tiny_model-L65">        k=k_new if cache is None else torch.cat((cache[0],k_new),dim=1)</span>
+<span data-line="66" id="tiny_model-L66">        v=v_new if cache is None else torch.cat((cache[1],v_new),dim=1)</span>
+<span data-line="67" id="tiny_model-L67">        K=k.shape[1]</span>
+<span data-line="68" id="tiny_model-L68">        allowed=torch.ones(B,T,K,dtype=torch.bool,device=ids.device)</span>
+<span data-line="69" id="tiny_model-L69">        if causal:</span>
+<span data-line="70" id="tiny_model-L70">            allowed &amp;= (torch.arange(K,device=ids.device)[None,:] &lt;=</span>
+<span data-line="71" id="tiny_model-L71">                        (past+torch.arange(T,device=ids.device))[:,None])[None,:,:]</span>
+<span data-line="72" id="tiny_model-L72">        if key_valid is not None:</span>
+<span data-line="73" id="tiny_model-L73">            if key_valid.shape!=(B,K):raise ValueError('key_valid必须覆盖历史与当前全部Key')</span>
+<span data-line="74" id="tiny_model-L74">            allowed &amp;= key_valid[:,None,:].bool()</span>
+<span data-line="75" id="tiny_model-L75">        # 本实现拒绝完全没有可读Key的query。PAD query在工业实现中也可以单独跳过。</span>
+<span data-line="76" id="tiny_model-L76">        if not allowed.any(dim=-1).all(): raise ValueError('出现全遮蔽query行')</span>
+<span data-line="77" id="tiny_model-L77">        dot=q@k.transpose(-1,-2)</span>
+<span data-line="78" id="tiny_model-L78">        scores=dot/math.sqrt(4)</span>
+<span data-line="79" id="tiny_model-L79">        masked=scores.masked_fill(~allowed,float('-inf'))</span>
+<span data-line="80" id="tiny_model-L80">        A=torch.softmax(masked,dim=-1)</span>
+<span data-line="81" id="tiny_model-L81">        mix=A@v</span>
+<span data-line="82" id="tiny_model-L82">        attn_delta=mix@self.Wo</span>
+<span data-line="83" id="tiny_model-L83">        residual=x+attn_delta</span>
+<span data-line="84" id="tiny_model-L84">        n2,r2=self.norm(residual,self.g2)</span>
+<span data-line="85" id="tiny_model-L85">        ff_pre=n2@self.W1</span>
+<span data-line="86" id="tiny_model-L86">        ff_act=F.relu(ff_pre)</span>
+<span data-line="87" id="tiny_model-L87">        ff_delta=ff_act@self.W2</span>
+<span data-line="88" id="tiny_model-L88">        hidden=residual+ff_delta</span>
+<span data-line="89" id="tiny_model-L89">        final,rf=self.norm(hidden,self.gf)</span>
+<span data-line="90" id="tiny_model-L90">        logits=final@self.U</span>
+<span data-line="91" id="tiny_model-L91">        new_cache=(k,v)</span>
+<span data-line="92" id="tiny_model-L92">        if not return_trace:return logits,new_cache</span>
+<span data-line="93" id="tiny_model-L93">        trace=dict(ids=ids,position_ids=position_ids,embedding=e,position=pos,x=x,r1=r1,n1=n1,</span>
+<span data-line="94" id="tiny_model-L94">                   q=q,k=k,v=v,dot=dot,scores=scores,allowed=allowed,A=A,mix=mix,</span>
+<span data-line="95" id="tiny_model-L95">                   attn_delta=attn_delta,residual=residual,r2=r2,n2=n2,</span>
+<span data-line="96" id="tiny_model-L96">                   ff_pre=ff_pre,ff_act=ff_act,ff_delta=ff_delta,hidden=hidden,</span>
+<span data-line="97" id="tiny_model-L97">                   rf=rf,final=final,logits=logits,probabilities=torch.softmax(logits,dim=-1))</span>
+<span data-line="98" id="tiny_model-L98">        return logits,new_cache,trace</span>
+<span data-line="99" id="tiny_model-L99"> </span>
+<span data-line="100" id="tiny_model-L100"> </span>
+<span data-line="101" id="tiny_model-L101">def training_loss(logits,targets):</span>
+<span data-line="102" id="tiny_model-L102">    """已对齐的目标；外部切片一次，本函数绝不再次移动标签。"""</span>
+<span data-line="103" id="tiny_model-L103">    if logits.shape[:-1]!=targets.shape:raise ValueError('logits位置轴必须与targets对应')</span>
+<span data-line="104" id="tiny_model-L104">    valid=targets.ne(-100)</span>
+<span data-line="105" id="tiny_model-L105">    if not valid.any():raise ValueError('没有有效目标，不能取0/0均值')</span>
+<span data-line="106" id="tiny_model-L106">    losses=F.cross_entropy(logits.reshape(-1,8),targets.reshape(-1),ignore_index=-100,reduction='none').reshape_as(targets)</span>
+<span data-line="107" id="tiny_model-L107">    return losses.sum()/valid.sum(),losses</span>
+<span data-line="108" id="tiny_model-L108"> </span>
+<span data-line="109" id="tiny_model-L109"> </span>
+<span data-line="110" id="tiny_model-L110">def rms_backward(x,gamma,r,dy):</span>
+<span data-line="111" id="tiny_model-L111">    g=dy*gamma</span>
+<span data-line="112" id="tiny_model-L112">    dx=g/r - x*(g*x).mean(dim=-1,keepdim=True)/(r**3)</span>
+<span data-line="113" id="tiny_model-L113">    dgamma=(dy*x/r).sum(dim=(0,1))</span>
+<span data-line="114" id="tiny_model-L114">    return dx,dgamma</span>
+<span data-line="115" id="tiny_model-L115"> </span>
+<span data-line="116" id="tiny_model-L116"> </span>
+<span data-line="117" id="tiny_model-L117">def manual_backward(model,trace,targets):</span>
+<span data-line="118" id="tiny_model-L118">    """只用链式法则和矩阵运算重建整层梯度，不调用 autograd。"""</span>
+<span data-line="119" id="tiny_model-L119">    t={k:v.detach() for k,v in trace.items()}</span>
+<span data-line="120" id="tiny_model-L120">    p={k:v.detach() for k,v in model.named_parameters()}</span>
+<span data-line="121" id="tiny_model-L121">    safe=targets.clamp(min=0)</span>
+<span data-line="122" id="tiny_model-L122">    onehot=F.one_hot(safe,8).double()</span>
+<span data-line="123" id="tiny_model-L123">    count=targets.ne(-100).sum()</span>
+<span data-line="124" id="tiny_model-L124">    dz=(t['probabilities']-onehot)*targets.ne(-100)[...,None]/count</span>
+<span data-line="125" id="tiny_model-L125">    def wt(a,b):return a.reshape(-1,a.shape[-1]).T@b.reshape(-1,b.shape[-1])</span>
+<span data-line="126" id="tiny_model-L126">    grads={}; backward={}</span>
+<span data-line="127" id="tiny_model-L127">    grads['U']=wt(t['final'],dz)</span>
+<span data-line="128" id="tiny_model-L128">    dfinal=dz@p['U'].T</span>
+<span data-line="129" id="tiny_model-L129">    dhidden,grads['gf']=rms_backward(t['hidden'],p['gf'],t['rf'],dfinal)</span>
+<span data-line="130" id="tiny_model-L130">    grads['W2']=wt(t['ff_act'],dhidden)</span>
+<span data-line="131" id="tiny_model-L131">    dact=dhidden@p['W2'].T</span>
+<span data-line="132" id="tiny_model-L132">    dpre=dact*t['ff_pre'].gt(0)</span>
+<span data-line="133" id="tiny_model-L133">    grads['W1']=wt(t['n2'],dpre)</span>
+<span data-line="134" id="tiny_model-L134">    dn2=dpre@p['W1'].T</span>
+<span data-line="135" id="tiny_model-L135">    drnorm,grads['g2']=rms_backward(t['residual'],p['g2'],t['r2'],dn2)</span>
+<span data-line="136" id="tiny_model-L136">    dresidual=dhidden+drnorm</span>
+<span data-line="137" id="tiny_model-L137">    grads['Wo']=wt(t['mix'],dresidual)</span>
+<span data-line="138" id="tiny_model-L138">    dmix=dresidual@p['Wo'].T</span>
+<span data-line="139" id="tiny_model-L139">    dA=dmix@t['v'].transpose(-1,-2)</span>
+<span data-line="140" id="tiny_model-L140">    dv=t['A'].transpose(-1,-2)@dmix</span>
+<span data-line="141" id="tiny_model-L141">    ds=t['A']*(dA-(dA*t['A']).sum(dim=-1,keepdim=True))</span>
+<span data-line="142" id="tiny_model-L142">    dq=ds@t['k']/math.sqrt(4)</span>
+<span data-line="143" id="tiny_model-L143">    dk=ds.transpose(-1,-2)@t['q']/math.sqrt(4)</span>
+<span data-line="144" id="tiny_model-L144">    grads['Wq']=wt(t['n1'],dq);grads['Wk']=wt(t['n1'],dk);grads['Wv']=wt(t['n1'],dv)</span>
+<span data-line="145" id="tiny_model-L145">    dn1=dq@p['Wq'].T+dk@p['Wk'].T+dv@p['Wv'].T</span>
+<span data-line="146" id="tiny_model-L146">    dxnorm,grads['g1']=rms_backward(t['x'],p['g1'],t['r1'],dn1)</span>
+<span data-line="147" id="tiny_model-L147">    dx=dresidual+dxnorm</span>
+<span data-line="148" id="tiny_model-L148">    grads['E']=torch.zeros_like(p['E']).index_add_(0,t['ids'].reshape(-1),dx.reshape(-1,4))</span>
+<span data-line="149" id="tiny_model-L149">    grads['P']=torch.zeros_like(p['P']).index_add_(0,t['position_ids'].reshape(-1),dx.reshape(-1,4))</span>
+<span data-line="150" id="tiny_model-L150">    backward.update(dz=dz,dfinal=dfinal,dhidden=dhidden,dact=dact,dpre=dpre,dn2=dn2,</span>
+<span data-line="151" id="tiny_model-L151">                    drnorm=drnorm,dresidual=dresidual,dmix=dmix,dA=dA,dv=dv,ds=ds,</span>
+<span data-line="152" id="tiny_model-L152">                    dq=dq,dk=dk,dn1=dn1,dxnorm=dxnorm,dx=dx)</span>
+<span data-line="153" id="tiny_model-L153">    return grads,backward</span>
+<span data-line="154" id="tiny_model-L154"> </span>
+<span data-line="155" id="tiny_model-L155"> </span>
+<span data-line="156" id="tiny_model-L156">def generate(model,prompt,max_new=5,use_cache=True):</span>
+<span data-line="157" id="tiny_model-L157">    if not prompt:raise ValueError('prompt不能为空')</span>
+<span data-line="158" id="tiny_model-L158">    model.eval();ids=torch.tensor([prompt],dtype=torch.long)</span>
+<span data-line="159" id="tiny_model-L159">    full=ids.clone();cache=None;steps=[];reason='length'</span>
+<span data-line="160" id="tiny_model-L160">    with torch.inference_mode():</span>
+<span data-line="161" id="tiny_model-L161">        for step in range(max_new):</span>
+<span data-line="162" id="tiny_model-L162">            if full.shape[1]&gt;8:reason='context';break</span>
+<span data-line="163" id="tiny_model-L163">            new=ids if use_cache else full</span>
+<span data-line="164" id="tiny_model-L164">            log,c,tr=model(new,cache=cache if use_cache else None,return_trace=True)</span>
+<span data-line="165" id="tiny_model-L165">            selected=int(log[0,-1].argmax())</span>
+<span data-line="166" id="tiny_model-L166">            steps.append(dict(step=step,phase='prefill' if step==0 else 'decode',</span>
+<span data-line="167" id="tiny_model-L167">                              prefix=full[0].tolist(),input=new[0].tolist(),</span>
+<span data-line="168" id="tiny_model-L168">                              cache_before=0 if cache is None else cache[0].shape[1],</span>
+<span data-line="169" id="tiny_model-L169">                              cache_after=c[0].shape[1],selected=selected,selected_text=VOCAB[selected],</span>
+<span data-line="170" id="tiny_model-L170">                              logits=jval(log[0,-1]),probabilities=jval(tr['probabilities'][0,-1]),</span>
+<span data-line="171" id="tiny_model-L171">                              trace=jval(tr)))</span>
+<span data-line="172" id="tiny_model-L172">            full=torch.cat((full,torch.tensor([[selected]])),dim=1)</span>
+<span data-line="173" id="tiny_model-L173">            if selected==EOS:reason='eos';break</span>
+<span data-line="174" id="tiny_model-L174">            ids=torch.tensor([[selected]],dtype=torch.long);cache=c if use_cache else None</span>
+<span data-line="175" id="tiny_model-L175">    return dict(tokens=full[0].tolist(),steps=steps,reason=reason)</span>
+<span data-line="176" id="tiny_model-L176"> </span>
+<span data-line="177" id="tiny_model-L177"> </span>
+<span data-line="178" id="tiny_model-L178">def run(out:Path,steps:int=400):</span>
+<span data-line="179" id="tiny_model-L179">    torch.set_num_threads(1);torch.use_deterministic_algorithms(True)</span>
+<span data-line="180" id="tiny_model-L180">    out.mkdir(parents=True,exist_ok=True)</span>
+<span data-line="181" id="tiny_model-L181">    model=TinyLM();initial=copy.deepcopy(model.state_dict())</span>
+<span data-line="182" id="tiny_model-L182">    ids=SEQUENCES[:,:-1]; targets=SEQUENCES[:,1:]</span>
+<span data-line="183" id="tiny_model-L183">    logits,_,trace=model(ids,return_trace=True);loss,per=training_loss(logits,targets)</span>
+<span data-line="184" id="tiny_model-L184">    manual,back=manual_backward(model,trace,targets)</span>
+<span data-line="185" id="tiny_model-L185">    loss.backward()</span>
+<span data-line="186" id="tiny_model-L186">    checks={k:float((v-model.get_parameter(k).grad).abs().max()) for k,v in manual.items()}</span>
+<span data-line="187" id="tiny_model-L187">    if max(checks.values())&gt;1e-10:raise AssertionError(checks)</span>
+<span data-line="188" id="tiny_model-L188">    data=dict(spec=MODEL_SPEC,environment=dict(python=platform.python_version(),torch=torch.__version__,device='cpu',threads=1),</span>
+<span data-line="189" id="tiny_model-L189">              sequences=jval(SEQUENCES),input=jval(ids),target=jval(targets),</span>
+<span data-line="190" id="tiny_model-L190">              parameter_count=sum(p.numel() for p in model.parameters()),</span>
+<span data-line="191" id="tiny_model-L191">              initial_parameters=jval(initial),initial_trace=jval(trace),</span>
+<span data-line="192" id="tiny_model-L192">              initial_loss=float(loss.detach()),initial_position_losses=jval(per),</span>
+<span data-line="193" id="tiny_model-L193">              initial_gradients={k:jval(v.grad) for k,v in model.named_parameters()},</span>
+<span data-line="194" id="tiny_model-L194">              analytic_backward=jval(back),analytic_gradient_errors=checks,</span>
+<span data-line="195" id="tiny_model-L195">              initial_hash=fingerprint(model))</span>
+<span data-line="196" id="tiny_model-L196">    model.zero_grad(set_to_none=True)</span>
+<span data-line="197" id="tiny_model-L197">    opt=torch.optim.AdamW(model.parameters(),lr=.03,betas=(.9,.999),eps=1e-8,weight_decay=.01,foreach=False)</span>
+<span data-line="198" id="tiny_model-L198">    history=[];first_two=[]</span>
+<span data-line="199" id="tiny_model-L199">    for step in range(steps):</span>
+<span data-line="200" id="tiny_model-L200">        model.train();opt.zero_grad(set_to_none=True)</span>
+<span data-line="201" id="tiny_model-L201">        logits,_=model(ids);loss,_=training_loss(logits,targets)</span>
+<span data-line="202" id="tiny_model-L202">        loss.backward()</span>
+<span data-line="203" id="tiny_model-L203">        if step&lt;2:</span>
+<span data-line="204" id="tiny_model-L204">            par=model.Wq;idx=(0,0)</span>
+<span data-line="205" id="tiny_model-L205">            state=opt.state.get(par,{})</span>
+<span data-line="206" id="tiny_model-L206">            item=dict(step=step+1,weight_before=float(par[idx].detach()),gradient=float(par.grad[idx]),</span>
+<span data-line="207" id="tiny_model-L207">                      m_before=float(state.get('exp_avg',torch.zeros_like(par))[idx]),</span>
+<span data-line="208" id="tiny_model-L208">                      v_before=float(state.get('exp_avg_sq',torch.zeros_like(par))[idx]))</span>
+<span data-line="209" id="tiny_model-L209">        opt.step()</span>
+<span data-line="210" id="tiny_model-L210">        if step&lt;2:</span>
+<span data-line="211" id="tiny_model-L211">            item.update(weight_after=float(model.Wq[idx].detach()),</span>
+<span data-line="212" id="tiny_model-L212">                        m_after=float(opt.state[model.Wq]['exp_avg'][idx]),</span>
+<span data-line="213" id="tiny_model-L213">                        v_after=float(opt.state[model.Wq]['exp_avg_sq'][idx]))</span>
+<span data-line="214" id="tiny_model-L214">            first_two.append(item)</span>
+<span data-line="215" id="tiny_model-L215">        if step==0:</span>
+<span data-line="216" id="tiny_model-L216">            data['after_one_parameters']=jval(model.state_dict())</span>
+<span data-line="217" id="tiny_model-L217">            _,_,tr1=model(ids,return_trace=True);data['after_one_trace']=jval(tr1)</span>
+<span data-line="218" id="tiny_model-L218">        if step in {0,1,2,4,9,19,49,99,199,299,steps-1}:</span>
+<span data-line="219" id="tiny_model-L219">            with torch.no_grad():</span>
+<span data-line="220" id="tiny_model-L220">                after,_=model(ids);lossafter,_=training_loss(after,targets)</span>
+<span data-line="221" id="tiny_model-L221">            history.append(dict(updates=step+1,loss_before=float(loss.detach()),loss_after=float(lossafter)))</span>
+<span data-line="222" id="tiny_model-L222">    checkpoint=dict(spec=MODEL_SPEC,parameters=jval(model.state_dict()))</span>
+<span data-line="223" id="tiny_model-L223">    (out/'weights_trained.json').write_text(json.dumps(checkpoint,ensure_ascii=False,indent=2))</span>
+<span data-line="224" id="tiny_model-L224">    (out/'weights_initial.json').write_text(json.dumps(dict(spec=MODEL_SPEC,parameters=jval(initial)),ensure_ascii=False,indent=2))</span>
+<span data-line="225" id="tiny_model-L225">    # JSON不执行任意Python反序列化逻辑，便于教学审查。</span>
+<span data-line="226" id="tiny_model-L226">    loaded=TinyLM()</span>
+<span data-line="227" id="tiny_model-L227">    disk=json.loads((out/'weights_trained.json').read_text())</span>
+<span data-line="228" id="tiny_model-L228">    loaded.load_state_dict({k:torch.tensor(v,dtype=torch.float64) for k,v in disk['parameters'].items()})</span>
+<span data-line="229" id="tiny_model-L229">    loaded.eval()</span>
+<span data-line="230" id="tiny_model-L230">    with torch.no_grad():</span>
+<span data-line="231" id="tiny_model-L231">        l,_,tf=loaded(ids,return_trace=True);lf,pl=training_loss(l,targets)</span>
+<span data-line="232" id="tiny_model-L232">    data.update(training_steps=steps,training_hyperparameters=dict(lr=.03,beta1=.9,beta2=.999,eps=1e-8,weight_decay=.01),</span>
+<span data-line="233" id="tiny_model-L233">                history=history,adam_steps=first_two,trained_parameters=disk['parameters'],</span>
+<span data-line="234" id="tiny_model-L234">                final_loss=float(lf),final_position_losses=jval(pl),final_trace=jval(tf),trained_hash=fingerprint(loaded))</span>
+<span data-line="235" id="tiny_model-L235">    before=fingerprint(loaded)</span>
+<span data-line="236" id="tiny_model-L236">    data['generation']=generate(loaded,[6,1,2],use_cache=True)</span>
+<span data-line="237" id="tiny_model-L237">    data['generation_full']=generate(loaded,[6,1,2],use_cache=False)</span>
+<span data-line="238" id="tiny_model-L238">    data['other_prompt']=generate(loaded,[6,4,2],use_cache=True)</span>
+<span data-line="239" id="tiny_model-L239">    data['limited_generation']=generate(loaded,[6,1,2],max_new=2)</span>
+<span data-line="240" id="tiny_model-L240">    data['inference_hash_after']=fingerprint(loaded)</span>
+<span data-line="241" id="tiny_model-L241">    assert before==data['inference_hash_after']</span>
+<span data-line="242" id="tiny_model-L242">    assert data['generation']['tokens']==[6,1,2,3,5,7],data['generation']['tokens']</span>
+<span data-line="243" id="tiny_model-L243">    assert data['other_prompt']['tokens']==[6,4,2,3,5,7]</span>
+<span data-line="244" id="tiny_model-L244">    errors=[]</span>
+<span data-line="245" id="tiny_model-L245">    for a,b in zip(data['generation']['steps'],data['generation_full']['steps']):</span>
+<span data-line="246" id="tiny_model-L246">        errors.append(max(abs(x-y) for x,y in zip(a['logits'],b['logits'])))</span>
+<span data-line="247" id="tiny_model-L247">    assert max(errors)&lt;1e-10,errors</span>
+<span data-line="248" id="tiny_model-L248">    data['cache_full_max_errors']=errors</span>
+<span data-line="249" id="tiny_model-L249">    (out/'run.json').write_text(json.dumps(data,ensure_ascii=False,indent=2,allow_nan=False))</span>
+<span data-line="250" id="tiny_model-L250">    print(json.dumps({k:data[k] for k in ['parameter_count','initial_loss','final_loss','training_steps','analytic_gradient_errors','cache_full_max_errors']},ensure_ascii=False,indent=2))</span>
+<span data-line="251" id="tiny_model-L251"> </span>
+<span data-line="252" id="tiny_model-L252">if __name__=='__main__':</span>
+<span data-line="253" id="tiny_model-L253">    ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--out',type=Path,default=Path(__file__).resolve().parent.parent/'data');ap.add_argument('--steps',type=int,default=400)</span>
+<span data-line="254" id="tiny_model-L254">    a=ap.parse_args()</span>
+<span data-line="255" id="tiny_model-L255">    if a.steps&lt;2:ap.error('--steps至少为2')</span>
+<span data-line="256" id="tiny_model-L256">    run(a.out,a.steps)</span>
+</code></pre><h2 id="reference_inference">lab/reference_inference.py</h2><p><a href="../labs/model/lab/reference_inference.py">原文件：labs/model/lab/reference_inference.py</a></p><pre class="source-lines"><code class="language-python"><span data-line="1" id="reference_inference-L1">"""仅用Python标准库，从本课保存的JSON权重重新计算无缓存前向与生成。</span>
+<span data-line="2" id="reference_inference-L2">这份实现刻意不用PyTorch，作为独立数值对照。不会训练或下载模型。</span>
+<span data-line="3" id="reference_inference-L3">运行: python reference_inference.py</span>
+<span data-line="4" id="reference_inference-L4">"""</span>
+<span data-line="5" id="reference_inference-L5">from __future__ import annotations</span>
+<span data-line="6" id="reference_inference-L6">import json, math</span>
+<span data-line="7" id="reference_inference-L7">from pathlib import Path</span>
+<span data-line="8" id="reference_inference-L8"> </span>
+<span data-line="9" id="reference_inference-L9">def matmul(a,b):</span>
+<span data-line="10" id="reference_inference-L10">    if not a or not b or len(a[0])!=len(b): raise ValueError('矩阵乘内侧尺寸不匹配')</span>
+<span data-line="11" id="reference_inference-L11">    return [[sum(a[i][k]*b[k][j] for k in range(len(b))) for j in range(len(b[0]))] for i in range(len(a))]</span>
+<span data-line="12" id="reference_inference-L12"> </span>
+<span data-line="13" id="reference_inference-L13">def trans(a):return [list(col) for col in zip(*a)]</span>
+<span data-line="14" id="reference_inference-L14">def add(a,b):return [[x+y for x,y in zip(ra,rb)] for ra,rb in zip(a,b)]</span>
+<span data-line="15" id="reference_inference-L15">def norm(a,g,eps=1e-5):</span>
+<span data-line="16" id="reference_inference-L16">    out=[]</span>
+<span data-line="17" id="reference_inference-L17">    for row in a:</span>
+<span data-line="18" id="reference_inference-L18">        r=math.sqrt(sum(x*x for x in row)/len(row)+eps)</span>
+<span data-line="19" id="reference_inference-L19">        out.append([x/r*v for x,v in zip(row,g)])</span>
+<span data-line="20" id="reference_inference-L20">    return out</span>
+<span data-line="21" id="reference_inference-L21"> </span>
+<span data-line="22" id="reference_inference-L22">def softmax(row):</span>
+<span data-line="23" id="reference_inference-L23">    m=max(row)</span>
+<span data-line="24" id="reference_inference-L24">    if not math.isfinite(m):raise ValueError('这一行没有有限的可见分数')</span>
+<span data-line="25" id="reference_inference-L25">    es=[math.exp(x-m) for x in row];s=sum(es)</span>
+<span data-line="26" id="reference_inference-L26">    return [x/s for x in es]</span>
+<span data-line="27" id="reference_inference-L27"> </span>
+<span data-line="28" id="reference_inference-L28">def forward(ids,p):</span>
+<span data-line="29" id="reference_inference-L29">    if not ids or len(ids)&gt;8:raise ValueError('只支持1..8个位置')</span>
+<span data-line="30" id="reference_inference-L30">    x=add([p['E'][i] for i in ids],[p['P'][i] for i in range(len(ids))])</span>
+<span data-line="31" id="reference_inference-L31">    n=norm(x,p['g1']);q=matmul(n,p['Wq']);k=matmul(n,p['Wk']);v=matmul(n,p['Wv'])</span>
+<span data-line="32" id="reference_inference-L32">    scores=matmul(q,trans(k))</span>
+<span data-line="33" id="reference_inference-L33">    probs=[softmax([z/2 if j&lt;=i else -math.inf for j,z in enumerate(row)]) for i,row in enumerate(scores)]</span>
+<span data-line="34" id="reference_inference-L34">    r=add(x,matmul(matmul(probs,v),p['Wo']))</span>
+<span data-line="35" id="reference_inference-L35">    ff=matmul(norm(r,p['g2']),p['W1']);ff=[[max(0,x) for x in row] for row in ff]</span>
+<span data-line="36" id="reference_inference-L36">    h=add(r,matmul(ff,p['W2']))</span>
+<span data-line="37" id="reference_inference-L37">    return matmul(norm(h,p['gf']),p['U'])</span>
+<span data-line="38" id="reference_inference-L38"> </span>
+<span data-line="39" id="reference_inference-L39">def generate(ids,p,limit=5):</span>
+<span data-line="40" id="reference_inference-L40">    ids=list(ids);history=[]</span>
+<span data-line="41" id="reference_inference-L41">    for _ in range(limit):</span>
+<span data-line="42" id="reference_inference-L42">        z=forward(ids,p)[-1];prob=softmax(z);chosen=max(range(8),key=lambda i:z[i])</span>
+<span data-line="43" id="reference_inference-L43">        history.append(dict(input=list(ids),logits=z,probabilities=prob,selected=chosen))</span>
+<span data-line="44" id="reference_inference-L44">        ids.append(chosen)</span>
+<span data-line="45" id="reference_inference-L45">        if chosen==7:break</span>
+<span data-line="46" id="reference_inference-L46">    return ids,history</span>
+<span data-line="47" id="reference_inference-L47"> </span>
+<span data-line="48" id="reference_inference-L48">if __name__=='__main__':</span>
+<span data-line="49" id="reference_inference-L49">    d=Path(__file__).resolve().parent.parent/'data'</span>
+<span data-line="50" id="reference_inference-L50">    p=json.loads((d/'weights_trained.json').read_text())['parameters']</span>
+<span data-line="51" id="reference_inference-L51">    tokens,history=generate([6,1,2],p)</span>
+<span data-line="52" id="reference_inference-L52">    actual=json.loads((d/'run.json').read_text())</span>
+<span data-line="53" id="reference_inference-L53">    errors=[max(abs(x-y) for x,y in zip(a['logits'],b['logits'])) for a,b in zip(history,actual['generation']['steps'])]</span>
+<span data-line="54" id="reference_inference-L54">    assert tokens==[6,1,2,3,5,7]</span>
+<span data-line="55" id="reference_inference-L55">    assert max(errors)&lt;1e-10</span>
+<span data-line="56" id="reference_inference-L56">    result=dict(tokens=tokens,max_error=max(errors),device='Python math on CPU; no tensor library')</span>
+<span data-line="57" id="reference_inference-L57">    (d/'reference_result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))</span>
+<span data-line="58" id="reference_inference-L58">    print(json.dumps(result,ensure_ascii=False,indent=2))</span>
+</code></pre><h2 id="test_model">lab/test_model.py</h2><p><a href="../labs/model/lab/test_model.py">原文件：labs/model/lab/test_model.py</a></p><pre class="source-lines"><code class="language-python"><span data-line="1" id="test_model-L1">"""数值、因果性、训练/推理边界和常见错误的独立断言。"""</span>
+<span data-line="2" id="test_model-L2">from __future__ import annotations</span>
+<span data-line="3" id="test_model-L3">import copy,json,math,unittest,io,platform</span>
+<span data-line="4" id="test_model-L4">from pathlib import Path</span>
+<span data-line="5" id="test_model-L5">import torch</span>
+<span data-line="6" id="test_model-L6">from torch import nn</span>
+<span data-line="7" id="test_model-L7">from torch.nn import functional as F</span>
+<span data-line="8" id="test_model-L8">from tiny_model import TinyLM,training_loss,manual_backward,SEQUENCES,fingerprint,generate</span>
+<span data-line="9" id="test_model-L9">from reference_inference import forward as py_forward,softmax as py_softmax</span>
+<span data-line="10" id="test_model-L10">D=Path(__file__).resolve().parent.parent/'data'</span>
+<span data-line="11" id="test_model-L11">R=json.loads((D/'run.json').read_text())</span>
+<span data-line="12" id="test_model-L12">torch.set_num_threads(1)</span>
+<span data-line="13" id="test_model-L13">DT=torch.float64</span>
+<span data-line="14" id="test_model-L14"> </span>
+<span data-line="15" id="test_model-L15">def loaded():</span>
+<span data-line="16" id="test_model-L16">    m=TinyLM();m.load_state_dict({k:torch.tensor(v,dtype=DT) for k,v in R['trained_parameters'].items()});return m</span>
+<span data-line="17" id="test_model-L17"> </span>
+<span data-line="18" id="test_model-L18">class Arithmetic(unittest.TestCase):</span>
+<span data-line="19" id="test_model-L19">    def test_matmul_value(self):</span>
+<span data-line="20" id="test_model-L20">        self.assertEqual((torch.tensor([[1.,2.,3.],[4.,5.,6.]])@torch.tensor([[1.,0.],[0.,1.],[1.,1.]])).tolist(),[[4.,5.],[10.,11.]])</span>
+<span data-line="21" id="test_model-L21">    def test_softmax_shift(self):</span>
+<span data-line="22" id="test_model-L22">        a=torch.tensor([2.,1.,0.],dtype=DT);self.assertTrue(torch.allclose(a.softmax(-1),(a-2).softmax(-1)))</span>
+<span data-line="23" id="test_model-L23">    def test_softmax_not_divide_logits(self):</span>
+<span data-line="24" id="test_model-L24">        a=torch.tensor([2.,1.,0.],dtype=DT);self.assertGreater(float((a.softmax(-1)-a/a.sum()).abs().max()),.05)</span>
+<span data-line="25" id="test_model-L25">    def test_probability_sum(self):</span>
+<span data-line="26" id="test_model-L26">        self.assertAlmostEqual(sum(py_softmax([2,1,0])),1,places=14)</span>
+<span data-line="27" id="test_model-L27">    def test_logsumexp_ce(self):</span>
+<span data-line="28" id="test_model-L28">        z=torch.tensor([[2.,1.,0.]],dtype=DT);y=torch.tensor([1]);self.assertAlmostEqual(float(F.cross_entropy(z,y)),float(z.logsumexp(-1)-z[0,1]),places=14)</span>
+<span data-line="29" id="test_model-L29">    def test_ce_gradient(self):</span>
+<span data-line="30" id="test_model-L30">        z=torch.tensor([[2.,1.,0.]],dtype=DT,requires_grad=True);F.cross_entropy(z,torch.tensor([1])).backward();expected=z.detach().softmax(-1)-torch.tensor([[0.,1.,0.]],dtype=DT);self.assertTrue(torch.allclose(z.grad,expected))</span>
+<span data-line="31" id="test_model-L31">    def test_double_softmax_wrong(self):</span>
+<span data-line="32" id="test_model-L32">        z=torch.tensor([[2.,1.,0.]],dtype=DT);y=torch.tensor([1]);self.assertGreater(abs(float(F.cross_entropy(z,y)-F.cross_entropy(z.softmax(-1),y))),.1)</span>
+<span data-line="33" id="test_model-L33">    def test_ln_rms_different(self):</span>
+<span data-line="34" id="test_model-L34">        x=torch.tensor([1.,3.],dtype=DT);a=F.layer_norm(x,(2,),eps=1e-5);b=x/torch.sqrt(x.square().mean()+1e-5);self.assertLess(float(a[0]),0);self.assertGreater(float(b[0]),0)</span>
+<span data-line="35" id="test_model-L35">    def test_adam_steps(self):</span>
+<span data-line="36" id="test_model-L36">        for rec in R['adam_steps']:</span>
+<span data-line="37" id="test_model-L37">            t=rec['step'];g=rec['gradient'];m=.9*rec['m_before']+.1*g;v=.999*rec['v_before']+.001*g*g</span>
+<span data-line="38" id="test_model-L38">            w=rec['weight_before']*(1-.03*.01)-.03*(m/(1-.9**t))/(math.sqrt(v/(1-.999**t))+1e-8)</span>
+<span data-line="39" id="test_model-L39">            self.assertAlmostEqual(w,rec['weight_after'],places=13)</span>
+<span data-line="40" id="test_model-L40">    def test_training_lower_bound(self):</span>
+<span data-line="41" id="test_model-L41">        self.assertGreaterEqual(R['final_loss'],math.log(2)/5)</span>
+<span data-line="42" id="test_model-L42">        self.assertLess(R['final_loss'],.15)</span>
+<span data-line="43" id="test_model-L43">    def test_quantization(self):</span>
+<span data-line="44" id="test_model-L44">        x=.26;q=round(x/.1);self.assertEqual(q,3);self.assertAlmostEqual(q*.1-x,.04)</span>
+<span data-line="45" id="test_model-L45">    def test_lora_rank(self):</span>
+<span data-line="46" id="test_model-L46">        a=torch.tensor([[1.],[2.]],dtype=DT);b=torch.tensor([[1.,2.,3.]],dtype=DT);self.assertEqual((a@b).tolist(),[[1.,2.,3.],[2.,4.,6.]])</span>
+<span data-line="47" id="test_model-L47">    def test_speculative_identity(self):</span>
+<span data-line="48" id="test_model-L48">        p=[.6,.3,.1];q=[.2,.5,.3];accepted=[min(a,b) for a,b in zip(p,q)];rem=[max(a-b,0) for a,b in zip(p,q)];self.assertTrue(all(abs(a+b-c)&lt;1e-15 for a,b,c in zip(accepted,rem,p)))</span>
+<span data-line="49" id="test_model-L49">    def test_online_softmax(self):</span>
+<span data-line="50" id="test_model-L50">        s=[2.,1.,0.];v=[10.,20.,30.];m=-math.inf;l=0;u=0</span>
+<span data-line="51" id="test_model-L51">        for block in [[0,1],[2]]:</span>
+<span data-line="52" id="test_model-L52">            nm=max([m]+[s[i] for i in block]);a=0 if m==-math.inf else math.exp(m-nm)</span>
+<span data-line="53" id="test_model-L53">            l=a*l+sum(math.exp(s[i]-nm) for i in block);u=a*u+sum(math.exp(s[i]-nm)*v[i] for i in block);m=nm</span>
+<span data-line="54" id="test_model-L54">        self.assertAlmostEqual(u/l,sum(a*b for a,b in zip(py_softmax(s),v)),places=13)</span>
+<span data-line="55" id="test_model-L55">    def test_rope_relative(self):</span>
+<span data-line="56" id="test_model-L56">        def rot(x,t):return [x[0]*math.cos(t)-x[1]*math.sin(t),x[0]*math.sin(t)+x[1]*math.cos(t)]</span>
+<span data-line="57" id="test_model-L57">        q=[1,2];k=[-.5,1]</span>
+<span data-line="58" id="test_model-L58">        dot=lambda a,b:sum(x*y for x,y in zip(a,b))</span>
+<span data-line="59" id="test_model-L59">        self.assertAlmostEqual(dot(rot(q,.3),rot(k,.7)),dot(q,rot(k,.4)),places=14)</span>
+<span data-line="60" id="test_model-L60"> </span>
+<span data-line="61" id="test_model-L61">class ForwardAndGradient(unittest.TestCase):</span>
+<span data-line="62" id="test_model-L62">    def setUp(self):self.m=TinyLM();self.x=SEQUENCES[:,:-1];self.y=SEQUENCES[:,1:]</span>
+<span data-line="63" id="test_model-L63">    def test_parameter_count(self):self.assertEqual(sum(p.numel() for p in self.m.parameters()),236)</span>
+<span data-line="64" id="test_model-L64">    def test_shapes(self):</span>
+<span data-line="65" id="test_model-L65">        z,_,t=self.m(self.x,return_trace=True);self.assertEqual(tuple(z.shape),(2,5,8));self.assertEqual(tuple(t['A'].shape),(2,5,5))</span>
+<span data-line="66" id="test_model-L66">    def test_rowsum(self):</span>
+<span data-line="67" id="test_model-L67">        _,_,t=self.m(self.x,return_trace=True);self.assertTrue(torch.allclose(t['A'].sum(-1),torch.ones(2,5,dtype=DT)))</span>
+<span data-line="68" id="test_model-L68">    def test_future_attention_zero(self):</span>
+<span data-line="69" id="test_model-L69">        _,_,t=self.m(self.x,return_trace=True);self.assertEqual(float(t['A'].triu(1).abs().sum()),0)</span>
+<span data-line="70" id="test_model-L70">    def test_future_input_no_effect(self):</span>
+<span data-line="71" id="test_model-L71">        x=self.x.clone();x[0,4]=4;a,_=self.m(self.x);b,_=self.m(x);self.assertTrue(torch.equal(a[0,:4],b[0,:4]))</span>
+<span data-line="72" id="test_model-L72">    def test_missing_causal_mask_detected(self):</span>
+<span data-line="73" id="test_model-L73">        x=self.x.clone();x[0,4]=4;a,_=self.m(self.x,causal=False);b,_=self.m(x,causal=False);self.assertGreater(float((a[0,:4]-b[0,:4]).abs().max()),1e-4)</span>
+<span data-line="74" id="test_model-L74">    def test_batch_matches_individual(self):</span>
+<span data-line="75" id="test_model-L75">        a,_=self.m(self.x);b,_=self.m(self.x[:1]);self.assertTrue(torch.allclose(a[:1],b,atol=1e-14,rtol=1e-14))</span>
+<span data-line="76" id="test_model-L76">    def test_batch_permutation(self):</span>
+<span data-line="77" id="test_model-L77">        a,_=self.m(self.x);b,_=self.m(self.x.flip(0));self.assertTrue(torch.allclose(a,b.flip(0),atol=1e-14,rtol=1e-14))</span>
+<span data-line="78" id="test_model-L78">    def test_entire_analytic_backward(self):</span>
+<span data-line="79" id="test_model-L79">        z,_,t=self.m(self.x,return_trace=True);g,b=manual_backward(self.m,t,self.y);l,_=training_loss(z,self.y);l.backward()</span>
+<span data-line="80" id="test_model-L80">        for k,p in self.m.named_parameters():self.assertTrue(torch.allclose(p.grad,g[k],atol=1e-12,rtol=1e-10),k)</span>
+<span data-line="81" id="test_model-L81">    def test_qkv_input_paths_add(self):</span>
+<span data-line="82" id="test_model-L82">        z,_,t=self.m(self.x,return_trace=True);g,b=manual_backward(self.m,t,self.y)</span>
+<span data-line="83" id="test_model-L83">        expected=b['dq']@self.m.Wq.T+b['dk']@self.m.Wk.T+b['dv']@self.m.Wv.T</span>
+<span data-line="84" id="test_model-L84">        self.assertTrue(torch.allclose(expected,b['dn1']))</span>
+<span data-line="85" id="test_model-L85">    def test_embedding_duplicate_rows_accumulate(self):</span>
+<span data-line="86" id="test_model-L86">        z,_,t=self.m(self.x,return_trace=True);g,b=manual_backward(self.m,t,self.y)</span>
+<span data-line="87" id="test_model-L87">        self.assertTrue(torch.allclose(g['E'][2],b['dx'][0,2]+b['dx'][1,2]))</span>
+<span data-line="88" id="test_model-L88">    def test_score_gradient_rowsum_zero(self):</span>
+<span data-line="89" id="test_model-L89">        z,_,t=self.m(self.x,return_trace=True);g,b=manual_backward(self.m,t,self.y);self.assertLess(float(b['ds'].sum(-1).abs().max()),1e-12)</span>
+<span data-line="90" id="test_model-L90">    def test_finite_difference_selected_coordinates(self):</span>
+<span data-line="91" id="test_model-L91">        z,_=self.m(self.x);l,_=training_loss(z,self.y);l.backward();eps=1e-6</span>
+<span data-line="92" id="test_model-L92">        for name,idx in [('Wq',(0,0)),('Wk',(2,1)),('Wv',(1,0)),('Wo',(2,3)),('W1',(0,3)),('W2',(2,1)),('U',(0,3)),('g1',(2,)),('g2',(2,)),('gf',(2,)),('E',(2,1)),('P',(2,1))]:</span>
+<span data-line="93" id="test_model-L93">            p=self.m.get_parameter(name);old=float(p[idx].detach());g=float(p.grad[idx]);vals=[]</span>
+<span data-line="94" id="test_model-L94">            with torch.no_grad():</span>
+<span data-line="95" id="test_model-L95">                for sign in [1,-1]:</span>
+<span data-line="96" id="test_model-L96">                    p[idx]=old+sign*eps;zz,_=self.m(self.x);ll,_=training_loss(zz,self.y);vals.append(float(ll))</span>
+<span data-line="97" id="test_model-L97">                p[idx]=old</span>
+<span data-line="98" id="test_model-L98">            self.assertAlmostEqual((vals[0]-vals[1])/(2*eps),g,places=7,msg=name)</span>
+<span data-line="99" id="test_model-L99">    def test_sgd_small_step(self):</span>
+<span data-line="100" id="test_model-L100">        z,_=self.m(self.x);l,_=training_loss(z,self.y);before=float(l.detach());l.backward()</span>
+<span data-line="101" id="test_model-L101">        with torch.no_grad():</span>
+<span data-line="102" id="test_model-L102">            for p in self.m.parameters():p-=.001*p.grad</span>
+<span data-line="103" id="test_model-L103">        after,_=training_loss(self.m(self.x)[0],self.y);self.assertLess(float(after),before)</span>
+<span data-line="104" id="test_model-L104">    def test_backward_not_update(self):</span>
+<span data-line="105" id="test_model-L105">        old=fingerprint(self.m);z,_=self.m(self.x);training_loss(z,self.y)[0].backward();self.assertEqual(fingerprint(self.m),old)</span>
+<span data-line="106" id="test_model-L106">    def test_grad_accumulation(self):</span>
+<span data-line="107" id="test_model-L107">        z,_=self.m(self.x);l,_=training_loss(z,self.y);l.backward();first=self.m.U.grad.clone()</span>
+<span data-line="108" id="test_model-L108">        z,_=self.m(self.x);training_loss(z,self.y)[0].backward();self.assertTrue(torch.allclose(self.m.U.grad,2*first))</span>
+<span data-line="109" id="test_model-L109">    def test_ignored_target_gradient(self):</span>
+<span data-line="110" id="test_model-L110">        z=torch.randn(1,3,8,dtype=DT,requires_grad=True);y=torch.tensor([[1,-100,2]]);training_loss(z,y)[0].backward();self.assertEqual(float(z.grad[0,1].abs().sum()),0)</span>
+<span data-line="111" id="test_model-L111">    def test_all_ignored_rejected(self):</span>
+<span data-line="112" id="test_model-L112">        with self.assertRaises(ValueError):training_loss(torch.zeros(1,2,8),torch.full((1,2),-100))</span>
+<span data-line="113" id="test_model-L113">    def test_target_alignment(self):</span>
+<span data-line="114" id="test_model-L114">        self.assertEqual(self.x[0].tolist(),[6,1,2,3,5]);self.assertEqual(self.y[0].tolist(),[1,2,3,5,7])</span>
+<span data-line="115" id="test_model-L115">    def test_no_double_shift(self):</span>
+<span data-line="116" id="test_model-L116">        z,_,t=self.m(self.x,return_trace=True);right,_=training_loss(z,self.y)</span>
+<span data-line="117" id="test_model-L117">        wrong,_=training_loss(z[:,:-1],self.y[:,1:]);self.assertGreater(abs(float(right-wrong)),1e-3)</span>
+<span data-line="118" id="test_model-L118">    def test_ce_without_prior_softmax(self):</span>
+<span data-line="119" id="test_model-L119">        z,_=self.m(self.x);right,_=training_loss(z,self.y);wrong,_=training_loss(z.softmax(-1),self.y);self.assertGreater(abs(float(right-wrong)),.01)</span>
+<span data-line="120" id="test_model-L120">    def test_right_padding_needs_final_valid(self):</span>
+<span data-line="121" id="test_model-L121">        x=torch.tensor([[6,1,2,0]]);mask=torch.tensor([[1,1,1,0]],dtype=torch.bool)</span>
+<span data-line="122" id="test_model-L122">        z,_=self.m(x,key_valid=mask);true,_=self.m(x[:,:3]);self.assertTrue(torch.allclose(z[:,2],true[:,-1]));self.assertGreater(float((z[:,3]-z[:,2]).abs().max()),1e-4)</span>
+<span data-line="123" id="test_model-L123">    def test_padding_key_invisible(self):</span>
+<span data-line="124" id="test_model-L124">        x=torch.tensor([[6,0,1,2]]);mask=torch.tensor([[1,0,1,1]],dtype=torch.bool);_,_,t=self.m(x,key_valid=mask,return_trace=True);self.assertEqual(float(t['A'][:,:,1].sum()),0)</span>
+<span data-line="125" id="test_model-L125">    def test_empty_input_rejected(self):</span>
+<span data-line="126" id="test_model-L126">        with self.assertRaises(ValueError):self.m(torch.empty(1,0,dtype=torch.long))</span>
+<span data-line="127" id="test_model-L127">    def test_all_masked_rejected(self):</span>
+<span data-line="128" id="test_model-L128">        with self.assertRaises(ValueError):self.m(self.x,key_valid=torch.zeros(2,5,dtype=torch.bool))</span>
+<span data-line="129" id="test_model-L129"> </span>
+<span data-line="130" id="test_model-L130">class InferenceAndInterfaces(unittest.TestCase):</span>
+<span data-line="131" id="test_model-L131">    def test_reload_hash(self):self.assertEqual(fingerprint(loaded()),R['trained_hash'])</span>
+<span data-line="132" id="test_model-L132">    def test_full_cache_outputs(self):</span>
+<span data-line="133" id="test_model-L133">        m=loaded();a=generate(m,[6,1,2],use_cache=True);b=generate(m,[6,1,2],use_cache=False)</span>
+<span data-line="134" id="test_model-L134">        self.assertEqual(a['tokens'],b['tokens'])</span>
+<span data-line="135" id="test_model-L135">        for x,y in zip(a['steps'],b['steps']):self.assertLess(max(abs(i-j) for i,j in zip(x['logits'],y['logits'])),1e-10)</span>
+<span data-line="136" id="test_model-L136">    def test_expected_tokens(self):self.assertEqual(generate(loaded(),[6,1,2])['tokens'],[6,1,2,3,5,7])</span>
+<span data-line="137" id="test_model-L137">    def test_no_parameter_change(self):</span>
+<span data-line="138" id="test_model-L138">        m=loaded();h=fingerprint(m);generate(m,[6,1,2]);self.assertEqual(fingerprint(m),h)</span>
+<span data-line="139" id="test_model-L139">    def test_cache_lag(self):</span>
+<span data-line="140" id="test_model-L140">        a=generate(loaded(),[6,1,2]);self.assertEqual([s['cache_after'] for s in a['steps']],[3,4,5]);self.assertEqual(len(a['tokens']),6)</span>
+<span data-line="141" id="test_model-L141">    def test_limit_not_eos(self):</span>
+<span data-line="142" id="test_model-L142">        a=generate(loaded(),[6,1,2],max_new=2);self.assertEqual(a['reason'],'length');self.assertNotEqual(a['tokens'][-1],7)</span>
+<span data-line="143" id="test_model-L143">    def test_two_new_tokens_cache(self):</span>
+<span data-line="144" id="test_model-L144">        m=loaded();x=SEQUENCES[:1,:-1];allz,_=m(x);_,c=m(x[:,:3]);part,_=m(x[:,3:],cache=c);self.assertTrue(torch.allclose(allz[:,3:],part,atol=1e-12))</span>
+<span data-line="145" id="test_model-L145">    def test_wrong_position_changes_output(self):</span>
+<span data-line="146" id="test_model-L146">        m=loaded();_,c=m(torch.tensor([[6,1,2]]));good,_=m(torch.tensor([[3]]),cache=c);bad,_=m(torch.tensor([[3]]),cache=c,position_ids=torch.zeros(1,1,dtype=torch.long));self.assertGreater(float((good-bad).abs().max()),.01)</span>
+<span data-line="147" id="test_model-L147">    def test_stale_cache_after_weights_change(self):</span>
+<span data-line="148" id="test_model-L148">        m=loaded();x=torch.tensor([[6,1,2,3]]);_,c=m(x[:,:3])</span>
+<span data-line="149" id="test_model-L149">        with torch.no_grad():m.Wv.mul_(.5)</span>
+<span data-line="150" id="test_model-L150">        stale,_=m(x[:,3:],cache=c);fresh,_=m(x);self.assertGreater(float((stale[:,-1]-fresh[:,-1]).abs().max()),1e-4)</span>
+<span data-line="151" id="test_model-L151">    def test_stdlib_reference(self):</span>
+<span data-line="152" id="test_model-L152">        z=py_forward([6,1,2],R['trained_parameters']);expected=R['generation']['steps'][0]['logits'];self.assertLess(max(abs(x-y) for x,y in zip(z[-1],expected)),1e-10)</span>
+<span data-line="153" id="test_model-L153">    def test_eval_does_not_disable_grad(self):</span>
+<span data-line="154" id="test_model-L154">        m=TinyLM().eval();z,_=m(SEQUENCES[:,:-1]);self.assertTrue(z.requires_grad)</span>
+<span data-line="155" id="test_model-L155">    def test_no_grad_does_not_switch_dropout(self):</span>
+<span data-line="156" id="test_model-L156">        d=nn.Dropout(.5).train();x=torch.ones(1000)</span>
+<span data-line="157" id="test_model-L157">        with torch.no_grad():y=d(x)</span>
+<span data-line="158" id="test_model-L158">        self.assertGreater(int(y.eq(0).sum()),0)</span>
+<span data-line="159" id="test_model-L159">    def test_eval_switches_dropout(self):</span>
+<span data-line="160" id="test_model-L160">        d=nn.Dropout(.5).eval();x=torch.ones(100);self.assertTrue(torch.equal(d(x),x))</span>
+<span data-line="161" id="test_model-L161">    def test_sdpa_non_square_alignment(self):</span>
+<span data-line="162" id="test_model-L162">        q=torch.ones(1,1,2,1,dtype=DT);k=torch.ones(1,1,5,1,dtype=DT);v=torch.arange(1,6,dtype=DT).reshape(1,1,5,1)</span>
+<span data-line="163" id="test_model-L163">        good=(torch.arange(5)[None,:]&lt;=torch.tensor([3,4])[:,None])</span>
+<span data-line="164" id="test_model-L164">        a=F.scaled_dot_product_attention(q,k,v,attn_mask=good);b=F.scaled_dot_product_attention(q,k,v,is_causal=True)</span>
+<span data-line="165" id="test_model-L165">        self.assertEqual(a.flatten().tolist(),[2.5,3.]);self.assertEqual(b.flatten().tolist(),[1.,1.5])</span>
+<span data-line="166" id="test_model-L166">    def test_sdpa_scale_once(self):</span>
+<span data-line="167" id="test_model-L167">        q=torch.tensor([[[[1.,2.]]]],dtype=DT);k=torch.tensor([[[[1.,0.],[0.,1.]]]],dtype=DT);v=k</span>
+<span data-line="168" id="test_model-L168">        a=F.scaled_dot_product_attention(q,k,v);manual=(q@k.transpose(-1,-2)/math.sqrt(2)).softmax(-1)@v</span>
+<span data-line="169" id="test_model-L169">        self.assertTrue(torch.allclose(a,manual));b=F.scaled_dot_product_attention(q/math.sqrt(2),k,v);self.assertGreater(float((a-b).abs().max()),.01)</span>
+<span data-line="170" id="test_model-L170">    def test_linear_storage_transpose(self):</span>
+<span data-line="171" id="test_model-L171">        x=torch.tensor([[1.,2.]],dtype=DT);w=torch.tensor([[1.,3.],[2.,4.]],dtype=DT)</span>
+<span data-line="172" id="test_model-L172">        self.assertEqual((x@w).tolist(),[[5.,11.]]);self.assertEqual(F.linear(x,w).tolist(),[[7.,10.]])</span>
+<span data-line="173" id="test_model-L173">    def test_training_loss_drops(self):self.assertLess(R['final_loss'],R['initial_loss']/10)</span>
+<span data-line="174" id="test_model-L174"> </span>
+<span data-line="175" id="test_model-L175">if __name__=='__main__':</span>
+<span data-line="176" id="test_model-L176">    suite=unittest.defaultTestLoader.loadTestsFromModule(__import__(__name__))</span>
+<span data-line="177" id="test_model-L177">    stream=io.StringIO();res=unittest.TextTestRunner(stream=stream,verbosity=2).run(suite)</span>
+<span data-line="178" id="test_model-L178">    log=stream.getvalue();print(log)</span>
+<span data-line="179" id="test_model-L179">    (D/'tests.log').write_text(log)</span>
+<span data-line="180" id="test_model-L180">    (D/'tests.json').write_text(json.dumps(dict(run=res.testsRun,failures=len(res.failures),errors=len(res.errors),skipped=len(res.skipped),python=platform.python_version(),torch=torch.__version__,device='cpu'),indent=2))</span>
+<span data-line="181" id="test_model-L181">    if not res.wasSuccessful():raise SystemExit(1)</span>
+</code></pre><h2 id="weights_initial">data/weights_initial.json</h2><p><a href="../labs/model/data/weights_initial.json">原文件：labs/model/data/weights_initial.json</a></p><pre class="source-lines"><code class="language-json"><span data-line="1" id="weights_initial-L1">{</span>
+<span data-line="2" id="weights_initial-L2">  "spec": {</span>
+<span data-line="3" id="weights_initial-L3">    "vocab": [</span>
+<span data-line="4" id="weights_initial-L4">      "PAD",</span>
+<span data-line="5" id="weights_initial-L5">      "我",</span>
+<span data-line="6" id="weights_initial-L6">      "爱",</span>
+<span data-line="7" id="weights_initial-L7">      "学习",</span>
+<span data-line="8" id="weights_initial-L8">      "你",</span>
+<span data-line="9" id="weights_initial-L9">      "！",</span>
+<span data-line="10" id="weights_initial-L10">      "BOS",</span>
+<span data-line="11" id="weights_initial-L11">      "EOS"</span>
+<span data-line="12" id="weights_initial-L12">    ],</span>
+<span data-line="13" id="weights_initial-L13">    "vocab_size": 8,</span>
+<span data-line="14" id="weights_initial-L14">    "width": 4,</span>
+<span data-line="15" id="weights_initial-L15">    "ffn_width": 8,</span>
+<span data-line="16" id="weights_initial-L16">    "layers": 1,</span>
+<span data-line="17" id="weights_initial-L17">    "heads": 1,</span>
+<span data-line="18" id="weights_initial-L18">    "context": 8,</span>
+<span data-line="19" id="weights_initial-L19">    "norm": "RMSNorm",</span>
+<span data-line="20" id="weights_initial-L20">    "eps": 1e-05,</span>
+<span data-line="21" id="weights_initial-L21">    "position": "learned absolute position",</span>
+<span data-line="22" id="weights_initial-L22">    "activation": "ReLU",</span>
+<span data-line="23" id="weights_initial-L23">    "bias": false,</span>
+<span data-line="24" id="weights_initial-L24">    "dropout": 0.0,</span>
+<span data-line="25" id="weights_initial-L25">    "tied_embeddings": false,</span>
+<span data-line="26" id="weights_initial-L26">    "dtype": "float64",</span>
+<span data-line="27" id="weights_initial-L27">    "seed": 23</span>
+<span data-line="28" id="weights_initial-L28">  },</span>
+<span data-line="29" id="weights_initial-L29">  "parameters": {</span>
+<span data-line="30" id="weights_initial-L30">    "E": [</span>
+<span data-line="31" id="weights_initial-L31">      [</span>
+<span data-line="32" id="weights_initial-L32">        0.0,</span>
+<span data-line="33" id="weights_initial-L33">        0.0,</span>
+<span data-line="34" id="weights_initial-L34">        0.0,</span>
+<span data-line="35" id="weights_initial-L35">        0.0</span>
+<span data-line="36" id="weights_initial-L36">      ],</span>
+<span data-line="37" id="weights_initial-L37">      [</span>
+<span data-line="38" id="weights_initial-L38">        0.2,</span>
+<span data-line="39" id="weights_initial-L39">        -0.1,</span>
+<span data-line="40" id="weights_initial-L40">        0.7,</span>
+<span data-line="41" id="weights_initial-L41">        0.4</span>
+<span data-line="42" id="weights_initial-L42">      ],</span>
+<span data-line="43" id="weights_initial-L43">      [</span>
+<span data-line="44" id="weights_initial-L44">        -0.3,</span>
+<span data-line="45" id="weights_initial-L45">        0.8,</span>
+<span data-line="46" id="weights_initial-L46">        0.1,</span>
+<span data-line="47" id="weights_initial-L47">        0.5</span>
+<span data-line="48" id="weights_initial-L48">      ],</span>
+<span data-line="49" id="weights_initial-L49">      [</span>
+<span data-line="50" id="weights_initial-L50">        0.6,</span>
+<span data-line="51" id="weights_initial-L51">        0.2,</span>
+<span data-line="52" id="weights_initial-L52">        -0.4,</span>
+<span data-line="53" id="weights_initial-L53">        0.9</span>
+<span data-line="54" id="weights_initial-L54">      ],</span>
+<span data-line="55" id="weights_initial-L55">      [</span>
+<span data-line="56" id="weights_initial-L56">        0.1,</span>
+<span data-line="57" id="weights_initial-L57">        -0.5,</span>
+<span data-line="58" id="weights_initial-L58">        0.9,</span>
+<span data-line="59" id="weights_initial-L59">        0.3</span>
+<span data-line="60" id="weights_initial-L60">      ],</span>
+<span data-line="61" id="weights_initial-L61">      [</span>
+<span data-line="62" id="weights_initial-L62">        -0.2,</span>
+<span data-line="63" id="weights_initial-L63">        0.4,</span>
+<span data-line="64" id="weights_initial-L64">        0.5,</span>
+<span data-line="65" id="weights_initial-L65">        -0.6</span>
+<span data-line="66" id="weights_initial-L66">      ],</span>
+<span data-line="67" id="weights_initial-L67">      [</span>
+<span data-line="68" id="weights_initial-L68">        0.4,</span>
+<span data-line="69" id="weights_initial-L69">        -0.2,</span>
+<span data-line="70" id="weights_initial-L70">        0.3,</span>
+<span data-line="71" id="weights_initial-L71">        0.1</span>
+<span data-line="72" id="weights_initial-L72">      ],</span>
+<span data-line="73" id="weights_initial-L73">      [</span>
+<span data-line="74" id="weights_initial-L74">        0.1,</span>
+<span data-line="75" id="weights_initial-L75">        0.2,</span>
+<span data-line="76" id="weights_initial-L76">        -0.3,</span>
+<span data-line="77" id="weights_initial-L77">        0.4</span>
+<span data-line="78" id="weights_initial-L78">      ]</span>
+<span data-line="79" id="weights_initial-L79">    ],</span>
+<span data-line="80" id="weights_initial-L80">    "P": [</span>
+<span data-line="81" id="weights_initial-L81">      [</span>
+<span data-line="82" id="weights_initial-L82">        -0.05,</span>
+<span data-line="83" id="weights_initial-L83">        -0.05,</span>
+<span data-line="84" id="weights_initial-L84">        -0.05,</span>
+<span data-line="85" id="weights_initial-L85">        0.0</span>
+<span data-line="86" id="weights_initial-L86">      ],</span>
+<span data-line="87" id="weights_initial-L87">      [</span>
+<span data-line="88" id="weights_initial-L88">        -0.1,</span>
+<span data-line="89" id="weights_initial-L89">        0.0,</span>
+<span data-line="90" id="weights_initial-L90">        0.0,</span>
+<span data-line="91" id="weights_initial-L91">        -0.05</span>
+<span data-line="92" id="weights_initial-L92">      ],</span>
+<span data-line="93" id="weights_initial-L93">      [</span>
+<span data-line="94" id="weights_initial-L94">        0.1,</span>
+<span data-line="95" id="weights_initial-L95">        0.0,</span>
+<span data-line="96" id="weights_initial-L96">        -0.1,</span>
+<span data-line="97" id="weights_initial-L97">        -0.05</span>
+<span data-line="98" id="weights_initial-L98">      ],</span>
+<span data-line="99" id="weights_initial-L99">      [</span>
+<span data-line="100" id="weights_initial-L100">        0.05,</span>
+<span data-line="101" id="weights_initial-L101">        0.0,</span>
+<span data-line="102" id="weights_initial-L102">        0.05,</span>
+<span data-line="103" id="weights_initial-L103">        0.0</span>
+<span data-line="104" id="weights_initial-L104">      ],</span>
+<span data-line="105" id="weights_initial-L105">      [</span>
+<span data-line="106" id="weights_initial-L106">        -0.1,</span>
+<span data-line="107" id="weights_initial-L107">        0.0,</span>
+<span data-line="108" id="weights_initial-L108">        0.1,</span>
+<span data-line="109" id="weights_initial-L109">        0.05</span>
+<span data-line="110" id="weights_initial-L110">      ],</span>
+<span data-line="111" id="weights_initial-L111">      [</span>
+<span data-line="112" id="weights_initial-L112">        -0.05,</span>
+<span data-line="113" id="weights_initial-L113">        0.1,</span>
+<span data-line="114" id="weights_initial-L114">        -0.1,</span>
+<span data-line="115" id="weights_initial-L115">        -0.1</span>
+<span data-line="116" id="weights_initial-L116">      ],</span>
+<span data-line="117" id="weights_initial-L117">      [</span>
+<span data-line="118" id="weights_initial-L118">        0.05,</span>
+<span data-line="119" id="weights_initial-L119">        -0.1,</span>
+<span data-line="120" id="weights_initial-L120">        -0.05,</span>
+<span data-line="121" id="weights_initial-L121">        -0.05</span>
+<span data-line="122" id="weights_initial-L122">      ],</span>
+<span data-line="123" id="weights_initial-L123">      [</span>
+<span data-line="124" id="weights_initial-L124">        -0.05,</span>
+<span data-line="125" id="weights_initial-L125">        0.0,</span>
+<span data-line="126" id="weights_initial-L126">        0.1,</span>
+<span data-line="127" id="weights_initial-L127">        0.05</span>
+<span data-line="128" id="weights_initial-L128">      ]</span>
+<span data-line="129" id="weights_initial-L129">    ],</span>
+<span data-line="130" id="weights_initial-L130">    "Wq": [</span>
+<span data-line="131" id="weights_initial-L131">      [</span>
+<span data-line="132" id="weights_initial-L132">        0.2,</span>
+<span data-line="133" id="weights_initial-L133">        -0.2,</span>
+<span data-line="134" id="weights_initial-L134">        -0.1,</span>
+<span data-line="135" id="weights_initial-L135">        -0.1</span>
+<span data-line="136" id="weights_initial-L136">      ],</span>
+<span data-line="137" id="weights_initial-L137">      [</span>
+<span data-line="138" id="weights_initial-L138">        0.1,</span>
+<span data-line="139" id="weights_initial-L139">        0.1,</span>
+<span data-line="140" id="weights_initial-L140">        -0.30000000000000004,</span>
+<span data-line="141" id="weights_initial-L141">        -0.2</span>
+<span data-line="142" id="weights_initial-L142">      ],</span>
+<span data-line="143" id="weights_initial-L143">      [</span>
+<span data-line="144" id="weights_initial-L144">        -0.2,</span>
+<span data-line="145" id="weights_initial-L145">        0.1,</span>
+<span data-line="146" id="weights_initial-L146">        0.2,</span>
+<span data-line="147" id="weights_initial-L147">        -0.2</span>
+<span data-line="148" id="weights_initial-L148">      ],</span>
+<span data-line="149" id="weights_initial-L149">      [</span>
+<span data-line="150" id="weights_initial-L150">        -0.2,</span>
+<span data-line="151" id="weights_initial-L151">        -0.1,</span>
+<span data-line="152" id="weights_initial-L152">        -0.2,</span>
+<span data-line="153" id="weights_initial-L153">        -0.1</span>
+<span data-line="154" id="weights_initial-L154">      ]</span>
+<span data-line="155" id="weights_initial-L155">    ],</span>
+<span data-line="156" id="weights_initial-L156">    "Wk": [</span>
+<span data-line="157" id="weights_initial-L157">      [</span>
+<span data-line="158" id="weights_initial-L158">        -0.30000000000000004,</span>
+<span data-line="159" id="weights_initial-L159">        -0.1,</span>
+<span data-line="160" id="weights_initial-L160">        -0.1,</span>
+<span data-line="161" id="weights_initial-L161">        -0.2</span>
+<span data-line="162" id="weights_initial-L162">      ],</span>
+<span data-line="163" id="weights_initial-L163">      [</span>
+<span data-line="164" id="weights_initial-L164">        0.30000000000000004,</span>
+<span data-line="165" id="weights_initial-L165">        0.2,</span>
+<span data-line="166" id="weights_initial-L166">        0.0,</span>
+<span data-line="167" id="weights_initial-L167">        0.2</span>
+<span data-line="168" id="weights_initial-L168">      ],</span>
+<span data-line="169" id="weights_initial-L169">      [</span>
+<span data-line="170" id="weights_initial-L170">        0.1,</span>
+<span data-line="171" id="weights_initial-L171">        -0.2,</span>
+<span data-line="172" id="weights_initial-L172">        0.2,</span>
+<span data-line="173" id="weights_initial-L173">        0.2</span>
+<span data-line="174" id="weights_initial-L174">      ],</span>
+<span data-line="175" id="weights_initial-L175">      [</span>
+<span data-line="176" id="weights_initial-L176">        0.2,</span>
+<span data-line="177" id="weights_initial-L177">        0.2,</span>
+<span data-line="178" id="weights_initial-L178">        0.30000000000000004,</span>
+<span data-line="179" id="weights_initial-L179">        -0.30000000000000004</span>
+<span data-line="180" id="weights_initial-L180">      ]</span>
+<span data-line="181" id="weights_initial-L181">    ],</span>
+<span data-line="182" id="weights_initial-L182">    "Wv": [</span>
+<span data-line="183" id="weights_initial-L183">      [</span>
+<span data-line="184" id="weights_initial-L184">        -0.30000000000000004,</span>
+<span data-line="185" id="weights_initial-L185">        0.0,</span>
+<span data-line="186" id="weights_initial-L186">        -0.1,</span>
+<span data-line="187" id="weights_initial-L187">        -0.30000000000000004</span>
+<span data-line="188" id="weights_initial-L188">      ],</span>
+<span data-line="189" id="weights_initial-L189">      [</span>
+<span data-line="190" id="weights_initial-L190">        0.30000000000000004,</span>
+<span data-line="191" id="weights_initial-L191">        0.30000000000000004,</span>
+<span data-line="192" id="weights_initial-L192">        -0.1,</span>
+<span data-line="193" id="weights_initial-L193">        0.1</span>
+<span data-line="194" id="weights_initial-L194">      ],</span>
+<span data-line="195" id="weights_initial-L195">      [</span>
+<span data-line="196" id="weights_initial-L196">        -0.30000000000000004,</span>
+<span data-line="197" id="weights_initial-L197">        0.1,</span>
+<span data-line="198" id="weights_initial-L198">        0.1,</span>
+<span data-line="199" id="weights_initial-L199">        -0.30000000000000004</span>
+<span data-line="200" id="weights_initial-L200">      ],</span>
+<span data-line="201" id="weights_initial-L201">      [</span>
+<span data-line="202" id="weights_initial-L202">        -0.1,</span>
+<span data-line="203" id="weights_initial-L203">        0.30000000000000004,</span>
+<span data-line="204" id="weights_initial-L204">        -0.30000000000000004,</span>
+<span data-line="205" id="weights_initial-L205">        0.0</span>
+<span data-line="206" id="weights_initial-L206">      ]</span>
+<span data-line="207" id="weights_initial-L207">    ],</span>
+<span data-line="208" id="weights_initial-L208">    "Wo": [</span>
+<span data-line="209" id="weights_initial-L209">      [</span>
+<span data-line="210" id="weights_initial-L210">        0.30000000000000004,</span>
+<span data-line="211" id="weights_initial-L211">        0.1,</span>
+<span data-line="212" id="weights_initial-L212">        -0.2,</span>
+<span data-line="213" id="weights_initial-L213">        0.30000000000000004</span>
+<span data-line="214" id="weights_initial-L214">      ],</span>
+<span data-line="215" id="weights_initial-L215">      [</span>
+<span data-line="216" id="weights_initial-L216">        -0.30000000000000004,</span>
+<span data-line="217" id="weights_initial-L217">        -0.1,</span>
+<span data-line="218" id="weights_initial-L218">        -0.1,</span>
+<span data-line="219" id="weights_initial-L219">        0.30000000000000004</span>
+<span data-line="220" id="weights_initial-L220">      ],</span>
+<span data-line="221" id="weights_initial-L221">      [</span>
+<span data-line="222" id="weights_initial-L222">        0.30000000000000004,</span>
+<span data-line="223" id="weights_initial-L223">        0.30000000000000004,</span>
+<span data-line="224" id="weights_initial-L224">        -0.1,</span>
+<span data-line="225" id="weights_initial-L225">        -0.30000000000000004</span>
+<span data-line="226" id="weights_initial-L226">      ],</span>
+<span data-line="227" id="weights_initial-L227">      [</span>
+<span data-line="228" id="weights_initial-L228">        -0.2,</span>
+<span data-line="229" id="weights_initial-L229">        0.0,</span>
+<span data-line="230" id="weights_initial-L230">        0.30000000000000004,</span>
+<span data-line="231" id="weights_initial-L231">        0.1</span>
+<span data-line="232" id="weights_initial-L232">      ]</span>
+<span data-line="233" id="weights_initial-L233">    ],</span>
+<span data-line="234" id="weights_initial-L234">    "W1": [</span>
+<span data-line="235" id="weights_initial-L235">      [</span>
+<span data-line="236" id="weights_initial-L236">        0.2,</span>
+<span data-line="237" id="weights_initial-L237">        -0.1,</span>
+<span data-line="238" id="weights_initial-L238">        -0.1,</span>
+<span data-line="239" id="weights_initial-L239">        0.2,</span>
+<span data-line="240" id="weights_initial-L240">        -0.2,</span>
+<span data-line="241" id="weights_initial-L241">        -0.30000000000000004,</span>
+<span data-line="242" id="weights_initial-L242">        0.30000000000000004,</span>
+<span data-line="243" id="weights_initial-L243">        0.1</span>
+<span data-line="244" id="weights_initial-L244">      ],</span>
+<span data-line="245" id="weights_initial-L245">      [</span>
+<span data-line="246" id="weights_initial-L246">        -0.1,</span>
+<span data-line="247" id="weights_initial-L247">        0.0,</span>
+<span data-line="248" id="weights_initial-L248">        0.30000000000000004,</span>
+<span data-line="249" id="weights_initial-L249">        0.30000000000000004,</span>
+<span data-line="250" id="weights_initial-L250">        -0.30000000000000004,</span>
+<span data-line="251" id="weights_initial-L251">        -0.2,</span>
+<span data-line="252" id="weights_initial-L252">        -0.30000000000000004,</span>
+<span data-line="253" id="weights_initial-L253">        -0.30000000000000004</span>
+<span data-line="254" id="weights_initial-L254">      ],</span>
+<span data-line="255" id="weights_initial-L255">      [</span>
+<span data-line="256" id="weights_initial-L256">        0.1,</span>
+<span data-line="257" id="weights_initial-L257">        0.2,</span>
+<span data-line="258" id="weights_initial-L258">        -0.2,</span>
+<span data-line="259" id="weights_initial-L259">        0.0,</span>
+<span data-line="260" id="weights_initial-L260">        0.0,</span>
+<span data-line="261" id="weights_initial-L261">        0.0,</span>
+<span data-line="262" id="weights_initial-L262">        -0.30000000000000004,</span>
+<span data-line="263" id="weights_initial-L263">        -0.30000000000000004</span>
+<span data-line="264" id="weights_initial-L264">      ],</span>
+<span data-line="265" id="weights_initial-L265">      [</span>
+<span data-line="266" id="weights_initial-L266">        0.2,</span>
+<span data-line="267" id="weights_initial-L267">        -0.1,</span>
+<span data-line="268" id="weights_initial-L268">        0.30000000000000004,</span>
+<span data-line="269" id="weights_initial-L269">        -0.1,</span>
+<span data-line="270" id="weights_initial-L270">        -0.2,</span>
+<span data-line="271" id="weights_initial-L271">        0.0,</span>
+<span data-line="272" id="weights_initial-L272">        0.1,</span>
+<span data-line="273" id="weights_initial-L273">        -0.2</span>
+<span data-line="274" id="weights_initial-L274">      ]</span>
+<span data-line="275" id="weights_initial-L275">    ],</span>
+<span data-line="276" id="weights_initial-L276">    "W2": [</span>
+<span data-line="277" id="weights_initial-L277">      [</span>
+<span data-line="278" id="weights_initial-L278">        -0.30000000000000004,</span>
+<span data-line="279" id="weights_initial-L279">        -0.30000000000000004,</span>
+<span data-line="280" id="weights_initial-L280">        -0.30000000000000004,</span>
+<span data-line="281" id="weights_initial-L281">        0.0</span>
+<span data-line="282" id="weights_initial-L282">      ],</span>
+<span data-line="283" id="weights_initial-L283">      [</span>
+<span data-line="284" id="weights_initial-L284">        0.1,</span>
+<span data-line="285" id="weights_initial-L285">        0.1,</span>
+<span data-line="286" id="weights_initial-L286">        0.0,</span>
+<span data-line="287" id="weights_initial-L287">        0.30000000000000004</span>
+<span data-line="288" id="weights_initial-L288">      ],</span>
+<span data-line="289" id="weights_initial-L289">      [</span>
+<span data-line="290" id="weights_initial-L290">        0.30000000000000004,</span>
+<span data-line="291" id="weights_initial-L291">        0.1,</span>
+<span data-line="292" id="weights_initial-L292">        -0.2,</span>
+<span data-line="293" id="weights_initial-L293">        0.30000000000000004</span>
+<span data-line="294" id="weights_initial-L294">      ],</span>
+<span data-line="295" id="weights_initial-L295">      [</span>
+<span data-line="296" id="weights_initial-L296">        0.1,</span>
+<span data-line="297" id="weights_initial-L297">        -0.2,</span>
+<span data-line="298" id="weights_initial-L298">        -0.30000000000000004,</span>
+<span data-line="299" id="weights_initial-L299">        0.2</span>
+<span data-line="300" id="weights_initial-L300">      ],</span>
+<span data-line="301" id="weights_initial-L301">      [</span>
+<span data-line="302" id="weights_initial-L302">        -0.2,</span>
+<span data-line="303" id="weights_initial-L303">        0.1,</span>
+<span data-line="304" id="weights_initial-L304">        -0.1,</span>
+<span data-line="305" id="weights_initial-L305">        0.1</span>
+<span data-line="306" id="weights_initial-L306">      ],</span>
+<span data-line="307" id="weights_initial-L307">      [</span>
+<span data-line="308" id="weights_initial-L308">        0.0,</span>
+<span data-line="309" id="weights_initial-L309">        0.2,</span>
+<span data-line="310" id="weights_initial-L310">        0.1,</span>
+<span data-line="311" id="weights_initial-L311">        -0.1</span>
+<span data-line="312" id="weights_initial-L312">      ],</span>
+<span data-line="313" id="weights_initial-L313">      [</span>
+<span data-line="314" id="weights_initial-L314">        -0.2,</span>
+<span data-line="315" id="weights_initial-L315">        0.2,</span>
+<span data-line="316" id="weights_initial-L316">        -0.1,</span>
+<span data-line="317" id="weights_initial-L317">        0.1</span>
+<span data-line="318" id="weights_initial-L318">      ],</span>
+<span data-line="319" id="weights_initial-L319">      [</span>
+<span data-line="320" id="weights_initial-L320">        -0.30000000000000004,</span>
+<span data-line="321" id="weights_initial-L321">        0.1,</span>
+<span data-line="322" id="weights_initial-L322">        0.2,</span>
+<span data-line="323" id="weights_initial-L323">        0.0</span>
+<span data-line="324" id="weights_initial-L324">      ]</span>
+<span data-line="325" id="weights_initial-L325">    ],</span>
+<span data-line="326" id="weights_initial-L326">    "U": [</span>
+<span data-line="327" id="weights_initial-L327">      [</span>
+<span data-line="328" id="weights_initial-L328">        0.1,</span>
+<span data-line="329" id="weights_initial-L329">        0.0,</span>
+<span data-line="330" id="weights_initial-L330">        0.30000000000000004,</span>
+<span data-line="331" id="weights_initial-L331">        0.1,</span>
+<span data-line="332" id="weights_initial-L332">        -0.2,</span>
+<span data-line="333" id="weights_initial-L333">        -0.2,</span>
+<span data-line="334" id="weights_initial-L334">        -0.30000000000000004,</span>
+<span data-line="335" id="weights_initial-L335">        0.30000000000000004</span>
+<span data-line="336" id="weights_initial-L336">      ],</span>
+<span data-line="337" id="weights_initial-L337">      [</span>
+<span data-line="338" id="weights_initial-L338">        0.1,</span>
+<span data-line="339" id="weights_initial-L339">        -0.2,</span>
+<span data-line="340" id="weights_initial-L340">        0.1,</span>
+<span data-line="341" id="weights_initial-L341">        0.30000000000000004,</span>
+<span data-line="342" id="weights_initial-L342">        0.30000000000000004,</span>
+<span data-line="343" id="weights_initial-L343">        -0.30000000000000004,</span>
+<span data-line="344" id="weights_initial-L344">        -0.1,</span>
+<span data-line="345" id="weights_initial-L345">        0.1</span>
+<span data-line="346" id="weights_initial-L346">      ],</span>
+<span data-line="347" id="weights_initial-L347">      [</span>
+<span data-line="348" id="weights_initial-L348">        -0.1,</span>
+<span data-line="349" id="weights_initial-L349">        -0.30000000000000004,</span>
+<span data-line="350" id="weights_initial-L350">        0.2,</span>
+<span data-line="351" id="weights_initial-L351">        -0.30000000000000004,</span>
+<span data-line="352" id="weights_initial-L352">        0.30000000000000004,</span>
+<span data-line="353" id="weights_initial-L353">        -0.1,</span>
+<span data-line="354" id="weights_initial-L354">        0.2,</span>
+<span data-line="355" id="weights_initial-L355">        -0.30000000000000004</span>
+<span data-line="356" id="weights_initial-L356">      ],</span>
+<span data-line="357" id="weights_initial-L357">      [</span>
+<span data-line="358" id="weights_initial-L358">        0.0,</span>
+<span data-line="359" id="weights_initial-L359">        -0.1,</span>
+<span data-line="360" id="weights_initial-L360">        -0.2,</span>
+<span data-line="361" id="weights_initial-L361">        0.1,</span>
+<span data-line="362" id="weights_initial-L362">        0.1,</span>
+<span data-line="363" id="weights_initial-L363">        -0.30000000000000004,</span>
+<span data-line="364" id="weights_initial-L364">        0.30000000000000004,</span>
+<span data-line="365" id="weights_initial-L365">        0.1</span>
+<span data-line="366" id="weights_initial-L366">      ]</span>
+<span data-line="367" id="weights_initial-L367">    ],</span>
+<span data-line="368" id="weights_initial-L368">    "g1": [</span>
+<span data-line="369" id="weights_initial-L369">      1.0,</span>
+<span data-line="370" id="weights_initial-L370">      1.0,</span>
+<span data-line="371" id="weights_initial-L371">      1.0,</span>
+<span data-line="372" id="weights_initial-L372">      1.0</span>
+<span data-line="373" id="weights_initial-L373">    ],</span>
+<span data-line="374" id="weights_initial-L374">    "g2": [</span>
+<span data-line="375" id="weights_initial-L375">      1.0,</span>
+<span data-line="376" id="weights_initial-L376">      1.0,</span>
+<span data-line="377" id="weights_initial-L377">      1.0,</span>
+<span data-line="378" id="weights_initial-L378">      1.0</span>
+<span data-line="379" id="weights_initial-L379">    ],</span>
+<span data-line="380" id="weights_initial-L380">    "gf": [</span>
+<span data-line="381" id="weights_initial-L381">      1.0,</span>
+<span data-line="382" id="weights_initial-L382">      1.0,</span>
+<span data-line="383" id="weights_initial-L383">      1.0,</span>
+<span data-line="384" id="weights_initial-L384">      1.0</span>
+<span data-line="385" id="weights_initial-L385">    ]</span>
+<span data-line="386" id="weights_initial-L386">  }</span>
+<span data-line="387" id="weights_initial-L387">}</span>
+</code></pre><h2 id="weights_trained">data/weights_trained.json</h2><p><a href="../labs/model/data/weights_trained.json">原文件：labs/model/data/weights_trained.json</a></p><pre class="source-lines"><code class="language-json"><span data-line="1" id="weights_trained-L1">{</span>
+<span data-line="2" id="weights_trained-L2">  "spec": {</span>
+<span data-line="3" id="weights_trained-L3">    "vocab": [</span>
+<span data-line="4" id="weights_trained-L4">      "PAD",</span>
+<span data-line="5" id="weights_trained-L5">      "我",</span>
+<span data-line="6" id="weights_trained-L6">      "爱",</span>
+<span data-line="7" id="weights_trained-L7">      "学习",</span>
+<span data-line="8" id="weights_trained-L8">      "你",</span>
+<span data-line="9" id="weights_trained-L9">      "！",</span>
+<span data-line="10" id="weights_trained-L10">      "BOS",</span>
+<span data-line="11" id="weights_trained-L11">      "EOS"</span>
+<span data-line="12" id="weights_trained-L12">    ],</span>
+<span data-line="13" id="weights_trained-L13">    "vocab_size": 8,</span>
+<span data-line="14" id="weights_trained-L14">    "width": 4,</span>
+<span data-line="15" id="weights_trained-L15">    "ffn_width": 8,</span>
+<span data-line="16" id="weights_trained-L16">    "layers": 1,</span>
+<span data-line="17" id="weights_trained-L17">    "heads": 1,</span>
+<span data-line="18" id="weights_trained-L18">    "context": 8,</span>
+<span data-line="19" id="weights_trained-L19">    "norm": "RMSNorm",</span>
+<span data-line="20" id="weights_trained-L20">    "eps": 1e-05,</span>
+<span data-line="21" id="weights_trained-L21">    "position": "learned absolute position",</span>
+<span data-line="22" id="weights_trained-L22">    "activation": "ReLU",</span>
+<span data-line="23" id="weights_trained-L23">    "bias": false,</span>
+<span data-line="24" id="weights_trained-L24">    "dropout": 0.0,</span>
+<span data-line="25" id="weights_trained-L25">    "tied_embeddings": false,</span>
+<span data-line="26" id="weights_trained-L26">    "dtype": "float64",</span>
+<span data-line="27" id="weights_trained-L27">    "seed": 23</span>
+<span data-line="28" id="weights_trained-L28">  },</span>
+<span data-line="29" id="weights_trained-L29">  "parameters": {</span>
+<span data-line="30" id="weights_trained-L30">    "E": [</span>
+<span data-line="31" id="weights_trained-L31">      [</span>
+<span data-line="32" id="weights_trained-L32">        0.0,</span>
+<span data-line="33" id="weights_trained-L33">        0.0,</span>
+<span data-line="34" id="weights_trained-L34">        0.0,</span>
+<span data-line="35" id="weights_trained-L35">        0.0</span>
+<span data-line="36" id="weights_trained-L36">      ],</span>
+<span data-line="37" id="weights_trained-L37">      [</span>
+<span data-line="38" id="weights_trained-L38">        0.4052665704509908,</span>
+<span data-line="39" id="weights_trained-L39">        -0.13645826723147694,</span>
+<span data-line="40" id="weights_trained-L40">        0.880672324789573,</span>
+<span data-line="41" id="weights_trained-L41">        0.2146078974441324</span>
+<span data-line="42" id="weights_trained-L42">      ],</span>
+<span data-line="43" id="weights_trained-L43">      [</span>
+<span data-line="44" id="weights_trained-L44">        -0.41402480776723555,</span>
+<span data-line="45" id="weights_trained-L45">        0.8976377021170958,</span>
+<span data-line="46" id="weights_trained-L46">        -0.20475984694716162,</span>
+<span data-line="47" id="weights_trained-L47">        0.5363922214217095</span>
+<span data-line="48" id="weights_trained-L48">      ],</span>
+<span data-line="49" id="weights_trained-L49">      [</span>
+<span data-line="50" id="weights_trained-L50">        0.522332368093881,</span>
+<span data-line="51" id="weights_trained-L51">        -0.1627163251385308,</span>
+<span data-line="52" id="weights_trained-L52">        -0.44183553727956254,</span>
+<span data-line="53" id="weights_trained-L53">        0.6930100887813707</span>
+<span data-line="54" id="weights_trained-L54">      ],</span>
+<span data-line="55" id="weights_trained-L55">      [</span>
+<span data-line="56" id="weights_trained-L56">        0.5642765126898115,</span>
+<span data-line="57" id="weights_trained-L57">        -0.17829019233412394,</span>
+<span data-line="58" id="weights_trained-L58">        1.0052418508273846,</span>
+<span data-line="59" id="weights_trained-L59">        0.2302511866468691</span>
+<span data-line="60" id="weights_trained-L60">      ],</span>
+<span data-line="61" id="weights_trained-L61">      [</span>
+<span data-line="62" id="weights_trained-L62">        0.24866447668057495,</span>
+<span data-line="63" id="weights_trained-L63">        0.6780220920160707,</span>
+<span data-line="64" id="weights_trained-L64">        0.22053460562650315,</span>
+<span data-line="65" id="weights_trained-L65">        -0.7765776956913002</span>
+<span data-line="66" id="weights_trained-L66">      ],</span>
+<span data-line="67" id="weights_trained-L67">      [</span>
+<span data-line="68" id="weights_trained-L68">        0.04498881876426931,</span>
+<span data-line="69" id="weights_trained-L69">        -0.44910340538948257,</span>
+<span data-line="70" id="weights_trained-L70">        0.07049946858335403,</span>
+<span data-line="71" id="weights_trained-L71">        0.013794423406222472</span>
+<span data-line="72" id="weights_trained-L72">      ],</span>
+<span data-line="73" id="weights_trained-L73">      [</span>
+<span data-line="74" id="weights_trained-L74">        0.08869044690994136,</span>
+<span data-line="75" id="weights_trained-L75">        0.17738089381988273,</span>
+<span data-line="76" id="weights_trained-L76">        -0.26607134072982386,</span>
+<span data-line="77" id="weights_trained-L77">        0.35476178763976546</span>
+<span data-line="78" id="weights_trained-L78">      ]</span>
+<span data-line="79" id="weights_trained-L79">    ],</span>
+<span data-line="80" id="weights_trained-L80">    "P": [</span>
+<span data-line="81" id="weights_trained-L81">      [</span>
+<span data-line="82" id="weights_trained-L82">        -0.35411819233046726,</span>
+<span data-line="83" id="weights_trained-L83">        -0.31606773502456975,</span>
+<span data-line="84" id="weights_trained-L84">        -0.2399170956014412,</span>
+<span data-line="85" id="weights_trained-L85">        -0.074896023503719</span>
+<span data-line="86" id="weights_trained-L86">      ],</span>
+<span data-line="87" id="weights_trained-L87">      [</span>
+<span data-line="88" id="weights_trained-L88">        0.2724124617391578,</span>
+<span data-line="89" id="weights_trained-L89">        0.18635818470800816,</span>
+<span data-line="90" id="weights_trained-L90">        0.26048613856626973,</span>
+<span data-line="91" id="weights_trained-L91">        -0.14095483867358694</span>
+<span data-line="92" id="weights_trained-L92">      ],</span>
+<span data-line="93" id="weights_trained-L93">      [</span>
+<span data-line="94" id="weights_trained-L94">        -0.059263020127469423,</span>
+<span data-line="95" id="weights_trained-L95">        0.18811412683756437,</span>
+<span data-line="96" id="weights_trained-L96">        -0.3821407407670451,</span>
+<span data-line="97" id="weights_trained-L97">        0.04859476341703128</span>
+<span data-line="98" id="weights_trained-L98">      ],</span>
+<span data-line="99" id="weights_trained-L99">      [</span>
+<span data-line="100" id="weights_trained-L100">        0.03453491008920237,</span>
+<span data-line="101" id="weights_trained-L101">        -0.3400972189584134,</span>
+<span data-line="102" id="weights_trained-L102">        -0.04272852618482567,</span>
+<span data-line="103" id="weights_trained-L103">        -0.10520393340810176</span>
+<span data-line="104" id="weights_trained-L104">      ],</span>
+<span data-line="105" id="weights_trained-L105">      [</span>
+<span data-line="106" id="weights_trained-L106">        0.3373549235905165,</span>
+<span data-line="107" id="weights_trained-L107">        0.32326030437630504,</span>
+<span data-line="108" id="weights_trained-L108">        -0.13422718201326223,</span>
+<span data-line="109" id="weights_trained-L109">        -0.20008979077668104</span>
+<span data-line="110" id="weights_trained-L110">      ],</span>
+<span data-line="111" id="weights_trained-L111">      [</span>
+<span data-line="112" id="weights_trained-L112">        -0.04434522345497068,</span>
+<span data-line="113" id="weights_trained-L113">        0.08869044690994136,</span>
+<span data-line="114" id="weights_trained-L114">        -0.08869044690994136,</span>
+<span data-line="115" id="weights_trained-L115">        -0.08869044690994136</span>
+<span data-line="116" id="weights_trained-L116">      ],</span>
+<span data-line="117" id="weights_trained-L117">      [</span>
+<span data-line="118" id="weights_trained-L118">        0.04434522345497068,</span>
+<span data-line="119" id="weights_trained-L119">        -0.08869044690994136,</span>
+<span data-line="120" id="weights_trained-L120">        -0.04434522345497068,</span>
+<span data-line="121" id="weights_trained-L121">        -0.04434522345497068</span>
+<span data-line="122" id="weights_trained-L122">      ],</span>
+<span data-line="123" id="weights_trained-L123">      [</span>
+<span data-line="124" id="weights_trained-L124">        -0.04434522345497068,</span>
+<span data-line="125" id="weights_trained-L125">        0.0,</span>
+<span data-line="126" id="weights_trained-L126">        0.08869044690994136,</span>
+<span data-line="127" id="weights_trained-L127">        0.04434522345497068</span>
+<span data-line="128" id="weights_trained-L128">      ]</span>
+<span data-line="129" id="weights_trained-L129">    ],</span>
+<span data-line="130" id="weights_trained-L130">    "Wq": [</span>
+<span data-line="131" id="weights_trained-L131">      [</span>
+<span data-line="132" id="weights_trained-L132">        0.12901819214113494,</span>
+<span data-line="133" id="weights_trained-L133">        0.10018194346631253,</span>
+<span data-line="134" id="weights_trained-L134">        -0.07676758359219502,</span>
+<span data-line="135" id="weights_trained-L135">        -0.23410226462910147</span>
+<span data-line="136" id="weights_trained-L136">      ],</span>
+<span data-line="137" id="weights_trained-L137">      [</span>
+<span data-line="138" id="weights_trained-L138">        -0.14199319291176252,</span>
+<span data-line="139" id="weights_trained-L139">        -0.19638590009989923,</span>
+<span data-line="140" id="weights_trained-L140">        -0.5053521160865082,</span>
+<span data-line="141" id="weights_trained-L141">        -0.217821629359178</span>
+<span data-line="142" id="weights_trained-L142">      ],</span>
+<span data-line="143" id="weights_trained-L143">      [</span>
+<span data-line="144" id="weights_trained-L144">        -0.29828838008954023,</span>
+<span data-line="145" id="weights_trained-L145">        -0.23753852184672697,</span>
+<span data-line="146" id="weights_trained-L146">        0.04572017172329083,</span>
+<span data-line="147" id="weights_trained-L147">        -0.10748150272504867</span>
+<span data-line="148" id="weights_trained-L148">      ],</span>
+<span data-line="149" id="weights_trained-L149">      [</span>
+<span data-line="150" id="weights_trained-L150">        -0.2137456044653996,</span>
+<span data-line="151" id="weights_trained-L151">        0.30526990802780746,</span>
+<span data-line="152" id="weights_trained-L152">        -0.1962986205984683,</span>
+<span data-line="153" id="weights_trained-L153">        -0.1110553073336788</span>
+<span data-line="154" id="weights_trained-L154">      ]</span>
+<span data-line="155" id="weights_trained-L155">    ],</span>
+<span data-line="156" id="weights_trained-L156">    "Wk": [</span>
+<span data-line="157" id="weights_trained-L157">      [</span>
+<span data-line="158" id="weights_trained-L158">        -0.16471598616965574,</span>
+<span data-line="159" id="weights_trained-L159">        -0.49600578606092294,</span>
+<span data-line="160" id="weights_trained-L160">        -0.1407311404709995,</span>
+<span data-line="161" id="weights_trained-L161">        -0.015111991294880311</span>
+<span data-line="162" id="weights_trained-L162">      ],</span>
+<span data-line="163" id="weights_trained-L163">      [</span>
+<span data-line="164" id="weights_trained-L164">        0.037844152863870856,</span>
+<span data-line="165" id="weights_trained-L165">        0.10388911362853988,</span>
+<span data-line="166" id="weights_trained-L166">        0.008304300651785165,</span>
+<span data-line="167" id="weights_trained-L167">        0.15278269613010464</span>
+<span data-line="168" id="weights_trained-L168">      ],</span>
+<span data-line="169" id="weights_trained-L169">      [</span>
+<span data-line="170" id="weights_trained-L170">        0.17728364851894093,</span>
+<span data-line="171" id="weights_trained-L171">        -0.10710726152395218,</span>
+<span data-line="172" id="weights_trained-L172">        0.45708888477971765,</span>
+<span data-line="173" id="weights_trained-L173">        0.06371481273508782</span>
+<span data-line="174" id="weights_trained-L174">      ],</span>
+<span data-line="175" id="weights_trained-L175">      [</span>
+<span data-line="176" id="weights_trained-L176">        0.583954943849413,</span>
+<span data-line="177" id="weights_trained-L177">        -0.0552760550869857,</span>
+<span data-line="178" id="weights_trained-L178">        -0.08718302159177573,</span>
+<span data-line="179" id="weights_trained-L179">        0.10321747025562987</span>
+<span data-line="180" id="weights_trained-L180">      ]</span>
+<span data-line="181" id="weights_trained-L181">    ],</span>
+<span data-line="182" id="weights_trained-L182">    "Wv": [</span>
+<span data-line="183" id="weights_trained-L183">      [</span>
+<span data-line="184" id="weights_trained-L184">        -0.1661979024664514,</span>
+<span data-line="185" id="weights_trained-L185">        -0.09760614382746562,</span>
+<span data-line="186" id="weights_trained-L186">        -0.024523795325299438,</span>
+<span data-line="187" id="weights_trained-L187">        -0.5097903198037397</span>
+<span data-line="188" id="weights_trained-L188">      ],</span>
+<span data-line="189" id="weights_trained-L189">      [</span>
+<span data-line="190" id="weights_trained-L190">        0.24106504283779193,</span>
+<span data-line="191" id="weights_trained-L191">        0.23597985056730156,</span>
+<span data-line="192" id="weights_trained-L192">        -0.027017122253964024,</span>
+<span data-line="193" id="weights_trained-L193">        -0.05770683656485458</span>
+<span data-line="194" id="weights_trained-L194">      ],</span>
+<span data-line="195" id="weights_trained-L195">      [</span>
+<span data-line="196" id="weights_trained-L196">        0.03810175702924752,</span>
+<span data-line="197" id="weights_trained-L197">        -0.12171722760788875,</span>
+<span data-line="198" id="weights_trained-L198">        0.2979115911673585,</span>
+<span data-line="199" id="weights_trained-L199">        -0.4813512704399146</span>
+<span data-line="200" id="weights_trained-L200">      ],</span>
+<span data-line="201" id="weights_trained-L201">      [</span>
+<span data-line="202" id="weights_trained-L202">        0.11002371234763587,</span>
+<span data-line="203" id="weights_trained-L203">        0.07441640646561325,</span>
+<span data-line="204" id="weights_trained-L204">        -0.13079117324607692,</span>
+<span data-line="205" id="weights_trained-L205">        -0.21717425754208874</span>
+<span data-line="206" id="weights_trained-L206">      ]</span>
+<span data-line="207" id="weights_trained-L207">    ],</span>
+<span data-line="208" id="weights_trained-L208">    "Wo": [</span>
+<span data-line="209" id="weights_trained-L209">      [</span>
+<span data-line="210" id="weights_trained-L210">        -0.10051174909605023,</span>
+<span data-line="211" id="weights_trained-L211">        0.146567514684471,</span>
+<span data-line="212" id="weights_trained-L212">        0.001355887411496713,</span>
+<span data-line="213" id="weights_trained-L213">        0.30323168182859395</span>
+<span data-line="214" id="weights_trained-L214">      ],</span>
+<span data-line="215" id="weights_trained-L215">      [</span>
+<span data-line="216" id="weights_trained-L216">        -0.08803392347933432,</span>
+<span data-line="217" id="weights_trained-L217">        0.07801132101175781,</span>
+<span data-line="218" id="weights_trained-L218">        -0.2681511753621345,</span>
+<span data-line="219" id="weights_trained-L219">        -0.13974658063479029</span>
+<span data-line="220" id="weights_trained-L220">      ],</span>
+<span data-line="221" id="weights_trained-L221">      [</span>
+<span data-line="222" id="weights_trained-L222">        0.17681444560426157,</span>
+<span data-line="223" id="weights_trained-L223">        0.4886310674820848,</span>
+<span data-line="224" id="weights_trained-L224">        0.17080799482272205,</span>
+<span data-line="225" id="weights_trained-L225">        0.12478537865131792</span>
+<span data-line="226" id="weights_trained-L226">      ],</span>
+<span data-line="227" id="weights_trained-L227">      [</span>
+<span data-line="228" id="weights_trained-L228">        -0.5492654791035682,</span>
+<span data-line="229" id="weights_trained-L229">        0.07304797778675899,</span>
+<span data-line="230" id="weights_trained-L230">        0.4369527468224175,</span>
+<span data-line="231" id="weights_trained-L231">        0.1366195863912654</span>
+<span data-line="232" id="weights_trained-L232">      ]</span>
+<span data-line="233" id="weights_trained-L233">    ],</span>
+<span data-line="234" id="weights_trained-L234">    "W1": [</span>
+<span data-line="235" id="weights_trained-L235">      [</span>
+<span data-line="236" id="weights_trained-L236">        0.5951426698638274,</span>
+<span data-line="237" id="weights_trained-L237">        -0.26544520489076334,</span>
+<span data-line="238" id="weights_trained-L238">        -0.45222946443048656,</span>
+<span data-line="239" id="weights_trained-L239">        0.25027303130409817,</span>
+<span data-line="240" id="weights_trained-L240">        -0.13106752573481484,</span>
+<span data-line="241" id="weights_trained-L241">        -0.5360738577038495,</span>
+<span data-line="242" id="weights_trained-L242">        0.27908927386211285,</span>
+<span data-line="243" id="weights_trained-L243">        -0.2894186884228373</span>
+<span data-line="244" id="weights_trained-L244">      ],</span>
+<span data-line="245" id="weights_trained-L245">      [</span>
+<span data-line="246" id="weights_trained-L246">        -0.0846092483253801,</span>
+<span data-line="247" id="weights_trained-L247">        0.23310034471907004,</span>
+<span data-line="248" id="weights_trained-L248">        0.30921994573767775,</span>
+<span data-line="249" id="weights_trained-L249">        0.31398452903625895,</span>
+<span data-line="250" id="weights_trained-L250">        -0.15841584354623056,</span>
+<span data-line="251" id="weights_trained-L251">        -0.30877464123069054,</span>
+<span data-line="252" id="weights_trained-L252">        -0.3234964068172794,</span>
+<span data-line="253" id="weights_trained-L253">        -0.27658395249135376</span>
+<span data-line="254" id="weights_trained-L254">      ],</span>
+<span data-line="255" id="weights_trained-L255">      [</span>
+<span data-line="256" id="weights_trained-L256">        -0.21898615750849917,</span>
+<span data-line="257" id="weights_trained-L257">        0.36914665333735475,</span>
+<span data-line="258" id="weights_trained-L258">        0.11107552181042529,</span>
+<span data-line="259" id="weights_trained-L259">        0.19557527950958822,</span>
+<span data-line="260" id="weights_trained-L260">        -0.23102667570984356,</span>
+<span data-line="261" id="weights_trained-L261">        0.23579609414078465,</span>
+<span data-line="262" id="weights_trained-L262">        -0.28690132204926355,</span>
+<span data-line="263" id="weights_trained-L263">        0.01800718860998905</span>
+<span data-line="264" id="weights_trained-L264">      ],</span>
+<span data-line="265" id="weights_trained-L265">      [</span>
+<span data-line="266" id="weights_trained-L266">        0.5708099659963267,</span>
+<span data-line="267" id="weights_trained-L267">        -0.3131090599310812,</span>
+<span data-line="268" id="weights_trained-L268">        0.14056178897711857,</span>
+<span data-line="269" id="weights_trained-L269">        0.021318112563615703,</span>
+<span data-line="270" id="weights_trained-L270">        -0.39554942482874306,</span>
+<span data-line="271" id="weights_trained-L271">        -0.20913947036137473,</span>
+<span data-line="272" id="weights_trained-L272">        -0.12586037788522791,</span>
+<span data-line="273" id="weights_trained-L273">        -0.49954284350267636</span>
+<span data-line="274" id="weights_trained-L274">      ]</span>
+<span data-line="275" id="weights_trained-L275">    ],</span>
+<span data-line="276" id="weights_trained-L276">    "W2": [</span>
+<span data-line="277" id="weights_trained-L277">      [</span>
+<span data-line="278" id="weights_trained-L278">        -0.37393827764725274,</span>
+<span data-line="279" id="weights_trained-L279">        -0.6995703125650319,</span>
+<span data-line="280" id="weights_trained-L280">        -0.5838104346189115,</span>
+<span data-line="281" id="weights_trained-L281">        -0.37716754856659324</span>
+<span data-line="282" id="weights_trained-L282">      ],</span>
+<span data-line="283" id="weights_trained-L283">      [</span>
+<span data-line="284" id="weights_trained-L284">        0.4328712557247543,</span>
+<span data-line="285" id="weights_trained-L285">        0.3145770791056371,</span>
+<span data-line="286" id="weights_trained-L286">        -0.04813244766737684,</span>
+<span data-line="287" id="weights_trained-L287">        0.03451033414575454</span>
+<span data-line="288" id="weights_trained-L288">      ],</span>
+<span data-line="289" id="weights_trained-L289">      [</span>
+<span data-line="290" id="weights_trained-L290">        -0.08782339292405175,</span>
+<span data-line="291" id="weights_trained-L291">        -0.14500468980523987,</span>
+<span data-line="292" id="weights_trained-L292">        -0.3156320692426011,</span>
+<span data-line="293" id="weights_trained-L293">        0.23045040898830776</span>
+<span data-line="294" id="weights_trained-L294">      ],</span>
+<span data-line="295" id="weights_trained-L295">      [</span>
+<span data-line="296" id="weights_trained-L296">        0.044943500081096904,</span>
+<span data-line="297" id="weights_trained-L297">        -0.1701151669880897,</span>
+<span data-line="298" id="weights_trained-L298">        -0.3098381002852733,</span>
+<span data-line="299" id="weights_trained-L299">        0.027523849621446973</span>
+<span data-line="300" id="weights_trained-L300">      ],</span>
+<span data-line="301" id="weights_trained-L301">      [</span>
+<span data-line="302" id="weights_trained-L302">        -0.06639234862124987,</span>
+<span data-line="303" id="weights_trained-L303">        0.3204323241752668,</span>
+<span data-line="304" id="weights_trained-L304">        0.009857538582702769,</span>
+<span data-line="305" id="weights_trained-L305">        -0.1767642898322145</span>
+<span data-line="306" id="weights_trained-L306">      ],</span>
+<span data-line="307" id="weights_trained-L307">      [</span>
+<span data-line="308" id="weights_trained-L308">        0.052454066052005935,</span>
+<span data-line="309" id="weights_trained-L309">        0.473205483546291,</span>
+<span data-line="310" id="weights_trained-L310">        0.2803020769159998,</span>
+<span data-line="311" id="weights_trained-L311">        -0.3120454506307641</span>
+<span data-line="312" id="weights_trained-L312">      ],</span>
+<span data-line="313" id="weights_trained-L313">      [</span>
+<span data-line="314" id="weights_trained-L314">        -0.33810736039362654,</span>
+<span data-line="315" id="weights_trained-L315">        -0.22276930186292088,</span>
+<span data-line="316" id="weights_trained-L316">        -0.45467945672294335,</span>
+<span data-line="317" id="weights_trained-L317">        -0.19897167185812908</span>
+<span data-line="318" id="weights_trained-L318">      ],</span>
+<span data-line="319" id="weights_trained-L319">      [</span>
+<span data-line="320" id="weights_trained-L320">        -0.4169712925576273,</span>
+<span data-line="321" id="weights_trained-L321">        0.056932474914360195,</span>
+<span data-line="322" id="weights_trained-L322">        0.1515049129100647,</span>
+<span data-line="323" id="weights_trained-L323">        -0.03658887231023298</span>
+<span data-line="324" id="weights_trained-L324">      ]</span>
+<span data-line="325" id="weights_trained-L325">    ],</span>
+<span data-line="326" id="weights_trained-L326">    "U": [</span>
+<span data-line="327" id="weights_trained-L327">      [</span>
+<span data-line="328" id="weights_trained-L328">        0.23159767479751747,</span>
+<span data-line="329" id="weights_trained-L329">        -1.2033863705883912,</span>
+<span data-line="330" id="weights_trained-L330">        1.3661768603925686,</span>
+<span data-line="331" id="weights_trained-L331">        -0.6526826095161274,</span>
+<span data-line="332" id="weights_trained-L332">        -1.1245086622257228,</span>
+<span data-line="333" id="weights_trained-L333">        -0.20234191971768323,</span>
+<span data-line="334" id="weights_trained-L334">        0.20988593631195954,</span>
+<span data-line="335" id="weights_trained-L335">        0.873423035382752</span>
+<span data-line="336" id="weights_trained-L336">      ],</span>
+<span data-line="337" id="weights_trained-L337">      [</span>
+<span data-line="338" id="weights_trained-L338">        0.05918561900176784,</span>
+<span data-line="339" id="weights_trained-L339">        -0.1906891875722753,</span>
+<span data-line="340" id="weights_trained-L340">        -1.0934387153207679,</span>
+<span data-line="341" id="weights_trained-L341">        1.0743612165020355,</span>
+<span data-line="342" id="weights_trained-L342">        -0.2586528266277411,</span>
+<span data-line="343" id="weights_trained-L343">        -1.327446155300007,</span>
+<span data-line="344" id="weights_trained-L344">        0.05972726377507129,</span>
+<span data-line="345" id="weights_trained-L345">        1.2277697804175587</span>
+<span data-line="346" id="weights_trained-L346">      ],</span>
+<span data-line="347" id="weights_trained-L347">      [</span>
+<span data-line="348" id="weights_trained-L348">        0.3000281521189067,</span>
+<span data-line="349" id="weights_trained-L349">        0.8021715972663168,</span>
+<span data-line="350" id="weights_trained-L350">        1.1121622866814025,</span>
+<span data-line="351" id="weights_trained-L351">        -1.2092777006061424,</span>
+<span data-line="352" id="weights_trained-L352">        1.168320975663797,</span>
+<span data-line="353" id="weights_trained-L353">        -1.1091133248193976,</span>
+<span data-line="354" id="weights_trained-L354">        0.35104960747678415,</span>
+<span data-line="355" id="weights_trained-L355">        -0.13910417247374068</span>
+<span data-line="356" id="weights_trained-L356">      ],</span>
+<span data-line="357" id="weights_trained-L357">      [</span>
+<span data-line="358" id="weights_trained-L358">        0.8124216132521279,</span>
+<span data-line="359" id="weights_trained-L359">        -0.6967202042146631,</span>
+<span data-line="360" id="weights_trained-L360">        -0.28592686466808004,</span>
+<span data-line="361" id="weights_trained-L361">        1.3282719890323578,</span>
+<span data-line="362" id="weights_trained-L362">        -0.38496093333016784,</span>
+<span data-line="363" id="weights_trained-L363">        0.11537519484207422,</span>
+<span data-line="364" id="weights_trained-L364">        0.9204017868185256,</span>
+<span data-line="365" id="weights_trained-L365">        -0.9496749149352876</span>
+<span data-line="366" id="weights_trained-L366">      ]</span>
+<span data-line="367" id="weights_trained-L367">    ],</span>
+<span data-line="368" id="weights_trained-L368">    "g1": [</span>
+<span data-line="369" id="weights_trained-L369">      0.8833610761666376,</span>
+<span data-line="370" id="weights_trained-L370">      0.7049167265305969,</span>
+<span data-line="371" id="weights_trained-L371">      0.9471476805097483,</span>
+<span data-line="372" id="weights_trained-L372">      0.6120434754247834</span>
+<span data-line="373" id="weights_trained-L373">    ],</span>
+<span data-line="374" id="weights_trained-L374">    "g2": [</span>
+<span data-line="375" id="weights_trained-L375">      1.1507837929300662,</span>
+<span data-line="376" id="weights_trained-L376">      0.8746811057503767,</span>
+<span data-line="377" id="weights_trained-L377">      0.6864572816868669,</span>
+<span data-line="378" id="weights_trained-L378">      1.2693203635085186</span>
+<span data-line="379" id="weights_trained-L379">    ],</span>
+<span data-line="380" id="weights_trained-L380">    "gf": [</span>
+<span data-line="381" id="weights_trained-L381">      2.098956853000513,</span>
+<span data-line="382" id="weights_trained-L382">      2.3455107933702246,</span>
+<span data-line="383" id="weights_trained-L383">      2.1185102336010564,</span>
+<span data-line="384" id="weights_trained-L384">      1.9326554118256944</span>
+<span data-line="385" id="weights_trained-L385">    ]</span>
+<span data-line="386" id="weights_trained-L386">  }</span>
+<span data-line="387" id="weights_trained-L387">}</span>
+</code></pre></article></main><aside aria-label="本章目录" class="chapter-outline"><nav aria-label="本章提纲" class="toc"><a href="#tiny_model">lab/tiny_model.py</a><a href="#reference_inference">lab/reference_inference.py</a><a href="#test_model">lab/test_model.py</a><a href="#weights_initial">data/weights_initial.json</a><a href="#weights_trained">data/weights_trained.json</a></nav></aside></div><button aria-label="关闭目录" class="nav-backdrop" tabindex="-1" type="button"></button><button aria-label="回到顶部" class="back-top icon-button" data-top="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M12 20V5m-6 6 6-6 6 6"></path></svg></button><div aria-live="polite" class="toast" id="studio-toast" role="status"></div><dialog aria-label="搜索教材" class="studio-dialog" id="command-search"><div class="command-head"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><input aria-label="搜索概念、章节或题号" autocomplete="off" id="command-input" placeholder="搜索概念、章节或题号" spellcheck="false"/><button aria-label="关闭搜索" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><p class="command-hint" id="command-hint">输入关键词即可检索。</p><div class="command-results" id="command-results"></div><div class="command-foot"><span>↑ ↓ 选择　Enter 打开</span><span>Esc 关闭 · 仅本地搜索</span></div></dialog><dialog aria-labelledby="reading-settings-title" class="studio-dialog settings-dialog" id="reading-settings"><div class="settings-header"><h2 id="reading-settings-title">阅读设置</h2><button aria-label="关闭阅读设置" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><div class="setting-row"><label>正文字号</label><div class="setting-picks"><button aria-label="缩小正文字号" data-font="-1" type="button">A− 缩小</button><button aria-label="放大正文字号" data-font="1" type="button">A＋ 放大</button></div></div><div class="setting-row"><label>页面底色</label><div class="setting-picks"><button aria-pressed="true" data-paper-choice="sage" type="button">浅灰纸面</button><button aria-pressed="false" data-paper-choice="white" type="button">标准白纸</button></div></div><div class="setting-row"><label>正文宽度</label><div class="setting-picks"><button aria-pressed="false" data-width-choice="narrow" type="button">紧凑</button><button aria-pressed="true" data-width-choice="comfortable" type="button">舒适</button><button aria-pressed="false" data-width-choice="wide" type="button">宽幅</button></div></div><p class="setting-info">阅读设置仅保存在本机浏览器，不上传任何数据。</p></dialog><script src="../assets/app.js"></script><script src="../assets/visual-data.js"></script><script src="../assets/visual-player.js"></script><script src="../assets/catalog.js"></script><script src="../assets/atelier.js"></script><script src="../assets/reader-navigation.js"></script><script src="../assets/mechanisms.js"></script><script src="../assets/diagrams.js"></script></body></html>

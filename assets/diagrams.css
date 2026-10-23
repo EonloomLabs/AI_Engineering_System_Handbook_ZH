@@ -1,0 +1,55 @@
+
+/* Diagram system: semantic structure first, native data second, restrained graphic grammar. */
+.d-figure{margin:30px 0 34px!important;padding:0!important;background:#fff!important;color:#182632;border:1px solid #d8e0e7!important;border-radius:3px!important;overflow:hidden;break-inside:avoid}
+.d-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;padding:16px 20px 14px;background:#fff;border-bottom:1px solid #e5e9ee}
+.d-head strong{font-size:17px;line-height:1.65;font-weight:650;color:#182632}
+.d-head button,.d-tools button{font-size:13px;line-height:1.5;padding:6px 12px;white-space:nowrap;border:1px solid #b8c7d5;border-radius:3px;background:#fff;color:#285d96}
+.d-art{width:100%;max-width:100%;overflow:auto;background:#fff;padding:10px 10px 0}
+.d-svg,.d-art>svg{display:block;width:100%;height:auto;min-width:650px;max-width:1000px;margin:0 auto;background:#fff;font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.d-mobile{display:none}
+.d-caption{margin:0!important;padding:13px 20px 16px!important;font-size:14px!important;line-height:1.85!important;background:#f7f9fb!important;color:#415363!important;border-top:1px solid #e6ebef}
+.d-caption p{margin:3px 0!important;font-size:14px!important}
+.d-caption a{margin-right:10px}
+.d-table{margin:25px 0 30px;border-top:2px solid #c6d2dc;padding-top:12px;background:transparent}
+.d-table>h4,.d-table>.d-table-title{font-size:16px;line-height:1.7;margin:0 0 12px;font-weight:650}
+.d-table .table-wrap{border:0;border-radius:0;background:white;overflow:auto;margin:0}
+.d-table table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.8;table-layout:auto}
+.d-table th{background:#f7f9fb;color:#526272;font-size:13px;font-weight:600;text-align:left}
+.d-table td,.d-table th{padding:12px 14px;vertical-align:top;border:0;border-bottom:1px solid #e1e7ed}
+.d-table td:first-child{font-weight:600;color:#253d54}
+.d-table code{background:transparent;white-space:pre-wrap;overflow-wrap:anywhere}
+.d-note{font-size:14px;line-height:1.85;color:#465969;margin:10px 0}
+.d-detail{margin:16px 0;font-size:15px}
+.d-detail summary{cursor:pointer;color:#285d96;padding:7px 0}
+.d-anchor{display:block;scroll-margin-top:90px;height:0}
+.d-numeric .mc-caption{color:#536473;font-size:13px}
+.d-numeric td{font-variant-numeric:tabular-nums}
+.d-dialog{width:min(96vw,1380px);max-height:94vh;border:1px solid #a2b3c4;border-radius:4px;background:#fff;padding:20px;color:#182632}
+.d-dialog::backdrop{background:rgba(14,26,40,.65)}
+.d-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.d-tools h2{font-size:18px;line-height:1.5;margin:0 auto 0 0;border:0;padding:0}
+.d-dialog .d-art{max-height:78vh;overflow:auto;margin-top:14px;padding:0}
+.d-dialog .d-art>svg{max-width:none;width:var(--diagram-zoom,100%);min-width:650px}
+.d-source-note{font-size:12px;color:#61717e;margin:8px 0 0}
+.d-referral{margin:18px 0;padding:10px 15px;border-left:2px solid #b5c9dd;font-size:14px;color:#405b76;background:#f8fafc}
+.d-referral a{margin-right:8px}
+.vb-block,.vb-player{border-color:#d7e0e7!important;border-radius:3px!important;box-shadow:none!important;background:#fff!important}
+.vb-block h2,.vb-block h3,.vb-frame-title{color:#182632!important}
+.vb-intro,.vb-scenario,.vb-reasons,.vb-caption{background:#f7f9fb!important;color:#334a5e!important}
+.vb-art{background:#fff!important}.vb-art>svg{font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif!important;max-width:1000px;margin:auto}
+.vb-controls{background:#fff!important}.vb-controls button,.vb-controls select{border-radius:3px!important}
+.foundation-board{background:#fff!important;border-color:#d8e0e7!important;box-shadow:none!important}
+.mc-numeric{margin:24px 0!important}.mc-numeric figcaption{color:#243d53!important}
+@media(max-width:700px){
+ .d-head{padding:13px 14px}.d-head strong{font-size:16px}.d-caption{padding:12px 14px!important}
+ .d-art{padding:8px 0 0}.d-desktop.has-mobile{display:none}.d-mobile{display:block}
+ .d-mobile>svg{min-width:360px;max-width:550px}
+ .d-table table{font-size:14px}.d-table th,.d-table td{padding:10px 8px}
+ .d-tools h2{width:100%;font-size:17px}.d-dialog{padding:13px}
+}
+@media print{.d-zoom,.d-dialog{display:none!important}.d-art{overflow:visible}.d-svg,.d-art>svg{min-width:0!important;max-width:100%}.d-figure{border-color:#bbb!important}.d-caption{background:white!important}}
+@media(prefers-reduced-motion:reduce){.d-figure *,.vb-block *{animation:none!important;transition:none!important}}
+
+@media(max-width:700px){.d-desktop:not(.has-mobile)>svg{min-width:850px}.d-mobile>svg{min-width:360px}.d-figure:not(:has(.d-mobile)) .d-head::after{content:"宽图可横向滚动";font-size:12px;color:#61717e;display:block}.d-figure:not(:has(.d-mobile)) .d-head{flex-wrap:wrap}}
+
+.d-svg text{white-space:pre}

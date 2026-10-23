@@ -1,0 +1,8 @@
+%%{init: {"theme":"base","themeVariables":{"primaryColor":"#2d333b","primaryTextColor":"#e6edf3","primaryBorderColor":"#6d5dfc","lineColor":"#8b949e","background":"#161b22"}}}%%
+flowchart LR
+ C["历史K/V: 位置0..2"] --> K["cat(old,new) -> 位置0..3"]
+ T["新Token: 学习, 位置3"] --> P["本层投影k_new/v_new"]
+ P --> K
+ K --> Att["当前位置Query读取全部允许K/V"]
+ Att --> Next["下一Token分数; 新Token尚未进缓存"]
+%% Sources: labs/model/lab/tiny_model.py:58-81,156-175

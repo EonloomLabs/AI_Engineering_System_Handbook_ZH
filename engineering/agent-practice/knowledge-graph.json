@@ -1,0 +1,562 @@
+{
+  "scope": "固定Codex源码与官方工程资料的机制关系；不是完整仓库调用图",
+  "nodes": [
+    {
+      "id": "Claude后置block",
+      "label": "Claude后置block"
+    },
+    {
+      "id": "StepContext",
+      "label": "StepContext"
+    },
+    {
+      "id": "Trace",
+      "label": "Trace"
+    },
+    {
+      "id": "临时工具许可",
+      "label": "临时工具许可"
+    },
+    {
+      "id": "产物发布",
+      "label": "产物发布"
+    },
+    {
+      "id": "任务成本",
+      "label": "任务成本"
+    },
+    {
+      "id": "任务结果",
+      "label": "任务结果"
+    },
+    {
+      "id": "任务质量",
+      "label": "任务质量"
+    },
+    {
+      "id": "优化决策",
+      "label": "优化决策"
+    },
+    {
+      "id": "会话历史",
+      "label": "会话历史"
+    },
+    {
+      "id": "历史think工具建议",
+      "label": "历史think工具建议"
+    },
+    {
+      "id": "历史快照",
+      "label": "历史快照"
+    },
+    {
+      "id": "原始日志",
+      "label": "原始日志"
+    },
+    {
+      "id": "原工具结果",
+      "label": "原工具结果"
+    },
+    {
+      "id": "取消请求",
+      "label": "取消请求"
+    },
+    {
+      "id": "后置结果替换",
+      "label": "后置结果替换"
+    },
+    {
+      "id": "后置钩子",
+      "label": "后置钩子"
+    },
+    {
+      "id": "回答主张",
+      "label": "回答主张"
+    },
+    {
+      "id": "增加编排机制",
+      "label": "增加编排机制"
+    },
+    {
+      "id": "外部副作用",
+      "label": "外部副作用"
+    },
+    {
+      "id": "失败与废弃工作",
+      "label": "失败与废弃工作"
+    },
+    {
+      "id": "子Agent消息提交",
+      "label": "子Agent消息提交"
+    },
+    {
+      "id": "子任务完成",
+      "label": "子任务完成"
+    },
+    {
+      "id": "完成工具项",
+      "label": "完成工具项"
+    },
+    {
+      "id": "实时后缀",
+      "label": "实时后缀"
+    },
+    {
+      "id": "实时授权",
+      "label": "实时授权"
+    },
+    {
+      "id": "实际应用",
+      "label": "实际应用"
+    },
+    {
+      "id": "工作树版本",
+      "label": "工作树版本"
+    },
+    {
+      "id": "工作者完成",
+      "label": "工作者完成"
+    },
+    {
+      "id": "工具执行",
+      "label": "工具执行"
+    },
+    {
+      "id": "工具注册",
+      "label": "工具注册"
+    },
+    {
+      "id": "工具路由器",
+      "label": "工具路由器"
+    },
+    {
+      "id": "并行任务",
+      "label": "并行任务"
+    },
+    {
+      "id": "执行授权",
+      "label": "执行授权"
+    },
+    {
+      "id": "扩展思考",
+      "label": "扩展思考"
+    },
+    {
+      "id": "技能文件",
+      "label": "技能文件"
+    },
+    {
+      "id": "技能正文保留",
+      "label": "技能正文保留"
+    },
+    {
+      "id": "持久化成功",
+      "label": "持久化成功"
+    },
+    {
+      "id": "授权代际",
+      "label": "授权代际"
+    },
+    {
+      "id": "摘要候选",
+      "label": "摘要候选"
+    },
+    {
+      "id": "摘要安装",
+      "label": "摘要安装"
+    },
+    {
+      "id": "摘要安装接受",
+      "label": "摘要安装接受"
+    },
+    {
+      "id": "整合工作者",
+      "label": "整合工作者"
+    },
+    {
+      "id": "整合工作者终态",
+      "label": "整合工作者终态"
+    },
+    {
+      "id": "文档块",
+      "label": "文档块"
+    },
+    {
+      "id": "有序收集",
+      "label": "有序收集"
+    },
+    {
+      "id": "模型可见性",
+      "label": "模型可见性"
+    },
+    {
+      "id": "模型请求",
+      "label": "模型请求"
+    },
+    {
+      "id": "测试结果",
+      "label": "测试结果"
+    },
+    {
+      "id": "环境噪声",
+      "label": "环境噪声"
+    },
+    {
+      "id": "用户目标",
+      "label": "用户目标"
+    },
+    {
+      "id": "租约所有者",
+      "label": "租约所有者"
+    },
+    {
+      "id": "记忆候选",
+      "label": "记忆候选"
+    },
+    {
+      "id": "记忆发布",
+      "label": "记忆发布"
+    },
+    {
+      "id": "评测差异",
+      "label": "评测差异"
+    },
+    {
+      "id": "评测指标",
+      "label": "评测指标"
+    },
+    {
+      "id": "请求快照",
+      "label": "请求快照"
+    }
+  ],
+  "edges": [
+    {
+      "from": "用户目标",
+      "to": "模型请求",
+      "relation": "约束并提供任务",
+      "sources": [
+        "C01",
+        "A01"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "请求快照",
+      "to": "工具路由器",
+      "relation": "绑定本次声明与分派",
+      "sources": [
+        "C02",
+        "C03"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "工具注册",
+      "to": "模型可见性",
+      "relation": "不等价",
+      "sources": [
+        "C03"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "模型可见性",
+      "to": "执行授权",
+      "relation": "不等价",
+      "sources": [
+        "C09",
+        "D05"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "完成工具项",
+      "to": "会话历史",
+      "relation": "先记录",
+      "sources": [
+        "C05"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "完成工具项",
+      "to": "工具执行",
+      "relation": "校验后准入",
+      "sources": [
+        "C05",
+        "C09"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "工具执行",
+      "to": "外部副作用",
+      "relation": "可能改变",
+      "sources": [
+        "C09"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "后置钩子",
+      "to": "外部副作用",
+      "relation": "不能自动回滚",
+      "sources": [
+        "C09"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "并行任务",
+      "to": "有序收集",
+      "relation": "执行与结果消费属于不同阶段",
+      "sources": [
+        "C04",
+        "C01"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "源码执行/消费分离；本书A/B的具体顺序是教学对照"
+    },
+    {
+      "from": "取消请求",
+      "to": "外部副作用",
+      "relation": "不证明从未发生",
+      "sources": [
+        "C04"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "摘要候选",
+      "to": "历史快照",
+      "relation": "依赖版本",
+      "sources": [
+        "C06",
+        "C08"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "摘要安装",
+      "to": "实时后缀",
+      "relation": "需要保留或拒绝候选",
+      "sources": [
+        "C07",
+        "C16"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "授权代际",
+      "to": "摘要候选",
+      "relation": "变化可使候选失效",
+      "sources": [
+        "C06"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "记忆候选",
+      "to": "整合工作者",
+      "relation": "经筛选进入",
+      "sources": [
+        "C14",
+        "C15"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "租约所有者",
+      "to": "记忆发布",
+      "relation": "条件验证",
+      "sources": [
+        "C15"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "工作者完成",
+      "to": "记忆发布",
+      "relation": "并不等价",
+      "sources": [
+        "C15"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "子Agent消息提交",
+      "to": "子任务完成",
+      "relation": "并不等价",
+      "sources": [
+        "C11"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "技能文件",
+      "to": "实际应用",
+      "relation": "需要发现选择加载与执行",
+      "sources": [
+        "C01",
+        "A05"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "文档块",
+      "to": "回答主张",
+      "relation": "需版本条件与覆盖核验",
+      "sources": [
+        "A08",
+        "A02"
+      ],
+      "evidence_kind": "engineering_inference",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "工作树版本",
+      "to": "测试结果",
+      "relation": "决定验证对象",
+      "sources": [
+        "A06",
+        "D07"
+      ],
+      "evidence_kind": "engineering_inference",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "任务结果",
+      "to": "评测指标",
+      "relation": "依赖判分口径",
+      "sources": [
+        "A07"
+      ],
+      "evidence_kind": "engineering_inference",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "环境噪声",
+      "to": "评测差异",
+      "relation": "可能造成混淆",
+      "sources": [
+        "A12"
+      ],
+      "evidence_kind": "engineering_inference",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "失败与废弃工作",
+      "to": "任务成本",
+      "relation": "仍应计入",
+      "sources": [
+        "C06",
+        "A14"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "Trace",
+      "to": "优化决策",
+      "relation": "定位关键路径",
+      "sources": [
+        "C04",
+        "A07"
+      ],
+      "evidence_kind": "source_observation",
+      "scope": "所列源码范围/文章说明，不是跨产品不变规则"
+    },
+    {
+      "from": "StepContext",
+      "to": "实时授权",
+      "relation": "快照访问器仍组合当前授权",
+      "sources": [
+        "C02"
+      ],
+      "evidence_kind": "source_observation"
+    },
+    {
+      "from": "摘要安装接受",
+      "to": "持久化成功",
+      "relation": "不等价",
+      "sources": [
+        "C16"
+      ],
+      "evidence_kind": "source_observation"
+    },
+    {
+      "from": "Claude后置block",
+      "to": "原工具结果",
+      "relation": "仍可提供原结果并添加原因",
+      "sources": [
+        "D04"
+      ],
+      "evidence_kind": "official_documentation"
+    },
+    {
+      "from": "后置结果替换",
+      "to": "原始日志",
+      "relation": "不自动改写先前记录",
+      "sources": [
+        "D04"
+      ],
+      "evidence_kind": "official_documentation"
+    },
+    {
+      "from": "技能正文保留",
+      "to": "临时工具许可",
+      "relation": "寿命不同",
+      "sources": [
+        "D06"
+      ],
+      "evidence_kind": "official_documentation"
+    },
+    {
+      "from": "整合工作者终态",
+      "to": "产物发布",
+      "relation": "还需关停、产物校验及租约确认",
+      "sources": [
+        "C15"
+      ],
+      "evidence_kind": "source_observation"
+    },
+    {
+      "from": "历史think工具建议",
+      "to": "扩展思考",
+      "relation": "2025-12-15更新多数场景改荐后者",
+      "sources": [
+        "A17"
+      ],
+      "evidence_kind": "dated_article_update"
+    },
+    {
+      "from": "增加编排机制",
+      "to": "任务质量",
+      "relation": "须经单项对照，不能假定单调改善",
+      "sources": [
+        "A13"
+      ],
+      "evidence_kind": "engineering_inference"
+    }
+  ],
+  "commit": "86e17e98c7f901277aeeb4649cf1b01462b082f2",
+  "coverage": "读取的18个Codex文件/行范围＋17篇工程正文＋7份文档相关小节；不是完整仓库调用图"
+}

@@ -1,0 +1,930 @@
+{
+  "title": "AI系统工程：从基础到内部",
+  "language": "zh-CN",
+  "source_context": "local",
+  "entry": "index.html",
+  "ordering": "共通计算 → 训练与验证 → 训练后推理 → 工程实践",
+  "items": [
+    {
+      "title": "前言与使用指南",
+      "name": "preface",
+      "prompt": "以preface.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+      "children": [],
+      "source_files": [
+        "preface.html"
+      ]
+    },
+    {
+      "title": "基础课程",
+      "name": "foundations",
+      "prompt": "One canonical learning path, no separate M series",
+      "children": [
+        {
+          "title": "输入表示",
+          "name": "输入表示",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F01｜模型的生命周期：对象、参数、训练与推理",
+              "name": "foundations/01",
+              "prompt": "以foundations/01.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/01.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F02｜一排数、一张表和一叠表：读懂张量与形状",
+              "name": "foundations/02",
+              "prompt": "以foundations/02.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/02.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F03｜文字怎样成为编号：分词、词表与序列边界",
+              "name": "foundations/03",
+              "prompt": "以foundations/03.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/03.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F04｜从多句话到训练批次：组批、补齐与标签位置",
+              "name": "foundations/04",
+              "prompt": "以foundations/04.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/04.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F05｜Embedding与位置：从编号查表到模型输入",
+              "name": "foundations/05",
+              "prompt": "以foundations/05.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/05.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F06｜“放到设备”是什么：数据类型、内存、CPU与GPU",
+              "name": "foundations/06",
+              "prompt": "以foundations/06.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/06.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "共通计算",
+          "name": "共通计算",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F07｜模型最常做的算术：加权求和、点积与矩阵乘法",
+              "name": "foundations/07",
+              "prompt": "以foundations/07.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/07.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F08｜reshape、转轴、广播：形状变了，内容未必算过",
+              "name": "foundations/08",
+              "prompt": "以foundations/08.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/08.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F09｜概率、指数与softmax：把分数变成比例",
+              "name": "foundations/09",
+              "prompt": "以foundations/09.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/09.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F10｜参数、前向与归一化：同一输入如何变成可用表示",
+              "name": "foundations/10",
+              "prompt": "以foundations/10.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/10.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F11｜Attention逐步计算：先算相关分数，再混合内容",
+              "name": "foundations/11",
+              "prompt": "以foundations/11.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/11.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F12｜Mask不是黑箱：把“谁能看谁”写成一张表",
+              "name": "foundations/12",
+              "prompt": "以foundations/12.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/12.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F13｜位置编号与RoPE：先懂位置，再懂旋转",
+              "name": "foundations/13",
+              "prompt": "以foundations/13.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/13.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F14｜完成一次前向：残差、前馈网络与词表分数",
+              "name": "foundations/14",
+              "prompt": "以foundations/14.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/14.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "训练与验证",
+          "name": "训练与验证",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F15｜导数、梯度与链式法则：训练怎样找到调整方向",
+              "name": "foundations/15",
+              "prompt": "以foundations/15.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/15.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F16｜一次训练从头到尾：标签、损失、更新、验证与保存",
+              "name": "foundations/16",
+              "prompt": "以foundations/16.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/16.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F17｜后训练：监督微调、偏好、奖励与参数适配",
+              "name": "foundations/17",
+              "prompt": "以foundations/17.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/17.html",
+                "example-sources.html",
+                "sources.html",
+                "reference/model-code.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "训练后推理",
+          "name": "训练后推理",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F18｜加载训练结果：逐个预测、选择与停止",
+              "name": "foundations/18",
+              "prompt": "以foundations/18.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/18.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F19｜KV缓存：在同一结果下复用历史计算",
+              "name": "foundations/19",
+              "prompt": "以foundations/19.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/19.html",
+                "reference/model-code.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "结构与资源",
+          "name": "结构与资源",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F20｜低秩、量化、专家：先看究竟少算了什么",
+              "name": "foundations/20",
+              "prompt": "以foundations/20.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/20.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F21｜算得快与装得下：复杂度、带宽、批处理和并行",
+              "name": "foundations/21",
+              "prompt": "以foundations/21.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/21.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Agent与上下文",
+          "name": "Agent与上下文",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F22｜Agent不是另一个神经网络：用一次读文件讲清循环",
+              "name": "foundations/22",
+              "prompt": "以foundations/22.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/22.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F23｜API与流式协议：请求如何变成可执行数据",
+              "name": "foundations/23",
+              "prompt": "以foundations/23.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/23.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F24｜状态、事件与检查点：模型知道和系统记录的区别",
+              "name": "foundations/24",
+              "prompt": "以foundations/24.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/24.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F25｜工具与MCP：连接、发现、授权、执行四层拆开",
+              "name": "foundations/25",
+              "prompt": "以foundations/25.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/25.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F26｜上下文组装：每轮到底给模型什么，以及为什么",
+              "name": "foundations/26",
+              "prompt": "以foundations/26.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/26.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F27｜压缩不是魔法：摘要、原文和执行状态怎样配合",
+              "name": "foundations/27",
+              "prompt": "以foundations/27.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/27.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "检索与可靠交付",
+          "name": "检索与可靠交付",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F28｜检索入门：目录、倒排索引、向量与近似搜索",
+              "name": "foundations/28",
+              "prompt": "以foundations/28.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/28.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F29｜从搜索结果到可信答案：召回、重排和证据",
+              "name": "foundations/29",
+              "prompt": "以foundations/29.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/29.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F30｜代码不是普通文档：语法树、调用关系与版本",
+              "name": "foundations/30",
+              "prompt": "以foundations/30.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/30.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F31｜长期记忆的基础：事实、经历、流程和时间",
+              "name": "foundations/31",
+              "prompt": "以foundations/31.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/31.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F32｜Skill、路由和多Agent：先理解谁负责什么",
+              "name": "foundations/32",
+              "prompt": "以foundations/32.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/32.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F33｜重试、幂等和事务：为什么超时不是失败证明",
+              "name": "foundations/33",
+              "prompt": "以foundations/33.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/33.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F34｜工程质量的基础：需求、反例、测试与审查",
+              "name": "foundations/34",
+              "prompt": "以foundations/34.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/34.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "评测与生产",
+          "name": "评测与生产",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "F35｜评测指标的分母：成功率、精确率、召回率和pass",
+              "name": "foundations/35",
+              "prompt": "以foundations/35.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/35.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F36｜别被几个百分点骗了：随机性、样本与统计判断",
+              "name": "foundations/36",
+              "prompt": "以foundations/36.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/36.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F37｜安全基础：数据能影响模型，但不能因此获得权限",
+              "name": "foundations/37",
+              "prompt": "以foundations/37.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/37.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F38｜看懂生产运行：Trace、队列、成本和回滚",
+              "name": "foundations/38",
+              "prompt": "以foundations/38.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/38.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F39｜多模态与可信度：图片怎样成为输入，解释为什么有限",
+              "name": "foundations/39",
+              "prompt": "以foundations/39.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/39.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            },
+            {
+              "title": "F40｜从基础概念到系统分析：怎样定位问题，而不是再堆技术",
+              "name": "foundations/40",
+              "prompt": "以foundations/40.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "foundations/40.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "系统机制",
+      "name": "chapters",
+      "prompt": "One canonical learning path, no separate M series",
+      "children": [
+        {
+          "title": "模型数据与前向",
+          "name": "模型数据与前向",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "01｜输入究竟是什么：从用户的一句话到模型张量",
+              "name": "chapters/01",
+              "prompt": "以chapters/01.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/01.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "02｜一次Transformer前向：逐张量、逐算子讲明白",
+              "name": "chapters/02",
+              "prompt": "以chapters/02.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/02.html",
+                "sources.html",
+                "example-sources.html",
+                "reference/model-code.html"
+              ]
+            },
+            {
+              "title": "03｜注意力的深入追问：位置、掩码、多头与反向传播",
+              "name": "chapters/03",
+              "prompt": "以chapters/03.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/03.html",
+                "sources.html",
+                "example-sources.html",
+                "reference/model-code.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "模型训练",
+          "name": "模型训练",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "04｜训练机制：损失、完整反向传播与参数更新",
+              "name": "chapters/04",
+              "prompt": "以chapters/04.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/04.html",
+                "sources.html",
+                "example-sources.html",
+                "reference/model-code.html"
+              ]
+            },
+            {
+              "title": "05｜后训练与模型定制：目标、结构和参数适配",
+              "name": "chapters/05",
+              "prompt": "以chapters/05.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/05.html",
+                "sources.html",
+                "example-sources.html",
+                "reference/model-code.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "模型推理",
+          "name": "模型推理",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "06｜推理机制：加载、解码策略与连续生成",
+              "name": "chapters/06",
+              "prompt": "以chapters/06.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/06.html",
+                "sources.html",
+                "example-sources.html",
+                "reference/model-code.html"
+              ]
+            },
+            {
+              "title": "07｜KV Cache、FlashAttention与PagedAttention的内部过程",
+              "name": "chapters/07",
+              "prompt": "以chapters/07.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/07.html",
+                "sources.html",
+                "example-sources.html",
+                "reference/model-code.html"
+              ]
+            },
+            {
+              "title": "08｜推理服务：调度、吞吐、延迟和并行",
+              "name": "chapters/08",
+              "prompt": "以chapters/08.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/08.html",
+                "sources.html",
+                "example-sources.html",
+                "reference/model-code.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Agent与工具",
+          "name": "Agent与工具",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "09｜Agent一次任务的完整循环：谁在思考，谁在执行",
+              "name": "chapters/09",
+              "prompt": "以chapters/09.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/09.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "10｜模型输出怎样变成真实工具调用：协议与执行边界",
+              "name": "chapters/10",
+              "prompt": "以chapters/10.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/10.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "11｜工具设计与MCP：从连接到可控执行",
+              "name": "chapters/11",
+              "prompt": "以chapters/11.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/11.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "12｜Codex、Claude Code、Copilot：从公开事实到可诊断运行链",
+              "name": "chapters/12",
+              "prompt": "以chapters/12.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/12.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "上下文",
+          "name": "上下文",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "13｜每一轮Prompt怎样组装：上下文是一条数据管线",
+              "name": "chapters/13",
+              "prompt": "以chapters/13.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/13.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "14｜上下文压缩：到底压掉什么，丢失后又如何恢复",
+              "name": "chapters/14",
+              "prompt": "以chapters/14.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/14.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "知识与记忆",
+          "name": "知识与记忆",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "15｜检索离线链路：文档怎样变成可查询索引",
+              "name": "chapters/15",
+              "prompt": "以chapters/15.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/15.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "16｜检索在线链路：召回、融合、重排与证据充足性",
+              "name": "chapters/16",
+              "prompt": "以chapters/16.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/16.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "17｜代码智能：从文本搜索到符号、版本与运行证据",
+              "name": "chapters/17",
+              "prompt": "以chapters/17.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/17.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "18｜长期记忆：写入、检索、冲突、失效与遗忘",
+              "name": "chapters/18",
+              "prompt": "以chapters/18.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/18.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "19｜Skills与路由：怎样加载刚好需要的专业能力",
+              "name": "chapters/19",
+              "prompt": "以chapters/19.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/19.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "协作与交付",
+          "name": "协作与交付",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "20｜多Agent：并行的收益与交接的损失",
+              "name": "chapters/20",
+              "prompt": "以chapters/20.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/20.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "21｜可靠执行：重试、幂等、崩溃与状态恢复",
+              "name": "chapters/21",
+              "prompt": "以chapters/21.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/21.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "22｜工程质量：从需求到测试，再到真正可交付的代码",
+              "name": "chapters/22",
+              "prompt": "以chapters/22.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/22.html",
+                "example-sources.html",
+                "sources.html"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "评价与应用",
+          "name": "评价与应用",
+          "prompt": "Dependency-ordered reading within the existing course",
+          "children": [
+            {
+              "title": "23｜Evaluation：怎样证明一次优化真有收益",
+              "name": "chapters/23",
+              "prompt": "以chapters/23.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/23.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "24｜安全：指令边界、沙箱、权限与记忆污染",
+              "name": "chapters/24",
+              "prompt": "以chapters/24.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/24.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "25｜生产运行：Trace、成本、队列、灰度与回滚",
+              "name": "chapters/25",
+              "prompt": "以chapters/25.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/25.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "26｜深度应用：把组件组合成能解释的工作系统",
+              "name": "chapters/26",
+              "prompt": "以chapters/26.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/26.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "27｜事实可靠性、多模态与可解释性：能力边界在哪里",
+              "name": "chapters/27",
+              "prompt": "以chapters/27.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/27.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            },
+            {
+              "title": "28｜研究深水区与系统综合判断",
+              "name": "chapters/28",
+              "prompt": "以chapters/28.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+              "children": [],
+              "source_files": [
+                "chapters/28.html",
+                "sources.html",
+                "example-sources.html"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "把数字改一下，看每一步怎样变化",
+      "name": "labs",
+      "prompt": "以labs.html为唯一正文位置，先解释为何需要，再追踪对象、公式、状态及实现；用同一输入与参数复算，给出来源、反例和关联页。",
+      "children": [],
+      "source_files": [
+        "labs.html",
+        "reference/model-code.html"
+      ]
+    },
+    {
+      "title": "专题研修与资料索引",
+      "name": "studies",
+      "prompt": "Retain existing advanced references and source boundaries",
+      "children": []
+    }
+  ]
+}
