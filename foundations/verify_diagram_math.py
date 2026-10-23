@@ -6,13 +6,20 @@ from html.parser import HTMLParser
 ROOT=Path(__file__).resolve().parent.parent
 class DiagramTests(unittest.TestCase):
     def test_coverage(self):
+        # Figures are located by their fdiag anchor, not by a presentational
+        # class: the class was renamed during the diagram rework, the anchors
+        # are what the atlas and the chapter links actually point at.
         import re
         idx=json.loads((ROOT/'foundations/visual-index.json').read_text('utf8'))
         self.assertEqual(len(idx),201)
         self.assertEqual(set(r['chapter'] for r in idx),set(range(1,41)))
         for c in range(1,41):
             html=(ROOT/f'foundations/{c:02d}.html').read_text('utf8')
-            self.assertEqual(html.count('class="foundation-concept-figure"'),len([r for r in idx if r['chapter']==c]))
+            anchors=re.findall(r'id="fdiag-\d\d-\d\d"',html)
+            self.assertEqual(len(anchors),len([r for r in idx if r['chapter']==c]),
+                             f'foundations/{c:02d}.html figure count')
+            self.assertEqual(len(set(anchors)),len(anchors),
+                             f'foundations/{c:02d}.html duplicate figure anchor')
     def test_shapes(self):
         assert 2*3*4==24
         assert 2*128*4096==1_048_576

@@ -128,3 +128,79 @@ body .book-rail.sidebar,body.nav-open .book-rail.sidebar{display:flex}
   .reading-main > .article, .complete-main > .article,
   .complete-main .standalone-section { width: 100%; max-width: none; }
 }
+
+/* Grouped reference index (coverage.html): 206 items read as 17 modules, not
+   one 206-row table that repeats the same chapter column on every line.
+   Also used by foundation-atlas.html for its per-section jump bar. */
+.module-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 18px 0 30px;
+  padding: 14px 16px;
+  background: #f7f8fa;
+  border-left: 2px solid #c8d1dc;
+}
+.module-jump a {
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 5px 9px;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  color: #44515f;
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid #e1e6ec;
+  border-radius: 4px;
+}
+.module-jump a:hover { border-color: #aabbcf; color: var(--accent); }
+
+.index-module { margin: 34px 0 0; scroll-margin-top: calc(var(--bar) + 20px); }
+.index-module h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 17px;
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.index-module .module-count {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.index-module .table-wrap { border: 0; border-radius: 0; margin: 0 }
+.index-table { font-size: 15px }
+.index-table thead { display: none }
+.index-table td { padding: 8px 0; border-bottom: 1px solid #eef1f5; vertical-align: baseline }
+.index-table td:first-child { width: 56px; min-width: 56px }
+.index-table a { text-decoration: none }
+.index-table a:hover { text-decoration: underline }
+.idx-no { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted) }
+.index-module > .small { margin: 12px 0 4px; font-size: 12px; color: var(--muted) }
+.index-module .pillrow { margin: 0 0 6px }
+
+/* Section heading that carries a count on the right. */
+.article h2 > .module-count {
+  float: right;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  line-height: 2.4;
+}
+
+@media (max-width: 680px) {
+  .module-jump { padding: 12px; gap: 5px }
+  .index-table { font-size: 14px }
+  .index-table td:first-child { width: 46px; min-width: 46px }
+  .article h2 > .module-count { float: none; display: block; line-height: 1.6; margin-top: 2px }
+}
+@media print {
+  .module-jump { display: none }
+  .index-module { break-inside: avoid }
+}

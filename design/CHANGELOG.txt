@@ -19,3 +19,58 @@
 - 具体数值与报告见 QA.json 及其引用文件。
 - 浏览器策略禁止 file:// 与本地 HTTP 导航。使用内联真实本地文件内容的 Chromium 渲染、交互与存储测试架；跨文件路径和锚点独立检查。
 - 未宣称在用户的 Mac / Safari 上实机验证；没有把历史数值测试写成本轮重新执行。
+
+并入第二次 Desktop 导出版（课程重排与 wiki 镜像）· 本轮改动
+
+1. 导入
+- 来源：/Users/chuhemiao/Desktop/AI_Systems_Engineering_Textbook_ZH 2。
+- 该导出是一次完整重构：课程顺序改为「共通计算 → 训练与验证 → 训练后推理
+  → Agent与工程」，基础课程重分为 8 个小节、系统机制重分为 6 个小节，
+  目录分组与多章标题随之改写。因此按整体替换处理，不做分支级三方合并。
+- manuscript/（72 篇）被 wiki/ 取代后删除：wiki 覆盖同样章节、标题已更新、
+  无任何 HTML 引用 manuscript/。
+
+2. 本仓库一侧重放
+- guide / about / advanced-labs / coverage 四页重新套用新外壳。
+  guide.html 的结构表按新课程改写：八个小节的入口条件与完成标志、
+  系统机制六个小节与基础课程的对应关系。
+- search.html 重新并入条目类型表与编号对照表；编号对照增加 S 系列与 fdiag。
+- 全站目录补回四页，并修复 engineering/agent-validation.html 不在目录的问题。
+- index.html 增加「阅读导论」与图解索引、专题索引入口；
+  contents.html 的研修与索引区补入四条。
+- catalog.js 由 250 条增至 256 条，使这些页面可被顶栏搜索命中。
+- assets/atelier.css 重新追加分组索引样式（module-jump / index-module /
+  idx-no / 标题计数），coverage 与 foundation-atlas 依赖这组样式。
+
+3. 修复导出版中的版面缺陷
+- 20 个页面带有空提纲（<nav class="toc"></nav>），折叠框点开后没有内容。
+  其中 19 页删除空容器；search.html 重建时已带真实提纲。
+- foundation-atlas.html 原本提纲为空、无面包屑与阅读信息，40 节平铺。
+  改为按课程自身的八个小节分组，每组标注张数，加分组跳转条与右提纲；
+  201 条图解链接与顺序原样保留。
+- engineering/agent-evidence.html 与 agent-validation.html 未将自身标为
+  当前项（目录选中项为 0），已修正；两页同时补上面包屑。
+
+4. foundations/verify_diagram_math.py
+- test_coverage 仍按 class="foundation-concept-figure" 计数，而图解改版后
+  该 class 已不存在，40 章全部计为 0，测试在导入提交时即为失败。
+- 改为按 id="fdiag-NN-MM" 锚点计数，并检查锚点在章内唯一。
+  锚点是图解索引与章内链接实际指向的契约，类名只是表现。
+
+5. 已知问题（未改，留待确认）
+- 课程重排后 foundations/15—19 的文件号变了，但图解 id 仍是原章号：
+  foundations/15.html 内是 fdiag-17-*，16→18、17→19、18→15、19→16。
+  锚点全部可解析，阅读不受影响，但编号不再与文件号对应。
+- 未做重命名的原因：该编号同时出现在 complete.html、wiki/（生成镜像）与
+  diagrams/audit.json（构建审计记录）中，手工改写会使生成物与构建管线
+  脱节，并篡改一份审计记录。应由生成该导出的管线统一处理。
+
+6. 验证范围
+- design/check_local_links.py：257 页、101190 条本地引用、0 处错误。
+- 256 个计入目录的页面，每页目录条目 256 条，当前项唯一。
+- foundations/verify_diagram_math.py 21 项、mechanisms/test_mechanisms.py
+  56 项、labs/test_foundations.py 39 项、visual/labs/test_visual.py 97 项、
+  studies/labs/test_suite.py 均通过。
+- diagrams/test_diagrams.py 需要 lxml、engineering/labs/test_engineering.py
+  需要 torch，本机未安装，两者未执行；这与本轮改动无关。
+- 本轮未启动本地服务、未做浏览器渲染检查，全部结论来自静态检查与上述测试。
