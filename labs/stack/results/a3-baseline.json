@@ -1,0 +1,2058 @@
+[
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t01",
+    "split": "development",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14219,
+    "elapsed_ms": 1.684688,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"vendor\"]}",
+    "artifact_sha256": "5fc3f140aa0152714a6a262eab45037a38e3b888c3541769df2b6039ee15636e",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.658476,
+        "event": "task_started",
+        "task_id": "t01",
+        "split": "development",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "vendor/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "vendor/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "vendor2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.717565,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1419
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.730024,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.012308,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.731526,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.809214,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.076406,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.886771,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3718
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.907242,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.020441,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.908344,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"vendor\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 1.108787,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.198941,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "5fc3f140aa0152714a6a262eab45037a38e3b888c3541769df2b6039ee15636e",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 1.246315,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4223
+      },
+      {
+        "seq": 10,
+        "at_ms": 1.259965,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.0136,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 1.261408,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.466698,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.204059,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "vendor/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "vendor/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "vendor2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "5fc3f140aa0152714a6a262eab45037a38e3b888c3541769df2b6039ee15636e",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.543825,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4859
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.549934,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.005989,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.681863,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "vendor/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "vendor/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "vendor2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "5fc3f140aa0152714a6a262eab45037a38e3b888c3541769df2b6039ee15636e",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.683085,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  },
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t02",
+    "split": "development",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14206,
+    "elapsed_ms": 1.663365,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"build\"]}",
+    "artifact_sha256": "2cbbcf2f35bd87e4f418d314537c4ac190e9e0e6a652cc5d126978fa2863a0f6",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.481719,
+        "event": "task_started",
+        "task_id": "t02",
+        "split": "development",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "build/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "build/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "build2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.519736,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1417
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.530542,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.010687,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.531995,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.580969,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.048033,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.636983,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3716
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.654259,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.017066,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.655401,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"build\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 1.102637,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.445513,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "2cbbcf2f35bd87e4f418d314537c4ac190e9e0e6a652cc5d126978fa2863a0f6",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 1.182338,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4220
+      },
+      {
+        "seq": 10,
+        "at_ms": 1.193995,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.011488,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 1.195307,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.434008,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.237309,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "build/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "build/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "build2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "2cbbcf2f35bd87e4f418d314537c4ac190e9e0e6a652cc5d126978fa2863a0f6",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.513168,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4853
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.519688,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.0064,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.660441,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "build/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "build/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "build2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "2cbbcf2f35bd87e4f418d314537c4ac190e9e0e6a652cc5d126978fa2863a0f6",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.661663,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  },
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t03",
+    "split": "development",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14206,
+    "elapsed_ms": 1.349911,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"cache\"]}",
+    "artifact_sha256": "c7727403ad6c5942cab4e1a09c411ded3ed1da678a4b1a661ac7e44410e712bd",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.462049,
+        "event": "task_started",
+        "task_id": "t03",
+        "split": "development",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "cache/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "cache/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "cache2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.497082,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1417
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.507638,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.010356,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.50912,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.592015,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.057057,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.647009,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3716
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.664625,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.017537,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.665587,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"cache\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 0.82665,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.159592,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "c7727403ad6c5942cab4e1a09c411ded3ed1da678a4b1a661ac7e44410e712bd",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 0.895514,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4220
+      },
+      {
+        "seq": 10,
+        "at_ms": 0.905509,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.009865,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 0.906561,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.07118,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.160522,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "cache/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "cache/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "cache2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "c7727403ad6c5942cab4e1a09c411ded3ed1da678a4b1a661ac7e44410e712bd",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.188047,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4853
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.194887,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.00676,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.346997,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "cache/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "cache/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "cache2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "c7727403ad6c5942cab4e1a09c411ded3ed1da678a4b1a661ac7e44410e712bd",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.348199,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  },
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t04",
+    "split": "development",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14258,
+    "elapsed_ms": 1.445786,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"generated\"]}",
+    "artifact_sha256": "0dc7c0c4260f0f852601c30f085274120cfff0343ca6a2255abc1ddbfdefe395",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.292742,
+        "event": "task_started",
+        "task_id": "t04",
+        "split": "development",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "generated/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "generated/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "generated2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.325272,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1425
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.335417,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.009955,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.336689,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.378833,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.041343,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.432183,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3724
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.448388,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.015994,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.449309,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"generated\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 0.72764,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.276898,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "0dc7c0c4260f0f852601c30f085274120cfff0343ca6a2255abc1ddbfdefe395",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 0.801562,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4232
+      },
+      {
+        "seq": 10,
+        "at_ms": 0.812939,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.011247,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 0.814261,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.060754,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.24517,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "generated/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "generated/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "generated2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "0dc7c0c4260f0f852601c30f085274120cfff0343ca6a2255abc1ddbfdefe395",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.181316,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4877
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.188507,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.007131,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.442,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "generated/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "generated/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "generated2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "0dc7c0c4260f0f852601c30f085274120cfff0343ca6a2255abc1ddbfdefe395",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.443863,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  },
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t05",
+    "split": "development",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14180,
+    "elapsed_ms": 1.412386,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"tmp\"]}",
+    "artifact_sha256": "7958fb04fc4d897cf0902587bd18ee700ed62e2c4f679baa44031ef1d2b6e696",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.384382,
+        "event": "task_started",
+        "task_id": "t05",
+        "split": "development",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "tmp/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "tmp/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "tmp2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.423521,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1413
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.435028,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.011197,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.43639,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.494578,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.057146,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.550863,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3712
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.56823,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.017186,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.569321,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"tmp\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 0.815483,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.24466,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "7958fb04fc4d897cf0902587bd18ee700ed62e2c4f679baa44031ef1d2b6e696",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 0.887993,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4214
+      },
+      {
+        "seq": 10,
+        "at_ms": 0.898749,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.010616,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 0.899861,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.103098,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.202126,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "tmp/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "tmp/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "tmp2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "7958fb04fc4d897cf0902587bd18ee700ed62e2c4f679baa44031ef1d2b6e696",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.225964,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4841
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.232935,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.006821,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.409291,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "tmp/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "tmp/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "tmp2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "7958fb04fc4d897cf0902587bd18ee700ed62e2c4f679baa44031ef1d2b6e696",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.410633,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  },
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t06",
+    "split": "development",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14271,
+    "elapsed_ms": 1.480208,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"assets_old\"]}",
+    "artifact_sha256": "73575ad35e558b98c3488ad53a640f165a6b8d51dee6aa485365d673ee1c20ac",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.477813,
+        "event": "task_started",
+        "task_id": "t06",
+        "split": "development",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "assets_old/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "assets_old/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "assets_old2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.514048,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1427
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.524834,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.010676,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.526206,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.604615,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.077276,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.686639,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3726
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.706048,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.019279,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.707059,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"assets_old\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 0.966732,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.25768,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "73575ad35e558b98c3488ad53a640f165a6b8d51dee6aa485365d673ee1c20ac",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 1.039502,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4235
+      },
+      {
+        "seq": 10,
+        "at_ms": 1.050529,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.010927,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 1.051711,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.257271,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.204389,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "assets_old/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "assets_old/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "assets_old2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "73575ad35e558b98c3488ad53a640f165a6b8d51dee6aa485365d673ee1c20ac",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.339716,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4883
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.345765,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.005829,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.477374,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "assets_old/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "assets_old/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "assets_old2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "73575ad35e558b98c3488ad53a640f165a6b8d51dee6aa485365d673ee1c20ac",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.478576,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  },
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t07",
+    "split": "heldout-demo",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14245,
+    "elapsed_ms": 1.364072,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"packages\"]}",
+    "artifact_sha256": "5c5bf5cc35a3b808431b59a46d67db01b916c28058f322bc33773b4ff43379fa",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.335487,
+        "event": "task_started",
+        "task_id": "t07",
+        "split": "heldout-demo",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "packages/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "packages/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "packages2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.371471,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1423
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.382298,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.010606,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.38355,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.434186,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.049685,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.488568,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3722
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.505224,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.016505,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.506285,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"packages\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 0.679016,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.171419,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "5c5bf5cc35a3b808431b59a46d67db01b916c28058f322bc33773b4ff43379fa",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 0.841021,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4229
+      },
+      {
+        "seq": 10,
+        "at_ms": 0.855423,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.014432,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 0.856735,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.043377,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.1855,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "packages/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "packages/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "packages2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "5c5bf5cc35a3b808431b59a46d67db01b916c28058f322bc33773b4ff43379fa",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.194596,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4871
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.202017,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.007341,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.361118,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "packages/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "packages/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "packages2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "5c5bf5cc35a3b808431b59a46d67db01b916c28058f322bc33773b4ff43379fa",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.36237,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  },
+  {
+    "schema": "outside-in-lab-1",
+    "task_id": "t08",
+    "split": "heldout-demo",
+    "backend": "scripted-protocol-fixture",
+    "context_policy": "full",
+    "success": true,
+    "artifact_correct": true,
+    "stop_reason": "model_final",
+    "rounds": 4,
+    "writes": 1,
+    "request_bytes": 14193,
+    "elapsed_ms": 1.444354,
+    "model_usage": [
+      null,
+      null,
+      null,
+      null
+    ],
+    "financial_cost_usd": null,
+    "token_count": null,
+    "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+    "artifact": "{\"exclude_dirs\":[\"logs\"]}",
+    "artifact_sha256": "0be12327132f2cdc2078fef032505cd02caa4938257ef1550ce618bee23531d6",
+    "events": [
+      {
+        "seq": 0,
+        "at_ms": 0.263238,
+        "event": "task_started",
+        "task_id": "t08",
+        "split": "heldout-demo",
+        "backend": "scripted-protocol-fixture",
+        "initial": {
+          "success": false,
+          "checks": [
+            {
+              "path": "logs/a.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "logs/nested/b.txt",
+              "expected": false,
+              "actual": true
+            },
+            {
+              "path": "logs2/a.txt",
+              "expected": true,
+              "actual": true
+            },
+            {
+              "path": "src/a.py",
+              "expected": true,
+              "actual": true
+            }
+          ],
+          "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+          "grader": "outside-in-lab-1-root-segment"
+        }
+      },
+      {
+        "seq": 1,
+        "at_ms": 0.296588,
+        "event": "model_requested",
+        "round": 1,
+        "request_bytes": 1415
+      },
+      {
+        "seq": 2,
+        "at_ms": 0.306513,
+        "event": "model_returned",
+        "round": 1,
+        "duration_ms": 0.009694,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 3,
+        "at_ms": 0.307675,
+        "event": "tool_proposed",
+        "call_id": "call_1",
+        "name": "read_file",
+        "arguments": "{\"path\":\"rules.json\"}"
+      },
+      {
+        "seq": 4,
+        "at_ms": 0.387726,
+        "event": "tool_returned",
+        "call_id": "call_1",
+        "name": "read_file",
+        "duration_ms": 0.078929,
+        "result": {
+          "ok": true,
+          "result": {
+            "content": "{\"exclude_dirs\":[]}",
+            "sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+            "diagnostics": "fixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\nfixture-noise\n"
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "at_ms": 0.44314,
+        "event": "model_requested",
+        "round": 2,
+        "request_bytes": 3714
+      },
+      {
+        "seq": 6,
+        "at_ms": 0.461177,
+        "event": "model_returned",
+        "round": 2,
+        "duration_ms": 0.017927,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 7,
+        "at_ms": 0.462159,
+        "event": "tool_proposed",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "arguments": "{\"dir_name\":\"logs\",\"expected_sha256\":\"cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b\"}"
+      },
+      {
+        "seq": 8,
+        "at_ms": 0.645235,
+        "event": "tool_returned",
+        "call_id": "call_2",
+        "name": "set_exclusion",
+        "duration_ms": 0.181615,
+        "result": {
+          "ok": true,
+          "result": {
+            "written": true,
+            "sha256": "0be12327132f2cdc2078fef032505cd02caa4938257ef1550ce618bee23531d6",
+            "note": "local single-writer atomic replace; not a distributed transaction"
+          }
+        }
+      },
+      {
+        "seq": 9,
+        "at_ms": 0.715712,
+        "event": "model_requested",
+        "round": 3,
+        "request_bytes": 4217
+      },
+      {
+        "seq": 10,
+        "at_ms": 0.726028,
+        "event": "model_returned",
+        "round": 3,
+        "duration_ms": 0.010206,
+        "tool_calls": 1,
+        "usage": null
+      },
+      {
+        "seq": 11,
+        "at_ms": 0.727159,
+        "event": "tool_proposed",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "arguments": "{}"
+      },
+      {
+        "seq": 12,
+        "at_ms": 1.181356,
+        "event": "tool_returned",
+        "call_id": "call_3",
+        "name": "verify_index",
+        "duration_ms": 0.453025,
+        "result": {
+          "ok": true,
+          "result": {
+            "success": true,
+            "checks": [
+              {
+                "path": "logs/a.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "logs/nested/b.txt",
+                "expected": false,
+                "actual": false
+              },
+              {
+                "path": "logs2/a.txt",
+                "expected": true,
+                "actual": true
+              },
+              {
+                "path": "src/a.py",
+                "expected": true,
+                "actual": true
+              }
+            ],
+            "artifact_sha256": "0be12327132f2cdc2078fef032505cd02caa4938257ef1550ce618bee23531d6",
+            "grader": "outside-in-lab-1-root-segment"
+          }
+        }
+      },
+      {
+        "seq": 13,
+        "at_ms": 1.288127,
+        "event": "model_requested",
+        "round": 4,
+        "request_bytes": 4847
+      },
+      {
+        "seq": 14,
+        "at_ms": 1.294938,
+        "event": "model_returned",
+        "round": 4,
+        "duration_ms": 0.00663,
+        "tool_calls": 0,
+        "usage": null
+      },
+      {
+        "seq": 15,
+        "at_ms": 1.44171,
+        "event": "host_verified",
+        "success": true,
+        "checks": [
+          {
+            "path": "logs/a.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "logs/nested/b.txt",
+            "expected": false,
+            "actual": false
+          },
+          {
+            "path": "logs2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "0be12327132f2cdc2078fef032505cd02caa4938257ef1550ce618bee23531d6",
+        "grader": "outside-in-lab-1-root-segment"
+      },
+      {
+        "seq": 16,
+        "at_ms": 1.442821,
+        "event": "task_finished",
+        "success": true,
+        "stop_reason": "model_final"
+      }
+    ]
+  }
+]

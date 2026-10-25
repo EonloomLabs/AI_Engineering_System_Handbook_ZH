@@ -1,0 +1,115 @@
+{
+  "edition": "AI系统工程：主流程渐进教学版",
+  "date": "2026-10-23",
+  "source_archive": "AI_Engineering_Outside_In_Course_ZH.zip",
+  "source_archive_sha256": "a7435acbbcbf806ea01449374a87d634bad2ce2ea80b7fb61344de978863f067",
+  "delivery_scope": {
+    "stages": 5,
+    "units": 18,
+    "foundation_lessons": 40,
+    "system_chapters": 28,
+    "system_questions": 112,
+    "engineering_boundaries_in_main": 56,
+    "assignments": 5,
+    "necessary_figures": 10,
+    "figure_layout_versions": 20,
+    "canonical_html_pages": 94,
+    "complete_html_pages": 1
+  },
+  "content_changes": {
+    "foundation_agent_lessons_rewritten": "F22–F40：19节重新编写。先用固定任务定义对象，再走过程、错误路径与验证。",
+    "foundation_model_sequence": "F01–F21：保留详细数值与推导，补本地前置解释、重组小节、对齐贯通例子。",
+    "system_question_introductions": "112个主问题增加具体入口；独有研修、工程边界与来源方法迁入对应主问题，删除完全重复段落。",
+    "dependency_corrections": [
+      {
+        "concept": "Attention反向传播",
+        "from": "chapters/03.html#Q012",
+        "to": "chapters/04.html#Q012",
+        "reason": "Requires F15 derivatives and F16 loss before full backward"
+      },
+      {
+        "concept": "检索对比损失与梯度",
+        "from": "chapters/15.html#worked-Q059",
+        "to": "chapters/04.html#retriever-training-objective",
+        "reason": "Separate inference contract from the later training derivation"
+      }
+    ],
+    "visual_policy": "全部旧版教学图解与动画撤下。只新增10幅必要关系图，位于相应正文；每幅有独立手机排版及完整文字/数表解释。",
+    "single_owner_policy": "不另设图解篇、工程深挖篇、研修课程或M系列。参考代码、数据、来源、简短术语仍作为资源。"
+  },
+  "actual_tests": [
+    {
+      "suite": "index-assistant",
+      "command": "python -m unittest -v test_stack",
+      "cwd": "labs/stack",
+      "exit_code": 0,
+      "tests": 48,
+      "passed": true,
+      "seconds": 2.41,
+      "log": "index-assistant-tests.txt"
+    },
+    {
+      "suite": "model-core",
+      "command": "python -m unittest -v test_model",
+      "cwd": "labs/model/lab",
+      "exit_code": 0,
+      "tests": 57,
+      "passed": true,
+      "seconds": 2.6,
+      "log": "model-core-tests.txt"
+    },
+    {
+      "suite": "foundations",
+      "command": "python -m unittest -v test_foundations",
+      "cwd": "labs",
+      "exit_code": 0,
+      "tests": 39,
+      "passed": true,
+      "seconds": 0.71,
+      "log": "foundations-tests.txt"
+    },
+    {
+      "suite": "progression-and-figures",
+      "command": "python validation/test_progression.py",
+      "tests": 24,
+      "passed": true,
+      "log": "progression-tests.txt"
+    }
+  ],
+  "actual_test_total": 168,
+  "static_validation": {
+    "html_pages": 95,
+    "references": 18894,
+    "errors": [],
+    "duplicate_ids": [],
+    "old_visual_nodes": [],
+    "unexpected_article_media": [],
+    "forbidden_navigation": [],
+    "main_pages": 68,
+    "questions": 112,
+    "engineering_anchors_retained": 56,
+    "new_figure_instances_in_main": 10,
+    "complete_new_figures": 10,
+    "old_picture_files": []
+  },
+  "browser_validation": {
+    "layout_checks": 55,
+    "interaction_checks": 24,
+    "figure_layout_checks": 20,
+    "failures": [],
+    "scope": "Actual local HTML, CSS and scripts inlined with Playwright set_content. Direct file:// and localhost navigation are blocked by browser policy in this environment.",
+    "record": "browser.json"
+  },
+  "retained_program_and_data_files": {
+    "count": 145,
+    "changed": [],
+    "record": "resource-integrity.json"
+  },
+  "limitations": [
+    "本轮是基于已提供资料的教学重编，没有重新核验全部外部文档、源码或高校课程。引用仍受原获取范围、提交和版本约束。",
+    "168项是本轮实际运行的教学计算与结构测试；不是商业LLM能力、Codex完整Rust工程、GPU性能或生产服务实测。",
+    "浏览器验收用实际本地内容内联载入Chromium。测试环境阻止直接file://和localhost导航；未声称在用户设备、Safari或全部浏览器上实测。",
+    "为消除重复章节，教学正文有意重写、移动和合并；不声称原有每句话逐字保留。归并映射位于editorial/content-disposition.json。",
+    "图形与文字的检查覆盖明确输入和场景，不能证明所有读者都不会产生歧义。"
+  ]
+}

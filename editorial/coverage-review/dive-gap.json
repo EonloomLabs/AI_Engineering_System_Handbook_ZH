@@ -1,0 +1,58 @@
+{
+  "package": "/workspace/scratch/eceaa3dab2fe/course/AI_Systems_Engineering_Textbook_ZH",
+  "review_date": "2026-10-24",
+  "preserve": "五阶段十八单元，原有主线与页面位置不变",
+  "conclusion": "Dive 的主要主题此前已经映射到课程。当前真实缺口集中在知识编辑的机制、多模态连接器的学习过程、多模态生成与理解区别、文本水印生成机制；不能把已存在的后训练/数学蒸馏/GUI/R-Judge重新列为缺失章节。",
+  "coverage": [
+    {"source_chapter": 1, "status": "已覆盖", "locations": ["foundations/16.html", "chapters/04.html", "chapters/05.html", "chapters/08.html"], "decision": "保留，历史工具安装不移植"},
+    {"source_chapter": 2, "status": "已覆盖", "locations": ["chapters/13.html", "chapters/06.html", "chapters/28.html"], "decision": "零/少样本、程序辅助、CoT与推理预算已有；不重复"},
+    {"source_chapter": 3, "status": "对象与选型已覆盖，机制仍薄", "locations": ["chapters/05.html#review-knowledge-update-choice"], "decision": "补一个机制与回归的同层小节"},
+    {"source_chapter": 4, "status": "已覆盖并已纠正源例", "locations": ["foundations/17.html#review-teacher-vs-reward", "chapters/05.html#review-math-sft-audit"], "decision": "保留已有教师SFT、数字答案过滤、全序列loss、版本误打印说明；不重复"},
+    {"source_chapter": 5, "status": "检测解释已覆盖，生成机制缺失", "locations": ["chapters/27.html#review-provenance-truth"], "decision": "可补小概率表连接softmax与检测；不新增水印章节"},
+    {"source_chapter": 6, "status": "已覆盖", "locations": ["chapters/24.html"], "decision": "现有信任边界、受控评测足够，不搬攻击工具和载荷"},
+    {"source_chapter": 7, "status": "刻意边界内的概念选学", "locations": ["chapters/27.html#review-provenance-truth"], "decision": "可用一行对照明确水印/隐写/加密；完整隐写编解码实验不属于本课主线"},
+    {"source_chapter": 8, "status": "推理输入已有，训练与输出生成缺口", "locations": ["foundations/39.html", "chapters/27.html#Q107"], "decision": "补视觉连接器如何学习、冻结参数与梯度路径；区分视觉问答与生成图像"},
+    {"source_chapter": 9, "status": "已覆盖", "locations": ["chapters/27.html#review-multimodal-feedback"], "decision": "已有坐标变换、动作闭环和1–5分不等于校准概率；无需重复"},
+    {"source_chapter": 10, "status": "已覆盖", "locations": ["chapters/24.html#review-recognition-enforcement", "chapters/23.html"], "decision": "已有R-Judge记录判读与运行时阻断区别；无需重复"},
+    {"source_chapter": 11, "status": "已覆盖且机制更完整", "locations": ["foundations/17.html", "chapters/05.html"], "decision": "已有SFT/DPO/PPO/GRPO、优势/KL/裁剪、旧策略与参考策略区别；补版本说明即可，不复制TRL0.9.4 API"}
+  ],
+  "proposed_edits": [
+    {
+      "id": "DIVE-G1",
+      "target": "chapters/05.html",
+      "near_anchor": "review-knowledge-update-choice",
+      "title": "知识编辑实际改哪里：从一个低秩改动到连续编辑回归",
+      "need": "现有正文只讲对象对比与评测项，没有解释具体编辑如何改变前向。所有课程正文找不到ROME或MEMIT。",
+      "outline": ["从FFN权重W与隐藏表示h接回已学矩阵乘法", "用原创2×2秩1更新演示目标方向改变、正交方向保持、相关方向仍受影响", "ROME定位/调整目标关联、MEMIT批量多层更新仅作历史代表，不能说固定一条事实存在一个神经元", "增加连续编辑后的既往事实与通用任务回归，强调单次局部成功不保证累计无损"],
+      "sources": ["https://arxiv.org/abs/2202.05262", "https://arxiv.org/abs/2210.07229", "https://arxiv.org/abs/2401.07453"]
+    },
+    {
+      "id": "DIVE-G2",
+      "target": "chapters/27.html",
+      "near_anchor": "review-multimodal-feedback",
+      "title": "视觉连接器怎样学会把图像表示交给语言模型",
+      "need": "当前有像素分块、视觉编码、坐标和结果验证，但没有连接器训练的数据/目标/梯度过程。",
+      "outline": ["明确选用一种编码器＋投影＋因果语言模型示意结构，不宣称覆盖所有VLM", "以四个图像块×三维特征，乘3×4投影得到四个四维视觉位置，与文本向量拼接", "配对图文对齐阶段与视觉指令微调阶段分别改变哪些参数，答案loss怎样回传至连接器", "对比学习图文匹配目标与自回归回答目标不相同；冻结LLM参数仍可让梯度穿过LLM传到连接器", "同物体换背景、否定问题、细节OCR等评测避免只学语言捷径"],
+      "sources": ["https://arxiv.org/abs/2304.08485", "https://arxiv.org/abs/2103.00020", "https://huggingface.co/docs/transformers/en/chat_templating_multimodal"]
+    },
+    {
+      "id": "DIVE-G3",
+      "target": "chapters/27.html",
+      "near_anchor": "review-multimodal-feedback",
+      "title": "看懂图片与生成图片，需要的输出链路为何不同",
+      "need": "整个主线找不到扩散或Diffusion，可能使读者误以为多模态理解天然包含图像生成。Dive ch8 NExT-GPT正好提供区分案例。",
+      "outline": ["视觉问答输出文本token，图像生成要把条件交给能产生图像表示/像素的模块", "外部工具调度、连接预训练生成器、统一模态token是不同设计路径", "以扩散路径作一个机制框：训练加入噪声并学习预测噪声/去噪，推理从噪声逐步更新；不声称所有生成模型使用同一过程", "NExT-GPT作为历史连接方案，注明来源时代，避免移植旧环境与AGI必然趋势措辞"],
+      "sources": ["https://arxiv.org/abs/2309.05519", "https://arxiv.org/abs/2006.11239"]
+    },
+    {
+      "id": "DIVE-G4",
+      "target": "chapters/27.html",
+      "near_anchor": "review-provenance-truth",
+      "title": "文本水印如何在采样时留下统计信号",
+      "need": "当前仅讲检测基率与边界，尚未连接到生成softmax。",
+      "outline": ["四个候选原分布0.25，给两个选定候选logit加ln2，重归一后变1/3,1/6,1/3,1/6", "实际绿名单依上下文/密钥规则变化，小示例不构成完整检测器", "区分水印检测来源统计信号、隐写携带额外信息、加密保护内容、签名证明某主体声明", "复用已有90/(90+99)基率例，不重复大段统计说明"],
+      "sources": ["https://arxiv.org/abs/2301.10226", "https://github.com/Lordog/dive-into-llms/tree/f84c04268794ef94f8949808bbc14ab8636763a0/documents/chapter7"]
+    }
+  ],
+  "scope_notes": ["不因RLVR/RLAIF缩写缺失就扩章：其对应概念正文已有。", "当前包已有对源资料过时的批判性处理，除精确版本注记外不应再次追加相同风险段落。", "以上补充应紧随现有相关节，在同一知识链前进，不放进另一个附录体系。"]
+}

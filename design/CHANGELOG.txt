@@ -120,3 +120,64 @@
   test_visual 97 项全部通过。
 - 本轮未启动本地服务、未做浏览器渲染与真实交互验证；以上结论来自
   静态检查、语法校验与既有测试，实际点击行为需在浏览器中确认。
+
+并入第三次 Desktop 导出版（增量资产）· 本轮改动
+
+1. 判定：这是一次分叉，不是前进
+- 来源：/Users/chuhemiao/Desktop/AI_Systems_Engineering_Textbook_ZH（2026-10-24 审计版）。
+- 该包是一个自洽的 95 页教材：统一「第01—68课」编号、Q001—Q112、作业01—05，
+  内部零失效链接，且完全不引用 visual/、mechanisms/、reading-notes/、wiki/ 等目录。
+- 但它同时缺少本仓库已有的内容：节内图解锚点 6 个（仓库 201 个）、
+  d-figure 0 处（仓库 49）、分步播放器 0 处（仓库 32）；
+  foundations 体量比仓库少 56%，complete.html 由 34.3MB 降到 11.0MB。
+- 抽样比对显示文件与课次的对应关系也变了：foundations/22、30 两边正文
+  只有 6—7% 重合（导出版的 foundations/22.html 是「第01课」）。
+- 结论：它不是仓库 HEAD 加编号修订，而是基于更早基线的另一条线。
+  按用户决定，只取增量资产，正文结构与 201 张节内图解全部保留。
+
+2. 取入的内容
+- 新增教学材料：递进作业 01—05 与贯穿实验页共 6 个 HTML，
+  以及 labs/stack/ 的完整实验栈（core.py、metrics.py、run.py、server.py、
+  test_stack.py、templates/ 与 results/ 的 12 份运行记录）。
+- 编辑与审计记录：editorial/（含 content-review 28 项、coverage-review 22 项）、
+  validation/ 16 项、checks/ 3 个脚本、worked-examples/visibility.json。
+- 资源：assets/figures/ 20 个 SVG、assets/figures.js、assets/progressive.css。
+- 文档：AI_Engineering_Content_Audit_Report_ZH.md、编号修复说明.md、SHA256SUMS.txt。
+- 共导入 147 个非 HTML 文件与 6 个 HTML 页。
+
+3. 未取入的内容
+- 全部正文 HTML（foundations/、chapters/、index、contents、complete、search、
+  glossary、labs、preface、sources、studies/code）：取入会丢掉 201 张节内图解。
+- assets 下的 js 与 css：本仓库这些文件带有此前的交互修复。
+- llms.txt、README.txt、wiki/*.md：描述的是 95 页结构，与本仓库不一致。
+- worked-examples/ 的 5 个 json：按新结构重建的 401 条示例位置，
+  锚点指向本仓库没有的页面。
+
+4. 对取入页面所做的调整
+- 6 个页面原带导出包自己的 95 页目录，已改用本仓库外壳重套，
+  并按二级目录修正全部相对路径与 data-root。
+- 加入左导航「实验与核验」组；labs.html 正文新增「递进作业与贯穿实验」区块，
+  手机折叠目录与右侧提纲同步补条目。
+- 补上本仓库通用的面包屑与阅读信息。
+- 5 个自检答案原为 open 默认展开，按 AGENTS.md「自检答案默认收起」改为收起。
+- 这些页引用的 10 个来源条目在本仓库 sources.html 中不存在，
+  已从导出包原样追加（3 个 source-card 与 7 个 source-set），未改写其内容。
+
+5. 必须注意的不一致（未解决）
+- 导入的 editorial/、validation/ 记录与两份说明文档描述的是作者那份 95 页包，
+  不是本仓库。其中的页数、引用数与通过项不能当作本仓库的验证结果。
+- 编号修复说明.md 描述的「第01—68课」统一编号，本仓库并未采用；
+  本仓库仍是 F01—F40 加章节 01—28。checks/verify_numbering.py 校验的是前者，
+  在本仓库上不适用（且本机缺 lxml，未执行）。
+- assets/figures.js 与 assets/progressive.css 导入后在本仓库中无页面引用，
+  因为 6 个页面已改用本仓库外壳；暂作为资源保留。
+
+6. 验证范围
+- design/check_local_links.py：263 页、105036 条本地引用、0 处错误。
+- 262 个计入目录的页面，每页条目 262 条，当前项唯一。
+- labs/stack/test_stack.py 48 项通过；checks/coverage_numeric.py 26 项通过；
+  labs/test_content_contracts.py 48 项中 47 项通过，1 项因本机缺 torch 未执行。
+- foundations/verify_diagram_math.py、mechanisms/test_mechanisms.py、
+  labs/test_foundations.py、visual/labs/test_visual.py 均通过。
+- assets 下全部脚本通过 node --check。
+- 本轮未启动本地服务、未做浏览器渲染与交互验证。

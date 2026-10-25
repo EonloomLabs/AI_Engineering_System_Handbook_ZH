@@ -1,0 +1,274 @@
+{
+  "date": "2026-10-24",
+  "rows": [
+    {
+      "reference": "CS2680",
+      "topic": "观察Agent、实现循环、工具、上下文、记忆、协作",
+      "decision": "已覆盖",
+      "location": "foundations/22.html",
+      "treatment": "沿用原有运行轨迹、状态、调用与可靠执行解释"
+    },
+    {
+      "reference": "CS2680",
+      "topic": "评测、成本、可靠性和优化实验",
+      "decision": "已覆盖",
+      "location": "chapters/23.html",
+      "treatment": "保留Task/Trial、pass@k/pass^k、失败分母与配对评测；不重复新增"
+    },
+    {
+      "reference": "CS2680",
+      "topic": "GPU执行、线程与存储层级",
+      "decision": "补齐机制",
+      "location": "foundations/06.html#gpu-operator-to-kernel",
+      "treatment": "先由算子接到kernel，再在计算资源课展开分工和分块"
+    },
+    {
+      "reference": "CS2680",
+      "topic": "编译、融合、CUDA Graph与计时",
+      "decision": "补齐机制",
+      "location": "chapters/08.html#gpu-fusion-compile-graphs",
+      "treatment": "插入原服务章节；区分流量、提交开销、冷启动与稳定执行"
+    },
+    {
+      "reference": "CS2680",
+      "topic": "多副本调度与前缀缓存",
+      "decision": "补齐机制",
+      "location": "chapters/08.html#cache-aware-replica-routing",
+      "treatment": "用队列加剩余prefill估算说明缓存亲和与负载的取舍"
+    },
+    {
+      "reference": "CS2680",
+      "topic": "剪枝与量化",
+      "decision": "补齐剪枝",
+      "location": "foundations/20.html#update-pruning-storage",
+      "treatment": "补稀疏形状、索引开销、结构缩减和硬件条件；保留既有量化"
+    },
+    {
+      "reference": "CS2680",
+      "topic": "Batching、分页、并行、投机解码、全栈实验",
+      "decision": "已覆盖",
+      "location": "chapters/08.html",
+      "treatment": "保留原有推导与五个递进作业；后续计划课以原论文核对机制"
+    },
+    {
+      "reference": "Dive 01",
+      "topic": "微调与部署",
+      "decision": "已覆盖",
+      "location": "chapters/05.html",
+      "treatment": "原理与数据/标签链保留；旧模型和安装命令作为历史实验环境"
+    },
+    {
+      "reference": "Dive 02",
+      "topic": "提示学习与思维链",
+      "decision": "已覆盖",
+      "location": "chapters/13.html",
+      "treatment": "提示、示例、上下文与推理时采样已在主线；不把思维链当正确性证明"
+    },
+    {
+      "reference": "Dive 03",
+      "topic": "知识编辑",
+      "decision": "补齐机制",
+      "location": "chapters/05.html#coverage-knowledge-edit-mechanism",
+      "treatment": "补秩1更新、相邻输入受影响与连续编辑回归；不宣称某方法普遍最好"
+    },
+    {
+      "reference": "Dive 04",
+      "topic": "数学推理与蒸馏",
+      "decision": "补齐机制",
+      "location": "chapters/05.html#coverage-distillation-temperature",
+      "treatment": "补软目标、KL和温度；教师序列SFT与在线RL保持区分"
+    },
+    {
+      "reference": "Dive 05",
+      "topic": "文本水印",
+      "decision": "补齐机制",
+      "location": "chapters/27.html#coverage-watermark-mechanism",
+      "treatment": "补生成偏置与统计检测；继续接原有基率、误报与可信度"
+    },
+    {
+      "reference": "Dive 06",
+      "topic": "越狱攻击",
+      "decision": "已覆盖",
+      "location": "chapters/24.html",
+      "treatment": "纳入模型与Agent安全的权限、输出和环境评测；不另设攻击教程"
+    },
+    {
+      "reference": "Dive 07",
+      "topic": "文本隐写",
+      "decision": "限定覆盖",
+      "location": "chapters/27.html#coverage-watermark-mechanism",
+      "treatment": "解释隐藏消息与来源水印的不同；完整编码算法作为研究选学"
+    },
+    {
+      "reference": "Dive 08",
+      "topic": "多模态模型",
+      "decision": "补齐机制",
+      "location": "chapters/27.html#coverage-multimodal-connector",
+      "treatment": "补视觉连接器训练、维度和梯度；再区分理解与生成"
+    },
+    {
+      "reference": "Dive 09",
+      "topic": "GUI智能体",
+      "decision": "已覆盖",
+      "location": "chapters/27.html#Q107",
+      "treatment": "保留观测、定位、动作、反馈、最终状态链；不复制历史自报分数"
+    },
+    {
+      "reference": "Dive 10",
+      "topic": "智能体安全",
+      "decision": "已覆盖",
+      "location": "chapters/24.html",
+      "treatment": "风险识别分数与实际阻断分开；保持执行器边界与注入测试"
+    },
+    {
+      "reference": "Dive 11",
+      "topic": "PPO/RLHF安全对齐",
+      "decision": "已覆盖",
+      "location": "chapters/05.html#Q022",
+      "treatment": "保留策略/奖励/参考模型；旧TRL接口不作为当前安装说明"
+    }
+  ],
+  "sources": [
+    {
+      "title": "docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "cs2680.seas.harvard.edu/readings/oct-21",
+      "url": "https://cs2680.seas.harvard.edu/readings/oct-21",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "docs.sglang.io/docs/advanced_features/sgl_model_gateway",
+      "url": "https://docs.sglang.io/docs/advanced_features/sgl_model_gateway",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "arxiv.org/abs/2312.07104",
+      "url": "https://arxiv.org/abs/2312.07104",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "docs.pytorch.org/docs/stable/generated/torch.compile",
+      "url": "https://docs.pytorch.org/docs/stable/generated/torch.compile",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "triton-lang.org/main/index.html",
+      "url": "https://triton-lang.org/main/index.html",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "docs.pytorch.org/docs/stable/user_guide/torch_compiler/torch.compiler_profiling_torch_compile.html",
+      "url": "https://docs.pytorch.org/docs/stable/user_guide/torch_compiler/torch.compiler_profiling_torch_compile.html",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "docs.nvidia.com/dl-cuda-graph/cuda-graph-basics/cuda-graph.html",
+      "url": "https://docs.nvidia.com/dl-cuda-graph/cuda-graph-basics/cuda-graph.html",
+      "scope": "本次新增GPU执行、编译或副本路由机制的一手依据"
+    },
+    {
+      "title": "ROME",
+      "url": "https://arxiv.org/abs/2202.05262",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "MEMIT",
+      "url": "https://arxiv.org/abs/2210.07229",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "EDIT-FORGET",
+      "url": "https://arxiv.org/abs/2401.07453",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "DISTILL",
+      "url": "https://arxiv.org/abs/1503.02531",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "WATERMARK",
+      "url": "https://arxiv.org/abs/2301.10226",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "DIVE7-PINNED",
+      "url": "https://github.com/Lordog/dive-into-llms/tree/f84c04268794ef94f8949808bbc14ab8636763a0/documents/chapter7",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "LLAVA-PROJECT",
+      "url": "https://llava-vl.github.io/",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "LLAVA",
+      "url": "https://arxiv.org/abs/2304.08485",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "CLIP",
+      "url": "https://arxiv.org/abs/2103.00020",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "HF-MULTIMODAL",
+      "url": "https://huggingface.co/docs/transformers/en/chat_templating_multimodal",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "NEXT-GPT",
+      "url": "https://arxiv.org/abs/2309.05519",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "title": "DDPM",
+      "url": "https://arxiv.org/abs/2006.11239",
+      "scope": "本次新增知识编辑、蒸馏、水印或多模态机制的一手依据"
+    },
+    {
+      "id": "UPDATE-PRUNING",
+      "title": "PyTorch Pruning Tutorial",
+      "url": "https://docs.pytorch.org/tutorials/intermediate/pruning_tutorial.html",
+      "scope": "掩码、稠密形状与剪枝对象；不采用其历史性能数字",
+      "checked": "2026-10-24"
+    },
+    {
+      "id": "UPDATE-SPARSITY",
+      "title": "NVIDIA: Accelerating Inference with Sparsity",
+      "url": "https://developer.nvidia.com/blog/accelerating-inference-with-sparsity-using-ampere-and-tensorrt/",
+      "scope": "2:4模式、格式与硬件条件；2021年文章，作为机制来源",
+      "checked": "2026-10-24"
+    },
+    {
+      "title": "Harvard CS2680 Modern AI Systems",
+      "url": "https://cs2680.seas.harvard.edu/",
+      "scope": "2026 Fall官方课程主题与已发布资料"
+    },
+    {
+      "title": "Dive into LLMs：本次检索固定快照",
+      "url": "https://github.com/Lordog/dive-into-llms/tree/f84c04268794ef94f8949808bbc14ab8636763a0",
+      "scope": "根README、11章README、数学SFT notebook相关实现和RLHF requirements；不代表审读所有PDF/视频/代码"
+    }
+  ],
+  "reference_commit": "f84c04268794ef94f8949808bbc14ab8636763a0",
+  "preserved_structure": {
+    "stages": 5,
+    "units": 18,
+    "lessons": 68,
+    "assignments": 5
+  }
+}

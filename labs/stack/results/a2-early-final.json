@@ -1,0 +1,112 @@
+{
+  "schema": "outside-in-lab-1",
+  "task_id": "t01",
+  "split": "development",
+  "backend": "scripted-fault-fixture",
+  "context_policy": "full",
+  "success": false,
+  "artifact_correct": false,
+  "stop_reason": "model_final",
+  "rounds": 1,
+  "writes": 0,
+  "request_bytes": 1419,
+  "elapsed_ms": 0.56233,
+  "model_usage": [
+    null
+  ],
+  "financial_cost_usd": null,
+  "token_count": null,
+  "measurement_scope": "local host execution; scripted policy is NOT model intelligence and bytes are NOT tokens",
+  "artifact": "{\"exclude_dirs\":[]}",
+  "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+  "events": [
+    {
+      "seq": 0,
+      "at_ms": 0.381106,
+      "event": "task_started",
+      "task_id": "t01",
+      "split": "development",
+      "backend": "scripted-fault-fixture",
+      "initial": {
+        "success": false,
+        "checks": [
+          {
+            "path": "vendor/a.txt",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": "vendor/nested/b.txt",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": "vendor2/a.txt",
+            "expected": true,
+            "actual": true
+          },
+          {
+            "path": "src/a.py",
+            "expected": true,
+            "actual": true
+          }
+        ],
+        "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+        "grader": "outside-in-lab-1-root-segment"
+      }
+    },
+    {
+      "seq": 1,
+      "at_ms": 0.420055,
+      "event": "model_requested",
+      "round": 1,
+      "request_bytes": 1419
+    },
+    {
+      "seq": 2,
+      "at_ms": 0.42309,
+      "event": "model_returned",
+      "round": 1,
+      "duration_ms": 0.002955,
+      "tool_calls": 0,
+      "usage": null
+    },
+    {
+      "seq": 3,
+      "at_ms": 0.558975,
+      "event": "host_verified",
+      "success": false,
+      "checks": [
+        {
+          "path": "vendor/a.txt",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "path": "vendor/nested/b.txt",
+          "expected": false,
+          "actual": true
+        },
+        {
+          "path": "vendor2/a.txt",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "path": "src/a.py",
+          "expected": true,
+          "actual": true
+        }
+      ],
+      "artifact_sha256": "cf2ce9360a72cc5ff55cd6b41d153cfc32867a2d05eeffb72a2c46dd0643cb8b",
+      "grader": "outside-in-lab-1-root-segment"
+    },
+    {
+      "seq": 4,
+      "at_ms": 0.560287,
+      "event": "task_finished",
+      "success": false,
+      "stop_reason": "model_final"
+    }
+  ]
+}

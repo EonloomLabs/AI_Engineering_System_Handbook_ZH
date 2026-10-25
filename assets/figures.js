@@ -1,0 +1,6 @@
+(()=>{'use strict';let opener=null;let dialog=document.getElementById('figure-dialog');
+ if(!dialog){dialog=document.createElement('dialog');dialog.id='figure-dialog';dialog.className='figure-modal';dialog.innerHTML='<div class="figure-modal-header"><h2 id="figure-dialog-title"></h2><button type="button" class="figure-modal-close">关闭</button></div><div class="figure-modal-body"></div>';dialog.setAttribute('aria-labelledby','figure-dialog-title');document.body.append(dialog)}
+ function close(){dialog.close();opener?.focus()}
+ dialog.querySelector('.figure-modal-close').addEventListener('click',close);dialog.addEventListener('cancel',()=>setTimeout(()=>opener?.focus(),0));
+ document.addEventListener('click',e=>{const b=e.target.closest('.figure-zoom');if(!b)return;const f=b.closest('.necessary-figure');const mobile=matchMedia('(max-width:700px)').matches;const svg=f.querySelector(mobile?'.figure-mobile svg':'.figure-desktop svg');if(!svg)return;opener=b;dialog.querySelector('h2').textContent=f.querySelector('figcaption').textContent;dialog.querySelector('.figure-modal-body').replaceChildren(svg.cloneNode(true));dialog.showModal();dialog.querySelector('button').focus()});
+})();

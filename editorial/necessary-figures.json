@@ -1,0 +1,102 @@
+[
+  {
+    "id": "agent-call-boundaries",
+    "page": "foundations/22.html",
+    "anchor": "figure-agent-call-boundaries",
+    "title": "提议、执行与验收分别发生在哪里",
+    "source": "读取与写入的实现见 labs/stack/core.py；默认后端为脚本，不是商业模型轨迹。",
+    "why": "工具提议不修改文件。宿主读取或修改工作区，将对应调用的结果带入下一次模型请求。最终还要验收。",
+    "desktop": "assets/figures/agent-call-boundaries.svg",
+    "mobile": "assets/figures/agent-call-boundaries-mobile.svg"
+  },
+  {
+    "id": "unknown-result",
+    "page": "foundations/33.html",
+    "anchor": "figure-unknown-result",
+    "title": "确认丢失后，先核验而不是盲目重做",
+    "source": "显式构造的消息丢失案例，用来区分外部提交与宿主确认。",
+    "why": "教学故障：下游提交成功后，确认消息丢失。宿主只能记为未知，先核验而不能认定失败。",
+    "desktop": "assets/figures/unknown-result.svg",
+    "mobile": "assets/figures/unknown-result-mobile.svg"
+  },
+  {
+    "id": "compaction-prefix",
+    "page": "chapters/14.html",
+    "anchor": "figure-compaction-prefix",
+    "title": "摘要覆盖的前缀与实时尾部不能混为一段",
+    "source": "抽象事件序列用于解释前缀替换；具体版本与额外校验条件见本题源码依据。",
+    "why": "教学事件e1至e5。摘要只覆盖e1至e3；安装时验证版本，并把e4和e5原样留在摘要后。",
+    "desktop": "assets/figures/compaction-prefix.svg",
+    "mobile": "assets/figures/compaction-prefix-mobile.svg"
+  },
+  {
+    "id": "embedding-address",
+    "page": "foundations/05.html",
+    "anchor": "figure-embedding-address",
+    "title": "两个“爱”取同一行，但仍处在两个位置",
+    "source": "独立六项词表小例。增加BOS/EOS后的八项贯通模型在本页后半段接入。",
+    "why": "独立六项词表查表例：爱为编号2，向量为负零点三、零点八、零点一、零点五。增加的是特征轴，不是Token位置。",
+    "desktop": "assets/figures/embedding-address.svg",
+    "mobile": "assets/figures/embedding-address-mobile.svg"
+  },
+  {
+    "id": "attention-contributions",
+    "page": "foundations/11.html",
+    "anchor": "figure-attention-contributions",
+    "title": "三种表示分工，最后沿位置轴混合内容",
+    "source": "来自 labs/model/data/run.json 的 initial_trace；显示值四舍五入，验证使用原始精度。",
+    "why": "使用贯通模型更新前的真实记录，第一句位置2的爱。三张参数表不同，打分权重也不同于模型参数。",
+    "desktop": "assets/figures/attention-contributions.svg",
+    "mobile": "assets/figures/attention-contributions-mobile.svg"
+  },
+  {
+    "id": "cached-causal-mask",
+    "page": "chapters/03.html",
+    "anchor": "figure-cached-causal-mask",
+    "title": "同样是两行五列，允许关系可以完全不同",
+    "source": "历史3项、新输入2项的独立掩码例；不是贯通模型的某轮实际输入。",
+    "why": "已有3个缓存位置，新输入2个Token。Query绝对位置为3和4，不能使用从零起算的左上三角。",
+    "desktop": "assets/figures/cached-causal-mask.svg",
+    "mobile": "assets/figures/cached-causal-mask-mobile.svg"
+  },
+  {
+    "id": "residual-gradient",
+    "page": "foundations/15.html",
+    "anchor": "figure-residual-gradient",
+    "title": "残差分支的梯度在同一个输入处相加",
+    "source": "独立标量计算例；不冒充模型参数Wq的真实反向数据。",
+    "why": "独立标量例：x等于2，w等于0.5，y等于x加wx等于3，损失是y平方的一半。x的梯度由两条路径相加得到4.5。",
+    "desktop": "assets/figures/residual-gradient.svg",
+    "mobile": "assets/figures/residual-gradient-mobile.svg"
+  },
+  {
+    "id": "shifted-targets",
+    "page": "foundations/16.html",
+    "anchor": "figure-shifted-targets",
+    "title": "看清每个输入位置到底在预测哪一项",
+    "source": "与贯通模型 input、target 完全对应；vocab和有效位置数见 run.json。",
+    "why": "同一完整句子BOS我爱学习感叹号EOS。输入为前五项，标签为后五项；每个位置都预测下一项，不能把当前位置原样复制当作学习成功。",
+    "desktop": "assets/figures/shifted-targets.svg",
+    "mobile": "assets/figures/shifted-targets-mobile.svg"
+  },
+  {
+    "id": "cache-frontier",
+    "page": "foundations/19.html",
+    "anchor": "figure-cache-frontier",
+    "title": "缓存覆盖到哪里，与刚选出什么要分开",
+    "source": "使用保存权重实际生成的三轮记录，未使用另一个演示模型。",
+    "why": "前向之后缓存只覆盖已经计算过的位置；接下来选出的Token，要等下一轮前向才写入缓存。",
+    "desktop": "assets/figures/cache-frontier.svg",
+    "mobile": "assets/figures/cache-frontier-mobile.svg"
+  },
+  {
+    "id": "critical-path",
+    "page": "chapters/20.html",
+    "anchor": "figure-critical-path",
+    "title": "等待时间由最慢依赖路径决定",
+    "source": "40/20/60/30 ms为构造条件，不是产品性能实测；不含额外调度开销。",
+    "why": "教学时间例：模型先40毫秒，随后读取20毫秒和搜索60毫秒并行，最后模型30毫秒。时间总和150毫秒，关键路径130毫秒。",
+    "desktop": "assets/figures/critical-path.svg",
+    "mobile": "assets/figures/critical-path-mobile.svg"
+  }
+]

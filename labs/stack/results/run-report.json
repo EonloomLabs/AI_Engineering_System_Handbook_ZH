@@ -1,0 +1,76 @@
+{
+  "scope": "local execution and deterministic protocol experiments; no commercial model, GPU, official benchmark or hidden-test performance measured",
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.41"
+  },
+  "stages": {
+    "observe": {
+      "events": 17,
+      "success": true,
+      "backend": "scripted-protocol-fixture"
+    },
+    "build": {
+      "early_final_is_not_success": true,
+      "claim": "host grader is independent of final text"
+    },
+    "optimize": {
+      "baseline": {
+        "trials": 8,
+        "successes": 8,
+        "success_rate": 1.0,
+        "total_request_bytes": 113778,
+        "cost_usd": null,
+        "cost_per_success_usd": null,
+        "p50_ms_nearest_rank": 1.444354,
+        "p95_ms_nearest_rank": 1.684688
+      },
+      "candidate": {
+        "trials": 8,
+        "successes": 8,
+        "success_rate": 1.0,
+        "total_request_bytes": 67194,
+        "cost_usd": null,
+        "cost_per_success_usd": null,
+        "p50_ms_nearest_rank": 1.414198,
+        "p95_ms_nearest_rank": 1.842255
+      },
+      "paired": {
+        "both_pass": 8,
+        "gain": 0,
+        "regression": 0,
+        "both_fail": 0
+      },
+      "scope": "request-byte reduction on scripted fixtures; NOT evidence of model-quality equivalence or GPU speedup"
+    },
+    "serve": {
+      "http_contract_success": true,
+      "toy_generation": [
+        6,
+        1,
+        2,
+        3,
+        5,
+        7
+      ],
+      "real_engine_benchmark": "NOT_RUN",
+      "course_assignment_complete": false
+    },
+    "stack": {
+      "resource_ledger": {
+        "parameters": 1000000000,
+        "weight_bytes_fp16": 2000000000,
+        "training_state_bytes_explicit_recipe": 18000000000,
+        "training_recipe": "FP16 weights 2 + FP32 gradients 4 + FP32 master weights 4 + Adam moments 8 bytes/parameter; activations excluded",
+        "kv_bytes": 134217728,
+        "kv_MiB": 128.0,
+        "dense_parameter_matmul_forward_FLOPs_per_token_approx": 2000000000,
+        "caveat": "Dense parameter-bearing matmul estimate only; attention, recomputation, routing and actual utilization require separate accounting."
+      },
+      "critical_path_ms": 130,
+      "sum_task_ms": 150,
+      "amdahl_speedup_for_60_percent_doubled": 1.4285714285714286,
+      "scope": "constructed dimensions and durations; analytical examples, not performance measurements"
+    }
+  }
+}

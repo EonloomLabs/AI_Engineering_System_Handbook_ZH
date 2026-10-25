@@ -1,0 +1,16 @@
+{
+  "resource_ledger": {
+    "parameters": 1000000000,
+    "weight_bytes_fp16": 2000000000,
+    "training_state_bytes_explicit_recipe": 18000000000,
+    "training_recipe": "FP16 weights 2 + FP32 gradients 4 + FP32 master weights 4 + Adam moments 8 bytes/parameter; activations excluded",
+    "kv_bytes": 134217728,
+    "kv_MiB": 128.0,
+    "dense_parameter_matmul_forward_FLOPs_per_token_approx": 2000000000,
+    "caveat": "Dense parameter-bearing matmul estimate only; attention, recomputation, routing and actual utilization require separate accounting."
+  },
+  "critical_path_ms": 130,
+  "sum_task_ms": 150,
+  "amdahl_speedup_for_60_percent_doubled": 1.4285714285714286,
+  "scope": "constructed dimensions and durations; analytical examples, not performance measurements"
+}

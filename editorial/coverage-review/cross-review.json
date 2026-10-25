@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-24",
+  "reviewer": "dive_llms_audit",
+  "scope": [
+    "foundations/06.html",
+    "foundations/21.html",
+    "chapters/08.html",
+    "foundations/20.html"
+  ],
+  "reviewed_anchors": {
+    "foundations/06.html": [
+      "gpu-operator-to-kernel"
+    ],
+    "foundations/21.html": [
+      "gpu-thread-memory-hierarchy",
+      "gpu-tile-arithmetic-intensity"
+    ],
+    "chapters/08.html": [
+      "cache-aware-replica-routing",
+      "prefix-index-residency",
+      "gpu-fusion-compile-graphs",
+      "gpu-compilation-measurement"
+    ],
+    "foundations/20.html": [
+      "update-pruning-mechanism"
+    ]
+  },
+  "root_anchor_resolution": "Requested update-pruning-storage was not present; reviewed actual new heading update-pruning-mechanism without renaming it.",
+  "criteria": [
+    "numerical correctness",
+    "tensor and matrix shapes",
+    "causal performance claims",
+    "prerequisite continuity",
+    "GPU result scope"
+  ],
+  "material_findings": [],
+  "mutations": [],
+  "conclusion": "No material teaching error found in the designated additions. No wording edits made.",
+  "quantitative_checks": {
+    "gpu_vector_add": [
+      11,
+      22,
+      33,
+      44,
+      55,
+      66
+    ],
+    "warps_per_256_thread_block": 8,
+    "dense_matmul_flops": 128,
+    "naive_bytes": 576,
+    "tiled_bytes": 320,
+    "naive_arithmetic_intensity": 0.2222222222222222,
+    "tiled_arithmetic_intensity": 0.4,
+    "replica_a_ttft_ms": 150.0,
+    "replica_b_ttft_ms": 120.0,
+    "replica_a_short_queue_ttft_ms": 60.0,
+    "fusion_bytes_before_per_element": 20,
+    "fusion_bytes_after_per_element": 12,
+    "fusion_traffic_reduction": 0.4,
+    "compile_break_even_strict_integer": 667,
+    "four_hundred_iterations": {
+      "uncompiled_ms": 3200,
+      "compiled_ms": 4000
+    },
+    "thousand_iterations": {
+      "uncompiled_ms": 8000,
+      "compiled_ms": 7000
+    },
+    "pruning_before": [
+      1.06,
+      6.01,
+      2.08,
+      8.02
+    ],
+    "pruning_after": [
+      1,
+      6,
+      2,
+      8
+    ],
+    "pruning_dense_bytes": 32,
+    "pruning_coo_bytes": 48,
+    "structured_pruning_parameter_count_before": 16,
+    "structured_pruning_parameter_count_after": 12
+  },
+  "causal_checks": [
+    "F06 distinguishes mathematical operator, kernel and CPU submission from GPU completion.",
+    "F21 defines FLOP/byte at a named storage boundary and states the no-cache hypothesis; traffic ratios are not presented as measured speedups.",
+    "F21 introduces Roofline before the new tile section, so the reference has an existing prerequisite.",
+    "Chapter08 separates model selection, replica routing and iteration scheduling; cached-prefix benefit is weighed against queue delay.",
+    "Chapter08 distinguishes fusion, graph compilation and CUDA Graph replay; compile amortization includes its setup cost.",
+    "F20 distinguishes zero count, dense storage, indexed sparse storage and removal of a hidden dimension; paired matrix dimensions remain compatible.",
+    "All designated additions label numbers as teaching assumptions or arithmetic and do not claim GPU performance measurements."
+  ],
+  "files_sha256": {
+    "foundations/06.html": "63d7b92e4c7510e59de967c3d2effd740562c885b4b91289e53eaaed2c7cb6cc",
+    "foundations/21.html": "69aca0b8f9cda9c91be4d35e4048e698b21fac23c92910a5b1abb4204e49c63e",
+    "chapters/08.html": "8827ab98f42e60b548e954ef678f038c362f68547ec07979535b130218ccc338",
+    "foundations/20.html": "c829793cb4b119739f553f93d9db0c5cc98f3bc793046801f8e69069c9bc77e0"
+  }
+}

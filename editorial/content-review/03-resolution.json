@@ -1,0 +1,422 @@
+[
+  {
+    "id": "A01",
+    "kind": "计算缺口",
+    "finding": "Embedding与位置相加只留下文字承诺，E[2]+P[2]数表被移除",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/05.html#core-parameters-3--mc-section-3"
+    ],
+    "verification": "复算E[2]+P[2]==initial_trace.x[0][2]",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A02",
+    "kind": "计算衔接",
+    "finding": "RMSNorm给出分母但未展示四格N1，下一课直接使用N1",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/10.html#core-normalization-2--mc-section-2"
+    ],
+    "verification": "四格与run.json一致",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A03",
+    "kind": "内容缺失",
+    "finding": "三张参数表完全展开标题下只有来源，无三张表",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/11.html#core-qkv-2--mc-section-2",
+      "foundations/11.html#core-qkv-5--mc-section-5"
+    ],
+    "verification": "矩阵乘法得到原Q/K/V，来源哈希不变",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A04",
+    "kind": "计算缺口",
+    "finding": "残差、FFN激活和最终词表头缺少中间数表，只保留单格结果",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/14.html#core-ffn-2--mc-section-2",
+      "foundations/14.html#core-ffn-3--mc-section-3",
+      "foundations/14.html#core-ffn-4--mc-section-4",
+      "foundations/14.html#core-output-head-2--mc-section-2",
+      "foundations/14.html#core-value-residual-4--mc-section-4",
+      "foundations/14.html#core-value-residual-5--mc-section-5"
+    ],
+    "verification": "逐个结果与唯一run.json校验",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A05",
+    "kind": "内容缺失",
+    "finding": "第一轮声称八项实际值是，但八项logits与概率不存在",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/18.html#core-generation-2--mc-section-2",
+      "foundations/18.html#core-generation-3--mc-section-3",
+      "foundations/18.html#core-generation-4--mc-section-4"
+    ],
+    "verification": "每轮与generation_full一致，不借用初值",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A06",
+    "kind": "内容缺失",
+    "finding": "一次两个新Query的mask以冒号结束，未列允许表",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/19.html#core-cache-5--mc-section-5"
+    ],
+    "verification": "允许表s<=t，不用左上三角代替",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A07",
+    "kind": "内容缺失",
+    "finding": "整条链的同一位置视图标题下没有数表",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/02.html#core-forward-trace-3--mc-section-3"
+    ],
+    "verification": "完整trace各阶段有行，数值可复算",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A08",
+    "kind": "顺序冲突",
+    "finding": "外向内改序后仍有F22以后展开、方差F14才解释等旧引用",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/04.html#Q017",
+      "chapters/06.html#Q015",
+      "foundations/01.html#text",
+      "foundations/11.html#quiz",
+      "foundations/11.html#text"
+    ],
+    "verification": "针对旧语句的回归扫描",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A09",
+    "kind": "前置缺失",
+    "finding": "Token、HyDE、Bootstrap在阶段内首次使用/自检前没有足够解释",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/26.html#section-1c18971210",
+      "foundations/29.html#section-18f902652b",
+      "foundations/36.html#section-6121ba05fb"
+    ],
+    "verification": "词义先于自检，基础章节仍简洁",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A10",
+    "kind": "实践衔接",
+    "finding": "聊天模板与二次tokenize的重复特殊标记风险未形成可检查过程",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/03.html#lesson-part-2"
+    ],
+    "verification": "文本与模板版本记录，测试拒绝重复控制前缀",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A11",
+    "kind": "接口冲突风险",
+    "finding": "手工移位的tiny_model和库内部移位没有统一对照，容易移位两次",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/04.html#ch05-s3",
+      "foundations/04.html#lesson-part-2"
+    ],
+    "verification": "固定序列目标配对测试",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A12",
+    "kind": "概念衔接",
+    "finding": "可见位置、监督位置、PAD/EOS、打包边界容易混淆",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/03.html#ch03-s5",
+      "chapters/04.html#ch05-s3",
+      "foundations/12.html#lesson-part-3"
+    ],
+    "verification": "masked标签仍可被注意力读；PAD/EOS测试",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A13",
+    "kind": "深度衔接",
+    "finding": "数据治理已有原则，但从数据记录到去重簇、划分、训练计数缺少连续可复算例",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/04.html#ch05-s15",
+      "chapters/23.html#Q091"
+    ],
+    "verification": "同源和重复簇分区不交叉，过滤计数守恒",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A14",
+    "kind": "工程遗漏",
+    "finding": "保存权重与精确继续训练的恢复状态没有足够显式对照",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/04.html#ch05-s12",
+      "foundations/16.html#lesson-part-5"
+    ],
+    "verification": "使用真实torch比较恢复AdamW与仅权重续训",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A15",
+    "kind": "外部资料迁移",
+    "finding": "蒸馏SFT、PPO、DPO和组内奖励的对象不能只靠方法名区分",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/05.html#Q022",
+      "foundations/17.html#foundations-19-s5",
+      "foundations/17.html#lesson-part-2"
+    ],
+    "verification": "目标计算和参考项反例",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A16",
+    "kind": "数据偏差",
+    "finding": "数学SFT来源用isdigit筛答案，会改变任务分布；labels复制不证明只监督助手",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/05.html#integrated-4a2346e1aabf--c23-h5",
+      "foundations/17.html#lesson-part-2"
+    ],
+    "verification": "负数小数分数可解析，非数值和恶意表达式拒绝",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A17",
+    "kind": "覆盖遗漏",
+    "finding": "外部记忆、知识编辑、检索、微调缺少可撤回性与验证范围的统一对照",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/04.html#ch05-s15",
+      "chapters/05.html#integrated-48f9db3a936a--c23-h1",
+      "chapters/18.html#Q069"
+    ],
+    "verification": "概念矩阵不把删除外部数据等同参数遗忘",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A18",
+    "kind": "计量歧义",
+    "finding": "TTFT例prefill后额外20ms未说明性质，容易与首Token已经产生重复计算",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/08.html#Q030",
+      "chapters/08.html#ch08-s9",
+      "chapters/08.html#在单次生成中，可粗略写",
+      "chapters/25.html#integrated-933ff059b4ab--c22-h1"
+    ],
+    "verification": "固定事件时间线复算TTFT、TPOT、E2E",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A19",
+    "kind": "优化衔接",
+    "finding": "前缀缓存与decode缓存收益、吞吐与任务完成仍有跨层解释跳跃",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/07.html#ch07-s12",
+      "foundations/18.html#lesson-part-2"
+    ],
+    "verification": "相同输出长度计算，独立任务成功不等于token吞吐",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A20",
+    "kind": "过时建议筛选",
+    "finding": "旧CoT教程可能被误读为所有模型都应长写思维过程",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/13.html#Q049"
+    ],
+    "verification": "不得将多数票比例当事实概率",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A21",
+    "kind": "执行位置遗漏",
+    "finding": "本地夹具与真实多容器任务环境不同，当前路径不等于目标仓库",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/09.html#ch09-s6"
+    ],
+    "verification": "假运行位置与错误基线负例",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A22",
+    "kind": "评测完整性",
+    "finding": "调参集与最终留出、失败费用、零成功分母需在同一记录中连接",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/23.html#Q091",
+      "chapters/25.html#integrated-933ff059b4ab--c22-h1",
+      "foundations/36.html#section-6121ba05fb"
+    ],
+    "verification": "样例成本和置信指标可复算",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A23",
+    "kind": "安全概念遗漏",
+    "finding": "离线风险识别准确率不能直接证明执行防线",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/24.html#Q093"
+    ],
+    "verification": "高分风险识别仍可执行错误的反例",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A24",
+    "kind": "多模态/校准衔接",
+    "finding": "GUI自报1–5分与成功概率、图像块与语义对象需明确区分",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/27.html#Q107"
+    ],
+    "verification": "坐标映射和置信分组计数测试",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A25",
+    "kind": "来源覆盖取舍",
+    "finding": "水印/隐写与可信度关系目前缺少明确边界",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/27.html#Q105"
+    ],
+    "verification": "混淆矩阵复算，检测分数非作者身份证据",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A26",
+    "kind": "版本真实性",
+    "finding": "外部教程包含旧模型/旧软件环境及条件限定实验成绩",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/05.html#integrated-4a2346e1aabf--c23-h5",
+      "chapters/28.html#integrated-8f83a8e72699--c26-h8",
+      "foundations/01.html#lesson-part-2"
+    ],
+    "verification": "来源范围与教材结论逐项映射",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A27",
+    "kind": "实践衔接",
+    "finding": "外向内五个作业需要相同任务ID和不可混用的夹具/模型/服务成绩",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "labs/projects/assignment1.html#accept",
+      "labs/projects/assignment2.html#baseline",
+      "labs/projects/assignment3.html#measure",
+      "labs/projects/assignment4.html#metrics",
+      "labs/projects/assignment5.html#artifacts"
+    ],
+    "verification": "5个作业共享manifest，真实模型未运行明确标注",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A28",
+    "kind": "符号与范围",
+    "finding": "N/V/T/d与逻辑张量/实际存储/低秩节省对象需要跨课一致",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/02.html#core-tensor-notation-2--mc-section-2",
+      "foundations/06.html#foundations-06-s3",
+      "foundations/08.html#foundations-08-s5",
+      "foundations/20.html#foundations-20-s2"
+    ],
+    "verification": "字节数/低秩参数量/shape可复算",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A29",
+    "kind": "连贯性复查",
+    "finding": "产品特定快照与通用教学循环需分开；状态、代价和权限不能靠术语代替证据",
+    "status": "scoped_review_retained",
+    "actual_locations": [
+      "chapters/19.html#Q073",
+      "chapters/28.html#integrated-8f83a8e72699--c26-h8"
+    ],
+    "verification": "来源日期沿用而非假标今日，结构与引用检查",
+    "scope_note": "沿用原固定源码证据；本轮没有重新阅读所有产品实现或声称今日版本等价。"
+  },
+  {
+    "id": "A30",
+    "kind": "静态结构与派生稿",
+    "finding": "正文、搜索、单页和Markdown可能在局部修改后不一致",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/04.html#Q017",
+      "chapters/06.html#Q015"
+    ],
+    "verification": "95页引用/旧短语/数值契约/隐藏答案/布局全检查",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A31",
+    "kind": "知识顺序",
+    "finding": "前向章节混入A.7以后完整生成/缓存；A.3投影又在A.4掩码之后",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/02.html#core-forward-trace-3--mc-section-3",
+      "chapters/02.html#integrated-bdc26289bfd4--walka-s3",
+      "chapters/04.html#core-gradient-4--mc-section-4",
+      "chapters/04.html#core-value-residual-6--mc-section-6",
+      "chapters/06.html#integrated-71d97056a70b--walka-s8",
+      "chapters/06.html#integrated-b23ba8ef3872--walka-s7",
+      "chapters/06.html#integrated-b9baf105ff7e--walka-s9",
+      "chapters/07.html#integrated-49b10a554c24--walka-s11",
+      "chapters/08.html#integrated-14bafdfec86b--walka-s12"
+    ],
+    "verification": "前向页不再提前展开A.7—12生成；A.2、A.3、A.4顺序正确",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A32",
+    "kind": "重复与连贯",
+    "finding": "相邻两段重做DPO公式，换输入却给相同损失，读者不易看清信息增量",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "foundations/17.html#foundations-19-s5"
+    ],
+    "verification": "旧锚点保留；下方独立程序算例仍明确参数不同",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  },
+  {
+    "id": "A33",
+    "kind": "前置顺序",
+    "finding": "标签小节先出现输出头梯度和残差反向，早于完整更新问题",
+    "status": "implemented_or_relocated",
+    "actual_locations": [
+      "chapters/02.html#core-forward-trace-3--mc-section-3",
+      "chapters/02.html#integrated-bdc26289bfd4--walka-s3",
+      "chapters/04.html#core-gradient-4--mc-section-4",
+      "chapters/04.html#core-value-residual-6--mc-section-6",
+      "chapters/06.html#integrated-71d97056a70b--walka-s8",
+      "chapters/06.html#integrated-b23ba8ef3872--walka-s7",
+      "chapters/06.html#integrated-b9baf105ff7e--walka-s9",
+      "chapters/07.html#integrated-49b10a554c24--walka-s11",
+      "chapters/08.html#integrated-14bafdfec86b--walka-s12"
+    ],
+    "verification": "段落ID迁移后链接可达，梯度数值未变",
+    "scope_note": "以本目录测试、静态检查和修改记录为范围；不是全书零错误证明。"
+  }
+]

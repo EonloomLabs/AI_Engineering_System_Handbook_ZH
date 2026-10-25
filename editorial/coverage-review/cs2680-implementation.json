@@ -1,0 +1,172 @@
+{
+  "date": "2026-10-24",
+  "changed_files": [
+    "foundations/06.html",
+    "foundations/21.html",
+    "chapters/08.html"
+  ],
+  "kept_question_ids": [
+    "Q029",
+    "Q030",
+    "Q031",
+    "Q032"
+  ],
+  "scope": "Only existing mechanism groups; no new course units.",
+  "additions": [
+    {
+      "path": "foundations/06.html",
+      "anchors": [
+        "addition-gpu-operator-bridge",
+        "gpu-operator-to-kernel"
+      ],
+      "headings": [
+        "一行张量运算，怎样变成GPU上的工作？"
+      ],
+      "chinese_characters": 420,
+      "sources": [
+        "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html"
+      ]
+    },
+    {
+      "path": "foundations/21.html",
+      "anchors": [
+        "addition-gpu-execution",
+        "gpu-thread-memory-hierarchy",
+        "gpu-tile-arithmetic-intensity"
+      ],
+      "headings": [
+        "线程怎样分工，数字又从哪里读进来？",
+        "同样的矩阵乘，分块怎样提高每次读取的利用率？"
+      ],
+      "chinese_characters": 1152,
+      "sources": [
+        "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/writing-cuda-kernels.html",
+        "https://docs.nvidia.com/cuda/cuda-programming-guide/03-advanced/advanced-kernel-programming.html",
+        "https://cs2680.seas.harvard.edu/readings/oct-21"
+      ]
+    },
+    {
+      "path": "chapters/08.html",
+      "anchors": [
+        "addition-cache-replica-routing",
+        "cache-aware-replica-routing",
+        "prefix-index-residency"
+      ],
+      "headings": [
+        "同一模型有多个副本时，选缓存最多的那台吗？",
+        "前缀索引找到“相同”，为什么仍可能没有可用缓存？"
+      ],
+      "chinese_characters": 696,
+      "sources": [
+        "https://docs.sglang.io/docs/advanced_features/sgl_model_gateway",
+        "https://arxiv.org/abs/2312.07104"
+      ]
+    },
+    {
+      "path": "chapters/08.html",
+      "anchors": [
+        "addition-gpu-compilation",
+        "gpu-fusion-compile-graphs",
+        "gpu-compilation-measurement"
+      ],
+      "headings": [
+        "融合、编译和CUDA Graph分别改变哪一步？",
+        "首轮变慢，什么时候仍值得编译？"
+      ],
+      "chinese_characters": 979,
+      "sources": [
+        "https://docs.pytorch.org/docs/stable/generated/torch.compile",
+        "https://docs.nvidia.com/cuda/cuda-programming-guide/04-special-topics/cuda-graphs.html",
+        "https://triton-lang.org/main/index.html",
+        "https://docs.pytorch.org/docs/stable/user_guide/torch_compiler/torch.compiler_profiling_torch_compile.html",
+        "https://docs.nvidia.com/dl-cuda-graph/cuda-graph-basics/cuda-graph.html"
+      ]
+    }
+  ],
+  "additional_correction": {
+    "path": "foundations/06.html",
+    "old": "地址没有变，存放与计算的位置改变了",
+    "new": "编号没有变，存放与计算的位置改变了",
+    "reason": "Device transfer need not preserve physical or virtual addresses; semantic token IDs are unchanged."
+  },
+  "numeric_checks": [
+    {
+      "id": "GPU-VECTOR",
+      "expression": "[1,2,3,4,5,6]+[10,20,30,40,50,60] elementwise",
+      "expected": [
+        11,
+        22,
+        33,
+        44,
+        55,
+        66
+      ]
+    },
+    {
+      "id": "GPU-WARPS",
+      "expression": "256/32",
+      "expected": 8
+    },
+    {
+      "id": "GPU-TILE",
+      "flops": 128,
+      "naive_read_bytes": 512,
+      "tiled_read_bytes": 256,
+      "write_bytes": 64,
+      "naive_intensity": "128/576",
+      "tiled_intensity": 0.4,
+      "kind": "ideal explicit access-count model; no hardware benchmark"
+    },
+    {
+      "id": "GPU-FUSION",
+      "unfused_bytes_per_element": 20,
+      "fused_bytes_per_element": 12,
+      "traffic_reduction_fraction": 0.4,
+      "N": 1000000,
+      "kind": "unfused versus fused hypothetical implementation"
+    },
+    {
+      "id": "GPU-ROUTING",
+      "A_busy_ms": 150,
+      "B_ms": 120,
+      "A_light_ms": 60,
+      "linear_prefill_tokens_per_ms": 10,
+      "kind": "toy timing estimate"
+    },
+    {
+      "id": "GPU-COMPILE",
+      "setup_ms": 2000,
+      "uncompiled_ms_per_run": 8,
+      "compiled_ms_per_run": 5,
+      "strict_break_even_runs": 667,
+      "runs_400_ms": [
+        3200,
+        4000
+      ],
+      "runs_1000_ms": [
+        8000,
+        7000
+      ],
+      "kind": "toy amortization model"
+    }
+  ],
+  "no_gpu_measurement": true,
+  "global_sources_navigation_markdown_not_modified": true,
+  "validation": {
+    "new_anchor_count": 11,
+    "internal_links": "all resolve",
+    "original_Q_questions": [
+      "Q029",
+      "Q030",
+      "Q031",
+      "Q032"
+    ],
+    "numeric_examples": "all arithmetic checked with independent CPU calculations",
+    "matrix_output_equal": true,
+    "matrix_load_counts": [
+      128,
+      64
+    ],
+    "gpu_benchmark": false
+  }
+}

@@ -1,0 +1,25 @@
+exec(open('/mnt/data/_content_audit_20261024/browser_qa.py').read().split('pages=')[0])
+report=json.loads((R/'editorial/content-review/browser-report.json').read_text())
+report['interactions']=[x for x in report['interactions'] if x['name'] not in ['new text available in command search','standalone new-text search']]
+report['mode']+='; independent search exercised with identical local lazy data preloaded into the test document'
+with sync_playwright() as pw:
+ b=pw.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
+ page=b.new_page(viewport={'width':1440,'height':960});page.set_default_timeout(10000)
+ print('loading independent',flush=True)
+ page.set_content(inline('foundations/16.html'),wait_until='load');page.wait_for_timeout(150)
+ print('data',page.evaluate('window.COURSE_SEARCH?.length'),flush=True)
+ page.locator('[data-search]').first.click();page.locator('#command-input').fill('恢复优化器');page.wait_for_timeout(250)
+ count=page.locator('#command-results a').count();sample=page.locator('#command-results').inner_text()[:350]
+ print('independent',count,sample,flush=True)
+ report['interactions'].append({'name':'new text available in command search','pass':count>0,'result_count':count,'sample':sample})
+ page.close()
+ page=b.new_page(viewport={'width':1440,'height':960});page.set_default_timeout(10000)
+ print('loading standalone',flush=True)
+ page.set_content((R/'complete.html').read_text(),wait_until='load');page.wait_for_timeout(150)
+ page.locator('[data-search]').first.click();page.locator('#command-input').fill('恢复优化器');page.wait_for_timeout(250)
+ count=page.locator('#command-results a').count();print('standalone',count,flush=True)
+ report['interactions'].append({'name':'standalone new-text search','pass':count>0,'result_count':count})
+ b.close()
+(R/'editorial/content-review/browser-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+assert all(x['pass'] for x in report['interactions'])
+print('all',len(report['interactions']),'pass')

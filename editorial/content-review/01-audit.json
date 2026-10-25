@@ -1,0 +1,411 @@
+{
+  "audited_at": "2026-10-24",
+  "baseline": "AI_Engineering_Progressive_Mainline_ZH.zip",
+  "method": "68个主线页面结构/标题扫描；全部基础课的前置与算例链检查；系统问题的聚合顺序、模型计算、训练接口、Agent/评测/来源边界定向细读。未逐行重新核验所有外部源码、PDF与历史引用。",
+  "issues": [
+    {
+      "id": "A01",
+      "pages": [
+        "foundations/05.html"
+      ],
+      "kind": "计算缺口",
+      "finding": "Embedding与位置相加只留下文字承诺，E[2]+P[2]数表被移除",
+      "evidence": "输入表示X怎样真正出现：分别取E[2]和P[2]，对应特征相加：",
+      "design": "由现有run.json恢复E、P、X逐特征结果",
+      "acceptance": "复算E[2]+P[2]==initial_trace.x[0][2]"
+    },
+    {
+      "id": "A02",
+      "pages": [
+        "foundations/10.html"
+      ],
+      "kind": "计算衔接",
+      "finding": "RMSNorm给出分母但未展示四格N1，下一课直接使用N1",
+      "evidence": "r=0.469718001；下一课N1=[-0.425787,...]",
+      "design": "在原算式后列x/r及g缩放结果",
+      "acceptance": "四格与run.json一致"
+    },
+    {
+      "id": "A03",
+      "pages": [
+        "foundations/11.html"
+      ],
+      "kind": "内容缺失",
+      "finding": "三张参数表完全展开标题下只有来源，无三张表",
+      "evidence": "core-qkv-2--mc-section-2",
+      "design": "恢复Wq/Wk/Wv全表与五个位置Q/K/V，固定初始参数",
+      "acceptance": "矩阵乘法得到原Q/K/V，来源哈希不变"
+    },
+    {
+      "id": "A04",
+      "pages": [
+        "foundations/14.html"
+      ],
+      "kind": "计算缺口",
+      "finding": "残差、FFN激活和最终词表头缺少中间数表，只保留单格结果",
+      "evidence": "core-value-residual-5 / core-ffn-3/4 / core-output-head-2",
+      "design": "补足Wo、W1、W2、U及R/N2/ff_pre/ff_act/H/F/logits表",
+      "acceptance": "逐个结果与唯一run.json校验"
+    },
+    {
+      "id": "A05",
+      "pages": [
+        "foundations/18.html"
+      ],
+      "kind": "内容缺失",
+      "finding": "第一轮声称八项实际值是，但八项logits与概率不存在",
+      "evidence": "core-generation-2--mc-section-2",
+      "design": "在三轮各自位置恢复八候选与所选编号",
+      "acceptance": "每轮与generation_full一致，不借用初值"
+    },
+    {
+      "id": "A06",
+      "pages": [
+        "foundations/19.html"
+      ],
+      "kind": "内容缺失",
+      "finding": "一次两个新Query的mask以冒号结束，未列允许表",
+      "evidence": "core-cache-5--mc-section-5",
+      "design": "恢复绝对位置3、4对Key0—4的2×5表",
+      "acceptance": "允许表s<=t，不用左上三角代替"
+    },
+    {
+      "id": "A07",
+      "pages": [
+        "chapters/02.html"
+      ],
+      "kind": "内容缺失",
+      "finding": "整条链的同一位置视图标题下没有数表",
+      "evidence": "core-forward-trace-3--mc-section-3",
+      "design": "恢复贯通前向表，说明局部算例不可拼接",
+      "acceptance": "完整trace各阶段有行，数值可复算"
+    },
+    {
+      "id": "A08",
+      "pages": [
+        "foundations/01.html",
+        "foundations/11.html",
+        "foundations/14.html"
+      ],
+      "kind": "顺序冲突",
+      "finding": "外向内改序后仍有F22以后展开、方差F14才解释等旧引用",
+      "evidence": "F01/F11/F14文字与curriculum顺序不一致",
+      "design": "按现课程次序改为复习链接；方差指向F10",
+      "acceptance": "针对旧语句的回归扫描"
+    },
+    {
+      "id": "A09",
+      "pages": [
+        "foundations/26.html",
+        "foundations/29.html",
+        "foundations/36.html"
+      ],
+      "kind": "前置缺失",
+      "finding": "Token、HyDE、Bootstrap在阶段内首次使用/自检前没有足够解释",
+      "evidence": "课程模型阶段在阶段4；上述术语阶段2/3已出现",
+      "design": "就地补一段最小定义和一个独立小例，不前置整套数学",
+      "acceptance": "词义先于自检，基础章节仍简洁"
+    },
+    {
+      "id": "A10",
+      "pages": [
+        "foundations/03.html",
+        "chapters/01.html"
+      ],
+      "kind": "实践衔接",
+      "finding": "聊天模板与二次tokenize的重复特殊标记风险未形成可检查过程",
+      "evidence": "HF chat_templating v4.44.2",
+      "design": "明确一次模板化，展示符号序列及add_special_tokens条件",
+      "acceptance": "文本与模板版本记录，测试拒绝重复控制前缀"
+    },
+    {
+      "id": "A11",
+      "pages": [
+        "foundations/04.html",
+        "foundations/16.html",
+        "chapters/04.html"
+      ],
+      "kind": "接口冲突风险",
+      "finding": "手工移位的tiny_model和库内部移位没有统一对照，容易移位两次",
+      "evidence": "tiny_model.py training_loss；Transformers v4.52.3 ForCausalLMLoss",
+      "design": "对照两种正确协议和一个错误协议，说明只移位一次",
+      "acceptance": "固定序列目标配对测试"
+    },
+    {
+      "id": "A12",
+      "pages": [
+        "foundations/12.html",
+        "foundations/17.html",
+        "chapters/04.html"
+      ],
+      "kind": "概念衔接",
+      "finding": "可见位置、监督位置、PAD/EOS、打包边界容易混淆",
+      "evidence": "HF/TRL pinned docs与现有mask章节",
+      "design": "四种mask职责表；PAD=EOS时按真实位置忽略；独立样本packing块内因果",
+      "acceptance": "masked标签仍可被注意力读；PAD/EOS测试"
+    },
+    {
+      "id": "A13",
+      "pages": [
+        "foundations/16.html",
+        "chapters/04.html"
+      ],
+      "kind": "深度衔接",
+      "finding": "数据治理已有原则，但从数据记录到去重簇、划分、训练计数缺少连续可复算例",
+      "evidence": "Q019有原则与多个孤立例；CS336 assignment4",
+      "design": "六条记录同源分组→切分→切块→计数；保留验证不回流训练的边界",
+      "acceptance": "同源和重复簇分区不交叉，过滤计数守恒"
+    },
+    {
+      "id": "A14",
+      "pages": [
+        "foundations/16.html",
+        "chapters/04.html"
+      ],
+      "kind": "工程遗漏",
+      "finding": "保存权重与精确继续训练的恢复状态没有足够显式对照",
+      "evidence": "本包weights_trained.json仅spec/parameters",
+      "design": "权重工件/恢复检查点两表，包含optimizer/scheduler/scaler/RNG/data cursor和发布边界",
+      "acceptance": "使用真实torch比较恢复AdamW与仅权重续训"
+    },
+    {
+      "id": "A15",
+      "pages": [
+        "foundations/17.html",
+        "chapters/05.html"
+      ],
+      "kind": "外部资料迁移",
+      "finding": "蒸馏SFT、PPO、DPO和组内奖励的对象不能只靠方法名区分",
+      "evidence": "Dive ch4/ch11；现有Q021/22",
+      "design": "明确teacher文本目标与在线奖励的不同，区分旧策略/参考策略/当前策略",
+      "acceptance": "目标计算和参考项反例"
+    },
+    {
+      "id": "A16",
+      "pages": [
+        "chapters/05.html"
+      ],
+      "kind": "数据偏差",
+      "finding": "数学SFT来源用isdigit筛答案，会改变任务分布；labels复制不证明只监督助手",
+      "evidence": "Dive notebook lines240–530",
+      "design": "分析原代码的准确含义，新增安全精确数值解析教学例，不执行任意文本",
+      "acceptance": "负数小数分数可解析，非数值和恶意表达式拒绝"
+    },
+    {
+      "id": "A17",
+      "pages": [
+        "chapters/05.html",
+        "chapters/18.html",
+        "chapters/28.html"
+      ],
+      "kind": "覆盖遗漏",
+      "finding": "外部记忆、知识编辑、检索、微调缺少可撤回性与验证范围的统一对照",
+      "evidence": "Dive ch3；原记忆与SFT章节",
+      "design": "参数知识编辑放后训练；早期记忆只做职责交叉引用",
+      "acceptance": "概念矩阵不把删除外部数据等同参数遗忘"
+    },
+    {
+      "id": "A18",
+      "pages": [
+        "chapters/08.html"
+      ],
+      "kind": "计量歧义",
+      "finding": "TTFT例prefill后额外20ms未说明性质，容易与首Token已经产生重复计算",
+      "evidence": "Q030公式M*t_decode与示例120ms",
+      "design": "明确额外20ms为首结果处理/传输，不是再做一次完整decode；M-1间隔",
+      "acceptance": "固定事件时间线复算TTFT、TPOT、E2E"
+    },
+    {
+      "id": "A19",
+      "pages": [
+        "foundations/21.html",
+        "chapters/07.html",
+        "chapters/08.html"
+      ],
+      "kind": "优化衔接",
+      "finding": "前缀缓存与decode缓存收益、吞吐与任务完成仍有跨层解释跳跃",
+      "evidence": "vLLM APC；CS2680 A4",
+      "design": "冷暖cache、已命中前缀、输出长度的控制变量；SLO goodput与端到端",
+      "acceptance": "相同输出长度计算，独立任务成功不等于token吞吐"
+    },
+    {
+      "id": "A20",
+      "pages": [
+        "foundations/26.html",
+        "chapters/13.html",
+        "chapters/06.html"
+      ],
+      "kind": "过时建议筛选",
+      "finding": "旧CoT教程可能被误读为所有模型都应长写思维过程",
+      "evidence": "Dive ch2；OpenAI reasoning best practices",
+      "design": "简单提示→少量正反例→固定评测；区分可见解释、隐藏计算与验证证据",
+      "acceptance": "不得将多数票比例当事实概率"
+    },
+    {
+      "id": "A21",
+      "pages": [
+        "chapters/17.html",
+        "chapters/22.html"
+      ],
+      "kind": "执行位置遗漏",
+      "finding": "本地夹具与真实多容器任务环境不同，当前路径不等于目标仓库",
+      "evidence": "CS2680 A3 sandbox contract",
+      "design": "执行环境ID+cwd+revision+test manifest，明确本地与远端边界",
+      "acceptance": "假运行位置与错误基线负例"
+    },
+    {
+      "id": "A22",
+      "pages": [
+        "chapters/23.html",
+        "foundations/36.html"
+      ],
+      "kind": "评测完整性",
+      "finding": "调参集与最终留出、失败费用、零成功分母需在同一记录中连接",
+      "evidence": "CS2680 A3/A4；现有Evals",
+      "design": "同任务配对，不混宏平均与池化；零成功记未定义，非0成本",
+      "acceptance": "样例成本和置信指标可复算"
+    },
+    {
+      "id": "A23",
+      "pages": [
+        "chapters/24.html"
+      ],
+      "kind": "安全概念遗漏",
+      "finding": "离线风险识别准确率不能直接证明执行防线",
+      "evidence": "Dive R-Judge章节；现安全章节",
+      "design": "识别/决定/执行/验收分层，用无害权限测试覆盖",
+      "acceptance": "高分风险识别仍可执行错误的反例"
+    },
+    {
+      "id": "A24",
+      "pages": [
+        "foundations/39.html",
+        "chapters/27.html"
+      ],
+      "kind": "多模态/校准衔接",
+      "finding": "GUI自报1–5分与成功概率、图像块与语义对象需明确区分",
+      "evidence": "Dive ch8/ch9；现Q107",
+      "design": "具体投影形状与坐标变换，采集新观察；风险阈值按留出结果校准",
+      "acceptance": "坐标映射和置信分组计数测试"
+    },
+    {
+      "id": "A25",
+      "pages": [
+        "chapters/27.html"
+      ],
+      "kind": "来源覆盖取舍",
+      "finding": "水印/隐写与可信度关系目前缺少明确边界",
+      "evidence": "Dive ch5/ch7",
+      "design": "只补来源证据与真伪分离、基准率反例，避免扩成独立水印课程",
+      "acceptance": "混淆矩阵复算，检测分数非作者身份证据"
+    },
+    {
+      "id": "A26",
+      "pages": [
+        "chapters/28.html",
+        "sources.html"
+      ],
+      "kind": "版本真实性",
+      "finding": "外部教程包含旧模型/旧软件环境及条件限定实验成绩",
+      "evidence": "Dive eleven READMEs and selected notebook ranges",
+      "design": "来源适用性表：机制保留、命令冻结、成绩不转引、未知不补造",
+      "acceptance": "来源范围与教材结论逐项映射"
+    },
+    {
+      "id": "A27",
+      "pages": [
+        "labs/projects/assignment1.html",
+        "labs/projects/assignment2.html",
+        "labs/projects/assignment3.html",
+        "labs/projects/assignment4.html",
+        "labs/projects/assignment5.html"
+      ],
+      "kind": "实践衔接",
+      "finding": "外向内五个作业需要相同任务ID和不可混用的夹具/模型/服务成绩",
+      "evidence": "CS2680 public assignments；labs/stack",
+      "design": "每次接管边界定义输入输出、基线和未测项，保留教学自定义任务而非冒称官方作业",
+      "acceptance": "5个作业共享manifest，真实模型未运行明确标注"
+    },
+    {
+      "id": "A28",
+      "pages": [
+        "foundations/02.html",
+        "foundations/06.html",
+        "foundations/08.html",
+        "foundations/20.html"
+      ],
+      "kind": "符号与范围",
+      "finding": "N/V/T/d与逻辑张量/实际存储/低秩节省对象需要跨课一致",
+      "evidence": "固定模型spec；现基础多套局部例",
+      "design": "增加简短输入约定和场景标识，不把所有优化写成少算",
+      "acceptance": "字节数/低秩参数量/shape可复算"
+    },
+    {
+      "id": "A29",
+      "pages": [
+        "chapters/09.html",
+        "chapters/10.html",
+        "chapters/11.html",
+        "chapters/12.html",
+        "chapters/14.html",
+        "chapters/19.html",
+        "chapters/20.html",
+        "chapters/21.html",
+        "chapters/25.html",
+        "chapters/26.html"
+      ],
+      "kind": "连贯性复查",
+      "finding": "产品特定快照与通用教学循环需分开；状态、代价和权限不能靠术语代替证据",
+      "evidence": "既有固定Codex来源；现正文",
+      "design": "精确补充对象契约/场景切换说明；不更新未经本轮重读的产品实现",
+      "acceptance": "来源日期沿用而非假标今日，结构与引用检查"
+    },
+    {
+      "id": "A30",
+      "pages": [
+        "all-core"
+      ],
+      "kind": "静态结构与派生稿",
+      "finding": "正文、搜索、单页和Markdown可能在局部修改后不一致",
+      "evidence": "当前目录/单页/搜索依赖",
+      "design": "从同一修改后HTML生成派生物；课程和图解身份保持",
+      "acceptance": "95页引用/旧短语/数值契约/隐藏答案/布局全检查"
+    },
+    {
+      "id": "A31",
+      "pages": [
+        "chapters/02.html",
+        "chapters/06.html",
+        "chapters/07.html",
+        "chapters/08.html"
+      ],
+      "kind": "知识顺序",
+      "finding": "前向章节混入A.7以后完整生成/缓存；A.3投影又在A.4掩码之后",
+      "evidence": "Q005/Q006中的连续案例A标题顺序",
+      "design": "按对应机制迁移，明确独立两层模型身份，保留旧锚点映射",
+      "acceptance": "前向页不再提前展开A.7—12生成；A.2、A.3、A.4顺序正确"
+    },
+    {
+      "id": "A32",
+      "pages": [
+        "foundations/17.html"
+      ],
+      "kind": "重复与连贯",
+      "finding": "相邻两段重做DPO公式，换输入却给相同损失，读者不易看清信息增量",
+      "evidence": "DPO比较的不是…与DPO的式子先用…相邻",
+      "design": "保留首次完整推导，第二段改讲整段概率与长度/掩码边界",
+      "acceptance": "旧锚点保留；下方独立程序算例仍明确参数不同"
+    },
+    {
+      "id": "A33",
+      "pages": [
+        "chapters/04.html"
+      ],
+      "kind": "前置顺序",
+      "finding": "标签小节先出现输出头梯度和残差反向，早于完整更新问题",
+      "evidence": "Q017内两段具体梯度",
+      "design": "移入Q018对应更新机制；Q017保留损失定义和基础求导",
+      "acceptance": "段落ID迁移后链接可达，梯度数值未变"
+    }
+  ]
+}
