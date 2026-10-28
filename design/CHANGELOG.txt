@@ -352,3 +352,24 @@
 - assets 下全部脚本通过 node --check。
 - 本轮未启动本地服务；线上状态通过 curl 读取已部署文件核对，
   未做浏览器渲染与交互验证。
+
+检索提示文案更新 · 本轮改动
+
+- search.html 的检索框占位仍为「例如：Embedding、矩阵乘法、Q025、unknown」。
+  Q025 在新编号下仍是有效标号，但指向的已是另一道题，且该组示例不体现课号检索。
+  改为「例如：Embedding、矩阵乘法、第39课、Q001」。
+- 顺带发现 assets/app.js 中搜索框为空时的提示写着
+  「输入中文、英文、题号或符号，例如：张量、F05、Q025、unknown。」，
+  其中 F05 是已废弃的旧课号。上一轮统一编号时只处理了 HTML 文本节点，
+  按设计跳过了 <script>，因此外部脚本里的用户文案没有被覆盖到。
+  改为「输入中文、英文、课号或题号，例如：张量、第39课、Q001。」。
+- 四个示例均先在 assets/search-data.js 中按 app.js 的匹配口径核对过命中数
+  （Embedding 328、矩阵乘法 81、张量 210、第39课 41、Q001 17），
+  不会给出搜不到结果的例子。
+- complete.html 的内联副本同步。
+- 复查全部 assets/*.js 的用户可见字符串，已无旧课号或「第N章」残留；
+  catalog.js 与 search-data.js 中的 visual/Fxx.html 是文件路径，保持不变。
+
+验证
+- design/check_local_links.py：263 页、105037 条本地引用、0 处错误。
+- assets/app.js 通过 node --check。

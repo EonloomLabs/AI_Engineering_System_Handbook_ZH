@@ -10,7 +10,7 @@ $$('.sidebar a').forEach(a=>a.addEventListener('click',()=>document.body.classLi
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.body.classList.remove('nav-open');menu?.setAttribute('aria-expanded','false')}});
 $$('[data-mark]').forEach(b=>{const key=b.dataset.mark;const render=()=>{const yes=store.get(key)==='read';b.textContent=yes?'✓ 已读：再次点击撤销':'标记本节已读';b.setAttribute('aria-pressed',String(yes));if(!storageOK){const note=b.parentElement.querySelector('.read-status');if(note)note.textContent='浏览器未允许本地存储；当前页面内标记仍可用。'}};render();b.addEventListener('click',()=>{store.set(key,store.get(key)==='read'?'':'read');render()})});
 const sg=$('#search-input');if(sg){const result=$('#search-results'), count=$('#search-summary');
-function search(){const q=sg.value.trim().toLowerCase();result.replaceChildren();if(!q){count.textContent='输入中文、英文、题号或符号，例如：张量、F05、Q025、unknown。';return}
+function search(){const q=sg.value.trim().toLowerCase();result.replaceChildren();if(!q){count.textContent='输入中文、英文、课号或题号，例如：张量、第39课、Q001。';return}
 const parts=q.split(/\s+/).filter(Boolean);const data=window.COURSE_SEARCH||[];
 const found=data.map(d=>{const txt=(d.title+' '+d.text).toLowerCase();let score=0;for(const w of parts){if(!txt.includes(w))return null;score+=d.title.toLowerCase().includes(w)?15:1;if(d.id.toLowerCase()===w)score+=30}return {d,score}}).filter(Boolean).sort((a,b)=>b.score-a.score);
 count.textContent=`找到 ${found.length} 项，显示前 ${Math.min(70,found.length)} 项。结果按相关程度排列。`;
