@@ -11,6 +11,7 @@ i18n/locales/*.json   各语种译文，每个文件是 key → 译文 的扁平
 i18n/build.py         打包成 assets/i18n-data.js，并做完整性校验
 assets/i18n.js        运行时：套用译文、设置 lang/dir、渲染切换器
 assets/i18n.css       切换器样式与 RTL 版式
+i18n/inline_complete.py  把上述三者内联进 complete.html（幂等，带哨兵标记）
 ```
 
 打包成 JS 而非 JSON，是为了让本书在 `file://` 下直接打开也能工作。
@@ -23,7 +24,10 @@ assets/i18n.css       切换器样式与 RTL 版式
 3. 校验是否忘了打包：`python3 i18n/build.py --check`。只比对不写入，
    若 `assets/i18n-data.js` 与 `i18n/locales/` 不一致则报错退出。
    页面加载的是打包产物，改了词条不重新打包，线上看到的仍是旧译文。
-4. 新增页面：给外壳元素加 `data-i18n="key"`（替换 textContent）或
+4. 同步单文件版：`python3 i18n/inline_complete.py`。complete.html 不引用外部
+   资源，词条、运行时与样式都内联在其中，改完必须重新内联，否则单文件版
+   会比分页版旧。`--check` 只比对不写入，不一致即非零退出。
+5. 新增页面：给外壳元素加 `data-i18n="key"`（替换 textContent）或
    `data-i18n-attr="aria-label:key"`（替换属性）。
 
 ## 约定

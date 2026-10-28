@@ -97,3 +97,16 @@
 /* The result count is substituted into a translated sentence; isolating it
    keeps the digits from drifting against the surrounding words. */
 #search-summary, .command-hint { unicode-bidi: plaintext }
+
+/* Group labels are translated and some run to ~45 characters in a 250px
+   rail. The base rule is a flex row with a fixed min-height, so let the text
+   wrap instead of overflowing, and let the row grow with it. */
+.rail-group > summary {
+  align-items: flex-start;
+  min-height: 0;
+  padding-block: 9px;
+  line-height: 1.5;
+}
+.rail-group > summary::before { margin-top: .45em }
+.rail-section-name,
+.rail-group > summary { overflow-wrap: anywhere; text-wrap: pretty }
