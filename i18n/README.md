@@ -20,7 +20,10 @@ assets/i18n.css       切换器样式与 RTL 版式
 1. 改词条：编辑 `i18n/source.json`，再到各 `i18n/locales/*.json` 补同名 key。
 2. 重新打包：`python3 i18n/build.py`。有缺 key、多余 key、译文与中文原文
    相同等情况会逐条报告并以非零状态退出。
-3. 新增页面：给外壳元素加 `data-i18n="key"`（替换 textContent）或
+3. 校验是否忘了打包：`python3 i18n/build.py --check`。只比对不写入，
+   若 `assets/i18n-data.js` 与 `i18n/locales/` 不一致则报错退出。
+   页面加载的是打包产物，改了词条不重新打包，线上看到的仍是旧译文。
+4. 新增页面：给外壳元素加 `data-i18n="key"`（替换 textContent）或
    `data-i18n-attr="aria-label:key"`（替换属性）。
 
 ## 约定

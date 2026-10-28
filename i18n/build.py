@@ -6,6 +6,11 @@ Run: python3 i18n/build.py
 import json, sys
 from pathlib import Path
 
+# `--check` rebuilds in memory and compares, without writing. It catches the
+# case that bit us once: a locale file edited after the last build, so the
+# source is correct but the bundle the page actually loads is stale.
+CHECK = '--check' in sys.argv
+
 ROOT = Path(__file__).resolve().parent.parent
 SRC = json.loads((ROOT / 'i18n/source.json').read_text(encoding='utf-8'))
 KEYS = list(SRC['keys'])
@@ -57,7 +62,13 @@ def main() -> int:
                         'names': {c: NAMES[c] for c in META['locales'] if c in NAMES}},
                        ensure_ascii=False, separators=(',', ':')),
             json.dumps(tables, ensure_ascii=False, separators=(',', ':'))))
-    (ROOT / 'assets/i18n-data.js').write_text(out, encoding='utf-8')
+    target = ROOT / 'assets/i18n-data.js'
+    if CHECK:
+        current = target.read_text(encoding='utf-8') if target.exists() else ''
+        if current != out:
+            problems.append(('bundle', 'assets/i18n-data.js is stale — run python3 i18n/build.py'))
+    else:
+        target.write_text(out, encoding='utf-8')
 
     print('%-8s %6s %8s %7s %11s' % ('locale', 'keys', 'missing', 'extra', 'same-as-zh'))
     for r in report:
