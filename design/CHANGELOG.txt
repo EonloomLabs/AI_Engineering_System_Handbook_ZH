@@ -246,3 +246,63 @@
   labs/stack/test_stack.py、checks/coverage_numeric.py 均通过。
 - assets 下全部脚本通过 node --check。
 - 本轮未启动本地服务、未做浏览器渲染与交互验证。
+
+安装 landing-page-design 技能并按其 Part B 优化界面 · 本轮改动
+
+1. 安装
+- 来源：https://github.com/elayadesign/ai-design-skills（MIT）。
+- 该仓库只含一个技能 skills/landing-page-design/SKILL.md，
+  按其 README 的 Claude Code 方式装到 .claude/skills/landing-page-design/。
+
+2. 适用范围的判断
+- 该技能面向落地页与营销站：Part A 全部是转化策略（hero、CTA、FAQ、
+  风险逆转、社会证明），B5 是 hero 标题渐变，B11 要求一个「标语揭示」
+  大字滚动动效区，B8 要求编造可信的客户名、品牌与数字。
+- 本项目是离线技术教材。design/DESIGN.md 的既定方向是
+  「精确的技术参考，而非营销式书籍封面」；AGENTS.md 要求
+  「来源应定位到实际文件、函数与行号；工程推导与实测、教学模拟要分别标明」。
+- 因此 Part A、B5、B11 未采用；B8 的「编造证明内容」在本书中是有害的，
+  与其来源纪律直接冲突，亦未采用。
+- 采用的是 Part B 中与文档站点相容的工艺规则：B1 文案与字体、
+  B4 背景、B7 动效、B9 交互状态、B10 交付项。
+
+3. 实际改动
+- B7 动效：新增统一基准曲线 --ease-base: cubic-bezier(.22,1,.36,1)。
+  原有三处过渡均短于技能规定的 200ms 下限且使用浏览器默认曲线
+  （按钮 .12s、提示 .16s、手机目录抽屉 .15s ease），
+  改为颜色与透明度 .3s、位移类 .5s，全部走基准曲线。
+  为导航、按钮、药丸标签、跳转条、课次列表等交互元素补上过渡声明。
+  仅过渡 transform 与 opacity 类属性，未对 width/height/top/left 设过渡。
+- B1 文案：标题加 text-wrap: balance，正文、列表、说明文字加
+  text-wrap: pretty，避免末行孤字。原先只有 4 处零散使用。
+- B4 背景：.vb-intro 的 linear-gradient(135deg,#eef7f2,#f7f9f4)
+  是全站唯一的背景渐变，改为平涂 #f1f6f2。
+- B9 状态：原先只有 button 有 :active 反馈。为 .button、.pill、
+  .module-jump、.chapter-list、.resource-link、.curriculum-row、
+  自检答案摘要与复制按钮补上 translateY(1px)，返回顶部用 scale(.98)。
+- B10 交付项：全站 263 页此前没有 favicon，加入内联 SVG data URI 图标
+  （深色圆角方块加三条横排，呼应正文的「一排数、一张表」），
+  与目录深度无关，不引入额外文件，每页约 535 字节。
+
+4. 未改（技能规则与本项目冲突或已达成）
+- B4「卡片不允许单边描边」未采用：本站的 .panel、.preq、.module-jump
+  使用左侧单边线作为克制的语义标记，DESIGN.md 明确要求
+  「语义块：不是一堆着色卡片」，改为四边描边会回到被否定的方向。
+- B1 字体族（Geist/Manrope/Poppins）未采用：本书是离线包，
+  不加载任何外部字体；现有系统中文字体栈是刻意选择。
+- B1 的 Tailwind 字号阶未采用：本项目不使用 Tailwind，
+  现有字号自成一套且与行高配对，强行套阶会造成大面积无谓改动。
+- B6 图标库（Phosphor/Solar/Iconamoon）未采用：同样是离线约束，
+  现有图标是内联 SVG。
+- 已达成项：无斜体、无 900 字重、不对布局属性做过渡、
+  尊重 prefers-reduced-motion、focus-visible 齐备、
+  无 href="#" 死链、当前页在导航中有标识、全部 <img> 有 alt、
+  263 页均有跳到正文链接与 title/description。
+
+5. 验证范围
+- design/check_local_links.py：263 页、105037 条本地引用、0 处错误。
+- 按 Part B 的适用条目逐条复审，11 项规则与 4 项交付项全部达成。
+- assets 下全部脚本通过 node --check。
+- 本轮未启动本地服务、未做浏览器渲染与交互验证；
+  动效时长与手感需在浏览器中确认，抽屉位移时长按技能规定取 .5s，
+  若实际偏慢可下调而不影响其余规则。
