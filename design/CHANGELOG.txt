@@ -306,3 +306,49 @@
 - 本轮未启动本地服务、未做浏览器渲染与交互验证；
   动效时长与手感需在浏览器中确认，抽屉位移时长按技能规定取 .5s，
   若实际偏慢可下调而不影响其余规则。
+
+主问题编号统一与抽屉时长调整 · 本轮改动
+
+1. 先澄清上一轮搁置的理由（原判断有误）
+- 上一轮记录「运行示例另有一套同形的 Q### 锚点，直接替换会混淆」，
+  据此搁置了 Q 编号。复查发现这个判断不成立：
+  同一页上的 id="Q033" 是主问题本身，id="worked-Q033" 是该问题的运行示例，
+  data-example="Q033" 指向同一条目。它们是同一套序列的不同部件，不是两套。
+- 全站恰好 112 个主问题锚点、112 个运行示例锚点、112 个可见标号，一一对应。
+
+2. 映射与做法
+- editorial/numbering-map.json 的 questions 表：112 条，
+  old_label 与 label 都在 Q001—Q112 内，是一个置换，仅 4 条恒等。
+  该文件声明 stable_paths_and_ids_preserved: true，
+  且 112 条的 stable_id 全部等于 old_label——作者的设计是锚点不动、只换可见标号。
+- 因此只替换文本节点中的可见标号，保持 id="Q033"、id="worked-Q033"、
+  data-example="Q033" 与所有 href 锚点不变。旧书签仍然可用。
+- 置换必须一次性完成：顺序替换会把自己的输出再映射一遍。
+  使用单次正则回调，分页版改 1982 处、单文件版改 919 处。
+- search-data.js 标题 123 条、正文 395 条同步；其 path 字段的 112 个
+  #Q### 锚点保持不变，因此搜索结果显示新标号、跳转仍落到原锚点。
+
+3. 抽屉时长
+- 手机目录抽屉的位移上一轮按技能 B7 的「位移类 duration-500」取 .5s，
+  实测偏慢，本轮改为 .3s。其余位移类过渡仍为基准值，颜色与透明度仍为 .3s。
+
+4. 单文件版补齐
+- 发现 complete.html 内联的是自己那份 CSS，上一轮的 Part B 改动没有进去，
+  与 AGENTS.md「complete.html 是同一内容的内联版本」不符。
+  本轮补上：基准曲线、三处过渡、背景平涂、text-wrap 与 :active 状态块，
+  并同步 Q 编号。两版现已逐项一致。
+
+5. 线上状态
+- https://ai-engineering-handbook.eonloom.com 自动跟随 main：
+  当前线上为上一提交，已含第01—68课编号、节内图解与 Part B 的曲线和图标；
+  本轮的 Q 编号与 .3s 抽屉尚未上线，推送后生效。
+
+6. 验证范围
+- design/check_local_links.py：263 页、105037 条本地引用、0 处错误。
+- 112 处锚点与可见标号逐一核对，全部符合映射；
+  可见标号恰好覆盖 Q001—Q112，锚点集合与映射的 old_label 全集一致。
+- foundations/verify_diagram_math.py、mechanisms/test_mechanisms.py、
+  labs/test_foundations.py、visual/labs/test_visual.py 均通过。
+- assets 下全部脚本通过 node --check。
+- 本轮未启动本地服务；线上状态通过 curl 读取已部署文件核对，
+  未做浏览器渲染与交互验证。
