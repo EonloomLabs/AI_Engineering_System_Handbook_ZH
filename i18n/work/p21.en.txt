@@ -1,0 +1,577 @@
+23807	Lesson 38｜From several sentences to a training batch: batching, padding and label positions — AI Systems Engineering
+12700	Start by separating two input settings
+9445	The long and short sentences "我爱学习" and "你爱" serve only to explain padding; PAD adds no real text. The worked training run always uses the two complete samples "我爱学习！" and "你爱学习！", with BOS/EOS added; they are the same length. The complete samples, the inputs and the labels are all set out explicitly below, and the IDs of the padding example are never treated as the training record of another model.
+23773	Lesson 36 · A row of numbers, a table and a stack of tables</a><a class="pill" href="03.html">Lesson 37 · Why text has to become token IDs first
+12988	All the steps and explanations</a><a href="../visual/F12.html">Lesson 47 · A mask is a visibility table, not extra meaning</a><a href="../visual/O06.html">O06 · Continuous batching: when a seat frees up, take the next one
+9482	"Batching" means letting several inputs be processed together
+10418	Processing "我爱学习" on its own is a single input. Putting "我爱学习" and "你爱" into the same computation is called a <strong>batch</strong>. This batch holds 2 inputs, so the <strong>batch size is B=2
+13252	Key difference:</strong> Batching organizes several inputs into one device computation; it does not join two sentences into a single one.
+17107	Easy to misread:</strong> Different users' inputs in the same batch do not thereby share an attention context.
+16454	They are still two independent inputs; the second sentence is not appended to the first. The batch axis provides a way of organizing them to be "scheduled together", and the standard independent-sample computation does not let two samples read each other's content. Batching is never a reason to mix different users' contexts together.
+10541	The two ID sequences from the previous lesson are:
+16354	To lay them out as a regular rectangular table, every row has to be the same length. We set the length allotted for this batch to T=3 and pad the second row with one placeholder ID 0:
+8034	Padding</strong> adds placeholder items to a short input; it does not add meaningful new content to the original words. ID 0 happens to be PAD in this book; a real model may use a different PAD ID, and may need it handled according to the model configuration.
+23312	A true length and an allotted length are not the same thing
+24095	The second row's true length is still 2, while the table allots 3 positions. If a production system padded this whole batch to 128, the shape would be
+29508	; this is no proof that either original sentence contains 128 tokens.
+13208	Key difference:</strong> Padding the shorter sentence to the same length gives [[1,2,3],[4,2,0]].
+17023	Easy to misread:</strong> PAD is a placeholder, not text from the original sentence.
+28228	Worked out cell by cell: once the two sentences are batched, which cells are real content and which are only placeholders
+11406	A batch of two rows and three columns, where the end of the second sentence is PAD, not original text
+21896	Step 1</span><span>The first sentence, "我/爱/学习", has three real tokens: IDs [1,2,3].
+21915	Step 2</span><span>The second sentence, "你/爱", has only two real tokens: IDs [4,2].
+21922	Step 3</span><span>One PAD is added for batching, giving [4,2,0]; the PAD is not part of the original text.
+21949	Step 4</span><span>The valid-position markers are [1,1,1] and [1,1,0] respectively.
+24107	The second row's original text is only "你/爱"; the PAD at its end helps align the shape of the computation and does not count toward the true token length.
+11463	To tell the later computation which positions are real content, a second marker table goes with it:
+27349	Here 1 marks a real position and 0 a padding position. This is the basis of the <strong>padding mask</strong> that comes later. For now, read "mask" as a marker that decides whether an item may take part in a computation; the full attention mask has to wait until F12 for its rows and columns to be explained properly.
+11339	How two sentences become ten training questions
+16755	Each complete sample has 6 items:
+26557	The input takes the first five items and the label the last five. This model <strong>shifts them only once, during data preparation
+9195	input_ids: the IDs fed into the forward computation
+20081	A table of integers — not an embedding, and not probabilities.
+9343	targets: the next item each input position has to predict
+21344	A label is not the input at the same position; it enters the loss computation only after the forward pass has produced the scores.
+12616	Prefix it may use
+23051	Supervision target
+18505	我 (你 in the other sample)
+7092	BOS 我
+7093	BOS 我 爱
+7094	BOS 我 爱 学习
+7095	BOS 我 爱 学习 ！
+25149	What difference does padding on the left or the right make
+15288	Right padding writes the second row as
+29477	; left padding would write it as
+10013	. Both can express "你爱", but the real positions sit in different columns.
+25150	What difference does padding on the left or the right make: item by item
+23313	True lengths: [3,2]
+18166	Length allotted in the tensor: 3
+20625	Valid positions: 111 / 110
+13248	Key difference:</strong> Both the true valid length and the array width after padding have to be kept; the mask depends on the valid positions.
+17145	Easy to misread:</strong> An array with 3 columns does not mean the second sentence has 3 real tokens.
+16353	If a program always takes "the prediction in the last column" to continue generating, the last column of a right-padded row is PAD, and the wrong position may be taken. Some decoding flows therefore require left padding, or require the last valid position to be selected by the true length. <strong>Which strategy is correct depends on the generation code and the model's conventions</strong>, so neither side can be called the universally best approach.
+20817	This book's foundation examples use right padding because it is intuitive for a first reading; when generating, take the last valid position of each row explicitly, and do not simply copy
+25159	Padding is not truncation, and still less is it context compaction
+25161	Padding adds placeholders; <strong>truncation</strong> deletes part of an over-long input; <strong>summary compaction</strong> tries to replace a long history with a shorter description. Deleting real content can make a rule or a piece of evidence disappear; padding has no such purpose.
+25160	Padding is not truncation, and still less is it context compaction: item by item
+15289	Right padding: 4,2,0
+17893	Left padding: 0,4,2
+12176	The positions and the read-out position differ
+13260	Key difference:</strong> The padding side changes the index of a valid token in the array, and decoding has to handle that accordingly.
+17074	Easy to misread:</strong> The last column should not be taken blindly as the last valid token.
+24361	Batching also does not always have to force every request into the same rectangle. High-performance inference can group by length or organize variable lengths. This lesson uses an ordinary dense table to explain shape, and does not dress it up as the real internal storage of every service.
+11525	Why batching can be faster, and can also make one person wait longer
+15417	One set of parameters can compute over several inputs at once, which may use the hardware more fully. But waiting to fill a batch adds to the waiting time of some request. There is another kind of waste: padding one input of length 2 and one of length 1000 both to 1000 produces a great many padding positions.
+11526	Why batching can be faster, and can also make one person wait longer: item by item
+8035	Padding: add placeholders
+9011	Truncation: drop a stretch of content
+7288	Compaction: keep a summary
+13137	Key difference:</strong> All three operations can change the input length, but they lose information by entirely different mechanisms.
+17067	Easy to misread:</strong> Do not call everything that "got shorter" compaction.
+15727	So larger B and T are not simply better. B says how many inputs are organized in parallel; T affects how many positions each one is allotted. Hardware, caches and queues come into the discussion later. For now it is enough to be able to write out the ID table and the valid-position table from a real input.
+5823	· Lesson 38
+11476	Why "你爱" has a 0 at the end without gaining an extra word
+26437	Input and conditions.</strong> The first sentence, "我爱学习", is
+29497	; the second sentence, "你爱", is
+10104	. We want to put them into the same two-row table.
+22116	Compare the lengths
+11338	The two sentences have 3 and 2 tokens
+24495	Allot a common length of 3; the true lengths must not both be recorded as 3.
+15287	Pad on the right
+24108	Put PAD, ID 0, at the end of the second row
+7733	The ID table is
+25572	Record validity
+24053	The first row is all true; the end of the second row is false
+20624	The valid-position table is
+28992	Choose the position when predicting
+24020	The first sentence takes index 2, the second index 1
+24106	Index 2 of the second row is PAD and must not be taken as the position of 爱.
+25385	Work out the utilization
+6757	5 real tokens in 6 allotted positions
+14147	The placeholder share is
+29467	; variable-length batching can be implemented differently and need not pad everything into a rectangle.
+18881	Join the steps up.</strong> The 0 marks a cell occupied for the sake of tidiness; it does not add new text to "你爱". Real tokens and placeholders must stay distinguishable throughout.
+26748	Limits and counterexamples.</strong> Some off-the-shelf generators require left padding; this example explains the object semantics of right padding, and makes no promise that every generation API picks the last valid position automatically.
+28660	Two inputs of length 4 and 2 are right-padded to 4: what shape is the ID table, and how many PADs are there?
+18281	Shape [2,4], with 2 PADs added to the second input. The total number of real tokens is 6, and the table allots 8 positions.
+18751	Does putting two users' inputs into one batch let them share a semantic context?
+10790	It should not. An ordinary batch is a way of organizing the computation of independent samples. Sharing context across samples is a separate matter and does not follow from batching.
+23814	Lesson 39｜Embeddings and position: from an ID lookup to model input — AI Systems Engineering
+16060	Foundations</span><span>about 3.7k characters</span><span>1 controllable demo
+16003	Address, initial vector and position addition are three steps
+13947	The earlier local lookup example showed only ordinary text and PAD. The complete worked model keeps vocabulary items 0–5 the same and adds 6 for BOS and 7 for EOS; the first six rows of the embedding keep their values. First take E by vocabulary address, then P by position address, and finally add them feature by feature to get X; the ID itself takes no part in adding the two tables. The full eight-row parameter table and the computation at the same 爱 position are both inside this section.
+23774	Lesson 36 · A row of numbers, a table and a stack of tables</a><a class="pill" href="03.html">Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="04.html">Lesson 38 · Batching and padding
+12974	All the steps and explanations</a><a href="../visual/F02.html">Lesson 36 · What exactly does one more axis add</a><a href="../visual/F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in
+11487	Why the "size of an ID" cannot be used to understand text directly
+21801	A model needs a numeric representation that can be weighted, combined, compared and updated. ID 1 is only an address; the fact that it differs from ID 4 by 3 has no linguistic meaning. The most common way in is to prepare a learnable table of numbers in which every vocabulary ID corresponds to one row of numbers. That table is called the <strong>embedding matrix</strong>, written E.
+11489	Why the "size of an ID" cannot be used to understand text directly: item by item
+8961	Token ID 2
+11647	Binary storage 0010
+15554	Vector [-0.3,0.8,0.1,0.5]
+13134	Key difference:</strong> The three notations serve different purposes: finding a vocabulary row, storing an integer in a machine, and acting as a neural network feature.
+17018	Easy to misread:</strong> An embedding is not an integer expanded into a few 0/1 binary digits.
+15171	Learnable</strong> means these numbers are adjusted during training; ordinary inference usually reads them from the trained parameters, rather than building a table on the spot when a new sentence arrives. The embedding lookup is itself a layer of the model, not some extra networked retrieval service.
+12794	Get three representations straight first: binary, One-hot and Embedding
+27202	All three can be written as numbers, yet they are <strong>not the same computational step</strong>. Suppose this book encodes 爱 as token ID
+29416	, and the vocabulary has 6 items in all.
+13519	Actual result
+25206	What it expresses
+20077	The binary form of an integer in memory
+29128	(integer 2 held in 8 bits)
+23011	How a computer stores numbers; not the model's semantic vector
+8003	One-hot vector
+29121	(only position 2 of the 6 is 1)
+22842	Uses a 0/1 indicator array to mark "ID 2 is selected"
+7606	Embedding vector
+29127	(row 2 of the model's parameter table)
+12335	4 real numbers for the neural network computation that follows; usually formed by training
+8002	One-hot is not a binary number in the ordinary sense either:</strong> its length depends on how many items the vocabulary has, and a larger vocabulary makes the one-hot longer. The binary representation of the integer 2, by contrast, depends on the integer storage format.
+8001	One-hot and embeddings really are related mathematically:</strong> treating the one-hot as a row of numbers and multiplying it by the 6-row, 4-column embedding matrix picks out exactly row 2. This is called an equivalent mathematical formulation; a real implementation usually looks the row up by ID directly, without actually generating those six 0/1 values and then doing a matrix multiplication.
+20976	The embedding values that follow in this book <strong>deliberately include decimals and negative numbers</strong>. That is what makes them easier to understand: the new axis says how many numeric features each token has, and certainly not "how many binary digits the ID expands into".
+22833	Using a 6-row, 4-column table to represent "我爱学习" and "你爱"
+22182	Keeping the 6-item teaching vocabulary, we specify that each piece is represented by 4 numbers, written d=4. The numbers below are artificially constructed <strong>floating-point numbers</strong>, positive, negative and fractional, used only to explain the computation; they do not stand for what 我 or 你 really mean:
+13176	Key difference:</strong> Taking ID 1 gives the four features of 我 and ID 2 the four features of 爱, laid out in their original order.
+17076	Easy to misread:</strong> Two occurrences of the same token can have the same initial lookup result, yet their later contextualized states may differ.
+24682	The ID selects the row; the two occurrences of 爱 get the same row of parameters
+19916	Enlarged figure: the ID selects the row; the two occurrences of 爱 get the same row of parameters
+24683	The ID selects the row; one position goes from a single ID to four floating-point features
+22168	Looking up the same embedding table along both sentences
+27283	This embedding table is written
+29322	, and its shape is
+6759	6 rows are the 6 IDs that can be looked up in the vocabulary; 4 columns mean each ID corresponds to 4 numbers</strong>. The lookup does not take three rows at random: it takes the matching rows in turn, by the ID of each text fragment in the two sentences.
+12902	First be clear which sentence each of the two ID sequences stands for:
+24022	The first sentence is <strong>"我爱学习"</strong>. This book splits it into three tokens, <strong>"我/爱/学习"</strong>, encoded as the ID sequence
+24085	The second sentence is <strong>"你爱"</strong>. It splits into two tokens, <strong>"你/爱"</strong>, whose original IDs are
+29463	; to batch it with the first sentence, one
+29332	is added at the end, so the computation writes it as
+8018	PAD is a placeholder, not a third word of "你爱".
+19561	The embedding lookup that comes next simply replaces these token IDs, one by one, with numeric vectors the neural network can compute with. It can also be understood as <strong>producing an initial numeric representation for every token of the two sentences</strong>; but it is not compressing a whole sentence into one vector.
+24023	The first sentence: how "我爱学习" is looked up
+12694	The earlier IDs
+10903	are not three meaningless isolated numbers but correspond, in order, to <strong>我, 爱 and 学习</strong>. The lookup goes item by item as follows:
+14664	Original token
+19467	Putting the three rows of numbers together in the original order 我 → 爱 → 学习 gives the <strong>initial embedding representation of "我爱学习"
+24087	The second sentence: how "你爱" is looked up
+24086	The second sentence's <strong>real text is only the two tokens "你/爱"</strong>, with IDs
+10188	. The
+11968	added for batching stands for PAD, so the lookups are, in turn,
+14665	Original token / placeholder
+8023	PAD (not original text)
+15492	Laid out by position in the same way, the result is <strong>the two token representations of "你爱" plus one PAD placeholder representation used for batching
+18753	Putting the two sentences' results together:</strong> the first three-row, four-column table stands for the three tokens of "我爱学习"; the second stands for the two tokens of "你爱" and one PAD. There are now <strong>2 tables, each with 3 rows, each row holding 4 numbers</strong>, so the result
+27391	Two steps have to be distinguished here: <strong>text → token ID</strong> is the tokenizer's encoding; <strong>token ID → embedding vector</strong> is the lookup representation inside the model. At this point every position has a row of numbers, but the whole sentence has not been computed into a vector that directly stands for its complete meaning, and no answer has been generated. Both sentences contain 爱 (ID 2), so what they <strong>first look up in the same table is
+29471	; the later network updates each of their representations according to position and context.
+22851	Put as one executable definition: <strong>the row of numbers at a given position of a given input in H equals the row in E that the token ID at that position points to.</strong> Even though the PAD row happens to be all zeros in this teaching table, it still has to be handled under the mask rules that follow.
+11494	Why two axes become three
+22380	Note that the original input was <strong>two sentences, each allotted 3 token positions</strong>, so it has two axes:
+10149	. At this point each position holds only one ID; the 2nd position of the first sentence, for instance, holds ID
+29122	(爱).
+13218	Key difference:</strong> Adding a last axis means each position no longer holds just one ID but a row of 4 numbers.
+17167	Easy to misread:</strong> No extra token appears, and no new sentence is introduced.
+21290	After the lookup this position no longer holds just ID 2 but holds
+29263	, that is, <strong>4 numbers that can be computed with</strong>. The first sentence still has 3 positions and there are still 2 sentences; what changed is <strong>what each position holds</strong>, so one more index direction is added, "which number inside the position":
+25826	Read these three indices by their real objects:
+10026	. For example,
+29359	is the 1st number of the initial vector of the token 爱 in the first sentence, "我爱学习";
+13823	is the 爱 in the second sentence, "你爱". Both initially look up the same row; only later, combined with context, can they differ.
+9431	"One more axis" does not add a new kind of text, and it does not copy one integer four times.</strong> Binary digits only describe how a number is stored; the 6 positions of a one-hot specify the vocabulary item; the 4 new embedding features come from the 4 columns of the chosen table. These three kinds of "length" must not be run together. Padding changes the number of positions T; embedding changes the representation width d of each position.
+13591	Now a larger-scale example:
+29446	: there are 2 inputs, each allotted 128 positions; the single ID at each position is replaced by 4096 numbers, which gives 2 tables of 128 rows and 4096 columns. The shape is
+29177	, not 4096 more tokens generated.
+27685	Follow-up: is an embedding an "encoding" into binary?
+10838	No. A token ID is a discrete address; an embedding takes a row of learnable floating-point numbers by that address. Binary is the low-level way a computer stores those integers or floats, not the reason the lookup adds a feature axis. During training E receives the gradient of the selected rows; the integer ID itself is not differentiated continuously under this objective.
+28851	What exactly is "hidden" about the hidden dimension
+28853	A hidden representation</strong> is an intermediate numeric representation produced inside the network and not handed directly to the user; the <strong>hidden dimension d</strong> is the width of that representation at each position. Hidden does not mean mysterious, encrypted, or a private record of thought.
+28852	What exactly is "hidden" about the hidden dimension: item by item
+25757	Number of vocabulary items V
+28850	Hidden dimension d
+18431	Total table size V×d
+13119	Key difference:</strong> V decides how many rows the parameter table has and d how many features each row has; both differ from the actual input length T.
+17028	Easy to misread:</strong> V, T and d cannot be interchanged, and d must not be taken for the vocabulary length.
+27184	The columns of this row of numbers usually have no humanly assigned names, so no one may claim that the first dimension stands for "animal" and the second for "happiness". They take part in the prediction together and may represent several kinds of information in a distributed way. For teaching we call the columns feature 0 to feature 3 rather than invent semantic labels.
+15350	The same token usually takes the same row in a standard fixed lookup; only after position handling and the later layers that read context does the representation change from sentence to sentence. An input embedding, a contextualized hidden state and a whole-document retrieval vector may all be "a row of numbers", but they differ in origin, training objective and use.
+8021	If the PAD row is zero, can the mask be dropped?
+11109	That does not follow. Even if the Value is zero, taking part in the probability normalization can still draw off attention weight; position handling, biases and the like can also stop the later values from being zero. Whether PAD takes part has to be handled under the mask and loss conventions. The zero row here is a teaching choice, not a complete isolation mechanism.
+8022	If the PAD row is zero, can the mask be dropped? Item by item
+8016	The PAD vector is all 0
+22355	Attention still scores the position
+28877	A position mask is needed
+13168	Key difference:</strong> An initial value of 0 is no guarantee that "no contribution" survives projection and normalization automatically.
+17054	Easy to misread:</strong> The padding row being zero is no reason to delete the attention mask and the loss mask.
+25399	The computational boundary:</strong> It is wrong to say that the neural network "begins" only once the embedding lookup is done. The lookup layer is already part of the model's computation; the more accurate boundary is this: before it, the work is mainly request organization and ID conversion, and from the embedding on we are inside the model's numeric representation and the network computation that follows.
+5824	· Lesson 39
+10375	How a whole sentence has its embedding fetched position by position
+26391	Input and conditions.</strong> The book's six-row, four-column floating-point embedding table is kept.
+11970	stands for "我/爱/学习", and
+11969	stands for "你/爱/PAD". Every row below keeps its text label.
+25167	Represent the 1st piece of "我爱学习"
+25168	Represent the 2nd piece of "我爱学习"
+25169	Represent the 3rd piece of "我爱学习"
+29460	; the three rows of numbers together represent the sentence's three initial tokens.
+25165	Represent "你爱"
+16129	Handle the placeholder
+20880	This example takes
+29196	, and the valid-position restriction is still needed.
+21511	Check the shape
+22014	Each ID is replaced by a row of 4 numbers
+29486	; the last axis selects which feature of a given token it is.
+18891	Join the steps up.</strong> An embedding does not compile an integer into binary. The 爱 here has the same initial vector in both sentences; after the context computation their hidden states can differ.
+26786	Limits and counterexamples.</strong> These decimals are teaching parameters; no column has been assigned a human meaning such as "sentiment" or "part of speech", and they are not the real weights of a trained model.
+19566	Connecting to the complete training samples: add the sequence boundaries, then add the position representation
+10592	Above, the three-position table for "我爱学习/你爱" has covered the lookup, the feature axis and PAD in full. Now we switch to the two equal-length complete sentences that the later training uses throughout: "我爱学习！" and "你爱学习！". With BOS/EOS added, each training input takes the first five items; the initial vectors of the first six vocabulary entries are unchanged. From here on an eight-row E and five input positions are used, and [2,3,4] is no longer the shape at this stage.
+22164	The computation can be done before any training
+13847	The initial parameters usually come from some initialization distribution, not from the model having already understood word meanings. To make recomputation easy, this book sets the first six rows of the embedding to fixed decimals and generates the other matrices as decimals from the fixed seed 23. That way the same initial forward pass and gradients come out every time. <strong>What is specified by hand are the initial values; the answer is not being stuffed straight into a trained output head.
+13829	Initial embedding parameter E, shape [8,4]
+26575	How the input representation X actually appears
+23628	At t=2 in sample 0 the token is 爱, ID=2, and its semantic position is 2. Take E[2] and P[2] and add them feature by feature:
+15377	What makes up the input at one position
+27327	This addition is neither a lookup of the binary form of ID 2 nor an increase in the number of tokens. The result is still a row of 4 floating-point numbers. Doing the whole batch gives X the shape
+16004	Address and content: two tables are added, not two kinds of ID
+8952	Token address
+9193	input_ids[0,2]=2 → take row 2 of E.
+9269	position_ids[0,2]=2 → take row 2 of P. That both are 2 this time is only a coincidence.
+20021	Numeric result
+15534	What it is used for next
+9094	X passes through the first RMSNorm before it is fed to Wq/Wk/Wv.
+13308	At other positions the token ID and the position ID usually differ; the BOS at t=0, for instance, has ID 6.
+10253	How one 爱 becomes the four input features of the current position
+25750	Vocabulary address
+28248	Add feature by feature
+9089	X[0,2]=[-0.2,0.8,0,0.45]; the number of tokens has not changed.
+10598	Normalize next
+8710	RMSNorm is computed along the 4 features; the input is not used directly as Q.
+7618	E has shape [100,8] and the input IDs shape [3,7]: what is the result of the lookup?
+24431	The result is [3,7,8], 168 numbers in all. E having 100 rows is the vocabulary capacity; it does not mean this input has 100 positions.
+15370	The same 爱 appears in both sentences, so why can their later representations differ?
+13849	The initial fixed lookup can be the same; position information is then added and attention uses different contexts, so the later hidden states can differ.
+9471	爱 has ID 2, the vocabulary has 6 items and the embedding width is 4: what are its binary storage, its one-hot and its embedding? And why does the lookup add an axis?
+20075	Held in 8 bits, the integer 2 can be written
+29452	; the one-hot is
+29488	; and the embedding in this example is
+10042	. The first two are ways of storing or identifying the ID; the third is a row of 4 trainable numbers selected from the parameter table. Each input position originally held only 1 ID and holds 4 numbers after the lookup, which is why
+10124	. The new axis is not a count of binary digits or of tokens.
+23838	Lesson 40｜What "putting it on the device" means: data types, memory, CPU and GPU — AI Systems Engineering
+12992	All the steps and explanations</a><a href="../visual/F21.html">Lesson 62 · Slow computation may mean things are being moved slowly</a><a href="../visual/O02.html">O02 · Quantization: saves storage, and introduces approximation
+15382	One and the same number raises three different questions
+23238	Look at data of shape
+23043	and ask, separately: how is it laid out (shape), how is each number stored (dtype), and where does it live and what computes it (device). None of the three can stand in for another.
+15384	One and the same number raises three different questions: item by item
+20024	Value: 2
+24192	Type: integer / floating point
+12194	Location: CPU / GPU memory
+13178	Key difference:</strong> One value can be stored in different types and can sit on different devices; these are separate properties.
+17142	Easy to misread:</strong> Moving something to the GPU does not automatically turn an integer into a semantic vector.
+20413	is the processor that runs general-purpose programs;
+19830	is good at processing large quantities of numbers in parallel on suitable operations. <strong>Device</strong> is the notion a computing framework uses to identify where execution or storage happens, for example the CPU or a particular GPU. Putting data on the GPU does not automatically make it more meaningful; it only lets that hardware carry out the computation that follows.
+20079	Why an integer ID and a floating-point feature have different types
+8943	A token ID is used to find which row of a table, and usually takes an integer type the framework supports; embedding weights and outputs commonly use a floating-point type. A <strong>floating-point number</strong> is a way of approximating a value with a fractional part using a finite number of bits; it is not a real number of arbitrary precision.
+20080	Why an integer ID and a floating-point feature have different types: item by item
+9194	input_ids: integer IDs
+7610	Embedding weights: floating point
+15536	Later hidden states: floating point
+13256	Key difference:</strong> IDs are for indexing while parameters and activations are for multiply-add, and the usual data type follows the use.
+17048	Easy to misread:</strong> Not all of a model's data shares one dtype, and not everything sits in VRAM.
+25187	means 64 bits per integer, that is 8 bytes;
+28306	usually uses 32 bits per number, that is 4 bytes; FP16 and BF16 each use 16 bits, that is 2 bytes, but they arrange the exponent and the significant digits differently, so the range and the fineness cannot be read off the bit count alone. Which types an operator actually supports depends on the implementation.
+19879	Changing the type changes the memory use and the numeric error; changing the shape changes how the layout is read; changing the device changes where execution happens. These are not the same act.
+17577	Work the storage out for a larger representation
+13069	holds 256 IDs in all. Stored as int64, the ID data alone comes to
+16411	bytes.
+13165	Key difference:</strong> Count the elements first, then multiply by the bytes each element takes, to get what this activation tensor occupies.
+17197	Easy to misread:</strong> This 2 MiB describes one tensor only and cannot stand in for the whole model's VRAM budget.
+20595	holds 1,048,576 numbers. At 2 bytes each, this result alone comes to 2,097,152 bytes, that is 2 MiB. MiB counts in units of 1024, with 1 MiB=1024×1024 bytes; a decimal MB is 1,000,000 bytes.
+27212	This does not mean the whole model needs only 2 MiB.</strong> E itself, all the layer weights, the intermediate results, the KV cache and the runtime workspace have yet to be counted. Estimating memory means listing the objects, not inferring total VRAM from the size of one tensor.
+10421	The actual order of one common execution
+23467	The program first prepares the model parameters and the computing environment, then hands this batch's IDs and the necessary markers to the computing framework. For a GPU with its own VRAM, the data taking part in the computation has to be arranged onto a compatible device; otherwise the framework may report a device mismatch rather than quietly doing every move for you.
+10422	The actual order of one common execution: item by item
+13664	Prepare the input IDs
+16128	In progress
+18777	Put the parameters and data on the executing device
+20191	New state
+7611	The embedding lookup yields vectors
+13127	Key difference:</strong> "Putting it on the device" and "looking it up" are separable operations; the actual implementation and the memory-movement strategy differ between frameworks.
+17065	Easy to misread:</strong> Do not fix "copy all the data first, then start computing" as the one flow every system follows.
+28833	The embedding operation is then called: it reads the matching rows of the weight table by ID and produces this batch's representation. The network's matrix computations follow. Once generation is over, some results are fetched back to the CPU for text processing or display in the interface.
+27271	This is only the common logical order; not every underlying system really performs the same physical copies. Unified memory, model sharding and offloading change the details. This lesson establishes the idea that "a computation needs access to the data" first.
+20061	Data type and device are implementation conditions, not meaning
+20989	This model uses float64 on the CPU, which makes hand calculation and finite-difference checks easy; it is not that every language model deployment should use float64. IDs are integers; parameters and activations are floating point. Putting them on the GPU only changes where the computing happens, whereas quantization changes the numeric representation; the two are not the same operation.
+20969	This experiment has no bias, no dropout and no shared input-output weights. The absence of b from the formulas that follow is not an omission; if the model is changed to a real one that includes these modules, the computation has to be completed accordingly. The configuration and the weight file must be read together: the single name "Transformer" is not enough to settle the structure.
+11504	Why putting a small task on the GPU is sometimes not faster
+12137	Transfer, scheduling and launching a computation all cost something. If the real computation is only a few numbers, the preparation and the moving can cost more than the computation itself. Strong GPU throughput does not mean low latency for every small operation.
+11505	Why putting a small task on the GPU is sometimes not faster: item by item
+17629	A small-scale CPU computation
+7651	A GPU computation needs transfer and scheduling
+18429	The total time may not come down
+13103	Key difference:</strong> A single GPU computation is fast, but for a small task the launch, the moving and the synchronization can dominate.
+17091	Easy to misread:</strong> Theoretical compute alone does not predict end-to-end request latency.
+27162	There is another common timing trap: some GPU calls are asynchronous, so the CPU can carry on as soon as it has issued the instruction while the GPU has not finished. Timing only up to the function's return may measure the time to "queue the instruction" rather than the time to finish computing. Measuring performance requires waiting as the framework prescribes, or using a device timing mechanism.
+22776	Now join up "batching, putting it on the device, looking it up"
+24364	Batching settles "which inputs are computed together this time"; padding and markers settle "how different lengths are laid out"; device settles "where it is computed"; dtype settles "how each number is stored"; embedding settles "which row of numbers an ID corresponds to". Each step has a different job, so each kind of error is diagnosed differently.
+5825	· Lesson 40
+18787	Moving the same tensor to a device: how the values and the footprint change, separately
+26197	Input and conditions.</strong> From the small example
+5920	with its 6 integers, look up the
+5919	with its 24 floating-point numbers. Assume the IDs use int64 at 8 bytes each, and the floating-point output uses FP32 at 4 bytes each.
+24181	Work out the ID storage
+6561	48 bytes, counting the data itself only.
+24183	Work out the representation storage
+6858	96 bytes; the dimensions and the dtype together decide the footprint.
+19343	Copy to the GPU
+18860	Move the same data to another device
+18287	The shape is still
+29484	; moving it does not add meaning by itself.
+19890	Switch to FP16
+23195	The same 24 numbers, 2 bytes each
+20870	48 bytes for the data itself, but the decimals may be rounded; this differs from simply moving devices.
+19919	Scale it up
+7732	The IDs are 256 integers; the output is 1,048,576 numbers, which in FP16 is 2,097,152 bytes, that is 2 MiB.
+18970	Join the steps up.</strong> Ask first how many numbers are stored, then how many bytes each number takes, and last which device they are on; these three must not be rolled into one "the dimensions got bigger".
+26671	Limits and counterexamples.</strong> The estimate excludes the tensor objects, the allocator, the model weights, the cache and the intermediate results; it is not the VRAM needed to run the whole model.
+9315	How many bytes is the data itself for float32 with shape [2,3,4]?
+6336	24 numbers at 4 bytes each, 96 bytes in all; object metadata and the model's other storage are not included.
+18699	Does moving CPU data to the GPU change what a token ID means?
+10681	No. It changes where the computation happens. A precision conversion can change a floating-point value, but moving devices is not itself semantic learning.
+5969	01｜What input really is: from the user's sentence to model tensors</a><br/><a href="../chapters/04.html">04｜Training mechanics: loss, the full backward pass and parameter updates</a><br/><a href="../chapters/07.html">07｜Inside KV cache, FlashAttention and PagedAttention</a><br/><a href="../chapters/08.html">08｜Inference serving: scheduling, throughput, latency and parallelism
+14743	Does a total of 236 parameters mean inference needs storage for only 236 numbers?
+10853	No. The input, each layer's temporary activations, the cache and the runtime framework's overhead are needed as well; training also needs gradients and optimizer state. The parameter count is only one of the ledgers.
+23862	Lesson 42｜The arithmetic a model does most: weighted sums, dot products and matrix multiplication — AI Systems Engineering
+12981	All the steps and explanations</a><a href="../visual/F08.html">Lesson 43 · Keep changing the arrangement separate from changing the values</a><a href="../visual/F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in
+11832	Start from the average you already know
+6351	The ordinary average of 2 and 6 is
+29192	, which can also be written
+10072	. If you think the second number should take a larger share, you can write
+29426	, and this is called a <strong>weighted average</strong>. When the weights are non-negative and sum to 1, it expresses "what share each one takes".
+13162	Key difference:</strong> Multiply by the weights first, then add: 0.25×2+0.75×6=5. A weight is a share of the contribution.
+17101	Easy to misread:</strong> Only weights that are non-negative and sum to 1 can properly be read as "shares".
+17268	For the two rows of numbers
+29195	, the computation still goes position by position:
+18326	The result is still a row of numbers; no sentence of text has been chosen. This is used directly in attention.
+22580	How a dot product turns two rows of numbers into one number
+22584	A dot product</strong> requires the two rows to be the same length: multiply them position by position, then add.
+13263	Key difference:</strong> Computing 1×4+2×5+3×6 ends with one number.
+17173	Easy to misread:</strong> A dot product does not keep each position separately as three rows of results.
+13027	The formula
+15001	simply writes the three multiplications and the addition above as a general rule. A dot product gives a scalar, not three rows of numbers. It can be used to compare directions or to produce a score, but a raw dot product is also affected by vector length, so it cannot be called a pure semantic similarity without qualification.
+23348	Matrix multiplication is "many dot products at once"
+21017	This passage names two objects first:</strong> X is the current table of input numbers; W is the table of coefficients that decides how those numbers are combined. W is specified by hand for now; F10 explains how it becomes a trainable parameter inside the model. The letters only identify objects; they add no new arithmetic operation.
+13120	Key difference:</strong> One row of X pairs with one column of W to fill one cell of Y; repeating that gives 2 rows and 2 columns.
+17086	Easy to misread:</strong> The inner dimensions have to match, and matrix multiplication is not cell-by-cell multiplication.
+28234	Worked out cell by cell: matrix multiplication: how one output cell comes from a row and a column
+24052	The dot product of the first row [1,2,3] and the first column [1,0,1] gives Y[0,0] equal to 4
+21890	Step 1</span><span>Take row 0 of the input X: [1,2,3].
+21908	Step 2</span><span>Take column 0 of W: [1,0,1].
+21929	Step 3</span><span>Multiply position by position and add: 1×1+2×0+3×1=4.
+21946	Step 4</span><span>So Y[0,0]=4; repeating cell by cell gives Y=[[4,5],[10,11]].
+12718	Compute only the blue cell Y[0,0] first: 1×1+2×0+3×1=4. Move to the next row or the next column and fill in the remaining cells the same way.
+25630	Take two tables:
+29442	: every cell of Y is the dot product of one row of X with one column of W.
+13528	The inner sizes have to match:
+9991	. m is the number of rows of the first table, n the length paired in each dot product, and p the number of output columns. There is no freedom here to "multiply all the numbers however you like".
+10248	What act is it, exactly, when a token goes from 4096 numbers to another 4096 numbers
+25069	If a row of numbers x of length 4096 is multiplied by a
+21135	weight matrix, every output column is a weighted sum of the 4096 input numbers. The output is still 4096 numbers, but the values and the way they are combined have changed. This process is usually called a <strong>linear projection</strong>; "projection" here need not be the same as a three-dimensional object projected onto a wall, and it does not necessarily reduce the dimension.
+13236	Key difference:</strong> Every output feature comes from a weighted combination of the 4096 input features; the count can stay the same while the content has changed.
+17035	Easy to misread:</strong> A "projection" does not have to make the dimension smaller.
+15920	With several inputs, the last axis is usually treated as the feature axis. The same W acts on every position, so
+10088	. It changes the width of each position; it does not directly mix two samples or neighboring tokens.
+26106	How a transpose helps "compare one row of numbers against many rows"
+26108	A transpose</strong> swaps the rows and columns of a table. For example:
+13273	Key difference:</strong> After the transpose every Key becomes a column, which lets one Query take the dot product with all the Keys at once.
+17033	Easy to misread:</strong> The ᵀ in Kᵀ means transpose, not the sequence length T.
+7803	K in this passage <strong>is only the name given to three rows of numbers to be compared</strong>: it has 3 rows with 2 numbers each. There is also a row of numbers q to compare against them, also of length 2; to take the dot product of q with each of K's 3 rows, K can be turned into 2 rows and 3 columns, so that
+29161	gives the three comparison scores at once. Only in F11 are this receiving representation and this candidate representation introduced as Query and Key, with a full explanation of where their parameters come from.
+22348	Note that the superscript
+20439	means transpose, not the sequence length T;
+11592	is not K to the power of T either.
+23344	Matrix multiplication and element-wise multiplication must not be mixed up
+15924	In the common Python numeric libraries,
+25190	means matrix multiplication, and
+17960	usually means multiplying matching cells element by element. On two 2×2 matrices both operations run and both output 2×2, yet the results are entirely different. <strong>A correct shape is only a necessary check; it does not mean the operation means the right thing.
+25855	When reading a formula, ask in turn: what is each axis of the input, along which axis does the operation run, how is each output cell computed, and is the result a score or a feature. This is more reliable than just remembering that "QKV are all matrices".
+5826	· Lesson 42
+22897	Telling dot product, matrix multiplication and element-wise multiplication apart in one table
+22742	An independent matrix-multiplication comparison: below we switch to a single two-dimensional input row and do not continue with the three-column X above; this table uses the x and W given here throughout. <strong>Input and conditions.</strong> Take an input row
+29370	, and a weight matrix
+10202	. A row vector times a matrix means computing one new feature from each column of W.
+14914	Take column 1
+14915	Take column 2
+15334	Assemble the output
+18750	Put the two dot products side by side
+29509	; this is
+28211	Element-wise comparison
+29301	, which has not been summed and cannot stand in for the dot product 13.
+11368	Two inputs
+5850	in as well
+29379	, with the same weights at every position.
+19168	Join the steps up.</strong> Matrix multiplication involves no mysterious new act: it pairs things up as prescribed and repeats "multiply, then add". A legal shape is no guarantee that the axes mean the right thing.
+26745	Limits and counterexamples.</strong> The weights are constructed and carry no trained meaning. This example uses the row-vector convention; with a column-vector convention the formulas have to be transposed consistently.
+18280	Can shape [2,3] be matrix-multiplied by [4,5] directly?
+19460	Not under the ordinary rules of matrix multiplication: the inner 3 and 4 do not match. Confirm the design first, rather than reshaping at will until it runs.
+5959	What does 0.2×[1,5]+0.8×[6,0] equal?
+24038	The first cell is 0.2+4.8=5 and the second 1+0=1, so the answer is [5,1].
+5978	02｜One Transformer forward pass: tensor by tensor, operator by operator</a><br/><a href="../chapters/05.html">05｜Post-training and model customization: objectives, structure and parameter adaptation</a><br/><a href="../chapters/07.html">07｜Inside KV cache, FlashAttention and PagedAttention</a><br/><a href="../chapters/15.html">15｜The offline retrieval chain: how a document becomes a queryable index</a><br/><a href="../chapters/28.html">28｜Deep research waters and whole-system judgment
+23869	Lesson 43｜reshape, transpose, broadcast: the shape changed, the content need not have been computed — AI Systems Engineering
+12980	All the steps and explanations</a><a href="../visual/F07.html">Lesson 42 · Matrix multiplication is like filling in a recipe result cell by cell</a><a href="../visual/F12.html">Lesson 47 · A mask is a visibility table, not extra meaning
+11517	Why deep learning code changes shape again and again
+20606	Some operations need "one long table" and others need "one table per head". The same batch of numbers can be organized in different shapes, but <strong>organizing data</strong> and <strong>learning new features</strong> are not the same thing. Without that distinction, you will misread a reshape as the model having run inference once more.
+11519	Why deep learning code changes shape again and again: item by item
+12521	The arrangement of the values
+18162	The tensor shape
+13531	The memory stride
+13125	Key difference:</strong> The shape states the logical axis lengths; the stride states how far the underlying address jumps when one index moves.
+17199	Easy to misread:</strong> A successful logical reshape is not a physical reordering of memory.
+9298	reshape regroups; it does not swap rows and columns
+19481	as the number sequence 1, 2, 3, 4, 5, 6 read row by row, and change it to 3 rows and 2 columns, to get:
+13124	Key difference:</strong> reshape changes the grouping rule; by default it performs no operation that swaps rows with columns.
+17187	Easy to misread:</strong> Whether a view can be zero-copy is decided by contiguity and stride.
+24762	The transpose of the same original matrix, however, is:
+11332	Both results have shape
+29232	, yet the contents sit in different places. The first regroups; the second swaps the identities of "original row" and "original column". This is the source of many attention implementation errors.
+9297	The element count has to be the same before and after a reshape. 12 numbers can be laid out as
+29181	, but cannot be laid out, without dropping or adding any, as
+10021	. The
+20640	in code sometimes tells the library to work this axis out from the total, and is not a negative length.
+16223	Is multi-head just grouping the feature axis?
+12562	Suppose each position has width d=4, with 2 heads of width 2 each. After projection,
+15150	can be rearranged into
+29237	, and then swapping the T axis with the head axis gives
+29353	, which lets each head compute independently.
+16224	Is multi-head just grouping the feature axis? Item by item
+9299	reshape regroups
+9356	transpose swaps rows and columns
+24439	The results can share a shape and differ in value
+13195	Key difference:</strong> For [[1,2],[3,4]] the transpose is [[1,3],[2,4]], not the same values regrouped.
+17064	Easy to misread:</strong> "The output shapes are the same" cannot settle whether two operators are equivalent.
+27359	A "head" here means one grouped computation unit within an attention mechanism; what it holds comes from projection weights that have already been learned. It does not split the original text in half, and head 0 is not naturally responsible for Chinese and head 1 for code.
+11462	To keep them apart, write
+11554	for the number of heads,
+11561	for the width of each head, and
+10020	. Code often uses
+15520	and then
+29124	(which swaps several axes); the two steps each have their own role.
+18046	Broadcasting: applying one small object at many positions
+12530	Suppose X has 2 rows and 3 columns and every row has to have the bias
+10009	. There is no need to copy the bias into two rows by hand; the library can apply this row of numbers to every row under the <strong>broadcasting</strong> rules:
+13188	Key difference:</strong> Splitting into heads is first of all an axis regrouping; the real exchange of information happens in each head's attention computation.
+17141	Easy to misread:</strong> Splitting does not by itself make two heads read different positions or produce attention scores.
+17966	The common broadcasting rule aligns from the rightmost axis: lengths match when they are equal or when one of them is 1.
+15153	works;
+28278	usually does not. If you want to add a different single number to each row, the latter should be organized as
+22362	Attention scores may be
+29371	, and some masks can carry a head axis of length 1 to broadcast, expressing "all heads share this restriction". But that a shape can broadcast does not mean it is semantically right; the identity of the axes still has to be checked.
+13530	Memory layout and views need just one principle to start with
+18170	Besides a shape, a tensor can also be described by a <strong>stride<strong>, which says how far one step along an axis jumps in the underlying storage. A permute sometimes changes only that description without moving all the data, and the result may be a </strong>view
+13201	Key difference:</strong> Broadcasting applies the same row of bias to every row, and the addition that follows is element by element.
+17125	Easy to misread:</strong> Broadcasting differs from matrix multiplication: an axis has to be alignable or of length 1.
+15736	Some operations therefore require contiguous memory and sometimes have to copy before they can run; modifying a view that shares storage can also affect the original object. Do not take "the code only seems to change the shape" as necessarily free, and do not assume without qualification that it must copy.
+28310	usually removes an axis of length 1, and
+16111	adds an axis of length 1. If B happens to be 1, a casual squeeze may delete the batch axis as well, and the code that follows will run at B=1 but fail at B=2. Naming the axis explicitly is safer than guessing the shape.
+5827	· Lesson 43
+9296	reshape and transpose: why the same four numbers end up arranged differently
+26265	Input and conditions.</strong> The original matrix is
+29412	, in row-major order
+10628	Rows 1–4 below are four independent comparisons that each start from the same original matrix A; the result of one row is not fed straight into the next.
+17681	Flatten, then reshape
+19427	Lay them in one row in the original order
+29272	, only the grouping changes.
+20269	Old
+5902	becomes the new
+29221	, and the elements really do swap places.
+13965	Add a bias
+28526	Start again from the original matrix
+5864	(not from the transposed result of step 2), with each row adding
+29427	, which is a numeric operation after broadcasting.
+19314	Split into two heads
+28525	Start again from
+5901	flattened row-wise into
+5865	and cut into contiguous groups
+18320	Gives head 0
+9954	, head 1
+29507	; the position axis and the head axis still have to stay matched.
+14802	Counterexample check
+18463	Try to reshape 6 numbers into
+23089	The target wants 8 numbers; the element counts differ, so it should be rejected.
+19241	Join the steps up.</strong> These four rows are independent comparisons, not a continuous pipeline; the same old and new shapes do not mean the same computation. If "transpose A" really were followed by "add [10,20] to each row", the result would be
+29409	, and not row 3 of the table above, which gives
+26777	Limits and counterexamples.</strong> Whether a view is zero-copy depends on the underlying stride and contiguity; this example describes the logical arrangement of elements and makes no promise about whether a particular framework copies.
+9295	Is reshaping [2,3] to [3,2] necessarily the same as transposing?
+10663	No. The two may have the same output shape, but each element sits in a different place; the example with 1 to 6 in the text is the counterexample.
+9091	X is [2,3] and 10 and 20 are to be added to its two rows respectively: how should the bias be organized?
+9108	[2,1], that is [[10],[20]], so that one number per row broadcasts along the column axis.
+5977	02｜One Transformer forward pass: tensor by tensor, operator by operator</a><br/><a href="../chapters/03.html">03｜Attention, pressed further: position, masks, multiple heads and backpropagation</a><br/><a href="../chapters/07.html">07｜Inside KV cache, FlashAttention and PagedAttention
+23897	Lesson 44｜Probability, exponentials and softmax: turning scores into proportions — AI Systems Engineering
+12983	All the steps and explanations</a><a href="../visual/F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="../visual/F15.html">Lesson 57 · How one input connects to prediction, all the way to the end</a><a href="../visual/O07.html">O07 · Speculative decoding: the draft may be fast, but it must be verified correctly
+13767	A score is not a probability
+21024	This chapter uses <strong>one and the same set of three candidate tokens</strong> throughout: candidates A, B and C, which the model scores as
+10221	. These values are called <strong>logits (unnormalized scores)</strong>, not probabilities: 2 cannot be read as 200%, and the three numbers do not add up to 1 either. Real logits can also be negative, but to keep checking easy this chapter always uses
+13769	A score is not a probability: item by item
+13764	Scores [2,1,0]
+21612	Probabilities have to be non-negative
+10536	The three terms sum to 1
+13123	Key difference:</strong> Logits can be any real numbers, while probabilities are proportions that satisfy a sum constraint; the two must not be read interchangeably.
+17090	Easy to misread:</strong> A score of 2 is not a probability of 200%.
+21607	Probability</strong> here means the share the model assigns a candidate: each one is at least 0 and they sum to 1. 0.2 means 20%. It is the model's prediction under the current conditions, and does not automatically equal the probability that the answer is right in reality.
+12729	Learn just as much about exponentials and logarithms as is needed
+20416	is an exponential;
+29316	, where the base e is about 2.71828. An exponential turns any real number into a positive one: exp(0)=1, exp(1) is about 2.718, and exp(-1) is about 0.368.
+12730	Learn just as much about exponentials and logarithms as is needed: item by item
+13211	Key difference:</strong> The exponential function turns positive and negative scores into positive numbers, which are then used for normalization.
+17030	Easy to misread:</strong> exp magnifies the gap at the high end, so it cannot be treated as an ordinary linear proportion.
+24923	The natural logarithm ln</strong> asks the reverse: "e to what power equals this positive number". So ln(1)=0 and ln(e)=1.
+24308	is about 0.693, and
+24311	is about 1.099. The loss function later will use logarithms; for now just note that they and exponentials are inverse operations.
+9316	Computing softmax without skipping a step
+18848	turns the scores the model gives the three candidates into three probabilities. <strong>From here to this chapter's sampling example the input is always
+29313	, and no other set of data is substituted.</strong> The step-by-step computation follows. A computer usually subtracts the maximum first to keep the exponential from growing too large; the next section proves exactly why.
+13210	Key difference:</strong> The exponentials [1,0.3679,0.1353] sum to 1.5032; each term is divided by that sum.
+17156	Easy to misread:</strong> This section fixes the input at [2,1,0]; an independent comparison is declared separately in its own input conditions.
+15441	The same set [2,1,0]: scores, probabilities and sampling intervals
+19908	Enlarged figure: the same set [2,1,0]: scores, probabilities and sampling intervals
+28313	The general form is
+9990	. i is the current candidate, j runs over all the candidates, and Σ means a sum. <strong>The denominator is the same for all, so every term competes for its share together
+24957	If A's score rises while B and C stay the same, the probabilities of B and C fall after the softmax normalization, because all three share the same denominator. This also explains an engineering detail in attention: <strong>setting the embedding of a padding position (PAD) to zero is in itself no guarantee that it does not affect attention</strong>. If it is still a reachable Key position, it can take part in attention's softmax denominator; invalid positions should be excluded with a suitable attention mask. What is meant here is the <strong>attention softmax</strong>, not the generation probabilities of the current three candidate tokens.
+11531	Why the maximum is subtracted
+18298	A very large exponential can exceed the range a finite precision can represent. All the scores can have the same maximum m subtracted before the softmax is computed:
+13212	Key difference:</strong> Shifting the exponent corresponds to a common factor, which cancels during normalization, so the numbers are more stable.
+17088	Easy to misread:</strong> Subtracting the maximum does not reorder the candidates or raise any term's probability artificially.
+13740	The common factor in the numerator and the denominator cancels, so the result is mathematically unchanged while an over-large exponential is avoided. Check it with <strong>the same set of scores [2,1,0]</strong>: without subtracting the maximum, the exponentials are
+29328	, summing to about
+29512	; dividing term by term still gives about
+10038	. Subtracting the maximum is not "deleting the largest candidate", and it does not change the original probabilities.
+14901	Taking the maximum and sampling by probability are not the same thing
+28175	picks the candidate with the largest score or probability; <strong>sampling</strong> draws one at random according to the probabilities. When the probabilities are
+20325	, argmax always picks the first item, A; sampling with those probabilities may also pick B or C. A random number of 0.70, for instance, selects B. This is why one and the same distribution can produce different text.
+14902	Taking the maximum and sampling by probability are not the same thing: item by item
+7004	Argmax always picks A
+19419	Sampling from the distribution may pick B
+21608	Probabilities [0.6652,0.2447,0.0900]
+13284	Key difference:</strong> The random number 0.70 falls in B's cumulative interval, so picking B this time is no contradiction.
+17161	Easy to misread:</strong> The item with the largest probability is not the one every draw must select.
+8938	Temperature</strong> divides the scores by a positive τ before the softmax. A smaller τ usually concentrates the distribution and a larger one spreads it out. τ=0 cannot really divide by zero; an interface that uses 0 to mean greedy is following a separate convention.
+12424	keeps the top k items;
+28290	usually keeps the smallest set of high-probability candidates whose cumulative probability reaches a threshold, then normalizes and samples within it. p is a threshold, not a number of tokens. These strategies change which candidates are available during generation; they do not make a wrong matrix computation right.
+15364	The same softmax appears in two places
+7008	The softmax in attention turns "the scores over the input positions" into aggregation weights; the softmax at the final output turns "the scores over the vocabulary candidates" into next-token probabilities. The algorithm can be the same, but the axis normalized over, the candidate set and the purpose all differ, so attention weights must not be treated as confidence in the final answer.
+5828	· Lesson 44
+10491	How three scores become sampling probabilities, step by step
+26451	Input and conditions.</strong> We continue with this chapter's <strong>one and only three candidates A, B and C</strong>, whose scores are still
+10008	. The table below is a <strong>same-data cross-check</strong> of the item-by-item computation above, not another question with different scores.
+18006	Shift the scores
+29219	, keeping the relative differences.
+14898	Take the exponentials
+28259	Compute exp term by term
+22125	Sum them
+18827	Add the exponentials
+24316	About 1.503215.
+15311	Divide each by the sum
+29289	, which sum to 1.
+19421	Sample by interval
+18712	Divide [0,1) into three segments
+13779	The segments are A: [0,0.665241), B: [0.665241,0.909969), C: [0.909969,1). The random number 0.70 falls in B's interval, so B is chosen; argmax would choose A.
+19136	Join the steps up.</strong> This table matches "Computing softmax without skipping a step" above exactly: the scores, the exponentials, the denominator and the probabilities are unchanged. Subtracting the maximum does not change the probabilities mathematically, and sampling is allowed to select something other than the largest. The probabilities here are the model's predicted distribution over the next token, not the probability that a whole answer is really correct.
+26673	Limits and counterexamples.</strong> The computation uses unrounded numbers and the table shows only a finite number of decimals; the random number 0.70 is an example input given by hand.
+13763	What does softmax give for the scores [0,0]?
+19379	The exponentials are [1,1], the sum is 2, and the result is [0.5,0.5].
+10490	Three candidates have probabilities [0.2,0.3,0.5]: does the model giving the third 0.5 mean the answer is 50% likely to be really correct?
+11133	That cannot be inferred. This is the model's assigned probability for the next candidate, not a calibrated rate of factual correctness for a whole answer.
+5967	01｜What input really is: from the user's sentence to model tensors</a><br/><a href="../chapters/02.html">02｜One Transformer forward pass: tensor by tensor, operator by operator</a><br/><a href="../chapters/06.html">06｜Inference mechanics: loading, decoding strategy and continuous generation</a><br/><a href="../chapters/04.html">04｜Training mechanics: loss, the full backward pass and parameter updates</a><br/><a href="../chapters/05.html">05｜Post-training and model customization: objectives, structure and parameter adaptation

@@ -1,0 +1,624 @@
+23416	Example verification: numbers, state and code — AI Systems Engineering
+18758	Matching the numbers in the book to runnable code, and saying which conclusions lie outside what these tests prove.
+29098	Limits of verification:</strong> 401 teaching examples are not 401 experiments on model capability. The 108 new tests check numeric formulas, dimensions, causality, gradients, protocol fragmentation and simplified state behavior; the other scenario examples carry out an explicit derivation once their premises are given. They prove nothing about how well a commercial agent works, about GPU speed, about closed-source internals or about production security.
+18387	How to recompute it
+8083	Python 3.10 or above, standard library only. In the unpacked directory, run:
+10529	All 108 tests in the three witness groups (34+60+14) have actually been run and have passed. The original 39 basic tests, 49 topic tests and 12 run witnesses have also been re-run and have passed; a further 10 extension experiments passed their own checks. Those count as 10 experiments and are not passed off as 10 unit tests on the same basis.
+20710	No commercial model was retrained and no paper's full benchmark suite was run; the existing small-model training records are kept as the original experimental material. This page shows machine-readable results instead of putting assertive prose where the computation should be.
+14570	Original test log
+20004	Numeric and state basics: 34 tests
+29030	Further numerics and state: 60 tests
+25993	The worked model and its operators: 14 tests
+21827	Program output for the worked examples in the text
+20022	The six decimal places in the numeric tables are there for reading; the JSON below keeps more. When the same computation is explained in different chapters, they can be tied to one and the same result, which does not count as a separate new experiment.
+23812	Lesson 39 · How a whole sentence has its embedding taken out position by position
+23835	Lesson 40 · Moving the same tensor to a device: how the values and the footprint each change
+23873	Lesson 44 · How three scores become sampling probabilities, step by step
+23972	Lesson 58 · Why one and the same history needs its own K/V kept at every layer
+23945	Lesson 53 · Scoring three training positions one by one, keeping PAD out of the mean
+23951	Lesson 54 · Which two probability ratios preference training actually compares
+23648	Lesson 16 · How three documents become one inverted index
+23662	Lesson 17 · Fusing two ranked lists, then checking whether they are enough to answer
+23581	Lesson 05 · One set of results, with the four denominators counted out separately
+8316	Q073 · A two-position single-layer decoder, computed from the input all the way to vocabulary probabilities
+8322	Q075 · One stable softmax computation, plus a fully masked counterexample
+8342	Q081 · Working out the attention gradient for one query by hand, then checking it by perturbation
+8371	Q090 · How the same logits are redistributed by temperature, top-k and top-p
+8346	Q082 · AdamW's first step, with the momentum, the bias correction and the decay all worked out
+8356	Q085 · The same pair of answers: SFT and DPO look at different training signals
+8382	Q094 · Working out the K/V bytes of one long context from the units up
+8387	Q095 · How two blocks of scores give the same result without storing the full probability table
+8399	Q099 · A wrong draft can still preserve the target distribution: three kinds of token reconciled one by one
+8120	Q010 · A Chinese character is split into three network fragments, so why can it not be decoded fragment by fragment
+8180	Q030 · Both documents contain "exclude": why does BM25 not simply count occurrences
+8191	Q033 · Two ranking tables, fused row by row into RRF
+8283	Q062 · pass@3 against succeeding three times in a row: why the numbers differ so much
+8287	Q063 · 20 points better on 20 tasks — is the evidence strong enough
+8407	Q101 · Saying "80% sure" four times and being right only twice: how that is scored
+8792	S31 · Using one directional derivative to check that the matrix backward pass is wired up correctly
+9071	X01 · Carrying on with 我爱学习/你爱, and computing one model layer right through
+9073	X02 · The same [1,3]: what LayerNorm, RMSNorm and SwiGLU each do with it
+9074	X03 · The best first greedy step does not make the two-step sequence the most probable
+9075	X04 · KL divergence: the same two sets of probabilities give a different value when the direction is swapped
+9076	X05 · Using 1000 parameters to work out exactly which state ZeRO shards
+9078	X06 · How exactly 4 Q heads pair with 2 shared KV heads
+9079	X07 · One and the same "allow table", and why its boolean values are reversed between interfaces
+9080	X08 · Letting retrieval vectors learn: which direction the query vector really moves in
+9082	X09 · Why approximate graph search can miss the genuinely nearest point
+9084	X10 · Quantization is not only rounding; it can also clip a number that falls outside the range
+9085	X11 · When BPE merges, why the pair on the left is not always the one chosen
+9086	X12 · When padding positions are left out of the loss, the denominator has to change with them
+16760	The complete program
+11929	The code and the displayed results use the same parameters. After changing a parameter, re-run it; do not treat an old result as the output of new code.
+23421	Example: from two sentences to a three-dimensional representation — AI Systems Engineering
+28733	Reading tool</span><span>about 4.1k characters</span><span>Figures and item-by-item notes
+20917	This example follows on from Foundations lessons 35—40: with two sentences and one small parameter table it strings together IDs, batching, shape and lookup. The small-scale representation is computed first, and then it explains
+23174	Related step-by-step process: <a href="../visual/F05.html">An embedding is a row lookup, not an ID converted to binary</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+6249	1. How text is turned into IDs
+18503	We use two pieces of text: 我爱学习 ("I love study") and 你爱 ("you love"). A <strong>tokenizer</strong> is a set of rules that matches pieces of text to integer IDs. On this page we lay down by hand that it splits the first sentence into 我/爱/学习 and the second into 你/爱. That is only so the arithmetic comes out clearly; it is not the real tokenization of any commercial model.
+16084	PAD, the special item used to fill blanks
+19982	Teaching ID
+15745	So the first sentence becomes
+29397	, and the second becomes
+10322	An ID answers only "which item is it", not "what does it mean"</strong>. 4 being larger than 1 does not make 你 more important than 我.
+22780	No answer has been predicted yet. All we have done is replace the text with IDs that can later be used to find a position.
+6364	2. What "batching" actually batches
+18756	Handing two inputs to the same computation and processing them together is called <strong>batching</strong>. The group is one <strong>batch</strong>; there are 2 inputs in it, so the <strong>batch size is B=2
+27351	Here B is only shorthand for "how many there are". No mysterious mathematical object has been introduced. The two inputs are still each computed on their own, and the second user's input must not be treated as context for the first user.
+12146	But one of the two ID lists is 3 long and the other 2. So that an ordinary regular table can be used for the computation first, we put a placeholder ID 0 at the end of the shorter one:
+27232	This move is called <strong>padding</strong>. After padding, each row is laid out with 3 positions, written
+9988	. T says how many positions were laid out; the real length of the second sentence is still 2. A placeholder item is not a new word the model has suddenly understood.
+6476	3. Why the ID table is written [2,3]
+11408	Two rows with three IDs each, so the size of the table is written
+10231	. This way of describing a size is called the <strong>shape
+9496	"It holds
+9502	" is about content; "the shape is
+9503	" is about size. Do not confuse the two. The ID table holds
+11424	integers.
+15951	In a machine learning program, a set of numbers laid out as regularly as this is called a <strong>tensor</strong>. On this page, take it to mean a "container of numbers": a row of numbers, a table, or several tables of the same size can all be held in a tensor. The two-row, three-column ID table is a tensor with two axes: the first axis selects which sentence, the second selects which position within that sentence.
+6581	4. Why the IDs are then turned into a row of numbers
+24677	An ID can find an item, but comparing IDs by size directly has no semantic meaning. For every vocabulary item the model prepares a row of numbers that later computation can use, and putting those rows into one table gives the <strong>embedding table
+12647	Do not try to guess yet what each number stands for. Each row on this page holds only 4 numbers; the complete table is below. They are <strong>decimals and negative numbers</strong> set by hand, not parameters a real language model arrived at by training. Decimals are used, rather than only 0 and 1, to keep an embedding from being mistaken for a binary code:
+21249	Lookup ID
+17310	Matching fragment
+27282	This embedding table has 6 rows and 4 columns, so its shape is
+9981	. 6 is the <strong>number of vocabulary items</strong>: how many different IDs there are to look up. 4 is the <strong>representation width d</strong>: how many numbers each item is represented by. On this page d=4.
+24674	IDs, binary, One-hot and embeddings are not the same thing:</strong> the ID of 爱 is
+29474	; if all we are discussing is how it is stored in 8 bits in the computer, it can be written
+29475	; if a One-hot marker of length 6 is used, it can be written
+29464	; but the embedding this example actually looks up is
+24066	The third axis is simply the index direction along this row of 4 floating-point numbers, not a count of binary digits.</strong> An actual lookup needs nothing but the ID; there is no need to build a One-hot first.
+6756	6, 3 and 4 each answer a different question.</strong> The vocabulary having 6 usable items does not mean a sentence has to be 6 long; laying a sentence out with 3 positions does not mean each item uses only 3 numbers; using 4 numbers per item does not mean there must be 4 semantic properties a person could name.
+6680	5. "Looking up an embedding" really is just finding the matching row first
+12862	Take the first sentence, <strong>"我爱学习"</strong>, first: under this example's token split it is, in order, <strong>"我/爱/学习"</strong>, which is why the encoded IDs are
+10236	. This is not three random numbers being used to find rows; it is the original sentence's three tokens being turned into embedding vectors one after another: <strong>ID 1 is 我, ID 2 is 爱, ID 3 is 学习
+14682	The position of "我" used to hold only the ID
+29491	; now that position corresponds to a row
+18020	1 was not converted into a four-bit binary code</strong>; ID 1 was used instead to read a whole row of the parameter matrix. Each such token vector will later take part in the attention computation.
+24084	The second sentence is <strong>"你爱"</strong>: it really contains only the two tokens <strong>"你/爱"</strong>, encoded as
+10017	. Only so that it can be computed in the same batch as the first sentence is it padded to
+10232	. This stands for <strong>"你"(4), "爱"(2), plus one PAD placeholder (0) that does not belong to the original sentence</strong>. So the lookups fetch, in order, the vector for "你", the vector for "爱", and the vector for the PAD placeholder:
+27211	This is not "你爱" encoded as three real words:</strong> the third row is only there to pad it out to length 3. What the lookup gives is still the initial numeric representation of each token, not one act of understanding the whole sentence's meaning. Note that 爱, in both sentences, gets the same row of numbers from the first lookup. That does not mean it never looks at context; the network that follows will combine the current position with the other positions it is allowed to read, producing a new representation. <strong>The lookup is the starting point, not the whole of understanding.
+6766	6. Why there is now an extra level, [2,3,4]
+18752	Putting the results for the two sentences together gives <strong>two tables, each with 3 rows of 4 numbers</strong>. The overall shape is therefore
+18286	The number in the shape
+27370	What it counts here
+11369	Two inputs, hence two tables
+22049	Each input is laid out with three positions, hence three rows per table
+21991	Each position uses four numbers, hence four columns per row
+18413	In total
+11422	numbers. There were 6 IDs to begin with, each replaced by 4 numbers, so it can equally be counted as
+11821	Reading the third axis through the subscripts:</strong> the first subscript chooses between "我爱学习" and "你爱"; the second chooses which position within it; the third chooses which number of that token's vector. For example
+29360	is the first number in the initial representation of 爱, the second token of the first sentence. <strong>What has been added is a numeric feature axis for each position, not extra words or binary digits.
+9493	"This is a three-dimensional tensor" says it has three axes; "each position is a four-dimensional vector" says each row has four numbers. The two uses of <strong>dimension</strong> here have to be kept apart. A <strong>vector</strong> is simply an ordered row of numbers, as here; there is no need to picture four-dimensional space first.
+6812	7. Expanding the representation to [2,128,4096]
+22773	Only the three sizes change now; the reasoning behind the computation does not.
+7080	B=2: two inputs in this batch.
+8909	T=128: each input is padded or laid out to 128 positions.
+9159	d=4096: after the lookup, each position is represented by 4096 numbers.
+24681	The ID table has two rows of 128 integers each, so it is
+10153	. Each integer then becomes a row of 4096 numbers, which makes the whole thing
+16469	It holds
+11420	numbers. <strong>4096 is not a token count, not the vocabulary size, and not the total parameter count of the whole model.</strong> It is called the hidden dimension, or the hidden representation width, and it means the model uses a row of numbers this wide to represent each position. Deeper layers usually keep this width but change what the numbers are.
+25038	If each number is stored in 2 bytes, this one output takes about 2MiB. A byte is the unit of storage size, and a MiB is 1,048,576 bytes. The estimate covers this one piece of data only and <strong>does not include all the model's parameters, the cache or temporary working space</strong>. F06 covers storage precision and devices in full.
+6844	8. "Putting it on the device" did not change what the sentence means
+25638	A device</strong> here means the processor that carries out the computation, such as a CPU or a GPU. A CPU is a general-purpose processor; a GPU is good at running large amounts of suitable numeric work in parallel. For the computation to run at all, the program has to get the input data and the model parameters onto compatible devices and into compatible storage formats.
+15126	You can keep
+16422	in memory and then copy it into GPU VRAM; they are still the same IDs, and moving them has not made them any more "intelligent". <strong>VRAM</strong> is a kind of storage the GPU can use directly. Moving data can take time, and the space can run short, so this is a real engineering step.
+15926	In a common input embedding layer the lookup address is an integer ID, while the parameters fetched are usually floating-point numbers; a <strong>floating-point number</strong> is a computer number format that can approximate values such as 0.1 and −0.7. Device, format and shape are three different properties.
+6861	9. Which pieces of "auxiliary information" also have to come along
+24018	The first is the <strong>padding mask</strong>: it tells later computation which positions are real.
+27383	The 0/1 here are not token IDs but markers for "can this count as valid content". Even if PAD's embedding happens to be all zeros, that does not mean later computation will naturally ignore it, so these positions still have to be handled properly.
+24082	The second is the <strong>attention mask
+22350	Attention</strong> is, to begin with, "picking out the positions the current position may refer to, then combining their numbers in differing shares". The mask decides "who may be referred to", not "how much". The latter is worked out with a weighted average in F09–12.
+22807	When the next token is generated, both training and computation usually have to obey the rule against peeking at the future. For the three-position example, the positions that may be read are:
+18234	Current query position
+24785	Can it refer to position 0?
+12164	Position 1?
+12167	Position 2?
+27288	This is the <strong>causal mask</strong>. For the second sentence, position 2 has to be excluded as well, because it is a padding item. Different interfaces inside a model do not necessarily use the same mask shape or the same meaning for true and false; the table on this page only explains the visibility relation and does not pose as the input argument of any particular API.
+24067	The third is the <strong>position IDs</strong>. The three real positions, for instance, are recorded as 0, 1 and 2. A token ID answers "which fragment"; a position ID answers "where it occurs". They are not the same column. With left padding, or with a cache, the logical position and the table's column number can differ; F13 gives an example of each.
+20532	Last, there may be a <strong>KV cache</strong>. A cache simply keeps results already computed that can be reused later. The first time something is processed from scratch there is usually no history cache; when generation continues, some of the numbers each layer computed earlier can be brought back, which avoids recomputing from the start. This is not long-term memory, and it is not new knowledge entering the model parameters. What K and V mean, why they can be reused, and which changes invalidate them, are covered by explaining attention in F11 first and then deriving it in full in F19; this page does not ask you to memorize the two letters first.
+6105	10. A summary of the whole process
+18754	Two independent inputs are computed together, and the shorter ID list is padded to the length laid out for this batch. That gives one table of two rows with 128 IDs each. From each ID the model fetches a row of 4096 numbers out of its own embedding parameter table, so the result is two tables of 128 rows and 4096 columns. At the same time the program prepares the valid positions, which positions may refer to which, and the position IDs of the real fragments; if this is continued generation, it also brings in reusable results from earlier computation. The attention and the other numeric transformations of each layer then begin. <strong>The embedding lookup is itself already a computation step in the model's numeric representation</strong>, not something that meets the neural network only once the lookup is done.
+12260	You do not need to understand the full attention formula first in order to explain every object in this step. If Q, K, V or softmax turn up directly in what follows, go through F07 → lesson 44 → lesson 46 first; do not read on by guessing at abbreviations.
+24911	Self-check: answer out loud first, then look
+28694	Question one: with a vocabulary of 1000 items, three inputs, 10 positions each and 8 numbers per item, how big are the embedding table and the lookup result?
+14758	The parameter table is
+29403	, the ID table is
+29374	, and the lookup result is
+9980	. 1000 decides how many kinds of entry can be looked up; 3 and 10 decide how many positions this batch looked up.
+28698	Question two: why does the same 0 sometimes stand for the PAD ID and sometimes for "cannot be seen" in a mask?
+16450	They belong to different data objects.
+23023	has a 0 that is used to find a vocabulary row; a 0 in a validity or visibility table is a computation marker. They must not be run together just because the digit is the same.
+28695	Question three: does the 2nd number of an embedding always stand for emotion?
+22162	There is no such general guarantee. It is part of a distributed representation arrived at by training. The numbers in this book only demonstrate the reading and the computation; they do not force a semantic label onto every column.
+28702	Question four: when batching, will the second user read the first user's content?
+20462	An ordinary batch of independent samples should not allow that. The batch axis arranges for things to be computed together; it does not splice the samples into one context. A real system still has to put tenant and cache isolation in place.
+9567	← Lesson 40｜What "putting it on the device" means: data types, memory, CPU and GPU</a><a href="../foundations/07.html">Lesson 42｜The arithmetic a model does most: weighted sums, dot products and matrix multiplication
+16070	An index of all 201 section figures in Foundation lessons F01—F40, going straight to the matching figure for each section.
+16063	Index of section figures in Foundations — AI Systems Engineering
+16069	Foundation lessons
+15861	Figure index
+15862	Figure index</span><span>201 section figures</span><span>covering lessons 35—66
+11895	From the first section to the fortieth, every figure sits next to the explanation it belongs to. Click a section below to jump straight to its "input, operation, result" figure, instead of seeing only one overview at the head of a chapter.
+21826	The worked problems, self-checks, programs and references in the text stay where they were. For step-by-step animations see <a href="visual-guides.html">Figures and animations</a>; for the sources and recomputation records of the figures in the text, see the <a href="mechanisms/index.html">Index of figures in the text
+13791	Jump to a group
+26525	Input and representation<span class="module-count">Lessons 35—40 · 30 figures
+23766	Lesson 35</a> · figures in this section
+11836	Getting to know an AI system through its information objects</a><a href="foundations/01.html#fdiag-01-02">The model is not a person living in the computer who sees every file directly</a><a href="foundations/01.html#fdiag-01-03">Checking the boundary with three sentences that are easy to confuse</a><a href="foundations/01.html#fdiag-01-04">Where the numbers in this book come from</a><a href="foundations/01.html#fdiag-01-05">Getting ready to read
+23777	Lesson 36</a> · figures in this section
+12649	Do not start by memorizing "a tensor is a multi-dimensional array"</a><a href="foundations/02.html#fdiag-02-02">Understanding three axes from two tables</a><a href="foundations/02.html#fdiag-02-03">The numbers inside the square brackets are not the same kind of "dimension"</a><a href="foundations/02.html#fdiag-02-04">How to find one single number inside it</a><a href="foundations/02.html#fdiag-02-05">How to read a formula when you do not know the symbols
+23797	Lesson 37</a> · figures in this section
+16398	Keep characters, bytes and tokens apart first</a><a href="foundations/03.html#fdiag-03-02">One teaching vocabulary and two inputs</a><a href="foundations/03.html#fdiag-03-03">BPE's "learning the vocabulary" and "encoding the input" are not the same stage</a><a href="foundations/03.html#fdiag-03-04">How a chat role becomes part of the input</a><a href="foundations/03.html#fdiag-03-05">What has not happened yet once encoding is done
+23806	Lesson 38</a> · figures in this section
+9483	"Batching" simply means letting several inputs be processed together</a><a href="foundations/04.html#fdiag-04-02">The real length and the laid-out length are not the same thing</a><a href="foundations/04.html#fdiag-04-03">What is the difference between padding on the left and padding on the right</a><a href="foundations/04.html#fdiag-04-04">Padding is not truncation, and still less is it context compaction</a><a href="foundations/04.html#fdiag-04-05">Why batching can be faster and can also make one person wait longer
+23813	Lesson 39</a> · figures in this section
+11488	Why you cannot read text straight off the "size of the ID"</a><a href="foundations/05.html#fdiag-05-02">Representing "I love study" and "you love" with a table of 6 rows and 4 columns</a><a href="foundations/05.html#fdiag-05-03">Why two axes become three</a><a href="foundations/05.html#fdiag-05-04">What exactly is "hidden" about the hidden dimension</a><a href="foundations/05.html#fdiag-05-05">If the PAD row is zero, can the mask be dropped?
+23837	Lesson 40</a> · figures in this section
+15383	One and the same number raises three different questions</a><a href="foundations/06.html#fdiag-06-02">Why an integer ID and a floating-point feature have different types</a><a href="foundations/06.html#fdiag-06-03">Work the storage out once for a larger representation</a><a href="foundations/06.html#fdiag-06-04">The actual order of one common run</a><a href="foundations/06.html#fdiag-06-05">Why putting a small task on the GPU is sometimes not faster
+13075	Shared computation<span class="module-count">Lessons 42—49 · 41 figures
+23861	Lesson 42</a> · figures in this section
+11833	Start from the average you already know</a><a href="foundations/07.html#fdiag-07-02">How a dot product turns two rows of numbers into one number</a><a href="foundations/07.html#fdiag-07-03">Matrix multiplication is "many dot products at once"</a><a href="foundations/07.html#fdiag-07-04">What exactly happens when one token's 4096 numbers become another 4096 numbers</a><a href="foundations/07.html#fdiag-07-05">How transposing helps "compare one row of numbers with many rows"
+23868	Lesson 43</a> · figures in this section
+11518	Why deep-learning code changes shapes over and over</a><a href="foundations/08.html#fdiag-08-02">reshape regroups, it does not swap rows and columns</a><a href="foundations/08.html#fdiag-08-03">Is multi-head just grouping the feature axis?</a><a href="foundations/08.html#fdiag-08-04">Broadcasting: one small object acting on many positions</a><a href="foundations/08.html#fdiag-08-05">Memory layout and views: one principle is enough to begin with
+23896	Lesson 44</a> · figures in this section
+13768	A score is not a probability</a><a href="foundations/09.html#fdiag-09-02">Learn just the bit of exponentials and logarithms that is needed</a><a href="foundations/09.html#fdiag-09-03">Computing softmax without skipping a step</a><a href="foundations/09.html#fdiag-09-04">Why the maximum is subtracted</a><a href="foundations/09.html#fdiag-09-05">Taking the maximum and sampling by probability are not the same thing
+23902	Lesson 45</a> · figures in this section
+11818	Getting to know a "model" through one adjustable rule</a><a href="foundations/10.html#fdiag-10-02">From a single coefficient w to a parameter table W</a><a href="foundations/10.html#fdiag-10-03">A complete numeric example with two layers</a><a href="foundations/10.html#fdiag-10-04">Why a nonlinear function is needed in between</a><a href="foundations/10.html#fdiag-10-05">The hidden state is not a hidden draft in words
+23913	Lesson 46</a> · figures in this section
+16473	What problem it is trying to solve</a><a href="foundations/11.html#fdiag-11-02">What X actually is, before attention begins</a><a href="foundations/11.html#fdiag-11-03">What W is: meet the "table of multiplication coefficients" first, then the three names</a><a href="foundations/11.html#fdiag-11-04">What each of query, key and value does</a><a href="foundations/11.html#fdiag-11-05">Multiply all three parameter tables through once, using the same X</a><a href="foundations/11.html#fdiag-11-06">For the position of 爱, compute from the scoring all the way to the new representation
+23919	Lesson 47</a> · figures in this section
+12887	Start with a definition of the mask that is not mysterious</a><a href="foundations/12.html#fdiag-12-02">How the causal restriction prevents reading the future</a><a href="foundations/12.html#fdiag-12-03">How the padding restriction and the causal restriction go together</a><a href="foundations/12.html#fdiag-12-04">What "forbidden" actually does to softmax</a><a href="foundations/12.html#fdiag-12-05">Why the table is no longer a small square once there is a cache
+23923	Lesson 48</a> · figures in this section
+8957	Which token it is, and where it appears, are two questions</a><a href="foundations/13.html#fdiag-13-02">Why an embedding lookup is not enough on its own</a><a href="foundations/13.html#fdiag-13-03">Meeting sin and cos with nothing but points on a plane</a><a href="foundations/13.html#fdiag-13-04">How RoPE uses position to change the matching</a><a href="foundations/13.html#fdiag-13-05">Why cached positions cannot start from 0 every time
+23926	Lesson 49</a> · figures in this section
+12771	Write one layer as two parts, rather than as a pile of abbreviations</a><a href="foundations/14.html#fdiag-14-02">The residual connection: keeping one direct path</a><a href="foundations/14.html#fdiag-14-03">Mean, variance and standard deviation, starting from two numbers</a><a href="foundations/14.html#fdiag-14-04">Which row of numbers LayerNorm actually normalizes</a><a href="foundations/14.html#fdiag-14-05">What the FFN actually does
+25450	Training and validation<span class="module-count">Lessons 52—54 · 15 figures
+23937	Lesson 52</a> · figures in this section
+17590	A derivative asks: if the input changes a little, how does the result change</a><a href="foundations/15.html#fdiag-17-02">Why training parameters needs a rate of change</a><a href="foundations/15.html#fdiag-17-03">Work one complete update by hand with a single parameter</a><a href="foundations/15.html#fdiag-17-04">Backpropagation and the optimizer are not the same step</a><a href="foundations/15.html#fdiag-17-05">How finite differences check an analytic gradient
+23947	Lesson 53</a> · figures in this section
+12769	First line up "what is to be predicted"</a><a href="foundations/16.html#fdiag-18-02">Cross entropy starts from one correct candidate</a><a href="foundations/16.html#fdiag-18-03">How several positions and the padding are scored</a><a href="foundations/16.html#fdiag-18-04">Write one optimization step out in full</a><a href="foundations/16.html#fdiag-18-05">Why Adam keeps extra state
+23954	Lesson 54</a> · figures in this section
+15368	One and the same "better" has at least three meanings</a><a href="foundations/17.html#fdiag-19-02">Do not learn reward, policy and trajectory as a string of abbreviations</a><a href="foundations/17.html#fdiag-19-03">What the probability ratio actually compares</a><a href="foundations/17.html#fdiag-19-04">Why KL divergence is like a "do not stray too far from the original" constraint</a><a href="foundations/17.html#fdiag-19-05">Explain the DPO formula with two answers first
+25465	Inference after training<span class="module-count">Lessons 57—58 · 10 figures
+23965	Lesson 57</a> · figures in this section
+20526	The last layer is not text yet</a><a href="foundations/18.html#fdiag-15-02">Why we look at the last valid position</a><a href="foundations/18.html#fdiag-15-03">Prefill and decode are only two phases of the run</a><a href="foundations/18.html#fdiag-15-04">Selected is not the same as already processed</a><a href="foundations/18.html#fdiag-15-05">How generated tokens relate to the characters shown in the interface
+23973	Lesson 58</a> · figures in this section
+12657	Start from what caching ordinarily means</a><a href="foundations/19.html#fdiag-16-02">Why appending a token usually does not change the old K/V</a><a href="foundations/19.html#fdiag-16-03">Count the cache exactly with two layers and three history positions</a><a href="foundations/19.html#fdiag-16-04">Why past Q is usually not stored for later attention</a><a href="foundations/19.html#fdiag-16-05">Why it is still not constant time even with a cache
+24411	Structure and resources<span class="module-count">Lessons 61—62 · 10 figures
+23983	Lesson 61</a> · figures in this section
+9411	Understand "low rank" first through a table with repeated structure</a><a href="foundations/20.html#fdiag-20-02">What LoRA changes is not the whole base model</a><a href="foundations/20.html#fdiag-20-03">Quantization represents numbers on a limited scale</a><a href="foundations/20.html#fdiag-20-04">Why MoE has many parameters but calls only some of them</a><a href="foundations/20.html#fdiag-20-05">What distillation and fine-tuning actually do
+23998	Lesson 62</a> · figures in this section
+12698	Start by separating the three accounts</a><a href="foundations/21.html#fdiag-21-02">What O(T²) actually means</a><a href="foundations/21.html#fdiag-21-03">Why enough storage may still not mean fast computation</a><a href="foundations/21.html#fdiag-21-04">What FlashAttention actually saves</a><a href="foundations/21.html#fdiag-21-05">PagedAttention and continuous batching
+6963	Agents and context<span class="module-count">Lessons 01—22 · 30 figures
+23538	Lesson 01</a> · figures in this section
+12928	Reduce it to an ordinary program first</a><a href="foundations/22.html#fdiag-22-02">A complete example with three model calls</a><a href="foundations/22.html#fdiag-22-03">Why a round, a turn and a task have to be kept apart</a><a href="foundations/22.html#fdiag-22-04">The difference between a workflow and a free-running agent</a><a href="foundations/22.html#fdiag-22-05">What counts as a tool, and what counts as a side effect
+23604	Lesson 07</a> · figures in this section
+6919	An API is only an agreement between programs, not intelligence itself</a><a href="foundations/23.html#fdiag-23-02">What a schema checks</a><a href="foundations/23.html#fdiag-23-03">Why one read from the network is not a complete answer</a><a href="foundations/23.html#fdiag-23-04">Event boundaries in SSE</a><a href="foundations/23.html#fdiag-23-05">Why call_id matters more than the tool name
+23569	Lesson 02</a> · figures in this section
+9420	"How far has it got" must have a concrete object</a><a href="foundations/24.html#fdiag-24-02">A state machine starts from the smallest table</a><a href="foundations/24.html#fdiag-24-03">What an event and a snapshot each save</a><a href="foundations/24.html#fdiag-24-04">Why the version number matters</a><a href="foundations/24.html#fdiag-24-05">A checkpoint saves the information recovery needs
+23612	Lesson 08</a> · figures in this section
+12690	Do not read MCP as "fitting the model with a new brain"</a><a href="foundations/25.html#fdiag-25-02">The logical order of one run, from connection to tool result</a><a href="foundations/25.html#fdiag-25-03">What Tools, Resources and Prompts each are</a><a href="foundations/25.html#fdiag-25-04">A tool schema should not stand in for business judgment</a><a href="foundations/25.html#fdiag-25-05">stdio, HTTP and JSON-RPC: understand only what each is for to begin with
+23637	Lesson 11</a> · figures in this section
+10550	Context is not "the whole computer inside the model's head"</a><a href="foundations/26.html#fdiag-26-02">Work out a simplified token account first</a><a href="foundations/26.html#fdiag-26-03">How to select evidence: more is not better</a><a href="foundations/26.html#fdiag-26-04">Order, role and source are three different labels</a><a href="foundations/26.html#fdiag-26-05">Why a prompt cache needs a stable prefix
+23704	Lesson 22</a> · figures in this section
+12704	Start by separating the four kinds of action</a><a href="foundations/27.html#fdiag-27-02">A state that cannot be shortened any further into "the task is nearly done"</a><a href="foundations/27.html#fdiag-27-03">How one compaction should be carried out</a><a href="foundations/27.html#fdiag-27-04">How the original text is found again</a><a href="foundations/27.html#fdiag-27-05">Why an opaque compacted block cannot be treated as an ordinary summary
+21554	Retrieval and dependable delivery<span class="module-count">Lessons 04—16 · 35 figures
+23653	Lesson 16</a> · figures in this section
+21565	Retrieval first settles "where the candidates come from"</a><a href="foundations/28.html#fdiag-28-02">Why an inverted index is called "inverted"</a><a href="foundations/28.html#fdiag-28-03">TF, IDF and BM25: get to know what each is for first</a><a href="foundations/28.html#fdiag-28-04">Why vector retrieval can find a synonymous wording</a><a href="foundations/28.html#fdiag-28-05">Exact nearest neighbors and approximate nearest neighbors
+23663	Lesson 17</a> · figures in this section
+15100	Why recall and reranking are two separate steps</a><a href="foundations/29.html#fdiag-29-02">How keywords and vectors are used together</a><a href="foundations/29.html#fdiag-29-03">Why a cross-encoder is both finer and more expensive</a><a href="foundations/29.html#fdiag-29-04">Relevant is not the same as enough to answer</a><a href="foundations/29.html#fdiag-29-05">The limits of query rewriting and of HyDE
+23672	Lesson 18</a> · figures in this section
+12654	Start from one line of code and look at the different layers of observation</a><a href="foundations/30.html#fdiag-30-02">LSP is not a model that understands the business by itself</a><a href="foundations/30.html#fdiag-30-03">How to read a graph, its nodes and its edges</a><a href="foundations/30.html#fdiag-30-04">Why each of Git's several states matters</a><a href="foundations/30.html#fdiag-30-05">The concrete order of one bug hunt
+23709	Lesson 23</a> · figures in this section
+12914	Say first what is worth saving across sessions</a><a href="foundations/31.html#fdiag-31-02">The four kinds of memory are more than a set of names</a><a href="foundations/31.html#fdiag-31-03">The questions one usable memory has at least to answer</a><a href="foundations/31.html#fdiag-31-04">Why valid time and recorded time differ</a><a href="foundations/31.html#fdiag-31-05">An update is not just appending one new vector
+23642	Lesson 13</a> · figures in this section
+11661	Do not blend the five ways of extending capability into one big prompt</a><a href="foundations/32.html#fdiag-32-02">Routing is making a choice</a><a href="foundations/32.html#fdiag-32-03">Why both under-loading and over-loading are bad</a><a href="foundations/32.html#fdiag-32-04">A sub-agent is not a complete copy of the main agent</a><a href="foundations/32.html#fdiag-32-05">Use a DAG to work out whether parallelism is worth it
+23717	Lesson 26</a> · figures in this section
+12856	Look at the most dangerous timeline first</a><a href="foundations/33.html#fdiag-33-02">Idempotence is not "try not to go wrong on a retry"</a><a href="foundations/33.html#fdiag-33-03">How far a database transaction guarantees things</a><a href="foundations/33.html#fdiag-33-04">How CAS avoids overwriting a newer version</a><a href="foundations/33.html#fdiag-33-05">What an atomic replace can and cannot do
+23578	Lesson 04</a> · figures in this section
+21841	Correctness is relative to what, first of all</a><a href="foundations/34.html#fdiag-34-02">What one test contains</a><a href="foundations/34.html#fdiag-34-03">Which layer unit, integration and end-to-end tests each look at</a><a href="foundations/34.html#fdiag-34-04">Use counterexamples to spot a weak test</a><a href="foundations/34.html#fdiag-34-05">A passing test still has to be bound to a version
+25692	Evaluation and production<span class="module-count">Lessons 05—66 · 30 figures
+23586	Lesson 05</a> · figures in this section
+12890	Give the unit of evaluation a clear name first</a><a href="foundations/35.html#fdiag-35-02">Work the success rate out from the real counts first</a><a href="foundations/35.html#fdiag-35-03">Work precision and recall out by hand with sets</a><a href="foundations/35.html#fdiag-35-04">Ranking near the top has gradations of its own</a><a href="foundations/35.html#fdiag-35-05">The difference between pass@1, pass@k and pass^k
+23744	Lesson 31</a> · figures in this section
+21611	A probability and a single observation are not the same number</a><a href="foundations/36.html#fdiag-36-02">Why repeating the same question still gives different results</a><a href="foundations/36.html#fdiag-36-03">A paired comparison tells you more than two columns of totals</a><a href="foundations/36.html#fdiag-36-04">How to read the standard error</a><a href="foundations/36.html#fdiag-36-05">A confidence interval is not "the model is 95% confident"
+23723	Lesson 29</a> · figures in this section
+12707	Start by separating where an instruction comes from</a><a href="foundations/37.html#fdiag-37-02">What a trust boundary actually is</a><a href="foundations/37.html#fdiag-37-03">A sandbox is not a magic switch</a><a href="foundations/37.html#fdiag-37-04">Least privilege and approval: what is actually being approved</a><a href="foundations/37.html#fdiag-37-05">How memory poisoning spreads risk across sessions
+23749	Lesson 33</a> · figures in this section
+10408	Where one task is actually slow</a><a href="foundations/38.html#fdiag-38-02">Break the account down with one teaching trace</a><a href="foundations/38.html#fdiag-38-03">TTFT, TPOT and end-to-end latency</a><a href="foundations/38.html#fdiag-38-04">Throughput and latency are not a pair of synonyms</a><a href="foundations/38.html#fdiag-38-05">Cost should be counted over the whole task
+24003	Lesson 64</a> · figures in this section
+15847	In a computer an image is also data with a shape</a><a href="foundations/39.html#fdiag-39-02">How image patches become a sequence of vectors</a><a href="foundations/39.html#fdiag-39-03">How the visual representation is handed to the language model</a><a href="foundations/39.html#fdiag-39-04">Why a GUI agent has to observe over and over</a><a href="foundations/39.html#fdiag-39-05">Model confidence, probability and calibration
+24008	Lesson 66</a> · figures in this section
+12939	Ask first which layer the failure happens in</a><a href="foundations/40.html#fdiag-40-02">An investigation that is complete without being over-complicated</a><a href="foundations/40.html#fdiag-40-03">How to choose among prompt, RAG, memory, skill and fine-tuning</a><a href="foundations/40.html#fdiag-40-04">Why the foundations still need advanced follow-up questions</a><a href="foundations/40.html#fdiag-40-05">How an interview-style answer avoids becoming a recited formula
+9562	← Index of figures and detailed calculations</a><a href="visual-guides.html">Figures and animations →
+23768	Lesson 35｜The life cycle of a model: objects, parameters, training and inference — AI Systems Engineering
+13063	The shared computation first, then training, then inference
+13072	After the shared forward pass, training and inference lead to different changes of state
+19903	Enlarged figure: after the shared forward pass, training and inference lead to different changes of state
+25445	Training and inference share the forward pass, but only training updates the parameters
+21711	At the start a model is nothing but parameters and computation rules. The Foundation lessons first explain how those numbers are computed forward, then how a loss is computed against labels, backpropagated and used to update the parameters, and last how the training result is loaded to generate one item at a time. Inference still runs the forward pass, but it does not send gradients back along the loss and it does not update the parameters. Agents, tools and retrieval lie outside this model chain, and later Foundation lessons cover them separately.
+26027	Starting point</span>assumes only that you can add, subtract, multiply and divide; it does not assume you have studied linear algebra, calculus or machine learning. The terminology is built up from here.
+12975	All the steps and explanations</a><a href="../visual/F03.html">Lesson 37 · Text, bytes, tokens and IDs are four different things</a><a href="../visual/F05.html">Lesson 39 · An embedding is a row lookup, not an ID converted to binary</a><a href="../visual/F22.html">Lesson 01 · Break one agent task into the turns that actually happen
+11835	Getting to know an AI system through its information objects
+22790	To understand how an AI system runs, the first thing to know is <strong>what kind of thing</strong> each step handles. The text in the input box, the request sent to the server, the numbers inside the model and the code file on disk are not the same object. They convert into one another, but their names cannot be used interchangeably.
+13258	Key difference:</strong> what is typed in the chat window is only part of it; whether the source, the tool definitions and the history are attached is decided by the surrounding program.
+17055	Easy to misread:</strong> the model saying "read" is no ground for concluding that it has really read the file.
+12849	Take a task with no mathematical barrier first: "read the file and tell me why the function is erroring." The editor can attach the code you selected straight to the request, or it can send the question alone and read the file only after the model asks for it. Both can end in an answer, but the way the evidence is gathered differs.
+12262	What you meet
+16477	What it is
+11585	Example
+11716	A string of characters a person can read
+9489	"read the function foo"
+23481	A packet of information organized by a program
+28692	The question, the history and the tool descriptions put together
+22863	An integer used to find an entry
+24671	ID 17 stands for one text fragment in the vocabulary
+10464	A set of numbers
+21763	The representation used in the model's computation
+25495	A set of numbers adjusted during training and usually fixed during inference
+13636	The weights that decide how the input is transformed
+16187	Real content in the external environment
+23411	the on-disk
+24268	The current progress as recorded by the system
+9439	"read, not yet modified"
+27388	"Object" here means no more than <strong>the information or entity currently being handled</strong>; it does not require you to learn object-oriented programming first.
+21634	The model is not a person living in the computer who sees every file directly
+21629	A model</strong> can be understood, to begin with, as a very large function made up of many numbers and computation rules. A function is simply "something that, given an input, produces an output by a rule". With the rule "multiply the input by 2", 3 gives 6; a language model is far more complicated, but its input and output are still joined by an actual computation.
+21635	The model is not a person living in the computer who sees every file directly: item by item
+22954	User input: fix the error
+21649	Inside the model: numeric computation
+17761	Tool execution: really reading the file
+13279	Key difference:</strong> there are three different objects here: the user's intent, the model's computation, and a real change in the external environment.
+17165	Easy to misread:</strong> the model outputting "modified" does not amount to an actual change in the file on disk.
+19674	Inference</strong> is computing an output with the parameters already there; <strong>training</strong> is adjusting the parameters according to examples and error. Putting new information into this turn's input in ordinary chat does not amount to rewriting the model's parameters permanently. Whether it still knows when you ask again later depends on whether the history or an external memory supplies it again.
+6971	An agent harness</strong> is the surrounding program that calls the model, reads files, runs commands and saves state. The model can output "please call the file-reading tool", and only after the harness has checked the arguments and the permissions does it really read and hand the result to the model. Get to know this relationship first; the protocols themselves are set out from F22 onwards.
+20810	What this book is actually explaining
+9460	The term "model inference" easily covers two things at once: one is the running of an existing model to produce output,
+29193	; the other is the multi-step kind that goes into solving a complex problem,
+10133	. This book takes the first of these first: how text really passes through numeric computation, and how training turns parameters into usable parameters. Long thinking, tool calls and search strategies are all built on top of it, and none of them replaces this layer of computation.
+16254	A large language model is not a fixed catalog of answers, nor a program written on the spot during one chat. Take it first as a function: a string of IDs goes in, computation is done against many parameter tables, and a score for every candidate ID comes out. <strong>The structure says how to compute, the parameters decide what is computed, and the current input decides who is handled this time.
+10501	Three things that must not be run together as one
+21602	Concept
+20721	The concrete object in this book
+11722	When it changes
+6209	1 causal decoder layer, 4-dimensional representation, 1 attention head, 8-dimensional feed-forward layer
+18108	Fixed when the model is built; changing the structure usually means matching the weights up again
+14716	Parameters θ
+7613	The embedding table E, the position table P, Wq/Wk/Wv and so on — 236 numbers in all
+25510	An optimizer step in training changes them; ordinary inference leaves them unchanged
+11452	Temporary results
+18254	The Q/K/V, hidden states, scores and probabilities computed from the current input
+26137	A different input, or a different parameter version, and the result can differ
+11584	Here is a scalar warm-up that does not belong to a language model yet: the rule is
+10189	. The structure is "multiply", the parameter is w and the input is x. With w=2, x=3 gives 6; with w=4, the same x gives 12. Changing only the input does not amount to learning new parameters, and merely computing a result does not amount to finishing training.
+11530	Why the shared computation comes first, then training, and inference last
+25502	Training itself needs a forward pass too. Without first explaining multiplication, normalization, attention and the output scores, there is no way to explain where a prediction went wrong. But "learning the forward pass" is not the same as "already being in the inference chapters".
+20854	The order in this book is: <strong>get to know the data and the parameters → run the shared forward pass once with the initial parameters → compute the loss against the real labels → compute the gradients and update the parameters → save the training artifacts → load the training artifacts → run inference token by token</strong>. The forward computation is the engine both paths share; the loss, backpropagation and the optimizer belong to the training path; sampling, stopping and the KV cache belong to the inference path here.
+25488	Where "prediction" during training differs from "prediction" during inference
+11400	Both can produce scores for the next token. In training, the material already knows the correct next item, so it can judge whether the scores gave the probability to the right object; in inference there is no reference answer to tell you what the next item should be, so the result can only be produced from the distribution or by a selection rule.
+25530	Training usually does not need to sample each position into text before computing the loss. Only when the cross entropy is computed directly from the continuous, differentiable logits can the gradient travel back along the computation graph.
+28151	picks an integer, and that integer is not a necessary input to this standard training objective.
+26001	Which model the worked calculation fixes
+18499	We use the <strong>worked model</strong>: a very small, genuinely trainable one-layer causal language model. It is not a scaled-down parameter copy of GPT, Llama or any commercial system. Its purpose is to let every table be shown in full, and to let training, the backward pass and inference line up against one and the same file.
+16487	It has an 8-item vocabulary, a 4-dimensional hidden representation, 1 attention head, an 8-dimensional ReLU feed-forward layer, RMSNorm in 3 places, and learned absolute positions. There is no bias and no dropout, and the input embedding and the output head do not share weights. These choices are made first so that fewer variables appear at once on a first reading; RoPE, GQA, SwiGLU and dropout are compared separately later, and <strong>the main worked example will not be quietly swapped for another architecture
+27387	What "learning" here means, and only that
+25524	The training corpus is only the two fixed sequences "我爱学习！" and "你爱学习！". That is enough to verify the chain of loss, gradient, update, saving, loading and continuation; it is not enough to judge natural language understanding, generalization, factuality or safety. When the generated result comes out right, ask at the same time: has the model merely fitted these two sequences? For this experiment the answer is: it is mainly there to demonstrate exactly that kind of fitting.
+22854	Checking the boundary with three sentences that are easy to confuse
+9463	"The model says the file has been modified" is only an output; "the file's contents really changed" is a fact about the environment; "the new file passes the matching test" is a fact of verification again. The third does not follow from the first. Only by keeping these objects apart can you see why an agent needs tool results and tests rather than its own confirmation alone.
+13204	Key difference:</strong> to prove a bug is fixed, a check against the environment has to be wired in; language output is not itself a test result.
+17172	Easy to misread:</strong> the version tested has to be the version of the code finally committed or delivered.
+15506	In the same way, "the request included a piece of material" is no guarantee that the model used it correctly; "there is a session ID" is no guarantee that the old messages are there forever; "a cache exists" is no guarantee that its contents suit the current model and the current task.
+20849	Where the numbers in this book come from
+15525	What follows works by hand with a very small vocabulary and small vectors. A <strong>vocabulary</strong> is a correspondence table between text fragments and integer IDs; take a <strong>vector</strong>, for now, to be an ordered row of numbers, which the next lesson explains properly. So that the computation can be seen clearly, the book sets the numbers by hand; they are not the parameters of any commercial model, nor real semantics.
+20850	Where the numbers in this book come from: item by item
+22596	the fragment "我" → ID 1
+24672	ID 1 → a learnable vector
+28841	the hidden layer goes on working the vector
+13255	Key difference:</strong> an ID is an index, a vector is material for computation, and the hidden state that follows is a different representation again.
+17072	Easy to misread:</strong> do not let the size of a token ID stand for how strong a meaning is.
+12308	Writing "我→1, 爱→2", for instance, says only that this book demonstrates with these IDs. A real tokenizer may split one character into several fragments, or combine several characters into one fragment. Teaching IDs cannot be carried over into an actual model.
+28724	Getting ready to read
+29112	It is assumed that you can add, subtract, multiply and divide and can read ordinary program-like steps; it is not assumed that you know linear algebra, calculus, probability or deep learning. The prerequisite lessons introduce the necessary parts before they are used. The code is a second way of expressing the process, there to help you check it; the main text can be read right through without running any code.
+13216	Key difference:</strong> the mathematical groundwork builds up layer by layer from small examples; there is no need to memorize large-model formulas at the start.
+17155	Easy to misread:</strong> with a symbol you do not know yet, look at the object and the units first and at the formula after.
+19565	The order from here is: first get to know how numbers are laid out, then how text acquires IDs, then how several inputs are put together, and how one ID is turned into a row of numbers. Once these basic concepts have been read, the
+17645	in the example is no longer a string of symbols out of nowhere.
+5820	· Lesson 35
+21788	Does the model outputting "deleted" prove the file does not exist?
+10981	No. Check whether the harness executed it, and what the real state of the target file is. Text, action and verification result are not the same object.
+21080	If this turn tells the model a fact, must the parameters have changed?
+22160	There is no such guarantee. Ordinary inference uses the parameters already there; a new fact usually lives in the input context. Updating the parameters takes a separate training process.
+5971	01｜What input really is: from the user's sentence to model tensors</a><br/><a href="../chapters/09.html">09｜One full agent task loop: who is thinking and who is executing
+21639	If the model reads new knowledge out of one question, must it remember it permanently next time?
+10649	Not necessarily. Ordinary inference has not updated the parameters; new knowledge can go on being used only if it stays in the current context, in an external memory, or is supplied again later. Updating the trained parameters is a separate, explicit process.
+23778	Lesson 36｜A row of numbers, a table and a stack of tables: reading tensors and shapes — AI Systems Engineering
+23755	Lesson 35 · Sort the objects out first
+12977	All the steps and explanations</a><a href="../visual/F04.html">Lesson 38 · Batching does not blend two sentences into one</a><a href="../visual/F05.html">Lesson 39 · An embedding is a row lookup, not an ID converted to binary
+12648	Do not start by memorizing "a tensor is a multi-dimensional array"
+14110	A single number like
+15120	can be called a <strong>scalar</strong>. An ordered row of numbers like
+15093	is called a <strong>vector</strong>. Two such rows make up a table with rows and columns, which is called a <strong>matrix
+12650	Do not start by memorizing "a tensor is a multi-dimensional array": item by item
+21358	Scalar: 7
+15567	Vector: [2,4,6]
+23354	Matrix: two rows, three columns
+13181	Key difference:</strong> they are all containers of numbers; what differs is "how many coordinates" it takes to locate one element.
+17178	Easy to misread:</strong> the number of dimensions is the number of axes, not the size of the largest number inside.
+27284	This table has 2 rows of 3 numbers each, so its <strong>shape</strong> is written
+10238	. The
+20396	here describes a size; it does not mean the table really holds only 2 and 3. Telling "content" from "shape" is the first hurdle.
+15952	In a machine learning program a <strong>tensor</strong> is the general data structure for holding regularly arranged numbers. Scalars, vectors and matrices can all be represented as tensors. The more abstract definition of a tensor transformation used in mathematics and physics is not needed here.
+11827	Understanding three axes from two tables
+12534	Suppose the two sentences have 3 text fragments each, and each fragment is described by 4 numbers. The first sentence corresponds to one table of 3 rows and 4 columns, and so does the second. Putting the two tables together gives a tensor of shape
+23041	:
+13140	Key difference:</strong> the three axes stand, in order, for sample, position and feature; no extra sentence has appeared out of nowhere.
+17149	Easy to misread:</strong> the last axis is not a count of binary digits.
+28227	Worked out cell by cell: how three axes locate one number
+11324	Two samples, each three rows by four columns, with the coordinate [0,1,2] highlighted
+21897	Step 1</span><span>The first axis selects sample 0, that is, the first sentence.
+21917	Step 2</span><span>The second axis selects position 1, that is, the second token position in this sentence.
+21934	Step 3</span><span>The third axis selects feature 2, that is, the 3rd of the four numbers at this position.
+21939	Step 4</span><span>The three subscripts written together as [0,1,2] locate one specific number.
+12310	Take [0,1,2], for instance: first select input 0, then position 1, and last feature 2. The three coordinates are not three tokens.
+21995	Each place that decides "which direction to count in" is called an <strong>axis</strong>. The three axes here are, in order, "which sentence", "which fragment", and "which number of that fragment". <strong>The last axis is not the ID converted into 4 binary digits; it is there because each text fragment has gone from a single ID to 4 numeric features.</strong> Those features can be decimals or negative numbers; they need not be only 0 and 1. The lookup itself is set out in full in F05. What an axis means is decided by how you organize the data; a tensor does not itself know what a Chinese sentence is.
+15726	So
+15583	holds
+11421	numbers. In general, multiplying the lengths in a shape together gives the total number of elements in a regular dense tensor.
+20207	The numbers inside the square brackets are not the same kind of "dimension"
+9492	"This is a three-dimensional tensor" usually says it has 3 axes; "each token is a 4096-dimensional vector" says each row has 4096 numbers. The "dimension" in those two sentences is not at the same level.
+20208	The numbers inside the square brackets are not the same kind of "dimension": item by item
+11644	Two-dimensional: [2,3]
+10530	Three-dimensional: [2,3,4]
+13035	six IDs → twenty-four feature numbers
+13121	Key difference:</strong> the 2 and the 3 in [2,3] are the lengths of two axes; what [2,3,4] adds is the representation width of each position.
+17127	Easy to misread:</strong> a shape is only a statement about layout, not the array's actual contents.
+15549	From here on a uniform notation is used:
+20423	is how many inputs there are in this batch,
+20427	is how many positions each input is laid out with,
+20426	is how many numbers describe each position. So
+17647	means "B tables, each with T rows, each row of d numbers".
+18196	When
+20329	, it still has only <strong>3 axes</strong>, not 4096 axes; the total number of elements is 1,048,576. 4096 is the width of the row of numbers at each position; it does not mean there are 4096 Chinese characters, nor that the model has only 4096 parameters in all.
+18381	How to find one single number inside it
+20722	The code in this book uses subscripts starting from 0.
+19396	means row 0, column 1, which in matrix A above is 2. Square brackets after a variable name usually mean an <strong>index</strong>; only when written on their own, as in "shape=[2,3]", are they stating a size, so read the context.
+13253	Key difference:</strong> given [2,3,4], three subscripts are needed to locate any specific number.
+17188	Easy to misread:</strong> subscripts for access generally start at 0, and none may run past the length of its axis.
+14919	takes the second sentence, leaving one
+25213	table;
+14918	takes the first fragment of the second sentence, leaving a row of 4 numbers;
+13560	takes the third feature as well, giving a single number. Whichever subscript is used to take the data out, that is the axis that has been selected.
+13607	A colon means "all of this axis".
+14917	takes the third number of every fragment in the second sentence, giving a row of 3 numbers.
+14897	takes the first feature at every position of every sentence, giving
+12833	First, explain a tensor in one sentence
+18165	In this book a tensor is simply a set of numbers laid out by a rule.
+10861	is not the three values 2, 5 and 4 being fed into the network; it is the shape of the container: two samples, five positions each, four features per position. The container actually holds
+5849	floating-point numbers.
+10373	One row,
+5907	, is a vector; five such rows together make a matrix; two matrices of the same size stacked make the three-axis tensor here. An axis is not a space of meaning conjured out of nothing; it is first of all "how many subscripts it takes to find one cell".
+20860	The notation this book uses throughout
+15958	What it means in this course
+12327	Example
+24118	Which sample, with subscripts starting at 0
+9129	b=0 is the first sentence, b=1 the second
+18229	t, the position currently receiving information / s, the position being read
+7012	In attention the row selects t and the column selects s
+22635	Feature index; in certain sums k is the axis summed over
+9196	j=0 is the first number in each row
+18645	Batch size / current input length / hidden width
+25487	2 / 5 / 4 during training
+25759	The number of vocabulary items, deliberately not written V
+20874	8 in this example, which avoids confusion with the Value matrix V
+18538	The set of all learnable parameters
+9386	θ contains E, P, Wq and so on; it is not a single number
+9090	Capitals such as X, H and Q
+25231	A table holding several rows of results
+8445	Q[b,t,j] is one specific cell value
+9060	Names beginning with W, such as Wq and Wk
+15173	A learnable table of coefficients
+10607	The subscript q says only that it is there to produce the Query
+19508	The rate of change of the loss with respect to each cell of the intermediate table Z
+10867	Not another forward output
+18285	Keep shape and content apart
+25519	The shape of the training ID table is
+10179	. Item 2 of row 0 is 2, which stands for the token 爱, not for how important position 2 is. After the embedding lookup,
+20360	is a row of four numbers, so that ID's position becomes four features and the overall shape becomes
+16892	Locating one and the same 爱, without adding sentences or tokens
+12931	Select the sample first
+9130	b=0: BOS/我/爱/学习/！
+13604	Then select the position
+9338	t=2: input_ids[0,2]=2, and ID 2 is 爱.
+21240	Look up the parameter row
+7600	E[2]=[-0.3,0.8,0.1,0.5]: one integer cell is represented by a row of floating-point numbers.
+13605	Then select the feature
+9172	embedding[0,2,1]=0.8. The third subscript says which number of that row is selected.
+10608	Subscripts start at 0. A token's ID, its position in the sentence, and the feature index within a vector are three different kinds of index.
+15661	What each of four common operations changes
+19873	changes how the elements are grouped, not the sequence of elements under the prescribed traversal order;
+11683	swaps which axis is which; matrix multiplication computes new values; and broadcasting repeats a shorter shape along a compatible axis so that it joins the computation. The four cannot be interchanged just because the output shape is the same.
+22714	Independent layout micro-example:
+12015	reshaped row-major to
+5894	gives
+29506	; transposing gives
+10239	. The 1 to 6 here only demonstrate how the addresses are arranged; they are not parameters of the worked model.
+13033	The symbols in a formula are not another algorithm
+17649	simply multiplies each corresponding position and adds the results.
+20438	is a transpose, not a Tth power.
+20405	multiplies corresponding cells, with no sum afterwards.
+20434	is the positive square root of the dimension d; d=4 in this model, so the scaling denominator is 2.
+25164	means e to the power x;
+20401	is its inverse. Each time one of these symbols appears, expand it into two or three concrete arithmetic terms first, and look at the whole formula after.
+14720	Parameters, temporary values and gradients: three different accounts
+13917	The Q computed in the forward pass varies with the input, while Wq is the fixed coefficient that produces Q; the backward pass in training then computes a gradient for Wq of the same shape.
+10673	does not stand for "the new Wq"; the optimizer still has to update it from the gradient.
+11967	The computation graph in the code records "which operation produced which result". Backpropagation works the influence back along the dependencies; it does not read the tables of numbers backwards, and it does not translate output text back into parameters. Foundation lessons 52—53 and system mechanism lesson 55 start from the rate of change of the loss and follow it all the way to every parameter table.
+23509	How to read a formula when you do not know the symbols
+25851	reads as "the ith number of x";
+20355	is x times x;
+25170	means "add up the set of numbers specified after it";
+25166	means "belongs to";
+15895	usually denotes the real numbers in a formula.
+14998	just says "X is real-valued data of shape B, T, d". It is not asking you to solve an equation on the spot.
+23510	How to read a formula when you do not know the symbols: item by item
+7081	B = batch size
+8910	T = number of positions per input
+9160	d = number of features per position
+13209	Key difference:</strong> turn the English abbreviations into countable entities, and reading [B,T,d] then tells you what each axis corresponds to.
+17016	Easy to misread:</strong> B, T and d are naming conventions, not variables the model computes.
+17952	usually means "save the result on the right into the left"; in mathematics,
+17951	usually means "the left and the right are equal".
+18178	stresses a definition;
+25200	means approximately equal. A capital
+15221	in a formula may be the sequence length, while a superscript
+14165	is the transpose sign; the transpose is explained in F07, and the two must not be read as one.
+5821	· Lesson 36
+12611	Locating one number in a three-dimensional array the way you find a seat
+26352	Input and conditions.</strong> There are two sentences, each laid out with three positions, and each position is represented by two numbers for now. Write the result as
+28200	Select the first level
+5941	selects the 2nd sentence
+28202	Select the second level
+5943	selects the 3rd position of that sentence
+28201	Select the third level
+5942	selects the 1st feature at that position
+18322	gives the value
+29171	, no longer a row of numbers.
+14813	Count the sizes back
+6350	2 sentences × 3 positions × 2 features
+13038	12 numbers in all, shape
+29380	, with each axis answering a different question.
+18916	Join the steps up.</strong> "Three axes" and "each vector has two components" can both hold at once. An axis is a level of location; the length of an axis is how many choices there are at that level.
+26652	Limits and counterexamples.</strong> Subscripts starting at 0 is only the convention this book and Python adopt; there is no semantic "sentence number 0".
+18282	How many numbers does shape [2,5,3] hold? How many numbers does each position use?
+13070	There are 2×5×3=30 numbers in all, and each position uses 3 numbers. 2 is the number of inputs and 5 the number of positions.
+7727	With H of shape [2,128,4096], what is H[0,10]?
+24036	A row of 4096 numbers at the 11th position of the first input, of shape [4096]; not a single token ID.
+26605	If the output shape goes from [2,5,4] to [2,5,8], does that mean three more tokens went in?
+22138	No. The first two axes are still two samples and five positions; the last axis has become either eight candidates or eight intermediate features. You have to look at what the operation means; the final 8 on its own does not tell you whether these are vocabulary probabilities.
+23798	Lesson 37｜How text becomes IDs: tokenization, vocabulary and sequence boundaries — AI Systems Engineering
+23760	Lesson 35 · Sort the objects out first</a><a class="pill" href="02.html">Lesson 36 · A row of numbers, a table and a stack of tables
+12979	All the steps and explanations</a><a href="../visual/F04.html">Lesson 38 · Batching does not blend two sentences into one</a><a href="../visual/F23.html">Lesson 07 · Complete characters, complete events and complete tool arguments are three separate gates
+16397	Keep characters, bytes and tokens apart first
+12261	The 爱 you see is one character. Storing text in a computer needs an encoding rule; UTF-8, for instance, represents it as several bytes, and a <strong>byte</strong> is a storage unit of 8 binary digits. One character need not occupy just one byte.
+13278	Key difference:</strong> this correspondence table is a minimal vocabulary the book sets by hand; a real tokenizer may cut out different fragments.
+17038	Easy to misread:</strong> one Chinese character is not necessarily one token.
+20373	is the unit of fragment a tokenizer handles. A <strong>tokenizer</strong> is the tool that turns text into a sequence of token IDs by agreed rules, and decodes IDs back into text. A token may cover a word, part of a word, punctuation, a space, or even only some of the bytes of one character, so it is not the same as a character count.
+21646	Inside, the model handles numbers, not the glyphs on the screen. The tokenizer answers "which item of the vocabulary is it" first, and the embedding that follows answers "which row of numbers represents that item". The two steps must not be merged into one vague "turn it into a vector".
+12680	First tell two kinds of "encoding" apart:
+12021	Any integer ends up stored in the computer as 0 and 1 bits; the decimal ID
+15131	, for instance, can be stored as an 8-bit unsigned integer
+10235	. That says <strong>how the machine stores an integer</strong>, not how a language model represents the meaning of "爱".
+8960	The token ID
+25186	means looking up item number 2 in the vocabulary. The model can later use that ID to take a row of <strong>floating-point numbers, decimals and negatives included</strong>, out of the embedding parameter table. It is not the same as
+24695	compiled into a string of 0s and 1s. F05 puts binary, One-hot and embeddings side by side, one at a time.
+12854	Look at ordinary fragments first, then fix the complete eight-item vocabulary
+11557	To make the hand computation easy, the following small vocabulary is defined.
+25191	is the special item for a slot to be filled later.
+10367	One teaching vocabulary and two inputs: item by item
+16408	Character: the glyph a person reads
+16416	Byte: the stored encoding
+8964	Token: the model's unit of tokenization
+13149	Key difference:</strong> Chinese byte encoding, Unicode characters and a tokenizer's split boundaries are three different ideas.
+17073	Easy to misread:</strong> do not estimate exact token usage straight from a character count.
+12553	Suppose the teaching tokenization rule splits "我爱学习" into "我", "爱" and "学习"; that gives
+29480	; splitting "你爱" into "你" and "爱" gives
+24678	The size of an ID carries no size of meaning</strong>: 4 is not cleverer than 1, and
+19663	cannot be used to derive "你 minus 我 equals 学习".
+21016	This part shows the ordinary fragments plus PAD, six items in all; full training additionally uses the two boundary markers BOS and EOS. IDs 0—5 stay the same, and the next subsection lists the complete eight-item table.
+25755	The vocabulary has 6 items, written
+25171	. Later you will also see papers use
+25196	for the vocabulary size; in attention,
+14783	stands for the Value matrix instead. This book uses N in the basic examples so that you do not confuse the two.
+12723	Fix the vocabulary first; the IDs cannot change afterwards
+21633	A model does not do matrix multiplication on Chinese characters directly. First a teaching tokenizer, defined by hand and checkable item by item, splits this corpus into "我/爱/学习/！". A real tokenizer may split it differently; this lesson makes no claim to reproduce any product's token IDs.
+14952	A padding placeholder only, not content of this training sequence
+18136	Start marker
+24407	End marker
+9434	"学习" here is <strong>one</strong> token; "！" is one token too. BOS/EOS are dedicated symbols; the literal string B, O, S is not split into three items. The vocabulary has 8 items, which does not mean the training sentences have 8 positions in all.
+7108	BPE's "learning the vocabulary" and "encoding the input" are not the same stage
+7107	BPE is a common family of subword construction methods. Starting from basic symbols, it counts adjacent symbol combinations in the training corpus over and over, then picks a combination and merges it. If, for instance,
+24383	are often adjacent in the corpus, the item
+27199	can be added, and the next round of combinations counted again. This stage produces the vocabulary and the merge rules.
+13249	Key difference:</strong> the first step decides the split boundaries; only the second gives the fragments integer IDs from the vocabulary.
+17181	Easy to misread:</strong> an ID is an address; 1 does not mean more important than 3.
+12278	When a tokenizer that has already been prepared is used, it does not recount all the text in the world every time a sentence arrives. It splits the new input into existing fragments by fixed rules and looks their IDs up. A real implementation also has pre-tokenization, special markers and possibly normalization steps; it is not to be read as splitting words at will.
+11495	Why is it so hard for code to estimate tokens from a character count? Because
+15624	and the random string
+23038	have different subword combinations available; newlines, indentation and spaces can affect the split too. <strong>A real budget has to use the counting rules of the model in question</strong>; the teaching vocabulary is only there to explain the mechanism.
+24770	How a chat role becomes part of the input
+24766	Chat starts out as messages with roles — "what the user asks", "what the assistant answers". A <strong>chat template</strong> is what organizes those roles and the body into the form the model knew during training. The template may add control markers for the start of a role and the end of a message, and those markers can take up tokens too.
+13098	Key difference:</strong> methods such as BPE learn the rules first and then use them; online inference generally does not retrain the vocabulary on the spot.
+17200	Easy to misread:</strong> meeting a new word does not reorder the existing vocabulary IDs each time.
+20454	Writing "system:" in an ordinary string does not automatically make it a real system role; how the model interface organizes messages decides how the service handles it. Concatenating the chat bubbles a person sees, word for word, is no ground for claiming to have reproduced a commercial service's final input.
+24687	What has not happened yet once encoding is done
+19345	When you have
+20328	, all that has been found is the IDs; there is no contextual representation for each position yet, no next-token probability has been computed, and no external file has been read. Tokenization converts the representation; it is not "understanding completed".
+24688	What has not happened yet once encoding is done: item by item
+24217	System / developer rules
+17750	Tool definitions and history
+13275	Key difference:</strong> the harness organizes this content by message role and by the model interface, and only then does it enter the model's input sequence.
+17184	Easy to misread:</strong> what the chat bubbles do not show should not be guessed at as a particular vendor's internal template.
+14819	Decoding back has its boundaries too: some processing folds case or normalizes the text, and some tokens decoded on their own are not complete characters. In code tasks, keep "means the same" apart from "the same original bytes".
+5822	· Lesson 37
+18719	Encode "我爱学习", then decode it back unchanged
+26289	Input and conditions.</strong> A fixed teaching vocabulary:
+29489	; this example explicitly treats "学习" as one token. It does not stand for any particular model's real tokenization.
+13813	Split into fragments
+9444	"我爱学习" is split into "我/爱/学习"
+15644	Four Chinese characters, three tokens: the character count and the token count differ.
+21288	Look the IDs up
+12344	Look each one up in the vocabulary in turn
+29425	, and the embedding has not been looked up yet.
+24686	Encode the other sentence
+9413	"你爱" is split into "你/爱"
+29462	; "爱" has the same ID in both sentences.
+14817	Look the vocabulary up in reverse
+5884	corresponds to "我/爱/学习"
+19461	Joining by this example's rule restores "我爱学习".
+23250	Look at the byte level
+9442	The UTF-8 bytes of "我" in hexadecimal are
+27305	This is character storage; it is not the token ID 1, and it is not an embedding feature.
+18969	Join the steps up.</strong> The tokenization rule has to be given first, then the vocabulary IDs, before you can know which sentence a list actually stands for. Do not guess at the meaning of text from the size of the integers.
+26766	Limits and counterexamples.</strong> A real tokenizer also involves spaces, bytes, special tokens and normalization; this example verifies only the encoding chain of this one explicit vocabulary.
+7105	When BPE merges, why the pair on the left is not always the one chosen
+26488	Input and conditions.</strong> The input character sequence is [a,b,c]. Suppose two merge rules have been learned: b+c at priority 0 and a+b at priority 1, the smaller number taking precedence. In the vocabulary a has ID 1 and bc has ID 5.
+13814	List the candidates
+18247	The adjacent pairs at this point are (a,b) and (b,c)
+13706	Their priorities come out as 1 and 0.
+28189	Choose by the rule
+12720	Merge (b,c), at priority 0, first
+18050	The sequence becomes [a,bc]; the original (a,b) cannot be used as well, because b has already been merged into bc.
+28533	Find the adjacent pairs again
+22774	Now there is only (a,bc)
+12563	Supposing there is no merge rule for it, this stops.
+21251	Look up the final IDs
+26586	The output is [1,5], not [ID of ab, ID of c].
+18889	Join the steps up.</strong> BPE at inference time uses the order of the rules it has already learned; the original adjacency is not the merge priority. After each merge, which candidates are adjacent changes.
+26703	Limits and counterexamples.</strong> The character is the basic unit for teaching here; a real byte-level BPE may start from bytes, and it still has to respect special tokens and pre-tokenization rules.
+9433	"学习" takes one token in the teaching vocabulary — is that so for every real model too?
+10664	No. The actual split depends on the tokenizer in question and on its context rules, and cannot be inferred from this demonstration.
+8962	The distance between token ID 5 and ID 1 is 4 — does that say anything about semantic distance?
+10979	No. An ID is for locating a vocabulary entry; the semantic representation is decided by the parameters and the computation that follow.
+5973	01｜What input really is: from the user's sentence to model tensors</a><br/><a href="../chapters/10.html">10｜How model output becomes a real tool call: protocol and execution boundary</a><br/><a href="../chapters/13.html">13｜How each turn's prompt is assembled: context is a data pipeline</a><br/><a href="../chapters/15.html">15｜The offline retrieval chain: how a document becomes a queryable index

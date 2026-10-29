@@ -1,0 +1,500 @@
+23903	Lesson 45｜Parameters, the forward pass and normalization: how one input becomes a usable representation — AI Systems Engineering
+14730	Parameters are defined first, and only then do the operations have a source
+12839	Start with a small network to get to know the input, the parameters and the intermediate results; then list all 12 groups of parameters in the worked model; and finally compute the RMSNorm at the same position. The Q/K/V of the next section uses the N1 obtained here directly. There is no training yet; this is only one forward pass, carried out under the initialized parameters, that can be checked.
+23811	Lesson 39 · Embedding lookup</a><a class="pill" href="07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="09.html">Lesson 44 · Probability, exponentials and softmax
+12982	All steps and explanations</a><a href="../visual/F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="../visual/F14.html">Lesson 49 · A Transformer layer is not attention alone
+11817	Getting to know a "model" through one adjustable rule
+24754	Consider
+10000	. x is the input that changes each time; w and b are the numbers that fix the computation rule. With w=2 and b=1, an input of 3 gives 7. Change w to 4 and the same input becomes 13.
+13173	Key distinction:</strong> the parameters fix an adjustable mapping rule; inference usually uses the parameters it already has.
+17195	Easily misread:</strong> a change of input does not mean the model has just finished training its parameters.
+14718	Parameters</strong> are numbers such as w and b that can be adjusted by training; <strong>hyperparameters</strong> are settings of the training or of the structure — the width of a layer, the learning rate, the batch size — and are usually not learned automatically by the same gradient step; <strong>activations, or intermediate representations,</strong> are the temporary numbers one forward pass computes, such as the 7 obtained here.
+22936	A new input from the user changes x; normal inference does not change w automatically because of it.
+11810	From a single coefficient w to a parameter table W
+10593	The w=2 above is a single number; when the input and the output each have several features, many coefficients have to be stored, arranged into a matrix W. <strong>Lowercase w usually stands for a single parameter, and uppercase W for a whole parameter table.</strong> Writing W1 and W2 distinguishes the first transformation from the second; it does not mean multiplying W by 1 or by 2.
+13126	Key distinction:</strong> a "parameter table" stores coefficients obtained by training; multiplying and adding this input gives the intermediate values.
+17029	Easily misread:</strong> W and h are not the same kind of object: W is a parameter, h is this round's activation.
+12591	The bias b is a set of parameters as well, except that it is added cell by cell after the matrix multiplication. X and the hidden state h are numbers produced by computing each input; W and b decide how those numbers are transformed. Normal inference loads W and b from the weight file and then uses them; it does not run a training update automatically because some user input changed.
+19562	What follows first computes the forward pass with one given set of parameters. How the parameters are adjusted is explained once lessons 52–53 have established the ideas of "loss, gradient, optimizer". <strong>Understanding that a parameter is a table of coefficients does not require learning the whole training algorithm first.
+18822	List every parameter, so that W does not appear out of nowhere
+14733	Parameter name
+11419	Count
+17991	What it is for
+22991	Takes the initial token representation by vocabulary ID
+22987	Takes the position representation by absolute position 0–7
+15294	[4,4] each
+22803	Produces Query/Key/Value and the attention output projection
+18853	Expands each position's 4 features to 8, then back to 4
+15295	[4] each
+10505	The per-feature learnable scaling of the three RMSNorms
+18836	Turns the final 4 features into 8 vocabulary scores
+15343	Total
+6139	12 parameter tables or vectors
+10764	Excludes the input, the cache, the gradients and the optimizer state
+11475	Why is U not Wo? Wo turns the result of attention back into a 4-dimensional hidden representation; U turns the final hidden representation into 8 vocabulary scores. Both are "output projections", but what they output differs. Why does P have 8 rows? This model represents positions 0–7 at most; it is not that the vocabulary also has 8 items and so happens to share the same table. E and P are two different parameters.
+14737	Parameters and gradients kept apart: only optimizer.step changes θ
+19906	Enlarged figure: parameters and gradients kept apart: only optimizer.step changes θ
+18535	All positions share the parameters, so why do the outputs still differ
+15359	The same Wq is used for all B×T rows, but the input of each row differs, so the queries differ. This sharing means the model does not have to store a whole fresh Wq for every position. The rows of P are selected by position, the rows of E by token identity. On the backward pass during training, the several places a shared parameter is used <strong>add</strong> their gradients, and the matching derivation under System mechanisms follows that through.
+10305	A complete numeric example with two layers
+26132	Input x=
+29395	, and the matrix W1 and the bias b1 of the first layer are:
+13161	Key distinction:</strong> multiply by the matrix first, then add the bias, then pass through the nonlinearity. Every step has to keep the operations in the right order.
+17046	Easily misread:</strong> a layer should not be written as a direct "input → answer" with the intermediate state left out.
+22585	Then apply the <strong>ReLU activation function</strong>: any number below 0 is replaced by 0, and anything else is kept. That gives the hidden representation h=
+24091	The second layer uses W2=
+29400	, giving
+10214	. This computation from input to output is called the <strong>forward pass</strong>, and may be shortened to the forward.
+18550	A "layer" is not an abstract box on a screen but a set of operations that transform data by a rule. A complex model strings many layers together, and the result of one step becomes the input of the next.
+11492	Why a nonlinear function is needed in between
+16320	If all that ever happens is multiplying by a matrix and adding a bias, several linear or affine transformations can be merged into one, and more layers do not automatically bring a different kind of expressive power. An operation such as ReLU, which cannot be expressed as a single linear transformation, supplies the <strong>nonlinearity</strong> that lets the network represent more complex relationships.
+11493	Why a nonlinear function is needed in between: item-by-item distinctions
+24340	Linear layers stacked
+11437	A ReLU inserted in between
+15240	Can express different function shapes
+13239	Key distinction:</strong> without a nonlinearity, several linear layers can be merged into one affine transformation, which limits the expressive power.
+17025	Easily misread:</strong> ReLU is not an arbitrary decoration "just there to delete the negative numbers".
+17958	The usual definition is GELU(x)=xΦ(x), where Φ is the cumulative probability function of the standard normal distribution. It keeps negative and positive inputs to different degrees; it does not sample at random. An implementation may also use an approximate formula.<span class="concept-micro">Independent micro-example: Φ(0)=0.5, so GELU(0)=0. Φ here is not a learnable parameter table of the model.
+16917	Real Transformers commonly use GELU, SiLU or a gated feed-forward structure. Understand "why there has to be a nonlinearity" first and read the particular function afterwards; there is no need to memorize every formula the first time you meet the name.
+28845	The hidden state is not a hidden draft in words
+10582	In the example above, h=
+20363	is the result of one computation, not a hidden "I have thought of the answer". In a language model, the row of numbers a token comes out with after passing through a layer is also called a hidden state. It carries information useful to the computation that follows, but each coordinate cannot be translated directly into a sentence of explanation.
+28846	The hidden state is not a hidden draft in words: item-by-item distinctions
+28849	Hidden state: computed while running
+21719	Model weights: saved after training
+26611	Output text: obtained by decoding
+13167	Key distinction:</strong> the internal numeric representation, the fixed parameters and the sentence a person can see belong to different stages.
+17062	Easily misread:</strong> a hidden state must not be read as "a draft the model has already written out in words".
+9170	d is the hidden width at each position; L usually stands for the number of layers; the total number of parameters depends on the sizes of all the matrices and on how they are shared. d=4096 does not mean there are only 4096 parameters. A single
+23351	matrix alone has 16,777,216 cells.
+21128	Weight sharing and freezing parameters
+15360	The same W can be applied to every input in a batch and to every token position; that is called weight sharing. It does not mean the computed results are shared between positions. With different inputs, the intermediate states still differ.
+9424	"Freezing parameters" means some parameters are not updated during training; "inference uses fixed weights" means this computation performs no update. Some model services do train a new version at some other time, but correcting a mistake in an ordinary conversation is not the same thing as online training.
+11515	Why a row of numbers is processed before attention
+28848	The numeric scale of a hidden state varies. A normalization layer adjusts that scale from the feature statistics inside each position, so that the modules after it face a more controlled input; it does not turn the row into probabilities, and it does not make the four numbers add up to 1. The range RMSNorm normalizes over is the <strong>feature axis</strong>, not the whole sentence, and certainly not the whole batch.
+20994	This model uses pre-norm: RMSNorm is applied to X first and the result is fed into attention; the residual main path that is kept is still the original X, which is not replaced outright by the normalized values.
+17255	Working the row for "love" through once in full
+29153	, with d=4, ε=0.00001, and the initial scaling g1 all ones.
+15641	Square each of the four numbers.
+23192	Add them and divide by 4 to get the mean of the squares.
+13961	Add ε and take the square root to get r.
+21996	Divide each original value by r, then multiply by the matching learnable scaling g1[j].
+8713	RMSNorm computed cell by cell
+14512	Original x
+28221	x² cell by cell
+18192	Normalized output N1
+9307	r is an intermediate value computed from this input; ε is a constant set for numerical stability; g1 is a parameter that takes part in training. The three come from different places. With the next input, r is computed again; ordinary inference does not update g1 because r changed.
+7839	What the "mean and variance" of LayerNorm do beyond that
+10624	What follows is an <strong>independent two-number comparison</strong>, only for comparing the statistical rules; it does not continue the worked model. The fixed input is
+29170	, and is not changed to another set of numbers. The mean is μ=2, the deviations are [-1,1], the squared deviations [1,1], and the population variance is their mean, 1; the standard deviation is 1 when ε is not added.
+7837	LayerNorm subtracts μ first, then divides by
+29259	, which with the initial gamma=1 and beta=0 gives about [-0.999995,0.999995]. RMSNorm does not subtract the mean; the mean of the squares is 5, and the result is about [0.447213,1.341639]. That is why everything can still be positive after RMSNorm: it never promised a zero mean.
+15450	The same input [1,3]: the two rules are not the same operation
+9106	[1,3] → subtract the mean 2 → [-1,1] → divide by sqrt(1+ε) → then multiply by gamma and add beta.
+9107	[1,3] → compute sqrt((1²+3²)/2+ε) → divide the original values by it → then multiply by g.
+27356	ε is 1e-5 throughout here. The worked model uses RMSNorm only; the LayerNorm numbers serve as an independent comparison and nothing more.
+11486	Why it must not be treated as a softmax
+9320	softmax produces non-negative shares along the candidate axis that sum to 1; RMSNorm allows negative numbers and requires no sum of 1. The softmax over an attention row distributes the read shares among the visible keys; the softmax at the output distributes predicted probability among the vocabulary candidates. Both may be called "normalization", yet their goal and their axis are entirely different.
+25446	Whether training and inference recompute the statistics
+20985	In this model both compute r from the four features the position currently has. RMSNorm and LayerNorm do not depend on a cross-sample running mean of the kind BatchNorm uses.
+10675	does not mean they stop computing statistics; it only switches the mode of those modules that <strong>really do behave differently in training and in evaluation</strong>.
+14815	On the backward pass r depends on x as well, so it cannot be treated as a constant and computed as just
+10186	. The matching derivation under System mechanisms explains why there is an extra term in the gradient. For now, hold on to this: x affects its own numerator, and it also affects the denominator shared by every feature.
+27693	Follow-up: LayerNorm, RMSNorm and softmax are all normalization, so why are they not interchangeable?
+18191	Normalization differs in its axis, its statistics and the nature of its output. A norm handles the scale of the hidden features at each position; softmax turns position scores or candidate scores into a non-negative distribution that sums to 1. Swapping them changes both the forward pass and the gradient.
+11509	Why a textbook can give the weights before it teaches training
+11466	To follow what happens inside, take known weights and walk one forward pass through to the end. How those weights come from a large number of examples is explained in lessons 52–54. It is like understanding how an existing calculator produces its result before understanding how it was designed.
+17625	A numeric example on a small model can show that you understand the operations, but it has not been trained on language data and cannot produce a meaningful answer. Do not call a network worked by hand "a reproduction of large-model intelligence".
+5829	· Lesson 45
+15784	A forward pass with fixed parameters and learning the parameters are two different things
+26169	Input and conditions.</strong> A small network: input x, first layer
+29398	, second layer
+10049	. The parameters 2, −3, 4 and 1 are given in advance.
+26133	Input x=1
+8727	ReLU turns the negative number into 0, so h=0.
+26024	On to the output
+14943	Another input, x=2
+9187	h=1, and the output is y=5.
+25256	Observe the shared parameters
+11373	Both times use the same 2, −3, 4 and 1
+24447	The result changed because the input changed, not because the network has just updated its weights.
+12570	Suppose a training objective
+9375	At x=2 we want y to be close to 4
+27171	The loss and the gradient still have to be computed before it can be decided which way to update the parameters.
+18987	Join the steps up.</strong> The forward pass computes a result under the rules it already has; training changes those rules, guided by a target and an error. The h in between is a number, not a passage of hidden explanation.
+26645	Limits and counterexamples.</strong> The ReLU example is only a two-layer scalar network, not a complete Transformer; a small network was chosen so that every step could be worked out exactly.
+26134	When the input x changes, must w change along with it?
+19677	Usually not, during inference. w is a parameter the model already has; what changes is the intermediate state and the output. Only training updates the parameters, according to the loss.
+15957	In the two-dimensional network in the main text, with x=[1,2], pre-activation values [3,-1] in the first layer and W2=[[2],[1]] in the second, what is the output once ReLU is removed? (Not the scalar worked run.)
+28840	The hidden values are [3,-1], and the second layer gives 3×2+(-1)×1=5. This shows that the activation function really does change the computation.
+18854	Is taking the RMS over all T×d numbers of a sample together the same as taking the RMS along d at each position?
+10665	No. The first lets one position's scale be influenced by other positions, even by future content, which changes the structure of the model and its causal character. This model takes the statistics along the four features separately, for each sample and each position.
+23914	Lesson 46｜Attention step by step: compute the relevance scores, then mix the content — AI Systems Engineering
+22174	Along the same four-dimensional worked model, this joins the current input, the three parameter tables, the read shares and the mixed result into one complete chain of computation. The initialized parameters are still in use here; training updates come in later Foundations lessons.
+21058	This section first fixes six objects
+5906	is "token representation + position representation";
+5909	is the normalization result already computed in the previous lesson.
+5908	are three different trainable coefficient tables, each of shape
+10166	. Multiplying the same row of N1 by each of them is what produces the Q, K and V of this run. A parameter table is not the shares of which positions are currently read; the shares are computed separately, once Q and K have been matched.
+10623	Below, training input 0 is fixed as
+29414	, and position 2, 爱 ("love"), is the one watched. That row can read only the three positions 0, 1 and 2; 学习 and ！ are in the tensor, but the current position is not allowed to peek at them. Every number comes from the same set of initialized weights, and is not mixed with the two-dimensional demonstration or with weights after training.
+16472	What problem it is trying to solve
+10249	A token is first turned into a row of numbers by the embedding table, but that is not enough. "Apples taste good" and "Apple released a computer" have to draw on different contexts. <strong>Attention is a stretch of numeric computation: for the current position it computes how much information to take from each readable position, and then mixes the information by those shares.</strong> It is not the model's eyes, and it is not three more agents that talk.
+12783	Hold on to two things first: <strong>what is used to score the matching, and what is actually taken to be mixed once the scoring is done.</strong> Query, Key and Value are simply the numbers that carry those two separate jobs. What follows gives where they come from, and then works the whole process out. <a href="../concepts.html#source-attention">Source: the mechanism described in the original attention paper
+8447	What each of query, key and value does
+22777	Now connect the names to the objects:
+20369	What object it is
+15927	Its job in the current computation
+10864	What it is not
+8456	Query, the query vector q
+18230	A row of numbers produced by the position currently receiving information
+13695	Compared with the key at each position, to score "how much to read"
+10911	Not a question typed by the user, and not a search string
+7800	Key, the key vector k
+21999	A row of numbers produced by each readable position
+19571	Takes the query's comparison, supplying the matching features for this position
+10883	Not a cryptographic key, and not a keyword lifted straight out of the text
+9029	Value, the value vector v
+22000	Another row of numbers produced by each readable position
+15890	Once the shares are fixed, supplies the content that actually enters the weighted sum
+10905	Not the correct answer, and not the final output token
+15376	One position can be <strong>a receiver and a supplier of information at the same time</strong>. When the new representation for position 2, 爱, is computed, for instance, its query is compared with the keys of BOS, 我 and 爱, and the values of those three positions are then mixed by the resulting shares.
+17617	Lowercase q, k and v are one row; uppercase Q, K and V are the tables made by laying out every position's own row.</strong> In the worked model each table has shape [2,5,4]: two samples, five positions, four features per position. They are intermediate representations obtained from the same N1 through different parameter transformations.
+15744	So the three computations are:
+9425	"Split into three sets of parameters" does not mean the mathematics forbids them from happening to be equal. Some teaching cases do set them to the same matrix, and some research architectures share parameters too. But <strong>the usual separate design lets the three paths learn different transformations</strong>. Whether the numbers are the same, and whether they are shared, has to be read off the particular example or model.
+27609	What exactly is in hand when this step begins
+18501	We already have the whole batch X, and the first normalization N1 was computed in the RMSNorm example of F10. There is no user-question string "Query" here, no database key "Key", and no final answer "Value"; all that is in hand are tables of numbers. To compute "which positions the current position reads, and which features it takes back", the model multiplies that same N1 by each of three parameter tables.
+12237	What it does
+13840	A parameter that is initialized and then trained
+18820	Turns the current features into a query
+14941	A second, independent parameter
+18780	Turns a readable position's features into a key
+24068	A third independent parameter
+18781	Turns a readable position's features into a value
+7958	This run's result of multiplying N1 by each of the parameters above
+15293	[2,5,4] each
+13711	Used, respectively, to score, to be compared, and to supply the content for mixing
+14725	The subscripts q, k and v on the parameters are only names for their use; they do not mean multiplying by another lowercase letter. <strong>Here Q=N1Wq, not X multiplied by Wq without normalization.</strong> Some conceptual formulas call "the representation fed into attention" X across the board, which can leave a reader thinking it must be the original embedding; this book always says which table it is.
+10512	The three parameter tables, fully written out
+9066	Wq: the query parameters
+9051	Wk: the key parameters
+9067	Wv: the value parameters
+15373	The same "love", with the first three results all computed
+15447	One row of N₁, three parameter tables, three different results
+19909	Enlarged figure: one row of N₁, three parameter tables, three different results
+15372	The representation of that same "love", turned into Q/K/V by the three parameter tables
+8088	Q/K/V computed path by path: one input, three parameter tables
+27367	This uses the initial parameters θ₀ of the four-dimensional worked model, at position 2, 爱, of training input 0. It is the same as the tables of numbers in this section, and is not mixed with the independent two-dimensional calculation.
+18210	The current row N1=
+10036	. Compute column 0 of each parameter table term by term first, then compute the other three columns by the same rule:
+15404	Three rows of results at the same position t=2
+9285	q: used to initiate the matching
+9212	k: used to receive the matching
+9369	v: the content supplied for the mixing that follows
+11482	Why it is not three copies of the original row of numbers
+10511	The three parameter tables differ, so the feature combinations they produce differ. The model can learn separately which features suit judging relevance and which suit passing information on. <strong>The division of labor is fixed by the computation path; what the particular numbers do is formed by training</strong> — an engineer does not hard-code "syntax", "subject" or "emotion" into some dimension.
+9405	"q is like a request, k like the matching tag on the thing being looked up, and v like the content that can be read" only explains the division of labor. Nothing actually generates a search term in words first, and nothing looks up a database key by an exact string match. What comes next is a dot product giving continuous scores, and then several values mixed by their shares — not one single hit taken on its own.
+10475	The difference between one row and the whole table
+15974	At row t=2 of sample 0, one q is compared with every visible k of that sample. The other positions, meanwhile, each have a q of their own; stacking all the q together is what makes Q. The batch axis of Q/K/V must not cross over: sentence 0 cannot read sentence 1. For a single head, note the shape for now as
+29317	, and when multiple heads are introduced it is split explicitly into
+24033	Every query of the first sample, with input positions as rows
+8857	What the self in self-attention refers to
+16495	It means that Q, K and V come from the representation of one and the same sequence; it does not mean each position can see only itself. In a causal decoder, seeing only itself and earlier positions comes from an additional causal mask. Cross-attention can have Q from one sequence and K/V from another, a different relationship between the data sources, so this model's cache is no proof that it carries over unconditionally.
+11381	Putting the two kinds of "axis" on the table first
+18219	The q at the current position t=2 has 4 features. Every visible k has 4 features too. <strong>The four features are dotted along the feature axis, giving the score for one pair of positions; the different pairs form a row of scores, and softmax then runs along the key-position axis.</strong> The two sums run over different ranges.
+24035	The five positions of the first input are BOS, 我, 爱, 学习 and ！. Row 2 is building the representation for the prefix "BOS 我 爱", so s=0, 1 and 2 may be read and s=3 and 4 are forbidden.
+18218	The current position's q compared with each key, term by term
+20702	Unscaled dot product
+28821	Divided by sqrt(4)
+20380	Allowed
+20587	Final read share
+24016	The first score is not a guess
+15668	The four products are added and then divided by 2. Dividing by sqrt(d_key) controls the scale of dot-product scores as the dimension grows; it does not turn the scores into probabilities. A real network does not always strictly satisfy the independent-and-identically-distributed conditions of that intuitive derivation, yet this implementation still scales once, by the stated formula.
+12745	Mask the future first, then normalize
+20986	In this model the allow table is defined as
+10176	. The score of a forbidden entry is set to negative infinity, so that its exponential contributes 0. It is not a matter of multiplying a forbidden score by 0: were it turned into 0,
+29266	, so it would still be given a share.
+24032	The causal allow table for the first sample
+9308	s=1 · 我
+9309	s=2 · 爱
+9310	s=3 · 学习
+6205	1=allowed, 0=forbidden; the rows are the query positions receiving information, the columns the key positions that can be read.
+22899	Computing softmax in full from the same row of scores
+10621	Only the three allowed entries are kept below; the future entries have probability 0 and do not enter the denominator.
+13665	Subtracting the same m does not change the probabilities, because numerator and denominator are both multiplied by
+29275	, which cancels; it avoids overflow when a large positive score is exponentiated. Do not read this step as making the original scores "more credible".
+15406	The output at one position: the value contributions of the visible sources added up
+19907	Enlarged figure: the output at one position: the value contributions of the visible sources added up
+10314	One attention row: three visible sources converging into the output for one position
+12080	The shares answer "where to read from", not "what the answer is"
+21067	This row has three non-zero shares, for the values at BOS, 我 and 爱. It makes no choice among the 8 vocabulary candidates, and it is not a confidence that the model's answer is right. Predicting 学习 still has to pass through the mixing, the output projection, the residual, the feed-forward network, the final normalization and the vocabulary head.
+18239	Where the data of the current attention row comes from
+10251	One q[t=2], compared with the k at s=0..4 of the same sentence.
+24704	Scaling and masking
+22582	The dot products are divided by 2; s=3 and 4 are forbidden and their scores set to −∞.
+26101	Turned into shares
+12632	Normalizing the allowed entries gives [0.376593, 0.297862, 0.325545], and the two future entries are 0.
+27245	These five position shares are aligned by column with the five rows of Value, and the weighted sum is taken.
+21977	Each row is normalized independently. The whole 5×5 table sums not to 1 but to 5.
+13851	Two error boundaries to know from the very start
+24972	If a whole row is masked, an ordinary softmax implementation meets the undefined numbers that all-−∞ produces. Do not expect "it automatically becomes all zeros" to be guaranteed by every interface; this implementation rejects such input explicitly.
+10743	Libraries can take the opposite convention for a boolean mask. Here True means allowed, which is also the convention of PyTorch SDPA; another interface may have True mean forbidden. Confirm it with a very small two-position counterexample before handing over a large tensor. The matching derivation under System mechanisms checks another kind of misalignment in a non-square cache mask.
+22772	This is not another embedding lookup
+18502	We already have the value table produced by N1×Wv, and the read shares A just computed in this section. <strong>What takes part in the mixing is the Value of the current layer, not the original token IDs and not the original characters.</strong> Each row of Value is 4 wide; after mixing for one query it is still 4 wide.
+24031	The value table for the first sample
+22017	Every output feature is mixed with the same shares
+17253	For t=2 the five position shares are
+10158	. For cell j of the mixed output:
+12081	The shares are arranged by source position s; cell j takes the same feature j from each row of Value. The share of a forbidden position is 0, so its value contributes nothing this time.
+9339	t=2: what each source position contributes to the four output features
+26615	Output feature j=0
+26616	Output feature j=1
+26617	Output feature j=2
+26618	Output feature j=3
+28212	Add column by column → mix
+11527	Why the result is not "a word has been selected"
+15063	As long as several shares are non-zero, several positions can contribute together; values are both positive and negative, so contributions to one feature can cancel. The largest share is not the largest contribution in absolute value, and it certainly cannot explain the final answer on its own. What comes out here is a new four-dimensional numeric representation, not a discrete token.
+9314	self does not mean "look only at itself"
+26000	In the worked model Q, K and V are all produced from the N1 of one and the same sequence, which is why it is called <strong>self-attention</strong>. Each position can still read the other positions the rule allows. "self" speaks of where they come from, not of being able to see only itself.
+7311	Cross-attention</strong>, by contrast, can have the query come from one sequence and the key and value from another. A translation system, for instance, uses the target-side representation it is generating to read the representation the source-sentence encoder supplies. Two inputs like this are a different structure, and the same-X formula above must not be quietly substituted in.
+20437	is a class of network structure responsible for generating the following tokens step by step;
+20415	is a class of structure that turns a given input into a representation. Here we only get to know their jobs; the actual network structures are opened up in Systems. The causal read rule comes from the design of the generation task; it is not a function the letters Q/K/V carry with them.
+11543	Why three sets of representations are needed instead of comparing and mixing X directly
+25003	Matching on the raw X and mixing X directly would amount to restricting how the matching features and the content read can be transformed. Three projections let the model learn "how to receive", "how to be matched" and "what content to supply" separately. This is a design choice between expressive power and parameter count, not a claim that the mathematics of every task requires three distinct tables.
+15138	Two <strong>explicitly separate comparisons</strong> can be made along this example, each returning to this section's baseline first:
+12405	Held unchanged
+14994	What alone is changed
+15282	The predictable effect
+19892	Change the content read
+18711	Multiply the whole of Wv by 2
+18205	The current Q/K and the read shares are unchanged, and the whole of the current O is multiplied by 2
+19869	Change the matching rule
+12477	Alter one coefficient in Wq
+8449	The query may change, and so may the shares and the mixed result
+9409	"The shares are unchanged" applies only to this one attention branch; once the output changes, the layers after it may change with it. <strong>A local comparison must not be stretched into the rest of the model never being affected.
+25497	During training the error travels back along the computation dependencies "O→A and V→Q and K→each W", adjusting the coefficients. The gradients in F15 and the optimizer in F16 will show how the update is computed. For now it is enough to keep them apart: <strong>W holds rules that can be learned; Q/K/V hold the result of applying those rules to this input.
+13601	Before going on to multiple heads, scaling and the source code
+10280	One head</strong> is a single computation path of "match query to key, then mix value". <strong>Multiple heads</strong> use several such paths and combine their results; it is not the model opening several chat windows at once. Once the results of the heads are laid side by side, they can be multiplied by another parameter table,
+29336	, which converts the mixed result back to the width the main network needs. Wo is the attention output projection, not the language model output head that finally scores the vocabulary candidates.
+28819	Dividing by␣
+20395	controls the scale of the dot-product scores. The derivation needs variance, and F14 explains that statistic first; it is not a necessary part of the definition of softmax, and it does not change the number of candidates. To learn this step by step, treat it in this section as a fixed scaling rule for this example, and press for the reason behind it in Q007.
+20605	Some libraries' high-level attention interfaces also name the input before projection
+29235	, and multiply by W only internally; other low-level interfaces take Q/K/V already projected. <strong>The same name does not mean the same stage of computation.</strong> Before reading source code, check whether the interface is responsible for the projection, so that you do not multiply by W once yourself and have the library multiply again. PyTorch's linear layer also stores its parameters as
+18018	and transposes them when computing; the hand calculations in this book use the
+15286	right-multiplication convention, and the two can express the same transformation once transposed. <a href="../concepts.html#source-mha">Basis for the interface and the shapes
+11985	The numbers above carry on from unrounded results; the decimals on the page are for display only. You can watch the intermediate values with this section's parameter experiment, or recompute them by running the packaged
+16161	. It verifies the teaching formulas and their premises; it does not prove that a real model has learned Chinese.
+22674	An independent two-dimensional check: not the next step of the four-dimensional model above
+11642	The full matrix formula for the two-dimensional comparison
+10629	An independent two-dimensional model is set up afresh below, with no normalization and no position representation. Fix X=[[1,1],[1,-1]], Wq=[[0.5,0.5],[-0.5,0.5]], Wk=[[0.5,0.5],[0.5,-0.5]] and Wv=[[5,10],[5,-10]]; two receiving positions are computed from these new conditions. It does not continue the four-dimensional run above:
+10585	The superscript␣
+25199	␣means transpose: each of K's original rows becomes a column, so that all the "query row with key row" dot products can be computed at once. It is not the sequence length T, and it is not K raised to a power.
+23616	Position 0, 我, cannot read the 爱 that lies in the future. Negative infinity is added at the forbidden score positions, written␣
+29297	, whose exponential is taken as 0 in the limit. 0 is added at the allowed positions. Call this kind of <strong>additive mask table</strong> M:
+8903	S is the <strong>score table</strong>, A the <strong>read-share table</strong>, and O the <strong>table of mixed output</strong>. All three are results of this computation, not model parameters loaded from somewhere else. Row 0 has only one legal position, its share is 1, and so its output is simply its own value.
+18537	Only all these actions together are written as this compact formula:
+20882	Shape in this example
+21001	How it is obtained in this inference
+21011	This input's representation
+10540	Supplied by the previous step
+10513	The three projection parameter tables
+20920	Preset for this example; in practice the trained parameters are loaded
+10506	Three sets of intermediate representations
+9092	X multiplied by each matching W
+15260	The constraint on readable positions
+21444	Built from the sequence, the positions and the read rule
+22069	Each row's score against each column
+8461	Q dotted with K, scaled, plus M
+22070	Each row's read shares
+17246	softmax over S along the key columns
+22007	The new representation of each receiving position
+7023	A times V
+20883	Every shape in this example happens to be the same, which <strong>is no ground for deciding that all the objects are interchangeable</strong>. In general a single head has n queries and m keys, with Q
+9946	, K
+9947	, and V
+29256	, so the scores and the shares are
+9975	, and the output
+20425	is how many numbers each value has, and need not equal
+29454	; it is the lengths of query and key that have to pair up for the dot product.
+10622	What follows checks the local mechanism of "score — share — mix" using just two features. Its input and parameters are given separately for this example, and its output cannot be joined to the four-dimensional tables above.
+5830	· Lesson 46
+26363	Input and conditions.</strong> This table checks only the two-dimensional comparison just set out; it does not carry over the four-dimensional worked model. X=[[1,1],[1,-1]]; Wq=[[0.5,0.5],[-0.5,0.5]]; Wk=[[0.5,0.5],[0.5,-0.5]]; Wv=[[5,10],[5,-10]]. From these, q₁=[1,0], k₀=[1,0], k₁=[0,1], v₀=[10,0] and v₁=[0,20]; when the 爱 position is computed, both positions can be read.
+26737	Limits and counterexamples.</strong> This example is teaching attention with one head, two positions, no bias and no positional rotation; it is not a trained language model. All the Q/K/V come from actually multiplying the same X by the three parameter tables. If any parameter or input is changed, recompute from the corresponding step.
+8462	What does the dot product of Q and K give, and what is V responsible for?
+22578	The dot product gives the scores for the readable positions; V supplies the content vectors that are aggregated by the normalized weights.
+11301	If two keys score exactly the same and both are readable, what are the weights?
+15291	0.5 each. The output is the dimension-by-dimension average of the two values, not one value picked at random.
+9061	Which of Wq and Q actually holds the model parameters?
+9063	Wq holds the multiplication coefficients. Q is the intermediate representation obtained by multiplying this X by Wq. In ordinary inference a different input changes Q, but it does not thereby run a training update on Wq.
+24835	Self-check 4
+20872	How does x₁=[1,-1] in this example produce v₁=[0,20]?
+12275	With the fixed Wv=[[5,10],[5,-10]]: the first cell is 1×5+(-1)×5=0, and the second is 1×10+(-1)×(-10)=20. This step only works on that position; it mixes in no other token.
+24836	Self-check 5
+8459	Must each row of Q and K be the same width as each row of V?
+10805	No. Q and K need the same width so that the dot product can be computed; K and V need to correspond to the same readable positions. V may have a different width d_v, and the aggregated result then has d_v features too.
+12478	If Wv is altered while Wq/Wk and the input stay the same, must the read shares of this layer change?
+18238	The current attention scores are formed by Q and K alone, so the shares of this layer do not change this time; the values and the mixed output do. In a multi-layer network the input of the later layers may change as a result, so this cannot be stretched into "no attention anywhere changes in the end".
+7013	Each of the 5 rows of the attention table has shares that sum to 1, so should the whole table sum to 1 as well?
+10926	No. The five rows are the independent distributions of five queries, so the whole table sums to 5. Normalizing over the whole table by mistake would make the positions compete for one total budget, and the computation would already have changed.
+23921	Lesson 47｜A mask is not a black box: writing "who can see whom" as a table — AI Systems Engineering
+23802	Lesson 38 · Batching and padding</a><a class="pill" href="09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="11.html">Lesson 46 · Attention step by step
+12978	All steps and explanations</a><a href="../visual/F04.html">Lesson 38 · Batching does not blend two sentences into one</a><a href="../visual/F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read
+12886	Start with a definition of the mask that is not mysterious
+7925	A mask</strong> is a marking that controls which elements may take part in an operation. In attention, a row is a query position and a column is a position being read. A cell therefore answers "may this row read this column".
+12888	Start with a definition of the mask that is not mysterious: item-by-item distinctions
+7924	A mask is a table of rules
+22363	An attention score is the model's computation
+9027	Value is the content mixed in
+13111	Key distinction:</strong> a mask does not stand for new meaning; it limits which positions' scores can take part in the softmax.
+17138	Easily misread:</strong> taking a mask for a new word vector confuses the rule with the content.
+16080	Padding markers, attention readability and the positions scored by the training loss can all be called a mask, yet they are put to different uses. When you see the word mask, ask first what it controls, rather than just memorizing a set of 0s and 1s.
+15725	How the causal restriction prevents reading the future
+10487	For three positions 0, 1 and 2, the usual allowed relationship in the causal attention used by autoregressive training and inference is:
+13184	Key distinction:</strong> a causal mask forms a lower-triangular "visibility table" that stops future information from leaking.
+17177	Easily misread:</strong> with a real cache, alignment must follow absolute position, not reuse the upper-left triangle mechanically.
+21302	Query position \ key position
+15094	It is called "causal" because the current position cannot depend on later tokens that have not happened yet, not because the model is claimed to have learned causal relationships in the real world. During training the whole answer can be fed in at once; the mask limits each position to its prefix, and the target is usually to predict the next token.
+11502	Why the whole sentence is in memory and yet the answer is not peeked at
+18824	Feeding every input position to the device at once is for parallel computation. The causal mask lays down that row t can read only the positions
+5921	as its keys. At row t=2, which predicts 学习, the 学习 at t=3 is in the same batch of tensors but <strong>cannot be read by this row through attention</strong>. The per-position RMSNorm and FFN do not mix across positions either, so there is no detour through those modules to peek at the future.
+15430	Having the data ready at the same time is not the same as every position being able to read all of it
+15875	At t=2: BOS / 我 / 爱.
+25219	Forbidden to read
+15876	At t=3 and 4: 学习 / ！ are future input positions. The mask sets the corresponding attention scores to −∞.
+22869	The label used for scoring
+9342	targets[0,2]=3 (学习). It is used only at the loss stage, to select the probability of one candidate.
+13910	The forward pass produces 8 scores; the loss judges whether the probability of item 3 is high.
+25484	That the training data is complete is something the harness knows; whether a given position can be read is a constraint of the model's computation.
+8011	Do not merge PAD, the attention mask and the loss mask
+20720	Both training inputs in this book are 5 long, so there is no PAD for the moment. To handle different lengths another implementation can pad, and then three things have to be right separately: not reading the padding keys, recording the semantic positions correctly, and keeping the padding labels out of the loss. <strong>Not computing loss on PAD does not automatically forbid other tokens from reading PAD.
+20962	This implementation uses
+5896	to ignore a loss label; -100 is not a vocabulary item and cannot be used to look up an embedding. Some libraries shift the labels automatically inside, so read the interface's contract when using them, and do not shift already-shifted labels a second time.
+16081	How the padding restriction and the causal restriction go together
+24529	Continuing with the second input
+10041	. The first two positions are real content and the third is PAD. For the real queries 0 and 1, a readable column has to satisfy both "not PAD" and "not in the future". Their relationship is:
+16082	How the padding restriction and the causal restriction go together: item-by-item distinctions
+20621	Valid tokens: 1,1,1
+8015	PAD positions: 1,1,0
+15718	The intersection of the causal and the PAD restriction
+13148	Key distinction:</strong> the two masks restrict for different reasons and can exist at the same time.
+17081	Easily misread:</strong> the allowed set is what both allow at once, not a sum that automatically widens the range.
+8020	A PAD query row is not itself a meaningful output this time: it is not used to carry on generating, and its prediction is not counted in the normal loss. How a real kernel avoids the numerical problem of a fully masked row has to follow the semantics of the interface; do not blindly fill a whole row with negative infinity.
+18649	Batched input also has sample boundaries: sample 0 must not read sample 1 merely because they share a batch. If several samples are packed into one sequence, the cross-sample readability has to be handled separately; inserting an end token on its own does not create isolation in the matrix by nature.
+9477	What "forbidden" actually does to softmax
+10289	One common way to express it mathematically is to add negative infinity to the score at a forbidden position, so that its exponential is 0, and to add 0 at an allowed position, keeping the original score; one row is then normalized.
+13261	Key distinction:</strong> the exp of a forbidden entry becomes 0, and the remaining entries are then renormalized.
+17136	Easily misread:</strong> when every entry is forbidden there is a risk of an invalid normalization, which has to be handled specially.
+24991	Running softmax over every position first and then zeroing the forbidden entries without renormalizing leaves the remaining weights summing to less than 1, which is usually not the attention that was wanted.
+12968	When a whole row has no allowed entry, softmax has no ordinary finite candidates to normalize over, and a naive computation may produce
+29264	, that is, "not a valid number". An engineering implementation has to handle or avoid such a row explicitly, rather than letting a NaN quietly travel on.
+10727	A different API may use boolean True for allowed, or for masked out, and may also accept an additive floating-point mask. <strong>Do not take the 1=allowed of this text as any library's general boolean convention.
+17912	Why the table is no longer a small square once there is a cache
+12780	For now, take a cache to be "intermediate results computed earlier"; the details are in F19. Suppose 3 past positions are already there and 2 new positions are being computed. There are only 2 queries this time, but 5 keys can be read:
+13235	Key distinction:</strong> each new query can see its own absolute position and the earlier ones; it does not see only the upper-left 2×2.
+17128	Easily misread:</strong> the shape can be right and the alignment still wrong, especially when the Q length and the K length differ.
+24664	The allow table for cached decoding: compare absolute positions, not local row numbers
+19915	Enlarged figure: the allow table for cached decoding: compare absolute positions, not local row numbers
+15740	So the table is
+10182	. The first row does not read only the first column, because its real position is already 3. The rule is "the logical position of the key is not greater than the logical position of the current query", not simply drawing a little triangle in the upper-left corner of a 2×5 table.
+7871	And what is a loss mask
+25504	When a training sample contains both a question and an answer, loss may be computed only for the next-token predictions in the answer part.
+13635	decides which predictions are scored;
+13642	decides which conditions are read. Not computing loss on the user's question does not mean the model cannot read it.
+27182	This difference is used later to explain training: the model can use the question to predict the answer, even when the question itself is not what this batch scores directly.
+5831	· Lesson 47
+6465	How the mask opens out with 3 past positions plus 2 new ones
+26256	Input and conditions.</strong> The past positions are 0, 1 and 2; the new input is at positions 3 and 4. There are only 2 queries now, but 5 keys in all to compare with. "May read / may not read" is used here to avoid confusion over the boolean polarity of different APIs.
+13815	List the columns
+7797	The key columns are labeled 0, 1, 2, 3, 4
+18536	Every column holds a real position; these are not five new inputs.
+23676	The first new query
+24488	Absolute position 3 can see only positions ≤3
+23725	The second new query
+24489	Absolute position 4 can see positions ≤4
+12481	Alter the scores
+18862	Set the scores of the may-not-read columns to negative infinity, then softmax
+25770	The weight of that column becomes 0; it is not enough to multiply the original score by 0.
+17236	Applying the upper-left triangle straight to a 2×5 table
+23688	Row 1 would read only position 0, wrongly dropping the past positions 1 and 2 and the current position 3.
+19021	Join the steps up.</strong> A causal judgment compares absolute positions; the index of a row within the new block cannot be taken directly as its position in the whole sequence.
+26678	Limits and counterexamples.</strong> A fully masked row has no standard softmax distribution, and the teaching program rejects it explicitly; a production kernel may have conventions of its own.
+28094	Follow-up: training already knows the answer, so why is a causal mask still needed?
+23338	What knows the answer is the training data and the loss computation; the forward pass responsible for the prediction at a position cannot read the future token it is supposed to predict. Otherwise training would depend on information that is not available at inference, and a low loss would not mean the real autoregressive prediction is good.
+17921	With 2 past tokens already there and only 1 new token added, how many keys should the new query be able to read?
+15940	In a causal setting with no extra window or padding restriction, 3: the 2 past ones and itself.
+14977	If loss is computed only on the assistant's answer, should the user's question be masked out in attention?
+10794	That does not follow from the premise. The answer needs the user's question as its condition. What is scored and what is read are different ranges.
+23924	Lesson 48｜Position IDs and RoPE: understand position before rotation — AI Systems Engineering
+23855	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="11.html">Lesson 46 · Attention step by step</a><a class="pill" href="12.html">Lesson 47 · A mask is not a black box
+12984	All steps and explanations</a><a href="../visual/F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="../visual/F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read
+8956	Which token it is, and where it appears, are two questions
+9443	我爱你 ("I love you") and 你爱我 ("you love me") use similar fragments in a different order. A token ID identifies which vocabulary item it is; a <strong>position ID</strong> identifies its logical position in the sequence.
+8958	Which token it is, and where it appears, are two questions: item-by-item distinctions
+8944	Token ID: which item it is
+8044	Position ID: which place it is in
+15569	Vector: the numeric representation of that place
+13128	Key distinction:</strong> "which" and "where" are two kinds of information, and the model has to bring them together to handle them.
+17176	Easily misread:</strong> the same token at different positions need not produce the same attention behavior.
+17529	For this book's
+29306	, the usual position IDs are
+10101	. For the left-padded
+29348	, the array column numbers are 0, 1 and 2, while the logical positions of the two real tokens can be 0 and 1. What is written at a PAD position is a matter of the implementation's convention; a raw column number cannot stand in for all the position logic.
+12188	A position ID need not be text handed to the user to read; it may be passed in as a separate argument, or worked out by the model code from the input length and the cache.
+11484	Why an embedding lookup is not enough on its own
+23196	The same token looks up the same row of numbers in a fixed table. If an attention system with no position mechanism at all merely compares and aggregates a set, it cannot encode every difference of order in general. A causal mask supplies part of the before-and-after constraint, but that is no reason to leave the position mechanism out of the model design.
+11485	Why an embedding lookup is not enough on its own: item-by-item distinctions
+11739	Looking up the table by token identity alone
+10702	No distinction of order
+9394	"AB" and "BA" are hard to express in order
+13238	Key distinction:</strong> without position information, matching on content alone cannot fully express differences of word order.
+17124	Easily misread:</strong> not every positional encoding is written into the embedding by simple addition.
+10460	One approach prepares an extra vector for each position and adds it to the token representation; another common mechanism, RoPE, applies position to Q/K. Different models use different designs, and the two operations must not be welded into "every model adds first and then rotates".
+15036	Meeting sin and cos with nothing but points on a plane
+18790	Think of the vector
+18461	as an arrow from the origin to a point on the plane. Turn the arrow 90 degrees counterclockwise and
+29438	, and the length does not change.
+13114	Key distinction:</strong> RoPE can be understood first as a rotation in the plane: the length stays the same, but the direction changes with position.
+17116	Easily misread:</strong> real RoPE acts on the paired dimensions of Q/K; it does not rotate text on the screen.
+25315	An angle can also be given in <strong>radians</strong>: π radians is 180 degrees, and π/2 is 90 degrees. cos and sin are the functions that describe the rotation relationship; on the unit circle, the horizontal and vertical coordinates after a rotation by θ are cosθ and sinθ.
+12076	The rotation formula for any two-dimensional vector is:
+9385	At θ=0, cos=1 and sin=0, so nothing changes; at θ=π/2, cos=0 and sin=1, so it becomes
+10164	. You can now read the most basic two-dimensional operation of RoPE without taking a full course in trigonometry first.
+8751	How RoPE uses position to change the matching
+8749	RoPE can split a row of features into groups of two and use a different frequency for each group; the further back the position, the different the angle through which it is rotated at that frequency. One group, for instance, uses the angle mθ at position m and nθ at position n.
+13220	Key distinction:</strong> rotation lets a difference of position enter the matching score without having to change all the content of Value.
+17057	Easily misread:</strong> RoPE must not be taken for a separate "memory store".
+27379	The R added here is not the model's learnable projection W.</strong> R(α) is the two-dimensional rotation matrix built directly from the angle α:
+21018	This passage writes the two coordinates as a column and multiplies that column by R; if the same pair of coordinates is written as a row vector, the equivalent is right-multiplication by R(α)ᵀ. The transpose must not be dropped. α is the actual angle of rotation, θ can be the angle added per position, and mθ and nθ belong to positions m and n; π here is the circle constant, not the symbol for a policy probability in post-training.
+20220	The dot product of the rotated Q and K then holds a relationship tied to the difference between their positions. With the rotation written as the matrix R, this can be put as
+10103	. The left-hand side compares the two rotations; the right-hand side says that this amounts to holding the difference of angle.
+27221	This does not say that only distance is left of position and the content has been thrown away. The original Q and K are still there, and the rotation modulates the content matching; the actual formula includes their components.
+11528	Why cached positions cannot start from 0 every time
+13927	The prefix has already handled the 3 positions 0, 1 and 2, so the logical position of the next token should continue at 3. Written as 0 by mistake, the rotation angle of Q/K is wrong, and so is the relationship to the cached history.
+13254	Key distinction:</strong> when generation continues from a cache, the position IDs have to agree with the length of the history.
+17166	Easily misread:</strong> counting again from position 0 each turn breaks the consistency between the old and the new K/V.
+15898	In a typical RoPE cache implementation, the past K may already have been rotated by its original position before being saved. Reading it should not blindly rotate that same already-rotated result again. Which stage of representation the cache holds has to be read off the contract of the particular interface.
+12187	Position IDs, cache slots and the model window must not be mixed up
+24653	A cache slot is where the data sits in a container; the logical position is where the token sits in the sequence; the allowed context length is a limit of the model or the service. After a sliding window discards the early cache, the logical positions are not necessarily reset to 0 either.
+18746	Changing the maximum context length from 32K to 128K does not automatically guarantee that the model behaves correctly at the new length. Position scaling, the distribution of training lengths, and numeric and task evaluation all bear on it. The basic aim here is to read "which step position takes part in", not to infer effective capability from a configuration number.
+5832	· Lesson 48
+18766	Seeing positional rotation as a change of coordinates you could draw on graph paper
+26239	Input and conditions.</strong> The rotation is demonstrated first on one pair of two-dimensional coordinates, with teaching angles laid down as 0° for position 0 and 90° for position 1. Real RoPE usually uses a different frequency for each pair of coordinates; only one pair is isolated here.
+5904	and rotate by 0°
+11769	Still
+22829	Using
+5905	to rotate by 90°
+22096	Compare positions
+12166	The Q at position 1 dotted with the K at position 0
+15459	Compare at the same position
+11401	Both are at position 1
+29465	; the difference in position changed the matching.
+24668	Cache error, for contrast
+20140	The new token should be at position 1 but is numbered from 0
+16491	Its Q is wrongly taken to be
+29184	, and its dot product with the past K becomes 1 instead of 0.
+19107	Join the steps up.</strong> Rotation does not attach "which one it is" as a new word; it expresses the positional relationship in the matching coordinates. Position IDs have to be consecutive and consistent with the cache.
+26640	Limits and counterexamples.</strong> The 90° is for working by hand; it does not set the RoPE frequency of every model to 90°. The norm is preserved under rotation.
+11641	What does the two-dimensional vector [2,3] become when rotated 90 degrees counterclockwise?
+11925	Substituting cos=0 and sin=1 gives [-3,2]. The squared length is still 13.
+24648	With 5 real tokens already in the cache, what position does a new token usually get under zero-based numbering?
+15995	In the basic setting of consecutive positions, 5, not 0. When padding or a sliding window is involved, follow the logic of the interface.

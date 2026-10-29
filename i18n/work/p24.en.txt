@@ -1,0 +1,631 @@
+23956	Lesson 54｜Post-training: supervised fine-tuning, preference, reward and parameter adaptation — AI Systems Engineering
+16057	Foundations</span><span>about 3.2k characters</span><span>Figures and item-by-item notes
+12808	Reproducible training first, then how the objective changes
+13902	The previous lesson completed a training run with real next-token supervision. Here the skeleton of input, forward pass, loss, gradient and update is kept, so that pre-training, SFT and preference training can be compared on which part each of them actually changes. Reward, KL and the probability ratio are defined before they are used; the worked model has not run PPO or DPO, and mechanisms from the literature are labeled separately from local results.
+23887	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="15.html">Lesson 52 · Only the calculus you will actually use</a><a class="pill" href="16.html">Lesson 53 · One training run end to end
+12990	All steps and explanations</a><a href="../visual/F17.html">Lesson 52 · A gradient is like a slope; the learning rate is like step size</a><a href="../visual/F35.html">Lesson 05 · When reading a metric, first ask what its denominator is
+15367	One and the same "better" has at least three meanings
+25810	Language pre-training usually learns which token follows which in text; <strong>supervised fine-tuning, SFT</strong> uses task examples to teach the model how to answer; <strong>preference or reward optimization</strong> compares which behaviors fit a given objective better. These objectives may be related, but they are not the same loss.
+15369	One and the same "better" has at least three meanings: the items distinguished
+21842	Correctness: whether it matches the facts
+12586	Preference: which of two answers is better
+16298	Reward: the score that forms the training signal
+13196	Key difference:</strong> Alignment methods often draw on human or AI preference, but a high preference score is no guarantee of factual truth.
+17058	Easy to misread:</strong> A reward model must not be treated as an external fact checker.
+10340	One answer may be preferred by the raters because it is clearer, or because it is more ingratiating. Where the score and factual correctness disagree, optimizing the score is no automatic guarantee of real capability.
+12721	Fix one main line that will not change
+25997	The worked model demonstrates next-token supervised training only. A real LLM usually learns the conditional distribution over a large body of text first, then goes on to instruction- or preference-related training. The stages differ, yet each still needs a forward pass, an objective function, gradients and parameter updates; "feeding it more prompts" is not post-training on its own.
+29012	Pre-training usually learns the predictive regularities of a broad corpus; supervised fine-tuning demonstrates how the model is wanted to respond, using the desired answers; preference methods compare different answers or use a reward signal so that certain behaviors come out more readily. Their training data, loss and sampling differ.
+8802	What SFT actually does with the question and the answer
+22744	An independent schematic sequence:
+10057	. The loss can be computed on the targets of the assistant's answer alone, with the user's part left as the condition. <strong>Not computing a loss on the user's part is not the same as masking the user's input out</strong>: the assistant positions still have to read the question. The loss mask governs what is scored and the attention mask governs what is visible; the two tables have different jobs.
+25995	The worked model computes a loss at all ten positions; it does not quietly call that an SFT run which trains the answer only. Moving to a real chat template, you also have to check the role markers, the turn boundaries, the stop symbols, and whether the framework is responsible for the label shift.
+7375	What DPO compares is not the bare size of two answer probabilities
+7372	DPO takes a preferred answer y⁺ and a worse answer y⁻ under the same prompt, and compares the difference in log probability relative to a reference policy. Definition:
+9388	π stands for the conditional probability of a complete answer, usually obtained by adding up the log probabilities of the answer's tokens; β is a loss setting, not Adam's β1/β2. sigmoid is
+29179	, not a softmax over several candidates.
+22735	An independent numeric comparison: the reference model gives the preferred and the worse answer probabilities of 0.2 and 0.4; the current model gives 0.3 and 0.3, so
+10001	. With β=1, sigmoid(a)=2/3 and loss=−ln(2/3)≈0.405465. The two answers having equal probability under the current model does not mean there is no improvement relative to the reference.
+12582	Which extra objects a preference objective needs
+23207	The same prompt x
+18763	It puts the preferred answer and the worse answer under comparable conditions.
+11345	Two sets of probabilities
+18235	The current model πθ and the reference model πref each score the answers.
+23219	The relative difference
+25380	Compute each answer's log-probability gain relative to the reference, then compare the difference.
+20502	Update the current parameters
+23004	The preference loss propagates back to θ; the reference model is usually not updated by the same optimization step.
+20005	The numbers are an independent teaching setup; they do not come from the worked model's two-sentence training result.
+8706	Why RLHF and DPO cannot be swapped on the strength of one name
+17961	A common RLHF pipeline may include a reward model, policy sampling, advantage estimation, a KL constraint and policy optimization; DPO builds a direct optimization objective out of preference pairs, leaving out some of the explicit online RL steps. Different methods do not amount to "the model gets smarter if it explains at length", and the result in one paper cannot guarantee an improvement on an arbitrary engineering task.
+19693	The extra thinking tokens of a reasoning model are one way of using the inference-time compute budget; training that capability may use reinforcement learning or similar methods. <strong>The process of training the capability</strong> and <strong>the process of consuming more reasoning tokens at deployment</strong> have to be kept apart.
+7859	Which part LoRA actually trains
+25633	Let the frozen base weight be W[4,4], and let A[4,r] and B[r,4] express the increment ΔW=AB. The forward pass uses
+29504	; training updates only the selected parameters such as A and B, and W still takes part in the forward pass, but no update for it is computed or applied.
+9288	With r=1 that adds 8 numbers; it does not delete W's 16 numbers from the system. What is saved is the parameters chosen for updating together with their gradients and optimizer state; the base weights and the activations are still needed. If B starts at 0, A's first gradient can be 0 while B can still receive a gradient first; that alone is no reason to judge the implementation wrong.
+20940	Local experiments and the limits of the literature
+27196	The SFT mask, DPO and LoRA in this lesson are independent mechanism examples, there to explain the training objective and the range of parameters. The 400 steps of the main experiment ran only the worked model's next-token cross-entropy training, and <strong>make no claim of a commercial-scale pre-training run, or of a measured RLHF or DPO result
+16292	Do not learn reward, policy and trajectory as a string of abbreviations
+24146	A policy</strong> is the probability rule for choosing an action given the current conditions. For a language model the action can be the next token; over one complete tool task, many actions make up a <strong>trajectory
+13237	Key difference:</strong> A comparison has to share the same context conditions; a reward is not a lone number sealed off from reality.
+17193	Easy to misread:</strong> When preferences are compared across different tasks, comparability needs care.
+16291	A reward</strong> is a score given to a result or a step. Whether code passes a hidden test can serve as one reward signal, but if the test is too weak the model may "get around the exam question" without really meeting the goal.
+12092	The advantage</strong> roughly expresses how much better one performance is than a baseline. If a group of answers has rewards [0,1,1], the mean is 2/3, so the raw differences from the mean are [-2/3,1/3,1/3]. A particular algorithm may also normalize these or use a different baseline, so this teaching difference must not be equated with every implementation.
+21616	What the probability ratio actually compares
+20293	The old policy gives some choice 0.1 and the new policy gives it 0.2, so the ratio of 2 says "relative to the old policy, it is more willing to make this choice". It does not say the choice is correct, nor that the whole system's performance has doubled.
+21617	What the probability ratio actually compares: the items distinguished
+20292	The old policy πref
+20195	The new policy πθ
+15414	The probability ratio for the same reply
+13180	Key difference:</strong> Only the change in probability of the same reply under the two policies expresses a relative leaning.
+17162	Easy to misread:</strong> A probability ratio is not "the ratio of the lengths of the model's answers".
+10376	The probability of a whole answer can be formed by multiplying the next-token conditional probabilities. Multiplying many small probabilities together easily drives the value extremely small, so <strong>log probability</strong> is commonly used: multiplication becomes a sum of logarithms. When answers are compared, the effect of length also needs watching.
+7766	Why KL divergence is like a "do not stray too far from the original" constraint
+24470	Given two distributions p and q over the same candidate set, <strong>KL divergence</strong> is commonly written
+10091	. It measures the difference between p and q, and the result can differ with the direction.
+13106	Key difference:</strong> KL supplies one constraint on how far the distribution moves, keeping the pursuit of one kind of reward from pushing behavior too far.
+17021	Easy to misread:</strong> KL is not the character difference between two Chinese answers.
+12294	For example, with p=[0.5,0.5] and q=[0.25,0.75]:
+10081	. It is not the sum of the absolute differences of the two probabilities, and it is not a physical distance.
+25452	In training, a constraint of this kind can keep the policy from drifting too far from the reference model. A stronger coefficient tends to be more conservative, but the actual effect has to be evaluated; "a stronger constraint" is not an unconditional improvement in quality.
+7378	Explain the DPO formula with two answers first
+20601	There is one question, a preferred answer w and a worse answer l. What DPO compares is this: relative to the reference model, does the new model lean towards w rather than l? Write the log difference as:
+13101	Key difference:</strong> Preference methods such as DPO compare the relative standing of whole-reply probabilities under a given input.
+17068	Easy to misread:</strong> Do not take "the better answer" as the one correct label for the next token.
+9387	π is the current model's probability for a complete answer, πref is the reference model, and β is a coefficient that is set. If the current model gives w and l 0.2 and 0.1, the reference gives both 0.1, and β=1, then s=ln2, sigmoid(s)=2/3, and the loss is about 0.4055.
+27231	The formula takes its training signal from preference pairs, which does not mean that no "standard of better and worse" is needed at all. Nor can it be treated as a prompt trick that one API call will implement.
+8025	Why PPO and GRPO cannot be swapped on the strength of an abbreviation
+8027	PPO is a family of policy-optimization methods that commonly control the update with mechanisms such as the probability ratio between the new and the old policy, and clipping; some RLHF pipelines train a reward model and a value estimate. GRPO-style methods form the advantage from within-group comparison of several samples for the same question, and the implementation details and the reward design still matter.
+9484	"Outcome reward" judges the final result; "process supervision" judges the intermediate steps. A long intermediate process is not the same as a correct one, and extra reasoning is not free. Having got this far, read advanced Q021—Q086 next: you should be able to say where each quantity comes from, rather than only that "reinforcement learning was used".
+5836	· Lesson 54
+12584	Which two probability ratios preference training actually compares
+26494	Input and conditions.</strong> This <strong>starts a fresh set of teaching probabilities</strong>; it does not continue the 0.2/0.1 formula demonstration earlier in this section, and the two arrive at the same relative advantage independently. The current model gives the preferred answer A and the worse answer B 0.6 and 0.2; the reference model gives 0.3 and 0.2, and the remaining probability belongs to other answers. Take β=1.
+24165	Compute A's relative change
+9216	ln2, about 0.693147.
+24167	Compute B's relative change
+12236	Take the difference and scale it
+9380	β×(A change−B change)
+18319	This gives a preference margin of ln2.
+27512	Into the sigmoid
+24123	Equals 2/3.
+25372	Compute the DPO loss
+24307	About 0.405465; where the model is exactly the same as the reference it is ln2≈0.693147.
+19239	Join the steps up.</strong> This is not a matter of looking at A's absolute probability alone; it compares how the preferred and the worse answer change relative to the reference model.
+26676	Limits and counterexamples.</strong> The example explains the standard DPO objective for a single pair of samples only; it is not a reproduction of RLHF training. In practice the probability of a whole answer is usually expressed as a sum of token log probabilities.
+7767	KL divergence: the same two sets of probabilities give a different value when the direction is swapped
+26182	Input and conditions.</strong> The distributions over two candidate words are p=[0.8,0.2] and q=[0.5,0.5]. Natural logarithms are used, and the computation follows KL(p||q)=Σpᵢln(pᵢ/qᵢ).
+24062	The first term
+24305	About 0.376003.
+24112	The second term
+24326	About −0.183258; a single term can be negative.
+7762	KL(p||q)≈0.192745, and the whole is not negative.
+11679	Swap the direction
+7764	KL(q||p)≈0.223144, which is not equal to the previous value.
+18923	Join the steps up.</strong> "Limiting the drift from the reference model" has to state the direction of the KL, the sampling distribution and where it is computed; it is not a symmetric distance in the usual sense.
+26736	Limits and counterexamples.</strong> Both probabilities in this example are greater than 0, so the infinite value that a zero in the reference distribution would cause does not arise; the estimation method inside a post-training objective may differ from the complete sum used here.
+18236	If the current model prefers answer w over the reference model, does that prove w is actually correct?
+10983	No. Training preference, reward and factual correctness may disagree; independent evidence and evaluation are still needed.
+7763	Are KL(p||q) and KL(q||p) equal in general?
+10466	In general they are not. The distribution doing the weighting and the direction of the probability ratio differ in the formula.
+5987	05｜Post-training and model customization: objectives, structure and parameter adaptation</a><br/><a href="../chapters/27.html">27｜Factual reliability, multimodality and interpretability: where the limits of capability lie</a><br/><a href="../chapters/28.html">28｜Deep research waters and whole-system judgment
+15068	When only LoRA is trained and the base weights are not updated, does that mean the base model's forward pass need not be run?
+10842	No. The base model still supplies the main computation path, and the adapter branch adds an adjustment on top of it; whether some backward-pass memory is saved depends on what is frozen and on the implementation.
+23966	Lesson 57｜Loading the training result: predict, select and stop, one token at a time — AI Systems Engineering
+19687	Inference has to catch the training artifacts saved earlier
+12696	First load the weights and the configuration obtained by the training run in the foundation lessons, then process [BOS,我,爱]. The first turn selects 学习, and only the second turn takes 学习 as input; after ！ is processed, EOS is selected. For now a full recomputation on every turn serves as the correct baseline, and the next lesson compares it against a KV cache under the same weights, without changing the question or swapping parameters.
+23886	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="14.html">Lesson 49 · Fitting attention into one layer
+20525	The last layer is not text yet
+21015	This passage only reviews the output head's linear computation: h=[1,2] and the 2×6 weight table are an independent arithmetic example, not the saved four-dimensional, eight-item-vocabulary model. The real training result is loaded only later, under "Only now do we enter the inference path"; the matching eight logits are listed in full for every turn.
+24732	Once the network has processed the input, every position holds one row of d numbers. To generate text, every candidate in the vocabulary has to be scored. This step is called the <strong>output projection</strong>, or the language model output head.
+13274	Key difference:</strong> The output layer projects internal features onto the vocabulary candidates; it does not print Chinese characters straight out of a hidden vector.
+17031	Easy to misread:</strong> logits are not probabilities; a selection or a sampling step is still needed.
+12558	Suppose the hidden state at the last valid position is h=
+29417	, the vocabulary has only 6 items, and a teaching weight of 2 rows by 6 columns is used:
+26551	An input width of 2 becomes 6 candidate scores. Taking the largest gives ID 3. The numbers here and the character mapping earlier are a demonstration only; they do not mean this untrained network really understands Chinese.
+22775	Only now do we enter the inference path
+23931	Lessons 52—54 have already explained the gradient, completed training and validation, and drawn the line around post-training. Now the training loop is set aside and we read in
+29433	, rebuild the same structure and copy the parameters across. What we use is θ*, no longer the initial θ₀ of the matching foundation subsection, and we do not rerun 400 updates on every turn of chat.
+25467	Training and inference share the same forward computation, but inference has no targets, no loss.backward and no optimizer.step. The cache is intermediate state for this prefix, not a second set of training parameters.
+25448	The real boundary between training and inference: saved, then loaded again
+25477	Training loop → disk
+12363	Save the spec and the parameters, not just the sentence "training finished".
+20186	New model → configuration
+18116	Set up the same vocabulary, number of layers, width, position strategy and dtype.
+13996	Loader → parameters
+9217	load_state_dict: the key names, the shapes and the values all have to match.
+26893	Run mode → inference
+9175	eval switches the module's mode; inference_mode turns off the recording for differentiation.
+26123	Input → model
+15765	Fix [BOS,我,爱], and generate by full recomputation first, as the baseline.
+13994	Six kinds of information to check before loading
+20993	This model's setting
+28589	What happens if it is wrong
+25749	Vocabulary and special tokens
+15446	The same ID may decode to different text, or stopping comes too early or never
+6208	1 layer, 4 dimensions, 1 head, FFN8, RMSNorm, ReLU
+21132	The weight shapes do not match, or the shapes fit but the computation function has changed
+12183	Position mechanism
+15172	A learnable P, range 0—7
+25816	RoPE used by mistake, positions reset, or access beyond the length
+20003	Numeric and parameter conventions
+9181	float64, right-multiplication by W, no bias
+24199	A difference in precision or an unintended transpose makes the output disagree
+21804	Mode
+20597	A model with dropout may still vary randomly; recording the graph takes extra memory
+21140	Weight identity
+14000	Load the post-training JSON and check the fingerprint
+15228	The initial model may be loaded by mistake, or layers from different versions mixed together
+10384	What one inference request actually supplies
+20913	In this example the user wants 我爱 continued, the teaching tokenizer gives [1,2], BOS 6 is put in front, and the model's actual input is
+10209	. The input positions are [0,1,2]. It is not the whole training sentence
+22152	"学习！" has not been taken as input ahead of time
+15410	Under the same parameters, the two settings supply different information
+25516	Training sample 0
+26127	The input is BOS 我 爱 学习 ！, and the five positions are computed at once; the labels are 我 爱 学习 ！ EOS.
+21881	This generation request
+14989	Only BOS 我 爱 is supplied; there is no real suffix label. The model produces next-token candidates first, then makes its own selection.
+25517	Position 2 in training and the last position of this prefix can give the same conditional distribution when causality and the mode agree; where the input after that comes from is different.
+19679	The inference forward pass does not run only the model's last layer
+20200	A new input ID still has to look up E and P, and go through normalization, QKV, attention, the FFN and the output head. All the parameters being trained already does not mean these computations can be skipped. A KV cache can reuse <strong>part of the computation for the old positions</strong> only when the conditions hold, and a new position still has to pass through every layer.
+22823	The generation strategy is a layer of selection rules outside the model
+21792	The model returns logits; the harness can take the largest item greedily, or sample from the distribution after it has been shaped by temperature and Top-k/Top-p. The same weights under different strategies can give different results. This worked generation fixes greedy selection first, so that each turn can be checked; sampling is compared separately in the matching derivation among the system mechanisms.
+21716	The model itself does not append a string to a web page. The selected ID has to be decoded by the tokenizer, and the harness is then responsible for display, truncation, handing over to a tool, or other business actions. The inference forward pass, token selection, text decoding and the user interface are several distinct boundaries.
+19689	Parameters are not updated during inference: how to confirm that in practice
+28827	The experiment shipped with this book computes a parameter fingerprint before and after inference and confirms they agree; it records the input, the logits, the probabilities and the cache coverage for every generation turn. Seeing that "the answer changed" is no ground for inferring that the weights changed — the prefix, the positions, the sampling random numbers, the mode or the numeric kernel may differ instead.
+11520	Why we look at the last valid position
+24825	What an autoregressive language model produces at a position is the distribution of "the next token after this prefix". If the input tokens are a, b and c, the final representation at c's position is what predicts the d that comes next.
+11521	Why we look at the last valid position: the items distinguished
+12162	Position 0 predicts the first item that follows
+20535	The last valid position predicts the next item
+8013	PAD is not a valid end position
+13259	Key difference:</strong> In an autoregressive model every position predicts its successor; the current generation has to be read from the last valid position.
+17106	Easy to misread:</strong> In a right-padded batch, the last column of the array is not necessarily the last valid position.
+20304	Earlier positions can produce distributions too, but each of them is the prediction after a shorter prefix. Generating the current answer uses the last valid position; it does not average over all positions. A right-padded batch especially needs the right position chosen, and the last column of the array cannot be taken unconditionally.
+8051	Prefill and decode are only two phases of the run
+8059	Prefill</strong> processes the whole input that has already been given, producing the representations each layer needs and the intermediate results that can be kept. When prefill ends, the last position already holds next-token scores, so the first output token can be selected.
+13129	Key difference:</strong> An output token being selected and that token being fed into the model for processing are two different events, one after the other.
+17163	Easy to misread:</strong> The model does not generate a whole sentence at once and then print it character by character.
+28225	Worked out cell by cell: "selected" and "counted into the cache" are one turn apart
+28159	After the new token d is selected the cache length is unchanged; the cache grows only once d is processed on the next turn
+21884	Step 1</span><span>Prefill processed a, b and c, and the cache covers 3 positions.
+21912	Step 2</span><span>The model selects d from the candidate distribution, but d has not yet passed through the network's layers.
+21920	Step 3</span><span>The next decode actually processes d as input, and only then does the cache cover 4 positions.
+21942	Step 4</span><span>When e is then selected, e itself has not been written into the cache either.
+10434	The token just selected as a generation step ends does not automatically already have its own K/V in each layer. The program has to actually process it on the next decode.
+7392	Decode (step-by-step decoding)</strong> feeds the newly selected token back into the model and goes on to predict the next one. Because the future tokens have not been selected yet, each generation step depends on the result of the one before.
+24635	A cache helps with "not processing the whole history again", but it does not remove the dependency between generation steps. What is inside the cache is explained in the next lesson.
+12935	Start with the most straightforward correct implementation
+27195	In this lesson every turn feeds <strong>the complete current prefix</strong> back into the same post-training model. It wastes computation on repetition, but the logic is easy to check, so it can serve as the baseline for the cache optimization. When the next lesson optimizes, the result has to match this one under the same conditions, not merely look like "the generation is fairly similar".
+13995	Load the weights trained earlier and generate continuously until EOS
+19905	Enlarged figure: load the weights trained earlier and generate continuously until EOS
+15402	One set of trained weights: predict, append and stop, turn by turn
+24060	Turn 1: only BOS, 我 and 爱 are processed
+29214	, positions
+10161	. The same forward pass explained earlier gives 3 rows of logits, and the row for the last position, t=2, is taken. The actual eight values here are:
+25466	The first turn after training: vocabulary scores and probabilities
+20550	The largest item is ID 3, 学习. A new ID has now been selected; it has only just come out of the candidates, and <strong>it has not passed through this turn's forward pass in its own right as input</strong>. Appending it to the sequence gives
+24110	Turn 2: 学习 appears in the input for the first time
+28540	Recompute the complete prefix
+10127	. The last input position is now t=3, standing for 学习; from this prefix the model predicts what comes next. ID 5, ！, is selected, and appending it gives
+24077	Turn 3: after ！ is processed, the prediction reaches EOS
+26549	All five items are input, the scores at t=4 are taken, and ID 7, EOS, is selected. EOS is the end marker and is usually not displayed as ordinary text. The worked example stops here; it does not feed EOS in to predict "what comes after EOS".
+21086	The prefix known this turn
+16962	The IDs actually input (no cache)
+28149	Next item selected
+28155	Probability of the selected item
+7100	BOS/我/爱
+7101	BOS/我/爱/学习
+7102	BOS/我/爱/学习/！
+27303	This is the greedy trajectory actually produced by the same model after it was saved and loaded again; the next token was not specified by hand.
+11480	Why the words predicted at every position in turn 1 are not simply strung together into the answer
+25474	A training-style forward pass can give one row of distribution at each of BOS, 我 and 爱, but they belong to different prefixes: the distribution after BOS, the one after BOS 我, and the one after BOS 我 爱. They are not the 1st, 2nd and 3rd unknown words to come for the same question. Picking one item at each of the three positions and stringing them together misreads the output axis.
+15025	Only the last valid position corresponds to the next item "after the complete current prefix". Once that next item is chosen, the prefix condition has changed and the computation has to be redone under the new condition.
+11513	Why generation is sometimes inconsistent
+20919	This example is greedy, has no dropout, and fixes the weights and the precision, so the path is determined. A real system, even with a fixed seed, can still be affected by parallel kernels, the service version and so on; sampling deliberately introduces different choices. To judge a regression, control the weights, the input template, the mask, the positions, the generation parameters and the numeric environment, rather than only comparing two pieces of text.
+12598	The reason for stopping is not the reason for success
+27230	This example ends on EOS; if the maximum number of new tokens were set to 2, it would generate only 学习！ and then end on the length limit, with EOS not yet predicted. Returning "length" should not be dressed up as "a natural, complete finish". In JSON, code and tool settings, truncation can also leave the syntax incomplete or an action unfinished.
+28161	Selected is not the same as already processed
+24047	When the first step outputs d, what the model has just processed is a, b and c; d is no more than an ID selected from the scores, and it has not been through its own embedding and the layers. So if the cache holds the K/V of the tokens already computed, at this moment it covers 3 positions, not 4.
+13122	Key difference:</strong> d has just been selected and has not passed through the layers as input; the matching KV is written only after d is processed on the next turn.
+17180	Easy to misread:</strong> The cache length cannot be incremented by 1 unconditionally the moment sampling finishes.
+10597	Only when the next step takes d as the new input is d's K/V in each layer produced. That difference of one slot decides whether you append the input twice, whether you use the wrong position, and whether you estimate the cache length wrongly.
+22804	How generated tokens relate to the characters shown in the interface
+26625	An output ID has to be turned back into a text fragment by the matching tokenizer. One token may correspond to several characters, or supply only part of a multi-byte character. <strong>Streaming display</strong> lets partial results reach the interface gradually; it does not mean that each Chinese character appearing marks exactly one completed model computation.
+22805	How generated tokens relate to the characters shown in the interface: the items distinguished
+8963	The token output ID
+8946	The tokenizer decodes to text bytes
+23014	The interface displays progressively, character by character
+13117	Key difference:</strong> The boundaries of tokens, of UTF-8 characters and of network fragments do not necessarily line up one to one.
+17169	Easy to misread:</strong> Half a UTF-8 character arriving in a stream cannot be treated at once as a complete character.
+24727	Network transport also splits data into fragments of no fixed size, and F23 explains why half a piece of JSON cannot be executed. For now, keep the unit of generation, the unit of text encoding and the unit of network fragmentation apart.
+16471	How it stops
+21663	The model can generate the special <strong>EOS (end) token</strong>; the harness can also set a maximum output length, a stop string, or accept a cancellation request. These are no more than different reasons for stopping, and none of them should be read as "the task completed successfully".
+12323	Hitting the output length limit, for instance, may truncate JSON; receiving a tool call means the model wants the harness to take the next step, and need not be the final answer; a cancellation by the user certainly does not mean the tool left no side effect behind.
+25454	Why training can compute several positions at once
+25491	In training the complete sample a, b, c, d is already given, so b can be predicted from a, c from ab and d from abc all at once, with the causal mask limiting what each position may read. That is computing the training objective in parallel under known prefixes; it is not knowing in advance what a real inference run will generate.
+25857	When you read "training can be parallel, generation has to be sequential", explain it by this distinction; do not suppose that the two draw on entirely unrelated language capability.
+5837	· Lesson 57
+28990	Predicting a token is not the same as having written it into the KV cache
+26305	Input and conditions.</strong> The prompt IDs already processed are
+10142	. The model's last position outputs three candidate probabilities
+29220	, with candidate IDs 4, 5 and EOS; these are given for teaching.
+16527	Finish prefill
+16125	Process the prompt's 3 positions
+7776	There are 3 positions in the KV, and the logits predict the token that comes next.
+28158	Select ID 4
+12321	Greedily taking the largest probability, for instance
+26602	The output sequence becomes
+29206	, but ID 4 has not run the forward pass yet, so the KV is still of length 3.
+18132	Begin decode
+18834	Feed the new input
+5873	and the old KV into the model
+21087	Only this turn is ID 4's K/V in each layer computed, and the cache grows to 4.
+13606	Then predict ID 5
+25870	Read the output distribution at position 4
+26603	The output sequence is of length 5 and the KV of length 4, still one short by the token just selected.
+10604	If EOS is selected on the next turn
+21450	Display stops according to the generator's rules; there is no need to invent another tool execution in order to show EOS.
+18917	Join the steps up.</strong> "The number of tokens processed" and "the number of tokens already selected" can differ by 1 between two calls. Getting it wrong duplicates the input or misaligns the cache.
+26677	Limits and counterexamples.</strong> The candidate probabilities and the token numbers are given by hand; this state example makes no claim that the model really generated any natural language.
+25447	The final comparison table of training and inference
+25532	Training stage
+19701	Inference stage
+14729	Where the parameters come from
+13842	Initialization, or further learning from an existing checkpoint
+14002	The selected training result is loaded
+26577	Who decides the input
+23295	The prefix of a real sample
+22921	The user's prefix and what the model has already selected
+13916	The core of the forward pass
+7603	Embedding / position / layers / output head
+15444	The same structure, with the current parameters that match it
+23085	Target labels
+19511	The supervision object the loss requires
+22816	Usually unknown while generating
+20391	Whether gradients are computed
+28901	For the parameters and paths that need training
+20390	Whether there is an update
+12100	The optimizer step
+20463	Ordinary generation does not update
+24617	Cache / state
+22552	Activations, gradients, the optimizer and training progress
+7775	The KV, the generated sequence, and the sampling and stopping state
+16303	How the result is judged
+9230	loss + independent validation + task metrics
+22826	Generation quality + consistency + latency and cost, and so on
+12976	All steps and explanations</a><a href="../visual/F03.html">Lesson 37 · Text, bytes, tokens and IDs are four different things</a><a href="../visual/F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="../visual/F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read</a><a href="../visual/O07.html">O07 · Speculative decoding: the draft may be fast, but it must be verified correctly
+26580	With an input of length 3 and prefill having just selected the first new token, how many positions have usually been computed at that moment?
+6462	3. The token just selected forms its own intermediate results in each layer only after it is input on the next turn.
+22827	When generation stops on the length limit, can the work be declared finished straight away?
+11144	No. It states the reason for stopping only; whether the result is complete, and whether the requirement and the validation are met, has to be judged separately.
+5970	01｜What input really is: from the user's sentence to model tensors</a><br/><a href="../chapters/06.html">06｜Inference mechanics: loading, decoding strategy and continuous generation</a><br/><a href="../chapters/09.html">09｜One full agent task loop: who is thinking and who is executing
+18845	If the model has been put in eval but the optimizer object is still kept, does training necessarily happen?
+10680	No. What matters is whether the required gradients are computed and a parameter update is carried out. Keeping an object is not calling it; that said, an inference deployment usually has no need to carry the optimizer state.
+24058	The first turn can already compute logits at three positions, so why can three new tokens not be output at once?
+15711	Because the three rows belong to three different known prefixes, not to three future positions after the same prefix. The prefix the second unknown token needs depends on the first token actually selected.
+23974	Lesson 58｜KV cache: reusing past computation under the same result — AI Systems Engineering
+24652	A cache is an equivalent implementation of the same inference, not a different model
+21061	This section fixes the input, the trained weights and the selection rule from the previous lesson. The only change is whether the K/V of the positions already processed is reused, and the logits and the cache length are compared turn by turn. The small two-layer capacity example at the start is only for computing storage; the worked numeric experiment is still a one-layer model, and the two are not merged into one cache record.
+23906	Lesson 46 · Attention step by step</a><a class="pill" href="12.html">Lesson 47 · A mask is not a black box</a><a class="pill" href="13.html">Lesson 48 · Position IDs and RoPE</a><a class="pill" href="14.html">Lesson 49 · Fitting attention into one layer</a><a class="pill" href="18.html">Lesson 57 · From the last row of numbers to one token, and on to a whole answer
+12987	All steps and explanations</a><a href="../visual/F12.html">Lesson 47 · A mask is a visibility table, not extra meaning</a><a href="../visual/O01.html">O01 · GQA/MQA: what is reduced is the number of K/V groups</a><a href="../visual/O04.html">O04 · FlashAttention: accumulate while reading, without materializing the whole table
+12656	Start from what caching ordinarily means
+12257	You have worked out 2×3=6, and the next step needs the same result again, so 6 can be stored and used. A <strong>cache</strong> is exactly that: reusing an existing computation while the conditions have not changed, so that work is not repeated. What matters is not that "it was stored" but whether "the stored result still corresponds to the current conditions".
+12658	Start from what caching ordinarily means: the items distinguished
+20464	An ordinary cache: it keeps the result
+7791	A KV cache: it keeps the K/V of each layer
+28683	Long-term memory: it keeps external knowledge
+13182	Key difference:</strong> They are all called a cache or a memory, but what they store, how long they live and the conditions for reuse are entirely different.
+17022	Easy to misread:</strong> A KV cache is not the model having "already learned" that history.
+22352	In attention, every layer computes K and V for the tokens already processed, and the new queries that come later need to read that past K/V. Storing them is what is called
+11537	Why appending a token usually does not change the old K/V
+12003	On the premises of fixed weights, deterministic inference, causal attention, and normalization applied independently per token: an old position i can read only itself and what comes before it. Append a new token at the end, and the old positions still cannot see this future position.
+13186	Key difference:</strong> While causality holds and the positions are unchanged, the old tokens cannot see the future, so the old K/V need not be recomputed because of an append.
+17182	Easy to misread:</strong> Editing something in the middle of the prefix leaves the cache for the affected suffix no longer reliable.
+15733	So the input to layer 0 at the old positions has not changed, and neither has its output; the old representation that layer 1 depends on has not changed either, and so on, which lets the old K/V of every layer stay as it is. <strong>This reusability comes from the dependency structure; it is not the model committing the whole text to mind again.
+16352	If bidirectional attention is used, which lets the old positions read the new suffix, or if all the positions are normalized together, this argument cannot be applied directly.
+12099	Before optimizing, state what must stay the same
+11977	With F18's "full recomputation every turn" as the baseline, this lesson uses <strong>exactly the same post-training parameters, prefix, positions and greedy rule</strong>. The aim of the optimization is to reuse the past Key/Value, not to change the output distribution. If the cached path and the full recomputation disagree beyond the permitted numeric error, debug it first; do not treat it as a legitimate "second answer".
+11511	Why the K/V of old positions can be kept
+15723	In a causal model an old position can see only itself and earlier positions. Appending a new token does not change the prefix those old positions can see, so while the parameters, the positional encoding, the mode and other conditions are fixed, the old positions' representations and that layer's K/V need not be recomputed.
+27308	This is a conditional property: changing one token in the history, changing the model parameters, switching the position settings, or allowing the future to be seen can each invalidate the corresponding cache. With several layers, each layer also has to cache the K/V computed from <strong>its own</strong> input; the top layer alone cannot stand in for all of them.
+10534	A cache ledger over three rounds
+27515	Cached positions on entry
+13918	Cached positions when the forward pass ends
+21102	Selected this turn but not yet processed
+23691	On turn 1 prefill processes 3 items, the cache length is 3, and then 学习 is selected. Turn 2 inputs 学习 alone, gives it absolute position 3, computes its K/V and attaches it after the old cache for a length of 4, and then ！ is selected. Turn 3 inputs ！ alone at position 4, the cache length becomes 5, and then EOS is selected and it stops. <strong>EOS was selected but never put through a forward pass, so the final sequence length is 6 and the cache length 5.
+17901	The positions already processed and the token just selected are not the same state
+19912	Enlarged figure: the positions already processed and the token just selected are not the same state
+7790	A KV cache stores the positions already processed layer by layer; the token just selected has not been written in
+20136	How a new query reads old keys and new keys
+23738	Turn 2 has only one new query, so Q is of length 1, and after merging the K/V is of length 4. The attention scores are no longer square in shape but
+29125	(with the batch axis, [1,1,4]). It has to permit reading all four items at positions 0—3.
+23821	Turn 3 is likewise one query reading five keys. Applying the conventional square matrix's upper-left triangle rule directly to
+29276	may permit only the first item; the result runs, but it is already wrong.
+23739	The actual objects on turn 2's cached path
+17911	The existing cache
+10543	The K/V computed for positions 0, 1 and 2 on the previous turn, with the parameters still the same θ*.
+24673	ID 3 = 学习; position_id=3, not starting over from 0.
+27659	Append the new K/V
+21095	This turn computes k3/v3 and merges them into K/V positions 0..3.
+18206	The current query
+15067	Only q3 is computed; it reads the four positions of the K/V and gives the same final logits as recomputing all four items.
+28172	Select the next item
+28156	！ is selected; it does not have a cache entry of its own yet.
+24634	A cache saves only the repeated computation of the past representations; a new token's embedding, the computation in each layer and the output head still have to run.
+10707	Not just one token: how to draw the mask when two items come in at once
+22676	An independent position comparison: 3 positions are already cached, positions 3 and 4 are input together as new, and the total key length is 5. The first new query may read only 0—3, the second may read 0—4:
+21852	The correct non-square permission table
+9206	key position 0
+9207	key position 1
+9208	key position 2
+9209	key position 3
+9210	key position 4
+9280	query absolute position 3
+9281	query absolute position 4
+15043	Looking only at these two rows' local row numbers 0 and 1 inside the small new-input matrix puts the causal relationship in the wrong place.
+11540	Why old Q is usually not cached
+18245	The current generation needs only the output at the new position, using the new Q to compare against all the K it requires. The old outputs from the old Q have already been used, and appending a token does not call for producing them again. A typical autoregressive cache therefore stores K/V and does not keep the old Q for each generation step. A different algorithm or output requirement may call for other state, though, so this is no universal law that "Q can never be cached".
+23229	Computation saved, and what it cost
+7777	The KV volume is approximately
+10207	. In the worked model as it stands — 1 layer, batch 1, 1 head, S=5, D=4, float64=8 bytes — the raw K/V values come to
+5878	bytes; this does not include Python objects, the parameters or other temporary memory.
+16903	Measured consistency, and the limits
+28826	The largest logit difference between the three cached turns shipped with this book and the full recomputation is
+29490	; the standard-library independent forward pass and the PyTorch result also agree within floating-point tolerance. This is not a GPU performance benchmark. Whether it runs faster depends on the sequence length, the kernels, the scheduling and the hardware; reading the cache can itself become a bandwidth bottleneck.
+22858	Count the cache exactly with two layers and three history positions
+12542	Suppose there are only two layers, one head per layer, each K or V is 4 numbers, and 3 positions have been processed.
+13107	Key difference:</strong> KV data is stored layer by layer; each layer's K/V comes from its own hidden state.
+17052	Easy to misread:</strong> Storing only the last layer's K/V does not make it reusable for the layers above.
+28229	Worked out cell by cell: why a two-layer cache cannot store just one copy
+11351	A two-layer network stores the Key and Value of three positions in each layer
+21895	Step 1</span><span>Layer 0 stores a K and a V for each of the past positions 0, 1 and 2.
+21914	Step 2</span><span>Layer 1 likewise stores a K and a V for each of positions 0, 1 and 2.
+21921	Step 3</span><span>The K/V values of the two layers come from the representations of different layers, so one copy alone cannot be kept.
+21947	Step 4</span><span>As generation continues with a new token, the matching past data is read layer by layer.
+10584	An upper layer's K/V depends on that layer's input representation, which is not the same as reusing the lower layer's K/V directly; the cache has to be stored layer by layer.
+13037	In all
+11423	numbers. If each number takes 4 bytes, the data itself is 192 bytes.
+20139	When a new token arrives, layer 0 computes one row of 4 numbers each for the new K and V and appends them; layer 1 appends its own row once it has the new deeper representation. It is not one single addition to the cache at the top layer. The layers have different parameters, so their caches have different sources.
+11538	Why past Q is usually not stored for later attention
+20141	The output for a new token needs a new Q to match the past K and to weight the past V. The old Q has already done the querying for the old positions; predicting a new position does not call for the old Q again to produce the output at every old position, so for this incremental computation there is usually no need to store all the old Q.
+11539	Why past Q is usually not stored for later attention: the items distinguished
+21073	This turn's query is used only for this turn's scoring
+14168	The past keys have to be compared by the new query
+14169	The past values have to be drawn on for content
+13244	Key difference:</strong> What gets reused when generating the next token is the past K/V; the old Q is usually not used again by the next step's query.
+17034	Easy to misread:</strong> "Do not cache the old Q" is not an absolute prohibition; it is simply that there is usually no need.
+27281	This does not mean Q is unimportant or can never be cached; it is only that in standard causal incremental inference, reusing the past K/V pays off more directly.
+20646	Why it is still not constant time even with a cache
+17540	For every new token you still have to compute the new representation and its projections, and the new Q has more and more past K/V to read. The longer the history, the higher the cost of reading and aggregating in attention can be. A KV cache cuts the repeated forward pass of the old tokens through each layer; it does not bring the cost of a long context to zero.
+13108	Key difference:</strong> A KV cache cuts the repeated processing of old tokens, but a new token still has to read the past K/V.
+17150	Easy to misread:</strong> Having a KV cache does not mean every token is generated at constant cost.
+11594	Nor can a KV cache be called a losslessly compressed copy of the original text. It is intermediate numeric state under one particular model, one particular prefix and one particular position convention; it is not a general, editable knowledge base.
+24643	When cache invalidation happens
+19877	Changing the weights, the adapter or the position settings can leave the cache no longer matching. After a position in the middle of the prompt is modified, that position and the later state depending on it usually have to be recomputed; whether the prefix before it can be kept depends on whether the same model and input conditions still hold.
+17568	Compacting a conversation into a summary changes the input sequence, which is not the same as carrying the old KV over unchanged. A server-side prompt cache may reuse the computation for an identical prefix, but that sits at a different level from "writing a summary" in the application.
+10368	One table to separate three kinds of "memory"
+15513	Name
+12367	What it stores
+11547	Why it is stored
+21231	The K/V values in each layer for one model and one prefix
+28392	To avoid repeating the forward computation
+12123	Conversation history or a summary
+20104	Text, tool results, task progress
+11459	To supply the conditions for the next turn
+24384	Filtered facts and experience that carry across sessions
+17610	To be retrieved and used later as needed
+24791	Only once you can explain this table should you go on to FlashAttention, paged caching and long-task compaction; that is what keeps optimizations at different levels from being run together as one thing.
+5838	· Lesson 58
+15431	Why the same history needs a copy of the K/V kept in every layer
+26331	Input and conditions.</strong> The teaching model has 2 layers and 1 KV head, each head holds 2 numbers, and 3 positions have been processed; each number uses FP32's 4 bytes.
+20001	Count one layer's K
+6466	3 positions × 2 components
+6758	6 numbers.
+13962	Add that layer's V
+15485	Another 6 numbers
+22028	12 numbers of K/V per layer.
+11590	Multiply by the two layers
+22040	Each layer has a different input representation, and different projection weights
+18414	24 numbers in all, that is 96 bytes.
+27656	Append one position
+11349	Each of the two layers gains 2 numbers of K and 2 of V
+13047	8 numbers in all, that is 32 bytes.
+20183	The new query's computation
+22033	The new Q in each layer reads that layer's 4 keys
+20272	The old Q need not be recomputed; the past K/V still has to be read, though, so the cost is not constant.
+19265	Join the steps up.</strong> A cache at the top layer cannot stand in for one at the bottom: as soon as a new token enters the bottom layer, that layer's past K/V is already needed.
+26740	Limits and counterexamples.</strong> This example counts only the K/V data itself and ignores the metadata. It holds on the conditions of fixed weights, a fixed prefix and causal visibility.
+28002	Follow-up: with a cache, does the model look only at the new token?
+16499	It usually computes a new position representation, a query and so on for the new token only, but the new query still reads the past cached K/V, and the history still takes part in the output. A cache does not compact the whole context away, and it does not write the past knowledge permanently into the parameters.
+19862	After one token at the end of the prompt is changed, can the old K/V for that one position be reused unconditionally?
+10985	No. The input at that position has changed, so the old K/V no longer corresponds to the new input. An earlier prefix that meets the conditions can be judged for reuse separately.
+20598	With a KV cache in place, does the new query still read the history?
+25244	It does. It computes the weights through the past K and aggregates the past V; what the cache avoids is producing that old K/V again.
+5992	06｜Inference mechanics: loading, decoding strategy and continuous generation</a><br/><a href="../chapters/07.html">07｜Inside KV cache, FlashAttention and PagedAttention</a><br/><a href="../chapters/08.html">08｜Inference serving: scheduling, throughput, latency and parallelism</a><br/><a href="../chapters/14.html">14｜Context compaction: what is actually compacted, and how it is recovered once lost</a><br/><a href="../chapters/28.html">28｜Deep research waters and whole-system judgment
+18846	If the model is switched to a new LoRA adapter, can the old KV go on being used unconditionally?
+10717	No. A change in the parameters or the computation path can leave the past K/V no longer matching the current model. Cache reuse has to be bound to the model, the adapter, the prefix, the positions and the related run settings.
+23985	Lesson 61｜Low rank, quantization, experts: start with what is actually not being computed — AI Systems Engineering
+16056	Foundations</span><span>about 3k characters</span><span>Figures and item-by-item notes
+23854	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="10.html">Lesson 45 · The smallest neural network model</a><a class="pill" href="16.html">Lesson 53 · One training run end to end</a><a class="pill" href="17.html">Lesson 54 · The mathematics needed before post-training
+13011	All steps and explanations</a><a href="../visual/O02.html">O02 · Quantization: saves storage, and introduces approximation</a><a href="../visual/O03.html">O03 · LoRA: freeze the large table, learn a small increment</a><a href="../visual/O08.html">O08 · MoE: each token takes part of the compute path
+9410	Understand "low rank" first through a table with repeated structure
+23255	Look at the matrix
+10184	. The second row is just the first row times 2, so the two rows are not two independent directions. It can be split as:
+13177	Key difference:</strong> Only with enough linear dependence can a low rank represent something exactly at a small dimension.
+17135	Easy to misread:</strong> Not every matrix can be turned into rank 1 without loss.
+23445	Rank</strong> roughly describes how many linearly independent directions a matrix holds. The rank in the example above is 1. In general not every large table can be represented exactly with a very small rank; a low-rank approximation limits what can be represented.
+7855	What LoRA changes is not the whole base model
+25640	Let the existing weight W have shape
+9985	. LoRA freezes W and uses a smaller A=
+25172	to express an increment
+29245	, and then computes with
+25375	.
+13109	Key difference:</strong> LoRA keeps the original W and learns only a low-rank increment; the parameters that need training drop from 64 to 32.
+17049	Easy to misread:</strong> That is not the same as the original 64 weights being unnecessary at run time.
+27354	When r here is much smaller than the original size, the parameters that need training go from
+10029	. For instance an 8×8 matrix holds 64 numbers, and with r=2 the increment is 32 numbers. Sources using a column-vector convention may write it BA, so understanding the shapes matters more than memorizing the order of the letters.
+27226	This does not mean that "the facts the model knows are all held in the LoRA", nor that the whole training process is left with only this much memory. The base weights, the activations and other state are still there.
+28574	Quantization represents numbers on a limited scale
+28565	Quantization</strong> approximates the original value using fewer numeric representation slots. One teaching rule is to divide by a scale s first, round to an integer q, and then restore it approximately as s×q.
+13283	Key difference:</strong> Quantization maps continuous values onto a finite scale, which saves storage but introduces approximation error.
+17118	Easy to misread:</strong> In practice there may also be clipping, an offset and per-group scales.
+28240	Worked out cell by cell: quantization: 0.26 is mapped to 0.3 — where the error comes from
+17657	A scale of 0.1 rounds 0.26 to 0.3, with an error of 0.04
+21901	Step 1</span><span>Choose the quantization scale s=0.1, with the original value x=0.26.
+21907	Step 2</span><span>Compute x/s=2.6 first, and round to the integer q=3.
+21937	Step 3</span><span>Restoring gives q×s=0.3.
+21954	Step 4</span><span>The error is 0.3−0.26=+0.04; a low-precision representation does not leave the original value exactly unchanged.
+17656	A scale of 0.1 makes 0.26/0.1=2.6, which rounds to the integer 3 and then multiplies by 0.1 to give 0.3; 0.04 is the error this process introduces.
+12295	For instance, with s=0.1 and x=0.26, q=round(2.6)=3, restoring gives 0.3, and the error is 0.04. Real quantization also has range clipping, offsets, per-group scales and different formats, so this minimal example cannot stand in for every implementation.
+21141	Weight quantization shrinks the representation of the weights; KV quantization shrinks the representation of the cache; activation quantization is yet another object. Writing "a 4bit model" is no ground for inferring that all the memory in use is 4bit.
+24357	combines quantized base weights with parameter-efficient fine-tuning and similar techniques. It is not the same as storing every number involved in differentiation at very low precision.
+7934	Why MoE has many parameters but calls only some of them
+7938	MoE (mixture of experts)</strong> prepares several groups of selectable sub-networks in some layers; the router selects some of the experts to compute, based on the current token's representation, and the results are then combined. With 8 experts, for instance, each token selects only 2.
+13112	Key difference:</strong> MoE can raise the total parameter capacity while lowering the expert computation activated per token.
+17134	Easy to misread:</strong> The parameters of every expert still have to be available, and the load may be uneven.
+13675	What is reduced is the expert computation activated per token on this pass, not the system's need for the other experts' parameters at all. Different tokens can choose different experts, so the service still has to be able to obtain the weights it needs; uneven load and cross-device communication also have to be handled.
+9407	"Expert" is a structural name; it does not by nature mean that one group is a mathematics expert and another an emotions expert. MoE routing inside a neural network and an agent choosing another model for a task are routing at different levels.
+25101	What distillation and fine-tuning actually do
+25100	Distillation</strong> has a student model learn from signals such as the teacher's outputs or distributions; the teacher can supply a training target, but the student still has to be trained and independently evaluated. One wrong answer from the teacher can be learned along with the rest.
+25102	What distillation and fine-tuning actually do: the items distinguished
+25106	Distillation: the student learns the teacher's behavior
+18340	Fine-tuning: further training on an existing model
+21600	Retrieval: querying up-to-date external material
+13135	Key difference:</strong> The three approaches solve different problems; real-time facts usually suit retrieval better than fine-tuning.
+17144	Easy to misread:</strong> The teacher's answer may be wrong, so distillation needs independent verification.
+18336	Fine-tuning</strong> refers broadly to continuing to train some or all of the parameters on top of an existing model. It suits changing a stable distribution of task behavior, and is not usually the first choice for keeping real-time business facts in sync; real-time facts suit versioned retrieval better.
+8844	Why scaling laws are not an eternal table of ratios
+25291	Scaling studies try to fit the relationship between parameter count, data volume, compute budget and loss. Under a given architecture, data and training conditions, they can help allocate a budget.
+18738	Taking one empirically fitted proportion as a fixed law for every model overlooks deployment cost, duplicated data, data quality and new architectures. The derivation is kept for the advanced chapters; at this level, first understand that "total parameters, activated parameters, trained parameters and storage precision" are four different quantities.
+5839	· Lesson 61
+10521	What distinguishes three ways of "saving parameters or saving storage" on the same small table
+26221	Input and conditions.</strong> The low-rank increment takes the column vector
+5874	and the row vector
+29514	; quantization takes x=0.26 with a scale of s=0.1; the expert routing has three candidates.
+12200	Multiply the low-rank factors
+25369	Compute AB
+29499	; the second row is twice the first, so the rank is 1.
+13972	Add the base weight
+25628	Let W be the 2×2 identity matrix
+29476	; real LoRA also has a scaling convention.
+20076	The integer 3, dequantized to 0.3, with an error of 0.04; this is not a lossless change of file format.
+28173	Select the experts
+24480	Given the gating weights
+29271	, take only the top 2
+28148	Experts 0 and 1 are chosen; if this implementation renormalizes, the weights are 2/3 and 1/3.
+22499	Mix the outputs
+11298	The two experts output
+24430	The result is
+29495	; the third expert was not computed this time, but its parameters are still there.
+18957	Join the steps up.</strong> Low rank changes the trainable increment, quantization changes the numeric representation, and MoE changes which sub-networks are activated on this pass. Similar names do not mean the saving comes out of the same ledger.
+26638	Limits and counterexamples.</strong> The rank-1 factorization of a 2×2 matrix has 4 parameters, as many as the original matrix, so it only demonstrates the structure. A real parameter saving needs a large dimension and a small enough r; the expert normalization is a strategy this example chooses explicitly.
+28568	Quantization is not only rounding; it can also clip a number that falls out of range
+26196	Input and conditions.</strong> A five-level quantizer is defined by hand: the scale is s=0.1, and the only storable integers are −2, −1, 0, 1 and 2. The input is [-0.24,0.03,0.26].
+28824	Divide by the scale
+27346	These are not the final storable integers yet.
+15667	Round to nearest
+20881	None of the values here is exactly a half-integer, which gives [−2,0,3]
+10688	It does not depend on the differing rounding conventions for half-integers.
+18523	Clip to the range
+20546	The largest storable value is 2
+24692	The encoding becomes [−2,0,2], and the third item is clipped.
+14832	Dequantize
+24685	Multiply the encoding by 0.1
+27154	Restoring gives [−0.2,0,0.2], with errors of [0.04,−0.03,−0.06].
+21502	Check the cause
+24078	The third item rounded to 0.3, but the range does not allow it
+25227	Clipping error and ordinary rounding error must not be run together.
+19188	Join the steps up.</strong> The scale, the zero point, the integer range, the rounding method and the clipping rule together define a quantizer; leave any one of them unstated and the result may not be reproducible.
+26792	Limits and counterexamples.</strong> This is a five-level teaching quantization, not int8's real range of values; nor is there any claim that these errors correspond to the precision loss of some actual model.
+7851	If LoRA freezes the base W, does that mean the forward pass no longer uses W?
+10841	No. The forward pass usually still uses W together with the increment; freezing only means W is not updated.
+6836	With 8 experts and 2 chosen per token, do only 2 experts need to be stored permanently?
+11130	That does not follow. Different tokens may choose different experts, so the run-time environment still has to be able to reach the parameters of every expert that gets chosen.
+5986	05｜Post-training and model customization: objectives, structure and parameter adaptation</a><br/><a href="../chapters/08.html">08｜Inference serving: scheduling, throughput, latency and parallelism</a><br/><a href="../chapters/28.html">28｜Deep research waters and whole-system judgment
+23999	Lesson 62｜Computing fast and fitting in memory: complexity, bandwidth, batching and parallelism — AI Systems Engineering
+23831	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="16.html">Lesson 53 · One training run end to end</a><a class="pill" href="20.html">Lesson 61 · Low rank, quantization, experts
+13012	All steps and explanations</a><a href="../visual/O04.html">O04 · FlashAttention: accumulate while reading, without materializing the whole table</a><a href="../visual/O05.html">O05 · PagedAttention: logically contiguous, physically chunked</a><a href="../visual/O06.html">O06 · Continuous batching: when a seat frees up, take the next one</a><a href="../visual/O09.html">O09 · Activation checkpointing: store less, recompute on the backward pass
+12697	Start by separating the three accounts
+25402	The amount of computation</strong> is how many operations have to be done; the <strong>amount of storage</strong> is how much data has to be kept; the <strong>amount of data movement</strong> is how much data has to be moved between storage levels or devices. Storing less does not necessarily mean computing less, and adding parallelism does not necessarily make one request faster.
+12699	Start by separating the three accounts: the items distinguished
+25403	Amount of computation: how many operations
+16421	Amount of storage: how many bytes it occupies
+19799	Amount of movement: how many bytes are read and written
+13250	Key difference:</strong> Computing fast, fitting in memory and moving data are three ledgers, and the bottleneck may be an entirely different one in each.
+17087	Easy to misread:</strong> Cutting the parameter count does not necessarily cut end-to-end time in proportion.
+17950	usually means one floating-point operation;
+20428	is the number of floating-point operations per second. One S apart, yet one is an amount of work and the other a rate. Whether one multiply-add counts as two FLOP depends on the counting convention.
+7969	What O(T²) actually means
+16145	Big-O complexity</strong> describes the order at which the amount of work grows as the input gets larger. If T queries each have to be compared with T keys, there are T² pairings. Double T and the number of pairings becomes four times as large, which is why the attention-score part is commonly said to grow quadratically in T.
+13280	Key difference:</strong> What is meant here is the growth in the number of attention-score pairings with length, not that every computation becomes exactly four times as much.
+17015	Easy to misread:</strong> Big-O describes the order of growth, not the seconds a run actually takes.
+27222	This does not say that some implementation must take T² seconds, nor does it guarantee that the end-to-end time becomes exactly four times as long, because the hardware, the hidden width, memory movement and the other layers all play a part. When a complexity is written down, say which variable is growing and what is held fixed for the moment.
+11500	Why enough storage may still not mean fast computation
+23370	Hardware has an upper limit on compute capability, and also an upper limit on the <strong>bandwidth</strong> at which it reads data per second. If a lot of data is read for only a few operations, bandwidth may be the limit; if the data can be reused while a great deal is computed, compute capability may be the limit.
+11501	Why enough storage may still not mean fast computation: the items distinguished
+25377	The computation lower bound: C/R
+17935	The bandwidth lower bound: M/BW
+18430	The total time is bounded below by the larger of the two
+13203	Key difference:</strong> Before optimizing, ask whether the real bottleneck is compute capability or memory bandwidth.
+17117	Easy to misread:</strong> In practice there is also the overhead of queueing, scheduling and synchronization.
+28224	Worked out cell by cell: the intuition behind roofline: which weak link decides the time
+19797	The movement lower bound is ten times the computation lower bound, so the bottleneck is not raw compute
+21887	Step 1</span><span>Suppose the theoretical lower bound on the time for the computation is 0.01 seconds.
+21909	Step 2</span><span>The theoretical lower bound on the time to move the data for the same task is 0.10 seconds.
+21928	Step 3</span><span>The actual time is at least the larger of the two, 0.10 seconds.
+21944	Step 4</span><span>Doubling the computation speed alone may still leave it held back by the data-movement bottleneck.
+15991	Under these hypothetical conditions the movement takes at least 0.10 seconds, so simply doubling the computation speed need not change the overall time noticeably. A real measurement also has to count queueing and synchronization.
+22985	Estimate with a rough lower bound: a task does C operations and moves M bytes, at a computation rate R and a bandwidth BW, so the time is at least constrained by
+24328	. This line of thinking belongs to <strong>roofline</strong> analysis. In practice there is also queueing and synchronization overhead, so it cannot be taken as an exact timing formula.
+7638	What FlashAttention actually saves
+20461	A plain conceptual implementation forms a large T×T table of scores or weights explicitly. By means such as tiling, FlashAttention manages local blocks and the normalization statistics as it computes, so that the whole intermediate table is not written to and read from external VRAM over and over.
+13102	Key difference:</strong> FlashAttention rearranges the computation and the data access so that the whole attention matrix is not stored and read repeatedly.
+17113	Easy to misread:</strong> It is not an approximate attention that "reads only the first few tokens".
+16488	It does not simply turn exact attention into reading a few tokens, and it is not the same as a KV cache. The first arranges the reads and writes of one attention computation; the second reuses the past K/V across generation steps. Advanced Q027 derives the online softmax; for now, understand it as "the same target, with a different intermediate storage and access order".
+8036	PagedAttention and continuous batching
+13798	Paging</strong> cuts the cache into fixed-size blocks and uses a mapping table to remember which physical block each sequence's logical block corresponds to, which helps manage requests of different lengths and shared prefixes. The management idea resembles that of operating-system paging, but the object here is KV data, not all the memory of a whole program.
+13113	Key difference:</strong> PagedAttention keeps the logical positions contiguous while letting the physical blocks be scattered, which cuts waste in allocation.
+17114	Easy to misread:</strong> It is not the same as putting the whole neural network into operating-system paging.
+27647	Continuous batching</strong> lets a request release its slot once it finishes so that a new request can join, rather than requiring the whole batch to end together. It can raise resource utilization, but prefill, decode, and long and short requests still have to be scheduled against one another.
+16206	What exactly is split across multiple GPUs
+20210	Method
+11573	How it mainly divides
+12264	The cost you have to keep track of
+16217	Several copies of the model handle different samples
+25490	Synchronizing gradients and the like during training
+19317	Split a matrix or an operator across several devices
+17671	Communication and combination within a layer
+22397	Pipeline parallelism PP
+10742	Different layers on different devices
+28790	Waiting between stages, and transfer
+9101	ZeRO-style sharding
+13759	Spread the training parameters, gradients or optimizer state
+14912	The overhead of fetching and synchronizing
+20482	More devices is not an unconditional speed-up. If one round of communication takes longer than the computation it saves, the result can be slower. Nor can sharding in training and separating services in inference be covered by the same word.
+25459	Training saves, inference caches and checkpoints
+25456	Training may keep activations in order to compute gradients;
+12401	saves some nodes and recomputes the rest on the backward pass, trading computation for memory. A KV cache, by contrast, trades memory for repeated inference computation. The two even embody opposite resource trade-offs.
+23412	A model checkpoint on disk saves the weights or training state needed to restore it; an agent task checkpoint saves how far the work has got. Both are called a checkpoint, yet what they save is entirely different.
+5840	· Lesson 62
+12800	Count the computation and the movement first, then decide whether the GPU is short of compute
+26229	Input and conditions.</strong> A hypothetical operation does 1,000,000 floating-point operations and moves 8,000,000 bytes. The hypothetical device peaks at 100GFLOP/s with a bandwidth of 10GB/s, in decimal units.
+24180	Compute the pure computation lower bound
+5955	0.00001 seconds, that is 10 microseconds.
+24179	Compute the pure movement lower bound
+5956	0.0008 seconds, that is 800 microseconds.
+14899	Take the larger bottleneck
+22784	With ideal full overlap, take the max
+24947	At least about 800 microseconds, not 10 microseconds.
+13673	Reduce the movement
+25057	If a fused operation needs only 4MB
+19798	The movement lower bound is about 400 microseconds; it can run faster even with the compute unchanged.
+19886	Switch to quadratic pairing
+9015	T goes from 100 to 200
+22359	The attention position pairs go from 10,000 to 40,000, not merely double.
+18920	Join the steps up.</strong> "Saving memory reads and writes" and "cutting the number of mathematical pairings" are different optimizations. A high GPU peak figure is no reason to overlook the movement.
+26789	Limits and counterexamples.</strong> These are idealized lower bounds, not actual performance; scheduling, communication, kernel launches, cache hits and imperfect overlap are not yet counted.
+26130	If the input T doubles, how does the number of T×T relationships change? Does that mean the whole system must be four times slower?
+13081	The number of relationships becomes four times as large; the end-to-end time also depends on the other computation, the hardware and the scheduling, so no factor is guaranteed directly.
+7636	Can FlashAttention, KV cache and quantization substitute for one another?
+10965	No. They change, respectively, the intermediate computation and the reads and writes inside attention, the reuse of past computation, and the precision of the numeric representation; they act on different objects.
+5991	06｜Inference mechanics: loading, decoding strategy and continuous generation</a><br/><a href="../chapters/04.html">04｜Training mechanics: loss, the full backward pass and parameter updates</a><br/><a href="../chapters/07.html">07｜Inside KV cache, FlashAttention and PagedAttention</a><br/><a href="../chapters/08.html">08｜Inference serving: scheduling, throughput, latency and parallelism</a><br/><a href="../chapters/25.html">25｜Production operation: traces, cost, queues, canary releases and rollback

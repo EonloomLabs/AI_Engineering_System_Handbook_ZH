@@ -122,6 +122,7 @@ untranslated text and inline-tag mismatches. Fix and re-run until clean.
 
     python3 i18n/consistency.py        a shared Chinese frame rendered two ways
     python3 i18n/embedded.py           a link's text against the heading it points at
+    python3 i18n/vocab.py              the worked model's tokens still in Chinese
 
 The second is why reusing canonical wording matters: a chapter's table of
 contents is one string holding every heading on the page, so if you translate a

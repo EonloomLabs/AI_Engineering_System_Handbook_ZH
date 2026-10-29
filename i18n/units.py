@@ -23,6 +23,11 @@ TAG = re.compile(r'<[^>]+>')
 # Merging it would turn an already-translated phrase into a new composite
 # string and throw that translation away.
 PUNCT_ONLY = re.compile(r'^[\s。；，、：？]+$')
+# Same reason: a Latin run whose only translatable content is Chinese
+# punctuation converts deterministically and must not be folded into a
+# neighbouring sentence, which would discard that sentence's translation.
+HAN_ = re.compile(r'[一-鿿]')
+MIXED = re.compile(r'[。；，、：？（）]')
 
 
 def merge(doc, items):
@@ -43,7 +48,8 @@ def merge(doc, items):
             units.append({'i': len(units), 'start': it['start'], 'end': it['end'],
                           'kind': it['kind'], 'zh': it['zh']})
             continue
-        if PUNCT_ONLY.match(it['zh']):
+        if PUNCT_ONLY.match(it['zh']) or (
+                not HAN_.search(it['zh']) and MIXED.search(it['zh'])):
             flush()
             units.append({'i': len(units), 'start': it['start'], 'end': it['end'],
                           'kind': 'punct', 'zh': it['zh']})

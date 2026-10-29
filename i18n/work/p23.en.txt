@@ -1,0 +1,568 @@
+23928	Lesson 49｜Completing one forward pass: residuals, the feed-forward network and vocabulary scores — AI Systems Engineering
+16058	Foundations</span><span>about 3.3k characters</span><span>1 controllable demo
+13073	The shared forward pass closes in this section
+22366	Attention mixes information from different positions, Wo turns the result back into the hidden width, and the residual keeps the original path; the FFN only works on the features of each position. After the final normalization and the vocabulary output head, we have eight candidate scores. No word is chosen and no parameter is changed at this point: in training these scores go first to the loss function, and only in inference do they go to a selection strategy.
+23901	Lesson 45 · The smallest neural network model</a><a class="pill" href="11.html">Lesson 46 · Attention step by step</a><a class="pill" href="13.html">Lesson 48 · Position IDs and RoPE
+12985	All the steps and explanations</a><a href="../visual/F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="../visual/F17.html">Lesson 52 · A gradient is like a slope; the learning rate is like step size</a><a href="../visual/O01.html">O01 · GQA/MQA: what is reduced is the number of K/V groups
+12770	Write one layer as two parts, rather than as a pile of abbreviations
+12743	First go over the objects that appear in this process
+7386	Decoder layer</strong> is a stretch of computation used to build a generative network; a <strong>sublayer</strong> is the attention or feed-forward part inside it. The <strong>output projection</strong> multiplies the attention result by one more parameter table Wo, so that it returns to the width the residual needs; it does not decode that result into text. Below, X, R and Y all stand for temporary arrays: X is the input, R is the result of the first addition, and Y is the result of the second.
+25194	stands for a normalizing function, whose exact cell-by-cell arithmetic is defined immediately below.
+10454	One common pre-norm decoder layer can be read like this: normalize the input, compute attention, and add the result back onto the original input; then normalize again, pass through the feed-forward network, and add it back again.
+13118	Key difference:</strong> A Transformer layer has both cross-position reading and a position-by-position nonlinear transformation.
+17168	Easy to misread:</strong> Attention is not the whole of the layer.
+25181	means the normalization comes before the sublayer transformation. Other architectures may place it elsewhere or use variants; this lesson gives one concrete model skeleton and does not claim that every network has the same order.
+21972	The residual connection: keeping one direct path
+21974	A residual connection</strong> is simply
+10208	. The input is
+29369	, the transformation result of this part is
+29389	, and adding them gives
+13286	Key difference:</strong> The order varies with the model structure; the residual merges the original path with the adjustment the new computation makes.
+17024	Easy to misread:</strong> Pre-Norm and Post-Norm are not one fixed order.
+27324	This lets a sublayer learn how to adjust an existing representation instead of rebuilding everything from scratch each time. It also affects the path taken by backpropagation; the detailed gradients are in F15. The addition requires compatible dimensions, so attention usually returns to the original hidden width d through an output projection.
+21962	A residual does not keep a Chinese copy of the "original words"; it adds on the numeric representation.
+9057	Why Wo multiplies once more
+20988	This model has only one head, so the mixed result is multiplied on the right by Wo[4,4] directly. With several heads the usual step is to concatenate the head outputs first and then project. Wo turns the attention output into the combination of features the main network uses; the width in this model is still 4, but the numbers have been recombined.
+22377	The attention output projection parameters Wo
+24034	The first residual: keep the original X and add the update
+23629	The first residual at t=2 of sample 0
+14513	The original main path X
+22361	The attention branch attn_delta
+21963	A residual is not two token lists concatenated, and not an average taken instead. It is an addition of corresponding cells in the same shape. The main path keeps one direct route and the branch supplies the adjustment; this helps information and gradients travel through a deep network, but it is no guarantee that "once a residual is added everything stays stable forever".
+27227	These two objects being added must be kept clear
+19918	Enlarged figure: these two objects being added must be kept clear
+21967	The residual adds on the forward pass, and adds again at the fork on the backward pass
+25108	Although the attention branch uses N1, the normalized form, the main path of the residual adds X.
+8836	SVG source</a> · The data comes from the TinyLM implementation in this package and from run.json.
+16017	Mean, variance and standard deviation, starting from two numbers
+17259	For a row of numbers
+16015	mean</strong> μ=(1+3)/2=2; each item deviates from the mean by [-1,1]; squared, [1,1]; averaged, that gives the <strong>variance</strong> σ²=1; taking the square root gives the <strong>standard deviation
+11797	From [1,3] step by step to the mean, the variance and the standard deviation
+23631	Cell 0
+23683	Cell 1
+15327	Combined result
+14655	Original input
+11318	Two numbers
+16010	Mean
+13667	Subtract the mean
+12587	Deviations [-1,1]
+18002	Squared deviations
+18412	Population variance=(1+1)/2=1
+21332	Standard deviation
+27390	What is counted here is two features in the same row, not across samples and not across tokens; the variance is computed from the average squared deviation, not from the average of the squares of the original numbers. The normalization denominator then adds ε as well.
+15352	The same [1,3]: the two denominators of LayerNorm and RMSNorm
+13735	Numerator
+14511	Original [1,3]
+13832	With initial affine parameters 1/0
+24325	about [−0.999995,0.999995]
+24323	about [0.447213,1.341639]
+11387	The two outputs are different in nature, so they are not both called "turning scores into probabilities".
+18003	Squaring keeps positive and negative deviations from canceling each other out, and the variance describes the size of the fluctuation. The standard deviation has the same dimension as the original values. The division here is by the number of elements, as a population average; the division by n−1 used in other statistical settings must not be carried over indiscriminately.
+7838	Which row of numbers LayerNorm actually normalizes
+15899	In a typical Transformer, the mean and the variance are computed independently over the hidden features of each position, and then:
+7841	LayerNorm: every cell is computed along the same feature row
+11777	Still [1,3]; the input does not change. Subtracting the mean 2 gives [−1,1], which is divided by sqrt(1+ε) and then multiplied by γ and added to β. γ and β are trainable parameters, μ and the variance are statistics of this input, and ε is a stabilizing constant. That setting changes only where γ and β are explicitly changed here.
+9383	ε is a very small positive number that prevents division by 0 and similar problems; γ and β are learnable scale and shift parameters. Ignoring the very small ε for now and setting γ=1 and β=0, the example above
+13288	What matters is to <strong>compute along the feature axis of each token</strong>, rather than taking a mean over all the tokens of all the sentences in the batch. If you change the scope of the normalization, both the model's behavior and the premise under which a cache can be reused change with it.
+17956	commonly uses the root mean square
+24708	to scale, without subtracting the mean. For [1,3], ignoring ε, r=√5, and the result is about [0.4472,1.3416], different from LayerNorm. Both names contain Norm, which does not make them the same operation.
+7627	What the FFN actually does
+13950	The feed-forward network, FFN</strong> usually does "a linear transformation up in dimension → a nonlinearity → a linear transformation back down" independently at each position. For example d=4, an intermediate width of 8, and back to 4:
+7632	FFN: widen at the same position, activate, then squeeze back
+11992	What follows is explicitly an independent two-dimensional FFN example; it does not continue from the statistical input of the LayerNorm above. x=[1,−1], W1=[[1,0,1],[0,1,1]], so xW1=[1,−1,0]. After ReLU, [1,0,0]. W2=[[1,0],[0,1],[1,1]], and squeezing back gives [1,0]. If a residual is then added, x+[1,0]=[2,−1].
+7630	The FFN itself does not read other tokens; the input it handles may already contain the context attention has gathered. For the full four-dimensional model computation, see Completing one forward pass: residuals, the feed-forward network and vocabulary scores.
+16440	It does not sum over different tokens directly at this step, but attention has already brought context into its input, so it can work on the mixed information. It is not a decorative layer with no effect, nor can it simply be taken for a database of facts that can be queried item by item.
+29228	, where sigmoid(x)=1/(1+exp(-x)).
+24195	-style gated structures use one branch to modulate another, and often include an element-wise product. This is not the same as matrix multiplication; looking back at F07 is enough to tell them apart.
+7631	Which kind of information processing the FFN is responsible for
+22365	Attention mixes information from different positions, while the FFN applies the same nonlinear processing to <strong>each position's own features</strong>. It has no new cross-token score table. Many positions can be computed at once, but they share the same W1 and W2.
+20987	This model computes the second RMSNorm first: N2=RMSNorm(R,g2). R at t=2 of item 0 is
+29254	, the denominator r2=
+29325	, which gives N2=
+10190	. The statistical rule is the same as in the corresponding Foundations subsection of this book; only the input and the parameter g2 differ.
+11470	Why 4 numbers are first expanded into 8
+9030	W1 has 4 rows and 8 columns, and N2 multiplied on the right by it gives 8 feature combinations. The width 8 does not mean 8 tokens have been added; it means the internal working width at the same position has grown. A nonlinearity follows, and then W2[8,4] returns to the 4 dimensions of the main path.
+9031	W1: [4,8], producing 8 intermediate features
+9032	W2: [8,4], mapping the activated 8 dimensions back to 4
+27325	Which cells this ReLU actually changed
+8730	ReLU runs, cell by cell,
+29447	: positive numbers are unchanged, negative numbers go to zero. This example does not pick the cells at random, and it does not learn a ReLU parameter.
+15405	The 8 feed-forward intermediate values at the same position
+24094	The second residual starts from R
+23623	The FFN residual at t=2 of item 0
+11579	Main path R
+13760	Branch ff_delta
+22379	Note that the main path this time is R, the result of the first residual — not the original embedding, not N2, and not mix. H is the hidden representation at the end of this layer. This model has only one layer; with several layers, H becomes the input to the next layer, and the computation controlled by each layer's own parameters is repeated.
+22970	Tracking the FFN with this model's actual data
+26560	Input R at this position
+24089	The second RMSNorm
+18627	Expansion and activation
+6573	4 dimensions → W1 → 8 dimensions; ReLU keeps the 2 positive values and zeroes the rest.
+14183	Squeezing back and the residual
+6842	8 dimensions → W2 → [0.271038, 0.051663, -0.219375, 0.287617]; adding R gives H.
+15826	The whole process in the figure is still the same sample at the same position, and no parameter is updated during the forward pass.
+11503	Why a real model may use SwiGLU rather than ReLU
+28923	The design of the nonlinearity and of the gate affects both expressive power and computational properties. SwiGLU has two projections and an element-wise product, and cannot be obtained by renaming this lesson's ReLU result. The corresponding derivation in the system mechanisms draws out the formula and the dimension relations separately. Work this one structure through first, and then compare it with others, so that steps from different models are not assembled into a network that does not exist.
+10284	One point where it is easy to half-understand
+7629	That the FFN computes position by position does not mean it knows nothing about context. The input R already contains the context attention brought in, so what the FFN is working on is <strong>the current representation, context included</strong>. It adds no cross-position reading of its own, but it can process already-gathered features nonlinearly.
+16228	How several layers join up
+23621	The output of layer 0 becomes the input of layer 1, and the layers usually have different parameters. The width d at each token position can stay the same, while the content of the representation keeps being transformed. The K/V of a deep layer come from that deep layer's input; they are not a copy of the first layer's cache.
+9393	"32 layers, 4096 wide" describe the depth and the width per position respectively; they cannot be read as 32 independent chat agents. A model usually also has a normalization and a vocabulary output projection at the end, and the next lesson goes from there to text.
+5833	· Lesson 49
+18181	Which set of numbers normalization, the residual and the feed-forward each change
+26309	Input and conditions.</strong> The input at the current position is
+10035	. First work out LayerNorm by hand with no affine parameters, temporarily setting ε=0 and taking the variance in this example as nonzero; then give one attention increment separately,
+24173	Take the average
+16012	The mean is 2.
+24176	Compute the variance
+20206	Variance 1, standard deviation 1, normalized to
+21969	Add the residual
+14223	The original x plus the given increment
+29461	; it does not overwrite the original x.
+13949	Feed-forward demonstration
+17235	Apply ReLU to
+5892	and then multiply by 0.5
+29304	, showing the position-by-position nonlinearity.
+13558	Add the residual again
+18775	Add the feed-forward increment onto the current state
+25020	If the current state is
+29401	, the result is
+18900	Join the steps up.</strong> Norm, the attention branch, the residual and the FFN have different roles. The given increments in this example serve to isolate each action; for the self-consistent computation of a whole layer, see Q005 in Systems.
+26705	Limits and counterexamples.</strong> A real LayerNorm uses a positive ε and may include a trainable scale and shift. This example is not a complete attention forward pass, and it is no grounds for deleting components of a real model.
+15495	The same [1,3]: what LayerNorm, RMSNorm and SwiGLU each do
+26238	Input and conditions.</strong> Look first at just two features at one position,
+9984	. LayerNorm and RMSNorm both take ε=0.00001 with all scale parameters set to 1; LayerNorm's shift parameter is 0. The gating example additionally sets all three projections to the identity matrix.
+7840	The mean and variance for LayerNorm
+16016	mean=(1+3)/2=2, variance=((1−2)²+(3−2)²)/2=1
+13780	Denominator sqrt(1+ε), output about [-0.999995,0.999995].
+8711	The root mean square for RMSNorm
+16021	mean square=(1²+3²)/2=5, without subtracting the mean
+26624	Output about [0.447213,1.341639]; both items are still positive.
+12877	Compute SiLU first
+8870	SiLU(1)≈0.731059, SiLU(3)≈2.857722; it does not "delete all the negative numbers".
+22755	Independent gating example
+22836	With [1,2], and identity projections, SwiGLU is SiLU(x) multiplied element by element with x
+18311	That gives [0.731059,3.523188]. There is no further multiplication by 0.25 here; the full model case specifies that output projection separately.
+19066	Join the steps up.</strong> Normalization, activation and gating are not the same thing. Each step has to state which axis it acts on, whether the mean is subtracted, and whether there is a trainable scale and a projection.
+26787	Limits and counterexamples.</strong> These numbers correspond only to the parameters explicitly specified. SiLU and SwiGLU are a combination of element-wise computation and projections; they do not include cross-token attention.
+28854	The hidden representation H is still not text
+21992	H at each position has only 4 numbers, while the vocabulary has 8 items. An explicit mapping is needed to combine the four features into eight candidate scores. This model does a final RMSNorm first, then multiplies on the right by the parameters U[4,8]. <strong>The column order of the candidates follows the vocabulary IDs 0—7 strictly.
+18221	From H at the current position to F, the input of the vocabulary head
+21066	The final RMS denominator for this row is rf=0.530508525. The initial gf are all 1.
+26599	Output head U: [4,8], each column corresponding to one vocabulary candidate
+26563	Input feature j=0
+26564	Input feature j=1
+26565	Input feature j=2
+26566	Input feature j=3
+22841	Working out one score with the "studying" column
+23064	The target "学习" has ID 3, so column 3 of U is the one to take — not cell 3 of the hidden state as a probability:
+17285	Only doing this for all eight columns gives the complete vocabulary logits. A logit may be negative and need not fall between 0 and 1. It shows how this model currently compares the candidates, not a percentage of external factual correctness.
+23626	Item 0, t=2: the initial scores and probabilities of the eight candidates
+11264	How this differs from the softmax in the attention section
+24178	The algorithm is "an exponential divided by a sum of exponentials" in both cases, but the objects differ. F11 takes a softmax over the visible positions for one and the same Query, and the row width is the number of Keys; here the softmax is over the 8 vocabulary candidates at one and the same position. The first gives the shares used to mix Value; the second gives a predictive distribution used for scoring in training or for selection in inference.
+15494	Both are a row of probability-like numbers, but their uses cannot be swapped
+7009	Attention shares
+24277	The index is the source position s; the result A[0,2,s] multiplies Value and forms the internal representation.
+25760	Vocabulary prediction probabilities
+24278	The index is the vocabulary ID v; the result p[0,2,v] is compared with the label 3 in training, and used to select the next token in inference.
+11393	Neither can be taken as a calibrated factual confidence for a whole answer.
+25455	Why training keeps the scores at every position
+25528	Training feeds in five positions, each with one next-token label, so what we get are
+5922	logits. Row 0, BOS, corresponds to the target "我" or "你"; "爱" at t=2 corresponds to the target "学习". We do not train only the last position.
+19681	Inference only needs the next distribution that "follows the whole known prefix", so it takes the scores at the last <strong>valid input position</strong>. Without valid-position tracking, a right-padded batch that simply takes
+5853	will pick a PAD position; the error can still output legitimate probabilities, so it has to be checked by meaning.
+11536	Why no word is chosen yet at this point
+18214	We are still in the shared forward pass and the preparation for training, and the initial parameters are very poor. The probability of this row's target "学习" is
+10187	. The forward-pass chapter of the system mechanisms collects the complete tables of numbers; the training chapter in Foundations then uses this probability to compute the loss, so that the learning signal travels back to U and to the earlier parameters. An argmax here only shows which candidate the initial model leans towards; it is no substitute for the loss or for an update.
+9321	Whether softmax should be handed to CrossEntropyLoss first
+15945	In this implementation it should not. PyTorch's CrossEntropyLoss takes raw logits and combines log-softmax with the target loss internally in a stable form. Turning the logits into probabilities first and then feeding those probabilities in as new scores for the cross entropy applies softmax a second time, which changes the training objective. The book shows the probabilities so that they can be understood; that does not mean the code has to pass probabilities to that API.
+17249	Computing [2,4] with LayerNorm's centering and unit variance, ignoring ε and the learnable scale and shift, gives what?
+16014	Mean 3, variance 1, result [-1,1].
+7628	If the FFN takes d=4 up to 8 and back down to 4, does that double the number of tokens?
+10682	No. What changes is the internal feature width at each position; the number of positions T does not change because of it.
+5976	02｜One Transformer forward pass: tensor by tensor, operator by operator</a><br/><a href="../chapters/03.html">03｜Attention, pressed further: position, masks, multiple heads and backpropagation</a><br/><a href="../chapters/06.html">06｜Inference mechanics: loading, decoding strategy and continuous generation</a><br/><a href="../chapters/27.html">27｜Factual reliability, multimodality and interpretability: where the limits of capability lie
+15012	With only W1 and W2 and no ReLU, can it still be called the same model?
+10876	It is not the same computational function. Without a nonlinearity, the two linear transformations can be merged into a single table W1W2, and the input-dependent switching that ReLU creates can no longer arise.
+9062	Both Wq and U can produce more than four columns of numbers; how do you tell which one gives the final candidate scores?
+23247	Look at what the parameters are for, where they come from, and how their column axis is defined. U's output columns correspond strictly to vocabulary items; Wq's output columns correspond to Query features. Having the same dimensions is no substitute for this judgment about meaning.
+23938	Lesson 52｜Derivatives, gradients and the chain rule: how training finds a direction to adjust — AI Systems Engineering
+25460	Learn to read a "rate of change" before training
+21070	This lesson only requires understanding how one parameter affects one loss first. The learning rate and the target in the scalar example are fixed within the example itself, and its update result cannot be attached to the 236-parameter worked model. The gradients of a whole layer are explained in the next lesson on the training process, and derived item by item in the training chapter of the system mechanisms.
+23853	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="10.html">Lesson 45 · The smallest neural network model
+12991	All the steps and explanations</a><a href="../visual/F18.html">Lesson 53 · Training: give every position a "what comes next" question</a><a href="../visual/O09.html">O09 · Activation checkpointing: store less, recompute on the backward pass
+17589	A derivative asks: if the input changes a little, how does the result change
+29159	, the result at x=3 is 9. Change x to 3.01 and the result is 9.0601; the result increases by 0.0601 while the input increases by 0.01, a ratio of about 6.01.
+13245	Key difference:</strong> The local derivative is approached using "change in result / change in input" for a very small change.
+17040	Easy to misread:</strong> A slope taken over one large span cannot be used directly as the derivative at an arbitrary point.
+18261	As the change gets smaller and smaller, this ratio approaches 6, which is called the <strong>derivative</strong> of f at x=3. The formula
+25202	expresses "the local rate of change of x squared with respect to x". It is not a new input variable, and it is not f divided by x.
+17661	Local</strong> matters: a rate of change near 3 does not mean the same slope can predict accurately when x goes from 3 to 100.
+14759	Why training parameters needs a rate of change
+21747	The model gives a prediction, and we measure how far it is from the target with one number, called the <strong>loss</strong>. Training aims to find parameters that lower the loss. The gradient tells us, for a small increase in each parameter, which way the loss moves and how fast.
+14760	Why training parameters needs a rate of change: item-by-item distinctions
+28987	Prediction y
+23073	Target value y*
+19505	Loss L(y,y*)
+13266	Key difference:</strong> The training objective is not to maximize the predicted value, but to reduce the loss as it is defined.
+17130	Easy to misread:</strong> The loss has to be defined before there is any "which direction is better".
+15015	With only one parameter it is the derivative; with many parameters, lining up the local rates of change with respect to each parameter gives the <strong>gradient</strong>. The symbol
+25177	denotes the rate of change of the loss L when only w changes and the other parameters are held fixed for the moment.
+22844	Work one complete update by hand with a single parameter
+29402	, with x=2, target y=4 and initial w=1. The prediction is 2. Define the loss as
+29323	, which gives
+13214	Key difference:</strong> The loss falls from 2 to 0.08; a negative gradient updates the parameter in the increasing direction.
+17036	Easy to misread:</strong> "Gradient descent" does not mean that every parameter value is bound to fall.
+28232	Worked out cell by cell: gradient descent: the same input, and the loss falls after the parameter changes
+14728	The parameter goes from 1 up to 1.8, and the loss from 2 down to 0.08
+21888	Step 1</span><span>Initial w=1, input x=2, target 4, prediction 2.
+21911	Step 2</span><span>Squared loss L=0.5×(2−4)²=2, and the gradient is −4.
+21927	Step 3</span><span>With a learning rate of 0.2, the update is w=1−0.2×(−4)=1.8.
+21948	Step 4</span><span>New prediction 3.6, new loss 0.08; this is the decrease in this example.
+15994	In this set of teaching numbers, a negative gradient means that increasing w suitably lowers the loss; gradient descent does not mean that parameter values are bound to get smaller.
+22779	Now compute the rates of change along the chain:
+27278	This is the <strong>chain rule</strong>: the rates of change of each small segment are multiplied together, carrying the influence back to the earlier parameters.
+25626	Let the <strong>learning rate be η=0.2</strong>, that is, how large a step is taken along the gradient each time. Using the simplest gradient descent:
+19506	The loss falls from 2 to 0.08. Note that the gradient is negative, and subtracting a negative number increases w; "gradient descent" does not say that every parameter gets smaller.
+12921	First understand "the rate of change of the loss with respect to one number"
+15999	asks: with the other independent parameters held still for the moment, how will L change if w alone is increased a little? It is not L divided by w, and it is not a new parameter value. A positive gradient means that locally increasing w increases the loss; a negative gradient means that locally increasing w lowers it.
+22738	An independent scalar warm-up, not using the worked model yet:</strong> the prediction
+29386	, target 4, loss
+9998	. At w=1, ŷ=2 and L=2. The rate of change of the loss with respect to ŷ is ŷ−4=−2, the rate of change of ŷ with respect to w is 2, and multiplying the two segments gives −4. With a learning rate of 0.2,
+29350	, and the new loss is 0.08. This example only explains the chain rule; it does not replace M's AdamW training.
+11809	From one number to a whole table
+24985	If every cell of an intermediate table Z affects the total loss, the rates of change of all the cells are put together in the same shape, written
+10130	. This book does not use "dZ" for both a small forward change and a stored gradient, so as to avoid confusion.
+27369	The notation for the gradient table Gz is established here first. The next section, F16, works Gz[2,5,8] out from the ten correct labels and the actual average loss; lesson 55 of the system mechanisms then propagates that real gradient back group by group. Knowing the derivative of cross entropy before it has been explained is not required here.
+12717	Look at a single product first, then at the sum
+17290	For the single row
+29448	: changing U[j,v] changes only this one term, and the rate of change is F_j; changing F_j may change all eight candidates, so their separate effects on the loss have to be added up. Hence:
+24029	The first expression sums over samples and positions, over all the points where a shared parameter is used; the second sums over vocabulary candidates, gathering the effects back into the same hidden feature. The axes they accumulate along are different.
+23191	How addition, reuse and branching pass the gradient on
+24954	If
+29146	, R and D each have a direct derivative of 1 with respect to H, so G_H passes to both routes. If R is also the input to D, then R finally receives two contributions, one "straight down the main path" and one "through the D branch", and they have to be added.
+24971	If a parameter is used in two places, the effects along each path have to be accumulated too. A repeated token using the same embedding row, several positions sharing a W, several losses depending on the same position — all are relationships of this kind. Automatic differentiation handles this reuse along the graph; it is not "each parameter learns once from one token".
+11799	Starting from the loss, every step of the gradient has a source
+21357	Scalar objective
+14091	Average over the ten questions L=2.244673168.
+25756	Vocabulary gradient
+7690	Gz=(p−onehot)/10, with the actual numbers first and the propagation back afterwards.
+26597	Output parameter gradient
+21980	Each F×Gz contribution accumulates into the shared U.
+28843	Hidden gradient
+7668	G_F=Gz×Uᵀ, continuing through the final normalization, the residuals and the FFN.
+14814	The backward direction is the reverse of the data dependency; it does not mean that running the whole forward code in reverse order automatically gives the right derivatives.
+24814	How automatic differentiation, finite differences and backpropagation relate
+24818	An automatic differentiation framework stores the dependencies between operations and applies local derivative rules; backpropagation is one efficient way of computing these effects. Finite differences, by contrast, actually compare
+5846	with
+29385	, estimating the derivative by dividing by 2δ, which suits checking a small model and is not suited to training a billion parameters.
+27201	These three are not three different training objectives. The program shipped with this book first writes the analytic backward pass for the whole model by hand, then compares it with PyTorch autograd parameter table by parameter table, and also applies finite differences to selected parameters. They have to be compared under the same structure, the same input, the same loss denominator and the same parameter snapshot.
+14807	Backpropagation and the optimizer are not the same step
+14806	Backpropagation</strong> computes the gradient of each parameter backwards along the computational dependencies; the <strong>optimizer</strong> takes those gradients and updates the parameters by its own rule. Running
+18008	does not necessarily mean a parameter update has already happened.
+13175	Key difference:</strong> Backpropagation computes rates of change; the parameter update happens in the optimizer step.
+17192	Easy to misread:</strong> Calling backward does not necessarily mean the weights have already been modified.
+25388	A computational graph</strong> is a record of the dependencies, of which operations produce which results. An automatic differentiation system applies known derivative rules according to that record; it does not actually try countless tiny perturbations for every parameter.
+15379	When the same parameter is used in several places, the effects of each path of use on the total loss have to be combined. If the code accidentally cuts the computational graph, or forgets to clear the gradients accumulated in the previous round, the gradients may not match the intent of this training run.
+20655	How finite differences check an analytic gradient
+15147	It can be computed approximately as
+29229	, where ε is a very small positive number, and compared with the gradient obtained from backpropagation. This is called a <strong>finite-difference check
+13246	Key difference:</strong> A numerical perturbation is used to verify a derivative formula, which suits small models and debugging.
+17032	Easy to misread:</strong> If ε is too small it is affected by floating-point error, and if it is too large it is not local enough.
+16498	It suits small-scale debugging and is not suited to computing a billion parameters one by one. Too large an ε makes the approximation insufficiently local; too small, and floating-point rounding error becomes important. ReLU also needs special handling at its kink. So "the two numbers are not exactly the same" is not necessarily an error; a reasonable input and tolerance have to be chosen.
+11496	Why gradients vanish or explode
+28587	Many rates of change smaller than 1 multiplied along the chain can make what travels back smaller and smaller; many rates of change greater than 1 can make it larger and larger. The network structure, the normalization, the initialization and the optimization strategy all affect this.
+27256	These are real computational and numerical problems, not a case of "the model being too lazy to learn". Recognizing this is what makes it clear, when reading the deeper derivation of the attention backward pass and of training stability, what the formulas are trying to solve.
+5834	· Lesson 52
+24170	Compute one gradient, then see whether the loss really falls
+26493	Input and conditions.</strong> This is an <strong>independent training example</strong>, and it does not carry over the example conditions earlier in this section, "target y=4, loss with a 0.5". Here the model is
+29305	, y=6 is wanted, and the initial w=1. The loss is set explicitly as
+29123	(with no 0.5 factor), and the learning rate is 0.1.
+12692	Forward pass first
+11868	Differentiate the loss with respect to y
+18316	That gives −8, which says that increasing y a little helps lower the loss.
+22169	Pass it back to w through the multiplication
+21470	Gradient
+20498	Update the parameter
+9373	w becomes 2.6.
+28527	Forward pass again
+20178	New loss
+29392	, which really is smaller than 16.
+19000	Join the steps up.</strong> Backpropagation finds the local information of "where to change and which way"; the optimizer carries out the parameter update. The two are not the same action.
+26717	Limits and counterexamples.</strong> Switching to too large a learning rate can overshoot the optimum and raise the loss; the decrease in this example is no guarantee that every step decreases.
+21475	The gradient is -4 and w←w−0.1×gradient is used; does w increase or decrease?
+16095	It increases by 0.4. The sign of the gradient points in the direction in which the loss rises, and a descending update takes the opposite direction.
+14810	Once backpropagation has computed the gradients, have the parameters certainly changed?
+10658	Not necessarily. The optimizer update still has to be run; computing a gradient and modifying a parameter are two actions.
+5981	03｜Attention, pressed further: position, masks, multiple heads and backpropagation</a><br/><a href="../chapters/04.html">04｜Training mechanics: loss, the full backward pass and parameter updates</a><br/><a href="../chapters/27.html">27｜Factual reliability, multimodality and interpretability: where the limits of capability lie
+26876	After running loss.backward(), have the model's parameters already changed?
+22140	No. It computes and accumulates the gradients. Only a later update operation such as optimizer.step() changes the parameters. Conversely, forgetting to clear the gradients can let the gradients of several steps accumulate unintentionally.
+23949	Lesson 53｜One training run end to end: labels, loss, update, validation and saving — AI Systems Engineering
+16059	Foundations</span><span>about 3.4k characters</span><span>1 controllable demo
+18815	Turning the forward pass you can already compute into a real training run
+22196	Carrying on with the same eight-item vocabulary, the same two samples and the same initialization parameters: line the ten targets up first, then compute the average loss, obtain the gradients, run an AdamW update, check the training and validation modes, and finally save the weights. Every update here comes from the program shipped with this book; it is not a swap for some other parameter table that "looks reasonable after training".
+23889	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="18.html">Lesson 57 · From the last row of numbers to a token, and on to an answer</a><a class="pill" href="15.html">Lesson 52 · Only the calculus you will actually use
+12986	All the steps and explanations</a><a href="../visual/F12.html">Lesson 47 · A mask is a visibility table, not extra meaning</a><a href="../visual/F17.html">Lesson 52 · A gradient is like a slope; the learning rate is like step size
+12768	First line up "what is to be predicted"
+20602	There is a token sequence
+10005	. Next-token training can be organized like this:
+13265	Key difference:</strong> In training the target moves one token to the right, and the model cannot steal the answer by looking at future labels.
+17194	Easy to misread:</strong> Getting the alignment between the input position and the supervised target position wrong trains the wrong task.
+28236	Worked out cell by cell: the training data shifted one slot to the right: every position predicts the next item
+18504	我 predicts 爱, 爱 predicts 学习, 学习 predicts EOS
+21886	Step 1</span><span>The position "我" is used to predict the next item, "爱".
+21905	Step 2</span><span>The position "爱" is used to predict the next item, "学习".
+21924	Step 3</span><span>The position "学习" is used to predict the end marker EOS.
+21950	Step 4</span><span>A model can compute the positions in parallel during training, but the causal mask does not allow it to peek at future input.
+23071	The target is not the input ID itself; training uses the next token as the supervision signal, and a causal mask keeps it from peeking at the future.
+9124	The position of a predicts b from a, the position of b predicts c from ab, and the position of c predicts d from abc. A <strong>label</strong> is the correct answer to compare against this time;
+20397	means using the real prefix from the data during training, rather than always using a prefix the model has just generated itself.
+11483	Why not predict a from the input a? Because that objective would become copying a known input rather than learning what comes next. A real model's API may shift the labels internally; shifting them again in outside code gets it wrong by two positions, so the boundary of responsibility has to be confirmed.
+8936	What teacher forcing actually "feeds" in
+25518	When training position t, the real prefix from the dataset is used, rather than letting the model draw a word first and then feed its own error onwards. This way of training, conditioning on the real history, is called teacher forcing. It allows the losses of many positions in one batch to be computed in parallel.
+19690	At inference time there is no real next word, so the only way to continue is with the result just selected. A low training loss therefore cannot automatically prove that long-form generation is stable: the prefix the model meets at inference may be an erroneous combination of its own making, which has already drifted away from the training distribution.
+15016	With only two sentences, why the final loss still cannot be 0
+11363	Position 0 of the input is BOS in both samples, but one target is "我" and the other is "你". With the same input and the same parameters, the model cannot give two mutually contradictory certain distributions. The most appropriate allocation is 0.5 each; the combined loss of these two questions is
+29251	, which spread over the ten questions is
+10064	. When the training loss is later seen to stop at this order of magnitude, the ambiguity of the data should be understood first, rather than concluding immediately that the optimizer is broken.
+11676	Cross entropy starts from one correct candidate
+12560	Suppose the correct next token is c and the model gives it a probability of 0.8. One commonly used loss is
+10196	. If it gives only 0.2, then
+29436	, and the error is larger.
+13234	Key difference:</strong> The lower the probability of the correct item, the larger the penalty; the loss measures the probability the model assigns to the correct item.
+17077	Easy to misread:</strong> Cross entropy is not "the score minus the correct label's ID".
+27334	This negative log probability of the correct target is the <strong>cross-entropy loss</strong> under a single correct label. The closer the probability is to 1, the closer the loss is to 0; the smaller the probability given to the true label, the larger the penalty.
+25036	If the correct candidate is expressed with
+25201	, that is, a row of zeros the length of the vocabulary with only the correct item set to 1, written y, then the general form is
+10066	. Because the other y_i are 0, only the correct item is left at the end.
+17252	The derivative with respect to the pre-softmax scores z simplifies to
+10233	. This explains why training pushes the score of the correct item up and the scores of the wrong items down; it then travels back through the output matrix and the layers to the earlier parameters.
+16218	How several positions and the padding are scored
+17542	The loss is computed for every valid target position and then summed or averaged. A PAD position should usually not be treated as a real language target; instruction tuning may also score only the assistant's output. This is what a loss mask is.
+16219	How several positions and the padding are scored: item-by-item distinctions
+20622	There are 3 valid positions
+8017	PAD or ignored labels are not counted
+13782	The denominator should be the total number of valid tokens
+13272	Key difference:</strong> When accumulating across micro-batches or across a distributed run, normalize by the total number of valid tokens.
+17089	Easy to misread:</strong> Averaging each batch separately and then taking an unweighted average of those averages can change the objective when the lengths differ.
+16351	If the real lengths differ from batch to batch, averaging per sample and averaging per valid token can give different weights. When reporting a loss, you have to know what the denominator is. A smaller number alone is no grounds for asserting that learning has improved.
+15747	Perplexity</strong> is commonly the exponential of the average negative log likelihood. It is only suitable for direct comparison when the tokenization, the data and the scoring conditions are comparable; it is not a single index of cleverness for any two models.
+25511	The training objective is not "the bigger the score the better"
+7622	The output head in F14 produces 8 candidate scores for every position. Raising all the scores alone would not change the softmax probabilities, and the model would be no better at predicting. What training needs is this: under each real prefix, give more probability to <strong>the corresponding real next token
+23622	The label for item 0 at t=2 is 3, "学习", and the predicted probability is
+10204	. The negative-log loss for that question is:
+21620	The closer the probability is to 1, the closer the negative log is to 0; the closer the probability is to 0, the larger the penalty. An independent comparison: with the correct candidate at 0.5 the loss is ln2≈0.693147, and at 0.1 it is about 2.302585. This is a score against the training objective, not a direct assessment of the factual quality of a whole passage of text.
+14087	How ten positions combine into one loss
+21377	Sample
+26541	Input position and current token
+23275	True next token
+25779	Probability of that target
+25782	Loss for that question
+13783	The denominator is the number of valid token targets — not the vocabulary's 8, not 6 items per sentence, and not the number of samples, two, itself. If there are ignored labels, the valid items should be determined by the mask first, excluding them from the numerator and the denominator together; when N=0 this implementation refuses to update, avoiding a division by zero or an unreasonable gradient.
+14088	How the scores of ten positions become one training objective
+28991	What is predicted
+21990	Every position has 8 logits, and the target is the next token's ID.
+25707	Scoring, not sampling
+11800	Take the probability p_y of the correct label from the softmax distribution and compute −ln p_y.
+28367	Mask out the ignored targets
+9341	Items with targets==-100 take no part in the sum and no part in the denominator.
+24492	One single denominator
+20974	This batch has 10 valid targets in all; total loss=sum(loss_i)/10.
+12136	Pass the gradient back
+22067	The gradient of each row of logits=(p−onehot)/10, which then travels to the parameters.
+11677	Why the cross-entropy formula can be written with logsumexp
+25646	Let one row of logits be z and the target ID be y:
+10837	is not "take the log of each logit and add them up", but take the exponential of each logit, add them, and then take the log. For stability it is actually written
+29154	, with m=max(z). This preserves the same shift invariance as softmax, and avoids the numerical problem of computing a tiny probability first and then taking its log.
+11514	Why the gradient becomes p−onehot, and why the conclusion cannot just be memorized
+17531	For one score zⱼ, the derivative of the first term
+5924	is: −1 if j=y, and 0 otherwise. The derivative of the second term with respect to zⱼ: differentiating the ln first gives
+29240	, and then differentiating the sum of exponentials gives
+29387	, and the product is exactly pⱼ.
+15735	So the derivative of one question with respect to zⱼ is
+10139	. This training loss is the average over the ten questions, so each question is multiplied by a further 1/10. The onehot here only expresses "which column is the real target"; it is not a token embedding, and the code is not required to construct it explicitly first.
+23625	Item 0, t=2: the gradient from the probabilities to the logits
+9278	p: the eight predicted probabilities
+21831	The gradient in the cell of the correct candidate is negative, so gradient descent will tend to raise its logit; the other cells are usually positive, which tends to lower theirs. What is actually adjusted, though, are the shared parameters, not this row of logits directly and permanently. The gradients of different training questions with respect to the same parameter also add up.
+9220	How shifting the logits relates to the row sums of the gradient
+21065	This row of Gz should sum to 0: the probabilities sum to 1, the onehot sums to 1, and subtracting and then dividing by N still gives 0. If all the logits are increased by the same number, the probabilities do not change and the loss does not change, so the rate of change along the "all-ones direction" is 0. It is a good numerical self-check, but passing it does not prove that the whole model implementation is correct.
+14742	The parameters have not been updated yet
+13894	At this point we have a scalar loss and the local gradient with respect to the logits. Making Wq, the embedding and the rest change requires propagating this effect back along the forward dependencies. The complete backward chain is in the training chapter of the system mechanisms, tracing from the output head all the way to the embedding; this section goes on to check how the optimizer uses these gradients.
+18733	Write one optimization step out in full
+21484	Gradient accumulation</strong> computes and accumulates the gradients over several small batches before updating once, so as to simulate a larger effective batch; it does not make the activation storage for one extremely long input disappear by itself. How the gradients are scaled has to correspond to the way the loss is averaged.
+13264	Key difference:</strong> One training update has a definite order; when gradients are accumulated, zeroing and scaling matter especially.
+17203	Easy to misread:</strong> Zeroing the gradients and updating the parameters must not be swapped in the step diagram.
+6945	Why Adam keeps extra state
+21063	The training notation in this section:</strong> g is the gradient of the current parameter; m is a moving average of the gradient; v is a moving average of the squared gradient; β₁ and β₂ are the smoothing coefficients that are set; t is the optimization step number; a hat, as in m̂, denotes a bias-corrected quantity. The lowercase v here is not attention's Value, and β is not the shift parameter in LayerNorm. m and v are updated as the training steps proceed and take up extra storage; they are not token features of this input.
+6946	Why Adam keeps extra state: item-by-item distinctions
+10480	First moment m
+11650	Second moment v
+12588	The bias-corrected update
+13096	Key difference:</strong> Adam maintains statistics of the gradient history; it does not just subtract this round's gradient directly.
+17013	Easy to misread:</strong> Adam's extra state increases training memory, which cannot be estimated from the weight bytes alone.
+20570	The simplest gradient descent uses only the current gradient g.
+27152	also keeps a smoothed average m of the gradient and a smoothed average v of the squared gradient, which help adjust the step size for each parameter. Schematically:
+9381	β is a smoothing coefficient between 0 and 1, not a word meaning the model has learned. Because the initial value is often 0, the average is too small at the start, so a <strong>bias correction</strong> is applied. At the first step with g=2 and β1=0.9, for instance: m=0.2, and dividing by 1−0.9 gives the corrected 2.
+28832	The corrected m is then divided by the square root of the corrected v, and the update follows.
+18839	treats weight decay as a decoupled operation. The complete formula is in the advanced chapters; this lesson explains "why m and v have to be stored as well" first, which also shows that training VRAM cannot be counted from the weights alone.
+12916	First say which stage really changed the model
+9225	loss.backward computes the gradients; optimizer.step applies the update. They are usually two calls. If the gradients have merely been computed without a step, generation behavior will not change by itself just because "the model has seen the answer".
+20571	The simplest SGD rule is
+29160	, where η is the learning rate and g is the current gradient of the parameter. A negative g increases w and a positive g decreases it; "descent" refers to the attempt to lower the loss, not to every parameter having to get smaller.
+10438	The state boundaries of one training update
+19900	Enlarged figure: the state boundaries of one training update
+22666	An independent SGD comparison: looking only at the difference in the update rule
+11757	Still using the initial Wq[0,0]=0.2 and the gradient just computed,
+10195	. If a single-cell SGD comparison with a learning rate of 0.03 is made, the result is
+27213	This is not the first step the experiment actually trains</strong>, and it cannot be attached to the AdamW history that follows.
+16959	The actual training uses AdamW: learning rate 0.03, β1=0.9, β2=0.999, ε=1e−8, weight_decay=0.01. Putting all the parameters in one group is a choice made for teaching; production training often uses different decay groups for certain parameters, so this configuration must not be called a universally best one.
+6940	Which two extra tables AdamW keeps
+21997	Every parameter cell has two corresponding pieces of history: m, an exponential moving average of the gradient, and v, an exponential moving average of the squared gradient. The closer β is to 1, the more history is usually retained. What v stores is the squared gradient, not the variance of the parameter, and not a Value matrix.
+9232	m and v start at 0, so early averages are biased towards 0, and the bias-correction denominator serves to cancel this effect of the initialization. ε prevents the denominator from being 0. Decoupled weight decay shrinks the parameters independently; it does not add λw into the gradient first and then compute m and v, which would be a different algorithm.
+18710	Write out the first two steps for Wq[0,0] in full
+21883	Step
+20973	g for this batch
+9164	decay deduction
+24934	adaptive deduction
+24042	At the first step m̂ is exactly the current g and v̂ is exactly g², and because g is negative the adaptive "deduction" is negative, so w grows by about 0.03 while being shrunk slightly by the decay. From this it can be understood that the size of Adam's first step is not η multiplied by the raw gradient.
+24100	The gradient of the second step comes from <strong>a fresh forward and backward pass after every parameter has been updated once</strong>; it is not the first step's g reused. If only one cell of Wq were changed and the other parameters left alone, the next step's gradient would no longer be the experimental value in the table either.
+14750	Once the parameters are updated, the intermediate results have to be recomputed
+24045	After the first update, the loss for the whole batch falls from
+5944	to
+10007	. The next Q/K/V, RMS denominators, shares and logits all have to be recomputed with the new parameters; the old computational graph cannot be taken as the backward record for the new parameters.
+21487	Gradient accumulation deliberately merges the contributions of several micro-batches; it has to be told apart from the unintended accumulation caused by forgetting to clear the gradients.
+16432	What the learning rate, gradient clipping and AMP each do
+16433	The learning rate controls the size of the optimizer's update step; gradient clipping limits the overall magnitude of the gradients; mixed precision changes the numeric representation and the computation. Under AMP loss scaling, the official procedure is to unscale before clipping, or the threshold acts on gradients that have been artificially enlarged.
+25998	The worked model uses CPU float64, with neither AMP nor clipping enabled. What is described here is the production boundary; a GPU process that was not run is not dressed up as an experimental result.
+16436	Learning to train is not learning to generalize
+25534	The training set</strong> is used to update the parameters; the <strong>validation set</strong> is used to choose approaches and tune settings; the <strong>test set</strong> is used to evaluate relatively independently. Putting the test answers into training, or repeatedly tuning the prompt against test results, contaminates the evaluation.
+15917	Driving the loss very low on a fixed short sequence only shows that this training process learned that distribution; it is no grounds for claiming that the model can understand arbitrary language. A real engineering result also depends on new tasks, new data, stability and cost.
+5835	· Lesson 53
+18744	Score the three training positions one by one, and keep PAD out of the average
+26431	Input and conditions.</strong> The real sequence is "我/爱/学习/EOS", and the input
+5885	corresponds to the targets
+10031	. Suppose the predicted probabilities of the three correct targets are 0.8, 0.5 and 0.25.
+23677	Position 1
+23244	Sees "我", the target is "爱"
+23726	Position 2
+23245	Sees "我爱", the target is "学习"
+23815	Position 3
+23246	Sees "我爱学习", the target is EOS
+15326	Combine the valid positions
+10537	Add the three items and divide by 3
+17999	The average is about 0.767528 — not the average of the probabilities with the negative log taken afterwards.
+25162	A padding comparison
+25007	If there are 2 more PAD afterwards that are not scored
+11781	Still divide by 3; dividing by 5 would pretend the loss was lower.
+19208	Join the steps up.</strong> If the training labels are off by one slot, the meaning changes from "predict the next token" to a different objective. A falling loss is no proof that the alignment is right either.
+26674	Limits and counterexamples.</strong> Natural logarithms are used; the probabilities are constructed. The results in the table are computed by a program, with no real model trained.
+9254	Padding positions do not count towards the loss, and the denominator has to change with them
+26298	Input and conditions.</strong> Four prediction positions are arranged, one of which is PAD. The probabilities of the correct token for the 3 valid labels are 0.8, 0.5 and 0.25; no sample weights are used.
+28258	Take the negative log of each item
+20631	The valid loss sum is ≈2.302585.
+19549	Exclude the PAD
+8014	PAD contributes no loss and no valid count
+20632	The valid count is 3, not the 4 positions arranged.
+22123	Take the mean
+17996	The average loss is ≈0.767528.
+14981	Zeroing only the PAD's loss while still dividing by 4
+18301	That gives 0.575646 — a smaller number, with no better model.
+19568	Carried over to a variable-length batch
+10759	Using the wrong denominator with different padding proportions
+11742	Changing nothing but the batching strategy can produce a spurious improvement in the training curve.
+19068	Join the steps up.</strong> An ignored label is not just "making that cell equal 0"; the aggregation and the normalization basis have to stay correct as well.
+26809	Limits and counterexamples.</strong> What is used here is an unweighted mean over the valid labels; in an implementation with class weights, sample weights or a custom reduction, the denominator may be defined differently.
+10907	Running through the formula once is no grounds for declaring it learned
+22778	Now data preparation, the forward pass, the loss, the backward pass and AdamW go into a real loop. The experiment fixes two sequences and uses this same small batch at every step; there is no hidden data augmentation, and no pre-written continuation rule is passed off as model output.
+10626	What follows is an extract of the core call logic (for TinyLM, MODEL_SPEC, jval and the data preparation, see the same source file); the full runnable source is on the <a href="../labs/model-run.html#tiny-model">local programs page</a>, rather than being given as pseudocode alone:
+25525	Training the worked model needs PyTorch; ordinary offline reading does not. There is also a forward-inference program that uses only the Python standard library, which can read the saved tables of numbers directly to check the generation, with no need to install PyTorch.
+16934	The actual loss trajectory
+17905	Updates done
+20497	Loss before the update
+20499	Loss after the update
+27215	This is not a curve of the cumulative average loss, but a record of the current loss for this batch at these particular step numbers. Its falling only shows that the objective of fitting these two training samples is improving; with no independent natural-language test set, it is no grounds for saying it has real Chinese understanding or generalization.
+11497	Why it stops near 0.139 and not at 0
+21059	The data analysis earlier in this section already pointed out that BOS is followed with equal frequency by the two targets "我/你", so the lower bound is
+10128	. The final actual loss is
+29194	, and the two are close. The other positions are essentially fitted, while two possibilities still have to be kept at BOS.
+20581	The final loss at each supervised position
+27358	The "lower bound" here is for this data, this single conditional-distribution objective and sufficient expressive power. Do not take log2/5 for a standard loss in all language model training.
+25515	Which objects training actually changed
+15371	The same embedding parameter row for 爱, before and after training
+13837	Initialized E[2]
+6558	E[2] after 400 steps
+15421	The same Wq, as a table of numbers after training
+15389	The same input passed through these parameters will produce different Q/K/V and different probabilities. It is not that token ID 2 was given a new ID, nor that only the final answer was written into some separate memory cell.
+12399	Saving the training artifacts: what the weights must come with
+20921	This package saves
+29260	, which contain the model configuration and the parameter arrays. JSON was chosen so that every number can be inspected and so that the standard-library inference can load them too; it is not a recommendation to use JSON instead of an efficient weight format for large-scale models.
+16964	A real deployment checks at least the vocabulary and tokenizer, the special tokens, the number of layers and the width, the position mechanism, the normalization ε, the weight naming and the transpose convention. With parameter shapes that happen to match but a different vocabulary order, a system may run and still output the wrong text.
+15165	Reproducible does not mean bit-identical on every machine
+20999	The environment actually measured: Python
+9944	, CPU, float64, single-threaded, with a fixed seed of 23 and deterministic settings. Different platforms, precisions and kernels may round differently, so checking should be done to a reasonable tolerance.
+28829	The package records the initial and final parameter fingerprints, the step-by-step loss, the parameter updates, the full table of forward intermediates, the analytic backward pass and the differences from automatic differentiation. A fingerprint serves to confirm which set of weights is being compared; it does not prove what that set is capable of.
+11900	Crossing from training into inference means crossing a real boundary
+15548	The generation that follows <strong>reloads the parameters from the saved file</strong>, rather than carrying on directly in memory with an object that still holds training state, and it does not adjust the probabilities to fit an expected answer. This experiment also recomputes with a second forward program that does not depend on PyTorch, reducing the risk that both ends share the same error and "verify" each other.
+12711	First distinguish the three ways of using it: training, validation and inference
+25501	Training has labels, computes gradients and updates parameters; validation may also have labels and compute a loss, but does not update parameters; generative inference usually has no labels and selects the next token from a prefix. All three can call the same forward function.
+25116	Behavior
+29082	Validation loss
+22812	Generative inference
+26562	Source of input
+23309	Real training prefix
+29094	Real prefix of a validation sample
+22922	User prefix + what has been generated
+28307	Usually none
+22861	Used for optimization
+22868	Used for evaluation
+10909	Not required for generation
+21473	Gradients and step
+28872	Required
+21723	Model mode
+10465	Usually train
+17974	Usually unused in ordinary full-sequence training
+14875	Depends on the evaluation method
+28245	Commonly used in step-by-step generation
+9174	eval() is not the same as turning gradients off
+13811	switches a module's training flag, so that dropout, for instance, no longer drops at random and BatchNorm uses its corresponding evaluation behavior. It is not an autograd switch.
+19658	control the recording of gradients or a stricter inference optimization; they do not switch every module to eval by themselves either.
+20990	This model has no dropout and no BatchNorm, so train and eval give the same numbers, which does not mean every real model does. The package also has an independent dropout test: adding no_grad alone still zeroes at random; eval can make dropout behave as the identity; and gradient computation can still be enabled under eval.
+7400	Why dropout breaks "the same input gives the same output"
+22747	An independent rule: during training a proportion p of the activations are zeroed, and the items kept are usually scaled by 1/(1−p) so that the expectation is unchanged. At evaluation time there is no random zeroing and no further scaling up. One random forward pass and a forward pass without dropout cannot be required to agree cell by cell.
+8798	SDPA is a function interface, and its dropout_p is passed in by the caller. Even when the enclosing module is in eval, the correct value of 0 still has to be passed to disable it; it cannot be assumed that the function reads the enclosing state by itself.
+21485	Why gradient accumulation so often gets the denominator wrong
+22734	An independent loss example: micro-batch A has 2 valid questions, a total loss of 4 and an average of 2; micro-batch B has 8 valid questions, a total loss of 8 and an average of 1. The correct average over all 10 questions is
+29478	; averaging the two averages gives
+10102	. The relative weights of the corresponding gradients are changed too.
+13737	The numerator and the denominator must correspond to the same set of valid targets
+18334	Micro-batch A
+6349	2 valid tokens; loss sum 4.
+18335	Micro-batch B
+6839	8 valid tokens; loss sum 8.
+21835	Combined correctly
+13736	Numerator 4+8, denominator 2+8, average 1.2.
+28603	Combined wrongly
+12719	Average each one first, then take an equal-weight average of 2 and 1, giving 1.5.
+27314	This is an independent arithmetic comparison, not the loss at some actual training step of the worked model.
+13753	Distributed training also requires knowing whether gradient synchronization sums or averages, and whether the framework has already applied the scaling. Do not divide by the world size or the number of accumulation steps a second time. Hugging Face has publicly explained a fix for this kind of gradient-accumulation normalization; this book takes it as a historical lesson and does not claim the current library still has that defect.
+29084	What to validate in order to know the model has not peeked
+15769	Fix a prefix and change a later token: the logits at the prefix positions should not change; running the same sample on its own and putting it into a separate batch should give the same result; swapping the order of the batch should swap the results correspondingly. These check causality and sample isolation; they do not assess semantic ability.
+20992	This model's negative control deliberately turns the causal mask off, to confirm that the test for "a change in the future does not affect the prefix" catches the error. A correct implementation passing is not enough on its own: it also has to be known that the test fails when it meets a broken implementation.
+29099	The validation set, overfitting and the limits of this experiment
+21816	Formal training should have an isolated validation task, control of data leakage, evaluation on the target domain and reproducible data processing. The worked model uses two sentences over and over and has no credible generalization score. This book does not dress up the continuation accuracy on those same two sentences as a validation-set success rate.
+27857	Follow-up: how exactly is the parameter W "taught" by language data?
+10350	One sentence forms several real prefixes and next-token labels. The current W affects the probabilities in the forward pass, cross entropy scores the probability of the label, the backward chain rule computes the local effect of every cell of W on this loss, and the optimizer updates step by step according to those effects. No single step writes the meaning of a word directly into a column of labels.
+21865	When the probability of the correct item rises from 0.25 to 0.5, does the negative-log loss rise or fall?
+10620	It falls, from about 1.3863 to 0.6931. Natural logarithms are used here.
+11507	Why might resuming training need the optimizer state as well, and not just the weights?
+6948	Optimizers such as Adam store smoothed history, and the step count and the learning-rate state also affect later updates. Restoring the weights alone does not necessarily continue the same training trajectory.
+5968	01｜What input really is: from the user's sentence to model tensors</a><br/><a href="../chapters/03.html">03｜Attention, pressed further: position, masks, multiple heads and backpropagation</a><br/><a href="../chapters/04.html">04｜Training mechanics: loss, the full backward pass and parameter updates</a><br/><a href="../chapters/05.html">05｜Post-training and model customization: objectives, structure and parameter adaptation</a><br/><a href="../chapters/28.html">28｜Deep research waters and whole-system judgment
+15145	Could input_ids and targets be made exactly the same, with the shift removed?
+28396	That would mainly train "predict the current token from itself", not the next-token conditional probability this book is about. The relationship between the input position, the visible prefix and the target position has to be explicit; the shift is usually done only once.
+24982	If two micro-batches have 2 and 8 valid tokens respectively, does averaging the two micro-batches' average losses equal the average over all 10 questions?
+10467	Generally not. The correct way is to add the two batches' valid loss sums and divide by 10; the two batch averages should be weighted by 2/10 and 8/10. An equal-weight average gives each token of the shorter micro-batch a larger weight.
+12384	Does saving the model parameters make it possible to resume AdamW training exactly?
+28279	Usually not. The optimizer's m and v, the step count, the scheduler, any necessary random state, the data progress and so on also have to be saved. Only loading for inference can do without this training state.
+25535	If the training-set loss falls and the same two sentences can be continued, does that prove a deployment to other sentences will also succeed?
+10989	No. This experiment has neither training coverage of language in general nor an independent evaluation; it serves to verify the computation and the file life cycle, not to prove generalization.
+11465	To save memory, wrapping the real training forward pass in no_grad and then calling loss.backward() on the loss — can all the parameters still be learned normally?
+28285	Usually not; the computational graph needed has been disabled and the gradient path is broken. Saving training VRAM should use explicit methods such as mixed precision, checkpointing or sharding, with the gradients verified, rather than simply turning off the differentiation that is needed.

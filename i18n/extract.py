@@ -29,6 +29,11 @@ HAN = re.compile(r'[一-鿿]')
 # must change are listed: · and — read correctly in English, and ！ is left out
 # because every standalone one is a cell of the worked model's vocabulary.
 PUNCT_ONLY = re.compile(r'^[\s。；，、：？]*[。；，、：？][\s。；，、：？]*$')
+# A node with no Chinese letters can still carry Chinese punctuation that has
+# to change: "（blob ", "call_id、item_id", "Precision=6/8；Recall=6/10". HAN
+# misses them and PUNCT_ONLY only matches punctuation on its own, so they used
+# to reach the English page with full-width marks in them.
+MIXED_PUNCT = re.compile(r'[。；，、：？（）]')
 ATTRS = ('title', 'aria-label', 'alt', 'summary', 'placeholder', 'content')
 # <meta> prose worth translating; the rest (charset, viewport, keys) is machine data.
 META_OK = re.compile(r'name="(description|i18n-scope)"|property="og:(title|description)"'
@@ -47,14 +52,15 @@ def extract(doc):
         lt = doc.find('<', i)
         if lt == -1:
             seg = doc[i:]
-            if HAN.search(seg) or PUNCT_ONLY.match(seg):
+            if HAN.search(seg) or PUNCT_ONLY.match(seg) or MIXED_PUNCT.search(seg):
                 items.append((i, n, 'text', seg))
             break
         if lt > i:
             seg = doc[i:lt]
             # Text under data-i18n is replaced at load from the catalogue;
             # translating it again would be overwritten, and could disagree.
-            if (HAN.search(seg) or PUNCT_ONLY.match(seg)) and not stack:
+            if (HAN.search(seg) or PUNCT_ONLY.match(seg)
+                    or MIXED_PUNCT.search(seg)) and not stack:
                 items.append((i, lt, 'text', seg))
         m = SKIP_ELEMENT.match(doc, lt)
         if m:

@@ -106,8 +106,18 @@ def chrome(html, en):
 
 
 def relink(html, rel, pages):
-    """en/ mirrors only the HTML tree, so references out of it gain one '../'."""
+    """Rewrite references that have to reach out of the translated tree.
+
+    en/ mirrors only the HTML, so a reference to a translated page keeps its
+    path - it resolves inside en/ - and so does one to a localised asset, which
+    en/assets/ provides. Everything else has to climb out of en/ as well as out
+    of the page's own directory, so it is rebuilt from the target's path
+    relative to the site root. Prepending one '../' is not the same thing: it
+    works for '../assets/x.css' but sends 'agent-practice/x.json', written
+    relative to the page's own directory, to en/agent-practice/x.json.
+    """
     here = Path(rel).parent
+    up = '../' * (len(here.parts) + 1)
 
     def fix(m):
         u = m.group('u')
@@ -119,7 +129,9 @@ def relink(html, rel, pages):
         target = os.path.normpath(str(here / bare)).replace(os.sep, '/')
         if target in pages or target in LOCALISED:
             return m.group(0)
-        return m.group('a') + '../' + u + m.group('b')
+        if target.startswith('..'):
+            return m.group(0)          # already outside the book; leave it alone
+        return m.group('a') + up + target + u[len(bare):] + m.group('b')
 
     return REF.sub(fix, html)
 

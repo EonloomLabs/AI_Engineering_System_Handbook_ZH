@@ -22,10 +22,13 @@ TABLE = ROOT / 'i18n/table.json'
 LANG = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--lang=')), 'en')
 FIX = '--fix' in sys.argv
 
-# The machine/OS sense: a container's kernel, what it can reach.
-MACHINE = re.compile(r'宿主(?:内核|机|影响|系统|操作系统|进程空间|环境变量)|限制宿主|隔离宿主|影响宿主')
-# MCP names Host, Client and Server as protocol roles.
-PROTOCOL = re.compile(r'MCP|Host、|、Host|Host\s*/\s*Client')
+# Which strings keep "host" is a list, not a pattern. A pattern for the
+# machine sense also caught 宿主机制 ("the harness mechanism"), and excluding
+# every string that merely mentions MCP also caught 宿主允许的动作, which is the
+# harness. Each entry in the file was checked by reading its context.
+EXCEPT = {k: v for k, v in json.loads(
+    (ROOT / 'i18n/term-exceptions.json').read_text(encoding='utf-8')).items()
+    if not k.startswith('_')}
 
 
 def harness(en):
@@ -44,7 +47,7 @@ def main():
         en = v.get(LANG)
         if not en or '宿主' not in k:
             continue
-        if MACHINE.search(k) or PROTOCOL.search(k) or PROTOCOL.search(en):
+        if k in EXCEPT:
             if re.search(r'\bharness', en, re.I):
                 kept.append((k, en))      # wrongly converted earlier
             continue
