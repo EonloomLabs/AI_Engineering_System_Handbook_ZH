@@ -33,9 +33,64 @@ GAP = '\u2423'        # visible stand-in for a space at a fragment's edge
 
 CJK = re.compile(r'[一-鿿]')
 # Japanese shares its kanji with Chinese, so 'still Chinese' cannot be detected
-# that way. Prose of any length carries kana, and an untranslated line comes
-# back byte-identical, so those two signals stand in for it.
-KANA = re.compile(r'[ぁ-ヿ]')
+# that way. Identical prose and long kanji-only text are review signals;
+# source-bound Japanese labels and literal units have explicit exceptions.
+# Require a kana letter, not punctuation, a voicing/length/iteration mark.
+# Includes full-width, small/archaic and half-width kana letters (Unicode 16).
+KANA = re.compile(
+    r'[\u3041-\u3096\u309f\u30a1-\u30fa\u30ff\u31f0-\u31ff'
+    r'\uff66-\uff6f\uff71-\uff9d\U0001b000-\U0001b122'
+    r'\U0001b132\U0001b150-\U0001b152\U0001b155\U0001b164-\U0001b167]')
+JA_KANJI_TRANSLATIONS = {
+    '旧': '旧',  # The same ordinary adjective in Japanese (shell key 30222).
+    '图解 Transformer': '図解Transformer',  # Kanji plus the model name (key 348).
+    '中间结果 / 新状态': '中間結果 / 新状態',  # Two state labels (key 578).
+}
+JA_APPROVED = ROOT / 'i18n/ja-approved.json'
+
+
+class JapaneseApprovalError(ValueError):
+    """An unreadable or malformed review file must stop JA validation."""
+
+
+def _japanese_approvals():
+    """Read reviewed exact pairs for validation only, never for generation."""
+    try:
+        text = JA_APPROVED.read_text(encoding='utf-8')
+    except FileNotFoundError:
+        return {}  # Optional file: keep the previous checker behavior.
+    except (OSError, UnicodeError) as exc:
+        raise JapaneseApprovalError('无法读取 %s: %s' % (JA_APPROVED, exc)) from exc
+    try:
+        document = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise JapaneseApprovalError('%s 不是有效 JSON: %s' % (JA_APPROVED, exc)) from exc
+    if not isinstance(document, dict) or not isinstance(document.get('pairs'), dict):
+        raise JapaneseApprovalError('%s 必须包含 pairs 对象' % JA_APPROVED)
+    pairs = document['pairs']
+    for source, target in pairs.items():
+        if (not isinstance(source, str) or not source.strip()
+                or not isinstance(target, str) or not target.strip()):
+            raise JapaneseApprovalError('%s 的 source/target 必须是非空字符串' % JA_APPROVED)
+    return pairs
+
+
+def _approved_japanese(source, target, pairs):
+    return (JA_KANJI_TRANSLATIONS.get(source.strip()) == target.strip()
+            or pairs.get(source) == target)
+
+
+def approved_japanese(source, target):
+    """Read-only exact-pair predicate, also retaining the three built-in pairs.
+
+    External approval is source-and-target exact; the existing built-in pairs
+    retain their whitespace compatibility. Invalid review files raise
+    JapaneseApprovalError, including when the requested pair is built in.
+    """
+    pairs = _japanese_approvals()
+    if not isinstance(source, str) or not isinstance(target, str):
+        return False
+    return _approved_japanese(source, target, pairs)
 
 
 def vocab():
@@ -59,13 +114,38 @@ def vocab():
 
 
 VOCAB = vocab()
+# Literal UTF-8 test data, not prose: studies/labs/sse_protocol.py:46 splits
+# this file name across streamed argument fragments. Keep its exact bytes.
+PRESERVED_FILES = ('中文.py',)
 
 
-def residual(s):
+def residual(s, source=''):
     """What is left after removing the model's own vocabulary items."""
     for v in VOCAB:
         s = s.replace(v, '')
+    for name in PRESERVED_FILES:
+        if name in source:
+            s = s.replace(name, '')
     return s
+
+
+def data_literal(s):
+    """A model token/list or a declared file name may stay identical in ja."""
+    plain = TAG.sub('', s).strip()
+    if plain in VOCAB or plain in PRESERVED_FILES:
+        return True
+    if not any(v in plain for v in VOCAB):
+        return False
+    rest = re.sub(r'\b(?:PAD|BOS|EOS|t)\b', '', residual(plain))
+    return bool(re.fullmatch(r'[\s\d\[\],，、/／:：;；.·!！+=()（）\-"\'“”‘’]*', rest))
+
+
+def japanese_unchanged(s):
+    """Reviewed same-form Japanese labels, punctuation and literal data."""
+    plain = TAG.sub('', s).strip()
+    return (data_literal(s) or not CJK.search(plain)
+            or JA_KANJI_TRANSLATIONS.get(s.strip()) == s.strip()
+            or bool(re.fullmatch(r'(?:第\d+列|\d+(?:\.\d+)?秒)', plain)))
 
 
 SHELL_MIN = 51          # appears on this many instances or more
@@ -75,7 +155,7 @@ LANG = 'en'             # set from argv by main
 HEAD = """# {label} — {n} strings — target language: {lang}
 # Translate every line into {lang}. Keep the leading "N<TAB>" exactly; N is a table key, not a count.
 # [tags] lines carry inline HTML: keep every tag and its attributes unchanged.
-#        You may move tags to suit English word order.
+#        You may move tags to suit the target language's word order.
 # Keep numbers, code, file names and anchors exactly as they are.
 # Terminology: i18n/glossary.json is the book's own bilingual glossary - follow it.
 """
@@ -105,11 +185,6 @@ def ids(t):
     return {v['id']: k for k, v in t.items()}
 
 
-def show(k):
-    """Render a string for a translator, with its edge spaces made visible."""
-    return (GAP if k[:1].isspace() else '') + k.strip() + (GAP if k[-1:].isspace() else '')
-
-
 def write(name, label, keys, t, idx):
     WORK.mkdir(exist_ok=True)
     # A src file is the contract for work already handed out: overwriting it
@@ -121,7 +196,9 @@ def write(name, label, keys, t, idx):
         return
     lines = [HEAD.format(label=label, n=len(keys), lang=LANG)]
     for k in keys:
-        lines.append('%d\t%s%s' % (idx[k], show(k), MARK if TAG.search(k) else ''))
+        # The raw string is the ingest identity; visible space markers belong
+        # only in target text, never in the immutable source contract.
+        lines.append('%d\t%s%s' % (idx[k], k, MARK if TAG.search(k) else ''))
     (WORK / ('%s.%s.src.txt' % (name, LANG))).write_text('\n'.join(lines) + '\n', encoding='utf-8')
     ch = sum(len(CJK.findall(k)) for k in keys)
     print('%-34s %5d strings %7s 字 -> i18n/work/%s.%s.src.txt' % (label, len(keys), format(ch, ','), name, LANG))
@@ -174,7 +251,7 @@ def export(args):
         for rel, own in lines:
             out.append('# page: %s' % rel)
             for k in own:
-                out.append('%d\t%s%s' % (idx[k], show(k), MARK if TAG.search(k) else ''))
+                out.append('%d\t%s%s' % (idx[k], k, MARK if TAG.search(k) else ''))
         dest.write_text('\n'.join(out) + '\n', encoding='utf-8')
         print('%-22s %2d 页 %5d 条 %7s 字 -> i18n/work/%s' %
               (name, len(lines), len(keys), format(total, ','), dest.name))
@@ -267,17 +344,23 @@ def pair(src, tgt):
 
 def check(pairs, p, how, t, dry):
     """Validate a batch whole: nothing is written unless every line passes."""
+    approvals = _japanese_approvals() if LANG == 'ja' else None
     errs = []
     for i, (zh, v) in enumerate(pairs):
         if not v.strip():
             errs.append('第%d行 空译文' % (i + 1))
         elif LANG == 'ja':
-            if v == zh:
+            reviewed = _approved_japanese(zh, v, approvals)
+            if v == zh and not japanese_unchanged(zh) and not reviewed:
                 errs.append('第%d行 未翻译（与原文相同）' % (i + 1))
-            elif len(zh) >= 6 and not KANA.search(v) and CJK.search(residual(v)):
+            elif (len(zh) >= 6 and not KANA.search(v) and CJK.search(residual(v, zh))
+                  and JA_KANJI_TRANSLATIONS.get(zh.strip()) != v.strip() and not reviewed):
                 errs.append('第%d行 无假名，疑未翻译' % (i + 1))
-        elif CJK.search(residual(v)):
+        elif CJK.search(residual(v, zh)):
             errs.append('第%d行 仍含中文' % (i + 1))
+        for name in PRESERVED_FILES:
+            if name in zh and zh.count(name) != v.count(name):
+                errs.append('第%d行 文件名未原样保留: %s' % (i + 1, name))
         if sorted(TAG.findall(zh)) != sorted(TAG.findall(v)):
             errs.append('第%d行 标签不符 %r -> %r' % (i + 1, TAG.findall(zh), TAG.findall(v)))
     if errs:
@@ -292,7 +375,8 @@ def ingest(files):
     # verify their own batch at the same time without racing on one file.
     dry = '--check' in files
     files = [f for f in files if not f.startswith('--')]
-    t = load()
+    document = json.loads(TABLE.read_text(encoding='utf-8'))
+    t = document['s']
     bad = 0
     for f in files:
         p = Path(f)
@@ -358,7 +442,7 @@ def ingest(files):
             for zh, v in pairs:
                 t[zh][LANG] = v
     if not dry:
-        TABLE.write_text(json.dumps({'s': t}, ensure_ascii=False), encoding='utf-8')
+        TABLE.write_text(json.dumps(document, ensure_ascii=False), encoding='utf-8')
     return 1 if bad else 0
 
 
@@ -370,7 +454,8 @@ def status(args):
     insd = sum(v['n'] for v in t.values() if v.get(LANG))
     print('[%s] 表: %s / %s 条已译 | %s / %s 字 (%.1f%%) | 全站实例覆盖 %.1f%%' % (
         LANG, format(sum(1 for v in t.values() if v.get(LANG)), ','), format(len(t), ','),
-        format(chd, ','), format(ch, ','), 100 * chd / ch, 100 * insd / inst))
+        format(chd, ','), format(ch, ','), 100 * chd / ch if ch else 0,
+        100 * insd / inst if inst else 0))
     if '--pages' in args:
         rows = []
         for p in sorted(UNITS.glob('*.json')):
@@ -394,4 +479,9 @@ if __name__ == '__main__':
             argv.remove(a)
     assert LANG in LANGS, 'unknown language %r' % LANG
     cmd = argv[0] if argv else 'status'
-    sys.exit({'export': export, 'ingest': ingest, 'status': status}[cmd](argv[1:]) or 0)
+    try:
+        result = {'export': export, 'ingest': ingest, 'status': status}[cmd](argv[1:]) or 0
+    except JapaneseApprovalError as exc:
+        print('日语核验文件拒收: %s' % exc, file=sys.stderr)
+        result = 1
+    sys.exit(result)

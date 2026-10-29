@@ -1,0 +1,298 @@
+6170	14｜Inside code intelligence: AST, LSP, dependency graph and versioned evidence — AI Systems Engineering
+22231	Follow this chapter through its objects and states</a><a href="#topic-2">Code retrieval cannot rely on "semantically similar" alone</a><a href="#c14-h1">1. Text matching, syntax matching and semantic binding</a><a href="#c14-h2">2. An evidence path for "the skill did not load"</a><a href="#c14-h3">3. Chunking file and symbol indexes</a><a href="#c14-h4">4. Dependency graphs for change-impact analysis</a><a href="#c14-h5">5. What Git history can explain</a><a href="#c14-h6">6. Why "not found" does not mean nonexistent</a><a href="#c14-h7">7. Writes still need control after evidence is retrieved</a><a href="#c14-h8">8. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-code">Test evidence invalidated
+23095	Goal: move from "searching code" to understanding syntax, name binding and change impact, while knowing which relationships static analysis cannot guarantee. Experiment:
+15622	and the repository fix in Lesson 65.
+24425	Structural retrieval adds relationships beyond keywords, but still depends on source snapshots and language-parsing capabilities.
+23167	Related step-by-step process: <a href="../../visual/F30.html">Code retrieval cannot rely on "semantically similar" alone</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24541	Continue with related mechanisms: <a href="../../visual/F34.html">Lesson 04 · A test looks for counterexamples; it does not stamp code green</a><a href="../../visual/F31.html">Lesson 23 · Long-term memory is not a note that is always right
+6040	1. Text matching, syntax matching and semantic binding
+12961	Full-text search answers "where does this string appear?"; an AST answers "what syntactic structure is at this position?"; name binding/type analysis answers "which definition does this identifier actually reference?" They are not equivalent. For example, two files may both contain
+29295	, yet these may be a built-in function, method or imported alias; full-text search cannot disambiguate them.
+9009	Tree-sitter queries locate syntax fragments by node structure and fields; they also expose error or missing nodes, making them useful for incomplete code under editing. LSP defines requests between clients and language services, including definitions, type definitions, references and diagnostics; check capabilities and implementation to establish whether a language server supports them and how accurately.
+6926	An AST does not automatically provide a complete call graph. Dynamic attributes, reflection, dependency injection, generated code and runtime plugins can make static relationships incomplete. This book's Python AST experiment returns only function/class names and line ranges; it does not claim cross-file name resolution.
+6275	2. An evidence path for "the skill did not load"
+12920	Read the actual task record first to locate failure in discovery, selection, reading, injection or execution. Then locate the loading entry point and conditional branches; read the configuration types and callers that determine the branch; finally find tests for those conditions. This path follows a falsifiable hypothesis rather than traversing the whole root directory first.
+12307	For example, suppose the candidate root cause is an incorrect cwd. Find how startup establishes cwd, how rule-discovery functions use it, and whether tests cover nested directories. Seeing only a function name
+29423	does not prove it was called, much less that its return entered model input. Execution traces and the source-code chain establish evidence together.
+18199	When a code path is unclear, text search cheaply finds error messages, configuration keys and log events; semantic retrieval maps "why does it not take effect?" to possible modules. The right approach usually combines methods rather than declaring one retrieval method a universal replacement for the rest.
+6430	3. Chunking file and symbol indexes
+19430	Fixed-character code chunks may cut through function signatures, exception handling or closures. AST-symbol chunking better respects structure, but large functions may remain too long and small functions may lose type and caller context. A reasonable index can store the main symbol text, parent scope, import summary, path and version, then expand related information on demand.
+23511	A symbol name alone cannot be a global primary key: overloads, same-named classes, different files and different versions collide. Use repository+version+path+qualified symbol name as a locator, with a stable range attached. Line numbers are snapshot coordinates and may move after edits; display the version alongside them.
+11958	Comments and documentation are evidence too, but conflicts with execution logic need investigation rather than automatically choosing the easier-to-read side. Test assertions express expectations and source code expresses current behavior; a mismatch may be the defect to fix. "The current code does this" does not mean the user must want it.
+6529	4. Dependency graphs for change-impact analysis
+15850	Graph nodes can be modules, functions, types, configuration or tests; edges may represent calls, imports, inheritance, data dependencies or coverage. Edge confidence varies: compiler-resolved direct references are usually stronger than text-based guesses; runtime traces cover only executed paths and do not establish that others are absent.
+12480	After changing a function, inspect direct callers and argument/return contracts, then boundary uses and error handling; test selection can expand along dependencies. Missing static edges, dynamic paths, shared data and build configuration can still cause omissions. For high-risk changes, broaden regression checks after focused tests rather than treating the graph as absolute proof.
+27244	This also explains why codebase RAG needs more than "find the most similar code snippet". Implementation needs combined evidence from definitions, calls, configuration and tests. RepoCoder studies iterative retrieval and generation together, but success on repository-completion benchmarks does not directly establish arbitrary bug-fixing capability.
+6626	5. What Git history can explain
+19737	Commit history helps identify when behavior appeared, the reasons at the time, related tests and rollback risks. It supports understanding current code rather than replacing it. An old decision may address constraints that no longer exist; making an old PR conclusion a permanent rule creates stale memory.
+17301	For regressions, binary search can narrow the change that introduced the issue, but the environment and dependencies must be reproducible; otherwise, infrastructure noise may determine test passes and failures. Recording failing samples and commands is more useful than one commit alone. Commit messages may also be incomplete and need diffs and runnable evidence.
+6708	6. Why "not found" does not mean nonexistent
+19788	Search may be limited by ignore rules, file types, hidden directories, index delays, unfinished language-server analysis or query expressions. Negative conclusions need a search scope and method. For example, "no text references to this symbol were found in the current src directory" cannot become "the entire system never calls it".
+18623	Expand searches to address gaps: add likely modules or configuration directories first, then inspect dynamic registration and generated code. Expanding indefinitely into every dependency also reduces efficiency. Stop when evidence supports the decision, or when remaining uncertainty is explicit and needs external material, rather than insisting on traversing every file.
+6785	7. Writes still need control after evidence is retrieved
+24206	After precise location, generate and verify the patch against the version read. Files can change between retrieval and writing, LSP buffers may differ from disk, and tests may read build artifacts rather than current source. Such version mismatches are frequent engineering risks in AI development.
+15869	In an IDE, specify whether unsaved editor buffers or disk files are authoritative; in a CLI, inspect existing user changes in the work tree and avoid overwriting them. AI development does not justify weaker change-isolation standards than ordinary software engineering.
+16116	Incrementally analyzing a function rename: which evidence must change
+26320	Input and conditions.</strong> Rename parse in a.py to parse_config; b.py imports it statically, while c.py registers the name through a string.
+25799	Syntax change
+9115	Update a.py's definition node
+16121	Incremental parsing rebuilds only the affected syntax range.
+28911	Static references
+9128	Update b.py's binding and calls
+21541	Check whether the language-service index was rebuilt.
+14041	Dynamic references
+9134	c.py's string is not covered by static renaming
+22978	Add verification through the registry and runtime tests.
+22619	Version marker
+20285	Old search results still show parse
+12235	Treat them as stale location clues, not authoritative evidence.
+17584	Import, registration lookup and call tests
+25246	Cover omissions across different evidence types.
+19030	Join the steps up.</strong> Updating an incremental syntax tree does not automatically align project-wide semantics and runtime behavior.
+26693	Limits and counterexamples.</strong> Rename coverage differs across language servers; static tools cannot be guaranteed to find every dynamic reference.
+6927	Does finding a function call in an AST prove its target must execute? No. Control flow may never enter that branch, and name binding may point to another object. Control flow, type/binding information and runtime conditions are needed.
+10413	A repair evidence package should at least identify which behavior violates which requirement, the exact root-cause branch, affected calls, how the patch changes behavior, and which checks pass on the current version. It can be short, but a vague "everything was checked" cannot replace the chain.
+9519	← 13｜Inside a retrieval system: BM25, vectors, ANN, fusion and index freshness</a><a href="15.html">15｜Inside a memory system: bi-temporality, conflict, provenance and useful forgetting
+22230	Follow this chapter through its objects and states</a><a href="#topic-2">Code retrieval cannot rely on "semantically similar" alone</a><a href="#c14-h1">1. Text matching, syntax matching and semantic binding</a><a href="#c14-h2">2. An evidence path for "the skill did not load"</a><a href="#c14-h3">3. Chunking file and symbol indexes</a><a href="#c14-h4">4. Dependency graphs for change-impact analysis</a><a href="#c14-h5">5. What Git history can explain</a><a href="#c14-h6">6. Why "not found" does not mean nonexistent</a><a href="#c14-h7">7. Writes still need control after evidence is retrieved</a><a href="#c14-h8">8. Acceptance questions
+6190	15｜Inside a memory system: bi-temporality, conflict, provenance and useful forgetting — AI Systems Engineering
+22327	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#c15-h1">1. From cognitive categories to storage semantics</a><a href="#c15-h2">2. When an experience is worth keeping</a><a href="#c15-h3">3. Bi-temporality: when a fact is valid and when the system knows it</a><a href="#c15-h4">4. Do not blindly overwrite conflicts with "the latest entry"</a><a href="#c15-h5">5. Retrieval, reranking and context burden</a><a href="#c15-h6">6. A-MEM, Mem0 and graph structures: read critically</a><a href="#c15-h7">7. Evaluating whether memory really helps</a><a href="#c15-h8">8. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-memory">The old worker comes back after the lease has expired
+23117	Goal: design memory that reduces repeated research without becoming a second, incorrect source of truth. Experiment:
+10137	. This chapter concerns system design, without assuming the model automatically writes conversations into parameters.
+21181	Provenance, valid time and recording time jointly determine whether memory is usable; conflicts cannot be resolved by overwriting with the latest write alone.
+23168	Related step-by-step process: <a href="../../visual/F31.html">Long-term memory is not a note that is always right</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+6026	1. From cognitive categories to storage semantics
+7255	CoALA organizes language agents through memory, action and decisions; MemGPT discusses layered management of limited context and external storage. They help establish structure, but are not production database schemas that must be copied.
+17717	Working memory holds current-task state; episodic memory records specific experiences; semantic memory keeps reusable facts; procedural memory stores methods. Engineering concerns how each item is written, when it applies, what evidence supports it, and how it is retrieved and deleted. A skill file can carry procedural knowledge without every success automatically warranting a new skill.
+12027	Separate task checkpoints from long-term experience. The former need precise executed actions and unresolved states; the latter should distill information that changes future actions. Permanently storing entire task conversations in an experience database adds retrieval noise and many unproductive guesses.
+6274	2. When an experience is worth keeping
+25660	Let rediscovering a conclusion cost Cr, its estimated number of correct future reuses be n, writing/maintenance/retrieval cost Cm, and incorrect-reuse loss Ce. Rough net value is then
+10219	. This does not require exact probability calculations; it reminds us that memory also has costs.
+17563	For development projects, valuable memories often identify "where the entry point is", "which plausible path was falsified", "why a decision exists" or "which checks catch this error class". Low-value memories are often obvious from code, available in one search or general knowledge without conditions of use. Memory retrieval should replace repeated reading, not add to all existing context.
+12326	For example: "This version has a total byte budget for rule loading; if nested rules never enter input, inspect the budget and cwd first, with evidence from a specific commit and function." This changes the next action and is more useful than "remember to check skill loading". Changed code in a new version requires invalidating or rewriting the experience.
+16736	For the full mechanism and continuing examples, see <a href="../../chapters/18.html#agent-practice-memory">Why is writing memory a pipeline with leases and acceptance?</a>. This section retains its original derivations and experiments; the two explanations work at different levels and do not replace each other.
+6420	3. Bi-temporality: when a fact is valid and when the system knows it
+12574	Suppose configuration changes on day 20, but the system receives evidence only on day 30. "What was the actual configuration on day 25?" and "what did the system know on day 25?" are different questions. One update timestamp cannot answer both.
+20724	This book uses
+25175	for a fact's validity interval,
+25195	for when the record enters the system, while retaining source versions. Queries with
+29410	distinguish late information. Validity intervals are left-closed and right-open so two versions do not automatically take effect at the same boundary instant.
+27316	These are actual SQLite queries, not simulated model memory. The current implementation lacks full transaction-time history, retraction events, concurrent merging and natural-language conflict judgments; it shows how minimal metadata prevent temporal confusion. Whether production needs bi-temporality depends on retrospective queries and late updates; ordinary personal notes need not add it by default.
+6531	4. Do not blindly overwrite conflicts with "the latest entry"
+11366	Contradictory statements may differ in version, scope or time, or may contain actual errors. Separate these dimensions before deciding whether a conflict exists. With multiple valid conclusions under identical conditions, this book returns
+29183	instead of choosing one at random.
+21696	Model-extracted facts start as candidates and should not automatically become active because they sound fluent. Verification may come from current source, deterministic tests, authoritative documentation or human confirmation. Evidence strengths imply different uses, without requiring a complex grading system; explicit "verified / awaiting verification / invalid" states are usually enough.
+28678	Long-term memory must not override the user's clear current constraints. If the user requests no new agents this time, follow that goal even if past experience favors multiple agents. External pages or low-trust tool results especially cannot gain authority through "writing memory"; this is where memory poisoning and prompt injection intersect.
+17820	Engineering case · D06
+25614	Memory diagnosis: the error is wrong timing or a retracted conclusion, not "not found"
+11362	Two queries need different answers
+9480	"What did we know on day 6 at the time?" differs from "looking back now, what was the actual value on day 6?" This book queries the same event stream by valid time and recording time, obtaining 10 and 20. Keeping only the latest value would collapse the questions into one answer. Temporal reasoning and knowledge updates need separate evaluation.
+21189	How source changes affect derived experience
+13568	Then draw doc→chunk→summary→memory/answer_cache as a dependency graph. Retracting doc must at least block unsupported derivatives from further use. The program computes the invalidation closure and retains original local results; deleting one embedding vector is not enough.
+28139	Conditions of use are also memory content
+9494	"Retry after a timeout" needs conditions: read-only operation, downstream idempotency or confirmation that execution did not occur. Saving it without conditions as general experience turns a past safe policy into a future dangerous action. Experience entries need at least triggers, provenance, versions, and success/failure boundaries, not just one affirmative recommendation.
+29067	Acceptance sequence
+12670	First write, retrieve and derive conclusions; then add newly evidenced facts effective retrospectively, retract original sources or change permissions; finally ask about past and present, checking retrieved evidence and final executable actions. Tests of one write and one recall rate cannot reveal this long-term drift.
+12461	Scope of guarantees
+20970	This experiment governs external records, not base-model parameters, and does not claim legal compliance with deletion requirements. Real systems must also include backups, logs, third-party storage and permission revocation in policy; extend the design for your environment rather than copying one teaching table directly.
+7347	D06: how to read these results rather than only "passed"
+12709	First separate when a fact was valid from when the system learned it, then handle retractions along provenance dependencies. Retrieving both facts does not mean both apply to the current question.
+13091	Related questions: <a href="../../chapters/18.html#engineering-E35">E35: "When it was true" and "when it became known": the two times in memory have to be kept apart
+7523	E36: Deleting the original text is not forgetting: summaries, caches and experience entries depend on it too
+6644	5. Retrieval, reranking and context burden
+25605	Memory retrieval can narrow by project, module, task type, version and permissions before terms or vectors locate relevant entries. Relevance is not applicability; check lifecycle state before returning results. Whether source code needs reading after memory depends on task risk and information-change speed; current implementation details usually need rechecking.
+25603	Memory entries should link to evidence without always loading it in full. A short catalog can be an index, and a file system may suffice. Consider dedicated services or graph databases only when scale, queries or concurrency create actual bottlenecks.
+28500	When merging duplicates, keep provenance and conditions of use rather than blending similar experience from different versions into unconditional rules. Deletion and revoked permissions must also propagate to summaries, caches and indexes, not just the main table.
+6702	6. A-MEM, Mem0 and graph structures: read critically
+6869	A-MEM explores dynamic memory linking, organization and updates; Mem0 discusses extracting and maintaining scalable memory from conversations. Their experiments suggest potential in some organizational methods, but benchmarks, models, data and comparisons each have limits. Paper names or scores alone cannot determine suitability for a code repository.
+15849	Graphs suit problems requiring combinations across relationships, but extracted edges may themselves be wrong, and updates and conflicts become more complex. If the task merely finds a historical root cause by module, a lightweight index may be better. Compare no-memory, static-rule and retrieval-on-demand baselines before adding graphs.
+6782	7. Evaluating whether memory really helps
+7869	Evaluations such as LongMemEval cover cross-session information use, time and updates, showing why memory evaluation needs more than one factual question.
+23303	Real development evaluation should also test whether repeated errors decrease, the first useful location is found sooner, conflicts with current source are corrected, and stale advice is rejected.
+18353	Keep a no-memory control. If two searches originally complete a task, but new memory adds three model calls for extraction, retrieval and verification, a correct final result may still not justify it. Evaluate "which costs memory replaced", not merely the number of entries stored.
+10387	A similar memory does not apply to the current environment
+26468	Input and conditions.</strong> Memory A: "test environment timeout=3"; memory B: "production environment timeout=5". The user asks about production, but A's wording is more similar to the question.
+23153	Similarity retrieval
+7040	A ranks higher
+15003	Only textual similarity.
+28140	Applicability filtering
+22762	The environment must be production
+7021	A is ineligible.
+11636	Fact selection
+7143	B's source version is valid
+22832	Answer with 5.
+24715	Missing case
+7134	B has expired, with no new evidence
+18096	Recheck production configuration rather than fall back to A to fill the answer.
+20192	A new production value of 7 has evidence
+13611	Write a new validity interval and invalidate the old production value without affecting test-environment records.
+19213	Join the steps up.</strong> Memory retrieval first selects facts under conditions; textual similarity comes second.
+26769	Limits and counterexamples.</strong> This example uses simple structured conditions; complex natural-language scopes may still be misjudged.
+10388	Can an experience that works three times in a row become a general rule? Not from the count alone. All three may share a template or version; examine task coverage, shared conditions, counterexamples and change risks. An upgraded rule must remain retractable and state when it should not be used.
+9520	← 14｜Inside code intelligence: AST, LSP, dependency graph and versioned evidence</a><a href="16.html">16｜Skills, tools and model routing: how expertise actually enters a task
+22326	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#c15-h1">1. From cognitive categories to storage semantics</a><a href="#c15-h2">2. When an experience is worth keeping</a><a href="#c15-h3">3. Bi-temporality: when a fact is valid and when the system knows it</a><a href="#c15-h4">4. Do not blindly overwrite conflicts with "the latest entry"</a><a href="#c15-h5">5. Retrieval, reranking and context burden</a><a href="#c15-h6">6. A-MEM, Mem0 and graph structures: read critically</a><a href="#c15-h7">7. Evaluating whether memory really helps</a><a href="#c15-h8">8. Acceptance questions
+6198	16｜Skills, tools and model routing: how expertise actually enters a task — AI Systems Engineering
+22212	Follow this chapter through its objects and states</a><a href="#topic-2">A skill exists — so why can it still be of no use at all?</a><a href="#c16-h1">1. Four kinds of routing are different problems</a><a href="#c16-h2">2. Descriptions should distinguish scope, not maximize visibility</a><a href="#c16-h3">3. What a specialist skill should contain</a><a href="#c16-h4">4. The evidence chain from "activated" to "effectively applied"</a><a href="#c16-h5">5. Model routing: know the candidates before seeking the optimum</a><a href="#c16-h6">6. Conflicts and a single authority</a><a href="#c16-h7">7. Acceptance experiment</a><a class="sub ap-toc" href="#agent-study-skills">Positive and negative samples for a routing regression test</a><a class="sub ap-toc" href="#agent-study-tools">Discoverable and authorizable
+23108	Goal: distinguish skill discovery, content loading, tool permissions, model selection and actual application of expertise; improve quality with a few precise mechanisms rather than building multiple routing layers by default.
+8070	Prompts, skills, tools and models operate at different layers; identify the failure point before changing routing.
+23169	Related step-by-step process: <a href="../../visual/F32.html">A skill exists — so why can it still be of no use at all?</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24536	Continue with related mechanisms: <a href="../../visual/F25.html">Lesson 08 · MCP connects interfaces; it does not hand over permissions on its own</a><a href="../../visual/F26.html">Lesson 11 · Each turn's context is like a working file with a boundary</a><a href="../../visual/O12.html">O12 · Model routing: cheaper per call is not cheaper per successful task
+6033	1. Four kinds of routing are different problems
+18688	Skill routing selects procedural knowledge; tool routing selects executable capabilities; model routing selects a cost/capability configuration; delegation assigns control and context responsibilities. These can be combined, but one "relevance score" cannot make every decision.
+12306	For example, a storage-system task may need transaction expertise without a new sub-agent; the main agent can read the skill on demand. Needing database tools does not authorize production writes. Deep reasoning does not necessarily require a model classifier to choose the model first. Every added layer should address a specific real failure.
+6952	The Agent Skills specification describes metadata, bodies and resource organization; check the particular implementation for how a harness discovers, loads and executes resources. Following the file format meets only one condition for recognition, not proof of identical CLI behavior.
+6282	2. Descriptions should distinguish scope, not maximize visibility
+10287	A poor description: "Handle all advanced software engineering problems and guarantee the best quality." It matches almost any task and reveals no boundary. A better description states task signals and expertise, such as transaction isolation, write consistency or data migration, while saying pure styling changes do not need it.
+12154	A description also must not be so narrow that loading requires exact keywords. "Two simultaneous requests lost one update" may need concurrency and consistency expertise without the words "lost update". Regression samples should cover keywords, synonyms, implicit expertise needs, easily confused neighboring tasks and unrelated tasks.
+26086	Routing aims for appropriateness, not maximum loading. Missing necessary skills and loading unrelated ones have different costs; consider task quality and cost together. Loading every skill makes recall look high but defeats routing's purpose.
+6416	3. What a specialist skill should contain
+11269	Expert content should change engineering actions. For persistence: local transactions do not cover remote side effects, timeouts need an unknown state, retries need idempotency/reconciliation, version checks prevent stale writes, and tests should cover crash windows. These are more useful than "consider security, performance and maintainability".
+18126	Keep goals, applicability, key risks and execution paths in the core, reading detailed resources on demand. Examples should state constraints rather than force every project into one framework. A simple fix should not require a full architecture report; a complex distributed problem needs more than a generic checklist.
+11964	Code resources and templates should be runnable and verifiable, with version dependencies stated. Tool commands must not default to unnecessary privileges. A downloaded skill is also input needing review; placement in the skill directory does not make it trustworthy.
+6526	4. The evidence chain from "activated" to "effectively applied"
+24941	Separate at least six steps: discovery, selection, reading, entering context, shaping actions and meeting specialist requirements in the result. A log showing skill selection establishes only the earlier steps; the model saying "followed" does not establish the later ones.
+25695	Look for specialist differences in results. For example, does a transaction skill handle unknown timeout outcomes, prevent duplicate writes and add matching fault tests, rather than merely repeat "idempotency" in the answer? Conversely, correct completion without explicitly loading a skill suggests that task may not justify the extra skill cost.
+28914	Static tests check description formats, paths, routing-boundary samples and resource existence; they cannot establish that a real harness loads the skill and improves code quality. Report static contract tests separately from actual task A/B comparisons, without substituting the former for the latter.
+6645	5. Model routing: know the candidates before seeking the optimum
+10729	Available models vary by CLI, account and configuration. An extension should not hardcode supposedly available model names from memory; prioritize candidates visible to the harness and user configuration. Capability also depends on tool support, context and output formats, not just the price per token.
+10320	A concise policy uses a reliable default model and switches only for known task constraints or explicit evidence. For cascades, include the first failure, retries, context handoff and error-detection rate. If a small model errs and the verifier misses it, escalation never triggers.
+19686	Avoid excessive control of both reasoning effort and model routing. Test default settings on real tasks first, then consider downgrading some low-risk task types. Do not add an analysis agent merely to decide whether analysis is needed, creating recursive costs.
+6712	6. Conflicts and a single authority
+16210	Multiple skills demanding "analyze first", "implement immediately" and "always get independent review" can conflict. Follow user goals, harness permissions and explicit project constraints, while specialist skills offer conditional advice rather than compete for top-level process control.
+17886	If an engineering brief or task state exists, use it as the central entry point for the current goal; other files should reference it rather than duplicate versions. Not every project needs a formal brief, but when scattered information conflicts, reduce authoritative copies instead of adding another coordination layer.
+18675	Is higher skill recall an optimization if unnecessary loading also rises?
+26141	Input and conditions.</strong> Among 10 tasks needing a concurrency skill, the old system finds 8 and the new one 10; among 90 tasks not needing it, false triggers rise from 2 to 30.
+18342	Necessary recall
+20271	Old 80%, new 100%
+23386	A real improvement.
+25354	Trigger precision
+20270	Old 8/(8+2)=80%; new 10/(10+30)=25%
+16257	Many unrelated tasks receive extra process.
+18497	Cost observation
+6453	30 falsely triggered tasks add reading and review
+15213	Most ordinary work may slow down.
+13796	Analyze classification errors
+23254	Find why the 2 missed positive cases did not match
+17640	Try targeted boundary fixes instead of generalizing to "all development".
+28196	Choose an approach
+15473	Compare task success and efficiency together
+11102	One recall metric cannot establish overall superiority.
+19081	Join the steps up.</strong> Skill routing must load when needed and avoid loading when unnecessary; metrics must constrain both.
+26727	Limits and counterexamples.</strong> These are a teaching confusion matrix, not actual rd-skills evaluation results.
+16737	For the full mechanism and continuing examples, see <a href="../../chapters/19.html#agent-practice-skills">How does a progressively loaded skill go from "a file" to actual capability?</a>. This section retains its original derivations and experiments; the two explanations work at different levels and do not replace each other.
+6794	7. Acceptance experiment
+28170	Choose real tasks and compare no skill, the old skill and the new skill under the same harness/model/tools. Measure specialist defects, functional success, extra reading and total time. Keep clear false-loading and missed-loading cases; ablate the new approach to identify which content produces gains.
+29077	Acceptance question: routing accuracy rises but generated-code quality falls. Should the new version merge? Not on routing metrics alone. The correct skill may have stale content, or loading costs may displace source evidence. The final goal is engineering tasks, not the routing classifier itself.
+9521	← 15｜Inside a memory system: bi-temporality, conflict, provenance and useful forgetting</a><a href="17.html">17｜Inside multi-agent: DAGs, context handoff, concurrency conflicts and correlated errors
+16730	For the full mechanism and continuing examples, see <a href="../../chapters/11.html#agent-practice-tools">The tool exists, the model sees it, it can be called, it is authorized: four layers of checking</a>. This section retains its original derivations and experiments; the two explanations work at different levels and do not replace each other.
+22211	Follow this chapter through its objects and states</a><a href="#topic-2">A skill exists — so why can it still be of no use at all?</a><a href="#c16-h1">1. Four kinds of routing are different problems</a><a href="#c16-h2">2. Descriptions should distinguish scope, not maximize visibility</a><a href="#c16-h3">3. What a specialist skill should contain</a><a href="#c16-h4">4. The evidence chain from "activated" to "effectively applied"</a><a href="#c16-h5">5. Model routing: know the candidates before seeking the optimum</a><a href="#c16-h6">6. Conflicts and a single authority</a><a href="#c16-h7">7. Acceptance experiment
+6201	17｜Inside multi-agent: DAGs, context handoff, concurrency conflicts and correlated errors — AI Systems Engineering
+22262	Follow this chapter through its objects and states</a><a href="#topic-2">Multi-agent: work that can run in parallel matters more than the number of agents</a><a href="#c17-h1">1. What real gains multiple agents offer</a><a href="#c17-h2">2. Estimate speedup from the critical path, not agent count</a><a href="#c17-h3">3. What a delegation contract needs</a><a href="#c17-h4">4. Concurrent file access and integration boundaries</a><a href="#c17-h5">5. Independent reviews do not imply independent errors</a><a href="#c17-h6">6. Cancellation, failure and partial completion</a><a href="#c17-h7">7. When not to split the task</a><a class="sub ap-toc" href="#agent-study-delegation">The break-even point of parallelism</a><a class="sub ap-toc" href="#agent-study-parallel">Head-of-line waiting caused by ordered collection
+23107	Goal: judge what to split, how to merge reliably and why multiple agents may perform worse. Establish a single-agent baseline first, without treating role count as capability.
+12038	A task graph first serves independence and handoff; do not force shared changes into parallel work for an attractive diagram.
+23173	Related step-by-step process: <a href="../../visual/O11.html">Multi-agent: work that can run in parallel matters more than the number of agents</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24533	Continue with related mechanisms: <a href="../../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat</a><a href="../../visual/F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened</a><a href="../../visual/F34.html">Lesson 04 · A test looks for counterexamples; it does not stamp code green
+6034	1. What real gains multiple agents offer
+23223	Relatively independent searches can run in parallel, tasks can have separate contexts and tools, and some reviews can isolate the implementer's assumptions. Anthropic's research system provides a case of a main agent coordinating parallel sub-agent exploration; Agentless suggests structured, simple flows can also compete on some software tasks. Their tasks and settings differ, so neither establishes that "multiple agents are always better".
+16198	Multiple agents add task descriptions, repeated retrieval, context handoffs, merging, conflict resolution and extra model calls. If everyone edits the same core logic, division may merely fragment continuous reasoning. On a small task, coordination may cost more than implementation.
+6291	2. Estimate speedup from the critical path, not agent count
+25639	Let p be the parallelizable share of work. With N executors, the ideal speedup bound is approximately
+29466	; coordination, communication, duplication and merging make actual speed lower. This applies an Amdahl-style derivation, not a model experiment result.
+11997	For two independently modified modules followed by integration, ideal time is the larger duration plus integration, not their sum. If the second needs an interface established by the first, a dependency edge prevents true parallelism. A task DAG should represent output dependencies, not mechanically impose three fixed layers of "analysis/implementation/review".
+13055	Shared rate limits also break ideal parallelism. Four agents calling one external API may rate-limit each other; with a fixed token budget, more concurrency also reduces evidence available per task. Evaluate the complete task's wall-clock time and total resources rather than one fast subtask.
+20619	Head-of-line waiting caused by ordered collection
+22834	Run parallel tasks A at 30 milliseconds and B at 10 milliseconds, recording completion order separately from result-return order. Explain why the user may not see B even after it finishes.
+13299	Key boundary:</strong> measure waiting gates, execution and collection separately; output order does not establish serial execution.
+28971	Keep tracing through the source or the engineering basis:</strong> distinguish execution order, collection order and safety gates. Do not check only the happy path; check behavior on cancellation, version changes and unknown results too.
+16739	For the full mechanism and continuing examples, see <a href="../../chapters/20.html#agent-practice-parallel">Why can tools running in parallel finish earlier and show their results later?</a>. This section retains its original derivations and experiments; the two explanations work at different levels and do not replace each other.
+25669	Evidence and the limits of understanding:</strong> a parallel flag constrains scheduling without proving the actions have no semantic conflict; separate queuing, execution, consumption and result-return times.
+6423	3. What a delegation contract needs
+16366	Delegation instructions need at least a goal, scope, current facts, necessary constraints, available tools, expected return form and completion conditions. Supply enough information without copying the whole main conversation. Mark important assumptions as unverified rather than teaching them to every sub-agent as facts.
+27140	Returns should distinguish conclusions, evidence locations, actions taken and unresolved issues. A main agent receiving only polished summaries without original sources cannot judge conflicts or recheck them. For precise code, read the current version identified by the sub-agent rather than having it manually rewrite potentially incorrect source in its summary.
+10740	Harnesses inherit context differently: some use independent context, others fork. Product configuration also determines tools and permissions. Verify the harness mechanism first; an abstract "inherits all permissions" statement in a skill does not implement it.
+16738	For the full mechanism and continuing examples, see <a href="../../chapters/20.html#agent-practice-delegation">How do several agents run in parallel, and how is loss at handoff avoided?</a>. This section retains its original derivations and experiments; the two explanations work at different levels and do not replace each other.
+6540	4. Concurrent file access and integration boundaries
+17557	For independent writes, branches or worktrees reduce direct overwrites but do not eliminate semantic conflicts. Separately passing patches may change shared interfaces, dependency versions or configuration behavior after merging. Reverify the current merged artifact rather than reusing green results from each branch.
+17297	For changes to the same file, define ownership boundaries or serialize critical parts first. Content hashes/CAS prevent overwrites, but a human or agent must still understand conflicts after failure rather than automatically choose the last writer. Some tasks suit research-only sub-agents with centralized implementation by the main agent, reducing concurrent-write conflicts.
+16336	If sub-agents can edit tests, the main agent must detect weakened tests. Verification resources need explicit ownership; high-risk acceptance can run outside the workspace or in a restricted environment. Before treating "all tests are green" as a result, confirm the tests still verify the original requirements.
+6649	5. Independent reviews do not imply independent errors
+15435	The same model, prompt and context can share incorrect premises. Showing the implementer's explanation first anchors the reviewer to its conclusion. Independent review can examine original requirements, the current diff and tests before implementation reasons, but adds reading cost and should be reserved for worthwhile tasks.
+16231	Majority voting offers expected benefits only when errors are sufficiently independent and the voting target identifiable. If every agent trusts stale API documentation, voting cannot recover facts. Independent evidence, such as reading the current interface or running tests, may help more than adding a fifth identical reviewer.
+17630	Fix and verify small issues within the current review rather than restarting analysis, design and review from the beginning. Return to design for changed goals or disruptive architecture decisions. Let risk, not ritual, drive the process.
+6714	6. Cancellation, failure and partial completion
+10281	One failed subtask need not invalidate everything. The main agent should know which artifacts are reusable and which depend on failed results. Tool actions may remain in flight after cancellation; wait for a confirmable terminal state or record unknown. Do not delete subtask logs to pretend nothing happened.
+17576	For timeouts, read persisted evidence first to avoid redoing work; for loops without progress, change task boundaries or narrow the problem. Restarting an agent with the full history may merely repeat the same failure. Recovery should match error types rather than always say "try again".
+6776	7. When not to split the task
+23088	A clear goal, small change, concentrated evidence and cheap verification often need only one agent. Cross-language work, independent modules or broad research with independently checkable results may benefit more from parallelism. Actual dependencies and risk should support this judgment; every task does not need a complexity score.
+29075	Acceptance question: four research agents produce four different conclusions. Should their views be averaged in a summary? No. Compare provenance, time, scope and evidence quality first; some differences reflect conditions and others real contradictions. Integration adjudicates evidence rather than compromising on wording.
+23189	With correlated errors, do not multiply three agents' probabilities as independent
+26232	Input and conditions.</strong> Assume three reviewers always make the same wrong judgment from identical incorrect material. Their shared error probability per task is 20%.
+26850	Marginal error
+22022	20% for each reviewer
+14143	They look the same in isolation.
+28623	Correlated errors
+10503	The probability all three are wrong is still 20%
+10835	Not 0.2³=0.8%.
+16232	Majority vote
+13068	The shared error still receives unanimous approval
+19301	Voting does not improve this failure class.
+16109	Add a test run or read the new version
+15210	This may break the shared premise, but must be measured.
+17813	Engineering cost
+10504	Three times the calls with no new information
+18092	Consider fewer duplicate reviews instead of adding a fourth.
+19127	Join the steps up.</strong> Multiplying probabilities requires independence; agents commonly share models, context and environments and cannot be assumed independent.
+26704	Limits and counterexamples.</strong> Perfect correlation is an extreme counterexample construction; real correlation varies and needs estimation from actual data.
+9522	← 16｜Skills, tools and model routing: how expertise actually enters a task</a><a href="18.html">18｜The core of engineering quality: contracts, tests, counterexamples, review and delivery evidence
+22261	Follow this chapter through its objects and states</a><a href="#topic-2">Multi-agent: work that can run in parallel matters more than the number of agents</a><a href="#c17-h1">1. What real gains multiple agents offer</a><a href="#c17-h2">2. Estimate speedup from the critical path, not agent count</a><a href="#c17-h3">3. What a delegation contract needs</a><a href="#c17-h4">4. Concurrent file access and integration boundaries</a><a href="#c17-h5">5. Independent reviews do not imply independent errors</a><a href="#c17-h6">6. Cancellation, failure and partial completion</a><a href="#c17-h7">7. When not to split the task
+6203	18｜The core of engineering quality: contracts, tests, counterexamples, review and delivery evidence — AI Systems Engineering
+22296	Follow this chapter through its objects and states</a><a href="#topic-2">A test looks for counterexamples; it does not stamp code green</a><a href="#c18-h1">1. Define behavior before choosing a process</a><a href="#c18-h2">2. The testing pyramid and target errors</a><a href="#c18-h3">3. Property-based and metamorphic testing</a><a href="#c18-h4">4. Mutation: prove the tests really catch errors</a><a href="#c18-h5">5. How review avoids an endless loop</a><a href="#c18-h6">6. Verification freshness and artifact ownership</a><a href="#c18-h7">7. A concise but sufficient delivery</a><a class="sub ap-toc" href="#agent-study-quality">Fix non-blocking problems directly
+23115	Goal: make code quality testable rather than asking the model to "act like a senior engineer". Experiment: actual file changes in Lesson 65, 8 functional tests and rejection of stale verification.
+16288	Contracts express observable behavior, counterexamples expose errors, tests bind to versions, and review addresses risks tests miss.
+6029	1. Define behavior before choosing a process
+10259	Task success first depends on user needs, existing system constraints and behavior that must stay unchanged. For exclude, specify path bases, directory-rule matching, wildcard support, case sensitivity and separator semantics. Without a clear contract, AI-generated tests merely confirm the model's guesses.
+10785	A simple change needs no pages of formal specifications, but ambiguities affecting results should be removed. Two or three executable examples often suffice; complex compatibility migrations need finer input, state and error semantics. Actual risk determines design depth.
+17883	Engineering environments should also make builds, tests and architecture boundaries easy for agents to find. OpenAI's harness-engineering article emphasizes repository workflows with knowledge and verifiable constraints; SWE-agent research shows operating interfaces affect coding results. Neither implies buying a large orchestration platform.
+6290	2. The testing pyramid and target errors
+14124	Unit tests quickly locate local logic; integration tests check module boundaries, real storage and protocols; end-to-end tests verify user flows but are usually costlier and more environment-sensitive. Test combinations should cover risks, not a fixed numerical ratio.
+12329	For example, testing only that
+25214	is excluded does not catch incorrect basename handling of
+23027	. Counterexamples need same-named files at different paths, directory boundaries, Windows separators, empty rules and parent traversal. Each assertion should match a contract or failure hypothesis rather than produce many duplicate happy paths.
+22422	Record test commands, exit codes, test counts, skipped items and environments. Zero exit status with no tests discovered is not a functional pass; skipping critical tests for missing dependencies cannot be summarized as "all passed".
+6427	3. Property-based and metamorphic testing
+20609	Some behavior suits invariance checks: separator normalization preserves results; adding unrelated rules when none match preserves results; KV cache chunking preserves logits; changing the authorized user prevents reuse of someone else's cached results.
+14934	Without complete expected answers, metamorphic testing derives output relationships through input transformations. It supplements example tests, but the relationship must be correct. "Adding any exclusion rule should preserve results" is false, because a matching rule should change them. Do not treat invented patterns as truths.
+20012	Numerical implementations suit finite differences, conserved quantities, symmetry and high-precision baselines; agent flows suit fault injection, permission boundaries and version conflicts. Handing everything to LLM graders loses strong evidence available from deterministic mechanisms.
+6522	4. Mutation: prove the tests really catch errors
+18793	Remove a causal mask, reset RoPE positions, remove user identity from a cache key or make finish ignore versions, then rerun tests. Corresponding failures show sensitivity to the target errors. If deliberately introduced bugs leave everything green, tests cover lines but not semantics.
+7948	Mutation scores alone cannot represent quality. Many mechanical mutations have no business meaning, and some equivalent transformations should not fail tests. Negative controls designed for real failure modes matter more than blindly trying to kill every mutation.
+18372	Snapshot tests suit stable output contracts, but fixed hashes for natural-language descriptions, entire skills or unrelated formatting turn reasonable edits into regression noise. Bind tests to behavior that must remain, not the exact shape of a whole text.
+6630	5. How review avoids an endless loop
+7687	Google's review standard emphasizes improving overall code health rather than endless perfection. Reviews can focus on design, functionality, complexity, tests and readability; fix and reverify small issues directly instead of restarting design every time.
+12090	Prioritize high-consequence issues: incorrect writes, races, transaction boundaries, broken compatibility, expanded permissions and weakened tests. Let existing project tools handle style where possible. Naming preferences must not obscure functional defects, and "not a major issue" must not dismiss real risk.
+22665	Independent review suits complex or high-risk changes; simple configuration changes may need only focused tests. Compare review costs with the defects, rework and incidents avoided. Simplify a process that only lengthens tasks without observable gains.
+6733	6. Verification freshness and artifact ownership
+22458	Passing tests must match current code. Changing files afterward does not automatically preserve old results' validity. This book detects changes through file-version hashes; larger systems may reuse results by dependency scope, but need reliable dependencies and build caches. A model deciding "it is only a small change" cannot justify skipping necessary verification.
+27174	Also protect uncommitted user changes, inspect the current diff scope, and identify generated files, lockfiles and configuration changes. A model may fix one issue while deleting intentionally retained code; check the final report against the actual diff rather than listing files from chat memory.
+28400	Deployment is a separate action. Local test passes do not mean code is live; merging a PR does not establish production health; rollback viability depends on migrations and external side effects. State each stage's actual completion without inventing production verification.
+6773	7. A concise but sufficient delivery
+13534	Include what behavior changed, why it was needed, main impact scope, verification run and remaining limits. Complex tasks can add key decision reasons; simple tasks need not fill templates. If evidence is insufficient, identify the exact gap rather than end with a vague "further testing recommended".
+29078	Acceptance question: a model patch passes every existing test but misses the user's new requirement. Where does responsibility lie? The tests omit the new contract and cannot replace requirements acceptance. Add tests for the new behavior and verify old behavior remains. AI engineering quality is still software engineering quality first.
+18407	Property-based testing catches prefix errors with a family of inputs
+26324	Input and conditions.</strong> Exclude directory d. The correct relation excludes d itself and d/child while keeping d_suffix.
+16898	Example 1
+9123	Exclude a and a/x; keep ab.
+16899	Example 2
+9139	Exclude cache/tmp; keep cached.
+22814	Generate a family
+19870	Vary d and the suffix
+28496	Repeat the same boundary property.
+14932	Mutant implementation
+18880	Replace the boundary check with startswith(d)
+16211	Multiple counterexamples consistently expose the error.
+24331	Constraint scope
+12897	Normalize paths and separators first
+15578	Otherwise generated strings may not represent actual path semantics.
+19070	Join the steps up.</strong> Property-based tests turn requirements into relationships over a family of inputs; mutations or counterexamples test whether the tests actually catch errors.
+26811	Limits and counterexamples.</strong> Passing finitely generated samples does not prove every path correct; platform and security boundaries need separate verification.
+9523	← 17｜Inside multi-agent: DAGs, context handoff, concurrency conflicts and correlated errors</a><a href="19.html">19｜Advanced evaluation: paired experiments, reliability, causal attribution and grading bias
+22295	Follow this chapter through its objects and states</a><a href="#topic-2">A test looks for counterexamples; it does not stamp code green</a><a href="#c18-h1">1. Define behavior before choosing a process</a><a href="#c18-h2">2. The testing pyramid and target errors</a><a href="#c18-h3">3. Property-based and metamorphic testing</a><a href="#c18-h4">4. Mutation: prove the tests really catch errors</a><a href="#c18-h5">5. How review avoids an endless loop</a><a href="#c18-h6">6. Verification freshness and artifact ownership</a><a href="#c18-h7">7. A concise but sufficient delivery

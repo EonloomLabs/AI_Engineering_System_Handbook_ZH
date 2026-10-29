@@ -1,0 +1,603 @@
+23305	Real coding agents — AI Systems Engineering
+22273	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#c06-section-1">Product mechanisms and public evidence</a><a href="#codex-loop">Codex: how each turn's input is formed</a><a href="#c06-section-3">App Server and a managed harness</a><a href="#harness-engineering">Harness Engineering: the environment can improve quality too</a><a href="#claude-code">Claude Code: context and memory</a><a href="#c06-section-6">Copilot: identify the surface first</a><a href="#c06-section-7">A comparison experiment across three products</a><a href="#section-8">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-products">Comparing product behavior with code facts</a><a class="sub ap-toc" href="#agent-reading-rules">Inheritance matrix
+7264	Public mechanisms of Codex, Claude Code and Copilot
+28779	Stage 6</span><span class="chip">21 expanded notes</span><span class="chip">Main text fully expanded
+11701	Product mechanisms and public evidence
+7263	Codex, Claude Code and Copilot include clients, models, tools and services, and keep changing. Public documentation describes capabilities, open-source code describes an implementation at a particular version, and one log proves only one run. Interface behavior cannot reveal a hidden prompt, and CLI rules cannot be applied to every IDE or cloud environment.
+21026	This chapter explains mechanisms using material available on the verification date, 2026-10-17; it does not guarantee that every account and version is the same. Specific source filenames, model lists and default thresholds are not stated as facts without verification.
+7281	Codex: how each turn's input is formed
+7267	Codex's public Agent Loop describes input preparation, dispatch of model output, tool execution and feeding results back in. Search results, file contents, patches and test results enter context dynamically during the loop; they are not all knowledge inherently contained in the user's initial prompt.
+17283	For a hypothetical
+12073	task, turn 1 selects search, turn 2 sees the matches and reads code, turn 3 generates a change, and turn 4 checks tests. Visible content differs each turn and before and after compaction. Diagnosing a failure therefore requires asking "What did it actually see at this point?", not only "Was the initial request long enough?"
+18144	The open-source repository can be used to trace configuration, sessions, message construction, tool dispatch and state saving. This book has not audited a complete commit and does not treat historical file paths from an article as fixed current interfaces.
+7001	App Server and a managed harness
+7261	The public description of Codex App Server connects clients to the core through a bidirectional protocol and organizes interactions with Thread, Turn and Item. Understand the layers of an ongoing session, the progress of one request and intermediate events, instead of only memorizing field names. Client disconnection, cancellation, approval and reconnection all need representation.
+14252	Original insight: progress shown by the interface should not be the only place task facts are stored. Terminal and desktop interfaces can share a core, but permissions and task state must remain stable. A managed Agents API places some session management, orchestration and recovery with the service; the application must still provide tools and execution boundaries.
+7704	Harness Engineering: the environment can improve quality too
+8005	OpenAI's engineering article comes from a particular team's case. It emphasizes organizing knowledge so it can be discovered in the repository and maintaining important boundaries through executable checks, instead of piling every rule into an enormous entry file. The case's results cannot be extrapolated into a promise of efficiency for every project.
+14265	Original application: the entry point tells the agent about project structure, key constraints and test entry points; domain rules belong in their corresponding directories; stable, important restrictions are enforced with tests and static checks. For
+29357	, specifying whether paths are relative to the repository root or the configuration directory is more useful than repeatedly writing "You are a professional engineer".
+7247	Claude Code: context and memory
+16884	The official description organizes work around gathering context, acting and verifying. Long sessions manage tool results and history; skills can be expanded on demand; sub-agents can work in separate contexts and return results. These are harness mechanisms, not the model's attention structure.
+9971	, automatic memory and
+19842	support must be checked against the version and configuration. The current documentation describes conditional AGENTS.md loading; it must not be described as something every version always reads, nor should the outdated claim that it is never supported be retained. Project instructions and automatic memory are both context, not program configuration that cannot be violated.
+16368	A sub-agent should not receive all its parent's history and permissions by default. Delegation needs a goal, boundaries, evidence requirements and a result format. The main agent must still judge whether a returned summary omits key restrictions. Hooks perform deterministic actions at lifecycle points; the permission system restricts resources, and a skill cannot replace those boundaries.
+7310	Copilot: identify the surface first
+7300	Copilot CLI, IDE interaction and other agent capabilities are not identical. Instructions, skills, custom agents, hooks, MCP and plugins each have their responsibilities and support scope; support on one surface does not imply support on all surfaces.
+7207	The CLI offers context inspection and compaction capabilities, but one compaction output cannot prove the internal algorithm. A custom agent organizes role configuration, a skill organizes task methods and resources, and a plugin packages them for distribution. Which tasks memory spans and how evidence is verified depend on current product rules.
+23470	Programmatic calls also need to handle exit codes, output structure, authorization and noninteractive behavior. A final terminal line saying "Done" is insufficient to judge a script successful; verify the target files and tests.
+10500	A comparison experiment across three products
+14257	An original experiment fixes the repository, bug and acceptance conditions, and records the first read, necessary evidence, modification scope, tool failures, compaction, delegation, total cost and outcome. End-to-end comparisons may use different models and harnesses; mechanism comparisons should hold variables fixed as far as possible. The combined differences cannot all be attributed to the model.
+24906	Self-check: if the interface shows no read, does that prove the model did not see it?</strong> No; it may have been injected by default. <strong>Does a feature's presence in source mean it is usable now?</strong> No; the release version, backend and permissions also matter.
+6734	6.1 · Codex input assembly and execution loop
+7275	Codex's public loop connects input preparation, model output, tool execution and result feedback. The model can propose a search or edit; the harness handles dispatch, permissions and state. This does not give the model direct access to the operating system.
+20982	This item focuses on changes to each turn's input: rules and goals may stay stable, while source excerpts, error logs and completion state keep being added. Compaction during a long task changes how history is represented, so checking only the user's initial prompt is insufficient.
+26540	A tool absent from the input cannot be blamed on the model failing to select it
+26299	Input and conditions.</strong> The actual request includes only read, not search.
+25844	Request list
+23389	Confirm that search is not exposed
+21709	The model cannot call it through normal tool definitions.
+12468	Fix the entry point
+21246	Check the tool plan, configuration and permissions
+12754	Restore the legitimately available capability first.
+13597	Evaluate again
+17775	When the tool is actually visible but still selected incorrectly
+18564	Only then investigate routing semantics.
+19221	Join the steps up.</strong> Diagnosis should follow the observable input chain, not just the final absence of a call.
+14297	Original exercise: draw three input summaries for the same bug: before reading, after a test failure and after compaction. Mark which facts are new and which remain unverified. Then remove one tool observation and identify which later conclusions lose their basis.
+16669	Completion means explaining the causal relationship between behavior and evidence, not guessing hidden system instructions or treating one log as the fixed implementation of every version.
+6745	6.2 · Codex App Server and session primitives
+17511	Related material: Unlocking the Codex Harness
+7262	The Codex App Server article introduces the interface between core runtime capabilities and clients, using primitives such as Thread, Turn and Item to organize sessions and events. These concepts distinguish an ongoing session, a single interaction and the different outputs produced along the way.
+23015	Interface display and execution facts should be kept separate. After a client disconnects, a screen that has stopped updating does not mean the task has necessarily stopped; receiving a progress event does not mean the final state is complete. Specific recovery behavior depends on the protocol and implementation.
+8940	How Thread and Turn lifecycles differ
+26276	Input and conditions.</strong> In the same thread, first ask for a configuration explanation, then request a fix.
+18663	Carries the identity of an ongoing session
+14052	Contains multiple interaction turns.
+10436	One user request progresses until completion or interruption
+13546	It can still contain multiple model calls.
+17771	Tool steps
+21984	Each turn can include multiple executions
+11065	Do not count turns as LLM requests.
+19119	Join the steps up.</strong> Check terminology against the specific interface; the illustration distinguishes a session, a user turn and a model step.
+14469	Original exercise: design the event sequence "Model requests approval → user approves → tool executes → result is displayed", identifying which events need persistence and which are only for display. Then consider how to avoid duplicate actions if the client disconnects after approval.
+11166	Do not treat an article's interface primitives as universal terminology for every agent framework, or infer identical backends from similar interfaces.
+6748	6.3 · An engineering environment for agents
+17407	Related material: Harness Engineering
+7703	Harness Engineering discusses building an environment where agents can discover knowledge, execute work and verify results easily. It comes from a particular team's practice; its output scale or efficiency cannot be extrapolated to arbitrary repositories.
+12945	Entry guidance works well as a map; detailed rules belong where they are relevant; stable, important boundaries can be enforced with tests or static checks. This makes necessary information easier for the model to obtain, instead of relying on an endlessly growing manual to remember everything.
+11913	How repository readability reduces repeated searches
+26518	Input and conditions.</strong> The project has a short README linking to build rules, test entry points and key modules.
+11796	Find the test command from the README
+10932	No need to guess among five tools.
+19501	Read on demand
+15077	Read only the current module's rules
+10700	Do not load the entire repository's documentation.
+26881	Run the command and inspect the current result
+20126	Documentation provides an entry point, not execution evidence.
+19058	Join the steps up.</strong> An engineering environment is valuable because information can be found and verified, not because the rules are longer.
+14386	Original exercise: divide a hypothetical project's rules into global constraints, module facts, temporary task state and executable checks, and decide where each belongs. Check whether "Must remain compatible" has a corresponding test rather than being only a slogan.
+16692	Completion means explaining which specific failure each environment change reduces. Complex governance without a real problem behind it should not be retained by default merely because it is called a harness.
+6749	6.4 · How to read Codex's public implementation
+17449	Related material: OpenAI Codex Repository
+7268	Codex's public repository is useful for studying the connections between configuration, sessions, input construction, tool dispatch and state management. This book has not audited a commit file by file and therefore does not present unconfirmed current source symbols as facts.
+25907	Pin a version when reading source, trace downward from a runnable entry point, and verify your understanding with tests or logs. A documentation architecture description may lag behind or precede a commit's implementation, and filenames can change.
+15766	Pin the commit before tracing a call chain
+26499	Input and conditions.</strong> Select an archived Codex commit and inspect the router and registry.
+28588	Pin the version
+25560	Record the full commit and path
+28389	Avoid piecing conclusions together across versions.
+27665	Trace the input
+8741	How ResponseItem becomes ToolCall
+21501	Check the matching type branch.
+27666	Trace the output
+8967	How ToolInvocation reaches dispatch
+15470	Retain error/cancellation paths too.
+19005	Join the steps up.</strong> Reading only a successful branch is insufficient to explain the whole execution system.
+14481	Original exercise: choose a read-only tool call and trace five locations: "definition → exposure to the model → argument receipt → execution → result return". Record actual paths and the commit. Do not scan the whole repository first and then guess the call relationships.
+27187	The goal of this item is a source-reading method that can be re-checked, not to make readers depend on an English repository to understand the preceding Chinese explanations of mechanisms.
+6750	6.5 · Responsibility boundaries of a managed harness
+17419	Related material: Introducing the Agents API
+18573	A managed Agents API places some harness and execution infrastructure with the service provider; the application must still provide business goals, tools and the environment. Managed hosting does not mean the user's data boundaries, authorization and acceptance are automatically designed correctly.
+18063	Distinguish session or recovery capabilities owned by the service from external side effects, business rules, identity and permissions owned by the application. An accepted call and a long task's eventual success are different states.
+18575	A managed execution environment does not decide business authorization for the application
+26356	Input and conditions.</strong> The service hosts sessions and tool processes; the user application still owns the project permission table.
+20681	Service capabilities
+26882	Execution and persistence
+25318	Address some infrastructure problems.
+18084	Application authorization
+21374	Check that user u7 has read-only access to P1
+11124	Do not let a model-supplied admin bypass this.
+19933	Responsibility for failure
+17726	A tool's business failure still needs explanation and recovery
+18574	Managed does not mean automatically correct.
+19191	Join the steps up.</strong> Moving responsibilities requires clear boundaries; a product name is not a complete guarantee of reliability.
+14394	Original exercise: migrate a local agent into a managed environment and list the resource authorization, result queries, error handling and cost caps that must remain. Then check which local paths or credentials should not be copied directly to the remote environment.
+11704	Product capabilities and lifecycles change. This book explains the layers of responsibility rather than treating one release's plans, quotas or model list as permanent facts.
+6751	6.6 · How Claude Code works
+17409	Related material: How Claude Code Works
+7238	Claude Code's official description organizes gathering context, acting and verifying into a loop. Tools let the model read or change the environment, and observations then affect the next step; long-session management belongs to the product harness, not to the model automatically changing its parameters.
+22791	Understanding a run requires inspecting what has been read, tool results, session state and whether sub-agents are used. The last answer displayed in the interface cannot replace actual patch and test records.
+7239	A Claude Code-style loop observes before continuing
+26269	Input and conditions.</strong> A read of config gives timeout=3, and the test log shows that the request took 4 seconds.
+11628	Obtain facts
+11336	Two tool results enter context
+15175	A candidate cause can be formed.
+21669	The model may suggest checking the timeout definition
+10901	Reading the file does not automatically write 5.
+18613	Execution constraints
+25048	Do not modify if the user requested read-only access
+21143	Permissions remain independent throughout.
+19134	Join the steps up.</strong> This is a teaching scenario for the public agent loop, not a claim of an actual Claude measurement.
+14450	Original exercise: for a small bug task, record the evidence obtained before the first edit and the verification performed afterward. If the model declares completion directly, check whether the files and tests support that claim.
+16665	Completion means explaining public mechanisms and observed behavior, without inferring private prompts, unpublished compaction algorithms or identical configuration for all accounts.
+6752	6.7 · What makes up Claude Code's context
+17390	Related material: Explore the Context Window
+10571	The context-window documentation helps distinguish information sources such as project guidance, session messages, tool definitions, file contents and tool results. Window size describes capacity; it does not mean every item will be used accurately.
+21280	Inspecting context usage can reveal an excess of one kind of content, but proportions alone do not indicate value. A short compatibility requirement may matter more than a long log; cleaning up tool results may also delete clues needed later.
+10570	Context consists of more than the current chat
+26364	Input and conditions.</strong> This turn includes the user task, repository instructions, tool schema and old tool logs.
+13818	List the objects
+13714	Count sources and purposes separately
+23335	Know what contributes the cost.
+14707	Remove irrelevant content
+20281	Keep only evidence paths and necessary state from old large logs
+11146	Do not lose current restrictions.
+16150	Recheck
+21683	What the model actually receives differs from the UI history
+11027	The chat scrollbar alone cannot tell you the context.
+18928	Join the steps up.</strong> Context management selects and organizes data; it is more than a chat summary.
+14298	Original exercise: create three columns for the same task: "necessary constraints, current evidence, history that can be stored externally". Compare whether key questions can still be answered before and after compaction. Do not use token reduction alone as the success criterion.
+11702	Specific product displays and automatic handling rules should be verified for the current version. This book does not assume all content is injected with the same role and in the same order.
+6753	6.8 · Project instructions and automatic memory
+17411	Related material: How Claude Remembers Your Project
+28957	Project instructions and automatic memory are two different information sources. The former expresses explicit guidance; the latter saves content for later use. As context, neither has the enforcement power of a deterministic program.
+7241	The official Claude Code documentation read for this book uses CLAUDE.md as the entry point for project rules. Unlike Codex, it does not automatically discover AGENTS.md merely because the file exists; explicit imports or corresponding configuration are required. Directory permissions, rule loading, automatic memory and sub-agent context remain different mechanisms.
+28964	Project rules conflict with personal preferences
+26190	Input and conditions.</strong> The personal preference is "Fix automatically where possible", but the project's current task explicitly requires read-only review.
+11418	The long-term personal preference is broader
+11143	It does not automatically override the current specific restriction.
+15078	Inspect read-only and make suggestions
+10781	Do not actually write.
+25610	Memory maintenance
+12577	The preference can remain with conditions of use attached
+20247	One read-only task does not require deleting all automation preferences.
+19088	Join the steps up.</strong> The scope of persistent information and current authorization must be judged together.
+14344	Original exercise: put a harmless, observable local rule in a test project and inspect its loading scope, coexistence with other files and behavior in a new session. Record "file exists", "loaded" and "followed" separately.
+25616	Memory also needs checks for expiry and conflicts. Reading an old project convention does not mean it applies to the current code version, still less that it should automatically override this user's explicit request.
+6754	6.9 · Sub-agent isolation and permissions
+17372	Related material: Create Custom Subagents
+16374	Sub-agents can provide independent contexts and dedicated configurations to isolate exploration. An independent context reduces noise in the main session, but also means a returned summary may lose evidence or restrictions.
+22589	Whether all the parent agent's history, tools and permissions are inherited depends on product settings; the label "sub-agent" does not imply full sharing. A role name is not proof of actual capability or permission either.
+16373	A sub-agent handoff does not automatically copy all history
+26402	Input and conditions.</strong> The parent context says "No network access", but the subtask says only "Find material".
+24713	Missing
+16383	The subtask message omits the restriction
+15233	An unsuitable action may be chosen.
+25142	Complete the handoff
+17940	Include the goal, prohibitions and readable evidence
+12439	Keep the minimum necessary context.
+17304	Disable network tools for the sub-agent
+22085	Stronger than only writing a prohibition.
+19156	Join the steps up.</strong> An independent context saves cost and also creates a handoff responsibility.
+14349	Original exercise: delegate a read-only path investigation with an explicit question, scope, known facts and evidence to return. Check whether the sub-agent repeats work already completed by the main agent, and whether the main agent can trace the conclusions back.
+15027	Isolation may deliver a net gain only when independent task boundaries, sufficient input and verifiable handoffs all hold; otherwise it merely adds calls and information transfers.
+6735	6.10 · Extending Claude Code with skills
+17391	Related material: Extend Claude with Skills
+8874	Skills organize task guidance and resources into work packages usable on demand. Discovery, loading and correct execution are three stages; installing files does not mean the skill has been applied in this task.
+12640	Metadata affects selection, the body explains the method, and accompanying resources provide further evidence or scripts. Expand resources as needed rather than carrying every specialist detail into every task.
+18676	A skill name appearing does not mean its body has been read
+26225	Input and conditions.</strong> The candidate list includes the test-debug skill.
+21738	The model sees the name/description
+15005	Only an entry point for judging relevance.
+25874	Read the full steps
+21869	Only then are the specific constraints known.
+16929	Actual tool and verification logs
+18567	Only these confirm that the specialist process participated in the task.
+19084	Join the steps up.</strong> Track discovery, loading and execution separately to locate problems accurately.
+14306	Original exercise: write two skill descriptions for a path problem: one covers only exact keywords; the other explains semantics and conditions where it does not apply. Use synonymous tasks and adjacent domains to test missed and mistaken selections.
+27186	This item concerns boundaries of use in Claude Code; an open skill specification does not mean every client handles all extension fields and execution modes identically.
+6736	6.11 · Execution points and hooks
+17335	Related material: Automate Actions with Hooks
+7710	Hooks run programmatic actions on explicit lifecycle events. They suit repeatable checks, records or automation, rather than relying on a model's textual promise that it will perform a step.
+7714	A hook can itself fail, take time or cause side effects. Define its triggers, input, exit behavior and error handling so an ordinary read does not trigger an expensive scan.
+7713	Which version a hook checks when intercepting a commit
+26155	Input and conditions.</strong> The hook's tests pass on v8, but v9 is created before the commit.
+21518	Check time
+25677	The evidence belongs to v8
+11122	It does not automatically carry over to v9.
+19738	The object committed should match the object verified
+15581	Otherwise rerun or block.
+24440	Handle the result
+7711	A failed hook returns the specific reason to the user/agent
+10923	It does not silently delete changes.
+19169	Join the steps up.</strong> Even a deterministic hook needs the correct objects and timing.
+14471	Original exercise: design a hook that records only a summary of tool calls, then compare it with logging complete sensitive input and explain the latter's privacy risks. A validation hook should also be tested on normal and exceptional paths.
+10792	Not every business rule belongs in hooks. Semantic judgment and deterministic thresholds can work together, but responsibilities must be clear so they do not form an implicit workflow that is hard to explain.
+6737	6.12 · Claude Code permission controls
+17363	Related material: Configure Permissions
+21156	Permission configuration controls whether a tool or operation is allowed, unlike behavioral advice in a prompt. Directory, command and network access, together with approval mechanisms, need configuration and testing according to product rules.
+11729	Allowing a tool name alone may still be too broad because its arguments determine the actual scope. Permission to read the workspace is not permission to read all the user's files; permission to run tests is not permission for arbitrary remote writes.
+15598	An allowed command name does not make all its arguments safe
+26235	Input and conditions.</strong> read_file is allowed, but its arguments point to a directory outside the permitted scope.
+9290	read_file itself is available
+11229	This is insufficient to establish that the action is permitted.
+23080	Target layer
+25297	The normalized path and the path actually accessed are outside the scope
+19321	Reject.
+25823	Explain the scope error without leaking file contents
+15257	The task can choose permitted material instead.
+19092	Join the steps up.</strong> Authorization combines the tool, arguments and environment, not a single-name allowlist.
+14326	Original exercise: list four operations—reading source, editing local files, uploading artifacts and deleting remote resources—and design different authorization boundaries for them. Use harmless tests to verify that denial actually occurs.
+16661	Completion means identifying the layer that enforces each restriction. The model expressing an understanding of permissions is not evidence that permission isolation has taken effect.
+6738	6.13 · Organizing coding tasks effectively
+17337	Related material: Best Practices for Claude Code
+24684	Coding-agent practices emphasize clear tasks, necessary context and verifiable feedback. Effective task organization does not prescribe every possible step rigidly; it makes the goal and completion conditions clear to the model.
+17564	A simple fix can proceed directly through locating, editing and testing; a cross-module problem needs more evidence and planning. The same long template may not suit both.
+17616	Handle small fixes directly and keep complex design separate
+26203	Input and conditions.</strong> Task A fixes a typo; B changes the task concurrency state machine.
+17664	Check after the local edit
+10930	No need to launch a full architecture study.
+20345	Specify states, races and recovery counterexamples
+28889	More analysis is needed.
+13064	A shared destination
+22540	Meet the goal and verify it
+10669	Do not impose extra turns for a fixed process.
+19031	Join the steps up.</strong> Complexity is determined by actual risks and evidence.
+14426	Original exercise: compare three inputs: a vague request, one with acceptance criteria added, and one with a long fixed process layered on top. Record actual success, unrelated changes, verification and time, rather than only whether the answer looks diligent.
+20519	Best practices are a starting point. Recheck their value as user environments, model versions and repository quality change, instead of permanently accumulating old techniques into lengthy rules.
+21176	Source S075, organizing coding tasks effectively
+6739	6.14 · Copilot CLI's execution environment
+17401	Related material: GitHub Copilot CLI
+7301	Copilot CLI is a particular product surface; its capabilities must not be conflated with those of an IDE extension or other Copilot services. Context, tools, authorization and execution modes depend on CLI documentation and the installed version.
+21279	Context inspection and compaction features help observe long sessions, but one run cannot reveal every internal algorithm. Actual program execution state still needs support from files, command results or structured output.
+7208	The CLI's current directory changes which project is visible
+26446	Input and conditions.</strong> The terminal is in repoA, but the user thinks it is in repoB.
+21245	Check the working directory
+17752	The tool's actual cwd is repoA
+11885	Find the wrong project at the source.
+25901	Read files
+15461	Even same-named config files may have different contents
+11043	Do not rely only on filenames.
+13809	Switch to the explicitly authorized target repository
+13575	Then retrieve and analyze.
+19025	Join the steps up.</strong> Confirm the execution environment's identity before comparing model answers.
+14337	Original exercise: in the same small repository, record the file scope available to an interactive CLI task and an editor task, and explain which input sources may cause the difference.
+16555	Completion means identifying the surface before discussing capabilities. A Copilot tutorial showing one feature does not imply simultaneous support across every client.
+6740	6.15 · Copilot custom agents
+17318	Related material: About Custom Agents
+24828	A custom agent organizes a specialist role and its configuration. It differs from a skill: the former usually defines an execution role or capability boundary, while the latter supplies specialist methods and resources for a class of tasks.
+10275	An agent named "reviewer" does not inherently have independent evidence or guarantee read-only behavior. Check the actual model, tools, scope and handoff method.
+24829	Overly broad responsibilities make custom agents duplicate work
+26151	Input and conditions.</strong> A handles analysis and B implementation, but both sets of instructions require exploring the whole repository.
+7058	A's output
+17903	Files and evidence located
+18272	A result ready for handoff.
+7152	B repeats
+28532	Scans the whole repository again
+18491	Costs increase, and it may get a different version.
+7123	B first checks key handoff facts, then expands where gaps remain
+10915	This does not absolutely prohibit B from reading source.
+19190	Join the steps up.</strong> Responsibility boundaries should reduce pointless repetition while preserving the ability to check.
+14472	Original exercise: design a read-only reviewer that explicitly reads the patch, related code and test results, then returns specific issues and their basis. Test whether it can finish normally when there are no issues, instead of forcing faults to justify the role's existence.
+24831	Custom roles should gain value from clear responsibilities and task fit, not their number. Too many overlapping agents increase repeated reading and coordination costs.
+6741	6.16 · Copilot CLI's task workflow
+17513	Related material: Using GitHub Copilot CLI
+7206	The CLI workflow combines user input, tool execution, state display and the final result. Distinguish interactive confirmation, noninteractive automation and task recovery when interpreting it; do not generalize one execution mode's defaults to every situation.
+24379	The last terminal line is not the only success signal. Automation needs checks of exit status, actual environment changes and necessary verification; an explanation generated after a tool fails cannot stand in for successful execution.
+23469	Tasks started programmatically also need exit-state checks
+26153	Input and conditions.</strong> The CLI outputs a polished summary, but the process exits with a non-0 code.
+28480	Collect
+15469	Save stdout, stderr and exit code together
+11030	Do not keep only the summary.
+13864	Judge
+28129	The exit code indicates a failed or incomplete run
+21414	Check its specific meaning.
+24721	Do not report success without test evidence
+20111	Text output does not replace state.
+19172	Join the steps up.</strong> Both programmatic calls and human chat require result verification.
+14408	Original exercise: simulate a failed test command followed by an agent summary, and design how a script identifies "Changes completed, verification failed". Keep partial results while clearly marking what did not pass.
+27185	This item focuses on closing the operational loop; model capability, context organization and permission configuration still need to be understood alongside the other items.
+21177	Source S078, Copilot CLI's task workflow
+6742	6.17 · Distinguishing five customization mechanisms
+17370	Related material: Copilot Customization Cheat Sheet
+16897	The customization comparison helps distinguish extension points such as Instructions, Skills, Agents, Hooks and MCP. Choose according to whether you need to change long-term guidance, specialist processes, role orchestration, deterministic events or external connections.
+18825	Forcing every requirement into one mechanism confuses boundaries. For example, a skill can explain how to deploy, but actual deployment permissions should be controlled by tools or the platform.
+11659	Five extensions address different needs
+26514	Input and conditions.</strong> Requirements include project prohibitions, specialist test methods, execution checks, event triggers and role delegation.
+20101	Text/method
+7740	Instructions holds general constraints; Skill holds specialist processes
+28374	Avoid keeping everything permanently loaded.
+18578	Execution/timing
+8975	Tool performs the check; Hook controls when it must run
+25784	Different semantics.
+25316	Role
+6973	Agent takes on an independent task
+10711	It is more than renaming a file.
+19183	Join the steps up.</strong> Assign responsibilities before combining mechanisms so one does not carry everything.
+14385	Original exercise: match code style, database migration steps, pre-commit checks, remote queries and independent review to suitable mechanisms, and explain why you did not choose the others.
+16543	Completion means reducing duplicate configuration, not memorizing names. If the same rule is maintained in several places, you must know which source is authoritative when they conflict.
+6743	6.18 · Copilot skill loading
+17317	Related material: About Agent Skills
+7303	Copilot Skills provides reusable guidance and resources for relevant tasks. Support varies with the particular product surface and version; an open format does not make all implementation details identical.
+18670	A skill's entry description affects selection; its body affects execution after selection. Evaluate routing and specialist content separately, rather than misdiagnosing a failure to load as the model's inability to understand the body.
+18674	Skill matching must include near-miss negative examples
+26319	Input and conditions.</strong> The skill targets database migration, while the task edits SQL comments.
+25212	Surface similarity
+28407	Both contain SQL
+10678	This does not mean a migration process is needed.
+23283	Actual action
+22157	No schema or data migration
+28280	A heavyweight migration skill usually should not be loaded.
+26822	A positive boundary case
+20165	Adding a non-nullable column affects existing data
+23407	The corresponding method is actually needed.
+19223	Join the steps up.</strong> Similar wording does not mean the task mechanism is the same.
+24574	Continue the step-by-step calculation: <a href="../chapters/19.html#worked-Q074">Q022 · How a description saying "applies to all development tasks" leads to wrong loading
+14320	Original exercise: prepare tasks that need the skill, do not need it, and are semantically similar but in a different domain. Observe loading behavior and final results. The easiest-to-match examples alone cannot prove the design works.
+18665	A skill is neither permanent parameter learning nor a mandatory execution script; important constraints still need support from tests or permission mechanisms.
+6744	6.19 · Copilot memory and evidence
+17319	Related material: About GitHub Copilot Memory
+7309	Copilot's memory documentation describes mechanisms for retaining information for later tasks. Check how a memory applies to the current repository, user or task; do not assume every surface shares one unrestricted permanent memory.
+12365	Saving a conclusion is only the start; provenance, validity and conflict handling are still needed. Something the model once said does not automatically become independent factual evidence.
+11921	Repository memory conflicts with current code
+26470	Input and conditions.</strong> Memory says the test command is npm test, but the current project has moved to another script entry point.
+25599	Recall memory
+19746	Provides a historical clue
+10799	Do not treat it as a current fact.
+25893	Read current configuration
+21391	Check the package or build files
+14885	Obtain the actual command.
+25574	Record the source version and invalidate the old entry
+28371	Avoid repeating the misuse next time.
+19117	Join the steps up.</strong> Useful memory should help checking, not prevent reading new evidence.
+24573	Continue the step-by-step calculation: <a href="../chapters/18.html#worked-Q072">Q048 · Once a memory has been deleted, why can the vector index still leak it
+14310	Original exercise: save a versioned project convention, then change the version and supply new evidence. Check whether the system still misuses the old memory. Count correct use, incorrect use and non-use when necessary separately.
+16687	Completion means proving that memory improves the task, not merely that a file or database gained a record. Memory maintenance costs also belong in comparisons of gains.
+6746	6.20 · Combining and distributing plugins
+17320	Related material: About GitHub Copilot Plugins
+19781	Plugins can organize and distribute extensions such as skills, agents, hooks or tool connections. They primarily package and connect capabilities; installation does not mean each capability will be called or automatically authorized.
+19782	Scripts, network services and configuration introduced by a plugin are part of the supply chain. Check their source, version, permissions and conflicts with existing rules.
+19780	A plugin contains tools, but installation does not automatically authorize them
+26325	Input and conditions.</strong> The plugin distributes a Skill, configuration and MCP service definitions.
+16517	Install
+20099	Files enter the environment
+24781	The capability exists.
+17730	Tool metadata is readable
+27164	It does not yet have permission for the current task.
+28814	Restrict accounts, paths and actions
+19503	Enable according to risk; do not trust every output merely because it comes from a plugin.
+18981	Join the steps up.</strong> A distribution unit and a security boundary are different things.
+24567	Continue the step-by-step calculation: <a href="../chapters/11.html#worked-Q044">Q016 · All called "tool failure", yet errors in four layers take four different fixes
+14323	Original exercise: list the files, commands and external connections a hypothetical plugin adds, then judge their reading, execution and network risks separately. Compare installing a documentation-only skill with installing an executable hook.
+11160	Distribution convenience is not a guarantee of security or correctness. Plugin upgrades also need the necessary regression checks, not only confirmation of successful installation.
+6747	6.21 · Programmatic calls and tool access
+17369	Related material: Copilot CLI Programmatic Reference
+23468	The programmatic reference helps integrate the CLI into scripts and automation. Starting the command is only part of it; input delivery, output format, exit status, tool authorization and error handling also matter.
+28918	A noninteractive setting cannot depend on a user being available to answer approval requests. Limit the executable scope in advance and allow an explicit blocked result instead of bypassing necessary confirmation.
+24809	Automation scripts need to record reproducible inputs
+26454	Input and conditions.</strong> The script saves only a user prompt, with no model or repository version.
+16167	Rerun changes
+29118	The default model and remote branch may have been updated
+24434	The reason for a different result is unclear.
+25155	Add records
+11917	Repository version, configuration, tool set, input and time
+12408	Maintain the necessary traceability.
+19937	Sensitive information
+11210	Do not log credentials or complete private prompts directly
+12281	Minimize and redact.
+19010	Join the steps up.</strong> Reproducibility and privacy should be designed together.
+14289	Original exercise: define success, partial completion and failure for a read-only analysis script, saving actual evidence and exit status. Test truncated output, tool timeouts and lack of permission.
+16694	Completion means the caller can reliably interpret the result. Do not parse natural-language wording that "looks done" to drive deployment or other important side effects.
+9539	← Agent basics</a><a href="chapter-07.html">Context engineering →
+16747	For the full mechanism and a continuing example, see <a href="../chapters/12.html#agent-practice-rules">Rule-file loading and sub-agent inheritance: why is "inherited automatically" not enough to say?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+10561	Context engineering — AI Systems Engineering
+22249	Follow this chapter through its objects and states</a><a href="#topic-2">Compaction must keep the facts an action depends on</a><a href="#context-engineering">Supplying information each turn</a><a href="#c07-section-2">Nominal window and effective capability</a><a href="#c07-section-3">Five content-management operations</a><a href="#compaction">What compaction actually keeps</a><a href="#compaction-fidelity">Fidelity checks must inspect the status of propositions</a><a href="#c07-section-6">Trade-offs among caching, compaction and resets</a><a href="#c07-section-7">Externally stored evidence must be locatable</a><a href="#section-8">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-context">Compacted input with missing dependencies</a><a class="sub ap-toc" href="#agent-reading-compaction">Generation checks when installing a candidate
+28168	Selection, compaction, offloading, recovery and fidelity checks
+28780	Stage 7</span><span class="chip">11 expanded notes</span><span class="chip">Main text fully expanded
+21978	Supplying information each turn
+10563	Context engineering concerns the entire visible set: rules, goals, state, evidence, tool definitions and necessary history. Prompt engineering is the part that expresses instructions. Retrieval, progressive disclosure, compaction, notes and sub-agents can all change what is visible this turn.
+27311	This is a teaching analysis formula, not an actual serialization format. The goal is sufficient, relevant information, not a mechanically maximal or minimal amount. The entire old repository may contain outdated implementations, while supplying only one new function may lose compatibility constraints.
+7872	Lost in the Middle studies position effects; LongBench and RULER examine long-context capability across multiple tasks. Accepting a given length does not mean every task can be completed reliably; retrieving a needle also differs from combining constraints across several locations. Conclusions depend on the model, task and distracting content.
+14260	An original experiment places the same compatibility condition in different positions, gradually adds irrelevant logs, randomizes layouts and repeats runs. Check whether the actual patch preserves old behavior instead of only asking the model "Do you remember?"
+11657	Five content-management operations
+28185	Selection leaves irrelevant content unloaded; trimming deletes duplicate or old output; summarization re-expresses it; offloading saves original material with references; retrieval again brings it back when needed. Caching reuses computation and is not content compaction.
+28177	Selection may miss evidence, trimming may remove future clues, summarization may misrepresent certainty, offloading depends on valid references, and retrieving again needs sufficient clues and permissions. A common practical combination is compact task state plus externally stored original evidence, instead of only a summary that cannot be traced back.
+7287	What compaction actually keeps
+10733	Products do not share one compaction algorithm. OpenAI interfaces can return dedicated compaction state that is not meant for people to read directly; Claude offers mechanisms such as summaries, thresholds and context editing. Use the official returned structure; do not fabricate or arbitrarily split opaque state.
+14193	Compaction can be understood as selecting candidate history, extracting state, generating a shorter representation and continuing calls. Seeing a summary does not verify every internal state, and an invisible internal process does not imply losslessness. A task summary far shorter than the original usually cannot guarantee answers to arbitrary future detail questions.
+17580	Work that needs auditing should also save original events, file versions and logs separately. Compaction is more like a lossy handoff than lossless restoration from a ZIP file. A dedicated representation should not be claimed to recover all original content either.
+12457	Fidelity checks must inspect the status of propositions
+27297	This is an original handoff example. Negative conclusions, prohibitions and uncertainty are the easiest to distort. Turning "May be related to Windows" into "Windows is the root cause" misleads later work. Keyword matching alone cannot detect this error.
+14191	Before and after compaction, ask: What must not change? What has been ruled out? Which tests ran? What remains a hypothesis? Then continue the actual task. Information recovery and task success must both be evaluated; even a complete summary has costs if it makes the agent repeat work.
+24624	Trade-offs among caching, compaction and resets
+14194	Compaction may change the shareable prefix and affect caching, but the extent depends on service rules and where the change occurs; it cannot simply be said to invalidate everything or necessarily save money. Comparisons should include compaction calls, later input savings, rereading evidence and rework caused by errors.
+28547	Resetting context may remove old assumptions but also introduces handoff losses. Long-task research has used different combinations and adjusted them as model capabilities change; scheduled resets must not be treated as an eternal rule.
+25674	Externally stored evidence must be locatable
+9487	"See earlier logs" is not a reliable reference. Save at least the location, version, scope and run command. If a patch is edited again after passing tests, change its status to "Old version passed, new version awaiting verification", instead of carrying over the green conclusion.
+24898	Self-check: can a large window replace long-term memory?</strong> Not completely; cross-session persistence, versions and permissions still matter. <strong>Does a summary containing every keyword preserve fidelity?</strong> Not necessarily; truth, time and certainty may have changed.
+6796	7.1 · Effective context engineering
+17383	Related material: Effective Context Engineering
+10564	Context engineering concerns the whole set of information the model needs this turn, beyond prompt wording. Methods include on-demand access, progressive disclosure, compaction, notes and sub-agents, but do not require every mechanism on every occasion.
+20657	Limited attention and a limited window require selecting information. More content may supply evidence but also introduce stale conclusions and noise; less content saves cost but may omit constraints.
+23160	More relevant information is not always better
+26428	Input and conditions.</strong> The goal is to locate an assertion failure; candidates include 20 lines of the failing function and 10000 lines of repository-wide logs.
+12085	Prioritize
+25904	Read the assertion, the function under test and necessary callers
+18277	Form a minimal evidence chain.
+24712	Gap
+11768	Expand in a targeted way if the failure remains unexplained
+24763	Instead of loading everything at once.
+25546	Record why retrieval expanded to a particular file
+12357	This helps judge whether retrieval has lost focus.
+19090	Join the steps up.</strong> On-demand access makes information decisions around the task; it does not mean shorter is always better.
+14383	Original exercise: divide a coding task's input into persistent rules, current evidence and retrievable history, explaining when each enters context. Evaluate the approach by task success rather than the fewest tokens.
+16667	Completion means explaining why each input segment is useful this turn, not reducing context engineering to "Write a longer system prompt".
+6799	7.2 · Position effects in long contexts
+17435	Related material: Lost in the Middle
+7873	Lost in the Middle studies how relevant information's position in long input affects model performance. Its conclusions come from particular models and tasks and must not be restated as inevitable failure in the middle for every new model.
+12180	Position effects are only one long-context risk. Distracting information, combining several pieces of evidence, negative conditions and version conflicts also affect engineering tasks.
+12181	A position-effect experiment moves only the target evidence
+26275	Input and conditions.</strong> The same correct fact is placed at the beginning, middle and end of a long text.
+19651	Control
+18434	Total length and factual content stay the same
+14995	Only position changes.
+19776	Ask
+23213	The same question, run multiple times
+22107	Compare the rate of correct recovery.
+24444	Differences depend on the model, task and distracting content
+11067	One study cannot establish that every model is forever vulnerable in the middle.
+19243	Join the steps up.</strong> This is an experimental design, not measured numbers for the gain from position.
+14366	Original exercise: place the same compatibility constraint in different positions, add irrelevant logs of different lengths and run the same fix task multiple times. Check behavior and adherence to constraints, not only whether the sentence can be repeated.
+16973	Experiments should hold other conditions fixed and report variation. One success cannot prove a long window is reliable, and one failure cannot characterize every task.
+6800	7.3 · Context capacity and state
+17350	Related material: Claude Context Windows
+10572	Context-window documentation describes the information range a model can handle and the relevant token accounting. The window, output budget, reasoning consumption and automatic product management are different concepts; check the specific accounting against the interface.
+11076	The character count in user-visible chat cannot be treated directly as the entire input; tool definitions, results and internal state may also consume the relevant budgets.
+23506	Fitting in the window does not mean it can be used accurately
+26487	Input and conditions.</strong> The input contains 100 rules, two of which conflict in version.
+18409	The total token count is within the limit
+15085	Only the length check has passed.
+28904	Identify the rule corresponding to the target version
+10933	The capacity check does not decide this.
+28690	Ask about key conditions and require evidence
+25131	Measure effective use, not merely a successful request.
+19012	Join the steps up.</strong> Accepted input length and the length at which tasks can be completed reliably are different metrics.
+14324	Original exercise: list every content source besides user text in a tool task. Estimate which can be reused stably and which grow each turn, then check against actual interface statistics.
+16634	Completion means understanding budget components and limits, not memorizing a maximum token number that may change soon as the whole explanation of capability.
+21178	Source S086, context capacity and state
+6801	7.4 · Multitask evaluation of long contexts
+17433	Related material: LongBench
+7865	LongBench evaluates long-context understanding using multiple tasks and long inputs. Tasks may require retrieval, summarization or information synthesis; one task's score cannot represent every long-task capability.
+25729	Evaluation length, language, data sources and grading all affect interpretation. Answering questions about a long article does not imply maintaining execution state across multiple rounds of code edits.
+28640	Long-context tasks cannot all be assessed by finding one sentence
+26278	Input and conditions.</strong> The same long text contains three related order records.
+21598	Retrieval question
+18660	Find an order's date
+15090	Only one matching location is needed.
+24774	Aggregation question
+10520	Sum the amounts in three sections
+28888	Information from multiple locations must be combined.
+19704	Reasoning question
+22106	Compare conditions to identify an anomaly
+27179	Correct logic is also required; high single-point recall does not guarantee success.
+19258	Join the steps up.</strong> Long-context evaluation should cover the operations actually needed.
+14299	Original exercise: design three questions for the same long material: fact location, inference across sections and adherence to constraints. Compare the required information and grading methods, and specify which answers can be verified deterministically.
+28726	The value of studying a benchmark is learning to construct discriminating tasks, not merely recording a model's ranking at that time.
+6802	7.5 · Nominal window and effective capability
+17467	Related material: RULER
+8724	RULER examines the difference between nominal context length and actual effective capability by testing models across tasks and lengths. It reminds us that an interface accepting input is only the beginning of capability evaluation.
+24158	Recovering one piece of information differs from multistep reasoning that combines information; failures as length increases may also come from interference and task complexity rather than insufficient capacity alone.
+17992	How to test the effective window as interference increases
+26425	Input and conditions.</strong> The target fact stays the same while the background expands from 100 sections to 1000.
+16043	Baseline
+23356	Measure the success rate on short input
+14974	Increase only the declared interference
+28498	Repeat questions of the same kind.
+15479	Record accuracy and latency together
+10827	Do not treat the nominal maximum length as a recommendation for stable use.
+19142	Join the steps up.</strong> Without measured data, only a test plan can be given; an effective-window threshold cannot be invented.
+14482	Original exercise: gradually increase the number of constraints that must all hold while fixing total input length, and observe whether degradation differs from single-item retrieval.
+11168	Do not convert a synthetic benchmark result directly into the maximum number of files a real repository can handle. Actual engineering still needs its own end-to-end verification.
+6803	7.6 · Opaque compaction state and continued execution
+17450	Related material: OpenAI Compaction
+8004	OpenAI Compaction provides dedicated compaction state so long interactions can continue within limited context. Some returned content is an opaque or encrypted representation; do not assume it equals an editable human-readable summary.
+18083	Applications should save and pass this state according to the official interface, without fabricating fields or claiming to recover all original content. Complete auditing still requires separately retaining original evidence.
+11233	Opaque compaction items must be carried forward unchanged
+26359	Input and conditions.</strong> The service returns compaction object C, which is not a human-readable summary.
+12448	Preserve the type and payload
+10823	Do not rewrite binary/encrypted strings as ordinary text.
+19455	Return C and subsequent new messages as specified by the interface
+20682	The service interprets its semantics.
+11630	Factual audit
+22699	Retain readable task goals, evidence and state independently
+11003	C's appearance cannot prove that facts were preserved faithfully.
+18936	Join the steps up.</strong> Distinguish opaque state from a public text summary; do not guess its internal encoding.
+24568	Continue the step-by-step calculation: <a href="../chapters/14.html#worked-Q053">Q041 · What each of the four "reduce the load" actions actually changes
+14409	Original exercise: compare two recovery approaches: "Save only the compaction result" and "Save task state plus original log references". Check whether exact error codes and historical restrictions can be recovered.
+14208	Compaction's value depends on subsequent task quality and total cost, not only the compaction ratio. An invisible internal representation is no guarantee of losslessness.
+6804	7.7 · Overview of summary-based compaction
+17348	Related material: Claude Compaction Overview
+7251	Claude's compaction mechanism preserves task continuity as a session grows. Summary-based management changes how history is represented; interpret specific interfaces, triggers and retention scope according to current documentation.
+19819	A summary must handle goals, completed steps, evidence and uncertainty. The most common risk is not missing a keyword but changing "possible" to "confirmed" or "awaiting verification" to "passed".
+19818	Summaries must retain negation and unfinished work
+26262	Input and conditions.</strong> The original says "Do not deploy; tests have not run yet".
+16024	Bad summary
+9495	"Deploy, tests"
+11583	The topic words remain, but the action's meaning is reversed.
+16299	Good summary
+9478	"Deployment prohibited; tests not run"
+22637	State and negation are both clear.
+15526	The following system still verifies first and does not deploy
+22988	Check the summary's effect through behavior.
+18959	Join the steps up.</strong> Preserving nouns does not mean preserving the original meaning.
+14319	Original exercise: prepare a history containing negative conclusions, prohibitions and old-version results. Ask about each after compaction, then continue executing the task to verify.
+16553	Completion means retaining useful meaning and recoverable evidence, not equating a shorter summary with greater long-task reliability.
+6805	7.8 · Proactive compaction and stage boundaries
+17361	Related material: Compaction on Demand
+19497	On-demand compaction lets context be organized proactively when needed instead of only waiting for capacity to trigger it. Task stages can be useful boundaries, such as moving from investigation to implementation, but compaction is not mandatory at every stage end.
+11571	A proactive operation adds a processing step and may affect caching and information fidelity. A task near completion may not be worth this cost.
+28791	Compaction at a stage boundary is easier to keep consistent than during writes
+26210	Input and conditions.</strong> The task has just finished reading and is preparing to edit in the next stage.
+28793	Stage boundary
+18237	No unfinished write tools are running
+18374	The snapshot is relatively stable.
+23066	Goal, findings, sources, prohibitions and next step
+13678	Reduce repeated exploration.
+20203	Recheck the target version in the new stage
+11055	A clear boundary does not remove the need for a version check.
+19108	Join the steps up.</strong> Timing can reduce state complexity, but not every stage end requires a summary-model call.
+24569	Continue the step-by-step calculation: <a href="../chapters/14.html#worked-Q054">Q042 · Another tool result arrives while the summary is being generated: how is it kept from being lost
+14419	Original exercise: compare compaction at fixed intervals, at stage ends and no compaction, recording later rereads, omitted constraints and total time.
+11215	Do not assume proactive compaction is better than automatic compaction. The real questions are when there is enough redundancy to clean up and which evidence future steps still need.
+6806	7.9 · Cleaning up tool results
+17365	Related material: Context Editing
+7296	Context Editing cleans up historical content, for example old tool results. It differs from rewriting all history into a summary; the two may also affect information retention and caching differently.
+20256	After logs are deleted, later model calls may know an action happened without knowing its exact return. Important evidence therefore needs references from which it can be reread.
+13859	Keep a recoverable location before deleting a large log
+26399	Input and conditions.</strong> The test returns 5000 lines, with the key error on line 431.
+28593	Error, command, exit code, version and line range
+18275	Form the necessary state.
+16169	Offload
+16726	Save the full log at an accessible path
+19824	Attach a stable reference to the summary.
+28875	Reread lines 420–445 when context is needed
+10893	Do not pretend deleted content can never matter again.
+19233	Join the steps up.</strong> Output cleanup must consider both information density and recovery capability.
+14327	Original exercise: delete a failed test's long output, keeping only the command, exit code, relevant error and full-log path. Check whether diagnosis can continue correctly.
+22502	Cleanup policy should be decided by content value rather than age alone. Old constraints may remain important, while a recent block of duplicate logs may have no value.
+6797	7.10 · Threshold-triggered compaction
+17360	Related material: Compaction at a Token Threshold
+28750	Threshold-triggered compaction automatically starts organizing content based on budgets such as tokens. A threshold controls resources; it does not mean the model has understood whether the current task is ready for a handoff.
+25021	If it triggers before key evidence has been organized, a summary is more likely to lose state; if the threshold is too late, there may be too little room to complete later calls.
+14221	The compaction threshold must not wait until the window is full
+26490	Input and conditions.</strong> Current input is 850, the window is 1000, and the next tool result is expected to add 200.
+28986	Predict
+27163	The excess can be anticipated before the result arrives.
+28994	Reserve
+24481	Leave room for tool results and the final response
+19454	Calculate according to the interface's accounting.
+28138	Trim, offload or compact early as appropriate
+24764	Instead of waiting for a request error and randomly deleting the earliest content.
+19261	Join the steps up.</strong> A threshold is an engineering budget strategy, not a universal fixed percentage.
+14338	Original exercise: trigger compaction at different points in the same long task and compare retained unfinished steps and evidence. Record the trigger point, input length and later success separately.
+11046	Adjusting a single threshold cannot solve everything. Task-state structure, output control, tool-result granularity and externally stored original evidence matter too.
+6798	7.11 · Interaction between caching and compaction
+17351	Related material: Claude Prompt Caching
+8075	Prompt caching reuses computation for identical prefixes that meet the conditions; compaction and editing change content. They may affect one another, but the extent depends on the actual change location and product rules.
+23495	A stable prefix favors reuse, but a long irrelevant prefix may hurt context quality. A high cache-hit rate does not imply high business value.
+14195	Compaction reduces tokens but changes the cache prefix
+26260	Input and conditions.</strong> Original history H has length 600, summary M has length 100, and an existing cache matches H.
+28662	Length change
+13669	500 fewer logical tokens
+17207	The capacity gain is clear.
+24633	Cache change
+7949	M is not the same as H's prefix
+14490	The original hit cannot be carried over directly.
+18432	Overall evaluation
+22100	Compare actual billing, latency and continued execution
+10712	Do not report only the 83.3% compaction ratio.
+18991	Join the steps up.</strong> Compaction and caching can affect each other; measure the final task outcome.
+14462	Original exercise: calculate the total cost of a compaction call, subsequent prefill again, reduced input and evidence rereads, comparing tasks with little remaining work and much remaining work.
+16636	Completion means judging approaches by cost per successful task and quality, not treating caching, memory and compaction as the same feature.
+9565	← Real coding agents</a><a href="chapter-08.html">Retrieval and code intelligence →

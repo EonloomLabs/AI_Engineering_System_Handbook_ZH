@@ -1,6 +1,6 @@
-"""Build en/<page> from the Chinese page plus the translation table.
+"""Build <lang>/<page> from the Chinese page plus the translation table.
 
-Splices by the byte offsets recorded at extraction, in reverse order so each
+Splices by the string offsets recorded at extraction, in reverse order so each
 offset stays valid. Everything not covered by a unit is copied bit-for-bit:
 tags, attributes, numbers, code, SVG, anchors and data keys all survive
 untouched, which is why a page's figures and worked numbers cannot drift.
@@ -9,14 +9,16 @@ Three things happen besides the splice:
   - elements carrying data-i18n get their Chinese fallback replaced with the
     reviewed English from the interface bundle, so the page reads English
     before the runtime swaps anything and still does if its script fails;
-  - references out of en/ gain one '../', since en/ mirrors only the HTML;
-  - lang and the i18n-scope note are corrected for an English page.
+  - local pages and available language assets stay in the translated tree;
+    other references are rebuilt against the shared site root;
+  - lang is corrected; the i18n-scope note comes from the translation table.
 
 Run: python3 i18n/apply.py <page.html> [...]   (omit for every ready page)
      python3 i18n/apply.py --verify            round-trip with zh, must match
 """
 import json, os, re, sys
 from pathlib import Path
+from html import escape, unescape
 
 ROOT = Path(__file__).resolve().parent.parent
 UNITS = ROOT / 'i18n/units'
@@ -25,13 +27,13 @@ LANG = 'en'
 TAG = re.compile(r'<[^>]+>')
 CJK = re.compile(r'[一-鿿]')
 
-LOCALISED = {'assets/catalog.js', 'assets/search-data.js',
-             'assets/visual-data.js', 'assets/model-data.js'}
 REF = re.compile(r'(?P<a>\b(?:src|href)=")(?P<u>[^"]+)(?P<b>")')
 
 
 def bundle():
-    d = (ROOT / 'assets/i18n-data.js').read_text(encoding='utf-8')
+    local = ROOT / LANG / 'assets/i18n-data.js'
+    source = local if local.is_file() else ROOT / 'assets/i18n-data.js'
+    d = source.read_text(encoding='utf-8')
     s = json.loads(re.search(r'window\.I18N_STRINGS=(\{.*?\});\s*$', d, re.S | re.M).group(1))
     return s[LANG]
 
@@ -57,13 +59,21 @@ def splice(doc, items, table, field=None, over=None):
             val = it['zh']
         else:
             o = (over or {}).get(it['zh'])
-            val = (o or {}).get(LANG) if o else (table.get(it['zh'], {}) or {}).get(LANG)
+            val = (o or {}).get(LANG)
+            if val is None:
+                val = (table.get(it['zh'], {}) or {}).get(LANG)
         if val is None:
             continue
         assert doc[it['start']:it['end']] == it['zh'], \
             'offset drift at %d — re-run extract.py' % it['start']
-        if it['kind'].startswith('attr:'):
-            val = val.replace('"', '&quot;')
+        if field != 'zh':
+            if it['kind'] == 'code-comment':
+                val = unescape(val)
+                if '\n' in val or '\r' in val:
+                    raise ValueError('code comment translation must stay on one line')
+                val = escape(val, quote=False)
+            elif it['kind'].startswith('attr:'):
+                val = val.replace('"', '&quot;')
         out = out[:it['start']] + val + out[it['end']:]
     return out
 
@@ -108,10 +118,10 @@ def chrome(html, en):
 def relink(html, rel, pages):
     """Rewrite references that have to reach out of the translated tree.
 
-    en/ mirrors only the HTML, so a reference to a translated page keeps its
-    path - it resolves inside en/ - and so does one to a localised asset, which
-    en/assets/ provides. Everything else has to climb out of en/ as well as out
-    of the page's own directory, so it is rebuilt from the target's path
+    A reference to a translated page, its assembled complete.html, or an
+    available language asset keeps its path inside the translated tree.
+    Everything else has to climb out of that tree as well as out of the page's
+    own directory, so it is rebuilt from the target's path
     relative to the site root. Prepending one '../' is not the same thing: it
     works for '../assets/x.css' but sends 'agent-practice/x.json', written
     relative to the page's own directory, to en/agent-practice/x.json.
@@ -127,10 +137,11 @@ def relink(html, rel, pages):
         if not bare:
             return m.group(0)
         target = os.path.normpath(str(here / bare)).replace(os.sep, '/')
-        if target in pages or target in LOCALISED:
-            return m.group(0)
         if target.startswith('..'):
             return m.group(0)          # already outside the book; leave it alone
+        if (target in pages or target == 'complete.html' or
+                (ROOT / LANG / target).is_file()):
+            return m.group(0)
         return m.group('a') + up + target + u[len(bare):] + m.group('b')
 
     return REF.sub(fix, html)
@@ -190,10 +201,8 @@ def space_seams(html):
 
 
 def head(html):
-    html = re.sub(r'(<html[^>]*\blang=")[^"]*(")', r'\1en\2', html, count=1)
-    return re.sub(r'(<meta content=")[^"]*(" name="i18n-scope"/?>)',
-                  r'\1English edition: interface and lesson text are translated '
-                  r'from the Simplified Chinese original.\2', html, count=1)
+    return re.sub(r'(<html[^>]*\blang=")[^"]*(")',
+                  lambda m: m.group(1) + LANG + m.group(2), html, count=1)
 
 
 def main(argv):

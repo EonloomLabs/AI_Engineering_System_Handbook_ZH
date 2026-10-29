@@ -1,0 +1,675 @@
+{
+  "table": {
+    "变成": {
+      "from": "に変わる",
+      "to": "→",
+      "reason": "Six observed code-separated transitions place the target after this unit. A preposed に変わる reverses or breaks Japanese order; use the ordinary transition arrow for value/shape changes.",
+      "contexts": [
+        "foundations/05.html",
+        "foundations/13.html",
+        "foundations/14.html",
+        "chapters/05.html"
+      ]
+    },
+    "地址、初始向量与位置相加是三步</a><a href=\"#topic-1\">Embedding是查一行，不是把编号转二进制</a><a href=\"#foundations-05-s1\">为什么不能直接拿“编号大小”理解文字</a><a href=\"#foundations-05-s2\">用6行4列的表，表示“我爱学习”和“你爱”</a><a href=\"#foundations-05-s3\">为什么从两个轴变成三个轴</a><a href=\"#core-understanding-2--mc-section-2\">追问：Embedding是“编码”为二进制吗？</a><a href=\"#foundations-05-s4\">隐藏维度到底“隐藏”了什么</a><a href=\"#foundations-05-s5\">PAD行是零，就能不用mask吗</a><a href=\"#integrated-input-bridge\">接入完整训练样本：增加序列边界，再加入位置表示</a><a href=\"#core-parameters-1--mc-section-1\">没训练之前，也能做运算</a><a href=\"#core-parameters-3--mc-section-3\">输入表示X怎样真正出现</a><a href=\"#self-check\">课后自检</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "アドレス・初期ベクトル・位置の加算は三つのステップ</a><a href=\"#topic-1\">Embeddingは一行を参照する操作であり、IDを二進数に変換するものではない</a><a href=\"#foundations-05-s1\">文字を「IDの大小」で直接理解できない理由</a><a href=\"#foundations-05-s2\">6行4列の表で「我爱学习」と「你爱」を表す</a><a href=\"#foundations-05-s3\">二つの軸から三つの軸になる理由</a><a href=\"#core-understanding-2--mc-section-2\">さらに考える：Embeddingは二進数への「符号化」か？</a><a href=\"#foundations-05-s4\">隠れ次元は何を「隠している」のか</a><a href=\"#foundations-05-s5\">PAD行がゼロならmaskは不要か</a><a href=\"#integrated-input-bridge\">学習サンプル全体への接続：系列の境界を加えてから位置表現を加える</a><a href=\"#core-parameters-1--mc-section-1\">学習前でも計算できる</a><a href=\"#core-parameters-3--mc-section-3\">入力表現Xが実際に生じる仕組み</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "アドレス・初期ベクトル・位置との加算は三つの手順</a><a href=\"#topic-1\">Embeddingは一行を参照する操作であり、IDを二進数に変換するものではない</a><a href=\"#foundations-05-s1\">「IDの大小」でテキストを直接理解できない理由</a><a href=\"#foundations-05-s2\">6行4列の表で「我爱学习」と「你爱」を表す</a><a href=\"#foundations-05-s3\">二つの軸から三つの軸になる理由</a><a href=\"#core-understanding-2--mc-section-2\">さらに考える：Embeddingは二進数への「符号化」か？</a><a href=\"#foundations-05-s4\">隠れ次元は、何を「隠して」いるのか</a><a href=\"#foundations-05-s5\">PAD行がゼロなら、maskは不要か</a><a href=\"#integrated-input-bridge\">完全な学習サンプルにつなぐ：系列の境界を加え、その後に位置表現を加える</a><a href=\"#core-parameters-1--mc-section-1\">学習前でも演算はできる</a><a href=\"#core-parameters-3--mc-section-3\">入力表現Xが実際にできるまで</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Language-neutral embedded.py aligned existing TOC links with newly translated exact standalone source headings. This is an intended canonical title update.",
+      "producer": "embedded.py --lang=ja --fix after u02"
+    },
+    "数据搬到GPU，改变的是位置而不是含义</a><a href=\"#foundations-06-s1\">同一个数有三种不同的问题</a><a href=\"#foundations-06-s2\">整数编号与浮点特征为何类型不同</a><a href=\"#foundations-06-s3\">对较大规模的表示算一遍存储</a><a href=\"#foundations-06-s4\">一次常见执行的实际顺序</a><a href=\"#core-parameters-5--mc-section-5\">数据类型和设备是实现条件，不是语义</a><a href=\"#foundations-06-s5\">为什么小任务放GPU有时不快</a><a href=\"#foundations-06-s6\">现在把“组批、放设备、查表”连起来</a><a href=\"#self-check\">课后自检</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "データをGPUに移しても、変わるのは場所であって意味ではない</a><a href=\"#foundations-06-s1\">同じ数について、異なる三つの問いがある</a><a href=\"#foundations-06-s2\">整数のIDと浮動小数点の特徴で、型が異なる理由</a><a href=\"#foundations-06-s3\">大きめの表現で保存容量を計算する</a><a href=\"#foundations-06-s4\">よくある実行の実際の順序</a><a href=\"#core-parameters-5--mc-section-5\">データ型とデバイスは実装の条件であり、意味ではない</a><a href=\"#foundations-06-s5\">小さなタスクをGPUに置いても速くならない場合がある理由</a><a href=\"#foundations-06-s6\">ここで「バッチ化・デバイス配置・テーブル参照」をつなぐ</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "データをGPUに移しても、変わるのは場所であって意味ではない</a><a href=\"#foundations-06-s1\">同じ数に関する三つの異なる問い</a><a href=\"#foundations-06-s2\">整数のIDと浮動小数点の特徴で、型が異なる理由</a><a href=\"#foundations-06-s3\">大規模な表現の保存容量を計算する</a><a href=\"#foundations-06-s4\">一般的な実行での実際の順序</a><a href=\"#core-parameters-5--mc-section-5\">データ型とデバイスは実装上の条件であり、意味ではない</a><a href=\"#foundations-06-s5\">小さなタスクでは、GPUに置いても速くならないことがある理由</a><a href=\"#foundations-06-s6\">「バッチ化・デバイス配置・テーブル参照」をつなぐ</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Language-neutral embedded.py aligned existing TOC links with newly translated exact standalone source headings. This is an intended canonical title update.",
+      "producer": "embedded.py --lang=ja --fix after u02"
+    },
+    "矩阵乘法像逐格填写配方结果</a><a href=\"#foundations-07-s1\">从你已经会的平均数开始</a><a href=\"#foundations-07-s2\">点积是怎样把两排数变成一个数</a><a href=\"#foundations-07-s3\">矩阵乘法是“一次做很多个点积”</a><a href=\"#foundations-07-s4\">一个Token从4096个数变成另外4096个数，究竟是什么动作</a><a href=\"#foundations-07-s5\">转置怎样帮助“一排数分别与多行比较”</a><a href=\"#foundations-07-s6\">矩阵乘与逐元素乘不能混</a><a href=\"#self-check\">课后自检": {
+      "from": "行列積は、レシピに沿った計算結果をマスごとに埋めるようなもの</a><a href=\"#foundations-07-s1\">すでに知っている平均から始める</a><a href=\"#foundations-07-s2\">内積はどう二行の数値を一つの数値にするか</a><a href=\"#foundations-07-s3\">行列積は「多くの内積をまとめて計算する」</a><a href=\"#foundations-07-s4\">一つのトークンの4096個の数値を別の4096個に変えるとは、どんな操作か</a><a href=\"#foundations-07-s5\">転置が「一行の数値を複数の行とそれぞれ比較する」のをどう助けるか</a><a href=\"#foundations-07-s6\">行列積と要素ごとの積を混同しない</a><a href=\"#self-check\">課末の自己点検",
+      "to": "行列積は、レシピに沿った計算結果をマスごとに埋めるようなもの</a><a href=\"#foundations-07-s1\">すでに知っている平均から始める</a><a href=\"#foundations-07-s2\">内積で二行の数が一つの数になる仕組み</a><a href=\"#foundations-07-s3\">行列積は「一度に多くの内積を計算する」操作</a><a href=\"#foundations-07-s4\">一つのトークンが4096個の数から別の4096個の数になるのは、どのような操作か</a><a href=\"#foundations-07-s5\">転置が「一行の数を複数行とそれぞれ比較する」のに役立つ仕組み</a><a href=\"#foundations-07-s6\">行列積と要素ごとの積を混同しない</a><a href=\"#self-check\">課末の自己点検",
+      "reason": "Language-neutral embedded.py aligned existing TOC links with newly translated exact standalone source headings. This is an intended canonical title update.",
+      "producer": "embedded.py --lang=ja --fix after u02"
+    },
+    "改摆法与改数值，分开看</a><a href=\"#foundations-08-s1\">为什么深度学习代码里反复改变形状</a><a href=\"#foundations-08-s2\">reshape是重新分组，不是交换行列</a><a href=\"#foundations-08-s3\">多头只是把特征轴分组吗</a><a href=\"#foundations-08-s4\">广播：用一个小对象作用到许多位置</a><a href=\"#foundations-08-s5\">内存布局与视图只需先懂一个原则</a><a href=\"#self-check\">课后自检": {
+      "from": "並べ方の変更と数値の変更を分けて考える</a><a href=\"#foundations-08-s1\">深層学習のコードで形状を繰り返し変える理由</a><a href=\"#foundations-08-s2\">reshapeは再グループ化であり、行と列の入れ替えではない</a><a href=\"#foundations-08-s3\">マルチヘッドは特徴軸をグループ化するだけか</a><a href=\"#foundations-08-s4\">ブロードキャスト：小さな対象を多くの位置に適用する</a><a href=\"#foundations-08-s5\">メモリ配置とビューでは、まず一つの原則を知る</a><a href=\"#self-check\">課末の自己点検",
+      "to": "並べ方の変更と数値の変更を分けて考える</a><a href=\"#foundations-08-s1\">深層学習のコードで形状を繰り返し変える理由</a><a href=\"#foundations-08-s2\">reshapeは再グループ化であり、行列の入れ替えではない</a><a href=\"#foundations-08-s3\">マルチヘッドは、特徴軸のグループ化だけなのか</a><a href=\"#foundations-08-s4\">ブロードキャスト：小さな対象を多くの位置に適用する</a><a href=\"#foundations-08-s5\">メモリ配置とビューは、まず一つの原則を理解する</a><a href=\"#self-check\">課末の自己点検",
+      "reason": "Language-neutral embedded.py aligned existing TOC links with newly translated exact standalone source headings. This is an intended canonical title update.",
+      "producer": "embedded.py --lang=ja --fix after u02"
+    },
+    "Softmax不是直接把分数除以它们的和</a><a href=\"#foundations-09-s1\">分数不是概率</a><a href=\"#foundations-09-s2\">先学指数和对数需要的那一点</a><a href=\"#foundations-09-s3\">softmax一步不跳地算</a><a href=\"#foundations-09-s4\">为什么要减最大值</a><a href=\"#foundations-09-s5\">取最大与按概率抽样不是一回事</a><a href=\"#foundations-09-s6\">同一个softmax在两处出现</a><a href=\"#self-check\">课后自检": {
+      "from": "Softmaxはスコアをその合計で直接割る操作ではない</a><a href=\"#foundations-09-s1\">スコアは確率ではない</a><a href=\"#foundations-09-s2\">まず必要な範囲だけ指数と対数を学ぶ</a><a href=\"#foundations-09-s3\">softmaxを一段階も飛ばさずに計算する</a><a href=\"#foundations-09-s4\">最大値を引くのはなぜか</a><a href=\"#foundations-09-s5\">最大値を選ぶことと確率に従うサンプリングは別の操作</a><a href=\"#foundations-09-s6\">同じsoftmaxが二か所に現れる</a><a href=\"#self-check\">課後の自己点検",
+      "to": "Softmaxはスコアをその合計で直接割る操作ではない</a><a href=\"#foundations-09-s1\">スコアは確率ではない</a><a href=\"#foundations-09-s2\">必要な範囲だけ、指数関数と対数を学ぶ</a><a href=\"#foundations-09-s3\">softmaxを一手順も飛ばさず計算する</a><a href=\"#foundations-09-s4\">最大値を引く理由</a><a href=\"#foundations-09-s5\">最大値の選択と、確率に従うサンプリングは異なる</a><a href=\"#foundations-09-s6\">同じsoftmaxが二か所に現れる</a><a href=\"#self-check\">課後の自己点検",
+      "reason": "Language-neutral embedded.py aligned existing TOC links with newly translated exact standalone source headings. This is an intended canonical title update.",
+      "producer": "embedded.py --lang=ja --fix after u02"
+    },
+    "参数先有定义，运算才有来源</a><a href=\"#topic-1\">网络层是在重组数值，不是在生成隐藏句子</a><a href=\"#foundations-10-s1\">从一条可调的规则认识“模型”</a><a href=\"#parameter-matrix-basics\">从一个系数w到一张参数表W</a><a href=\"#core-parameters-2--mc-section-2\">把所有参数列全，避免W突然出现</a><a href=\"#core-parameters-4--mc-section-4\">所有位置共享参数，为什么输出仍不同</a><a href=\"#foundations-10-s2\">一个有两层的完整数值例子</a><a href=\"#foundations-10-s3\">为什么中间需要非线性函数</a><a href=\"#foundations-10-s4\">隐藏状态不是隐藏的中文草稿</a><a href=\"#foundations-10-s5\">权重共享和参数冻结</a><a href=\"#core-normalization-1--mc-section-1\">为什么注意力前面先处理一排数</a><a href=\"#core-normalization-2--mc-section-2\">对“爱”这一行完整算一次</a><a href=\"#core-normalization-3--mc-section-3\">LayerNorm的“均值、方差”多做了什么</a><a href=\"#core-normalization-4--mc-section-6\">为什么不能把它当作softmax</a><a href=\"#core-normalization-5--mc-section-7\">训练与推理是否重新计算统计量</a><a href=\"#core-understanding-9--mc-section-9\">追问：LayerNorm、RMSNorm和softmax都是归一化，为什么不可交换？</a><a href=\"#foundations-10-s6\">为什么教材可以先给权重再讲训练</a><a href=\"#self-check\">课后自检</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "パラメーターを先に定義して、演算の出所を明らかにする</a><a href=\"#topic-1\">ネットワーク層は数値を組み替えるものであり、隠れた文を生成するものではない</a><a href=\"#foundations-10-s1\">一つの調整可能な規則から「モデル」を知る</a><a href=\"#parameter-matrix-basics\">一つの係数wからパラメーターテーブルWへ</a><a href=\"#core-parameters-2--mc-section-2\">全パラメーターを列挙し、Wが突然現れることを防ぐ</a><a href=\"#core-parameters-4--mc-section-4\">全位置がパラメーターを共有しても、出力が異なる理由</a><a href=\"#foundations-10-s2\">二層の完全な数値例</a><a href=\"#foundations-10-s3\">途中に非線形関数が必要な理由</a><a href=\"#foundations-10-s4\">隠れ状態は、隠れた中国語の下書きではない</a><a href=\"#foundations-10-s5\">重みの共有とパラメーターの凍結</a><a href=\"#core-normalization-1--mc-section-1\">アテンションの前で、まず数の列を処理する理由</a><a href=\"#core-normalization-2--mc-section-2\">「爱」の行を一通り計算する</a><a href=\"#core-normalization-3--mc-section-3\">LayerNormの「平均・分散」がさらに行うこと</a><a href=\"#core-normalization-4--mc-section-6\">softmaxとして扱えない理由</a><a href=\"#core-normalization-5--mc-section-7\">学習と推論で統計量を再計算するか</a><a href=\"#core-understanding-9--mc-section-9\">さらに考える：LayerNorm・RMSNorm・softmaxはいずれも正規化なのに、入れ替えられないのはなぜか？</a><a href=\"#foundations-10-s6\">教材で重みを先に示し、後から学習を説明できる理由</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "パラメーターを先に定義して、演算の出所を明らかにする</a><a href=\"#topic-1\">ネットワーク層は数値を組み替えるものであり、隠れた文を生成するものではない</a><a href=\"#foundations-10-s1\">調整可能な一つの規則から「モデル」を理解する</a><a href=\"#parameter-matrix-basics\">一つの係数wから、パラメーターテーブルWへ</a><a href=\"#core-parameters-2--mc-section-2\">全パラメーターを列挙し、Wが突然現れるのを防ぐ</a><a href=\"#core-parameters-4--mc-section-4\">全位置でパラメーターを共有しても、出力が異なる理由</a><a href=\"#foundations-10-s2\">二層の完全な数値例</a><a href=\"#foundations-10-s3\">途中に非線形関数が必要な理由</a><a href=\"#foundations-10-s4\">隠れ状態は、隠れた中国語の下書きではない</a><a href=\"#foundations-10-s5\">重みの共有とパラメーターの凍結</a><a href=\"#core-normalization-1--mc-section-1\">アテンションの前で、まず数の列を処理する理由</a><a href=\"#core-normalization-2--mc-section-2\">「爱」の行を一通り計算する</a><a href=\"#core-normalization-3--mc-section-3\">LayerNormの「平均・分散」がさらに行うこと</a><a href=\"#core-normalization-4--mc-section-6\">softmaxとして扱えない理由</a><a href=\"#core-normalization-5--mc-section-7\">学習と推論で統計量を再計算するか</a><a href=\"#core-understanding-9--mc-section-9\">さらに考える：LayerNorm・RMSNorm・softmaxはいずれも正規化なのに、入れ替えられないのはなぜか？</a><a href=\"#foundations-10-s6\">教材で重みを先に示し、後から学習を説明できる理由</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Language-neutral embedded.py aligned existing TOC links with newly translated exact standalone source headings. This is an intended canonical title update.",
+      "producer": "embedded.py --lang=ja --fix after u02"
+    },
+    "共通前向在本节闭合</a><a href=\"#topic-1\">一层Transformer不是只有Attention</a><a href=\"#foundations-14-s1\">先把一层写成两段，而不是一大堆缩写</a><a href=\"#foundations-14-s2\">残差连接：保留一条直接通路</a><a href=\"#core-value-residual-4--mc-section-4\">Wo为什么还要再乘一次</a><a href=\"#core-value-residual-5--mc-section-5\">第一条残差：保留原X再加更新量</a><a href=\"#foundations-14-s3\">均值、方差和标准差从两个数算起</a><a href=\"#foundations-14-s4\">LayerNorm实际规范化哪一排数</a><a href=\"#foundations-14-s5\">FFN到底做了什么</a><a href=\"#core-ffn-1--mc-section-1\">FFN负责哪种信息加工</a><a href=\"#core-ffn-2--mc-section-2\">为什么4个数先扩成8个</a><a href=\"#core-ffn-3--mc-section-3\">这次ReLU到底改了哪几格</a><a href=\"#core-ffn-4--mc-section-4\">第二条残差从R出发</a><a href=\"#core-ffn-5--mc-section-5\">为什么实际模型可能用SwiGLU而不是ReLU</a><a href=\"#core-ffn-6--mc-section-6\">一个容易产生“似懂非懂”的点</a><a href=\"#foundations-14-s6\">多层如何连起来</a><a href=\"#core-output-head-1--mc-section-1\">隐藏表示H仍然不是文字</a><a href=\"#core-output-head-2--mc-section-2\">用“学习”列算出一个分数</a><a href=\"#core-output-head-3--mc-section-3\">与注意力小节的softmax有什么不同</a><a href=\"#core-output-head-4--mc-section-6\">训练为何保留所有位置的分数</a><a href=\"#core-output-head-5--mc-section-7\">为什么这里还不选择一个词</a><a href=\"#core-output-head-6--mc-section-8\">softmax应不应该先交给CrossEntropyLoss</a><a href=\"#self-check\">课后自检</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "この節で共通の順伝播を完結させる</a><a href=\"#topic-1\">Transformerの一層にはアテンション以外の処理もある</a><a href=\"#foundations-14-s1\">一層を略語の集まりではなく、二つの部分で書く</a><a href=\"#foundations-14-s2\">残差接続：直接の経路を保持する</a><a href=\"#core-value-residual-4--mc-section-4\">Woをさらに掛ける理由</a><a href=\"#core-value-residual-5--mc-section-5\">最初の残差：元のXを残し、更新量を足す</a><a href=\"#foundations-14-s3\">二つの数から平均・分散・標準偏差を計算する</a><a href=\"#foundations-14-s4\">LayerNormが実際に正規化する数の列</a><a href=\"#foundations-14-s5\">FFNが実際に行うこと</a><a href=\"#core-ffn-1--mc-section-1\">FFNが担当する情報処理</a><a href=\"#core-ffn-2--mc-section-2\">4個の数を先に8個へ拡張する理由</a><a href=\"#core-ffn-3--mc-section-3\">今回のReLUが実際に変えたマス</a><a href=\"#core-ffn-4--mc-section-4\">二つ目の残差はRから始まる</a><a href=\"#core-ffn-5--mc-section-5\">実際のモデルがReLUでなくSwiGLUを使う場合がある理由</a><a href=\"#core-ffn-6--mc-section-6\">「分かったようで分からない」状態を招きやすい点</a><a href=\"#foundations-14-s6\">多層をつなぐ仕組み</a><a href=\"#core-output-head-1--mc-section-1\">隠れ表現Hは、まだテキストではない</a><a href=\"#core-output-head-2--mc-section-2\">「学习」の列で一つのスコアを計算する</a><a href=\"#core-output-head-3--mc-section-3\">アテンションの節のsoftmaxとの違い</a><a href=\"#core-output-head-4--mc-section-6\">学習で全位置のスコアを保持する理由</a><a href=\"#core-output-head-5--mc-section-7\">ここでまだ一つの語を選ばない理由</a><a href=\"#core-output-head-6--mc-section-8\">softmaxを先にCrossEntropyLossへ渡すべきか</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "この節で共通の順伝播を完結させる</a><a href=\"#topic-1\">Transformerの一層にはアテンション以外の処理もある</a><a href=\"#foundations-14-s1\">一層を略語の集まりではなく、二つの部分で書く</a><a href=\"#foundations-14-s2\">残差接続：直接の経路を保持する</a><a href=\"#core-value-residual-4--mc-section-4\">Woをさらに掛ける理由</a><a href=\"#core-value-residual-5--mc-section-5\">最初の残差：元のXを残し、更新量を足す</a><a href=\"#foundations-14-s3\">二つの数から平均・分散・標準偏差を計算する</a><a href=\"#foundations-14-s4\">LayerNormが実際に正規化する数の列</a><a href=\"#foundations-14-s5\">FFNは何をしているのか</a><a href=\"#core-ffn-1--mc-section-1\">FFNが担う情報処理</a><a href=\"#core-ffn-2--mc-section-2\">4個の数を、まず8個に広げる理由</a><a href=\"#core-ffn-3--mc-section-3\">今回のReLUで変わったマス</a><a href=\"#core-ffn-4--mc-section-4\">二つ目の残差はRから始まる</a><a href=\"#core-ffn-5--mc-section-5\">実際のモデルがReLUではなくSwiGLUを使う場合がある理由</a><a href=\"#core-ffn-6--mc-section-6\">分かったつもりになりやすい点</a><a href=\"#foundations-14-s6\">複数の層のつながり方</a><a href=\"#core-output-head-1--mc-section-1\">隠れ表現Hは、まだテキストではない</a><a href=\"#core-output-head-2--mc-section-2\">「学习」の列でスコアを一つ計算する</a><a href=\"#core-output-head-3--mc-section-3\">アテンションの節のsoftmaxとの違い</a><a href=\"#core-output-head-4--mc-section-6\">学習で全位置のスコアを残す理由</a><a href=\"#core-output-head-5--mc-section-7\">ここではまだ単語を選ばない理由</a><a href=\"#core-output-head-6--mc-section-8\">CrossEntropyLossに渡す前にsoftmaxを適用すべきか</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u04"
+    },
+    "训练前先学会读“变化率”</a><a href=\"#topic-1\">梯度像坡度，学习率像迈步大小</a><a href=\"#foundations-17-s1\">导数是在问：稍微改一下输入，结果怎样变</a><a href=\"#foundations-17-s2\">参数训练为什么需要变化率</a><a href=\"#foundations-17-s3\">用一个参数手算一次完整更新</a><a href=\"#core-gradient-1--mc-section-1\">先读懂“损失对某个数的变化率”</a><a href=\"#core-gradient-2--mc-section-2\">从一个数推广到一张表</a><a href=\"#core-gradient-3--mc-section-3\">先只看一个乘积，再看求和</a><a href=\"#core-gradient-5--mc-section-5\">相加、复用和分支怎样传梯度</a><a href=\"#core-gradient-6--mc-section-6\">自动求导、有限差分和反向传播的关系</a><a href=\"#foundations-17-s4\">反向传播与优化器不是同一个步骤</a><a href=\"#foundations-17-s5\">有限差分怎样核对解析梯度</a><a href=\"#foundations-17-s6\">为什么会梯度消失或爆炸</a><a href=\"#self-check\">课后自检</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "学習の前に、まず「変化率」を読めるようにする</a><a href=\"#topic-1\">勾配は坂の傾き、学習率は一歩の大きさに似ている</a><a href=\"#foundations-17-s1\">導関数の問い：入力を少し変えると、結果はどう変わるか</a><a href=\"#foundations-17-s2\">パラメーターの学習に変化率が必要な理由</a><a href=\"#foundations-17-s3\">一つのパラメーターで、一回の完全な更新を手計算する</a><a href=\"#core-gradient-1--mc-section-1\">まず「ある数に対する損失の変化率」を理解する</a><a href=\"#core-gradient-2--mc-section-2\">一つの数から一つの表へ広げる</a><a href=\"#core-gradient-3--mc-section-3\">まず一つの積を見て、次に和を見る</a><a href=\"#core-gradient-5--mc-section-5\">加算・再利用・分岐で勾配を伝える仕組み</a><a href=\"#core-gradient-6--mc-section-6\">自動微分・有限差分・逆伝播の関係</a><a href=\"#foundations-17-s4\">逆伝播とオプティマイザーは、同じステップではない</a><a href=\"#foundations-17-s5\">有限差分で解析的な勾配を照合する方法</a><a href=\"#foundations-17-s6\">勾配が消失・爆発する理由</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "学習の前に「変化率」を読めるようにする</a><a href=\"#topic-1\">勾配は坂の傾き、学習率は一歩の大きさに似ている</a><a href=\"#foundations-17-s1\">導関数は、入力を少し変えたときの結果の変わり方を問う</a><a href=\"#foundations-17-s2\">パラメーターの学習に変化率が必要な理由</a><a href=\"#foundations-17-s3\">一つのパラメーターで、一回の更新を最後まで手計算する</a><a href=\"#core-gradient-1--mc-section-1\">まず「ある数に対する損失の変化率」を理解する</a><a href=\"#core-gradient-2--mc-section-2\">一つの数から一枚の表へ広げる</a><a href=\"#core-gradient-3--mc-section-3\">まず一つの積を見てから、和を見る</a><a href=\"#core-gradient-5--mc-section-5\">加算・再利用・分岐での勾配の伝わり方</a><a href=\"#core-gradient-6--mc-section-6\">自動微分・有限差分・逆伝播の関係</a><a href=\"#foundations-17-s4\">逆伝播とオプティマイザーは別の手順</a><a href=\"#foundations-17-s5\">有限差分で解析的な勾配を照合する方法</a><a href=\"#foundations-17-s6\">勾配が消失・爆発する理由</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u04"
+    },
+    "把已经会算的前向变成一次真实训练</a><a href=\"#topic-1\">训练：给每个位置一道“下一项”题</a><a href=\"#foundations-18-s1\">先把“要预测什么”对齐</a><a href=\"#core-training-data-4--mc-section-4\">Teacher forcing到底“喂”了什么</a><a href=\"#core-training-data-6--mc-section-6\">只有两句话，为什么最终损失也不可能是0</a><a href=\"#foundations-18-s2\">交叉熵从一个正确候选开始</a><a href=\"#foundations-18-s3\">多位置与填充怎样评分</a><a href=\"#core-training-loss-1--mc-section-1\">训练目标不是“分数越大越好”</a><a href=\"#core-training-loss-2--mc-section-2\">十个位置如何合成一个loss</a><a href=\"#core-training-loss-3--mc-section-3\">交叉熵公式为什么可以写成logsumexp</a><a href=\"#core-training-loss-4--mc-section-4\">为什么梯度会变成p−onehot，不能只背结论</a><a href=\"#core-training-loss-5--mc-section-5\">logits平移与梯度行和有什么关系</a><a href=\"#core-training-loss-6--mc-section-6\">参数尚未更新</a><a href=\"#foundations-18-s4\">把一个优化步写完整</a><a href=\"#foundations-18-s5\">Adam为什么会保存额外状态</a><a href=\"#core-optimizer-1--mc-section-1\">先说明哪个阶段真的改变了模型</a><a href=\"#core-optimizer-2--mc-section-2\">独立SGD对照：只看更新规则的差别</a><a href=\"#core-optimizer-3--mc-section-3\">AdamW多保存了哪两张表</a><a href=\"#core-optimizer-4--mc-section-4\">把Wq[0,0]的前两步写全</a><a href=\"#core-optimizer-5--mc-section-5\">参数更新后，临时结果要重新计算</a><a href=\"#core-optimizer-6--mc-section-6\">学习率、梯度裁剪与AMP分别做什么</a><a href=\"#foundations-18-s6\">学会训练不等于已经学会泛化</a><a href=\"#core-training-run-1--mc-section-1\">不是演示一遍公式就宣布学会</a><a href=\"#core-training-run-2--mc-section-2\">实际损失轨迹</a><a href=\"#core-training-run-3--mc-section-3\">为什么停在0.139附近，而不是0</a><a href=\"#core-training-run-4--mc-section-4\">训练究竟改变了哪些对象</a><a href=\"#core-training-run-5--mc-section-5\">保存训练产物：权重必须配什么</a><a href=\"#core-training-run-6--mc-section-6\">可复现不等于跨所有机器逐位一致</a><a href=\"#core-training-run-7--mc-section-7\">从训练跨入推理必须过一道真实边界</a><a href=\"#core-validation-1--mc-section-1\">先区分训练、验证与推理三种使用方式</a><a href=\"#core-validation-2--mc-section-2\">eval()不等于关闭梯度</a><a href=\"#core-validation-3--mc-section-3\">Dropout为什么会改变“相同输入同样输出”</a><a href=\"#core-validation-4--mc-section-4\">梯度累积为什么常在分母出错</a><a href=\"#core-validation-5--mc-section-5\">验证什么，才能知道模型没有偷看</a><a href=\"#core-validation-6--mc-section-6\">验证集、过拟合和本实验边界</a><a href=\"#core-understanding-3--mc-section-3\">追问：参数W到底怎样被语言数据“教会”？</a><a href=\"#self-check\">课后自检</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "計算を理解した順伝播を、実際の学習につなげる</a><a href=\"#topic-1\">学習：各位置に「次は何か」という問題を与える</a><a href=\"#foundations-18-s1\">まず「何を予測するか」を揃える</a><a href=\"#core-training-data-4--mc-section-4\">Teacher forcingは何を「与える」のか</a><a href=\"#core-training-data-6--mc-section-6\">二つの文だけでも、最終損失が0にならない理由</a><a href=\"#foundations-18-s2\">交差エントロピーは一つの正しい候補から始まる</a><a href=\"#foundations-18-s3\">複数の位置とパディングの採点方法</a><a href=\"#core-training-loss-1--mc-section-1\">学習目標は「スコアが大きいほどよい」ではない</a><a href=\"#core-training-loss-2--mc-section-2\">十位置から一つのlossを求める方法</a><a href=\"#core-training-loss-3--mc-section-3\">交差エントロピーの式をlogsumexpで書ける理由</a><a href=\"#core-training-loss-4--mc-section-4\">勾配がp−onehotになる理由を、結論の暗記で済ませない</a><a href=\"#core-training-loss-5--mc-section-5\">logitsの平行移動と勾配の行の和の関係</a><a href=\"#core-training-loss-6--mc-section-6\">パラメーターはまだ未更新</a><a href=\"#foundations-18-s4\">最適化の一ステップをすべて書く</a><a href=\"#foundations-18-s5\">Adamが追加の状態を保存する理由</a><a href=\"#core-optimizer-1--mc-section-1\">実際にモデルを変える段階を先に明示する</a><a href=\"#core-optimizer-2--mc-section-2\">独立したSGDの比較：更新規則の違いだけを見る</a><a href=\"#core-optimizer-3--mc-section-3\">AdamWが追加で保存する二つの表</a><a href=\"#core-optimizer-4--mc-section-4\">Wq[0,0]の最初の二ステップをすべて書く</a><a href=\"#core-optimizer-5--mc-section-5\">パラメーターの更新後は、一時的な結果を再計算する</a><a href=\"#core-optimizer-6--mc-section-6\">学習率・勾配クリッピング・AMPの役割</a><a href=\"#foundations-18-s6\">学習できても、汎化できたとは限らない</a><a href=\"#core-training-run-1--mc-section-1\">数式を一度実演しただけで、学習できたと宣言しない</a><a href=\"#core-training-run-2--mc-section-2\">実際の損失の推移</a><a href=\"#core-training-run-3--mc-section-3\">0.139付近で止まり、0にならない理由</a><a href=\"#core-training-run-4--mc-section-4\">学習で変わった対象</a><a href=\"#core-training-run-5--mc-section-5\">学習成果物の保存：重みと組み合わせるべきもの</a><a href=\"#core-training-run-6--mc-section-6\">再現可能でも、全マシンでビット単位に一致するとは限らない</a><a href=\"#core-training-run-7--mc-section-7\">学習から推論に進むには、実際の境界を越える必要がある</a><a href=\"#core-validation-1--mc-section-1\">まず学習・検証・推論の三つの使い方を分ける</a><a href=\"#core-validation-2--mc-section-2\">eval()は勾配を無効にすることではない</a><a href=\"#core-validation-3--mc-section-3\">Dropoutが「同じ入力なら同じ出力」を変える理由</a><a href=\"#core-validation-4--mc-section-4\">勾配累積で分母を誤りやすい理由</a><a href=\"#core-validation-5--mc-section-5\">モデルが答えをのぞき見ていないと確認するために、何を検証するか</a><a href=\"#core-validation-6--mc-section-6\">検証集合・過学習・この実験の限界</a><a href=\"#core-understanding-3--mc-section-3\">さらに考える：パラメーターWは言語データによってどう「学習される」のか？</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "計算できるようになった順伝播を、実際の一回の学習にする</a><a href=\"#topic-1\">学習：各位置に「次は何か」という問題を与える</a><a href=\"#foundations-18-s1\">まず「何を予測するか」をそろえる</a><a href=\"#core-training-data-4--mc-section-4\">Teacher forcingは何を「与える」のか</a><a href=\"#core-training-data-6--mc-section-6\">二つの文だけでも、最終損失が0にはなり得ない理由</a><a href=\"#foundations-18-s2\">交差エントロピーは、一つの正しい候補から始める</a><a href=\"#foundations-18-s3\">複数の位置とパディングの採点方法</a><a href=\"#core-training-loss-1--mc-section-1\">学習の目的は「スコアが大きいほどよい」ではない</a><a href=\"#core-training-loss-2--mc-section-2\">十位置を一つのlossにまとめる方法</a><a href=\"#core-training-loss-3--mc-section-3\">交差エントロピーの式をlogsumexpで書ける理由</a><a href=\"#core-training-loss-4--mc-section-4\">勾配がp−onehotになる理由：結論を暗記するだけでは足りない</a><a href=\"#core-training-loss-5--mc-section-5\">logitsの平行移動と、勾配の行の和の関係</a><a href=\"#core-training-loss-6--mc-section-6\">パラメーターはまだ更新していない</a><a href=\"#foundations-18-s4\">一回の最適化の手順をすべて書く</a><a href=\"#foundations-18-s5\">Adamが追加の状態を保存する理由</a><a href=\"#core-optimizer-1--mc-section-1\">どの段階でモデルが実際に変わるかを、まず明らかにする</a><a href=\"#core-optimizer-2--mc-section-2\">独立したSGDの比較例：更新規則の違いだけを見る</a><a href=\"#core-optimizer-3--mc-section-3\">AdamWが追加で保存する二枚の表</a><a href=\"#core-optimizer-4--mc-section-4\">Wq[0,0]の最初の二ステップをすべて書く</a><a href=\"#core-optimizer-5--mc-section-5\">パラメーター更新後は、一時的な結果を再計算する</a><a href=\"#core-optimizer-6--mc-section-6\">学習率・勾配クリッピング・AMPの役割</a><a href=\"#foundations-18-s6\">学習できても、汎化できたとは限らない</a><a href=\"#core-training-run-1--mc-section-1\">式を一度実演しただけで、学習できたとはしない</a><a href=\"#core-training-run-2--mc-section-2\">実際の損失の推移</a><a href=\"#core-training-run-3--mc-section-3\">0ではなく、0.139付近で止まる理由</a><a href=\"#core-training-run-4--mc-section-4\">学習で実際に変わった対象</a><a href=\"#core-training-run-5--mc-section-5\">学習の成果物を保存する：重みに何を組み合わせる必要があるか</a><a href=\"#core-training-run-6--mc-section-6\">再現可能でも、全マシンでビット単位に一致するとは限らない</a><a href=\"#core-training-run-7--mc-section-7\">学習から推論に進むには、実際の境界を越える必要がある</a><a href=\"#core-validation-1--mc-section-1\">まず、学習・検証・推論という三つの使い方を区別する</a><a href=\"#core-validation-2--mc-section-2\">eval()は勾配を無効にする操作ではない</a><a href=\"#core-validation-3--mc-section-3\">Dropoutで「同じ入力なら同じ出力」が変わる理由</a><a href=\"#core-validation-4--mc-section-4\">勾配累積で分母を間違えやすい理由</a><a href=\"#core-validation-5--mc-section-5\">モデルが先読みしていないと分かるために、何を検証するか</a><a href=\"#core-validation-6--mc-section-6\">検証セット・過学習・本実験の限界</a><a href=\"#core-understanding-3--mc-section-3\">さらに考える：パラメーターWは、言語データからどう「教わる」のか？</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u04"
+    },
+    "先有可复算的训练，再讨论目标如何改变</a><a href=\"#topic-1\">后训练改变行为，奖励不是事实裁判</a><a href=\"#foundations-19-s1\">同一个“更好”，至少有三种含义</a><a href=\"#core-post-training-1--mc-section-1\">先固定一条不会变的主线</a><a href=\"#core-post-training-2--mc-section-2\">SFT到底怎样处理问题与回答</a><a href=\"#core-post-training-3--mc-section-3\">DPO比较的不是两个答案概率的裸大小</a><a href=\"#core-post-training-4--mc-section-4\">RLHF与DPO为什么不能只按一个名称互换</a><a href=\"#core-post-training-5--mc-section-5\">LoRA究竟训练了哪一部分</a><a href=\"#core-post-training-6--mc-section-6\">本地实验与文献边界</a><a href=\"#foundations-19-s2\">奖励、策略、轨迹不要一起背缩写</a><a href=\"#foundations-19-s3\">概率比到底比较什么</a><a href=\"#foundations-19-s4\">KL散度为什么像一个“不离原来太远”的约束</a><a href=\"#foundations-19-s5\">DPO的式子先用两份答案解释</a><a href=\"#foundations-19-s6\">PPO、GRPO为什么不能靠缩写互换</a><a href=\"#self-check\">课后自检</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "再計算可能な学習から始め、その後で目標の変更を考える</a><a href=\"#topic-1\">事後学習は振る舞いを変えるが、報酬は事実の判定者ではない</a><a href=\"#foundations-19-s1\">同じ「よりよい」にも、少なくとも三つの意味がある</a><a href=\"#core-post-training-1--mc-section-1\">まず変わらない一本の流れを固定する</a><a href=\"#core-post-training-2--mc-section-2\">SFTが問いと回答を扱う仕組み</a><a href=\"#core-post-training-3--mc-section-3\">DPOが比較するのは、二つの回答の確率そのものの大小ではない</a><a href=\"#core-post-training-4--mc-section-4\">RLHFとDPOを名称だけで置き換えられない理由</a><a href=\"#core-post-training-5--mc-section-5\">LoRAが実際に学習する部分</a><a href=\"#core-post-training-6--mc-section-6\">ローカルの実験と文献の境界</a><a href=\"#foundations-19-s2\">報酬・方策・トレースの略語をまとめて暗記しない</a><a href=\"#foundations-19-s3\">確率比は何を比較するのか</a><a href=\"#foundations-19-s4\">KLダイバージェンスが「元から離れすぎない」制約に似ている理由</a><a href=\"#foundations-19-s5\">二つの回答でDPOの式を説明する</a><a href=\"#foundations-19-s6\">PPOとGRPOを略語だけで置き換えられない理由</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "まず再計算可能な学習を行い、それから目的の変更を考える</a><a href=\"#topic-1\">事後学習は振る舞いを変えるが、報酬は事実の判定者ではない</a><a href=\"#foundations-19-s1\">同じ「よりよい」にも、少なくとも三つの意味がある</a><a href=\"#core-post-training-1--mc-section-1\">まず、変わらない中心の流れを固定する</a><a href=\"#core-post-training-2--mc-section-2\">SFTは質問と回答をどう処理するか</a><a href=\"#core-post-training-3--mc-section-3\">DPOが比較するのは、二つの回答の確率そのものの大小ではない</a><a href=\"#core-post-training-4--mc-section-4\">RLHFとDPOを名称だけで置き換えられない理由</a><a href=\"#core-post-training-5--mc-section-5\">LoRAが実際に学習する部分</a><a href=\"#core-post-training-6--mc-section-6\">ローカルの実験と文献の境界</a><a href=\"#foundations-19-s2\">報酬・方策・トレースの略語をまとめて暗記しない</a><a href=\"#foundations-19-s3\">確率比は何を比較するのか</a><a href=\"#foundations-19-s4\">KLダイバージェンスが「元から離れすぎない」制約に似ている理由</a><a href=\"#foundations-19-s5\">二つの回答でDPOの式を説明する</a><a href=\"#foundations-19-s6\">PPOとGRPOを略語だけで置き換えられない理由</a><a href=\"#self-check\">課末の自己点検</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u04"
+    },
+    "目录指向D1和D3，排除指向D1，规则指向D1和D2": {
+      "from": "「ディレクトリ」はD1とD3、「除外」はD1、「ルール」はD1とD2を指す",
+      "to": "「ディレクトリ」はD1とD3、「除外」はD1、「規則」はD1とD2を指す",
+      "reason": "Keep the D1/D2/D3 inverted-index term identical to the canonical translated term and visible document/index/query labels.",
+      "producer": "parent contextual Japanese review"
+    },
+    "第40课 · “放到设备”是什么</a><a class=\"pill\" href=\"07.html\">第42课 · 模型最常做的算术</a><a class=\"pill\" href=\"19.html\">第58课 · KV Cache从零解释</a><a class=\"pill\" href=\"16.html\">第53课 · 一次训练从头到尾</a><a class=\"pill\" href=\"20.html\">第61课 · 低秩、量化、专家": {
+      "from": "第40課 · 「デバイスに置く」とは</a><a class=\"pill\" href=\"07.html\">第42課 · モデルが最もよく行う計算</a><a class=\"pill\" href=\"19.html\">第58課 · KVキャッシュを基礎から説明する</a><a class=\"pill\" href=\"16.html\">第53課 · 学習の全過程</a><a class=\"pill\" href=\"20.html\">第61課 · 低ランク・量子化・エキスパート",
+      "to": "第40課 · 「デバイスに置く」とは</a><a class=\"pill\" href=\"07.html\">第42課 · モデルが最もよく行う計算</a><a class=\"pill\" href=\"19.html\">第58課 · KVキャッシュをゼロから解説する</a><a class=\"pill\" href=\"16.html\">第53課 · 学習の全過程</a><a class=\"pill\" href=\"20.html\">第61課 · 低ランク・量子化・エキスパート",
+      "reason": "Use one Japanese rendering for the same Chinese abbreviated KV Cache heading across u05/u06 page links.",
+      "producer": "parent contextual Japanese review",
+      "delivery_aligned": "u05.ja.txt"
+    },
+    "本章各张表的来源与去向</a><a href=\"#topic-1\">沿着对象与状态理解本章</a><a href=\"#topic-2\">Q/K/V：先算从哪读，再算读进多少</a><a href=\"#Q005\">Q073｜一串Token进入Transformer后，究竟依次经过哪些计算？</a><a href=\"#core-projection-1--mc-section-1\">先说明这堂课正在准备什么</a><a href=\"#core-projection-2--mc-section-2\">只计算Q[0,2,0]这一个格子</a><a href=\"#core-projection-3--mc-section-3\">为什么内侧维度必须相同</a><a href=\"#core-projection-4--mc-section-4\">线性投影、偏置和非线性不是同一件事</a><a href=\"#core-projection-5--mc-section-5\">代码接口中最常见的转置差异</a><a href=\"#Q006\">Q074｜Q、K、V为什么要分成三份？Attention到底算出什么？</a><a href=\"#core-forward-trace-1--mc-section-1\">到这里为什么仍不能说“训练完了”</a><a href=\"#core-forward-trace-2--mc-section-2\">哪些步骤混合位置，哪些只混合特征</a><a href=\"#core-forward-trace-3--mc-section-3\">整条链的同一位置视图</a><a href=\"#core-forward-trace-4--mc-section-4\">从单层推广到多层，究竟多了什么</a><a href=\"#core-forward-trace-5--mc-section-5\">为什么训练可以同时算五个位置</a><a href=\"#core-forward-trace-6--mc-section-6\">检查是否真的懂了前向</a><a href=\"#Q007\">Q075｜为什么除以√d？为什么softmax？数值稳定为什么必须减最大值？</a><a href=\"#Q008\">Q076｜为什么一层除了Attention还需要残差、Norm和FFN？</a><a href=\"#core-architecture-1--mc-section-1\">不把不同架构拼成不存在的“标准模型”</a><a href=\"#core-architecture-2--mc-section-2\">多头：拆开的不是句子，而是特征子空间</a><a href=\"#core-architecture-3--mc-section-3\">GQA共享的是什么</a><a href=\"#core-architecture-4--mc-section-4\">RoPE：在Q/K里旋转，为什么能表示相对位置</a><a href=\"#core-architecture-5--mc-section-5\">SwiGLU：不是给FFN换一个激活名称</a><a href=\"#core-architecture-6--mc-section-6\">Norm、Dropout、权重共享等改动会牵动哪里</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "この章の各表の出所と行き先</a><a href=\"#topic-1\">対象と状態をたどってこの章を理解する</a><a href=\"#topic-2\">Q/K/V：まず読み取り元を決め、それから読み込む量を計算する</a><a href=\"#Q005\">Q073｜トークン列がTransformerに入ると、どの計算を順番に通るのか？</a><a href=\"#core-projection-1--mc-section-1\">まず、この課で準備するものを説明する</a><a href=\"#core-projection-2--mc-section-2\">Q[0,2,0]の一マスだけを計算する</a><a href=\"#core-projection-3--mc-section-3\">内側の次元が同じでなければならない理由</a><a href=\"#core-projection-4--mc-section-4\">線形射影・バイアス・非線形性は異なる</a><a href=\"#core-projection-5--mc-section-5\">コードのインターフェースでよくある転置の違い</a><a href=\"#Q006\">Q074｜Q・K・Vを三つに分ける理由は？アテンションは何を計算するのか？</a><a href=\"#core-forward-trace-1--mc-section-1\">ここまで来ても「学習済み」と言えない理由</a><a href=\"#core-forward-trace-2--mc-section-2\">位置を混合するステップと、特徴だけを混合するステップ</a><a href=\"#core-forward-trace-3--mc-section-3\">全処理を同じ位置から見る</a><a href=\"#core-forward-trace-4--mc-section-4\">単層から多層に広げると、何が増えるのか</a><a href=\"#core-forward-trace-5--mc-section-5\">学習で五つの位置を同時に計算できる理由</a><a href=\"#core-forward-trace-6--mc-section-6\">順伝播を本当に理解したか確認する</a><a href=\"#Q007\">Q075｜なぜ√dで割るのか？なぜsoftmaxなのか？数値安定化に最大値の減算が必要なのはなぜか？</a><a href=\"#Q008\">Q076｜一層にアテンションだけでなく、残差・Norm・FFNも必要なのはなぜか？</a><a href=\"#core-architecture-1--mc-section-1\">異なるアーキテクチャをつないで、存在しない「標準モデル」を作らない</a><a href=\"#core-architecture-2--mc-section-2\">マルチヘッド：分けるのは文ではなく、特徴の部分空間</a><a href=\"#core-architecture-3--mc-section-3\">GQAが共有するもの</a><a href=\"#core-architecture-4--mc-section-4\">RoPE：Q/K内の回転で、相対位置を表せる理由</a><a href=\"#core-architecture-5--mc-section-5\">SwiGLU：FFNの活性化の名前を替えるだけではない</a><a href=\"#core-architecture-6--mc-section-6\">Norm・Dropout・重みの共有などの変更が影響する場所</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "この章の各表の出所と行き先</a><a href=\"#topic-1\">対象と状態をたどってこの章を理解する</a><a href=\"#topic-2\">Q/K/V：まず読み取り元を決め、それから読み込む量を計算する</a><a href=\"#Q005\">Q073｜トークン列がTransformerに入ると、どの計算を順番に通るのか？</a><a href=\"#core-projection-1--mc-section-1\">この課で何を準備しているかを、まず明らかにする</a><a href=\"#core-projection-2--mc-section-2\">Q[0,2,0]の一マスだけを計算する</a><a href=\"#core-projection-3--mc-section-3\">内側の次元が同じでなければならない理由</a><a href=\"#core-projection-4--mc-section-4\">線形投影・バイアス・非線形処理は同じではない</a><a href=\"#core-projection-5--mc-section-5\">コードのインターフェースでよくある、転置の違い</a><a href=\"#Q006\">Q074｜Q・K・Vを三つに分ける理由は？アテンションは何を計算するのか？</a><a href=\"#core-forward-trace-1--mc-section-1\">ここまでで、まだ「学習が終わった」と言えない理由</a><a href=\"#core-forward-trace-2--mc-section-2\">位置を混合する手順と、特徴だけを混合する手順</a><a href=\"#core-forward-trace-3--mc-section-3\">計算全体の同じ位置を見る</a><a href=\"#core-forward-trace-4--mc-section-4\">一層から多層に広げると、何が増えるのか</a><a href=\"#core-forward-trace-5--mc-section-5\">学習で五つの位置を同時に計算できる理由</a><a href=\"#core-forward-trace-6--mc-section-6\">順伝播を本当に理解したか確認する</a><a href=\"#Q007\">Q075｜なぜ√dで割るのか？なぜsoftmaxなのか？数値安定化に最大値の減算が必要なのはなぜか？</a><a href=\"#Q008\">Q076｜一層にアテンションだけでなく、残差・Norm・FFNも必要なのはなぜか？</a><a href=\"#core-architecture-1--mc-section-1\">異なるアーキテクチャをつないで、存在しない「標準モデル」を作らない</a><a href=\"#core-architecture-2--mc-section-2\">マルチヘッド：分けるのは文ではなく、特徴の部分空間</a><a href=\"#core-architecture-3--mc-section-3\">GQAが共有するもの</a><a href=\"#core-architecture-4--mc-section-4\">RoPE：Q/K内の回転で、相対位置を表せる理由</a><a href=\"#core-architecture-5--mc-section-5\">SwiGLU：FFNの活性化の名前を替えるだけではない</a><a href=\"#core-architecture-6--mc-section-6\">Norm・Dropout・重みの共有などの変更が影響する場所</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u10"
+    },
+    "softmax轴错可能没有异常但输出失真；残差误用覆盖会改变网络；FFN维度转置可能直接报": {
+      "from": "softmaxの軸の誤りは、例外がなくても出力を歪める可能性があります。残差を誤って上書きにすると、ネットワークが変わります。FFNの次元の転置では、次のエラーが直接出る可能性があります：",
+      "to": "softmaxの軸の誤りは、例外がなくても出力を歪める可能性があります。残差を誤って上書きにすると、ネットワークが変わります。FFNの次元を転置すると、直接",
+      "reason": "Japanese predicate must follow the intervening shape link; u11 unit1456 supplies のエラーが起きる場合があります. Avoid duplicate predicates across a batch boundary.",
+      "producer": "parent after translator_b/ja_shared_c coordination",
+      "delivery_aligned": "u10.ja.txt"
+    },
+    "Mermaid源文件</a>。图的排布只表达数据／调用顺序，不代表计算耗时。": {
+      "from": "Mermaidのソースファイル</a>。図の配置が表すのはデータ／呼び出しの順序であり、計算の所要時間ではありません。",
+      "to": "Mermaidソースファイル</a>。図の配置が表すのはデータ／呼び出しの順序であり、計算の所要時間ではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u13"
+    },
+    "系统机制中的推理：先守住基线，再改变选择策略</a><a href=\"#Q013\">Q089｜Prefill与Decode有什么区别？第一个输出Token何时产生？</a><a href=\"#core-understanding-6--mc-section-6\">追问：为什么训练多个位置可并行，生成仍逐个来？</a><a href=\"#Q014\">Q090｜Temperature、Top-k、Top-p怎样改变输出？为什么温度为0也不等于百分之百复现？</a><a href=\"#core-decoding-1--mc-section-1\">模型分数和解码策略是两个层次</a><a href=\"#core-decoding-2--mc-section-2\">先完整算出基准概率</a><a href=\"#core-decoding-3--mc-section-3\">温度改变的是哪一步</a><a href=\"#core-decoding-4--mc-section-4\">Top-k与Top-p不是同一个筛选</a><a href=\"#core-decoding-5--mc-section-5\">处理顺序为什么重要</a><a href=\"#core-decoding-6--mc-section-6\">四种停止原因分开记录</a><a href=\"#Q015\">Q091｜模型怎么知道答案结束？EOS、停止字符串、长度限制和工具调用结束有什么区别？</a><a href=\"#independent-generation-animation\">独立结构对照：另一台七词表微型模型</a><a href=\"#topic-2\">一次输入如何连着预测，直到结束</a><a href=\"#Q016\">Q092｜推理模型“多想一会儿”到底发生了什么？与多Agent、CoT有什么关系？</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "システムの仕組みとしての推論：まず基準を守り、次に選択戦略を変える</a><a href=\"#Q013\">Q089｜PrefillとDecodeはどう異なるか？最初の出力トークンはいつ生じるか？</a><a href=\"#core-understanding-6--mc-section-6\">さらに考える：学習では複数の位置を並列処理できても、生成は一つずつなのはなぜか？</a><a href=\"#Q014\">Q090｜Temperature、Top-k、Top-pは出力をどう変えるか？温度が0でも完全な再現を保証しないのはなぜか？</a><a href=\"#core-decoding-1--mc-section-1\">モデルのスコアとデコード戦略は異なる層</a><a href=\"#core-decoding-2--mc-section-2\">まず基準の確率をすべて計算する</a><a href=\"#core-decoding-3--mc-section-3\">温度が変えるのはどの段階か</a><a href=\"#core-decoding-4--mc-section-4\">Top-kとTop-pは同じ絞り込みではない</a><a href=\"#core-decoding-5--mc-section-5\">処理の順序が重要なのはなぜか</a><a href=\"#core-decoding-6--mc-section-6\">四種類の停止理由を分けて記録する</a><a href=\"#Q015\">Q091｜モデルは回答の終了をどう知るか？EOS、停止文字列、長さの制限、ツール呼び出しの終了はどう異なるか？</a><a href=\"#independent-generation-animation\">独立した構造比較：語彙七項目の別の小型モデル</a><a href=\"#topic-2\">一つの入力から、終了まで予測を続ける仕組み</a><a href=\"#Q016\">Q092｜思考型の推論モデルでは「少し長く考える」と何が起こるか？マルチエージェントやCoTとはどんな関係か？</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "システムの仕組みとしての推論：まず基準を守り、次に選択戦略を変える</a><a href=\"#Q013\">Q089｜PrefillとDecodeはどう異なるか？最初の出力トークンはいつ生じるか？</a><a href=\"#core-understanding-6--mc-section-6\">さらに考える：学習では複数の位置を並列処理できても、生成は一つずつなのはなぜか？</a><a href=\"#Q014\">Q090｜Temperature、Top-k、Top-pは出力をどう変えるか？温度が0でも完全な再現を保証しないのはなぜか？</a><a href=\"#core-decoding-1--mc-section-1\">モデルのスコアとデコーディングの戦略は異なる二つの層</a><a href=\"#core-decoding-2--mc-section-2\">まず基準の確率を最後まで計算する</a><a href=\"#core-decoding-3--mc-section-3\">温度が変える手順</a><a href=\"#core-decoding-4--mc-section-4\">Top-kとTop-pは同じ絞り込みではない</a><a href=\"#core-decoding-5--mc-section-5\">処理順序が重要な理由</a><a href=\"#core-decoding-6--mc-section-6\">四つの停止理由を分けて記録する</a><a href=\"#Q015\">Q091｜モデルは回答の終了をどう知るか？EOS、停止文字列、長さの制限、ツール呼び出しの終了はどう異なるか？</a><a href=\"#independent-generation-animation\">独立した構造比較：語彙七項目の別の小型モデル</a><a href=\"#topic-2\">一つの入力から、終了まで予測を続ける仕組み</a><a href=\"#Q016\">Q092｜思考型の推論モデルでは「少し長く考える」と何が起こるか？マルチエージェントやCoTとはどんな関係か？</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u13"
+    },
+    "沿着对象与状态理解本章</a><a href=\"#topic-2\">FlashAttention：一边读一边累计，不攒整张表</a><a href=\"#Q025\">Q093｜为什么历史K/V可以缓存，而Q通常不缓存？请给出逐层解释。</a><a href=\"#core-api-boundaries-1--mc-section-1\">从手算走到API，先核对接口语义</a><a href=\"#core-api-boundaries-2--mc-section-2\">非方阵自动因果掩码可能对齐错误</a><a href=\"#core-api-boundaries-3--mc-section-3\">两个mask，三个位置概念</a><a href=\"#core-api-boundaries-4--mc-section-4\">最后一个“物理位置”不一定是最后一个“有效Token”</a><a href=\"#core-api-boundaries-5--mc-section-5\">缩放一次、softmax一次、shift一次</a><a href=\"#core-api-boundaries-6--mc-section-6\">训练模式的陷阱不是只有Dropout</a><a href=\"#core-api-boundaries-7--mc-section-7\">全遮蔽、过期缓存和边界长度</a><a href=\"#core-understanding-8--mc-section-8\">追问：为什么旧KV能复用，旧梯度图却不能无限复用？</a><a href=\"#Q026\">Q094｜KV缓存到底节约多少计算，又占多少显存？</a><a href=\"#Q027\">Q095｜FlashAttention为什么省内存？不存完整注意力矩阵怎样算softmax？</a><a href=\"#Q028\">Q096｜PagedAttention的“分页”具体分页什么？为什么能提升并发？</a><a href=\"#implementation-evidence\">从本页解释到可检查的实现": {
+      "from": "対象と状態をたどってこの章を理解する</a><a href=\"#topic-2\">FlashAttention：表全体をためず、読みながら累積する</a><a href=\"#Q025\">Q093｜過去のK/Vはキャッシュできるのに、通常Qはキャッシュしないのはなぜか？層ごとに説明する。</a><a href=\"#core-api-boundaries-1--mc-section-1\">手計算からAPIへ進む前に、インターフェースの意味を確認する</a><a href=\"#core-api-boundaries-2--mc-section-2\">非正方行列の自動因果マスクは、位置合わせが誤る場合がある</a><a href=\"#core-api-boundaries-3--mc-section-3\">二つのマスクと三つの位置の概念</a><a href=\"#core-api-boundaries-4--mc-section-4\">最後の「物理位置」が最後の「有効トークン」とは限らない</a><a href=\"#core-api-boundaries-5--mc-section-5\">スケーリング、softmax、shiftはそれぞれ一回</a><a href=\"#core-api-boundaries-6--mc-section-6\">学習モードの落とし穴はDropoutだけではない</a><a href=\"#core-api-boundaries-7--mc-section-7\">全遮断、期限切れのキャッシュ、境界の長さ</a><a href=\"#core-understanding-8--mc-section-8\">さらに考える：過去のKVを再利用できても、古い勾配グラフを無限に再利用できないのはなぜか？</a><a href=\"#Q026\">Q094｜KVキャッシュはどれだけ計算を節約し、どれだけVRAMを使うか？</a><a href=\"#Q027\">Q095｜FlashAttentionがメモリを節約するのはなぜか？完全なアテンション行列を保存せずにsoftmaxをどう計算するか？</a><a href=\"#Q028\">Q096｜PagedAttentionの「ページング」は何をページに分けるのか？並行処理能力が上がるのはなぜか？</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "to": "対象と状態をたどってこの章を理解する</a><a href=\"#topic-2\">FlashAttention：表全体をためず、読みながら累積する</a><a href=\"#Q025\">Q093｜過去のK/Vはキャッシュできるのに、通常Qはキャッシュしないのはなぜか？層ごとに説明する。</a><a href=\"#core-api-boundaries-1--mc-section-1\">手計算からAPIへ進む前に、インターフェースの意味を照合する</a><a href=\"#core-api-boundaries-2--mc-section-2\">非正方行列の自動の因果マスクは、位置がずれる可能性がある</a><a href=\"#core-api-boundaries-3--mc-section-3\">二つのmaskと、三つの位置の概念</a><a href=\"#core-api-boundaries-4--mc-section-4\">最後の「物理位置」が、最後の「有効なトークン」とは限らない</a><a href=\"#core-api-boundaries-5--mc-section-5\">スケーリング・softmax・shiftは一回ずつ</a><a href=\"#core-api-boundaries-6--mc-section-6\">学習モードの落とし穴は、Dropoutだけではない</a><a href=\"#core-api-boundaries-7--mc-section-7\">全マスク・無効になったキャッシュ・境界の長さ</a><a href=\"#core-understanding-8--mc-section-8\">さらに考える：過去のKVは再利用できても、過去の勾配のグラフを無限に再利用できないのはなぜか？</a><a href=\"#Q026\">Q094｜KVキャッシュはどれだけ計算を節約し、どれだけVRAMを使うか？</a><a href=\"#Q027\">Q095｜FlashAttentionがメモリを節約するのはなぜか？完全なアテンション行列を保存せずにsoftmaxをどう計算するか？</a><a href=\"#Q028\">Q096｜PagedAttentionの「ページング」は何をページに分けるのか？並行処理能力が上がるのはなぜか？</a><a href=\"#implementation-evidence\">このページの説明から、確認できる実装へ",
+      "reason": "Source-matched embedded normalization after explicit stale-cache heading clarification.",
+      "producer": "parent embedded.py --lang=ja --fix after3157"
+    },
+    "全遮蔽、过期缓存和边界长度": {
+      "from": "全マスク・古いキャッシュ・境界の長さ",
+      "to": "全マスク・無効になったキャッシュ・境界の長さ",
+      "reason": "Source paragraph concerns caches invalidated by loading new parameters; distinguish stale/invalid caches from reusable old KV.",
+      "producer": "parent contextual Japanese review of chapters/07.html:63",
+      "delivery_aligned": "u13.ja.txt"
+    },
+    "第44课 · 概率、指数与softmax</a><a class=\"pill\" href=\"../foundations/14.html\">第49课 · 把Attention装进一层</a><a class=\"pill\" href=\"../foundations/18.html\">第57课 · 从最后一排数到一个Token，再到一句回答</a><a class=\"pill\" href=\"../foundations/19.html\">第58课 · KV Cache从零解释</a><a class=\"pill\" href=\"../foundations/21.html\">第62课 · 算得快与装得下": {
+      "from": "第44課 · 確率・指数関数・softmax</a><a class=\"pill\" href=\"../foundations/14.html\">第49課 · アテンションを一層に組み込む</a><a class=\"pill\" href=\"../foundations/18.html\">第57課 · 最後の数値の列から一つのトークンへ、さらに一つの回答へ</a><a class=\"pill\" href=\"../foundations/19.html\">第58課 · KVキャッシュを基礎から説明する</a><a class=\"pill\" href=\"../foundations/21.html\">第62課 · 高速に計算し、メモリに収める",
+      "to": "第44課 · 確率・指数関数・softmax</a><a class=\"pill\" href=\"../foundations/14.html\">第49課 · アテンションを一層に組み込む</a><a class=\"pill\" href=\"../foundations/18.html\">第57課 · 最後の数値の列から一つのトークンへ、さらに一つの回答へ</a><a class=\"pill\" href=\"../foundations/19.html\">第58課 · KVキャッシュをゼロから解説する</a><a class=\"pill\" href=\"../foundations/21.html\">第62課 · 高速に計算し、メモリに収める",
+      "reason": "Use the reviewed canonical rendering of the identical abbreviated KV Cache heading across mixed link groups.",
+      "producer": "parent source-bound short-title alignment"
+    },
+    "第57课 · 从最后一排数到一个Token，再到一句回答</a><a class=\"pill\" href=\"../foundations/19.html\">第58课 · KV Cache从零解释": {
+      "from": "第57課 · 最後の数値の列から一つのトークンへ、さらに一つの回答へ</a><a class=\"pill\" href=\"../foundations/19.html\">第58課 · KVキャッシュを基礎から説明する",
+      "to": "第57課 · 最後の数値の列から一つのトークンへ、さらに一つの回答へ</a><a class=\"pill\" href=\"../foundations/19.html\">第58課 · KVキャッシュをゼロから解説する",
+      "reason": "Use the reviewed canonical rendering of the identical abbreviated KV Cache heading across mixed link groups.",
+      "producer": "parent source-bound short-title alignment"
+    },
+    "第58课 · KV Cache从零解释</a><a class=\"pill\" href=\"24.html\">第02课 · 状态、事件与检查点</a><a class=\"pill\" href=\"26.html\">第11课 · 上下文组装": {
+      "from": "第58課 · KVキャッシュをゼロから説明する</a><a class=\"pill\" href=\"24.html\">第02課 · 状態・イベント・チェックポイント</a><a class=\"pill\" href=\"26.html\">第11課 · コンテキストの組み立て",
+      "to": "第58課 · KVキャッシュをゼロから解説する</a><a class=\"pill\" href=\"24.html\">第02課 · 状態・イベント・チェックポイント</a><a class=\"pill\" href=\"26.html\">第11課 · コンテキストの組み立て",
+      "reason": "Use the reviewed canonical rendering of the identical abbreviated KV Cache heading across mixed link groups.",
+      "producer": "parent source-bound short-title alignment"
+    },
+    "用必要召回和不必要加载双指标": {
+      "from": "必要な取得と不要な読み込みの二つの指標を使う",
+      "to": "必要なスキルの再現率と不要な読み込みの二つの指標を使う",
+      "reason": "Preserve recall as the required-skill selection metric, rather than a generic fetching action.",
+      "producer": "parent contextual review; 7415 proposed by translator_a",
+      "delivery_aligned": "u21.ja.txt"
+    },
+    "权限必须在展示给模型或用户前生效。为提高召回把未授权正文先送入模型再删除，不是安全过滤。": {
+      "from": "権限は、モデルやユーザーに提示する前に適用する必要があります。取得を増やすために、未認可の本文を先にモデルへ送り、後で削除するのは、安全なフィルタリングではありません。",
+      "to": "権限は、モデルやユーザーに提示する前に適用する必要があります。再現率を高めるために、未認可の本文を先にモデルへ送り、後で削除するのは、安全なフィルタリングではありません。",
+      "reason": "Preserve improving recall as a metric, rather than increasing result volume.",
+      "producer": "parent contextual review; 7415 proposed by translator_a",
+      "delivery_aligned": "u18.ja.txt"
+    },
+    "在提交事件前确定性触发检查": {
+      "from": "コミットのイベントより前に、決定的に検査を起動",
+      "to": "提出イベントより前に、決定的に検査を起動",
+      "reason": "The source specifies a submission event without binding it to Git commit.",
+      "producer": "parent contextual review; 7415 proposed by translator_a",
+      "delivery_aligned": "u21.ja.txt"
+    },
+    "Schema是一份字段和类型等结构规则；结构化输出机制让模型更容易返回符合规则的数据。字段合法仍不等于目标文件存在、已授权或业务正确。<span class=\"concept-micro\">独立例：要求path为字符串；{\"path\":3}类型不合规则，{\"path\":\"missing.py\"}虽结构合规则仍可能找不到文件。": {
+      "from": "Schemaはフィールドや型などの構造規則です。構造化出力の仕組みにより、モデルは規則に沿ったデータを返しやすくなります。フィールドが適正でも、対象ファイルの存在、認可、業務上の正しさは保証されません。<span class=\"concept-micro\">独立した例：pathには文字列を要求します。{\"path\":3}は型の規則に合わず、{\"path\":\"missing.py\"}は構造の規則に合ってもファイルが見つからない可能性があります。",
+      "to": "Schemaは、フィールドや型などの構造上の規則です。構造化出力の仕組みは、規則に沿うデータをモデルが返しやすくします。フィールドが正当でも、対象ファイルの存在・認可・業務上の正しさとは同じではありません。<span class=\"concept-micro\">独立した例：pathに文字列を要求するなら、{\"path\":3}は型が規則に合わず、{\"path\":\"missing.py\"}は構造が合っていても、ファイルが見つからないかもしれません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "JSON是一种用对象、数组、字符串、数字等表达数据的文本格式。花括号对象把字段名映射到值，方括号数组保留项目顺序。解析JSON只得到数据，不会自动执行其中的工具名称。<span class=\"concept-micro\">独立例：{\"path\":\"a.py\",\"limit\":3}有两个字段；\"3\"是字符串而3是数值，Schema可以要求其中一种。": {
+      "from": "JSONは、オブジェクト・配列・文字列・数値などでデータを表すテキスト形式です。波括弧のオブジェクトはフィールド名を値に対応させ、角括弧の配列は項目の順序を保ちます。JSONを解析して得られるのはデータであり、含まれるツール名が自動実行されるわけではありません。<span class=\"concept-micro\">独立した例：{\"path\":\"a.py\",\"limit\":3}には二つのフィールドがあります。\"3\"は文字列、3は数値であり、Schemaでどちらかを要求できます。",
+      "to": "JSONは、オブジェクト・配列・文字列・数値などでデータを表すテキスト形式です。波括弧のオブジェクトは、フィールド名を値へ対応させ、角括弧の配列は項目の順序を保ちます。JSONを解析して得るのはデータだけであり、中のツール名を自動的に実行することはありません。<span class=\"concept-micro\">独立した例：{\"path\":\"a.py\",\"limit\":3}には、二つのフィールドがあります。\"3\"は文字列、3は数値であり、Schemaはいずれかを要求できます。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "图像中的patch是切分的小块，RGB是红绿蓝3个通道；软件工程中的patch则是代码补丁，两者同名。图像块展开后可通过可学习变换成为向量，不是查文字词表。<span class=\"concept-micro\">独立图像例：16×16×3的一块含768个数，投影后可以变成d个特征。d由模型设计决定。": {
+      "from": "画像のpatchは切り出した小さな領域で、RGBは赤・緑・青の3チャンネルです。ソフトウェア開発のpatchはコードのパッチを指し、同じ名前でも対象が異なります。画像のパッチは平坦化後、学習可能な変換でベクトルにできます。テキスト語彙のテーブル参照ではありません。<span class=\"concept-micro\">独立した画像の例：16×16×3のパッチには768個の値があり、投影後はd個の特徴にできます。dはモデルの設計で決まります。",
+      "to": "画像のpatchは分割した小片で、RGBは赤・緑・青の3チャンネルです。ソフトウェア工学のpatchはコードの修正であり、同じ名前でも別のものです。画像パッチは、平坦化した後、学習可能な変換でベクトルにできます。文字の語彙表の参照ではありません。<span class=\"concept-micro\">独立した画像の例：16×16×3の一つのパッチは、768個の数を含み、射影後はd個の特徴に変えられます。dはモデルの設計で決まります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "在授权场景，OAuth使应用能按授权取得访问凭据；scope声明一类访问范围，资源服务仍应检查具体权限。在记忆或任务场景，scope又可只表示适用范围，不能混成登录凭据。<span class=\"concept-micro\">获准“读取日历”不等于获准删除所有事件；连接成功也不证明操作被批准。": {
+      "from": "認可の場面では、OAuthによりアプリケーションは許可に応じたアクセス資格情報を取得できます。scopeはアクセス範囲の一種を示し、リソースサービス側でも具体的な権限を確認する必要があります。記憶やタスクの場面では、scopeが単に適用範囲を示すこともあり、ログイン資格情報と混同してはいけません。<span class=\"concept-micro\">「カレンダーの読み取り」の許可は、全イベントの削除の許可ではありません。接続成功も操作の承認を証明しません。",
+      "to": "認可の場面では、OAuthはアプリケーションが認可に従ってアクセス用の認証情報を取得できるようにします。scopeはアクセス範囲の種類を宣言しますが、リソースのサービスは、引き続き具体的な権限を確認するべきです。記憶やタスクの場面では、scopeは単に適用範囲を表すこともあり、ログインの認証情報と混同してはいけません。<span class=\"concept-micro\">「カレンダーを読む」許可は、全イベントの削除の許可ではありません。接続成功も、操作の承認を証明しません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "把最后隐藏表示转换为每个词表候选分数的参数层。输入宽度d，词表有Vocab项，右乘的参数形状是[d,Vocab]。生成概率需再对这些分数归一化。<span class=\"concept-micro\">注意力Wo输出的是隐藏特征；Wout输出的是词表候选分数。名字都含output，输出对象却不同。": {
+      "from": "最後の隠れ表現を、語彙内の各候補のスコアに変換するパラメーター層です。入力の幅がd、語彙がVocab項目なら、右から掛けるパラメーターの形状は[d,Vocab]です。確率を得るには、このスコアをさらに正規化する必要があります。<span class=\"concept-micro\">アテンションのWoが出力するのは隠れ特徴、Woutが出力するのは語彙候補のスコアです。名前にはどちらもoutputが入りますが、出力する対象は異なります。",
+      "to": "最後の隠れ表現を、語彙の各候補のスコアに変えるパラメーター層です。入力の幅はd、語彙にはVocab項目があり、右から掛けるパラメーターの形状は[d,Vocab]です。生成確率には、さらにこれらのスコアの正規化が必要です。<span class=\"concept-micro\">アテンションのWoが出すのは隠れ特徴で、Woutが出すのは語彙の候補のスコアです。どちらの名前にもoutputがありますが、出力の対象は異なります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "q是接收信息的一行查询表示；k是可读位置提供的一行匹配表示；v是该位置供混合的一行内容表示。大写Q/K/V把多行收集成表。它们由输入与参数计算得到，分别承担打分与提供内容的职责。<span class=\"concept-micro\">某个q与两个k点积得到两个分数；softmax得到两个份额；这些份额分别乘两行v，再相加。这里不生成搜索词，也不直接选答案。": {
+      "from": "qは情報を受け取る位置のクエリー表現の一行、kは読み取り可能な位置が提供する照合表現の一行、vはその位置が混合用に提供する内容表現の一行です。大文字のQ/K/Vは複数行を表にまとめたものです。入力とパラメーターから計算され、それぞれスコア計算と内容の提供を担います。<span class=\"concept-micro\">一つのqと二つのkの内積から二つのスコアを得ます。softmaxで二つの割合を求め、その割合を二行のvにそれぞれ掛けて足します。検索語を作ったり、直接回答を選んだりする処理ではありません。",
+      "to": "qは情報を受け取る一行のクエリ表現、kは読み取り可能な位置が提供する一行のマッチング表現、vはその位置が混合のために提供する一行の内容表現です。大文字のQ/K/Vは、複数行を表にまとめたものです。入力とパラメーターから計算され、それぞれ採点と内容の提供を担います。<span class=\"concept-micro\">あるqと二つのkの内積で二つのスコアを得て、softmaxで二つの割合を得ます。その割合を二行のvにそれぞれ掛け、足し合わせます。ここでは検索語の生成も、回答の直接の選択も行いません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "这是门控前馈结构。Wg生成要过SiLU的一路，Wu生成另一条内容路径，两路逐元素相乘，再用Wd映回原宽度。这些W是三组参数，不是三个Agent。<span class=\"concept-micro\">读(SiLU(XWg)⊙XWu)Wd时，先算XWg和XWu，再SiLU，再⊙，最后乘Wd。每个位置独立用同一组参数。": {
+      "from": "これはゲーティングを使うフィードフォワード構造です。WgはSiLUに通す経路を生成し、Wuは内容を扱う別の経路を生成します。両者を要素ごとに乗算し、Wdで元の幅に戻します。これらのWは三組のパラメーターであり、三つのエージェントではありません。<span class=\"concept-micro\">(SiLU(XWg)⊙XWu)Wdを読むときは、まずXWgとXWu、次にSiLU、続いて⊙を計算し、最後にWdを掛けます。各位置で同じパラメーターを独立に使います。",
+      "to": "ゲーティング付きフィードフォワードの構造です。WgはSiLUを通す経路を、Wuは別の内容の経路を生成します。二つの経路を要素ごとに掛け、Wdで元の幅へ戻します。これらのWは三組のパラメーターであり、三つのエージェントではありません。<span class=\"concept-micro\">(SiLU(XWg)⊙XWu)Wdは、まずXWgとXWuを計算し、次にSiLU、次に⊙、最後にWdを掛けると読みます。各位置で、同じパラメーター群を独立に使います。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "Norm在层公式中表示一个规范化函数。LayerNorm通常按一个Token的特征减均值、除标准差，再缩放平移；RMSNorm通常不减均值，按均方根缩放。它们不等于softmax。<span class=\"concept-micro\">独立微例，忽略稳定分母用的小正数ε与可学缩放：LayerNorm([1,3])=[-1,1]；RMSNorm([1,3])=[1/√5,3/√5]。": {
+      "from": "層の式にあるNormは、正規化関数を表します。LayerNormは通常、一つのトークンの特徴から平均を引き、標準偏差で割ってから、スケールとシフトを適用します。RMSNormは通常、平均を引かず、二乗平均平方根でスケーリングします。どちらもsoftmaxとは異なります。<span class=\"concept-micro\">独立した小例として、分母の安定化に使う小さな正数εと学習可能なスケールを無視します。LayerNorm([1,3])=[-1,1]；RMSNorm([1,3])=[1/√5,3/√5]です。",
+      "to": "層の式で、Normは正規化の関数を表します。LayerNormは、通常、一つのトークンの特徴から平均を引き、標準偏差で割り、拡大縮小と平行移動を行います。RMSNormは、通常、平均を引かず、二乗平均平方根で拡大縮小します。どちらもsoftmaxとは異なります。<span class=\"concept-micro\">独立した小さな例で、分母を安定させる小さい正数εと学習可能な倍率を無視すると、LayerNorm([1,3])=[-1,1]、RMSNorm([1,3])=[1/√5,3/√5]です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "pre-norm是先规范化再进入子层，残差从原输入直接相加；post-norm是子层结果与原输入相加之后再规范化。这描述运算顺序，不是训练前后两个阶段。<span class=\"concept-micro\">独立结构对照：x+F(Norm(x)) 与 Norm(x+F(x))一般不相等。F代表这里被包裹的子层函数。": {
+      "from": "pre-normは正規化してからサブ層に入り、残差には元の入力を直接加えます。post-normはサブ層の結果と元の入力を加えた後に正規化します。これは演算の順序を表し、学習の前後という二段階ではありません。<span class=\"concept-micro\">独立した構造の比較：x+F(Norm(x)) と Norm(x+F(x))は、通常は等しくありません。Fは、ここで囲まれるサブ層の関数を表します。",
+      "to": "pre-normは、先に正規化してからサブレイヤーに入り、残差を元の入力から直接足します。post-normは、サブレイヤーの結果と元の入力を足してから正規化します。これは演算の順序であり、学習前後の二段階ではありません。<span class=\"concept-micro\">独立した構造の比較：x+F(Norm(x))とNorm(x+F(x))は、一般には等しくありません。Fは、ここで囲まれているサブレイヤーの関数です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "一个注意力头是一套匹配并聚合内容的路径。MHA常让每个Query头有自己的K/V头；MQA让多个Query头共用一组K/V；GQA在两者之间，分组共享。它们是结构选择，不是运行时随便改一个开关。<span class=\"concept-micro\">独立形状例：8个Query头、2个K/V头，若均匀分组，每4个Query头共享1组K/V；缓存按K/V头数记账。": {
+      "from": "アテンションヘッドは、照合して内容を集約する一つの経路です。MHAでは通常、各Queryヘッドに専用のK/Vヘッドがあります。MQAは複数のQueryヘッドで一組のK/Vを共有し、GQAはその中間でグループごとに共有します。構造上の選択であり、実行時に自由に切り替えるスイッチではありません。<span class=\"concept-micro\">独立した形状の例：Queryヘッドが8個、K/Vヘッドが2個で均等に分けるなら、4個のQueryヘッドで1組のK/Vを共有します。キャッシュの使用量はK/Vヘッド数で計算します。",
+      "to": "一つのアテンションヘッドは、照合して内容を集約する一組の経路です。MHAでは、各Queryヘッドが独自のK/Vヘッドを持つことが一般的です。MQAは複数のQueryヘッドが一組のK/Vを共用し、GQAは両者の中間で、グループに分けて共有します。これらは構造の選択であり、実行時に一つのスイッチを自由に切り替えるものではありません。<span class=\"concept-micro\">独立した形状の例：Queryヘッドが8個、K/Vヘッドが2個で、均等に分けるなら、Queryヘッド4個ごとにK/Vを1組共有します。キャッシュはK/Vヘッド数に基づいて計上します。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "Concat把多份数组沿指定轴连接起来，不把元素相加；split或chunk按规定边界分组。所有未拼接轴需相容。这里chunk指数组块；网络中的chunk则是字节分片。<span class=\"concept-micro\">独立例：两头各[2,3]，沿特征轴拼成[2,6]；沿位置轴拼会变[4,3]，语义已经不同。": {
+      "from": "Concatは複数の配列を指定した軸に沿ってつなぎ、要素は加算しません。splitやchunkは、決めた境界で分けます。連結しないすべての軸で互換性が必要です。ここでchunkは配列のブロック、ネットワークではバイトの断片を指します。<span class=\"concept-micro\">独立した例：二つのヘッドがそれぞれ[2,3]なら、特徴軸に沿って連結すると[2,6]です。位置軸に沿って連結すると[4,3]になり、意味が異なります。",
+      "to": "Concatは、複数の配列を指定した軸に沿って連結し、要素は足しません。splitやchunkは、定めた境界でグループ分けします。連結しないすべての軸は、互換である必要があります。ここのchunkは配列のブロックを指し、ネットワークのchunkはバイトの断片です。<span class=\"concept-micro\">独立した例：二つのヘッドが、それぞれ[2,3]なら、特徴の軸で連結すると[2,6]です。位置の軸で連結すると[4,3]となり、意味がすでに異なります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "Σ是加法的简写。下标指出哪项在变化；没有被求和的下标保持不变。它不是一个额外参数，也不表示把数组拼在一起。<span class=\"concept-micro\">独立微例：Σᵢ xᵢyᵢ，x=[1,2]、y=[3,4]，就是1×3+2×4=11。": {
+      "from": "Σは加算の略記です。添字は変化する項を示し、和を取らない添字は固定したままです。追加のパラメーターでも、配列の連結でもありません。<span class=\"concept-micro\">独立した小さな例：Σᵢ xᵢyᵢで、x=[1,2]、y=[3,4]なら、1×3+2×4=11です。",
+      "to": "Σは加算の略記です。添字は、どの項が変わるかを示します。加算しない添字は固定します。追加のパラメーターでも、配列の連結でもありません。<span class=\"concept-micro\">独立した小さな例：Σᵢ xᵢyᵢで、x=[1,2]、y=[3,4]なら、1×3+2×4=11です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "x∼p表示按分布p抽样，E表示依指定分布求期望，Π表示把指定项连乘，∝表示相差一个公共比例因子而非已经相等。这里E不是Embedding参数表。<span class=\"concept-micro\">独立例：pᵢ∝exp(zᵢ)还需除以所有候选指数的总和；写∝时不能把未归一化值直接读作概率。": {
+      "from": "x∼pは分布pに従うサンプリング、Eは指定した分布での期待値、Πは指定項の総乗、∝は共通の比例係数による違いがあることを表し、すでに等しいことを意味しません。ここでのEはEmbeddingのパラメーターテーブルではありません。<span class=\"concept-micro\">独立した例：pᵢ∝exp(zᵢ)では、さらに全候補の指数の和で割る必要があります。∝と書かれているとき、未正規化の値をそのまま確率として読んではいけません。",
+      "to": "x∼pは分布pに従うサンプリング、Eは指定した分布での期待値、Πは指定した項の積を表します。∝は、共通の比例係数だけが異なることを表し、等しいという意味ではありません。ここのEは、Embeddingのパラメーターテーブルではありません。<span class=\"concept-micro\">独立した例：pᵢ∝exp(zᵢ)では、さらに、すべての候補の指数の総和で割る必要があります。∝と書く場合、正規化前の値を、そのまま確率と読んではいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "∂L/∂w询问保持其他独立变量不变时，w小幅改变会让损失L怎样变化。多个参数的这些变化率合成梯度∇L。它们是导数记号，不是把两个普通数直接相除。<span class=\"concept-micro\">独立微例：L=w²时，w=3处的梯度为6。最简单更新w←w−η×6中，η是学习率。": {
+      "from": "∂L/∂wは、ほかの独立変数を固定したとき、wの微小な変化で損失Lがどう変わるかを問います。複数のパラメーターについての変化率をまとめたものが勾配∇Lです。導関数の記号であり、普通の数値同士を直接割るものではありません。<span class=\"concept-micro\">独立した小さな例：L=w²なら、w=3での勾配は6です。最も単純な更新w←w−η×6で、ηは学習率です。",
+      "to": "∂L/∂wは、他の独立変数を固定し、wをわずかに変えると、損失Lがどう変わるかを問います。複数のパラメーターについて、この変化率をまとめたものが勾配∇Lです。これらは導関数の記号であり、通常の二つの数を直接割ることではありません。<span class=\"concept-micro\">独立した小さな例：L=w²なら、w=3での勾配は6です。最も単純な更新w←w−η×6のηは、学習率です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "当函数有多个输入和输出，Jacobian用一张表记录每个输出对每个输入的偏导。J_F表示函数F的这张表，不是训练数据里的新矩阵。<span class=\"concept-micro\">独立微例：F([x₁,x₂])=[2x₁,3x₂]，J_F=[[2,0],[0,3]]。残差x+F(x)的导数表为I+J_F。": {
+      "from": "関数に複数の入力と出力があるとき、Jacobianは各出力の各入力に対する偏導関数を表に記録します。J_Fは関数Fのこの表であり、学習データに追加された行列ではありません。<span class=\"concept-micro\">独立した小さな例：F([x₁,x₂])=[2x₁,3x₂]なら、J_F=[[2,0],[0,3]]です。残差x+F(x)の導関数の表はI+J_Fです。",
+      "to": "関数に複数の入力と出力がある場合、Jacobianは、各入力に対する各出力の偏導関数を表に記録します。J_Fは、関数Fのこの表であり、学習データ内の新しい行列ではありません。<span class=\"concept-micro\">独立した小さな例：F([x₁,x₂])=[2x₁,3x₂]なら、J_F=[[2,0],[0,3]]です。残差x+F(x)の導関数の表は、I+J_Fです。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "BatchNorm常对同一特征/通道，沿批次和适用空间轴计算统计量；LayerNorm沿指定的样本内部特征维度计算。BatchNorm的训练与评估可使用不同来源的统计，具体还取决于配置。<span class=\"concept-micro\">只见Norm这个词，不能把不同规范化层的统计轴混用；两个独立用户不应该因此共享会话上下文。": {
+      "from": "BatchNormは通常、同じ特徴/チャネルについて、バッチ軸と適用される空間軸に沿って統計量を計算します。LayerNormは、指定したサンプル内部の特徴次元に沿って計算します。BatchNormの学習時と評価時では、統計量の出所が異なる場合があり、具体的な挙動は設定にも依存します。<span class=\"concept-micro\">Normという語だけを見て、異なる正規化層の統計軸を混同してはいけません。そのために独立した二人のユーザーがセッションのコンテキストを共有すべきではありません。",
+      "to": "BatchNormは、通常、同じ特徴/チャンネルについて、バッチと適用する空間の軸に沿って統計量を計算します。LayerNormは、指定したサンプル内部の特徴次元に沿って計算します。BatchNormは、学習時と評価時で、異なる出所の統計を使う場合があり、具体的には設定にもよります。<span class=\"concept-micro\">Normという語だけを見て、異なる正規化層の統計を取る軸を混同してはいけません。これを理由に、独立した二人のユーザーの会話コンテキストを共有するべきではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "逐元素乘把形状对齐后的同位置数相乘，不沿某个维度再求和。公式的并排矩阵或@通常表示矩阵乘，二者不可互换。<span class=\"concept-micro\">独立微例：[1,2]⊙[3,4]=[3,8]，点积则为11。门控前馈里的⊙是在每个特征上调节另一路。": {
+      "from": "要素ごとの積は、形状をそろえた後、同じ位置にある数を掛け合わせます。特定の次元に沿った和は取りません。式で行列を並べた表記や@は通常、行列積を表し、両者は置き換えられません。<span class=\"concept-micro\">独立した小さな例：[1,2]⊙[3,4]=[3,8]ですが、内積は11です。ゲート付きフィードフォワード層の⊙は、各特徴で別の経路を調整します。",
+      "to": "要素ごとの積は、形状を合わせた後、同じ位置の数を掛け、さらにある次元に沿って足すことはしません。式で行列を並べた表記や@は、通常、行列積を表します。両者を置き換えることはできません。<span class=\"concept-micro\">独立した小さな例：[1,2]⊙[3,4]=[3,8]で、内積なら11です。ゲーティング付きフィードフォワードの⊙は、特徴ごとに別の経路を調整します。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "SiLU(x)=x×sigmoid(x)。先把x映射到0与1之间，再乘回x本身，形成非线性。负数不会像ReLU那样一律变为0。<span class=\"concept-micro\">独立微例：SiLU(0)=0；SiLU(1)约0.731059；SiLU(-1)约-0.268941。": {
+      "from": "SiLU(x)=x×sigmoid(x)。まずxを0と1の間に写し、その後x自体を掛け戻して非線形性を作ります。負数がReLUのように一律に0になるわけではありません。<span class=\"concept-micro\">独立した小さな例：SiLU(0)=0；SiLU(1)は約0.731059；SiLU(-1)は約-0.268941です。",
+      "to": "SiLU(x)=x×sigmoid(x)です。まずxを0と1の間に写像し、元のxを掛けて、非線形性を作ります。負数がReLUのように一律0になるわけではありません。<span class=\"concept-micro\">独立した小さな例：SiLU(0)=0、SiLU(1)は約0.731059、SiLU(-1)は約-0.268941です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "在σ(XW+b)中，σ常泛指这一层选定的非线性函数；具体可以是ReLU等，不能仅凭σ认定是sigmoid。统计公式中σ常指标准差，σ²是方差。它们不是同一对象。<span class=\"concept-micro\">独立例：σ若指定为ReLU，σ(-1)=0；若指定为sigmoid，则约0.268941。必须先给函数定义，才能算结果。": {
+      "from": "σ(XW+b)のσは、多くの場合、その層で選んだ非線形関数を一般的に表します。具体的にはReLUなどの場合があり、σだけでsigmoidとは判断できません。統計の式ではσは通常、標準偏差、σ²は分散です。これらは同じ対象ではありません。<span class=\"concept-micro\">独立した例：σをReLUと定義すればσ(-1)=0、sigmoidと定義すれば約0.268941です。結果を計算するには、先に関数を定義する必要があります。",
+      "to": "σ(XW+b)では、σは、その層で選んだ非線形関数の総称であることが多く、具体的にはReLUなどです。σだけでsigmoidと決め付けてはいけません。統計の式では、σは通常、標準偏差を指し、σ²は分散です。これらは同じ対象ではありません。<span class=\"concept-micro\">独立した例：σをReLUと指定すると、σ(-1)=0で、sigmoidと指定すると、約0.268941です。先に関数を定義して初めて、結果を計算できます。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "MoE是包含多套子网络的模型结构；路由器为当前Token表示选择或加权少数专家。专家通常是数值子网络，不是被赋予“数学老师”等提示词的聊天Agent。<span class=\"concept-micro\">独立例：有4个专家，每Token选2个，表示某次只激活其中2条专家路径；仍需保存模型设计要求的参数与路由状态。": {
+      "from": "MoEは複数のサブネットワークを含むモデル構造です。ルーターが現在のトークン表現に対して少数のエキスパートを選択、または重み付けします。エキスパートは通常、数値を扱うサブネットワークであり、「数学の先生」といったプロンプトを与えたチャットエージェントではありません。<span class=\"concept-micro\">独立した例：エキスパートが4個あり、トークンごとに2個選ぶなら、ある回に有効になるのはそのうち2本の経路だけです。それでも、モデルの設計に必要なパラメーターとルーティング状態は保存する必要があります。",
+      "to": "MoEは、複数組のサブネットワークを含むモデル構造です。ルーターは現在のトークン表現に対し、少数のエキスパートを選択するか、重みを付けます。エキスパートは通常、数値的なサブネットワークであり、「数学の先生」などのプロンプトを与えたチャットエージェントではありません。<span class=\"concept-micro\">独立した例：エキスパートが4個あり、トークンごとに2個を選ぶとは、ある回では、そのうち2本の経路だけが活性化することです。モデルの設計に必要なパラメーターとルーティングの状態は、引き続き保存する必要があります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "BOS通常表示序列起始，EOS表示结束的特殊Token；具体模型和消息模板可能使用不同名称、数量及结束标记。它们是输入/输出协议中的符号，不是语义正确性的证明。<span class=\"concept-micro\">遇到EOS不自动切断两个训练样本之间的注意力；要隔离读取还需mask或实现支持的样本边界。": {
+      "from": "BOSは通常、系列の開始を、EOSは終了を示す特殊トークンです。モデルやメッセージテンプレートによって、名称、個数、終了マーカーが異なる場合があります。これらは入出力プロトコルの記号であり、意味の正しさの証明ではありません。<span class=\"concept-micro\">EOSがあっても、二つの学習サンプル間のアテンションは自動的に遮断されません。読み取りを分離するには、maskや実装が対応するサンプル境界も必要です。",
+      "to": "BOSは、通常、系列の開始、EOSは終了を表す特殊トークンです。具体的なモデルやメッセージテンプレートでは、異なる名称・個数・終了マーカーを使う場合があります。入出力プロトコル内の記号であり、意味上の正しさの証明ではありません。<span class=\"concept-micro\">EOSが現れても、二つの学習サンプル間のアテンションは自動では切れません。読み取りを隔離するには、maskや、実装が対応するサンプル境界も必要です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "常用倒置Dropout在训练时按丢弃概率p随机将元素置零，保留项除以1-p以保持期望量级。评估模式通常关闭这一随机操作；底层函数可能要求调用者显式传p=0。<span class=\"concept-micro\">独立例：p=0.5，某值2在一次掩码中被保留则输出4，被丢弃则0。这不是训练把对应模型参数永久删掉。": {
+      "from": "一般的なinverted Dropoutは、学習時に確率pで要素をランダムにゼロにし、残す項目を1-pで割ることで期待値の大きさを保ちます。評価モードでは通常、このランダムな操作を無効にします。下位の関数では、呼び出し側が明示的にp=0を渡す必要がある場合があります。<span class=\"concept-micro\">独立した例：p=0.5で、値2があるマスクで保持されると出力は4、破棄されると0になります。学習によって対応するモデルパラメーターを永久に削除することではありません。",
+      "to": "一般的な倒置型Dropoutは、学習時に、破棄確率pで要素をランダムにゼロとし、残した項を1-pで割って、期待値の大きさを保ちます。評価モードでは、通常、このランダムな操作を無効にします。低水準の関数では、呼び出し側がp=0を明示する必要がある場合もあります。<span class=\"concept-micro\">独立した例：p=0.5で、ある値2が一回のマスクで残されたら出力は4、破棄されたら0です。学習で、対応するモデルのパラメーターを永久に削除することではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "d_k表示一个Query/Key向量有多少个分量；d_v表示一个Value向量有多少个分量。Dh或d_h在一些章节中是单头宽度。它们是尺寸整数，不是第k个Key或某个Value数值。<span class=\"concept-micro\">形状微例：Q[2,3]、K[5,3]、V[5,4]，则分数[2,5]，输出[2,4]。Q/K配对宽度3，Value宽度4仍合法。": {
+      "from": "d_kはQuery/Keyベクトルの成分数、d_vはValueベクトルの成分数を表します。Dhやd_hは、一部の章で単一ヘッドの幅を表します。これらは次元数を表す整数であり、k番目のKeyやValueの値ではありません。<span class=\"concept-micro\">形状の小例：Q[2,3]、K[5,3]、V[5,4]なら、スコアは[2,5]、出力は[2,4]です。Q/Kを組み合わせる幅が3でも、Valueの幅が4であることに問題はありません。",
+      "to": "d_kは、一つのQuery/Keyベクトルの成分数、d_vは、一つのValueベクトルの成分数を表します。一部の章のDhやd_hは、単一ヘッドの幅です。これらは寸法を表す整数であり、第kのKeyや、あるValueの値ではありません。<span class=\"concept-micro\">形状の小さな例：Q[2,3]、K[5,3]、V[5,4]なら、スコアは[2,5]、出力は[2,4]です。Q/Kの対応する幅は3で、Valueの幅が4でも正当です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "这是把输入表示变为Query的参数矩阵，不是Query本身。按本书右乘约定，输入每行d个数、Wq有d行d_k列，Q=XWq后每行有d_k个数。下标q表示用途，不表示再乘一个q。<span class=\"concept-micro\">同一Wq可处理多个位置；每个位置得到自己的q。F11给出X、Wq和每个乘加结果。": {
+      "from": "これは入力表現をQueryに変えるパラメーター行列であり、Queryそのものではありません。本書の右から掛ける規約では、入力の各行にd個の数があり、Wqはd行d_k列です。Q=XWqの後、各行にはd_k個の数が入ります。添字qは用途を示し、さらにqを掛ける意味ではありません。<span class=\"concept-micro\">同じWqで複数の位置を処理でき、各位置がそれぞれのqを得ます。F11ではX、Wq、乗算と加算の各結果を示します。",
+      "to": "入力表現をQueryに変えるパラメーター行列であり、Queryそのものではありません。本書の右から掛ける規約では、入力の各行にd個の数があり、Wqはd行d_k列です。Q=XWqの後は、各行にd_k個の数があります。添字qは用途を表し、さらにqを掛けることではありません。<span class=\"concept-micro\">同じWqで複数の位置を処理でき、各位置は自分のqを得ます。F11では、X・Wq・各積和の結果を示します。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "这是生成Key表示的模型参数表。K=XWk中的X来自当前注意力输入，K是这次算出的结果；Wk不是保存文档关键词或密钥的表。Q与K每行宽度要相同，才能做点积。<span class=\"concept-micro\">在F11，x₁=[1,-1]乘Wk得到k₁=[0,1]。不是把原来的Token ID拿来当Key。": {
+      "from": "これはKey表現を生成する、モデルのパラメーターテーブルです。K=XWkのXは現在のアテンション入力で、Kは今回計算した結果です。Wkは文書のキーワードや鍵を保存するテーブルではありません。QとKは、内積を取るために行ごとの幅が同じである必要があります。<span class=\"concept-micro\">F11では、x₁=[1,-1]にWkを掛けてk₁=[0,1]を得ます。元のトークンIDをKeyとして使うわけではありません。",
+      "to": "Key表現を生成する、モデルのパラメーターテーブルです。K=XWkのXは、現在のアテンションの入力であり、Kは今回求めた結果です。Wkは、文書のキーワードや暗号鍵を保存する表ではありません。QとKの各行の幅は、内積を取れるよう同じでなければなりません。<span class=\"concept-micro\">F11では、x₁=[1,-1]にWkを掛けると、k₁=[0,1]になります。元のトークンIDをKeyとして使うわけではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "这是从输入生成Value内容向量的模型参数表。V=XWv之后，Attention按读取份额混合V的各行。Value的宽度d_v可与Query/Key宽度d_k不同；它不是最终词表答案。<span class=\"concept-micro\">F11中同一x₁=[1,-1]乘Wv得到v₁=[0,20]，再参与加权求和。": {
+      "from": "これは入力からValueの内容ベクトルを生成する、モデルのパラメーターテーブルです。V=XWvの後、Attentionは読み取りの割合に従ってVの各行を混合します。Valueの幅d_vは、Query/Keyの幅d_kと異なる場合があります。最終的な語彙の答えではありません。<span class=\"concept-micro\">F11では、同じx₁=[1,-1]にWvを掛けてv₁=[0,20]を得て、重み付き和に使います。",
+      "to": "入力からValueの内容ベクトルを生成する、モデルのパラメーターテーブルです。V=XWvの後、Attentionは、読み取りの割合に従ってVの各行を混ぜます。Valueの幅d_vは、Query/Keyの幅d_kと異なっていても構いません。最終的な語彙の回答ではありません。<span class=\"concept-micro\">F11では、同じx₁=[1,-1]にWvを掛け、v₁=[0,20]を得て、加重和に使います。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "模型检查点保存权重或训练状态；激活检查点保存少量中间节点以便反向时重算；Agent任务检查点保存执行进展。三者同名，但恢复对象完全不同。<span class=\"concept-micro\">看到checkpoint先问“恢复参数、重算激活，还是继续任务”。Agent保存摘要不会更新模型权重。": {
+      "from": "モデルのチェックポイントは重みや学習状態を保存します。アクティベーションチェックポイントは少数の中間ノードを保存し、逆伝播時の再計算に使います。エージェントのタスクチェックポイントは実行の進捗を保存します。同じ名前でも、復元する対象はまったく異なります。<span class=\"concept-micro\">checkpointを見たら、まず「パラメーターを復元するのか、活性化を再計算するのか、タスクを続けるのか」を確認します。エージェントが要約を保存しても、モデルの重みは更新されません。",
+      "to": "モデルのチェックポイントは重みや学習状態を保存し、活性化チェックポイントは、逆伝播で再計算するために少数の中間ノードを保存します。エージェントのタスクのチェックポイントは、実行の進捗を保存します。三つは同じ名前でも、復元する対象はまったく異なります。<span class=\"concept-micro\">checkpointを見たら、まず「パラメーターの復元か、活性化の再計算か、タスクの続行か」を問います。エージェントが要約を保存しても、モデルの重みは更新しません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "G=∂L/∂O通常是后续运算传回的损失对当前输出O的梯度。反传伪代码把∂L/∂Q简写成dQ、∂L/∂W简写成dW；它们形状与被求导的对象对应，不是特征维度d乘Q。<span class=\"concept-micro\">先有前向O=AV，再接收G，才能算dV=AᵀG和dA=GVᵀ；dA改变的是份额路径，dV改变的是内容路径。": {
+      "from": "G=∂L/∂Oは通常、後続の演算から返される、現在の出力Oに対する損失の勾配です。逆伝播の擬似コードでは、∂L/∂QをdQ、∂L/∂WをdWと略記します。形状は微分対象に対応し、特徴次元dをQに掛けたものではありません。<span class=\"concept-micro\">まず順伝播O=AVがあり、Gを受け取ってから、dV=AᵀGとdA=GVᵀを計算できます。dAが変えるのは割合の経路、dVが変えるのは内容の経路です。",
+      "to": "G=∂L/∂Oは、通常、後続の演算から返された、現在の出力Oに対する損失の勾配です。逆伝播の疑似コードでは、∂L/∂QをdQ、∂L/∂WをdWと略記します。形状は微分する対象に対応し、特徴の次元dをQに掛けることではありません。<span class=\"concept-micro\">先に順伝播のO=AVがあり、その後Gを受け取って初めて、dV=AᵀGとdA=GVᵀを計算できます。dAが変えるのは割合の経路、dVが変えるのは内容の経路です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "优化器把梯度转换为参数更新。Adam还保存每个参数的梯度滑动平均m和平方梯度滑动平均v；它们是训练状态，不是注意力Value。AdamW把权重衰减与自适应梯度更新解耦。<span class=\"concept-micro\">独立首步例：g=2、m旧=0、β₁=0.9，则m新=0.2，偏差修正后m_hat=2。不能把0.2直接当完整更新量。": {
+      "from": "オプティマイザーは勾配をパラメーター更新に変換します。Adamは、各パラメーターの勾配の移動平均mと、勾配の二乗の移動平均vも保持します。これらは学習状態であり、アテンションのValueではありません。AdamWは、重み減衰を適応的な勾配更新から切り離します。<span class=\"concept-micro\">独立した最初のステップの例：g=2、m旧=0、β₁=0.9なら、m新=0.2で、バイアス補正後はm_hat=2です。0.2を更新量全体と見なしてはいけません。",
+      "to": "オプティマイザーは、勾配をパラメーターの更新に変換します。Adamはさらに、各パラメーターの勾配の移動平均mと、勾配の二乗の移動平均vを保存します。これらは学習状態であり、アテンションのValueではありません。AdamWは、重み減衰と適応的な勾配更新を切り離します。<span class=\"concept-micro\">独立した初回の例：g=2、mの旧値=0、β₁=0.9なら、mの新値=0.2で、バイアス補正後はm_hat=2です。0.2を、そのまま完全な更新量として扱ってはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "RLHF泛指利用人类反馈训练行为的流程。奖励模型是对回答等行为打分的模型；策略是实际生成动作的概率模型。两者职责不同，得高奖励不自动等于事实正确。<span class=\"concept-micro\">独立例：奖励器偏爱长回答，策略可能学会写长而不更准确；因此奖励判据需要验证。": {
+      "from": "RLHFは、人間のフィードバックを使って振る舞いを学習するプロセスの総称です。報酬モデルは回答などの振る舞いを採点するモデルで、方策は実際に行動を生成する確率モデルです。両者の役割は異なり、高い報酬を得ても、事実として正しいとは限りません。<span class=\"concept-micro\">独立した例：報酬器が長い回答を好むと、方策は正確さを改善せずに長く書くことを学ぶ可能性があります。そのため、報酬の判定基準を検証する必要があります。",
+      "to": "RLHFは、人のフィードバックで振る舞いを学習する手順を広く指します。報酬モデルは回答などの振る舞いを採点するモデルで、方策は実際に操作を生成する確率モデルです。両者の役割は異なり、高い報酬を得ても、自動的に事実が正しいとは限りません。<span class=\"concept-micro\">独立した例：報酬を付けるモデルが長い回答を好むと、方策は正確さを高めずに、長く書くことを学ぶかもしれません。そのため、報酬の判定基準を検証する必要があります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "混合精度在不同计算或状态中采用不同数值格式。主权重可用较高精度保存更新基准；loss scaling在反传前放大损失，随后再把梯度缩回，降低某些低精度下溢风险。<span class=\"concept-micro\">并不是把学习率随意乘大。实际是否需要主权重或loss scaling取决于精度格式、优化器和实现。": {
+      "from": "混合精度では、計算や状態によって異なる数値形式を使います。マスター重みは高い精度で保存し、更新の基準にできます。loss scalingでは、逆伝播前に損失を拡大し、その後で勾配を元のスケールに戻すことで、一部の低精度形式でのアンダーフローのリスクを減らします。<span class=\"concept-micro\">学習率を無造作に大きくすることではありません。マスター重みやloss scalingが実際に必要かは、精度形式・オプティマイザー・実装によって決まります。",
+      "to": "混合精度は、計算や状態ごとに異なる数値形式を使います。マスター重みは、更新の基準を高精度で保存できます。loss scalingは、逆伝播前に損失を拡大し、その後で勾配を元の尺度に戻して、一部の低精度でのアンダーフローのリスクを減らします。<span class=\"concept-micro\">学習率を自由に大きくすることではありません。実際にマスター重みやloss scalingが必要かは、精度の形式・オプティマイザー・実装によります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "数据并行让多份模型处理不同样本并同步梯度；张量并行拆分一次算子的参数/计算；流水线并行把不同层放不同设备。ZeRO/FSDP类技术还会切分参数、梯度或优化器状态。<span class=\"concept-micro\">它们拆的对象不同：一层矩阵分两块，不等于把两个独立用户任务分给两位Agent。": {
+      "from": "データ並列は、モデルを複製して異なるサンプルを処理し、勾配を同期します。テンソル並列は、一回の演算子のパラメーター/計算を分割します。パイプライン並列は、異なる層を別々のデバイスに置きます。ZeRO/FSDPのような技術は、パラメーター・勾配・オプティマイザー状態も分割します。<span class=\"concept-micro\">分ける対象はそれぞれ異なります。一層の行列を二分することは、独立した二つのユーザータスクを二つのエージェントに割り当てることとは違います。",
+      "to": "データ並列は、複数のモデルで異なるサンプルを処理し、勾配を同期します。テンソル並列は、一回の演算子のパラメーター/計算を分割します。パイプライン並列は、異なる層を異なるデバイスに配置します。ZeRO/FSDP系の技術は、パラメーター・勾配・オプティマイザーの状態も分割します。<span class=\"concept-micro\">分ける対象が異なります。一層の行列を二つに分けることは、独立した二つのユーザータスクを、二つのエージェントに割り当てることと同じではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "LoRA用两个较小矩阵的乘积表示一部分权重增量，而不是重新训练整个大矩阵。r是中间维度，限制这个乘积的最大秩。不同资料采用行/列向量约定时，A、B的左右次序可能不同。<span class=\"concept-micro\">右乘约定微例：W[4,6]，增量A[4,2]B[2,6]仍为[4,6]；r=2。A在这里不是注意力份额表。": {
+      "from": "LoRAは大きな行列全体を再学習する代わりに、重みの差分の一部を二つの小さな行列の積で表します。rは中間の次元で、この積の最大ランクを制限します。行ベクトル／列ベクトルの取り決めによって、資料間でAとBの左右の順序が異なる場合があります。<span class=\"concept-micro\">右から掛ける取り決めでの小さな例：W[4,6]に対し、差分A[4,2]B[2,6]も[4,6]で、r=2です。ここでAはアテンションの割合の表ではありません。",
+      "to": "LoRAは、大きな行列全体を学習し直すのではなく、二つの小さい行列の積で、重みの増分の一部を表します。rは中間の次元であり、この積の最大ランクを制限します。資料によって行/列ベクトルの規約が違うと、A・Bの左右の順序も異なる場合があります。<span class=\"concept-micro\">右から掛ける規約の小さな例：W[4,6]に対し、増分A[4,2]B[2,6]も[4,6]で、r=2です。ここのAは、アテンションの割合の表ではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "函数规则是sigmoid(x)=1/(1+exp(-x))。它逐个数计算，不要求同一行结果的总和为1，所以不能用它直接代替多候选softmax。<span class=\"concept-micro\">独立微例：sigmoid(0)=0.5；分别算两个0，得到[0.5,0.5]只是巧合，输入[1,1]的两项之和就大于1。": {
+      "from": "関数の規則はsigmoid(x)=1/(1+exp(-x))です。数値ごとに計算し、同じ行の結果の合計が1であることは求めません。そのため、複数候補のsoftmaxを直接置き換えることはできません。<span class=\"concept-micro\">独立した小例：sigmoid(0)=0.5です。二つの0を個別に計算して[0.5,0.5]になるのは偶然にすぎず、入力が[1,1]なら二項の和は1を超えます。",
+      "to": "関数の規則はsigmoid(x)=1/(1+exp(-x))です。一つずつ計算し、同じ行の結果の和が1であることは求めません。そのため、複数候補のsoftmaxを、そのまま置き換えることはできません。<span class=\"concept-micro\">独立した小さな例：sigmoid(0)=0.5です。二つの0を個別に計算すると[0.5,0.5]になるのは偶然であり、入力[1,1]では、二項の和は1を超えます。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "在策略与偏好优化中，π表示条件概率策略，π_ref表示固定参考策略；β是控制目标尺度或约束强度的设置系数。完整回答的概率由各Token条件概率构成。<span class=\"concept-micro\">这里π不是圆周率，β不是LayerNorm的偏移参数。DPO式子的w/l是偏好与非偏好答案标记，不是权重w与层数L。": {
+      "from": "方策と選好の最適化では、πは条件付き確率の方策、π_refは固定した参照方策を表します。βは目的関数の尺度や制約の強さを制御する設定係数です。回答全体の確率は、各トークンの条件付き確率から成ります。<span class=\"concept-micro\">ここでπは円周率ではなく、βはLayerNormのオフセットパラメーターではありません。DPOの式のw/lは、好まれる回答と好まれない回答の印であり、重みwと層数Lではありません。",
+      "to": "方策や選好の最適化では、πは条件付き確率の方策、π_refは固定した参照方策を表します。βは、目的関数の尺度や制約の強さを制御する設定係数です。回答全体の確率は、各トークンの条件付き確率から構成されます。<span class=\"concept-micro\">ここでπは円周率ではなく、βはLayerNormのシフトパラメーターではありません。DPOの式のw/lは、好ましい回答と好ましくない回答の印であり、重みwや層数Lではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "这些是策略优化相关概念。PPO常用新旧动作概率比和裁剪来限制更新；GRPO类方法使用组内奖励比较构造优势。优势是相对基线的表现，不是答案正确概率。<span class=\"concept-micro\">独立原始差值例：奖励[0,1,1]，减组均值2/3得到[-2/3,1/3,1/3]。算法还可能再归一化，不能直接混用。": {
+      "from": "これらは方策の最適化に関わる概念です。PPOは通常、新旧の行動確率比とクリッピングで更新を制限します。GRPOのような手法は、グループ内の報酬比較からアドバンテージを作ります。アドバンテージは基準に対する成績であり、回答が正しい確率ではありません。<span class=\"concept-micro\">独立した元の差分の例：報酬[0,1,1]からグループ平均2/3を引くと[-2/3,1/3,1/3]です。アルゴリズムによってはさらに正規化するため、そのまま混用してはいけません。",
+      "to": "これらは方策最適化に関わる概念です。PPOは、新旧の行動確率の比とクリッピングで更新を制限することが一般的です。GRPO系の方法は、グループ内の報酬の比較からアドバンテージを構成します。アドバンテージは、ベースラインに対する成績であり、回答の正解確率ではありません。<span class=\"concept-micro\">独立した元の差の例：報酬[0,1,1]から、グループ平均2/3を引くと、[-2/3,1/3,1/3]です。アルゴリズムによっては、さらに正規化するため、そのまま混同してはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "FLOPs通常表示浮点运算数量；FLOP/s表示每秒的运算速率。论文或厂商对乘加计一次还是两次可能不同，需要固定口径。<span class=\"concept-micro\">不能只用总运算量除理论峰值就承诺真实耗时：搬运、排队、通信和实际利用率也有成本。": {
+      "from": "FLOPsは通常、浮動小数点演算の回数を表し、FLOP/sは毎秒の演算速度を表します。乗算と加算を一回と数えるか二回と数えるかは、論文やメーカーによって異なる場合があるため、集計基準を固定する必要があります。<span class=\"concept-micro\">総演算量を理論ピークで割るだけで実際の所要時間を約束することはできません。データ移動、待ち行列、通信、実際の利用率にもコストがあります。",
+      "to": "FLOPsは、通常、浮動小数点演算の回数、FLOP/sは毎秒の演算速度を表します。積和を一回と数えるか二回と数えるかは、論文や提供元によって違う場合があるため、数え方を固定する必要があります。<span class=\"concept-micro\">総演算量を理論ピークで割るだけで、実際の所要時間を約束してはいけません。データ移動・待ち行列・通信・実際の利用率にもコストがあります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "标签是要比较的正确目标；下一Token训练让输入位置对准后一Token。Teacher forcing使用数据中的真实前缀计算，而非用刚采样的结果替换它。<span class=\"concept-micro\">独立例：完整序列[a,b,c,d]，可用输入[a,b,c]对标签[b,c,d]。接口已做移位时不能外面再移一次。": {
+      "from": "ラベルは比較対象となる正解です。次のトークンを予測する学習では、入力位置をその次のトークンに対応させます。Teacher forcingでは、直前のサンプリング結果で置き換えず、データにある正しいプレフィックスで計算します。<span class=\"concept-micro\">独立した例：完全な系列[a,b,c,d]に対し、入力[a,b,c]とラベル[b,c,d]を使えます。インターフェース側ですでにシフトしている場合、外側でもう一度シフトしてはいけません。",
+      "to": "ラベルは、比較する正解の目標です。次のトークンの学習では、入力位置を次のトークンに対応させます。Teacher forcingは、データ内の真のプレフィックスで計算し、直前のサンプリング結果には置き換えません。<span class=\"concept-micro\">独立した例：完全な系列[a,b,c,d]には、入力[a,b,c]とラベル[b,c,d]を使えます。インターフェースがすでにシフトする場合、外側でもう一度シフトしてはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "Top-k保留概率最高的k项；Top-p按概率降序保留累计概率达到阈值的候选前缀。用于抽样时，被保留的候选需按剩余总质量重新归一化。<span class=\"concept-micro\">这里k是候选数量，p是累计概率阈值；不是注意力Key表K，也不是表示维度d_k。": {
+      "from": "Top-kは確率が高いk項目を残します。Top-pは確率の降順に、累積確率がしきい値に達するまで候補の先頭部分を残します。サンプリングに使うときは、残った候補の確率をその合計に対して再正規化します。<span class=\"concept-micro\">ここでkは候補数、pは累積確率のしきい値です。アテンションのKeyテーブルKや表現の幅d_kではありません。",
+      "to": "Top-kは、確率が高いk項を残します。Top-pは、確率の降順で、累積確率がしきい値に達するまでの候補の先頭部分を残します。サンプリングに使う場合、残した候補は、残る総確率質量で再正規化する必要があります。<span class=\"concept-micro\">ここでkは候補数、pは累積確率のしきい値です。アテンションのKeyテーブルKでも、表現の次元d_kでもありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "这些是不同层对象的标识：工具调用、输出项、请求或响应。用来把增量和结果配回正确对象，不是模型输入的Token ID，也不天然是业务幂等键。<span class=\"concept-micro\">两次read_file可分别有c1与c2；结果返回顺序颠倒时仍按调用标识配对，而不是按工具名称猜。": {
+      "from": "ツール呼び出し・出力項目・リクエスト・レスポンスは、異なる層のオブジェクトの識別子です。増分や結果を正しい対象に対応付けるためのもので、モデル入力のトークンIDではなく、そのままで業務上の冪等キーになるわけでもありません。<span class=\"concept-micro\">二回のread_fileには、それぞれc1とc2を付けられます。結果が逆順で戻っても、ツール名から推測するのではなく、呼び出し識別子で対応付けます。",
+      "to": "これらは、ツール呼び出し・出力項目・リクエスト・レスポンスという、異なる層の対象の識別子です。増分と結果を正しい対象に戻して対応付けるものであり、モデル入力のトークンIDでも、元から業務上の冪等キーでもありません。<span class=\"concept-micro\">二回のread_fileには、それぞれc1とc2が付きます。結果の返る順序が逆でも、ツール名から推測するのでなく、呼び出しの識別子で対応付けます。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "通过分块和在线归一化等方式，避免把完整注意力分数/权重矩阵长期写到较慢显存；目标仍是同一个注意力运算，浮点舍入可随运算次序变化。<span class=\"concept-micro\">它不是把Token永久压缩，也不是跳过所有Key。区分“不把整张表落显存”与“没有进行这些数学计算”。": {
+      "from": "ブロック処理やオンライン正規化などにより、アテンションのスコア/重み行列全体を低速なVRAMへ長時間書き出すことを避けます。目的は同じアテンション演算であり、浮動小数点の丸めは演算順序によって変わる場合があります。<span class=\"concept-micro\">トークンを永久に圧縮したり、すべてのKeyを省略したりするわけではありません。「表全体をVRAMに書き出さない」と「これらの数学的計算を行っていない」を区別してください。",
+      "to": "ブロック分割とオンライン正規化などにより、完全なアテンションのスコア/重み行列を、遅いVRAMへ長期的に書き込むことを避けます。目標は依然として同じアテンション演算ですが、演算順序によって浮動小数点の丸めが変わる場合があります。<span class=\"concept-micro\">トークンを永久に圧縮することでも、すべてのKeyを飛ばすことでもありません。「表全体をVRAMに書き出さない」ことと、「これらの数学的な計算を行っていない」ことを区別します。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "把逻辑连续的K/V序列存到多个物理块，通过块表定位。它主要改变存储管理与共享方式，不把注意力公式替换成另一种语义算法。<span class=\"concept-micro\">独立例：逻辑位置0—3在物理块7、4—7在块2；逻辑第4个位置不必物理紧跟第3个位置。": {
+      "from": "論理的に連続するK/V系列を複数の物理ブロックに保存し、ブロックテーブルで位置を特定します。主に変えるのはストレージの管理と共有方法であり、アテンションの式を別の意味を持つアルゴリズムに置き換えるものではありません。<span class=\"concept-micro\">独立した例：論理位置0—3は物理ブロック7、4—7はブロック2に置きます。論理的な第4位置が、物理的に第3位置の直後に続く必要はありません。",
+      "to": "論理的に連続するK/V系列を複数の物理ブロックに保存し、ブロックテーブルで場所を特定します。主に変えるのは、ストレージの管理と共有の方法であり、アテンションの式を別の意味のアルゴリズムに置き換えるわけではありません。<span class=\"concept-micro\">独立した例：論理位置0—3は物理ブロック7に、4—7はブロック2にあります。論理的な第4位置が、物理的に第3位置の直後にある必要はありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "把各注意力头输出拼接后，再转换成主网络需要宽度的参数矩阵。它仍是一张系数表，不是softmax的份额，也不是词表输出头Wout。<span class=\"concept-micro\">若两个头各输出2个数，拼接宽度4；右乘形状[4,6]的Wo，可得到6个数以匹配残差宽度。此为独立形状例。": {
+      "from": "各アテンションヘッドの出力を連結してから、主ネットワークに必要な幅に変換するパラメーター行列です。これも係数テーブルであり、softmaxの割合でも語彙出力ヘッドWoutでもありません。<span class=\"concept-micro\">二つのヘッドが各2個の数を出力すると、連結後の幅は4です。形状[4,6]のWoを右から掛けると6個の数になり、残差の幅に合わせられます。これは独立した形状の例です。",
+      "to": "各アテンションヘッドの出力を連結した後、主ネットワークに必要な幅へ変換するパラメーター行列です。これも係数の表であり、softmaxの割合でも、語彙の出力ヘッドWoutでもありません。<span class=\"concept-micro\">二つのヘッドが、それぞれ2個の数を出すなら、連結後の幅は4です。形状[4,6]のWoを右から掛けると、残差の幅に合う6個の数を得られます。これは独立した形状の例です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "TTFT是请求到首个输出Token的延迟；TPOT描述后续每Token时间的统计；p95是某窗口里约95%观测不超过的分位数；吞吐是单位时间完成量。要说明计时起止。<span class=\"concept-micro\">首字快不代表任务快：工具执行可能还要很久。理论峰值吞吐也不等于某个用户的延迟。": {
+      "from": "TTFTはリクエストから最初の出力トークンまでのレイテンシーです。TPOTは後続のトークンあたりの時間の統計、p95は一定期間の観測値の約95%が超えない分位点、スループットは単位時間あたりの完了量を表します。計測の開始点と終了点を示す必要があります。<span class=\"concept-micro\">最初の文字が速くても、タスクが速いとは限りません。ツールの実行に、さらに長い時間がかかる場合があります。理論ピークのスループットも、あるユーザーのレイテンシーとは異なります。",
+      "to": "TTFTは、リクエストから最初の出力トークンまでのレイテンシーです。TPOTは、その後のトークンごとの時間の統計を表します。p95は、ある窓内の観測の約95%が超えない分位数で、スループットは単位時間の完了量です。計時の開始と終了を説明する必要があります。<span class=\"concept-micro\">最初の文字が速くても、タスクが速いとは限りません。ツールの実行は、まだ長くかかる可能性があります。理論ピークのスループットも、あるユーザーのレイテンシーとは異なります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "HBM在此指GPU较大容量的高带宽显存；SRAM相关片上存储通常更小、访问更近。带宽是一段时间能搬多少字节；算术强度是计算量相对于数据搬运量的比值。<span class=\"concept-micro\">独立记账：执行100次运算搬10字节，约10次运算/字节。它不是实际硬件性能测量。": {
+      "from": "ここでのHBMは、GPUの比較的大容量な高帯域VRAMを指します。SRAMに関連するオンチップストレージは通常、より小容量で、より近くからアクセスできます。帯域幅は単位時間に移動できるバイト数、演算強度はデータ移動量に対する計算量の比です。<span class=\"concept-micro\">独立した集計：100回の演算で10バイトを移動すると、約10演算/バイトです。実際のハードウェア性能の測定ではありません。",
+      "to": "ここでHBMは、GPUの大容量で高帯域幅のVRAMを指します。SRAMに関わるオンチップストレージは、通常、より小さく、より近くでアクセスできます。帯域幅は一定時間に動かせるバイト数、演算強度は計算量とデータ移動量の比です。<span class=\"concept-micro\">独立した計上の例：100回の演算で10バイトを動かすなら、約10演算/バイトです。実際のハードウェアの性能測定ではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "这些通常是宿主对会话和工作轮次的划分，不是神经网络的层。Thread可指一条会话，Turn可包含响应一次用户任务所需的多次模型/工具循环；具体边界取决于产品。<span class=\"concept-micro\">不能把“本轮完成”直接等同“所有外部工具都已结束”；需要看实际事件和结果。": {
+      "from": "通常、これらはハーネスがセッションや作業ターンを分ける単位であり、ニューラルネットワークの層ではありません。Threadは一つのセッションを指すことがあり、Turnは一つのユーザータスクへの応答に必要な複数回のモデル/ツールループを含む場合があります。具体的な境界は製品によります。<span class=\"concept-micro\">「このターンが完了した」を「すべての外部ツールが終了した」と、そのまま同一視してはいけません。実際のイベントと結果を見る必要があります。",
+      "to": "これらは通常、ハーネスによる会話や作業ラウンドの区分であり、ニューラルネットワークの層ではありません。Threadは一つの会話を指し、Turnは一回のユーザーのタスクへの応答に必要な、複数のモデル/ツールのループを含む場合があります。具体的な境界は製品によります。<span class=\"concept-micro\">「今回のラウンドが完了」を、「すべての外部ツールが終了」とそのまま同一視してはいけません。実際のイベントと結果を見る必要があります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "SSE是服务端发送事件的文本协议；网络chunk是这次收到的一段字节；delta是某个输出项的增量内容。三者边界不保证重合。一个完整事件也未必意味着完整工具参数。<span class=\"concept-micro\">参数可能先收到{\"path\":\"a，后收到.py\"}；必须组装并等协议规定的完成条件，不能见到片段就执行。": {
+      "from": "SSEはサーバーからイベントを送るテキストプロトコルです。ネットワークのchunkは今回受信したバイトのまとまりで、deltaは出力項目の増分内容です。三者の境界が一致するとは限りません。完全なイベントであっても、ツール引数がすべてそろったとは限りません。<span class=\"concept-micro\">引数として先に{\"path\":\"aを受信し、その後に.py\"}を受信することがあります。組み立てて、プロトコルが定める完了条件を待つ必要があり、断片を受け取っただけで実行してはいけません。",
+      "to": "SSEは、サーバーからイベントを送るテキストのプロトコルです。ネットワークのchunkは、今回受信したバイト列、deltaは、ある出力項目の増分の内容です。三つの境界は、一致する保証がありません。完全なイベント一つも、完全なツール引数とは限りません。<span class=\"concept-micro\">引数は、先に{\"path\":\"a、後で.py\"}を受信するかもしれません。組み立てて、プロトコルで定めた完了条件を待つ必要があり、断片を見ただけで実行してはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "LF是换行字符，CRLF是回车再换行的组合。SSE规定事件行与空行的解释；EventSource是浏览器接收SSE的接口。只解析一种分隔符的教学代码不等于完整协议实现。<span class=\"concept-micro\">实际网络片段可能恰好把CR和LF分开送达，解析器应按已实现的协议规则组装，不能直接把每个网络片段当一条事件。": {
+      "from": "LFは改行文字、CRLFは復帰と改行の組み合わせです。SSEはイベント行と空行の解釈を定め、EventSourceはブラウザーがSSEを受け取るインターフェースです。一種類の区切り文字だけを解析する教育用コードは、プロトコルの完全な実装ではありません。<span class=\"concept-micro\">実際のネットワーク断片では、CRとLFが別々に届く場合もあります。パーサーは実装したプロトコル規則に従って組み立てる必要があり、各ネットワーク断片をそのまま一つのイベントと見なしてはいけません。",
+      "to": "LFは改行文字、CRLFは復帰と改行の組です。SSEはイベント行と空行の解釈を定め、EventSourceはブラウザーでSSEを受信するインターフェースです。一種類の区切りだけを解析する教材のコードは、完全なプロトコル実装とは異なります。<span class=\"concept-micro\">実際のネットワークの断片では、CRとLFがちょうど分かれて届く場合があります。パーサーは、実装したプロトコルの規則に従って組み立てるべきです。ネットワークの各断片を、そのまま一つのイベントとしてはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "JSON-RPC约定怎样用JSON表示方法、参数、标识和结果；stdio使用进程标准输入输出通信；HTTP是另一层网络请求协议。协议名称并不自带权限。<span class=\"concept-micro\">用stdout承载协议消息时，普通调试日志应避免混入该数据流，通常写stderr；否则合法日志也可能破坏消息解析。": {
+      "from": "JSON-RPCは、メソッド・引数・識別子・結果をJSONで表す方法を定めます。stdioはプロセスの標準入出力を使う通信で、HTTPは別の層のネットワークリクエストプロトコルです。プロトコル名自体に権限は付いていません。<span class=\"concept-micro\">stdoutでプロトコルのメッセージを運ぶ場合、通常のデバッグログをそのデータストリームに混ぜず、一般にはstderrに書きます。そうしないと、正当なログでもメッセージ解析を壊すことがあります。",
+      "to": "JSON-RPCは、メソッド・引数・識別子・結果をJSONでどう表すかを定めます。stdioは、プロセスの標準入出力で通信します。HTTPは、別の層のネットワークリクエストのプロトコルです。プロトコル名そのものに権限は付いていません。<span class=\"concept-micro\">stdoutでプロトコルメッセージを運ぶ場合、通常のデバッグログをそのデータストリームに混ぜず、通常はstderrへ書くべきです。そうしないと、正当なログでも、メッセージの解析を壊す可能性があります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "退避让重试间隔增加；jitter加入随机扰动避免请求同时重试。取消信号是请求停止的通知，不自动撤回已经提交的外部副作用。<span class=\"concept-micro\">只读请求暂时连接失败可重试；写请求结果未知时先核验。不能用“重试更久”代替权限或幂等设计。": {
+      "from": "バックオフは再試行の間隔を長くし、jitterはリクエストが同時に再試行しないようにランダムな揺らぎを加えます。キャンセルシグナルは停止を要求する通知であり、コミット済みの外部の副作用を自動的に取り消すものではありません。<span class=\"concept-micro\">読み取り専用のリクエストで一時的に接続が失敗した場合は再試行できます。書き込みリクエストの結果が不明なら、先に検証します。「より長く再試行すること」で権限や冪等性の設計を置き換えてはいけません。",
+      "to": "バックオフは、再試行の間隔を長くします。jitterは、ランダムな揺らぎを加え、一斉の再試行を避けます。キャンセル信号は、停止を要求する通知であり、すでに確定した外部の副作用を自動で撤回するものではありません。<span class=\"concept-micro\">読み取り専用のリクエストの、一時的な接続失敗は再試行できます。書き込みリクエストの結果が不明なら、先に確認します。「より長い再試行」を、権限や冪等性の設計の代わりにしてはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "在能力加载场景，Skill是一组可复用指导与资源；JIT表示需要时再加载，不是必然指编译器即时编译。触发描述帮助模型判断适用性，不自动授予工具权限。<span class=\"concept-micro\">应先判断任务需不需要某技能，再读详细内容；已加载技能不等于它的要求已实际执行。": {
+      "from": "能力を読み込む場面で、スキルは再利用可能な指針とリソースの集まりです。JITは必要なときに読み込むことを意味し、必ずしもコンパイラーの実行時コンパイルを指しません。トリガーの説明は、モデルが適用可能性を判断する助けになりますが、ツールの権限を自動的に付与するものではありません。<span class=\"concept-micro\">まずタスクにそのスキルが必要かを判断し、その後で詳細を読みます。スキルを読み込んだことは、その要件を実際に実行したことを意味しません。",
+      "to": "機能を読み込む場面で、Skillは再利用できる指針とリソースの集合です。JITは必要になってからの読み込みであり、必ずしもコンパイラーの実行時コンパイルを指しません。起動条件の説明は、モデルによる適用性の判断を助けますが、ツールの権限を自動的に与えるものではありません。<span class=\"concept-micro\">まず、タスクにそのスキルが必要かを判断してから、詳細を読むべきです。読み込み済みのスキルでも、その要件が実際に実行されたとは限りません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "I在矩阵公式里通常是单位矩阵：对角线为1，其他位置为0。尺寸合适时，向量或矩阵乘I保持数值不变。Wq=Wk=I是人为选择的特例，不能推断真实模型的投影都相同。<span class=\"concept-micro\">独立微例：I=[[1,0],[0,1]]，[3,-2]I=[3,-2]。这里I不是字母i表示的位置下标。": {
+      "from": "行列の式にあるIは、通常、対角成分が1で、ほかが0の単位行列です。次元が合っていれば、ベクトルや行列にIを掛けても値は変わりません。Wq=Wk=Iは人為的に選んだ特殊な例であり、実際のモデルの射影がすべて同じだとは推論できません。<span class=\"concept-micro\">独立した小例：I=[[1,0],[0,1]]、[3,-2]I=[3,-2]です。ここでのIは、位置の添字を表す文字iではありません。",
+      "to": "行列の式で、Iは通常、単位行列です。対角が1、他の位置が0です。寸法が適切なら、ベクトルや行列にIを掛けても値は不変です。Wq=Wk=Iは、人が選んだ特例であり、実際のモデルの射影がすべて同じだとは推論できません。<span class=\"concept-micro\">独立した小さな例：I=[[1,0],[0,1]]なら、[3,-2]I=[3,-2]です。ここでIは、位置の添字を表す文字iではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "BM25是词项检索打分公式。常见记号N是文档总数，df是含该词的文档数，tf是当前文档词频，|D|是当前文档长度，avgdl是平均长度；k₁和b是词频饱和与长度修正的设置。<span class=\"concept-micro\">k₁不是Key向量k₁，b也不是神经网络偏置。分数只用于给候选排序，不能把8.2解释为82%正确率。": {
+      "from": "BM25は語の検索スコアを計算する式です。よく使う記号では、Nは文書総数、dfはその語を含む文書数、tfは現在の文書での語の頻度、|D|は現在の文書長、avgdlは平均文書長です。k₁とbは語の頻度の飽和と文書長の補正の設定です。<span class=\"concept-micro\">k₁はKeyベクトルk₁ではなく、bもニューラルネットワークのバイアスではありません。スコアは候補の順位付けだけに使い、8.2を82%の正答率と解釈してはいけません。",
+      "to": "BM25は、語による検索のスコア式です。一般的な記号では、Nは文書の総数、dfはその語を含む文書数、tfは現在の文書での語の出現頻度、|D|は現在の文書の長さ、avgdlは平均の長さです。k₁とbは、語の出現頻度の飽和と、長さの補正の設定です。<span class=\"concept-micro\">k₁はKeyベクトルのk₁ではなく、bもニューラルネットワークのバイアスではありません。スコアは候補の順位付けだけに使い、8.2を82%の正答率と解釈してはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "ANN在这里指近似最近邻搜索，不是泛指人工神经网络。HNSW是一种用分层近邻图缩小搜索范围的结构；参数影响召回、速度和内存。<span class=\"concept-micro\">查得快不代表一定找全精确最近邻；ANN召回率也不等于最终回答正确率。": {
+      "from": "ここでのANNは近似最近傍検索を指し、人工ニューラルネットワークの総称ではありません。HNSWは階層的な近傍グラフで検索範囲を狭める構造です。パラメーターは再現率、速度、メモリに影響します。<span class=\"concept-micro\">速く検索できても、厳密な最近傍を必ずすべて見つけられるとは限りません。ANNの再現率は、最終回答の正答率とも異なります。",
+      "to": "ここでANNは、近似最近傍探索を指し、人工ニューラルネットワークの総称ではありません。HNSWは、階層的な近傍グラフで探索範囲を絞る構造です。パラメーターは、再現率・速度・メモリに影響します。<span class=\"concept-micro\">速く見つかっても、厳密な最近傍を必ずすべて見つけるとは限りません。ANNの再現率も、最終回答の正答率とは異なります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "TF计某词在当前文档出现次数；DF计包含它的文档数；IDF根据全库统计降低常见词、提高较罕见词的区分贡献。三者是统计量，不是模型的学习率。<span class=\"concept-micro\">10篇文档只有2篇含某词时DF=2；该词在其中一篇出现3次，该篇TF=3。两个数字不能互换。": {
+      "from": "TFは現在の文書での語の出現回数、DFはその語を含む文書数を数えます。IDFはコーパス全体の統計から、頻出語の寄与を下げ、比較的まれな語の識別への寄与を高めます。三つとも統計量であり、モデルの学習率ではありません。<span class=\"concept-micro\">10文書のうち2文書だけがある語を含む場合、DF=2です。その語が片方の文書に3回現れるなら、その文書のTF=3です。この二つの数は置き換えられません。",
+      "to": "TFは、ある語の現在の文書内の出現回数、DFは、その語を含む文書数を数えます。IDFは、集合全体の統計に基づき、一般的な語を弱め、比較的珍しい語の識別への寄与を高めます。三つは統計量であり、モデルの学習率ではありません。<span class=\"concept-micro\">10件の文書中、ある語を含むのが2件だけなら、DF=2です。そのうち一件に3回現れるなら、その文書のTF=3です。二つの数は、置き換えられません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "对比学习通过目标函数让配对表示更易匹配、非配对表示相对区分。CLIP式训练学习图文关联，不自动提供完整聊天生成能力或可靠桌面操作。<span class=\"concept-micro\">同一图像与正确描述可作为正对，其他描述作为对照；相关性训练不等于每次生成结论都事实正确。": {
+      "from": "対照学習は目的関数を通じて、対になる表現を一致しやすくし、対でない表現を相対的に区別します。CLIP型の学習は画像とテキストの関連を学びますが、完全なチャット生成能力や信頼できるデスクトップ操作を自動的に得るわけではありません。<span class=\"concept-micro\">同じ画像と正しい説明を正の対、ほかの説明を対照にできます。関連を学習しても、生成する結論が毎回事実として正しいことにはなりません。",
+      "to": "対照学習は、目的関数により、対応する表現を照合しやすくし、対応しない表現を相対的に区別します。CLIP型の学習は、画像とテキストの関連を学びますが、完全なチャット生成能力や、信頼できるデスクトップ操作を自動的に提供するものではありません。<span class=\"concept-micro\">同じ画像と正しい説明を正例の組とし、他の説明を対照にできます。相関を学習しても、生成する結論が毎回事実として正しいこととは異なります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "RRF对某文档在每条召回路径上的排名r贡献1/(c+r)，再相加。c是平滑常数，r通常从1开始；没进入某条路径的候选不凭空获得该路贡献。<span class=\"concept-micro\">独立例：c=10，某文档两路排名1、3，得1/11+1/13约0.167832。不是把BM25和余弦的原始分数相加。": {
+      "from": "RRFは、各候補取得経路での文書の順位rから1/(c+r)の寄与を求め、合計します。cは平滑化定数で、rは通常1から始まります。ある経路に入らなかった候補は、その経路の寄与を勝手に得ることはありません。<span class=\"concept-micro\">独立した例：c=10で、ある文書の二つの経路での順位が1、3なら、1/11+1/13で約0.167832です。BM25とコサインの生スコアを足すのではありません。",
+      "to": "RRFは、ある文書の各候補取得経路での順位rに対し、1/(c+r)を寄与させ、足し合わせます。cは平滑化定数で、rは通常1から始まります。ある経路に入らなかった候補は、その経路の寄与を何もないところから得ません。<span class=\"concept-micro\">独立した例：c=10で、ある文書の二経路での順位が1・3なら、1/11+1/13で、約0.167832です。BM25とコサインの元のスコアを足すわけではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "双编码器分别编码查询与文档，可以预存文档向量；交叉编码器共同处理一对查询与文档，做更细判断，通常每对都要算。重排仅排序已经召回的候选。<span class=\"concept-micro\">遗漏的正确文档不在候选集内，再强的重排器也不能直接把它排第一；需要先补召回。": {
+      "from": "デュアルエンコーダーはクエリと文書を別々に符号化するので、文書ベクトルを事前に保存できます。クロスエンコーダーはクエリと文書の対を一緒に処理して細かく判断するため、通常は対ごとに計算が必要です。リランキングが並べ替えるのは、すでに取得した候補だけです。<span class=\"concept-micro\">取り逃した正しい文書は候補集合にないため、強力なリランカーでも直接最上位にできません。まず候補取得を補う必要があります。",
+      "to": "デュアルエンコーダーは、クエリと文書を別々に符号化し、文書ベクトルを事前保存できます。クロスエンコーダーは、クエリと文書の組を一緒に処理し、より細かく判断します。通常は組ごとに計算が必要です。リランキングは、取得済みの候補だけを並べ替えます。<span class=\"concept-micro\">漏れた正解文書が候補集合になければ、どれほど強いリランカーも、直接一位にはできません。まず候補取得を補う必要があります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "ColBERT类方法为查询和文档保留多个Token向量，再做后期交互。常见MaxSim让每个查询Token取与文档Token的最大相似度，再汇总。<span class=\"concept-micro\">它不是“整篇文档只有一个向量”的双编码检索，也不是生成模型每层的自注意力输出。": {
+      "from": "ColBERT系の手法は、クエリと文書に複数のトークンベクトルを保持し、後段で相互作用を計算します。一般的なMaxSimでは、各クエリトークンについて文書トークンとの最大類似度を求め、集計します。<span class=\"concept-micro\">「文書全体にベクトルが一つだけ」のデュアルエンコーダー検索でも、生成モデルの各層の自己アテンション出力でもありません。",
+      "to": "ColBERT系の方法は、クエリと文書に複数のトークンベクトルを残し、後段で相互作用を計算します。一般的なMaxSimは、各クエリトークンについて、文書トークンとの最大類似度を取り、集計します。<span class=\"concept-micro\">「文書全体にベクトルが一つだけ」のデュアルエンコーダー検索でも、生成モデルの各層の自己アテンションの出力でもありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "用模型生成一份假设性的回答或文档，将其表示用于检索。这份生成文本是寻找证据的辅助，不是已经找到的事实来源。<span class=\"concept-micro\">模型猜“可能是缓存失效”，可以据此扩大搜索；没有真实证据前不能写成“缓存失效已确认”。": {
+      "from": "モデルで仮説的な回答や文書を生成し、その表現を検索に使います。生成したテキストは証拠を探す補助であり、発見済みの事実の出典ではありません。<span class=\"concept-micro\">モデルが「キャッシュの失効かもしれない」と推測したら、それを手掛かりに検索を広げられます。実際の証拠がないうちは、「キャッシュの失効を確認した」と書いてはいけません。",
+      "to": "モデルで仮説的な回答や文書を生成し、その表現を検索に使います。この生成テキストは、証拠を探すための補助であり、すでに見つかった事実の出典ではありません。<span class=\"concept-micro\">モデルが「キャッシュの失効かもしれない」と推測したら、それを手がかりに検索を広げられます。実際の証拠を得る前に、「キャッシュの失効を確認済み」と書いてはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "GraphRAG类方法利用实体关系及社区等组织信息；RAPTOR利用分层聚类与摘要支持检索。它们引入额外派生信息，也引入更新、来源和错误传播问题。<span class=\"concept-micro\">源文档改变时，旧摘要或图中的关系可能过期。改了原文并不证明所有派生索引已同步更新。": {
+      "from": "GraphRAG系の手法は、エンティティの関係やコミュニティなどの構造情報を使います。RAPTORは階層的クラスタリングと要約を検索に利用します。これらは派生情報を増やすと同時に、更新、出所、誤りの伝播の問題も生じさせます。<span class=\"concept-micro\">元の文書が変わると、古い要約やグラフの関係が失効する可能性があります。原文を変更しても、すべての派生インデックスが同期済みとは言えません。",
+      "to": "GraphRAG系の方法は、エンティティの関係やコミュニティーなどで情報を組織します。RAPTORは、階層的なクラスタリングと要約で検索を支援します。追加の派生情報を持ち込むとともに、更新・出所・誤りの伝播の問題も持ち込みます。<span class=\"concept-micro\">元の文書が変わると、古い要約やグラフの関係は、期限切れかもしれません。原文を変更したことは、派生したインデックスがすべて同期して更新された証拠ではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "TTL是存储或缓存的到期设置；有效时间指事实何时适用；记录时间指系统何时知道。到期策略不能代替事实和来源核验。<span class=\"concept-micro\">10月10日才读到10月1日生效的规则：业务有效时间从1日算，系统知道这件事的时间从10日算。": {
+      "from": "TTLはストレージやキャッシュの有効期限の設定です。有効時間は事実がいつ適用されるか、記録時間はシステムがいつ知ったかを指します。有効期限のポリシーは、事実と出典の確認の代わりにはなりません。<span class=\"concept-micro\">10月10日に、10月1日から有効なルールを初めて読んだ場合、業務上の有効時間は1日から、システムがこの事実を知った時間は10日から数えます。",
+      "to": "TTLはストレージやキャッシュの有効期限の設定、有効時間は事実が適用される時刻、記録時間はシステムが知った時刻です。有効期限の方針は、事実と出所の確認の代わりにはなりません。<span class=\"concept-micro\">10月1日から有効な規則を10月10日に初めて読んだ場合、業務上の有効時間は1日から、システムが知った時刻は10日から数えます。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "DAG是有方向且没有环的任务依赖图。箭头A→B表示B依赖A完成；关键路径是在给定任务时长与依赖下决定最早完成时间的最长依赖链。<span class=\"concept-micro\">独立例：A需2秒，B/C依赖A分别需3/5秒且可并行，则A后两者完成至少7秒，不是把2+3+5=10当墙钟时间。": {
+      "from": "DAGは、有向で閉路のないタスクの依存関係グラフです。矢印A→Bは、BがAの完了に依存することを示します。クリティカルパスは、タスクの所要時間と依存関係の下で最も早い完了時刻を決める、最長の依存経路です。<span class=\"concept-micro\">独立した例：Aは2秒、Aに依存するB/Cはそれぞれ3/5秒で、並列実行できます。Aの後に両方が完了するまで少なくとも7秒であり、2+3+5=10を実経過時間としてはいけません。",
+      "to": "DAGは、向きがあり、閉路のないタスクの依存関係グラフです。矢印A→Bは、BがAの完了に依存することを表します。クリティカルパスは、与えられたタスクの時間と依存関係の下で、最も早い完了時刻を決める、最長の依存チェーンです。<span class=\"concept-micro\">独立した例：Aに2秒かかり、Aに依存するB/Cにそれぞれ3/5秒かかり、並列に実行できるなら、Aと両方の完了には、少なくとも7秒かかります。2+3+5=10を実時間とするわけではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "WAL是先记录日志再按协议更新数据的思路；fsync请求同步文件相关数据到存储；原子重命名在支持条件下使读者不见半截替换。可见性与崩溃后的持久性不是同一保证。<span class=\"concept-micro\">一个文件rename成功，不意味着多个文件和数据库一起提交；持久性还需核对平台、目录及存储行为。": {
+      "from": "WALは、先にログを記録してからプロトコルに従ってデータを更新する考え方です。fsyncはファイルに関連するデータをストレージへ同期するよう要求し、アトミックな名前変更は対応する条件下で、読者が置き換え途中の内容を見ることを防ぎます。可視性と、クラッシュ後の永続性は同じ保証ではありません。<span class=\"concept-micro\">一つのファイルのrenameが成功しても、複数のファイルとデータベースが一緒にコミットされたことにはなりません。永続性については、プラットフォーム、ディレクトリ、ストレージの振る舞いも確認する必要があります。",
+      "to": "WALは、先にログを記録し、その後でプロトコルに従ってデータを更新する考え方です。fsyncは、ファイルに関わるデータのストレージへの同期を要求します。アトミックな名前変更は、対応する条件の下で、読者に半分の置換が見えないようにします。可視性と、クラッシュ後の永続性は、同じ保証ではありません。<span class=\"concept-micro\">一つのファイルのrenameの成功は、複数のファイルとデータベースが一緒にコミットしたことを意味しません。永続性には、プラットフォーム・ディレクトリ・ストレージの振る舞いの確認も必要です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "CAS是比较预期版本/值仍匹配后再更新的受控操作。TOCTOU是检查与使用之间发生变化的竞态：分开的“先看版本再写”不自动等价原子CAS。<span class=\"concept-micro\">读到版本7生成补丁，提交时已是8，应拒绝直接覆盖并重新处理；比较与写入间也要防并发插入。": {
+      "from": "CASは、期待したバージョン/値との一致を比較してから更新する制御された操作です。TOCTOUは、確認と使用の間に状態が変わる競合です。「バージョンを見てから書く」という別々の操作は、アトミックなCASと自動的に同等にはなりません。<span class=\"concept-micro\">バージョン7を読んでパッチを作成しても、提出時に8になっていたら、直接の上書きを拒否して処理し直す必要があります。比較と書き込みの間の並行操作の割り込みも防ぐ必要があります。",
+      "to": "CASは、期待するバージョン/値がまだ一致するか比較してから更新する、制御された操作です。TOCTOUは、確認と使用の間で変化が起きる競合です。分離した「版を見てから書く」は、自動的にアトミックなCASと等価にはなりません。<span class=\"concept-micro\">バージョン7を読んでパッチを作り、コミット時には8になっていたら、そのままの上書きを拒否して処理し直すべきです。比較と書き込みの間も、並行した割り込みを防ぐ必要があります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "事务把一组数据库操作放在规定的提交边界内。ACID分别指原子性、一致性、隔离性、持久性；实际保证还依赖隔离级别、配置及资源边界。<span class=\"concept-micro\">数据库事务提交不代表另一个邮件服务也同步提交。把两种操作写进同一函数，并不会自动构成跨系统事务。": {
+      "from": "トランザクションは、一群のデータベース操作を定められたコミットの境界内に置きます。ACIDはそれぞれ、アトミック性・整合性・分離性・永続性を指します。実際の保証は、分離レベル、設定、リソースの境界にも依存します。<span class=\"concept-micro\">データベースのトランザクションがコミットされても、別のメールサービスが同期してコミットされたことにはなりません。二種類の操作を同じ関数に書くだけで、システムをまたぐトランザクションにはなりません。",
+      "to": "トランザクションは、データベース操作の群を、定めたコミット境界にまとめます。ACIDは、それぞれ原子性・一貫性・分離性・永続性を指します。実際の保証は、分離レベル・設定・リソースの境界にも依存します。<span class=\"concept-micro\">データベースのトランザクションのコミットは、別のメールサービスも同時にコミットしたことを意味しません。二種類の操作を同じ関数に書いても、自動的にシステム間のトランザクションにはなりません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "pass@k类指标通常关心k次尝试至少一次成功；pass^k类指标强调多次全成功。具体估计口径看基准，不能把一次成功后停止与每次都可靠混为一谈。<span class=\"concept-micro\">独立同概率假设p=0.8，3次至少一成=0.992，3次全成=0.512。真实任务相关或难度不同则需另算。": {
+      "from": "pass@k系の指標は通常、k回の試行で少なくとも一回成功するかを見ます。pass^k系の指標は、複数回すべての成功を重視します。具体的な推定方法はベンチマークによって異なり、一回成功したら停止することと、毎回確実に成功することを混同してはいけません。<span class=\"concept-micro\">独立で同一確率p=0.8と仮定すると、3回で少なくとも一回成功する確率=0.992、3回すべて成功する確率=0.512です。実際のタスクに相関や難易度の違いがある場合は、別に計算する必要があります。",
+      "to": "pass@k系の指標は、通常、k回の試行で少なくとも一回の成功に注目し、pass^k系の指標は、複数回すべての成功を重視します。具体的な推定の定義はベンチマークによります。一回成功したら停止することと、毎回信頼できることを混同してはいけません。<span class=\"concept-micro\">独立した、同じ確率という仮定でp=0.8なら、3回で少なくとも一回成功=0.992、3回すべて成功=0.512です。実際のタスクに相関や難度の差があれば、別に計算する必要があります。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "n!表示1到n整数连乘，0!=1；C(n,k)=n!/(k!(n-k)!)表示从n个不同对象中无放回选k个且不计顺序的数量。它不是模型置信度C。<span class=\"concept-micro\">独立例：C(4,2)=6。n=10、c=3、k=2时，1−C(7,2)/C(10,2)=24/45约0.533333。": {
+      "from": "n!は1からnまでの整数の積、0!=1です。C(n,k)=n!/(k!(n-k)!)は、異なるn個から重複なしでk個を選び、順序を区別しない場合の数を表します。モデルの信頼度Cではありません。<span class=\"concept-micro\">独立した例：C(4,2)=6。n=10、c=3、k=2なら、1−C(7,2)/C(10,2)=24/45は約0.533333です。",
+      "to": "n!は、1からnまでの整数の積を表し、0!=1です。C(n,k)=n!/(k!(n-k)!)は、異なるn個の対象から、重複なしでk個を選び、順序を数えない組み合わせの数です。モデルの信頼度Cではありません。<span class=\"concept-micro\">独立した例：C(4,2)=6です。n=10、c=3、k=2なら、1−C(7,2)/C(10,2)=24/45で、約0.533333です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "二项模型常用于固定次数独立成功/失败试验；标准误差描述估计量的波动尺度；Wilson是一种比例区间构造。McNemar关注配对分类结果中两种方向的不一致。<span class=\"concept-micro\">样本依赖、任务难度混合或挑选题目会改变可解释范围；统计公式不是“成绩提高必定来自这个改动”的证据。": {
+      "from": "二項モデルは、回数が固定された独立な成功/失敗の試行によく使います。標準誤差は推定量の変動の尺度を表し、Wilsonは比率の区間を構成する一つの方法です。McNemarは、対応のある分類結果で、二方向に生じる不一致に着目します。<span class=\"concept-micro\">標本の依存関係、タスク難易度の混在、問題の選別によって、解釈できる範囲は変わります。統計式は「成績の向上は必ずこの変更によるものだ」という証拠にはなりません。",
+      "to": "二項モデルは、固定回数の独立した成功/失敗の試行によく使います。標準誤差は推定量の変動の尺度を表し、Wilsonは割合の区間を構成する方法の一つです。McNemarは、対応する分類結果での、二方向の不一致に注目します。<span class=\"concept-micro\">サンプル間の依存・タスク難度の混在・問題の選別は、解釈できる範囲を変えます。統計の式は、「成績の向上が必ずこの変更による」とする証拠ではありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "SLI是实际测量的服务水平指标；SLO是该指标的目标；错误预算是相应目标允许的失败空间。它们是服务运行管理对象，不是模型参数。<span class=\"concept-micro\">“API返回200”可能不是用户成功；有些业务应以限定时间内正确完成任务的比例定义指标。": {
+      "from": "SLIは実際に測定するサービスレベルの指標、SLOはその指標の目標、エラーバジェットはその目標が許容する失敗の範囲です。これらはサービス運用の管理対象であり、モデルのパラメーターではありません。<span class=\"concept-micro\">「APIが200を返す」ことは、ユーザーの成功とは限りません。業務によっては、限られた時間内にタスクを正しく完了した割合で指標を定義する必要があります。",
+      "to": "SLIは実際に測定するサービス水準の指標、SLOはその指標の目標、エラーバジェットは、対応する目標が許容する失敗の余地です。これらはサービス運用の管理対象であり、モデルのパラメーターではありません。<span class=\"concept-micro\">「APIが200を返す」は、ユーザーの成功ではないかもしれません。業務によっては、時間内にタスクを正しく完了する割合で、指標を定義するべきです。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "队列记账中，L表示平均在系统中的任务数，λ是平均到达率，W是平均停留时间；在稳定等适用条件下L=λW。这里W不是投影矩阵，L不是模型层数。<span class=\"concept-micro\">独立例：每秒平均到达2项、平均停留3秒，则平均在系统约6项；不能拿瞬时尖峰直接替代长期平均。": {
+      "from": "キューの集計で、Lはシステム内の平均タスク数、λは平均到着率、Wは平均滞在時間です。定常状態などの適用条件の下でL=λWが成り立ちます。ここでWは投影行列、Lはモデルの層数ではありません。<span class=\"concept-micro\">独立した例：平均到着率が毎秒2件、平均滞在時間が3秒なら、システム内は平均約6件です。一時的なピークを長期平均の代わりにしてはいけません。",
+      "to": "待ち行列の計上では、Lはシステム内の平均タスク数、λは平均到着率、Wは平均滞在時間を表します。安定しているなどの適用条件の下で、L=λWです。ここのWは射影行列ではなく、Lはモデルの層数ではありません。<span class=\"concept-micro\">独立した例：毎秒平均2件が到着し、平均3秒滞在するなら、システム内には平均約6件あります。瞬間的なピークを、そのまま長期平均の代わりに使ってはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "SAE是稀疏自编码器，用较少活跃特征的组合重构模型激活。激活是本次计算的中间数值，不是完整自然语言推理记录。重构成功不自动证明某特征具有唯一因果含义。<span class=\"concept-micro\">观察某特征与输出一起变化是线索；要判断因果，还需控制其他条件、干预与对照。": {
+      "from": "SAEは疎なオートエンコーダーで、少数の活性化した特徴の組み合わせからモデルの活性値を再構成します。活性値は今回の計算の中間数値であり、自然言語による推論の完全な記録ではありません。再構成の成功は、ある特徴に一意の因果的な意味があることを自動的には証明しません。<span class=\"concept-micro\">ある特徴と出力が一緒に変化する観察は手掛かりです。因果を判断するには、ほかの条件の統制、介入、対照も必要です。",
+      "to": "SAEはスパースオートエンコーダーで、少数の活性な特徴の組み合わせにより、モデルの活性化を再構築します。活性化は今回の計算の中間値であり、完全な自然言語の推論記録ではありません。再構築の成功は、ある特徴の唯一の因果的な意味を自動で証明するものではありません。<span class=\"concept-micro\">ある特徴と出力が一緒に変わるという観察は、手がかりです。因果を判断するには、他の条件の制御・介入・対照も必要です。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "阅读数学式之前，先分清五类对象</a><a href=\"#reading-objects-2\">先用一句中文读完XW，再看矩阵尺寸</a><a href=\"#reading-objects-3\">大小写、下标、上标怎样读</a><a href=\"#reading-objects-4\">不能把重复出现的字母永久固定成一个意思</a><a href=\"#reading-objects-5\">函数名不是另一个神秘数据表</a><a href=\"#reading-objects-6\">程序里的数据、请求与状态也需要身份</a><a href=\"#reading-objects-7\">从基础到系统的依赖路径</a><a href=\"#concept-index\">概念索引：对象、来源、用途与独立微例</a><a href=\"#sources\">定义的依据与边界": {
+      "from": "数式を読む前に、五種類の対象を区別する</a><a href=\"#reading-objects-2\">まずXWを中国語の一文で読み、その後、行列のサイズを見る</a><a href=\"#reading-objects-3\">大文字・小文字・添字・上付き文字の読み方</a><a href=\"#reading-objects-4\">繰り返し現れる文字を、永久に同じ意味に固定しない</a><a href=\"#reading-objects-5\">関数名は、別の不思議なデータテーブルではない</a><a href=\"#reading-objects-6\">プログラム内のデータ・リクエスト・状態にも同一性が必要</a><a href=\"#reading-objects-7\">基礎からシステムまでの依存経路</a><a href=\"#concept-index\">概念の索引：対象・出所・用途・独立した小さな例</a><a href=\"#sources\">定義の根拠と限界",
+      "to": "数式を読む前に、五種類の対象を区別する</a><a href=\"#reading-objects-2\">まずXWを中国語の一文で読み、その後、行列のサイズを見る</a><a href=\"#reading-objects-3\">大文字・小文字・添字・上付き文字の読み方</a><a href=\"#reading-objects-4\">繰り返し現れる文字を、永続的に一つの意味へ固定しない</a><a href=\"#reading-objects-5\">関数名は、別の謎めいたデータ表ではない</a><a href=\"#reading-objects-6\">プログラムのデータ・リクエスト・状態にも識別が必要</a><a href=\"#reading-objects-7\">基礎からシステムへの依存関係の経路</a><a href=\"#concept-index\">概念インデックス：対象・出所・用途・独立した小さな例</a><a href=\"#sources\">定義の根拠と限界",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "在LayerNorm式子中，γ是一排可学习乘法系数，β是一排可学习加法系数；ε是人为设置的小正数，放在分母相关项中避免除零等问题。计算得到的均值μ、方差σ²又是本次数据的统计量。<span class=\"concept-micro\">γ=1、β=0常表示每个特征都用1和0，不是一份输入词义。DPO里的β另指目标函数系数，不能套用这里的意思。": {
+      "from": "LayerNormの式では、γは学習可能な乗算係数の列、βは学習可能な加算係数の列です。εは人為的に設定する小さな正数で、分母に関わる項に置き、ゼロ除算などを防ぎます。計算で得る平均μと分散σ²は、今回のデータの統計量です。<span class=\"concept-micro\">γ=1、β=0は通常、各特徴に1と0を使うことを表し、入力の語義ではありません。DPOのβは別の目的関数の係数を指すため、ここの意味を当てはめてはいけません。",
+      "to": "LayerNormの式では、γは学習可能な乗算係数の列、βは学習可能な加算係数の列です。εは、人が設定する小さい正数で、ゼロ除算などを避けるため、分母に関わる項に置きます。計算で得る平均μと分散σ²は、今回のデータの統計量です。<span class=\"concept-micro\">γ=1、β=0は、通常、各特徴に1と0を使うことであり、入力された語義ではありません。DPOのβは、別に目的関数の係数を表し、ここの意味を当てはめてはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "语义记忆保存事实，情景记忆保存经历，程序性记忆保存有条件的方法；工作记忆服务当前任务。CoALA是分析这类认知架构的框架，MemGPT研究有限上下文与外部存储的组织。<span class=\"concept-micro\">“p7补丁漏测失败”是经历；“当前需支持Windows”是事实；“改路径规则时检查分隔符”是有条件流程，不可直接升级成所有任务都跑全量测试。": {
+      "from": "意味記憶は事実、エピソード記憶は経験、手続き記憶は条件付きの方法を保存し、作業記憶は現在のタスクに使います。CoALAはこの種の認知アーキテクチャを分析する枠組みで、MemGPTは限られたコンテキストと外部ストレージの構成を研究しています。<span class=\"concept-micro\">「p7のパッチがテスト漏れで失敗した」は経験、「現在Windowsへの対応が必要」は事実、「パスの規則を変えるときは区切り文字を確認する」は条件付きの手順です。すべてのタスクで全テストを実行する規則へ、そのまま一般化してはいけません。",
+      "to": "意味記憶は事実、エピソード記憶は経験、手続き記憶は条件付きの方法を保存します。作業記憶は現在のタスクに使います。CoALAは、この種の認知アーキテクチャを分析する枠組みで、MemGPTは有限のコンテキストと外部ストレージの構成を研究します。<span class=\"concept-micro\">「p7パッチはテスト漏れで失敗した」は経験、「現在Windowsへの対応が必要」は事実、「パスの規則を変えるとき、区切り文字を確認する」は条件付きの手順です。すべてのタスクで全テストを行う規則へ、そのまま昇格させてはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "Handoff是把控制权交给另一个Agent；agent-as-tool把子Agent当作可调用组件，结果返回当前控制者。Orchestrator是负责分配与整合的协调程序或Agent。<span class=\"concept-micro\">委派时需要任务、边界、证据和完成条件；不要求把主会话所有历史照搬过去。": {
+      "from": "Handoffは制御権を別のエージェントに渡すことです。agent-as-toolはサブエージェントを呼び出し可能な部品として扱い、その結果を現在の制御主体に返します。Orchestratorは、割り当てと統合を担当する調整プログラムまたはエージェントです。<span class=\"concept-micro\">委派にはタスク・境界・証拠・完了条件が必要ですが、メインのセッションの全履歴をそのまま渡す必要はありません。",
+      "to": "Handoffは、別のエージェントへの制御権の引き渡しです。agent-as-toolは、サブエージェントを呼び出せる構成要素として扱い、現在の制御者に結果を返します。Orchestratorは、割り当てと統合を担う調整プログラムやエージェントです。<span class=\"concept-micro\">委任には、タスク・境界・証拠・完了条件が必要です。主セッションの履歴全体を、そのまま渡す必要はありません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "精确率看返回结果中有多少相关；召回率看应找相关中找到了多少；MRR平均第一个正确项的排名倒数；nDCG考虑相关程度和排序位置并相对理想排序归一化。<span class=\"concept-micro\">独立例：应找5篇，返回4篇其中3篇相关，精确率3/4，召回率3/5。不要把这两个分母互换。": {
+      "from": "適合率は返した結果のうち関連するものの割合、再現率は探すべき関連項目のうち発見したものの割合です。MRRは最初の正しい項目の順位の逆数を平均します。nDCGは関連度と順位を考慮し、理想的な順位に対して正規化します。<span class=\"concept-micro\">独立した例：探すべき文書が5件で、返した4件のうち3件が関連する場合、適合率は3/4、再現率は3/5です。この二つの分母を入れ替えてはいけません。",
+      "to": "適合率は返した結果のうち関連する割合、再現率は見つけるべき関連項目のうち見つけた割合を見ます。MRRは、最初の正解項目の順位の逆数の平均です。nDCGは、関連の程度と順位を考慮し、理想的な順位に対して正規化します。<span class=\"concept-micro\">独立した例：見つけるべき文書が5件、返した文書が4件で、そのうち3件が関連するなら、適合率は3/4、再現率は3/5です。二つの分母を入れ替えてはいけません。",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u28"
+    },
+    "KL散度：有方向的分布差异</a> <a href=\"#concept-lora\">LoRA、低秩及r</a> <a href=\"#concept-quantization\">量化、scale与zero point</a> <a href=\"#concept-dtypes\">FP32、FP16、BF16：存储数值的格式</a> <a href=\"#concept-mixed\">混合精度、loss scaling与主权重</a> <a href=\"#concept-checkpoint\">checkpoint：必须看保存的对象</a> <a href=\"#concept-cache\">KV Cache与Prompt Cache</a> <a href=\"#concept-prefill\">Prefill / Decode：两种计算阶段</a> <a href=\"#concept-flash\">FlashAttention：改变中间数据存取方式</a> <a href=\"#concept-paged\">PagedAttention：分页管理K/V存储</a> <a href=\"#concept-memory-hardware\">HBM、SRAM与带宽</a> <a href=\"#concept-flops\">FLOPs与FLOP/s：数量与速率</a> <a href=\"#concept-parallel\">DP、TP、PP、ZeRO与FSDP</a> <a href=\"#concept-temperature\">temperature / τ：生成分布的温度</a> <a href=\"#concept-topk\">Top-k、Top-p与重新归一化</a> <a href=\"#concept-speculative\">推测解码：草稿与目标验证</a> <a href=\"#concept-harness\">Harness / 宿主程序</a> <a href=\"#concept-api\">API、SDK与调用边界</a> <a href=\"#concept-schema\">Schema与Structured Outputs</a> <a href=\"#concept-sse\">SSE、chunk、delta：不同的分片层": {
+      "from": "KLダイバージェンス：方向を持つ分布の差</a> <a href=\"#concept-lora\">LoRA・低ランク・r</a> <a href=\"#concept-quantization\">量子化・scale・zero point</a> <a href=\"#concept-dtypes\">FP32・FP16・BF16：数値を格納する形式</a> <a href=\"#concept-mixed\">混合精度・loss scaling・マスター重み</a> <a href=\"#concept-checkpoint\">checkpoint：何を保存したかを確認する</a> <a href=\"#concept-cache\">KVキャッシュとPromptキャッシュ</a> <a href=\"#concept-prefill\">Prefill / Decode：二つの計算段階</a> <a href=\"#concept-flash\">FlashAttention：中間データの読み書きを変える</a> <a href=\"#concept-paged\">PagedAttention：K/Vストレージのページ管理</a> <a href=\"#concept-memory-hardware\">HBM・SRAM・帯域幅</a> <a href=\"#concept-flops\">FLOPsとFLOP/s：量と速度</a> <a href=\"#concept-parallel\">DP、TP、PP、ZeRO、FSDP</a> <a href=\"#concept-temperature\">temperature / τ：生成分布の温度</a> <a href=\"#concept-topk\">Top-k・Top-p・再正規化</a> <a href=\"#concept-speculative\">推測デコーディング：下書きと目標による検証</a> <a href=\"#concept-harness\">Harness / ハーネス</a> <a href=\"#concept-api\">API・SDK・呼び出しの境界</a> <a href=\"#concept-schema\">SchemaとStructured Outputs</a> <a href=\"#concept-sse\">SSE・chunk・delta：異なる層の分割",
+      "to": "KLダイバージェンス：方向を持つ分布の差</a> <a href=\"#concept-lora\">LoRA・低ランク・r</a> <a href=\"#concept-quantization\">量子化・scale・zero point</a> <a href=\"#concept-dtypes\">FP32・FP16・BF16：数値を格納する形式</a> <a href=\"#concept-mixed\">混合精度・loss scaling・マスター重み</a> <a href=\"#concept-checkpoint\">checkpoint：何を保存したかを確認する</a> <a href=\"#concept-cache\">KVキャッシュとPromptキャッシュ</a> <a href=\"#concept-prefill\">Prefill / Decode：二つの計算段階</a> <a href=\"#concept-flash\">FlashAttention：中間データの読み書きを変える</a> <a href=\"#concept-paged\">PagedAttention：K/Vストレージのページ管理</a> <a href=\"#concept-memory-hardware\">HBM・SRAM・帯域幅</a> <a href=\"#concept-flops\">FLOPsとFLOP/s：量と速度</a> <a href=\"#concept-parallel\">DP、TP、PP、ZeRO、FSDP</a> <a href=\"#concept-temperature\">temperature / τ：生成分布の温度</a> <a href=\"#concept-topk\">Top-k・Top-p・再正規化</a> <a href=\"#concept-speculative\">投機的デコーディング：下書きと目標による検証</a> <a href=\"#concept-harness\">Harness / ハーネス</a> <a href=\"#concept-api\">API・SDK・呼び出しの境界</a> <a href=\"#concept-schema\">SchemaとStructured Outputs</a> <a href=\"#concept-sse\">SSE・chunk・delta：異なる層の分割",
+      "reason": "Use the established Japanese technical term for speculative decoding.",
+      "producer": "parent after translator_b follow-up",
+      "delivery_aligned": "u28.ja.txt"
+    },
+    "推测解码：草稿与目标验证": {
+      "from": "推測デコーディング：下書きと目標による検証",
+      "to": "投機的デコーディング：下書きと目標による検証",
+      "reason": "Use the established Japanese technical term for speculative decoding.",
+      "producer": "parent after translator_b follow-up",
+      "delivery_aligned": "u28.ja.txt"
+    },
+    "系统篇：每个问题的内部过程</a><a href=\"#mx-section-2\">专题研修：相应小节的细算与边界</a><a href=\"#mx-section-3\">贯通案例：沿用原案例的对象与时序</a><a href=\"#mx-section-4\">工程深挖：原始结果可视化</a><a href=\"#mx-section-5\">核心导读：具体机制</a><a href=\"#mx-section-6\">拓展讲义与原算例：操作—结果对应": {
+      "from": "システム編：各問いの内部過程</a><a href=\"#mx-section-2\">トピック研究：対応する小節の詳細計算と限界</a><a href=\"#mx-section-3\">通しのケーススタディ：元の事例の対象と時間順序を引き継ぐ</a><a href=\"#mx-section-4\">エンジニアリング詳解：元の結果の可視化</a><a href=\"#mx-section-5\">主要な読解ガイド：具体的な仕組み</a><a href=\"#mx-section-6\">発展講義資料と元の計算例：操作—結果の対応",
+      "to": "システム編：各設問の内部の過程</a><a href=\"#mx-section-2\">トピック研究：対応する節の詳細計算と限界</a><a href=\"#mx-section-3\">通し事例：元の事例の対象と時系列を引き継ぐ</a><a href=\"#mx-section-4\">エンジニアリング詳解：元の結果の可視化</a><a href=\"#mx-section-5\">主要資料ガイド：具体的な仕組み</a><a href=\"#mx-section-6\">発展講義と元の計算例：操作と結果の対応",
+      "reason": "Source-matched embedded title normalization against new canonical heading translations.",
+      "producer": "embedded.py --lang=ja --fix after u31"
+    }
+  },
+  "overrides": {
+    "chapters/01.html": {
+      "source": "变成",
+      "ja": "によって、",
+      "reason": "The preceding code z=hWout is an output-projection method; the following V-dimensional logits phrase supplies the predicate."
+    }
+  },
+  "delivery_review": {
+    "u11": {
+      "1691": {
+        "from": "両方を一位置後ろへ移す",
+        "to": "両方を1つ後ろの位置へずらす",
+        "reason": "Preserve the source digit literal and state KV head counts explicitly."
+      },
+      "1745": {
+        "from": "隠れ次元を4096、クエリーヘッド数をH=32、各ヘッドをDh=128とします。MHAには32個のKVヘッドがあり、GQAは8個だけ、MQAは1個だけと仮定します。biasを無視すると、次のようになります：",
+        "to": "隠れ次元を4096、クエリーヘッド数をH=32、各ヘッドの次元をDh=128とします。MHAのKVヘッド数は32個です。GQAのKVヘッド数は8個、MQAは1個と仮定します。biasを無視すると、次のようになります：",
+        "reason": "Preserve the source digit literal and state KV head counts explicitly."
+      }
+    },
+    "u26": {
+      "10223": {
+        "from": "実際のMLAには、KとVの共同の低ランク表現、位置に関する設計、行列の吸収も関わります",
+        "to": "実際のMLAには、KVの共同低ランク表現、位置に関する設計、行列の吸収も関わります",
+        "reason": "Retain the source KV abbreviation while describing its joint low-rank representation."
+      }
+    }
+  }
+}

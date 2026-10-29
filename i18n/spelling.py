@@ -34,17 +34,21 @@ KEEP = {
     'compromises', 'premise', 'premises', 'exercise', 'exercises', 'exercised',
     'enterprise', 'enterprises', 'expertise', 'franchise', 'merchandise',
     'paradise', 'treatise', 'demise', 'chastise', 'advertise', 'advertised',
-    'advertising', 'size', 'sizes', 'sized', 'sizing',
+    'advertising', 'advise', 'surmise', 'despise', 'reprise', 'appraise',
+    'disable', 'disability', 'disabilities',
+    'size', 'sizes', 'sized', 'sizing',
     # the -wise suffix
     'wise', 'wisely', 'otherwise', 'likewise', 'clockwise', 'stepwise',
     'pairwise', 'elementwise', 'unwise', 'rowwise', 'columnwise',
 }
-SUFFIX = [('isations', 'izations'), ('isation', 'ization'), ('isers', 'izers'),
+SUFFIX = [('isabilities', 'izabilities'), ('isability', 'izability'),
+          ('isable', 'izable'), ('isably', 'izably'),
+          ('isations', 'izations'), ('isation', 'ization'), ('isers', 'izers'),
           ('iser', 'izer'), ('ises', 'izes'), ('ised', 'ized'),
           ('ising', 'izing'), ('ise', 'ize')]
-WORD = re.compile(r'\b[A-Za-z]+is(?:e|es|ed|ing|ation|ations|er|ers)\b')
+WORD = re.compile(r'\b[A-Za-z]+is(?:e|es|ed|ing|ation|ations|er|ers|able|ably|ability|abilities)\b')
 # Other British forms the book does not want, as explicit pairs.
-OTHER = [('behaviour', 'behavior'), ('colour', 'color'), ('catalogue', 'catalog'),
+OTHER = [('behaviour', 'behavior'), ('labour', 'labor'), ('colour', 'color'), ('catalogue', 'catalog'),
          ('labelled', 'labeled'), ('labelling', 'labeling'), ('modelling', 'modeling'),
          ('modelled', 'modeled'), ('centre', 'center'), ('defence', 'defense'),
          ('licence', 'license'), ('fulfil', 'fulfill'), ('whilst', 'while'),
@@ -59,13 +63,21 @@ OTHER = [('behaviour', 'behavior'), ('colour', 'color'), ('catalogue', 'catalog'
 # oversize. Matching by suffix instead would wrongly spare summarise, which
 # ends in "arise", so the prefix has to be stripped explicitly.
 PREFIX = ('un', 'im', 'in', 'over', 'under', 're', 'mis', 'non', 'pre', 'dis', 'de')
+# Protect inflections of native -ise stems as a family, rather than requiring
+# a new exception for supervised, supervising, exercisable, advisable, etc.
+NATIVE = KEEP | {stem[:-1] + ending
+                 for stem in KEEP if stem.endswith('ise')
+                 for ending in ('es', 'ed', 'ing', 'er', 'ers', 'able', 'ably',
+                                'ability', 'abilities')}
 
 
 def keep(word):
     w = word.lower()
-    if w in KEEP:
+    # -wise forms are productive (piecewise, bitwise, lengthwise), rather
+    # than British -ise verbs. Protect the suffix, including its adverb form.
+    if w in NATIVE or w.endswith(('wise', 'wisely')):
         return True
-    return any(w.startswith(p) and w[len(p):] in KEEP for p in PREFIX)
+    return any(w.startswith(p) and w[len(p):] in NATIVE for p in PREFIX)
 
 
 def american(word):
@@ -79,15 +91,28 @@ def american(word):
     return word
 
 
-def convert(text):
+def convert_prose(text):
     def one(m):
         return american(m.group(0))
     out = WORD.sub(one, text)
+    # These families keep their suffix when the stem spelling changes:
+    # behaviour -> behavioral/behaviorally, labour -> labor/laborers.
+    for british, american_stem in [('behaviour', 'behavior'), ('labour', 'labor')]:
+        out = re.sub(r'\b' + british + r'([a-z]*)\b',
+                     lambda m: american_stem + m.group(1), out)
+        out = re.sub(r'\b' + british.capitalize() + r'([a-z]*)\b',
+                     lambda m: american_stem.capitalize() + m.group(1), out)
     for a, b in OTHER:
         out = re.sub(r'\b%s\b' % a, b, out)
         out = re.sub(r'\b%s%s\b' % (a[0].upper(), a[1:]), b[0].upper() + b[1:], out)
         out = re.sub(r'\b%ss\b' % a, b + 's', out)
     return out
+
+
+def convert(text):
+    # Tags and their attributes are an immutable part of a translation unit.
+    return ''.join(part if part.startswith('<') else convert_prose(part)
+                   for part in re.split(r'(<[^>]+>)', text))
 
 
 def main():

@@ -1,0 +1,53 @@
+26002	A worked calculation: how two sentences pass through one model layer — AI Systems Engineering
+15448	One vocabulary, one parameter set and two labeled inputs: from numerical representations to probabilities, then one cached decoding step.
+18121	Read Lessons 35—58 first. Every table states which token each row and which feature each column represents. Displayed values use six decimal places; calculations use unrounded values. This example does not require meaningful Chinese generation.
+22192	Carry 我爱学习／你爱 through a complete one-layer calculation
+26184	Input and conditions.</strong> The two sentences still use a six-row, four-column embedding table. Specify an untrained teaching model: one layer, hidden width 4, two attention heads of width 2 each, pre-LayerNorm, residuals, a SwiGLU feed-forward network and output projection tied to the embedding. To reduce variables, this example has no positional encoding, bias or dropout.
+13707	Look up each sentence separately
+9446	我／爱／学习 takes rows 1, 2 and 3; 你／爱 takes rows 4 and 2
+11337	The sentences have shapes 3×4 and 2×4. PAD is only for batch display; the numerical witness processes valid tokens separately for each sequence.
+28209	Normalize each position
+21976	Subtract the mean and divide by the standard deviation for each row of 4 numbers
+18182	Normalization neither mixes the sentences nor averages different tokens into one sentence.
+25381	Compute two-head attention
+15301	Each head produces scores, a causal mask, probabilities and a Value mixture
+11309	Each head produces 2 numbers at every position; concatenate them into 4 and add back the original embedding.
+24386	Pass through the feed-forward layer
+13580	Normalize again, then compute 0.25×SiLU(z)×z and add the residual
+21989	Every position has 4 updated numbers; only the final position predicts this round's next token.
+19296	Project back to the vocabulary
+20531	Dot the final position's 4 numbers with each vocabulary row, then apply softmax
+20918	Decoding explicitly forbids PAD here; at the end of 我爱学习, the highest-probability item is 爱, about 0.307383.
+24503	Continue once
+18774	Feed the newly chosen 爱, ID 2, alongside the old K/V
+16117	The incremental final state matches full recomputation of 我／爱／学习／爱, with numerical error below 1e−12.
+18930	Join the steps up.</strong> The tables below show every intermediate tensor and every matrix value. Do not understand the model merely as "it predicted 爱"; observe how the same input passes through each operator.
+26743	Limits and counterexamples.</strong> All weights are manually specified; repeatedly predicting 爱 does not demonstrate language capability. This simplified model without positional encoding also does not represent a modern commercial model's complete architecture.
+6221	1. Fix every parameter first, leaving no matrix hidden
+25748	Vocabulary and embedding E
+20106	Text becomes IDs, then selects corresponding rows. The matrix multiplications below act only on these declared teaching numbers.
+8451	Query projection Wq
+7799	Key projection Wk
+9025	Value projection Wv
+18533	Every LayerNorm uses 4 numbers per row, ε=0.00001, scale 1 and bias 0. The attention output projection is the identity matrix. The feed-forward network uses Wgate=Wup=I and Wdown=0.25I, so each output component is
+10126	. A final LayerNorm follows, with E transposed for output projection. No training, positional encoding or dropout. These are explicit conditions of this example, not a vendor model's parameters.
+6363	2. Intermediate values at every layer for 我爱学习
+21097	This round's greedy choice: 爱</strong>, ID 2. These probabilities come from a manually constructed small model, not a conclusion about linguistic correctness.
+6473	3. Intermediate values at every layer for 你爱
+21096	This round's greedy choice: 你</strong>, ID 4. These probabilities come from a manually constructed small model, not a conclusion about linguistic correctness.
+6597	4. Actually feed the newly generated token back in
+24021	The first sentence outputs 爱, ID 2, this round. Feed it in as a new token, not the previous round's final hidden vector. The new token still looks up E[2] first. K/V for the old three positions are saved; the new token produces its own Q/K/V and computes with the old K/V.
+20138	Initial embedding of the new token 爱
+20155	Query at the new position
+27661	New Key appended
+27662	New Value appended
+17936	Final state at the new position using the old cache
+24654	Cached versus full recomputation: final-position comparison
+23478	The program checks all four components: maximum absolute difference is 0. This requires identical parameters, the same prefix and the correct mask.
+15047	Compute only the new token＋cache
+20071	Recompute all four tokens in the sentence
+24908	Self-check: why can we not use another sentence's cache directly
+24083	The final token of the second sentence, 你爱, is also 爱. Can the first sentence's three-position cache be attached to the second sentence? Decide for yourself first.
+10956	No. Identical token IDs mean only identical initial embedding rows, not identical prefixes. K/V retain that layer's computations for the corresponding prefix; mixing sentences injects 我／爱／学习 history into 你／爱, changing visible information and results.
+16764	Full calculation code
+21124	Machine-readable results

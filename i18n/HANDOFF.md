@@ -16,6 +16,7 @@
 - 不要启动任何服务或长时间运行的进程（dev server、npm、python server 都不行）。
   用户自己用 codex 做调试和最终验收，机器不能被占住。
 - 不要改动中文原文。翻译中发现的原文问题记录下来交给用户裁决，见第 7 节。
+- 不调用本地翻译服务，只使用 Codex 的语言能力适配。
 - AGENTS.md 的规则照旧生效，其中对翻译影响最大的三条：
   - 「不要手填看似合理的概率；改变示例须重新运行」
   - 「数值图中的舍入仅用于显示；计算使用原精度」
@@ -107,7 +108,7 @@ python3 i18n/embedded.py --fix                   # 6 对齐目录与标题
 python3 i18n/apply.py --verify && python3 i18n/apply.py
 ```
 
-三个检查发布前必须全部归零。另外两个检查：
+上述英文检查发布前必须全部归零。另外两个检查：
 
 ```bash
 python3 i18n/links.py      # 应解析但失败必须为 0（指向未译页面的不算）
@@ -120,28 +121,40 @@ python3 i18n/audit.py      # 残留中文按来源归类，核对是否都属已
 
 ---
 
-## 4. 当前状态
+## 4. 当前状态（2026-10-29）
 
-- 表：**17,013 / 29,168 条已译，40.2 万 / 69.8 万字（57.6%），全站实例覆盖 93.7%**
-- 已生成 **65 页** `en/`（页面要全部字符串齐备才生成，不出半中半英的页）
-- `en/assets/` 已生成：catalog.js（256 条目，0 条缺译文）、search-data.js（2,207 条索引）、
-  visual-data.js、model-data.js
-- 共享层 11 批全部完成（486 条外壳 + 跨页字符串）
-- 按页批次 **24 / 48 完成**（p01–p24）
+英文收尾已完成，静态验证证据见 i18n/validation.en.json。
 
-全部门禁当前归零：
+- 表：31,629 / 31,629 条英文译文；p01–p48 全部完成。
+- 英文分页版 262 页，连续版 en/complete.html 已生成；合计 263 份 HTML。
+- 目录 256 条目，搜索 5,614 条；局部运行资产 10 份，全部 14 份英文 JS 语法通过。
+- SVG 777 幅、下载镜像 49 个，12,017 行文字测量无越界。
+- 连续版：250 正文节、253 独立节、13,563 唯一 ID、175 份内联下载资源。
+- 安全代码注释 39 种 / 41 处；1,533 个可解析代码块 AST 保持。
+  等宽对齐算例、代码数据及原文件名仍按约定保留，不把表覆盖率解释为所有汉字已消失。
+- 分页版 183 个自检答案、连续版 178 个答案全部默认收起。
+- 对 1,371 份受保护源文件核对，1,370 份哈希不变。唯一派生例外是
+  assets/i18n-data.js 的完整版本 metadata 加入 en；所有语种界面词条均未变。
+- 未启动服务、浏览器或长进程。交互调试与最终验收由用户进行。
 
-```
-apply.py --verify   262/262 往返无损
-consistency.py      3,637 组模板，0 组分歧
-embedded.py         0 处目录／标题不一致
-spelling.py         0 条非目标拼写
-terms.py            两个方向均 0
-links.py            应解析但失败 0 处
-```
+全部英文门禁为零：262 页往返无损；拼写、术语、词元、模板与嵌入标题无分歧；
+263 份 HTML 无重复 ID、失效锚点或 ID 引用；88,058 处实际本地引用无失败、无待译目标。
 
-**未完成：p25–p48 共 24 批**，源文件已导出在 `i18n/work/pNN.en.src.txt`，
-约 12,100 条 / 29.5 万字。
+日语共享阶段已完成：首批 502 条，加上后续 12 批 6,628 条，当时共 7,130 条入表。
+该阶段全站实例覆盖 87.9%，字数覆盖 16.4%（117,714 / 719,628 字）。
+每批串行 ingest、标题对齐、262 页往返校验均通过；6,628 条的数字、标签、文件、
+标识符、转义、数学符号及模型词元核对通过。5 处嵌入标题已按规范译文对齐。
+校验证据见 i18n/validation.ja-shared.json；既有 326 份英文文件未变，表中非 ja 字段、
+该阶段 next_id 和原有 502 条日语译文均未变。
+24,499 条独有字符串现已导出为 u01–u54.ja.src.txt，合计 601,914 汉字，正在全量翻译。
+当前 u01–u22、u24–u25、u54 共 10,726 条已入表，日语累计 17,856 / 31,629 条，还缺 13,773 条。
+实例覆盖 93.2%，字数覆盖 56.2%（404,325 / 719,628 字）；67 / 262 页正文单位齐译。
+尚未生成日语分页版，也未加入语言导航。实况见 work/_ja-unique-progress.json，
+证据见 validation.ja-unique.json；完成后还有日语运行脚本、SVG 与连续版适配。
+_reference.ja.txt 已刷新为当前高频 900 条，另附 125 条界面参考和 104 条概念词表。
+续接状态见 work/_continuation-progress.json；已完成共享层记录在 work/_ja-shared-progress.json。
+
+---
 
 ## 5. 发批次给译者
 
@@ -162,14 +175,14 @@ links.py            应解析但失败 0 处
 > `# page:` 行标明每段字符串来自哪一页 —— 短标签含义不明时去读那一页的 HTML。
 > 这些注释行不要出现在你的输出里。
 >
-> 表里已有 12,000+ 条译文，所以你的字符串中嵌入的复用标题、模板、课程名多数
+> 表里已有 31,629 条英文译文，所以你的字符串中嵌入的复用标题、模板、课程名多数
 > 已有定译 —— 查出来逐字复用。`i18n/work/_reference.en.txt` 有最高频的 900 条，
 > 其余可直接查 `i18n/table.json`。这一点要紧，因为 `i18n/embedded.py` 会检查
 > 每个链接的文本是否与它指向的标题一致。
 >
 > 回报：写了多少行、校验器最终输出、以及任何你无法从上下文确定含义的字符串。
 
-**同时跑 6 个左右**。之前同时跑 12–13 个两次触到额度上限，所有 agent 中途死掉、
+**按当前可用并发槽分批，最多约 6 个译者**。本轮最多 3 个子代理并行，留根代理串行入表。之前同时跑 12–13 个两次触到额度上限，所有 agent 中途死掉、
 一个文件都没落盘。6 个一波能保证每波都有产出。
 
 译者绝不能跑不带 `--check` 的 `ingest` —— 那会写共享的表，并发时互相覆盖。
@@ -237,131 +250,107 @@ ingest 源文件时被 agent 的原始译法整批覆盖回去（回归 24 条�
 
 ## 7. 待用户裁决的中文原文问题
 
-**一条都没有擅自改动中文。** 完整清单见 `i18n/SOURCE-ISSUES.md`，共 8 项：
+完整清单见 i18n/SOURCE-ISSUES.md，目前 22 项。原有问题和本轮新发现均只记录，未改中文。
 
-1. **`index.html`「从F01开始 →」指向第35课。** 它链 `foundations/01.html`，
-   而那页标题是第35课；第01课是 `foundations/22.html`。阅读顺序走课号
-   （pager：`chapters/25` → `foundations/01` → `foundations/02` 即 34→35→36）。
-   同页上方 `data-i18n` 的 CTA 指向正确。
-2. **`chapters/07.html` 裸字母 `M`**（`已经训练好的M权重`、`本M`，全书仅此页 3 处）。
-   该页符号表把 `M` 定义为掩码不是模型。两个译者独立判断它指贯通模型，但都保留
-   裸字母未作断言。
-3. **`chapters/17.html`「会降低延迟且可能阻塞不必要的任务」。** 整段论证不要等
-   全量索引，但「降低延迟」是收益，与并列的「阻塞不必要的任务」方向相反，疑为
-   「增加延迟」之误。英文按原文直译为 lowers latency，未代为修正。
-4. **`chapters/18.html` E35**：正文说「第8天」，实验记录字段是 `at_day6_known_day9`。
-5. **`chapters/24.html`「版本包V1={贯通模型1,提示P1,工具T1,索引I1}」**：
-   其余三项是 P1/T1/I1，V2 的是 M2/P2/T2/I2，首项疑应为「模型M1」。
-6. **`元` 作货币共 3 处**（20元 / 100元 / 每次1元），但邻近声明称数字是「虚构的
-   统一单位」。现译 "yuan"；若改为抽象 "units"，三处应一并处理。
-7. **`<code>` 内中文会直接出现在英文页上**（四处影响阅读）：
-   `chapters/25.html` 的 `max(3,5)+2=7秒`、`chapters/28.html` 的 Mermaid 图源
-   `模型提议 --必须经校验--> 执行器`、`chapters/16.html` 的
-   `[query,document]→联合模型→相关性分数`、`chapters/26.html` 的 `平均(pᵢ−yᵢ)²`。
-8. 另有若干措辞判断，各批次报告里都标了，不影响正确性。
+新增诊断包括中文连续版与当前分页版的同步差异，以及中文搜索索引 40 个过期图解锚点。
+英文连续版从当前分页正文重新组装，英文搜索从当前英文页面重新提取；
+这些派生步骤不修改中文来源，也不裁决正文中的事实或措辞。
+
+日语共享层新增第 22 项：推测解码的残差释义与相邻 max(p−q,0) 公式方向疑似相反。
+日语条目 3612 按原文字面保留，公式未改，等待用户裁决。
 
 ---
 
-## 8. 剩余工作，按优先级
+## 8. 英文再生成与日语续接
 
-### 一、把 p19–p48 跑完（主线）
+### 英文固定发布顺序
 
-30 批，约 16,200 条 / 39 万字。按第 5 节发批次、第 3 节的四步收。
+原批次、代码注释、JS 散文、运行文案、SVG 与连续版外壳已全入同一张表。
+若修改英文译文，先按第 3 节跑英文修复器和往返验证，再按以下顺序生成：
 
-### 二、`en/` 的派生产物
+~~~bash
+python3 i18n/apply.py --lang=en
+python3 i18n/gen_assets.py --lang=en
+python3 i18n/data_strings.py write --lang=en
+python3 i18n/runtime_strings.py write --lang=en
+python3 i18n/figure_strings.py write --lang=en
+python3 i18n/build_complete.py --lang=en
+python3 i18n/links.py --lang=en
+~~~
 
-页面全齐之后：
+apply.py 会复制原页面 SVG，data_strings.py 会复制原 SVG 字段，必须在图形适配前运行。
+SVG 发布后再跑二者，须重跑图形和连续版。不要对英文任务运行会改中文连续版的 inline_complete.py。
 
-```bash
-python3 i18n/gen_assets.py --lang=en     # catalog.js + search-data.js
-python3 i18n/data_strings.py write --lang=en   # visual-data.js + model-data.js
-python3 i18n/build.py                    # 重算 I18N_META.editions
-```
+新增工具的 registry 只记录来源，table.py 合并其计数并分配永久 ID。
+runtime_strings.py、figure_strings.py 和 complete_strings.py 的 collect 不写翻译表。
+源码或注册表有漂移时工具会拒绝发布，不能绕过校验。
 
-`gen_assets.py` 是**从译好的页面重新生成**，不是翻译文件 —— 教材自己的
-`rebuild_derivatives.py` 就是这个路子（derived 产物重新生成，不手改）。
-这样搜索索引和侧栏永远不会和读者落地的页面说法不一致。
+### 图形与播放器的已定修复
 
-`build.py` 算出的 `I18N_META.editions` 只列出**完整**的版本。262 页全齐时 `en`
-才会自动加入，切换器才会跳转 —— 所以不会把读者送到不存在的页。
+- figure_strings.py / figure_layout.py 使用当前已发布 SVG，不导入旧生成器、不重跑实验。
+  保留原数值、横向比例、标识符、颜色与帧高亮，按词量宽折行并调整纵向空间。
+- 普通概念词允许自然英文大小写或复数，如 API → APIs；代码形式 API()/API[]/API= 仍严格保留。
+- data_strings.py 在语言版 MODEL_FRAMES 中保留 sourceGroup 原键，
+  runtime_strings.py 用它匹配原 data-allowed-groups；可见选项使用译后的 group。
+  不可把机器字段直接翻译后再靠无匹配回退显示所有阶段。
+- links.py 解析实际 HTML 属性。连续版源码面板中的 &lt;a href=...&gt; 是展示文本，
+  不能用全文正则将其当作真实链接；真实缺失文件仍以非零状态拒绝。
 
-### 三、代码注释（2,103 字 / 47 行）
+### 连续版
 
-`<code>`/`<pre>` 内共 5.8 万字中文，按性质拆开：
+build_complete.py 从当前分页正文组装，沿用原来的 250 节顺序，另有资源节和两个工程附节。
+ID、锚点、SVG 引用和无障碍 ID 引用统一加前缀；资源内联，搜索与数据使用最终 en/assets。
 
-| | 字数 | 能否翻译 |
-|---|---|---|
-| 版面内（等宽对齐） | 56,411 | 需逐块重排 |
-| 代码注释 | 2,103 | **安全，改动不影响任何对齐** |
+先前要求“重建中文与旧连续版逐字相同”已由完整诊断修正：
+250 节中 108 节规范化相同，142 节反映旧版同步差异，详情记入 SOURCE-ISSUES.md。
+诊断只写 /tmp，不写中文正本。当前构建逐节检查文字、代码、SVG 几何、披露状态及资源。
 
-注释那部分可译：注释左边和其它行都不会位移。做法是扩展 `extract.py`，在跳过
-元素内部只抽取注释文本。
+~~~bash
+python3 i18n/build_complete.py --diagnose-zh --output /tmp/zh-complete-rebuilt.html --report /tmp/zh-complete-proof.json
+python3 i18n/build_complete.py --lang=en --check
+~~~
 
-版面那部分不行：验证过 `第一句查表后：       第二句查表后：` 是双栏布局，
-用空格垫到第二个矩阵的起始列，译成英文（38 字符 vs 7 字）右栏会被推开。
+当前英文连续版的 14 段脚本已通过语法检查，42 帧数值与分组筛选通过；
+真实文件和已验证临时样本逐字节相同。浏览器内布局、滚动与动画操作留给用户验收。
 
-### 四、SVG 图内标签（3,180 处 / 2 万字 / 157 页）
+### 日语主线
 
-**可以正确做，但是独立工程。** 三个生成器（`diagrams/renderer.py`、
-`mechanisms/figures.py`、`visual/labs/figures.py`）都会量文字宽度并自动折行，
-`mechanisms/figures.py` 甚至已经把拉丁字符建模成 0.56 宽 —— 换英文标签版面会
-自己重排。
-
-障碍是另外两件：标签写死在这三个 Python 脚本里（共 4,618 字），而生成器→页面的
-内联脚本 `diagrams/build_exports.py` 依赖仓库里不存在的 `source/` 目录和 bs4，
-在这里跑不起来。
-
-另有 **101 处 / 112 字是算例词表，必须保留中文**（见第 6 节）。
-
-### 五、`en/complete.html`
-
-内容与 262 页相同，但切分边界不同（80.7% 重合）—— 单独翻会白做 10.4 万字重复
-内容。正解是从 `en/` 页面重新内联。
-
-**已查明的变换规则**（对比 `foundations/05.html` / `chapters/02.html` /
-`index.html` 的 article 与它们在 `complete.html` 里的 section 得出）：
-
-每页的 `<article>` 内容包进
-
-```html
-<section class="standalone-section" data-book-page="foundations/05.html" id="foundations--05">
-```
-
-`id` 由路径去掉 `.html`、`/` 换成 `--` 得到。页内所有 `id` 加 `<sid>--` 前缀，
-页内链接改写为对应的 `#<sid>--<anchor>`。
-
-**剥掉的元素**（三页一致）：
-
-- `<div class="breadcrumb">`
-- `<span class="anchor-target">`（如 `id="legacy-F05"`）
-- `<details class="mobile-outline">`（内含 `<nav class="toc">` 和 `<summary>`）
-- pager 的 `<nav>`
-
-**收录范围：250 个 section，不是 262 页。** 未收录的 12 页是
-`about.html`、`advanced-labs.html`、`coverage.html`、`guide.html`、
-`engineering/agent-evidence.html`、`engineering/agent-validation.html`、
-`labs/projects/assignment1–5.html`、`labs/stack/code.html`。
-`en/complete.html` 应保持同样的收录范围。
-
-**正确性可以验证**：先用同一套代码从**中文**页面重新生成一份 `complete.html`，
-与现有的 34MB 文件对比。能复现就说明变换对，再跑 `en/`。这是唯一不靠猜的做法 ——
-上面的规则是从三页归纳的，剩下 247 页可能有我没见到的边界情况。
-
-bs4 不可用，所以要用纯标准库重写（`i18n/inline_complete.py` 已经是这个路子）。
-另外 `complete.html` 里内联了 3 个 `<style>` 和 16 个 `<script>`，英文版要内联
-`en/assets/` 的那几个语言相关文件而不是根目录的。
-
-### 六、日语全量
-
-工具已参数化，`--lang=ja` 即可。同一张表加 `ja` 字段，486 条外壳的杠杆照样复用。
-
-日语的校验不能用「含中文字符」判定（汉字重叠），`batch.py` 已改为**必须含假名
-且不与原文相同**。
-
-还需要：
-- `i18n/work/_reference.ja.txt`（从 125 条界面日语词条起步）
-- 日语术语表（教材的 `glossary.html` 只有中英对照）
-- `apply.py` 的拼接空格处理对 `ja` 已自动跳过（日语不用词间空格）
+1. 遵守 TRANSLATING.md 的 Japanese edition、work/_reference.ja.txt 和 glossary.ja.json。
+   中英词表有些是关联概念，不能把 Bootstrap 当成“置信区间”的日语译名。
+2. 首批 shell 的 502 条及 tier2-50_01–12 的 6,628 条均已入表。
+   剩余 n=1 的 24,499 条已按页面上下文和长度拆成 u01–u54，源契约不得重发覆盖。
+   译者只写自己的 txt，只运行 ingest --check --lang=ja；根代理串行入表。
+   当前 u01–u22、u24–u25、u54 共 10,726 条已校验入表，日语累计 17,856 / 31,629 条；u23、u27、u28 在译。
+   逐批状态见 work/_ja-unique-progress.json，阶段证据见 validation.ja-unique.json。
+   已有日语的接缝修正与目录规范化有单独审计 work/_ja-unique-corrections.json，
+   不能用早期快照恢复掉这些已核验的修正。
+3. 后续继续使用 batch.py export tier / group / page --lang=ja，已有永久 ID 与其他语言保留。
+   新 src 保留真实首尾空白；不得覆盖已交译源契约。
+4. 对日语不跑英文 spelling/terms/vocab/consistency 的 --fix。
+   这些修复器包含英文模板。日语允许汉字；合法同文标签须按具体来源核验，不能强行换词。
+   embedded.py 按来源结构对齐目录与侧栏，规则与语言无关，可用 --lang=ja。
+   完整标题是同题侧栏的定译；首批已对齐 73 对标题，修复 66 处分歧。
+   共享层又对齐 5 处嵌入标题。合法纯汉字标签由根代理核对后写入 ja-approved.json，
+   只匹配具体 source/target，不绕过标签、文件名或空值检查；英文不读取此文件。
+   假名判定现只认实际字母，日语中点、长音符、浊点等单独出现不再抵消纯汉字复核。
+   正反例及独立审查证据见 validation.ja-kana.json；它仍只是语言脚本线索。
+   「是」作为布尔值的两页已加 ja=はい 覆盖：chapters/11.html 三格、assignment4 两格。
+5. apply.py 已支持 ja 的 lang、空格和语言缺省回退，页面须齐译才生成。
+   runtime / figure / complete 适配器当前只发布英文；日语全量阶段须逐个扩展、验证并再发布。
+   不能只改 --lang 就认为 SVG 或连续版已支持日语。
+6. 先完成日语正文，再本地化数据、运行文案、图形与连续版。未齐备版本不加入 editions。
+   始终不改中文、数值、原参数或训练记录，不调用本地翻译服务。
+   语言版界面的提示必须跟随当前正文版次，不能照搬“正文仍为中文”。
+   英文局部 i18n.js 已改为优先读取本页 i18n-scope；中文共享原脚本保持。
+7. 保留算例数据与文案的区别。`foundations/28.html:36` 的 A/B/C 倒排例中，
+   code 内的文档含「排除、路径、缓存、日志、输出」这些实际匹配词项；
+   条目 15924、15926、15929 的索引与查询也保留相同中文词项，只译外框。
+   `chapters/04.html` 的声明序列 `[BOS, 我, 爱, 编程, EOS]` 同理：
+   条目 1914、1915 的「编程」与输入代码、监督标签一致，不译成概念词。
+   README 错字正误对照、字节流文件名同理按具体原始数据处理；普通中文说明仍须翻译。
+8. 相同短题名嵌在不同链接组时，也要复用定译。`work/_ja-short-titles.json` 记录
+   当前明确的同题短名：「KV Cache从零解释」统一为「KVキャッシュをゼロから解説する」。
+   不能因独立裸串未抽取，便让目录里的同一题名随批次变动；不为此增造表键或 ID。
 
 ---
 
@@ -414,3 +403,12 @@ bs4 不可用，所以要用纯标准库重写（`i18n/inline_complete.py` 已�
 10. **同时跑 6 个 agent 左右。** 12–13 个两次触到额度上限，所有 agent 中途死掉、
    一个文件都没落盘。额度恢复后用 SendMessage 续跑（保留它们已读的上下文），
    不要重开新 agent。
+
+11. **写表要保存整个顶层 dict。** 只写 {'s': t} 会丢 next_id，使新条目与旧永久 ID 撞号。
+    table.py 的安全高水位也不能成为丢元数据的理由。重建必须保留旧 ID、各语言和退役条目。
+
+12. **源契约使用真实空白。** 曾把首尾空格换为 ␣ 导出，ingest 便找不到原中文 key，
+    还可能把有效译文当“源已消失”静默跳过。新导出已修复，旧已发出 src 不可覆盖。
+
+13. **英文修复器不是日语修复器。** --lang 只选择表字段，不会自动把英文模板改成日语。
+    日语生成链中不受支持的阶段应显式扩展和验证，不能借参数化掩盖缺口。

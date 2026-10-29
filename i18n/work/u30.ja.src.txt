@@ -1,0 +1,556 @@
+# Japanese unique-string batch u30; 550 entries; source IDs/whitespace immutable.
+# Read TRANSLATING.md, _reference.ja.txt and glossary.ja.json; only write u30.ja.txt.
+# Keep numbers, identifiers, filenames, escapes, HTML attributes, model vocabulary and evidence limits unchanged.
+# page: examples/input-representation.html
+11967	这不是把“你爱”编码成三个真实词：</strong>第三行只是为了补齐到长度3。查表得到的仍是逐Token的初始数值表示，而不是对完整句意的一次理解。注意“爱”在两句话里，初次查表得到同一排数。这不表示它永远不看上下文；后面的网络会把当前位置与允许读取的其他位置结合，产生新的表示。<strong>查表是起点，不是全部理解过程。 [tags]
+11968	6．现在为什么多出一层[2,3,4]
+11969	把两句话的结果合在一起，是<strong>两张表，每张3行、每行4个数</strong>。于是整体形状为 [tags]
+11970	形状中的数
+11971	这里具体数什么
+11972	两条输入，因此有两张表
+11973	每条输入安排三个位置，因此每张表三行
+11974	每个位置用四个数，因此每行四列
+11975	总共
+11976	个数。原来6个编号，各自换成4个数，所以也可以算成
+11977	从下标理解第三个轴：</strong>第一个下标选择“我爱学习”还是“你爱”；第二个下标选择其中的哪个位置；第三个下标选择该Token向量的第几个数。例如 [tags]
+11978	，是第一句话的第二个Token“爱”的初始表示第一个数。<strong>新增的是每个位置的数值特征轴，不是额外的词或二进制位。 [tags]
+11979	“这是三维张量”说有三个轴；“每个位置是四维向量”说每排有四个数。这里<strong>维</strong>的两种说法要区分。<strong>向量</strong>就是此处有顺序的一排数，不需要先想象四维空间。 [tags]
+11980	7．将表示扩展为[2,128,4096]
+11981	现在只换三个大小，不换计算道理。
+11982	B=2：本批两条输入。
+11983	T=128：每条输入补齐或安排到128个位置。
+11984	d=4096：每个位置查表后用4096个数表示。
+11985	编号表有两行、每行128个整数，所以是
+11986	。每个整数再换成长度4096的一排数，整体就是
+11987	它含
+11988	个数。<strong>4096不是Token数，不是词表大小，也不是整个模型的参数总量。</strong> 它叫隐藏维度或隐藏表示宽度，意思是模型用这么宽的一排数来表示每个位置。更深的层通常还沿用这个宽度，但会改变数字内容。 [tags]
+11989	若每个数用2字节保存，这一份输出约占2MiB。字节是存储大小的单位，MiB是1,048,576字节。这个估算只针对这一份数据，<strong>不包含模型全部参数、缓存或临时计算空间</strong>。F06会完整讲存储精度与设备。 [tags]
+11990	8．“放到设备”没有改变这句话的意思
+11991	设备</strong>在这里指执行计算的处理器，例如CPU或GPU。CPU是通用处理器，GPU擅长并行执行大量合适的数值运算。为了让运算执行，程序要让输入数据与模型参数位于相容的设备和存储格式中。 [tags]
+11992	可以把
+11993	存到内存，再复制到GPU显存中；它们仍然是相同编号，并没有因为移动就变得更“智能”。<strong>显存</strong>是GPU可直接使用的一类存储空间。移动数据可能花时间，空间也可能不够，所以这是实在的工程步骤。 [tags]
+11994	在常见输入Embedding层中，查找地址使用整数编号，取出来的参数通常是浮点数；<strong>浮点数</strong>就是可以近似表示0.1、−0.7等数值的计算机数值格式。设备、格式和形状是三种不同属性。 [tags]
+11995	9．还要带哪几份“辅助信息”
+11996	第一份是<strong>填充掩码</strong>：告诉后续计算哪些位置是真的。 [tags]
+11997	这里的0/1不是Token编号，而是“能不能算作有效内容”的标记。即使PAD的Embedding恰好全0，也不代表后续计算自然会忽略它，因此仍需正确处理这些位置。
+28978	第二份是<strong>注意力掩码（attention mask） [tags]
+28979	注意力</strong>先理解为“为当前这个位置挑出可以参考的位置，再按不同份额结合它们的数字”。掩码决定“能参考谁”，不是决定“参考多少”。后者要到F09–12用加权平均算出来。 [tags]
+11999	生成下一Token时，训练与运算通常要遵守不能偷看未来的规则。对三位置例子，可以读的位置是：
+12000	当前查询位置
+12001	能参考位置0吗
+12002	位置1吗
+12003	位置2吗
+12008	这是<strong>因果掩码</strong>。第二句话还必须把作为填充项的位置2排除。模型内部不同接口使用的掩码形状和真假含义不一定相同；本页表格只解释可见关系，不冒充某个API的入参。 [tags]
+12009	第三份是<strong>位置编号（position IDs）</strong>。比如真实的三个位置记为0、1、2。Token ID回答“哪个片段”，位置ID回答“出现在哪里”，二者不是同一列。采用左补齐或缓存时，逻辑位置与表格列号可能不同，F13会分别举例。 [tags]
+12010	最后可能有<strong>KV缓存（KV Cache）</strong>。缓存就是保存已经算过、后面还能复用的结果。第一次从头处理时通常没有历史缓存；继续生成时，可以带回之前各层算好的部分数字，避免从头重算。这不是长期记忆，也不是新知识进入模型参数。K和V的含义、为什么可以复用、哪些改动让它失效，会先在F11解释注意力，再在F19完整推演；此页不要求先背这两个字母。 [tags]
+12011	10．完整过程小结
+12012	把两条独立输入一起计算，并把较短的编号列表补到本批安排的长度。由此得到一张两行、每行128个编号的表。模型根据每个编号，从自己的Embedding参数表中取出一排4096个数，所以结果是两张128行、4096列的表。程序同时准备有效位置、哪些位置能互相参考、各个真实片段的位置编号；若这是继续生成，还带入可复用的历史计算结果。随后开始各层的注意力与其他数值变换。<strong>Embedding查表本身已经属于模型数值表示的计算步骤</strong>，不是查完之后才第一次碰到神经网络。 [tags]
+12013	你现在不需要先理解Attention的完整公式，便能解释这一步的每个对象。下一段若直接出现Q、K、V或softmax，先走F07→第44课→第46课；不是靠猜缩写读下去。
+12014	自检：请先口头回答，再看答案
+12015	问题一：词表1000项、三条输入、每条10个位置、每项用8个数表示，Embedding表和查表结果分别多大？
+12016	参数表是
+12017	，编号表是
+12018	，查表结果是
+12019	。1000决定可以查多少种条目，3和10决定这一批查了多少个位置。
+12020	问题二：为何同样写0，有时表示PAD编号，有时表示掩码里的不能看？
+12021	它们属于不同数据对象。
+12022	的0用于找词表行；有效性或可见性表里的0是一条运算标记。不能只看数字相同就混为一谈。
+12023	问题三：Embedding的第2个数是不是永远表示情绪？
+12024	没有这种一般保证。它是训练得到的分布式表示的一部分。教材里的数字只演示读取和计算过程，不给每一列强行贴语义标签。
+12025	问题四：组批时第二个用户会读取第一个用户的内容吗？
+12026	普通独立样本batch不应如此。批轴安排一起运算，不是把样本拼成一条上下文。真实系统还需落实租户和缓存隔离。
+12028	← 第40课｜“放到设备”是什么：数据类型、内存、CPU与GPU</a><a href="../foundations/07.html">第42课｜模型最常做的算术：加权求和、点积与矩阵乘法 [tags]
+# page: foundation-atlas.html
+12029	基础课程 F01—F40 共 201 张节内图解的索引，逐节直达对应图形。
+12030	基础篇逐节图解索引 — AI系统工程
+12031	基础课程
+12032	图解索引
+12033	图解索引</span><span>201 张节内图解</span><span>覆盖 第35—66课 [tags]
+12034	从第一节到第四十节，每张图都放在对应解释的附近。点击下面的小节可直接跳到具体的「输入、操作、结果」图解，避免只在章首看一张总览。
+28980	正文的例题、自检、程序和参考资料仍在原位置。分步动画另见<a href="visual-guides.html">图解与动画</a>，正文内图解的来源与复算记录见<a href="mechanisms/index.html">正文图解索引 [tags]
+12037	分组跳转
+12038	输入与表示<span class="module-count">第35—40课 · 30 张 [tags]
+12039	第35课</a> · 本节图解 [tags]
+12040	从信息对象认识AI系统</a><a href="foundations/01.html#fdiag-01-02">模型不是一位住在电脑里、直接看见所有文件的人</a><a href="foundations/01.html#fdiag-01-03">用三个容易混淆的句子检查边界</a><a href="foundations/01.html#fdiag-01-04">本书的数字是怎么来的</a><a href="foundations/01.html#fdiag-01-05">阅读准备 [tags]
+12041	第36课</a> · 本节图解 [tags]
+12042	先不背“张量是多维数组”</a><a href="foundations/02.html#fdiag-02-02">从两张表理解三个轴</a><a href="foundations/02.html#fdiag-02-03">方括号中的数字不是同一种“维度”</a><a href="foundations/02.html#fdiag-02-04">怎么找到里面的一个数</a><a href="foundations/02.html#fdiag-02-05">符号不认识时怎样读公式 [tags]
+12043	第37课</a> · 本节图解 [tags]
+12044	字符、字节和Token先分开</a><a href="foundations/03.html#fdiag-03-02">一张教学词表和两条输入</a><a href="foundations/03.html#fdiag-03-03">BPE的“学习词表”和“编码输入”不是同一阶段</a><a href="foundations/03.html#fdiag-03-04">聊天角色怎样成为输入的一部分</a><a href="foundations/03.html#fdiag-03-05">编码后还没发生什么 [tags]
+12045	第38课</a> · 本节图解 [tags]
+12046	“组批”就是让若干条输入一起处理</a><a href="foundations/04.html#fdiag-04-02">真实长度与安排长度不是一回事</a><a href="foundations/04.html#fdiag-04-03">补左边和补右边有什么区别</a><a href="foundations/04.html#fdiag-04-04">补齐不等于截断，更不等于上下文压缩</a><a href="foundations/04.html#fdiag-04-05">为什么组批可能快，也可能让一个人等更久 [tags]
+12047	第39课</a> · 本节图解 [tags]
+12048	为什么不能直接拿“编号大小”理解文字</a><a href="foundations/05.html#fdiag-05-02">用6行4列的表，表示“我爱学习”和“你爱”</a><a href="foundations/05.html#fdiag-05-03">为什么从两个轴变成三个轴</a><a href="foundations/05.html#fdiag-05-04">隐藏维度到底“隐藏”了什么</a><a href="foundations/05.html#fdiag-05-05">PAD行是零，就能不用mask吗 [tags]
+12049	第40课</a> · 本节图解 [tags]
+12050	同一个数有三种不同的问题</a><a href="foundations/06.html#fdiag-06-02">整数编号与浮点特征为何类型不同</a><a href="foundations/06.html#fdiag-06-03">对较大规模的表示算一遍存储</a><a href="foundations/06.html#fdiag-06-04">一次常见执行的实际顺序</a><a href="foundations/06.html#fdiag-06-05">为什么小任务放GPU有时不快 [tags]
+12051	共通计算<span class="module-count">第42—49课 · 41 张 [tags]
+12052	第42课</a> · 本节图解 [tags]
+12053	从你已经会的平均数开始</a><a href="foundations/07.html#fdiag-07-02">点积是怎样把两排数变成一个数</a><a href="foundations/07.html#fdiag-07-03">矩阵乘法是“一次做很多个点积”</a><a href="foundations/07.html#fdiag-07-04">一个Token从4096个数变成另外4096个数，究竟是什么动作</a><a href="foundations/07.html#fdiag-07-05">转置怎样帮助“一排数分别与多行比较” [tags]
+12054	第43课</a> · 本节图解 [tags]
+12055	为什么深度学习代码里反复改变形状</a><a href="foundations/08.html#fdiag-08-02">reshape是重新分组，不是交换行列</a><a href="foundations/08.html#fdiag-08-03">多头只是把特征轴分组吗</a><a href="foundations/08.html#fdiag-08-04">广播：用一个小对象作用到许多位置</a><a href="foundations/08.html#fdiag-08-05">内存布局与视图只需先懂一个原则 [tags]
+12056	第44课</a> · 本节图解 [tags]
+12057	分数不是概率</a><a href="foundations/09.html#fdiag-09-02">先学指数和对数需要的那一点</a><a href="foundations/09.html#fdiag-09-03">softmax一步不跳地算</a><a href="foundations/09.html#fdiag-09-04">为什么要减最大值</a><a href="foundations/09.html#fdiag-09-05">取最大与按概率抽样不是一回事 [tags]
+12058	第45课</a> · 本节图解 [tags]
+12059	从一条可调的规则认识“模型”</a><a href="foundations/10.html#fdiag-10-02">从一个系数w到一张参数表W</a><a href="foundations/10.html#fdiag-10-03">一个有两层的完整数值例子</a><a href="foundations/10.html#fdiag-10-04">为什么中间需要非线性函数</a><a href="foundations/10.html#fdiag-10-05">隐藏状态不是隐藏的中文草稿 [tags]
+12060	第46课</a> · 本节图解 [tags]
+12061	它想解决什么问题</a><a href="foundations/11.html#fdiag-11-02">进入注意力之前，X到底是什么</a><a href="foundations/11.html#fdiag-11-03">W是什么：先认识“乘法系数表”，再认识三个名字</a><a href="foundations/11.html#fdiag-11-04">Query、Key、Value各做哪一件事</a><a href="foundations/11.html#fdiag-11-05">用同一份X，把三张参数表完整乘一次</a><a href="foundations/11.html#fdiag-11-06">对“爱”这个位置，从打分一直算到新表示 [tags]
+12062	第47课</a> · 本节图解 [tags]
+12063	先给掩码一个不神秘的定义</a><a href="foundations/12.html#fdiag-12-02">因果限制怎样防止读未来</a><a href="foundations/12.html#fdiag-12-03">填充限制与因果限制怎样合在一起</a><a href="foundations/12.html#fdiag-12-04">“禁止”具体怎样改变softmax</a><a href="foundations/12.html#fdiag-12-05">已有缓存时，表为什么不再是小正方形 [tags]
+12064	第48课</a> · 本节图解 [tags]
+12065	Token是谁，和它出现在第几位，是两个问题</a><a href="foundations/13.html#fdiag-13-02">为什么不能只靠查Embedding</a><a href="foundations/13.html#fdiag-13-03">只用平面上的点认识sin与cos</a><a href="foundations/13.html#fdiag-13-04">RoPE怎样用位置改变匹配</a><a href="foundations/13.html#fdiag-13-05">为什么缓存位置不能每次从0开始 [tags]
+12066	第49课</a> · 本节图解 [tags]
+12067	先把一层写成两段，而不是一大堆缩写</a><a href="foundations/14.html#fdiag-14-02">残差连接：保留一条直接通路</a><a href="foundations/14.html#fdiag-14-03">均值、方差和标准差从两个数算起</a><a href="foundations/14.html#fdiag-14-04">LayerNorm实际规范化哪一排数</a><a href="foundations/14.html#fdiag-14-05">FFN到底做了什么 [tags]
+12068	训练与验证<span class="module-count">第52—54课 · 15 张 [tags]
+12069	第52课</a> · 本节图解 [tags]
+12070	导数是在问：稍微改一下输入，结果怎样变</a><a href="foundations/15.html#fdiag-17-02">参数训练为什么需要变化率</a><a href="foundations/15.html#fdiag-17-03">用一个参数手算一次完整更新</a><a href="foundations/15.html#fdiag-17-04">反向传播与优化器不是同一个步骤</a><a href="foundations/15.html#fdiag-17-05">有限差分怎样核对解析梯度 [tags]
+12071	第53课</a> · 本节图解 [tags]
+12072	先把“要预测什么”对齐</a><a href="foundations/16.html#fdiag-18-02">交叉熵从一个正确候选开始</a><a href="foundations/16.html#fdiag-18-03">多位置与填充怎样评分</a><a href="foundations/16.html#fdiag-18-04">把一个优化步写完整</a><a href="foundations/16.html#fdiag-18-05">Adam为什么会保存额外状态 [tags]
+12073	第54课</a> · 本节图解 [tags]
+12074	同一个“更好”，至少有三种含义</a><a href="foundations/17.html#fdiag-19-02">奖励、策略、轨迹不要一起背缩写</a><a href="foundations/17.html#fdiag-19-03">概率比到底比较什么</a><a href="foundations/17.html#fdiag-19-04">KL散度为什么像一个“不离原来太远”的约束</a><a href="foundations/17.html#fdiag-19-05">DPO的式子先用两份答案解释 [tags]
+12075	训练后的推理<span class="module-count">第57—58课 · 10 张 [tags]
+12076	第57课</a> · 本节图解 [tags]
+12077	最后一层还不是文字</a><a href="foundations/18.html#fdiag-15-02">为什么看最后一个有效位置</a><a href="foundations/18.html#fdiag-15-03">Prefill和Decode只是两种运行阶段</a><a href="foundations/18.html#fdiag-15-04">选出来不等于已经处理过</a><a href="foundations/18.html#fdiag-15-05">生成Token与界面显示字符的关系 [tags]
+12078	第58课</a> · 本节图解 [tags]
+12079	先从普通缓存的含义说起</a><a href="foundations/19.html#fdiag-16-02">为什么追加Token通常不改变旧K/V</a><a href="foundations/19.html#fdiag-16-03">用两层、三个历史位置数清缓存</a><a href="foundations/19.html#fdiag-16-04">为什么通常不保存历史Q来做后续注意力</a><a href="foundations/19.html#fdiag-16-05">有缓存为什么仍然不是常数时间 [tags]
+12080	结构与资源<span class="module-count">第61—62课 · 10 张 [tags]
+12081	第61课</a> · 本节图解 [tags]
+12082	“低秩”先用一张重复结构的表理解</a><a href="foundations/20.html#fdiag-20-02">LoRA改的不是整个基础模型</a><a href="foundations/20.html#fdiag-20-03">量化是在有限刻度上表示数字</a><a href="foundations/20.html#fdiag-20-04">MoE为什么很多参数但只调用部分</a><a href="foundations/20.html#fdiag-20-05">蒸馏与微调究竟在干什么 [tags]
+12083	第62课</a> · 本节图解 [tags]
+12084	先区分三本账</a><a href="foundations/21.html#fdiag-21-02">O(T²)到底是什么意思</a><a href="foundations/21.html#fdiag-21-03">为什么存储足够也可能算不快</a><a href="foundations/21.html#fdiag-21-04">FlashAttention省的是什么</a><a href="foundations/21.html#fdiag-21-05">PagedAttention与连续组批 [tags]
+12085	Agent与上下文<span class="module-count">第01—22课 · 30 张 [tags]
+12086	第01课</a> · 本节图解 [tags]
+12087	先还原成普通程序</a><a href="foundations/22.html#fdiag-22-02">一个三次模型调用的完整例子</a><a href="foundations/22.html#fdiag-22-03">一轮、一回合和一个任务为什么要区分</a><a href="foundations/22.html#fdiag-22-04">工作流与自由Agent的区别</a><a href="foundations/22.html#fdiag-22-05">什么叫工具，什么叫副作用 [tags]
+12088	第07课</a> · 本节图解 [tags]
+12089	API只是程序间约定，不是智能本身</a><a href="foundations/23.html#fdiag-23-02">Schema在检查什么</a><a href="foundations/23.html#fdiag-23-03">为什么网络一次读到的不是一个完整回答</a><a href="foundations/23.html#fdiag-23-04">SSE的事件边界</a><a href="foundations/23.html#fdiag-23-05">call_id为什么比工具名称重要 [tags]
+12090	第02课</a> · 本节图解 [tags]
+12091	“做到哪了”必须有具体对象</a><a href="foundations/24.html#fdiag-24-02">状态机从最小表开始</a><a href="foundations/24.html#fdiag-24-03">事件与快照分别保存什么</a><a href="foundations/24.html#fdiag-24-04">版本号为什么重要</a><a href="foundations/24.html#fdiag-24-05">检查点保存恢复所需信息 [tags]
+12092	第08课</a> · 本节图解 [tags]
+12093	先别把MCP理解成“给模型装了一个新大脑”</a><a href="foundations/25.html#fdiag-25-02">一次从连接到工具结果的逻辑次序</a><a href="foundations/25.html#fdiag-25-03">Tools、Resources、Prompts各是什么</a><a href="foundations/25.html#fdiag-25-04">工具Schema不应替代业务判断</a><a href="foundations/25.html#fdiag-25-05">stdio、HTTP与JSON-RPC先只懂职责 [tags]
+12094	第11课</a> · 本节图解 [tags]
+12095	上下文不是“整台电脑都在模型脑里”</a><a href="foundations/26.html#fdiag-26-02">先算一本简化Token账</a><a href="foundations/26.html#fdiag-26-03">怎样选证据，不是越多越好</a><a href="foundations/26.html#fdiag-26-04">顺序、角色、来源是三种不同标签</a><a href="foundations/26.html#fdiag-26-05">Prompt Cache为什么需要稳定前缀 [tags]
+12096	第22课</a> · 本节图解 [tags]
+12097	先区分四种动作</a><a href="foundations/27.html#fdiag-27-02">一个不能再被缩短成“任务快完成”的状态</a><a href="foundations/27.html#fdiag-27-03">一次压缩应该怎样进行</a><a href="foundations/27.html#fdiag-27-04">原文如何重新找回</a><a href="foundations/27.html#fdiag-27-05">为什么不透明压缩块不能当普通摘要 [tags]
+12098	检索与可靠交付<span class="module-count">第04—16课 · 35 张 [tags]
+12099	第16课</a> · 本节图解 [tags]
+12100	检索先解决“从哪里找到候选”</a><a href="foundations/28.html#fdiag-28-02">倒排索引为什么叫“倒排”</a><a href="foundations/28.html#fdiag-28-03">TF、IDF与BM25先认识职责</a><a href="foundations/28.html#fdiag-28-04">向量检索为什么能找同义表达</a><a href="foundations/28.html#fdiag-28-05">精确最近邻与近似最近邻 [tags]
+12101	第17课</a> · 本节图解 [tags]
+12102	召回和重排为什么分两步</a><a href="foundations/29.html#fdiag-29-02">关键词和向量怎样一起用</a><a href="foundations/29.html#fdiag-29-03">Cross-encoder为什么更细也更贵</a><a href="foundations/29.html#fdiag-29-04">相关不等于足够回答</a><a href="foundations/29.html#fdiag-29-05">查询改写和假设文档的边界 [tags]
+12103	第18课</a> · 本节图解 [tags]
+12104	先从一行代码看不同观察层</a><a href="foundations/30.html#fdiag-30-02">LSP不是自动懂业务的模型</a><a href="foundations/30.html#fdiag-30-03">图、节点和边怎样读</a><a href="foundations/30.html#fdiag-30-04">Git的几种状态为什么都重要</a><a href="foundations/30.html#fdiag-30-05">一次Bug定位的具体顺序 [tags]
+12105	第23课</a> · 本节图解 [tags]
+12106	先说什么值得跨会话保存</a><a href="foundations/31.html#fdiag-31-02">四种记忆不只是一组名称</a><a href="foundations/31.html#fdiag-31-03">一条可用记忆至少问哪些问题</a><a href="foundations/31.html#fdiag-31-04">Valid time与Recorded time为什么不同</a><a href="foundations/31.html#fdiag-31-05">更新不是只追加一条新向量 [tags]
+12107	第13课</a> · 本节图解 [tags]
+12108	五种扩展能力不要混成一个大Prompt</a><a href="foundations/32.html#fdiag-32-02">路由是在作选择</a><a href="foundations/32.html#fdiag-32-03">漏加载与过度加载为何都不好</a><a href="foundations/32.html#fdiag-32-04">子Agent不是主Agent的一份完全复制</a><a href="foundations/32.html#fdiag-32-05">用一个DAG算并行是否值得 [tags]
+12109	第26课</a> · 本节图解 [tags]
+12110	先看最危险的一条时间线</a><a href="foundations/33.html#fdiag-33-02">幂等不是“重试时最好别出错”</a><a href="foundations/33.html#fdiag-33-03">数据库事务保证到哪里</a><a href="foundations/33.html#fdiag-33-04">CAS怎样避免覆盖新版本</a><a href="foundations/33.html#fdiag-33-05">原子替换能做什么，不能做什么 [tags]
+12111	第04课</a> · 本节图解 [tags]
+12112	正确性首先相对于什么</a><a href="foundations/34.html#fdiag-34-02">一条测试包含什么</a><a href="foundations/34.html#fdiag-34-03">单元、集成和端到端测试各看哪层</a><a href="foundations/34.html#fdiag-34-04">用反例识别弱测试</a><a href="foundations/34.html#fdiag-34-05">测试通过也必须绑定版本 [tags]
+12113	评价与生产<span class="module-count">第05—66课 · 30 张 [tags]
+12114	第05课</a> · 本节图解 [tags]
+12115	先给评测单位起清楚名字</a><a href="foundations/35.html#fdiag-35-02">成功率先用真实次数算</a><a href="foundations/35.html#fdiag-35-03">精确率和召回率用集合手算</a><a href="foundations/35.html#fdiag-35-04">排得靠前也有区别</a><a href="foundations/35.html#fdiag-35-05">pass@1、pass@k、pass^k的区别 [tags]
+12116	第31课</a> · 本节图解 [tags]
+12117	概率与一次观察不是同一个数</a><a href="foundations/36.html#fdiag-36-02">为什么重复同一题也会不同</a><a href="foundations/36.html#fdiag-36-03">配对比较比只看两列总分更有信息</a><a href="foundations/36.html#fdiag-36-04">标准误差怎样理解</a><a href="foundations/36.html#fdiag-36-05">置信区间不是“模型有95%自信” [tags]
+12118	第29课</a> · 本节图解 [tags]
+12119	先区分指令来源</a><a href="foundations/37.html#fdiag-37-02">可信边界具体是什么</a><a href="foundations/37.html#fdiag-37-03">沙箱不是一个神奇开关</a><a href="foundations/37.html#fdiag-37-04">最小权限与审批到底批准什么</a><a href="foundations/37.html#fdiag-37-05">记忆污染如何让风险跨会话传播 [tags]
+12120	第33课</a> · 本节图解 [tags]
+12121	一次任务到底慢在哪里</a><a href="foundations/38.html#fdiag-38-02">用一条教学轨迹分账</a><a href="foundations/38.html#fdiag-38-03">TTFT、TPOT与端到端延迟</a><a href="foundations/38.html#fdiag-38-04">吞吐与延迟不是一对同义词</a><a href="foundations/38.html#fdiag-38-05">成本应算整个任务 [tags]
+12122	第64课</a> · 本节图解 [tags]
+12123	图片在计算机里也是有形状的数据</a><a href="foundations/39.html#fdiag-39-02">图像Patch怎样变成一串向量</a><a href="foundations/39.html#fdiag-39-03">视觉表示怎样交给语言模型</a><a href="foundations/39.html#fdiag-39-04">GUI Agent为什么要反复观察</a><a href="foundations/39.html#fdiag-39-05">模型自信、概率与校准 [tags]
+12124	第66课</a> · 本节图解 [tags]
+12125	先问失败发生在哪一层</a><a href="foundations/40.html#fdiag-40-02">一个完整但不过度复杂的调查</a><a href="foundations/40.html#fdiag-40-03">Prompt、RAG、Memory、Skill和Fine-tuning怎样选</a><a href="foundations/40.html#fdiag-40-04">为什么读完基础还需要高级追问</a><a href="foundations/40.html#fdiag-40-05">面试式回答怎样不变成背口诀 [tags]
+12126	← 正文图解与细算索引</a><a href="visual-guides.html">图解与动画 → [tags]
+# page: glossary.html
+17143	术语与符号速查 — AI系统工程
+17144	阅读工具</span><span>约 9.2 千字 [tags]
+17145	需要理解符号代表什么、从哪里来时，可阅读<a href="concepts.html">公式、术语与对象来源</a>。该页区分参数、输入、中间结果、尺寸及执行状态，并提供独立微例和完整课程入口。 [tags]
+17146	这里是速查，不是把基础教学缩成定义。每项都有例子和完整前置课入口；学习时优先读课文，再把此页当随手可查的索引。
+17147	搜索一个术语或题号
+17148	模型 / Model
+17149	带可学习参数的计算规则，把输入表示变为输出分数或其他结果。
+17150	具体例子：</strong>它不能自行打开你电脑里的文件；外围程序才能执行这种动作。 [tags]
+17152	参数 / Parameter
+17153	模型长期保存、训练时调整的数字。
+17154	具体例子：</strong>Embedding表和线性层权重都属于参数。 [tags]
+17155	训练 / Training
+17156	依据样例与目标计算误差，再调整参数的过程。
+17157	具体例子：</strong>本书标量训练把w=1更新为1.8。 [tags]
+17158	推理 / Inference
+17159	使用已有参数处理输入并产生输出的过程。
+17160	具体例子：</strong>通常不会因为一次聊天就永久修改模型权重。 [tags]
+17161	函数 / Function
+17162	按规则将输入映射到输出的操作。
+17163	具体例子：</strong>f(x)=2x表示输入3输出6。 [tags]
+17164	标量 / Scalar
+17165	单个数值。
+17166	具体例子：</strong>7，或者某一个损失值。 [tags]
+17168	向量 / Vector
+17169	有固定顺序的一排数。
+17170	具体例子：</strong>[0.2,-0.1,0.7,0.4]有4个分量。 [tags]
+17171	矩阵 / Matrix
+17172	有行有列的规则数字表。
+17173	具体例子：</strong>两行三列的表，形状[2,3]。 [tags]
+17174	张量 / Tensor
+17175	机器学习程序中用于存放规则排列数值的数据对象。
+17176	具体例子：</strong>[2,3,4]可读成两张三行四列表。 [tags]
+17177	形状 / Shape
+17178	各个轴分别有多长，不是数据内容。
+17179	具体例子：</strong>内容[[1,2],[3,4]]的形状是[2,2]。 [tags]
+17180	轴 / Axis
+17181	张量中某一个索引方向。
+17182	具体例子：</strong>[B,T,d]的三个轴是样本、位置、特征。 [tags]
+17183	秩 / Rank（轴数）
+17184	张量语境常指轴的数量，与矩阵线性代数中的秩不是一回事。
+17185	具体例子：</strong>[2,128,4096]有3个轴；矩阵秩见F20。 [tags]
+17186	索引 / Index
+17187	用位置找到数据的方式；本书代码从0计数。
+17188	具体例子：</strong>H[1,0]取第二条输入的第一个位置。 [tags]
+17189	切片 / Slice
+17190	按范围或保留某轴的一组位置取出数据。
+17191	具体例子：</strong>H[1,:,2]取第二条输入各位置的第三个分量。 [tags]
+17192	批大小，一起组织计算的输入条数。
+17193	具体例子：</strong>B=2表示两条输入，不表示两层网络。 [tags]
+17194	本轮安排的序列位置数；具体公式需核对是否包含缓存。
+17195	具体例子：</strong>补齐后T=128不证明真实输入都有128个Token。 [tags]
+17196	每个位置内部表示的宽度。
+17197	具体例子：</strong>d=4096即一排4096个数。 [tags]
+17198	N / V（词表）
+17199	词表项数；部分论文写V，注意与Attention的Value区别。
+17200	具体例子：</strong>N=6、d=4的Embedding参数表是[6,4]。 [tags]
+17201	L（层数）
+17202	串行堆叠的模型层数量。
+17203	具体例子：</strong>缓存公式乘L是因为各层都有自己的K和V。 [tags]
+17204	下标 x_i
+17205	向量x的第i个数，或按定义编号的对象。
+17206	具体例子：</strong>x=[7,2,9]时，0起算的x_1是2。 [tags]
+17207	Σ / 求和
+17208	把给定范围内的项逐个相加。
+17209	具体例子：</strong>Σ_i x_i可展开为x_0+x_1+…。 [tags]
+17210	∈读属于；R表示实数集合。
+17211	具体例子：</strong>X∈R^(2×3)表示X是两行三列的实数表。 [tags]
+17212	≈ / 近似
+17213	两边因舍入或近似而接近，并非逐位相等。
+29128	1/3≈0.3333。
+17215	字符 / Character
+17216	文本中的书写单位或编码字符，不能直接等同Token。
+17217	具体例子：</strong>“爱”的UTF-8编码占多个字节。 [tags]
+17219	字节 / Byte
+17220	8个二进制位构成的存储单位。
+17221	具体例子：</strong>一个float32通常占4字节。 [tags]
+17222	把Unicode字符编码为变长字节序列的一种规则。
+17223	具体例子：</strong>网络分片可能切在一个汉字的字节中间。 [tags]
+17224	模型分词器使用的片段单位。
+17225	具体例子：</strong>可能是词、词的一部分、标点或部分字节。 [tags]
+17226	某Token在对应词表中的整数地址。
+17227	具体例子：</strong>[1,2,3]先是编号列表，不是三个语义强度。 [tags]
+17228	按模型配套规则把文本与Token编号相互转换的工具。
+17229	具体例子：</strong>不能随意换分词器而保留不相容的模型参数。 [tags]
+17230	通过逐步合并相邻符号来构建子词词表的一类方法。
+17231	具体例子：</strong>训练合并规则在前，使用规则编码新输入在后。 [tags]
+17232	另一类子词建模方法，常采用词表上的最长匹配编码。
+17233	具体例子：</strong>训练目标和BPE合并过程不同，不能只记成同一种算法。 [tags]
+17234	为候选子词赋概率并选择切分的一类子词模型。
+17235	具体例子：</strong>不等于每次都取词表最长字符串。 [tags]
+17236	聊天模板 / Chat template
+17237	把带角色消息组织成模型约定的输入形式。
+17238	具体例子：</strong>角色与结束标记可能使用专门Token。 [tags]
+17239	Batch / 批次
+17240	一起组织计算的一组输入。
+17241	具体例子：</strong>普通样本batch不让不同用户相互读取内容。 [tags]
+17243	Padding / 补齐
+17244	给短序列增加占位项，使指定组织方式可用。
+17245	具体例子：</strong>[4,2]右补齐为[4,2,0]。 [tags]
+17246	模型配置中的补齐用特殊项。
+17247	具体例子：</strong>本书PAD编号为0，现实编号未必为0。 [tags]
+17248	Truncation / 截断
+17249	删去超长输入的一部分，而不是增加占位。
+17250	具体例子：</strong>可能删掉关键约束，不能与摘要压缩混用。 [tags]
+17251	Embedding / 嵌入表
+17252	按输入编号取出对应可学习向量的参数表及操作。
+17253	具体例子：</strong>E形状[6,4]，编号2取E的第2行。 [tags]
+17255	One-hot / 独热编码
+17256	用与词表大小相同的0/1数组指向某个编号：只有被选中的位置为1，其他均为0。这不同于整数的二进制存储，也不同于Embedding表中可训练的浮点向量。
+17257	具体例子：</strong>6项词表的编号2写成 [tags]
+17258	；若E形状[6,4]，用这个One-hot乘E在数学上等于取出E[2]，但运行时通常直接查表。
+17259	进入完整原理与查表例子 →
+17260	Lookup / 查表
+17261	根据地址读取完整条目，不用地址大小进行语义运算。
+17262	具体例子：</strong>编号4对应[0.1,-0.5,0.9,0.3]，不是将4乘某个向量。 [tags]
+17263	分布式表示
+17264	一个含义由多个数及其组合共同表达，而非每列固定对应一个词义标签。
+17265	具体例子：</strong>不能断言第12维永远表示快乐。 [tags]
+17266	dtype / 数据类型
+17267	规定每个元素如何存储与运算。
+17268	具体例子：</strong>整数编号与浮点表示通常不是同一dtype。 [tags]
+17270	浮点数 / Floating point
+17271	用有限位数近似表示实数的计算机格式。
+17272	具体例子：</strong>0.1不一定能被二进制浮点精确保存。 [tags]
+17273	不同的32位或16位浮点格式，范围与精度不一样。
+17274	具体例子：</strong>FP16和BF16都通常占2字节，但不能视为同一数值格式。 [tags]
+17275	通用处理器，适合多种控制和数值任务。
+17276	具体例子：</strong>本包基础实验使用CPU与Python标准库。 [tags]
+17277	适合大规模并行数值运算的处理器。
+17278	具体例子：</strong>数据搬到GPU不改变编号语义，但消耗时间和显存。 [tags]
+17279	Device / 设备
+17280	数据或运算所在的处理器环境。
+17281	具体例子：</strong>模型权重与输入必须满足相容的设备约束。 [tags]
+17282	显存 / VRAM
+17283	GPU用于存放参数、输入和中间结果的存储空间。
+17284	具体例子：</strong>只算Embedding输出大小不等于模型总显存。 [tags]
+17285	二进制存储单位，分别为2^20和2^30字节。
+17286	具体例子：</strong>1,048,576个2字节数占2MiB。 [tags]
+17287	权重 / Weight
+17288	决定输入数值如何组合的可学习系数。
+17289	具体例子：</strong>[1,2,3]乘系数[2,0,1]后求和得5。 [tags]
+17291	点积 / Dot product
+17292	两个等长向量逐项相乘再求和。
+29129	[1,2]·[3,4]=11。
+17293	矩阵乘法 / Matmul
+17294	把左表每一行与右表每一列做点积。
+17295	具体例子：</strong>[2,3]乘[3,4]得到[2,4]。 [tags]
+17296	转置 / Transpose / ᵀ
+17297	交换矩阵的行列方向。
+17298	具体例子：</strong>[[1,2,3],[4,5,6]]转置为[[1,4],[2,5],[3,6]]。 [tags]
+17299	范数 / Norm
+17300	衡量向量大小的一类函数，L2范数为平方和开根号。
+17301	具体例子：</strong>[3,4]的L2范数为5。 [tags]
+17302	余弦相似度 / Cosine
+17303	点积除以两个向量的L2范数，比较方向。
+17304	具体例子：</strong>主题方向接近不保证事实或权限一致。 [tags]
+17305	在元素总数相同的条件下改变数据视图或组织形状。
+17306	具体例子：</strong>6个数可以摆成[2,3]或[3,2]，但转置另有排列规则。 [tags]
+17308	permute / 转轴
+17309	重排多个轴的次序。
+17310	具体例子：</strong>[B,T,h,d_h]变为[B,h,T,d_h]。 [tags]
+17311	Broadcast / 广播
+17312	把兼容的单例维按规则扩展用于组合运算。
+17313	具体例子：</strong>每列偏置可应用到表中每一行，不是真的先学出很多份偏置。 [tags]
+17314	Stride / 步幅
+17315	沿某轴移动一个索引时底层存储要跨过的元素间距。
+17316	具体例子：</strong>转置后的视图可能不连续，后续reshape可能需复制。 [tags]
+17317	概率 / Probability
+17318	在给定条件和模型下事件所占的可能性份额。
+17319	具体例子：</strong>候选Token概率不是最终答案正确率。 [tags]
+17321	指数函数，将数值转换为正数；e约2.71828。
+29130	exp(0)=1，exp(ln2)=2。
+17322	指数的反向函数；本书未注明底时通常指自然对数。
+17323	具体例子：</strong>ln(1)=0，ln(2)约0.6931。 [tags]
+17324	将各分数取指数，再除以所有指数之和。
+17325	具体例子：</strong>[2,1,0]经Softmax后约为[0.6652,0.2447,0.0900]。 [tags]
+17326	归一化 / Normalization
+17327	按选定规则调整尺度；不同语境目标不同。
+17328	具体例子：</strong>softmax使和为1，LayerNorm按均值与方差变换，不是一回事。 [tags]
+17329	线性层 / Linear layer
+17330	常写作XW+b，对输入做加权组合并加偏置。
+17331	具体例子：</strong>输出宽度由W的列数决定。 [tags]
+17333	偏置 / Bias（参数）
+17334	线性层加上的可学习常数项。
+17335	具体例子：</strong>不同于评测里的统计偏差。 [tags]
+17336	激活 / Activation
+17337	可指层的中间输出，也可指激活函数，需看语境。
+17338	具体例子：</strong>ReLU把负数变0；激活显存存的是本次中间结果。 [tags]
+17339	非线性 / Nonlinearity
+17340	不能仅用一次线性变换等价表示的运算。
+17341	具体例子：</strong>ReLU使网络可以表达更复杂的分段行为。 [tags]
+17342	不同的非线性激活函数。
+17343	具体例子：</strong>ReLU(x)=max(0,x)，另外两者有平滑曲线。 [tags]
+17344	隐藏状态 / Hidden state
+17345	网络内部某层某位置的一排表示数字。
+17346	具体例子：</strong>相同Token在不同上下文的后层表示可能不同。 [tags]
+17347	前向 / Forward
+17348	按网络定义从输入计算输出。
+17349	具体例子：</strong>训练与推理都会做前向，训练还做反向更新。 [tags]
+17350	Attention / 注意力
+17351	计算查询与可读候选的匹配份额，再加权组合内容。
+17352	具体例子：</strong>先计算分数和权重，再用权重混合V。 [tags]
+17354	当前位置用于与候选比较的一组数。
+17355	具体例子：</strong>q=[1,0]不是用户原话，而是投影后的表示。 [tags]
+17356	每个可读位置用于被查询比较的一组数。
+17357	具体例子：</strong>与Q点积得到匹配分数。 [tags]
+17358	每个可读位置将被加权汇集的内容表示。
+17359	具体例子：</strong>这里V不是词表大小。 [tags]
+17360	Key宽度或每个头的宽度，具体以公式定义为准。
+17361	具体例子：</strong>常见点积缩放除以sqrt(d_k)。 [tags]
+17362	Self-attention / 自注意力
+17363	查询与可读信息来自同一序列的表示。
+17364	具体例子：</strong>生成模型通常再施加因果限制。 [tags]
+17365	规定哪些位置间的读取被允许的约束。
+17366	具体例子：</strong>接口可能用布尔值或加性负无穷，真假约定要核对。 [tags]
+17368	Causal mask / 因果掩码
+17369	让当前位置不能读取尚未来到的位置。
+17370	具体例子：</strong>位置1能读0和1，但不能读2。 [tags]
+17371	排除补齐项作为有效内容的标记。
+17372	具体例子：</strong>PAD向量全0仍不保证其softmax权重自动为0。 [tags]
+17373	规定哪些位置的预测误差计入训练目标。
+17374	具体例子：</strong>用户文本可被读取，但可不直接计算该段输出损失。 [tags]
+17375	表示真实逻辑位置的编号，不是Token身份编号。
+17376	具体例子：</strong>同一个“爱”出现在位置1或7，Token ID可相同但位置不同。 [tags]
+17378	通过按位置旋转成对坐标来引入位置信息的方法。
+17379	具体例子：</strong>二维90度旋转把[2,3]变为[-3,2]。 [tags]
+17380	描述二维单位圆上角度对应的纵横坐标的函数。
+17381	具体例子：</strong>旋转矩阵用它们保持长度并改变方向。 [tags]
+17382	Residual / 残差连接
+17383	把某段变换的输入加回输出。
+17384	具体例子：</strong>y=x+f(x)，要求可相加的形状。 [tags]
+17386	通常对每位置的特征计算均值方差并标准化，再用可学习尺度偏移。
+17387	具体例子：</strong>[1,3]忽略epsilon时标准化为[-1,1]。 [tags]
+17388	按均方根尺度归一化，通常不减均值。
+17389	具体例子：</strong>[1,3]除以sqrt(5)。 [tags]
+17390	通常是避免除零等数值问题的小正数，具体公式另有定义。
+17391	具体例子：</strong>放在方差加项中时会影响精确数值。 [tags]
+17392	通常在每个位置应用的前馈子网络。
+17393	具体例子：</strong>常把宽度先扩展再缩回，带非线性或门控。 [tags]
+17394	SwiGLU / 门控
+17395	以一个分支产生的值调节另一个分支输出的前馈结构。
+17396	具体例子：</strong>不是“挑一个词通过”，而是逐数值调制。 [tags]
+17397	归一化放在子层变换之前或残差之后的结构安排。
+17398	具体例子：</strong>不同结构的梯度与数值行为不能只看模块名称判断。 [tags]
+17399	输出投影给各词表候选的未归一化分数。
+17400	具体例子：</strong>可以是负数，还不是概率或Token编号。 [tags]
+17402	Argmax / 贪心选择
+17403	选择分数或概率最大的候选下标。
+17404	具体例子：</strong>不涉及按概率随机抽样。 [tags]
+17405	Sampling / 采样
+17406	依据概率分布抽取候选。
+17407	具体例子：</strong>相同输入可以得到不同输出，不代表参数变了。 [tags]
+17408	Temperature / 温度
+17409	在softmax前调整分数尺度的参数。
+17410	具体例子：</strong>正温度越低分布一般越集中，0需按接口特殊语义处理。 [tags]
+17411	分别按候选个数或累计概率保留候选的策略。
+17412	具体例子：</strong>筛选后通常还要重新归一化。 [tags]
+17413	模型约定的一种结束序列Token。
+17414	具体例子：</strong>与最大输出长度、用户取消是不同结束原因。 [tags]
+17415	自回归 / Autoregressive
+17416	根据已有序列逐步预测后续项。
+17417	具体例子：</strong>预测出新Token后，再把它作为后续步骤的条件。 [tags]
+17418	处理当前已经知道的一段输入前缀。
+17419	具体例子：</strong>得到各层表示及可复用的K/V。 [tags]
+17421	Decode（推理阶段）
+17422	继续逐步生成新Token的阶段。
+17423	具体例子：</strong>别与Tokenizer把编号解为文字的decode混淆。 [tags]
+17424	保存每层已有位置的Key和Value计算结果以复用。
+17425	具体例子：</strong>不是用户长期记忆，也不是Prompt摘要。 [tags]
+17426	用于跟踪缓存中逻辑位置的参数或约定。
+17427	具体例子：</strong>有历史前缀后，新查询不能重新从绝对位置0开始。 [tags]
+17428	导数 / Derivative
+17429	输入微小变化引起输出变化的局部比率。
+17430	具体例子：</strong>x²在x=3处导数是6。 [tags]
+17432	梯度 / Gradient
+17433	损失对各个参数的偏导数组成的集合。
+17434	具体例子：</strong>不是模型“思考过程”，是可计算的变化率。 [tags]
+17435	∂ / 偏导数
+17436	只改变某个变量、其余变量按定义固定时的变化率符号。
+17437	具体例子：</strong>∂L/∂w说明权重w对损失L的局部影响。 [tags]
+17438	链式法则 / Chain rule
+17439	把复合计算各阶段的变化率相乘并按路径相加。
+17440	具体例子：</strong>输出经中间量依赖w时，沿计算链回传影响。 [tags]
+17441	反向传播 / Backprop
+17442	利用链式法则高效计算各参数梯度的算法。
+17443	具体例子：</strong>沿已有前向计算图反向计算，不是反着生成文字。 [tags]
+17445	通过输入小幅加减后的输出差近似导数。
+17446	具体例子：</strong>可用于核对解析梯度，但不是大型模型训练常规替代法。 [tags]
+17447	标签 / Label
+17448	训练中希望模型预测的目标。
+17449	具体例子：</strong>自回归当前位置的标签通常是下一个Token。 [tags]
+17451	交叉熵 / Cross entropy
+17452	对目标概率取负对数后求平均等的训练目标。
+17453	具体例子：</strong>目标概率0.8时单项损失−ln0.8约0.2231。 [tags]
+17454	Learning rate / 学习率η
+17455	决定沿梯度更新多大步的系数。
+29131	w_new=w−η×gradient。
+17456	利用梯度一阶与二阶统计的优化器；AdamW独立处理权重衰减。
+17457	具体例子：</strong>恢复训练时应考虑其状态，不只有模型权重。 [tags]
+17458	Checkpoint（训练）
+17459	保存恢复训练所需状态的持久产物。
+17460	具体例子：</strong>可能含权重、优化器、步数与随机状态。 [tags]
+17461	过拟合 / Overfitting
+17462	过分适应训练数据而不能很好处理新样本。
+17463	具体例子：</strong>背熟教学循环序列不代表会自然语言推理。 [tags]
+17464	用指定目标回答做监督微调。
+17465	具体例子：</strong>属于参数训练，和会话中加载Skill不同。 [tags]
+17467	利用人类或AI反馈进行强化学习式后训练的方法族。
+17468	具体例子：</strong>反馈来源和目标都需核对，不能仅看缩写。 [tags]
+17469	策略 / Policy
+17470	给定状态时对动作或Token的概率分布。
+17471	具体例子：</strong>π(y|x)表示在输入x条件下产生输出y的概率。 [tags]
+17472	奖励 / Reward
+17473	用于评价动作或结果并驱动优化的信号。
+17474	具体例子：</strong>高奖励不自动证明符合真实业务目标。 [tags]
+17475	以偏好对比较策略相对参考模型概率的训练方法。
+17476	具体例子：</strong>要算完整回答条件概率，不只看最后一个Token。 [tags]
+17477	KL散度
+17478	衡量一个概率分布相对另一个分布的偏离量，通常有方向性。
+17479	具体例子：</strong>KL(p||q)不必等于KL(q||p)。 [tags]
+17480	不同策略优化方法，使用概率比及估计信号等控制更新。
+17481	具体例子：</strong>先懂策略、奖励、基线和相对变化，再读具体公式。 [tags]
+17482	矩阵秩 / Low rank
+17483	矩阵中独立方向的数量；低秩可用较小矩阵乘积近似某变换。
+17484	具体例子：</strong>不是张量轴数，rank2更新仍可用于二维权重矩阵。 [tags]
+17486	用低秩参数增量适配原权重的微调方法。
+17487	具体例子：</strong>ΔW=AB，训练A和B而非全部基础权重。 [tags]
+17488	在量化基础模型上训练低秩适配参数的一类方法。
+17489	具体例子：</strong>不意味着所有计算都在4位整数中完成。 [tags]
+17490	Quantization / 量化
+17491	把数值映射到较少位数的离散表示。
+17492	具体例子：</strong>通常需要尺度等元数据，并引入近似误差。 [tags]
+17493	Distillation / 蒸馏
+17494	利用教师模型输出或中间信号训练学生模型。
+17495	具体例子：</strong>不是把大模型参数简单切走一半。 [tags]
+17496	MoE / 专家混合
+17497	根据输入选择部分专家子网络参与计算的架构。
+17498	具体例子：</strong>总参数与本次激活参数分开统计。 [tags]
+17499	不同查询头与K/V头共享方式的注意力结构。
+17500	具体例子：</strong>共享更多K/V可减少缓存，但不保证质量完全相同。 [tags]
+17501	复杂度 / O记号
+17502	描述规模增长时主要计算或存储如何增长，省略常数细节。
+17503	具体例子：</strong>O(T²)不意味着某次实测恰好用T²毫秒。 [tags]
+17505	浮点运算次数的一种计数指标。
+17506	具体例子：</strong>计算少可能仍因内存搬运而慢。 [tags]
+17507	Bandwidth / 带宽
+17508	单位时间可搬运的数据量。
+17509	具体例子：</strong>显存带宽与网络带宽是不同瓶颈。 [tags]
+17510	通过分块和更有效内存访问计算注意力的一类实现。
+17511	具体例子：</strong>不是稀疏注意力，也不是把旧历史摘要掉。 [tags]
+17512	按块管理注意力缓存的一类机制。
+17513	具体例子：</strong>逻辑连续不要求物理内存一大块连续。 [tags]
+17514	张量并行、流水线并行和数据并行的不同拆分方式。
+17515	具体例子：</strong>拆运算、拆层、拆样本的通信要求不同。 [tags]
+17516	ZeRO / 分片
+17517	通过分散保存训练状态减少跨设备重复的一类方法。
+17518	具体例子：</strong>不等于把模型训练目标改变。 [tags]
+17519	草稿提候选，目标模型验证并修正的生成加速方法。
+17520	具体例子：</strong>保持目标分布需要正确的接受与拒绝采样。 [tags]
+17521	根据任务与观察调用模型和工具、持续推进的执行系统。
+17522	具体例子：</strong>不只是一次写得很长的Prompt。 [tags]
+17524	Harness / 宿主执行框架
+17525	组织模型输入、工具、状态、权限和反馈的外围程序。
+17526	具体例子：</strong>模型提出读文件，Harness执行并回填结果。 [tags]
+17527	Workflow / 工作流
+17528	由程序预先安排主要步骤和分支的流程。
+17529	具体例子：</strong>不等于每一步都必须由模型临时决策。 [tags]
+17530	程序之间约定输入、输出与行为的接口。
+17531	具体例子：</strong>不是人类界面的按钮本身。 [tags]
+17533	表达对象、数组、字符串、数值等结构化数据的文本格式。
+17534	具体例子：</strong>合法JSON不保证字段内容在业务上合法。 [tags]
+17535	对数据字段及类型等结构的约束描述。
+17536	具体例子：</strong>path是字符串，不表示可以读取任意路径。 [tags]
+17537	常用于客户端与服务器请求响应的网络协议。
+17538	具体例子：</strong>收到HTTP响应不单独证明业务动作成功。 [tags]
+17539	通过事件流逐段发送服务器消息的协议形式。
+17540	具体例子：</strong>传输分片边界不保证等于一个完整事件。 [tags]
+17541	Tool call / 工具调用
+17542	模型提出的工具名称和参数等结构化请求。
+17543	具体例子：</strong>提出调用不是工具已经执行。 [tags]
+17544	用来匹配一次工具调用与结果的标识。
+17545	具体例子：</strong>并行调用不能仅按结果到达顺序配对。 [tags]
+17546	State / 状态
+17547	系统当前有效事实或进展的记录。
+17548	具体例子：</strong>已提交、执行中、成功、失败、结果未知。 [tags]
+17550	Event / 事件
+17551	记录某件事发生的不可混淆描述。
+17552	具体例子：</strong>“写入开始”和“写入确认”不是同一事件。 [tags]
+17553	Checkpoint（任务）
+17554	为了中断后继续而保存的任务状态。
+17555	具体例子：</strong>不等于训练checkpoint，也不等于长期经验。 [tags]
+17556	Unknown / 未知结果
+17557	无法确认外部动作是否已经完成的状态。
+17558	具体例子：</strong>超时可能发生在成功执行之后。 [tags]
+17559	宿主与外部工具或资源服务器交互的一套协议。

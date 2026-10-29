@@ -1,0 +1,753 @@
+30922	Unread disk file
+30923	Not in this request
+30924	The model cannot claim to have read it on this basis
+30925	1. Harness request
+30926	2. Unread disk file
+30927	Which different objects does one sentence pass through: tokenization and IDs
+30928	Piece: 我
+30929	Teaching vocabulary ID
+30930	Piece: 爱
+30931	input_ids for this round
+30932	In the original order
+30933	[1,2], two positions
+30934	1. Piece: 我
+30935	2. Piece: 爱
+30936	3. input_ids for this round
+30937	Which different objects does one sentence pass through: looking up vectors
+30938	Position 0 / ID1
+30939	Read row 1 of the embedding table
+30940	Position 1 / ID2
+30941	Read row 2 of the embedding table
+30942	Output shape
+30943	4 features per position
+30944	[2,4]; not 4 binary bits
+30945	1. Position 0 / ID1
+30946	2. Position 1 / ID2
+30947	3. Output shape
+30948	Which different objects does one sentence pass through: the model computes the next item
+30949	Fixed model parameters θ
+30950	Act on this input's position representations
+30951	Produce vocabulary candidate scores
+30952	logits for this input
+30953	Computed results, not parameters
+30954	This figure specifies no scores; see F18 for the full values
+30955	Model parameters θ
+30956	Stay unchanged during ordinary inference
+30957	The current representations and output change
+30958	1. Fixed model parameters θ
+30959	2. logits for this input
+30960	3. Model parameters θ
+30961	Which different objects does one sentence pass through: the harness handles the output
+30962	If text is returned
+30963	The harness decodes and displays it
+30964	The output does not prove an external file changed
+30965	If a tool call is returned
+30966	The harness validates it and actually executes it
+30967	New evidence appears only after the tool result is filled back in
+30968	1. If text is returned
+30969	2. If a tool call is returned
+30970	What exactly does one more axis add: arranging a second input
+30971	ID table
+30972	First axis: which sentence; second axis: which position in that sentence.
+30973	What exactly does one more axis add: expanding one cell into a row of numbers
+30974	Original ID table
+30975	Vector for 爱
+30976	The added axis is "which cell in this row of numbers"; it is not the number of bits in a binary encoding.
+30977	What exactly does one more axis add: two tables of three rows and four columns
+30978	Input 0: 我爱学习
+30979	Input 1: 你爱 + PAD
+30980	2 × 3 × 4 = 24 floating-point numbers, not 24 tokens.
+30981	1. Text 0
+30982	2. Text 1
+30983	Text, bytes, tokens and IDs are four different things: text pieces
+30984	Piece 0
+30985	Teaching segmentation result
+30986	Piece 1
+30987	1. Piece 0
+30988	2. Piece 1
+30989	Text, bytes, tokens and IDs are four different things: vocabulary mapping
+30990	Vocabulary row number
+30991	我→1, 爱→2, 学习→3
+30992	An ID is an identity, not a semantic score
+30993	你→4, ！→5, PAD→0
+30994	学习 is one token; its two characters are not two items
+30995	1. Vocabulary row number
+30996	2. Vocabulary row number
+30997	Text, bytes, tokens and IDs are four different things: integer sequences
+30998	input_ids for text 0
+30999	Encoded in piece order
+31000	input_ids for text 1
+31001	Not padded yet
+31002	1. input_ids for text 0
+31003	2. input_ids for text 1
+31004	Text, bytes, tokens and IDs are four different things: checking decoding
+31005	Decode [1,2,3]
+31006	Recover pieces using the same vocabulary
+31007	我 + 爱 + 学习 = 我爱学习
+31008	Decode [4,2]
+31009	你 + 爱 = 你爱
+31010	1. Decode [1,2,3]
+31011	2. Decode [4,2]
+31012	Text, bytes, tokens and IDs are four different things: making the boundaries explicit
+31013	Character count of ordinary text
+31014	In this example, 我爱学习 has 4 characters
+31015	This is not its 3-token count
+31016	Tokenization in a real model
+31017	Use the model's tokenizer
+31018	Count role markers and byte pieces separately
+31019	1. Character count of ordinary text
+31020	2. Tokenization in a real model
+31021	Batching does not blend two sentences into one: padding to equal lengths
+31022	Batching does not blend two sentences into one: keeping the valid-position table
+31023	Sentence 0
+31024	Sentence 1
+31025	Batching does not blend two sentences into one: taking the last valid position
+31026	Last valid=2
+31027	Last valid=1
+31028	An embedding is a row lookup, not an ID converted to binary: taking row 2 for 爱
+31029	爱 → ID2
+31030	An embedding is a row lookup, not an ID converted to binary: taking row 3 for 学习
+31031	学习 → ID3
+31032	An embedding is a row lookup, not an ID converted to binary: taking row 4 for 你
+31033	你 → ID4
+31034	An embedding is a row lookup, not an ID converted to binary: restoring the original sentence order
+31035	The same ID2 retrieves the same initial vector in both sentences.
+31036	1. ID table [2,3]
+31037	2. Feature table [2,3,4]
+31038	Moving data to the GPU changes where it is, not what it means: specifying bytes per number as well
+31039	The same byte scale: 0—96 B
+31040	Features / float32
+31041	Only these two tensors are counted; changing feature precision does not convert integer IDs to half precision.
+31042	Moving data to the GPU changes where it is, not what it means: changing only feature precision
+31043	Features / float16
+31044	Moving data to the GPU changes where it is, not what it means: computation needs other memory too
+31045	This input representation
+31046	96 B in float32
+31047	Only one tensor
+31048	Total model VRAM
+31049	Parameters＋activations＋cache, etc.
+31050	Cannot be inferred from 96 B; GPU speed was not measured here
+31051	1. This input representation
+31052	2. Total model VRAM
+31053	Matrix multiplication is like filling in a recipe result cell by cell: filling output row 0, column 1
+31054	Matrix multiplication is like filling in a recipe result cell by cell: filling output row 1, column 0
+31055	Matrix multiplication is like filling in a recipe result cell by cell: filling output row 1, column 1
+31056	Keep changing the arrangement separate from changing the values: reshape: only regrouping
+31057	The original order stays the same; only the grouping used to read indices changes.
+31058	Keep changing the arrangement separate from changing the values: transpose: exchanging row and column roles
+31059	The same original table
+31060	Transpose [3,2]
+31061	The same output shape does not imply the same operation.
+31062	Keep changing the arrangement separate from changing the values: broadcasting: actually adding this time
+31063	[2,1] bias
+31064	Add to each row separately
+31065	[2,1] expands across columns; understanding it does not require copying it into a larger table.
+31066	Softmax does not simply divide the scores by their sum: shifting all scores down
+31067	Shifted scores
+31068	Softmax does not simply divide the scores by their sum: exponentiating each item
+31069	Softmax does not simply divide the scores by their sum: dividing each by the same total
+31070	Softmax does not simply divide the scores by their sum: selecting an item by probability intervals
+31071	A network layer rearranges numbers; it does not produce hidden sentences: linear combination
+31072	A network layer rearranges numbers; it does not produce hidden sentences: nonlinear filtering
+31073	ReLU: negative numbers become 0
+31074	A network layer rearranges numbers; it does not produce hidden sentences: combining in the second layer
+31075	Multiply by W2=[2,1], then sum
+31076	A network layer rearranges numbers; it does not produce hidden sentences: identifying the intermediate objects
+31077	Temporary numbers for this forward pass
+31078	h=[3,0], not Chinese reasoning text
+31079	Output y
+31080	The scalar result of this network
+31081	6 is neither a probability nor a vocabulary ID
+31082	1. Hidden state
+31083	2. Output y
+31084	A network layer rearranges numbers; it does not produce hidden sentences: independent counterexample
+31085	Independent comparison with ReLU removed
+31086	Q/K/V: first compute where to read from, then how much to read in: transforming each row separately, before mixing positions
+31087	Q: the receiver's matching representation
+31088	K: supplies matching features
+31089	V: supplies the numbers to mix
+31090	Lowercase q is one row; uppercase Q is a table of rows for all positions. Parameter weights W and read shares are different objects.
+31091	Q/K/V: first compute where to read from, then how much to read in: the receiver is 爱; compare two visible positions
+31092	Query for 爱
+31093	Key for 我
+31094	Key for 爱
+31095	Q/K/V: first compute where to read from, then how much to read in: turning scores into read shares
+31096	These two items are shares read from input positions, not next-token probabilities.
+31097	Q/K/V: first compute where to read from, then how much to read in: once the shares are set, V is mixed, not K
+31098	V to be mixed
+31099	New representation at the 爱 position
+31100	Shares come from comparing Q/K; content comes from V. Neither word is selected as the final answer.
+31101	A mask is a visibility table, not extra meaning: processing absolute position 1
+31102	Read row 1 now: 1=allowed, 0=blocked.
+31103	A mask is a visibility table, not extra meaning: processing absolute position 2
+31104	Read row 2 now: 1=allowed, 0=blocked.
+31105	A mask is a visibility table, not extra meaning: blocking is not simply "multiply the score by 0"
+31106	Teaching scores with only the first two items visible
+31107	Apply softmax to [2,1,−∞]
+31108	The third probability is 0; it takes no share of the denominator.
+31109	A mask is a visibility table, not extra meaning: with a cache, numbering cannot restart at 0
+31110	Relation shape [2,5]
+31111	New query 0 is actually position 3 in the full sequence.
+31112	How position enters the numeric computation: rotating position 1 to 30 degrees
+31113	Position 1: angle 1×30°
+31114	Original vector [1,0], rotated [0.8660,0.5000], length still 1
+31115	How position enters the numeric computation: rotating position 2 to 60 degrees
+31116	Position 2: angle 2×30°
+31117	Original vector [1,0], rotated [0.5000,0.8660], length still 1
+31118	How position enters the numeric computation: rotating position 3 to 90 degrees
+31119	Position 3: angle 3×30°
+31120	Original vector [1,0], rotated [0.0000,1.0000], length still 1
+31121	How position enters the numeric computation: comparing angle differences, not position names
+31122	Position 0 and position 2
+31123	Dot product at 0° and 60° = cos60° = 0.5
+31124	Rotate both another 30°
+31125	The angle between 30° and 90° is still 60°
+31126	Comparison result
+31127	Dot product still 0.5
+31128	Actual attention also depends on the original Q/K values and different frequencies; the dot product is not just positional distance.
+31129	A Transformer layer is not attention alone: reading context after normalization
+31130	A Transformer layer is not attention alone: first residual addition
+31131	A Transformer layer is not attention alone: processing each position
+31132	A Transformer layer is not attention alone: second residual addition
+31133	A Transformer layer is not attention alone: entering the next layer
+31134	How one input connects to prediction, all the way to the end: processing the full input (Prefill)
+31135	What actually enters the model this time
+31136	Cache for 我, 爱: 0 → 2
+31137	Representation at the last position
+31138	Passes through attention, residuals and feed-forward to the vocabulary output head
+31139	No selection yet
+31140	First obtain 7 candidate scores; parameters stay unchanged
+31141	How one input connects to prediction, all the way to the end: selection 1: 学习
+31142	Greedy selection: 学习; the cache still holds only 2 processed positions.
+31143	How one input connects to prediction, all the way to the end: displaying new text while preparing the next input
+31144	Just selected
+31145	Accumulated output
+31146	To process next round
+31147	Only 学习; it is not in K/V yet
+31148	How one input connects to prediction, all the way to the end: next round: process only 学习
+31149	Cache for 学习: 2 → 3
+31150	How one input connects to prediction, all the way to the end: selection 2: ！
+31151	Greedy selection: ！; the cache still holds only 3 processed positions.
+31152	Only ！; it is not in K/V yet
+31153	How one input connects to prediction, all the way to the end: next round: process only ！
+31154	Cache for ！: 3 → 4
+31155	How one input connects to prediction, all the way to the end: selection 3: EOS
+31156	Greedy selection: EOS; the cache still holds only 4 processed positions.
+31157	How one input connects to prediction, all the way to the end: stopping does not mean every task succeeds
+31158	Visible result
+31159	Input: 我爱; appended output: 学习！
+31160	Stop record
+31161	Reason: EOS; final cache length: 4
+31162	The tokens here happen to match complete pieces; a real tokenizer's piece boundaries need not align with Chinese characters or network chunks.
+31163	KV cache: keep what was computed, without skipping what must be read: selecting a new item, not yet counting it in the cache
+31164	t3 awaiting processing
+31165	Not in historical K/V
+31166	KV cache: keep what was computed, without skipping what must be read: computing K/V only for the new position
+31167	Just computed K/V
+31168	KV cache: keep what was computed, without skipping what must be read: reusing history, not deleting it
+31169	K/V stored
+31170	KV cache: keep what was computed, without skipping what must be read: comparison: changing the prefix means a different cache
+31171	Reuse can be checked
+31172	New t1
+31173	Must recompute
+31174	Reuse conditions
+31175	Model parameters, original prefix, positions, attention rules, etc. must be compatible.
+31176	A gradient is like a slope; the learning rate is like step size: the gradient gives the local direction
+31177	A gradient is like a slope; the learning rate is like step size: setting the step size and actually updating parameters
+31178	Prediction=3.6
+31179	Loss=0.08
+31180	A gradient is like a slope; the learning rate is like step size: independent counterexample: too large a step
+31181	Prediction=6.8
+31182	Loss=3.92
+31183	Training: give every position a "what comes next" question: concurrent computation during training does not allow peeking ahead
+31184	Visibility during training
+31185	"Knowing the labels" and "letting the model read the labels" are different things.
+31186	Training: give every position a "what comes next" question: scoring one position first
+31187	Use only the true target's share of the distribution, not "predicted ID−target ID".
+31188	Training: give every position a "what comes next" question: masking invalid targets before averaging
+31189	Per-position loss
+31190	Average valid losses
+31191	Training: give every position a "what comes next" question: computing gradients must be followed by step
+31192	Produce a distribution
+31193	Score valid targets
+31194	Obtain gradients
+31195	Parameters actually change
+31196	Next batch
+31197	Zero or accumulate as planned
+31198	Validation set
+31199	Check performance on unseen samples
+31200	The same question x
+31201	Complete candidate answers
+31202	y_A and y_B
+31203	Comparison conditions
+31204	Same question, same scoring criteria
+31205	Do not directly rank scores from different tasks
+31206	1. The same question x
+31207	2. Comparison conditions
+31208	Post-training changes behavior; a reward is not an arbiter of fact: people or rules supply preferences
+31209	Preference labeling
+31210	Labeled A better than B in this example
+31211	Labels may be noisy; they are not truth
+31212	Training data pair
+31213	Keep the original question and criteria
+31214	1. Preference labeling
+31215	2. Training data pair
+31216	Post-training changes behavior; a reward is not an arbiter of fact: comparing under the current model
+31217	Current policy πθ
+31218	Conditional log probability of the whole of A
+31219	Conditional log probability of the whole of B
+31220	1. Current policy πθ
+31221	2. Current policy πθ
+31222	Post-training changes behavior; a reward is not an arbiter of fact: comparing under the reference model
+31223	Reference policy πref
+31224	Compute a baseline for the same answer pair
+31225	Not the probability for a different question
+31226	Relative change
+31227	Current difference minus reference difference
+31228	Not just A's absolute probability
+31229	1. Reference policy πref
+31230	2. Relative change
+31231	Post-training changes behavior; a reward is not an arbiter of fact: forming a training signal
+31232	DPO path
+31233	Put the relative difference into the preference objective
+31234	Directly form a parameter-update signal
+31235	RLHF path
+31236	May include a reward model and policy optimization
+31237	Do not conflate the two training processes
+31238	1. DPO path
+31239	2. RLHF path
+31240	Post-training changes behavior; a reward is not an arbiter of fact: evaluating again
+31241	Evaluation after training
+31242	Use independent tasks and criteria
+31243	Check preferences, correctness and regressions
+31244	Repeated scoring by the same judge
+31245	May only verify that it pleases the judge
+31246	Cannot prove improvement on all real tasks
+31247	1. Evaluation after training
+31248	2. Repeated scoring by the same judge
+31249	Existing weights W
+31250	The model must load or access them
+31251	Total parameters differ from trainable parameters
+31252	This run's objective
+31253	First decide which resource to save
+31254	Training state / weight bits / activation computation
+31255	1. Existing weights W
+31256	2. This run's objective
+31257	Fewer parameters, fewer bits and fewer activations are not the same optimization: LoRA
+31258	LoRA main path
+31259	W is frozen but still used in the forward pass
+31260	W has not disappeared
+31261	LoRA branch
+31262	Train only the low-rank increment
+31263	Reduce trainable parameters and their state
+31264	1. LoRA main path
+31265	2. LoRA branch
+31266	Fewer parameters, fewer bits and fewer activations are not the same optimization: quantization
+31267	Quantization input
+31268	x=0.26, scale s=0.1
+31269	Reconstruct
+31270	Error 0.3-0.26=+0.04
+31271	1. Quantization input
+31272	2. Reconstruct
+31273	Fewer parameters, fewer bits and fewer activations are not the same optimization: MoE
+31274	Select some experts per token
+31275	Not all experts run at every step
+31276	Still required
+31277	Accessible weights, routing and communication
+31278	Fewer activations do not mean zero storage
+31279	2. Still required
+31280	Fewer parameters, fewer bits and fewer activations are not the same optimization: separate resource accounts
+31281	Training account
+31282	Gradients, optimizer state, activations
+31283	LoRA mainly affects the trainable part
+31284	Inference account
+31285	Weights, KV, temporaries and bandwidth
+31286	Specify each object being quantized
+31287	1. Training account
+31288	2. Inference account
+31289	Fewer parameters, fewer bits and fewer activations are not the same optimization: actual acceptance
+31290	Acceptance conditions
+31291	Same tasks, quality threshold, hardware
+31292	Report latency, throughput, peak memory
+31293	Theoretical storage reduction
+31294	Not a measurement of actual speedup
+31295	Also count dequantization and scheduling costs
+31296	1. Acceptance conditions
+31297	2. Theoretical storage reduction
+31298	Slow computation may mean things are being moved slowly: doubling only compute capacity
+31299	Slow computation may mean things are being moved slowly: halving only data movement
+31300	Slow computation may mean things are being moved slowly: a lower bound is not measured time
+31301	Message 1 / 8
+31302	Specific content transmitted
+31303	Read timeout in config.txt
+31304	What this step changed
+31305	The arrow shows this message's direction, not the model directly operating on a file.
+31306	Message 2 / 8
+31307	Task + read_file tool definition
+31308	Message 3 / 8
+31309	Message 4 / 8
+31310	Validate c1, then read the file
+31311	Message 5 / 8
+31312	c1 result: timeout=30
+31313	Message 6 / 8
+31314	Original task + c1 call + c1 result
+31315	Message 7 / 8
+31316	Answer: configured timeout is 30
+31317	Message 8 / 8
+31318	Display the answer
+31319	Complete characters, complete events and complete tool arguments are three separate gates: receiving the remaining bytes
+31320	Complete characters, complete events and complete tool arguments are three separate gates: complete SSE event
+31321	data: {"text":"爱"}
+31322	Blank line: event boundary
+31323	Complete characters, complete events and complete tool arguments are three separate gates: parsing structure before interpreting meaning
+31324	{"text":"爱"}
+31325	Text type; no tool execution
+31326	File replaced with v8
+31327	v8 exists, but the harness received no success acknowledgment
+31328	Confirm v8 by op1 and its content
+31329	Record success afterward; do not write blindly again
+31330	Message 1 / 7
+31331	Connect and negotiate capabilities with the Server
+31332	Message 2 / 7
+31333	Request the tool list
+31334	Message 3 / 7
+31335	Return tool descriptions and input structures
+31336	Message 4 / 7
+31337	Deliver tool descriptions for the Host to choose from
+31338	Message 5 / 7
+31339	Send the call after Host approval
+31340	Message 6 / 7
+31341	Return a result or an error
+31342	Message 7 / 7
+31343	Add the result to the next round's input
+31344	Each turn's context is like a working file with a boundary: adding the task
+31345	Allocated 30; remaining 70
+31346	Each turn's context is like a working file with a boundary: adding tool definitions
+31347	Allocated 45; remaining 55
+31348	Each turn's context is like a working file with a boundary: adding necessary evidence
+31349	Allocated 65; remaining 35
+31350	Each turn's context is like a working file with a boundary: reserving output capacity
+31351	Allocated 85; remaining 15
+31352	Retrieval finds candidates first, then judges whether they can answer: inverted index: from a term to documents containing it
+31353	Term
+31354	Deployment document
+31355	Build document
+31356	Inverted relation: Docker → {A,C}; pytest → {B}
+31357	Retrieval finds candidates first, then judges whether they can answer: vectors: another entry point to candidates
+31358	How to package a container?
+31359	Compare query/document representations
+31360	Candidates A, C
+31361	Candidates only, not answers
+31362	This frame shows only the objects processed; it supplies no fabricated embedding coordinates or model similarity scores.
+31363	Retrieval finds candidates first, then judges whether they can answer: retrieving the source and checking conditions
+31364	Candidate recall
+31365	A: deployment uses Docker; C: Docker image build
+31366	Evidence verification
+31367	Query concerns building → read C to confirm version and conditions of use
+31368	Search finds candidates; an answer still requires checking whether the evidence is sufficient.
+31369	From two candidate lists to usable evidence: computing candidate A's fusion contribution
+31370	Rankings from two paths
+31371	From two candidate lists to usable evidence: computing candidate B's fusion contribution
+31372	From two candidate lists to usable evidence: computing candidate C's fusion contribution
+31373	From two candidate lists to usable evidence: B ranks first but is not yet the final answer
+31374	Fusion improves candidate order; reranking and evidence verification follow. Raising scores is not their endpoint.
+31375	String search for foo
+31376	Matches # foo and foo()
+31377	A text occurrence does not mean the function ran
+31378	1. String search for foo
+31379	Code retrieval cannot rely on "semantically similar" alone: syntax structure, AST
+31380	Comment # foo
+31381	Syntax type: comment
+31382	Not a call node
+31383	Expression foo()
+31384	Syntax type: call
+31385	Call syntax still requires resolving the definition
+31386	1. Comment # foo
+31387	2. Expression foo()
+31388	Code retrieval cannot rely on "semantically similar" alone: symbol resolution, LSP
+31389	foo in module A
+31390	Resolve using the import/type environment
+31391	A definition's identity is not the string itself
+31392	foo in module B
+31393	Same name, different symbol
+31394	Do not mix their reference results
+31395	1. foo in module A
+31396	2. foo in module B
+31397	Code retrieval cannot rely on "semantically similar" alone: call relationships
+31398	Static call edge
+31399	Candidate call relationship
+31400	Dynamic dispatch may add edges
+31401	Runtime configuration
+31402	Controls whether the branch is reached
+31403	A static graph does not prove actual execution
+31404	1. Static call edge
+31405	2. Runtime configuration
+31406	Code retrieval cannot rely on "semantically similar" alone: version and environment
+31407	Index version r7
+31408	For the old workspace
+31409	New code r8 may have changed references
+31410	Unsaved edits
+31411	May exist only in the IDE buffer
+31412	CLI disk reads differ from IDE content
+31413	1. Index version r7
+31414	2. Unsaved edits
+31415	Code retrieval cannot rely on "semantically similar" alone: tests and execution
+31416	Tests, logs, call stacks
+31417	Check actual paths
+31418	Narrow candidate explanations to verifiable conclusions
+31419	Reading an implementation
+31420	Only one piece of evidence
+31421	Not proof that a deployed instance actually ran it
+31422	1. Tests, logs, call stacks
+31423	2. Reading an implementation
+31424	Long-term memory is not a note that is always right: learned on 1/3
+31425	Long-term memory is not a note that is always right: effective on 2/1
+31426	Long-term memory is not a note that is always right: learned on 2/4
+31427	Long-term memory is not a note that is always right: queried on 2/5
+31428	Exists on disk
+31429	Does not yet prove discovery
+31430	1. Skill file
+31431	A skill exists — so why can it still be of no use at all? — description discovered
+31432	Discovery stage
+31433	Path scan finds the description
+31434	Description visible ≠ body loaded
+31435	If not discovered
+31436	Check paths and configuration
+31437	Editing the body cannot fix a search-path problem
+31438	1. Discovery stage
+31439	2. If not discovered
+31440	A skill exists — so why can it still be of no use at all? — matching the current task
+31441	Selection stage
+31442	Match requirements to the description
+31443	Decide whether to read the full skill
+31444	If the selection is wrong
+31445	Check the actual task boundary
+31446	Do not load everything merely on seeing a keyword
+31447	1. Selection stage
+31448	2. If the selection is wrong
+31449	A skill exists — so why can it still be of no use at all? — full content read
+31450	Loading stage
+31451	The full skill body enters context
+31452	The description is no longer the only information
+31453	Budget trimming
+31454	May remove the body again
+31455	Check the final request sent
+31456	1. Loading stage
+31457	2. Budget trimming
+31458	A skill exists — so why can it still be of no use at all? — actually used for actions
+31459	Application stage
+31460	Actions follow the skill's requirements
+31461	Outputting a skill name is not execution evidence
+31462	1. Application stage
+31463	A skill exists — so why can it still be of no use at all? — result verified
+31464	Verification stage
+31465	Check artifacts/tests/cost
+31466	Check both defect reduction and added overhead
+31467	1. Verification stage
+31468	A timeout tells you nothing arrived, not that nothing happened: server-side commit
+31469	A timeout tells you nothing arrived, not that nothing happened: acknowledgment lost
+31470	A timeout tells you nothing arrived, not that nothing happened: wrong approach
+31471	A timeout tells you nothing arrived, not that nothing happened: safe recovery
+31472	A timeout tells you nothing arrived, not that nothing happened: establishing the outcome
+31473	Independent convention for this figure
+31474	Exclude only files in root vendor/
+31475	Match project-relative paths, not just filenames
+31476	1. Independent convention for this figure
+31477	A test looks for counterexamples; it does not stamp code green: constructing a small counterexample
+31478	In the root vendor directory
+31479	Should be excluded
+31480	Only contains vendor in the directory name
+31481	Should be kept
+31482	A test looks for counterexamples; it does not stamp code green: first observing the original failure
+31483	Incorrect implementation
+31484	Exclude everything containing the substring vendor
+31485	myvendor/a.py is wrongly excluded too
+31486	Negative-case verification
+31487	Run two explicit inputs
+31488	The test must detect wrongful exclusion
+31489	1. Incorrect implementation
+31490	2. Negative-case verification
+31491	A test looks for counterexamples; it does not stamp code green: making the smallest change
+31492	Match the root directory boundary
+31493	Keep the public interface unchanged
+31494	1. Minimal fix
+31495	A test looks for counterexamples; it does not stamp code green: testing behavior
+31496	Correct implementation and faulty variant
+31497	Run each on the same input
+31498	Outputs must differ observably
+31499	1. Correct implementation and faulty variant
+31500	A test looks for counterexamples; it does not stamp code green: delivering with a bound version
+31501	Verify artifact r8
+31502	Tests apply to r8's bytes
+31503	Another change to r9 requires reverification
+31504	Path/version/valid test count
+31505	Reporting only exit code 0 is insufficient
+31506	1. Verify artifact r8
+31507	2. Delivery record
+31508	When reading a metric, first ask what its denominator is: precision uses the selected set
+31509	When reading a metric, first ask what its denominator is: recall uses the truly needed set
+31510	When reading a metric, first ask what its denominator is: do not optimize just one number
+31511	It went up 10 percentage points — so why can we not conclude anything yet? — old version succeeds on 12 questions
+31512	It went up 10 percentage points — so why can we not conclude anything yet? — new version succeeds on 14 questions
+31513	It went up 10 percentage points — so why can we not conclude anything yet? — improvements and regressions coexist
+31514	It went up 10 percentage points — so why can we not conclude anything yet? — returning to specific failure causes
+31515	A trace should tell you causation, not just timestamps: two tools start together
+31516	A trace should tell you causation, not just timestamps: wall clock is not the sum of all rows
+31517	A trace should tell you causation, not just timestamps: optimizing A, outside the critical path
+31518	A trace should tell you causation, not just timestamps: then considering queues and costs
+31519	Image representation and interface action are two different problems: dividing into four 2×2 patches
+31520	Pixel table of the four flattened patches
+31521	Top left
+31522	Top right
+31523	Bottom left
+31524	Bottom right
+31525	Later projections produce model representations; each patch does not directly generate a character.
+31526	Image representation and interface action are two different problems: visual encoding is not a general fact parser
+31527	Pixels
+31528	Original image and dimensions
+31529	Preprocessing
+31530	Crop, resize, split into patches
+31531	Visual encoding
+31532	Compute visual representations
+31533	Connect to the language model
+31534	Projection, cross-attention, etc.
+31535	Task prediction
+31536	Combine textual and visual information
+31537	Coordinates, facts and action outcomes
+31538	Image representation and interface action are two different problems: interface actions require observing again
+31539	Interface
+31540	Screenshot: button at current coordinates
+31541	Propose a click at these coordinates
+31542	Execute the click
+31543	New screenshot: check whether it actually took effect
+31544	Teaching facts
+31545	Current r8: timeout=30
+31546	Answer instead cites r7: timeout=10
+31547	1. Teaching facts
+31548	Find which layer the error happens in before talking about changing models: locating the input issue
+31549	Input chain
+31550	Check whether r8 has been ingested
+31551	If not, fix synchronization before changing the model
+31552	1. Input chain
+31553	Find which layer the error happens in before talking about changing models: locating the retrieval issue
+31554	Candidate list
+31555	Check r7/r8 rankings and labels
+31556	Finding an old document cannot establish the current value
+31557	1. Candidate list
+31558	Find which layer the error happens in before talking about changing models: locating the state issue
+31559	Cache and summary
+31560	Do they still retain only r7 conclusions?
+31561	Distinguish effective time from acquisition time
+31562	1. Cache and summary
+31563	Find which layer the error happens in before talking about changing models: minimal fix
+31564	Controlled fix
+31565	Add only a current-version filter
+31566	Keep the model, question and other parameters fixed
+31567	1. Controlled fix
+31568	Find which layer the error happens in before talking about changing models: paired acceptance
+31569	Test both current and historical queries
+31570	Fixing the current value must preserve historical tracing
+31571	1. Paired acceptance
+31572	GQA/MQA: what is reduced is the number of K/V groups: GQA: each pair of query heads shares one K/V group
+31573	KV arrays only: 2×layers(2)×batch(1)×length(4)×KV heads(2)×width(2)×bytes(2) = 128 bytes
+31574	GQA/MQA: what is reduced is the number of K/V groups: MQA: all query heads share one K/V group
+31575	KV arrays only: 2×layers(2)×batch(1)×length(4)×KV heads(1)×width(2)×bytes(2) = 64 bytes
+31576	GQA/MQA: what is reduced is the number of K/V groups: a smaller cache does not guarantee bit-for-bit unchanged output
+31577	Reduce K/V groups
+31578	Benefit
+31579	Save cache space, reduce reads
+31580	Cost
+31581	Expressive capacity and training change
+31582	Not a runtime toggle
+31583	Cannot arbitrarily remove heads from an old model
+31584	Quality, VRAM, latency
+31585	Parameters and implementation must match
+31586	Quantization: saves storage, and introduces approximation: dividing by the scale and rounding to the nearest integer
+31587	Quantized integers (not yet clipped)
+31588	Quantization: saves storage, and introduces approximation: the signed 4bit range is too small
+31589	Clipped integers
+31590	Quantization: saves storage, and introduces approximation: approximate reconstruction and error checks
+31591	Approximation / error (approximation−original)
+31592	LoRA: freeze the large table, learn a small increment: two small tables represent an increment
+31593	ΔW=A×B: formed from 8 trainable numbers
+31594	Storing only 8 numbers does not replace the entire 16-parameter base model.
+31595	LoRA: freeze the large table, learn a small increment: output is the original path plus the increment path
+31596	Base output / incremental output / total output
+31597	There are 8 trainable parameters here, but the 16 base weights must still be supplied.
+31598	LoRA: freeze the large table, learn a small increment: training fewer parameters does not automatically mean faster inference
+31599	Training targets
+31600	Update only selected parameters such as A/B
+31601	Resources still needed
+31602	Base W, activations, computation
+31603	Rank constraints
+31604	Affect capacity and task adaptability
+31605	Inference path
+31606	Merge or retain the adapter
+31607	Measure quality and resources separately
+31608	Fallback
+31609	Keep the original baseline and version
+31610	FlashAttention: accumulate while reading, without materializing the whole table: processing candidate 1 online
+31611	Fixed read order: C, A, B
+31612	Current maximum m / exponential sum l / two weighted-sum cells
+31613	Normalized result if stopping now
+31614	FlashAttention: accumulate while reading, without materializing the whole table: processing candidate 2 online
+31615	FlashAttention: accumulate while reading, without materializing the whole table: processing candidate 3 online
+31616	FlashAttention: accumulate while reading, without materializing the whole table: same result, fewer intermediate reads and writes
+31617	Keep the objective
+31618	Same attention mathematics
+31619	Change the organization
+31620	Read in blocks and update statistics
+31621	Avoid intermediate tables
+31622	Reduce VRAM reads and writes
+31623	Implementation cost
+31624	More complex kernels and compatibility requirements
+31625	Floating-point differences
+31626	Different operation orders cause rounding differences
+31627	Measured gains
+31628	Depend on length, hardware and bottlenecks
+31629	PagedAttention: logically contiguous, physically chunked: A appends item 4
+31630	PagedAttention: logically contiguous, physically chunked: A appends item 5
+31631	PagedAttention: logically contiguous, physically chunked: releasing a request
+31632	Continuous batching: when a seat frees up, take the next one: filling vacancies promptly
+31633	Continuous batching: when a seat frees up, take the next one: why not every user's latency is halved
+31634	Continuous batching: when a seat frees up, take the next one: consider fairness alongside throughput
+31635	Speculative decoding: the draft may be fast, but it must be verified correctly: acceptance probability depends on the ratio of the two
+31636	Speculative decoding: the draft may be fast, but it must be verified correctly: total accepted mass is still insufficient
+31637	Speculative decoding: the draft may be fast, but it must be verified correctly: sampling remaining mass after rejection
+31638	Speculative decoding: the draft may be fast, but it must be verified correctly: following one concrete rejection branch
+31639	Reject→A
+31640	MoE: each token takes part of the compute path: selecting Top-2 experts
+31641	MoE: each token takes part of the compute path: combining actual expert outputs
+31642	Normalized shares after selection: 0.625 and 0.375; output 4×0.625+5×0.375=4.375
+31643	MoE: each token takes part of the compute path: sparse activation still has costs
+31644	Many tokens crowding into the same expert can still cause communication and load bottlenecks.
+31645	Activation checkpointing: store less, recompute on the backward pass: keeping only checkpoints
+31646	Do not store a1
+31647	Do not store a3
+31648	Activation checkpointing: store less, recompute on the backward pass: restoring the latter half first
+31649	Recompute a3
+31650	Activation checkpointing: store less, recompute on the backward pass: then restoring the first half
+31651	Recompute a1
+31652	a2 is no longer needed
+31653	a3 is no longer needed
+31654	Activation checkpointing: store less, recompute on the backward pass: why consistency is required
+31655	Consistent randomness
+31656	Unchanged parameters
+31657	Reproducible computation
+31658	Compaction, retrieval and prompt cache: three different kinds of saving: deleting only logs can lose state
+31659	Total allocated=85 / 100
+31660	Compaction, retrieval and prompt cache: three different kinds of saving: extracting recoverable state
+31661	Total allocated=95 / 100
+31662	Compaction, retrieval and prompt cache: three different kinds of saving: shorter input still needs verification
+31663	Multi-agent: work that can run in parallel matters more than the number of agents: parallel work still needs handoffs
+31664	Multi-agent: work that can run in parallel matters more than the number of agents: excessive handoff costs make it slower
+31665	Multi-agent: work that can run in parallel matters more than the number of agents: writing the same file is not independent
+31666	Model routing: cheaper per call is not cheaper per successful task: escalating only the 6 confirmed failures to the stronger model
+31667	Initial attempt
+31668	Escalation
+31669	Model routing: cheaper per call is not cheaper per successful task: using successful tasks as the denominator
+31670	Strong model for all calls
+31671	Model routing: cheaper per call is not cheaper per successful task: missed failures undermine this assumed benefit
+31672	Key prerequisite
+31673	Failures can be reliably identified
+31674	Errors are not silently delivered

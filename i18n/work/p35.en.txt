@@ -1,0 +1,725 @@
+21553	Retrieval and code intelligence — AI Systems Engineering
+22223	Follow this chapter through its objects and states</a><a href="#topic-2">From two candidate lists to usable evidence</a><a href="#c08-section-1">Retrieval starts from evidence needs</a><a href="#c08-section-2">Term-based, dense and late-interaction retrieval
+25110	Fusion, reranking and query rewriting</a><a href="#c08-section-5">Code retrieval should use structure</a><a href="#c08-section-6">Retrieval metrics and downstream success</a><a href="#c08-section-7">Failure diagnosis order</a><a href="#section-8">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-indexing">Switching index generations</a><a class="sub ap-toc" href="#agent-reading-retrieval">Fused ranking and independent evidence</a><a class="sub ap-toc" href="#agent-reading-code">Test evidence invalidated
+11897	From exact search to hybrid retrieval and code structure
+28781	Stage 8</span><span class="chip">16 expanded lecture notes</span><span class="chip">Main text fully expanded
+21557	Retrieval starts from evidence needs
+8699	RAG connects external retrieval with generation. The original paper's training and inference design differs from today's broad practice of "search, then put it in the prompt". Engineering systems also include ingestion, chunking, indexing, querying, candidate retrieval, reranking and assembly. An error at any layer can distort an answer.
+12701	First distinguish whether the task needs exact symbols, semantic material, historical changes or execution results. With stale source documents, retrieval only finds stale facts faster; when chunking loses conditions, semantic similarity is insufficient to support a conclusion.
+25763	Term-based, dense and late-interaction retrieval
+7090	Term-based methods such as BM25 use term occurrences and statistical importance; dense retrieval encodes queries and documents as vectors; DPR demonstrates bi-encoder retrieval for Q&A; ColBERT uses finer-grained token representations and late interaction. Vector distance is not factual accuracy;
+15208	they may be close yet mean opposite things.
+13808	Chunk around understandable units; code can be split by function / class while retaining paths and signatures. Too small loses conditions; too large adds interference. Overlap helps at boundaries but creates duplicates, which still need removal during assembly.
+6994	Anthropic's approach adds brief context grounded in the original text to each chunk, then combines terms, vectors and reranking. An isolated "the default changed from false to true" needs its field, project and version; added context can help retrieval, but incorrect additions also contaminate the index. The original text and provenance must be retained.
+27216	This does not mean inventing plausible context for every chunk. For code with complete symbols and paths already specified, extra long descriptions may not help; measure an exact-retrieval baseline first. The article's experimental results apply only to its test conditions, not as guaranteed efficiency gains for any repository.
+25109	Fusion, reranking and query rewriting
+8718	RRF adds contributions across different rankings using
+24286	, avoiding direct addition of BM25 and cosine scores with different scales. Rank fusion cannot recover documents missed by every retriever. A reranker judges candidates more finely at higher cost and is usually used on a smaller set.
+7726	HyDE generates hypothetical documents to help retrieval, but hypotheses are not evidence. RAPTOR builds hierarchical summary indexes, while GraphRAG organizes relationships and global information. They suit different needs and add extraction errors and maintenance costs.
+11954	Code retrieval should use structure
+26066	Paths, regular expressions, GitHub Code Search and ripgrep suit exact location. Tree-sitter provides syntax trees and incremental parsing; LSP provides language services such as definitions, references, symbols and diagnostics. An AST does not automatically contain every type or runtime meaning, and LSP also depends on the language server and project configuration.
+14486	Original investigation sequence: configuration field → parsing point → filter function → caller arguments → tests → change history → minimal reproduction. A same-named symbol may not lie on the actual execution path. Git descriptions can explain historical reasons, but current behavior must still be judged from current source and runtime evidence.
+8736	RepoCoder studies iterative retrieval and generation; RepoBench and CodeSearchNet evaluate different repository-context tasks. Completion, search and issue repair are different capabilities; their metrics cannot be converted directly.
+21578	Retrieval metrics and downstream success
+7883	MAP accounts for where relevant results appear; nDCG supports graded relevance, applies position discounts and normalizes. If the relevant set is unknown, recall itself is hard to measure precisely.
+14240	Original examples: evidence from both A and B is required, but results are A, X, Y, giving Recall@3 of 1/2 and Precision@3 of 1/3. If compatibility cannot be judged without B, finding A is not task success. Truncation or misinterpretation after retrieval still causes failure. BEIR reminds us that cross-domain generalization needs independent evaluation.
+16274	Failure diagnosis order
+21529	Check whether sources are correct and fresh → whether the index contains them → whether the query is accurate → whether candidates were retrieved → whether reranking removed them incorrectly → whether assembly truncated them → whether the model interpreted them correctly. Filter permissions before returning evidence, rather than letting the model see it and relying on voluntary secrecy.
+24907	Self-check: is the highest similarity the most trustworthy?</strong> No. <strong>Does good retrieval make testing unnecessary?</strong> No; retrieval supplies evidence, while tests check behavior.
+6820	8.1 · Foundations of retrieval-augmented generation
+17476	Related material: Retrieval-Augmented Generation
+14508	The original RAG research combines a parametric generative model with nonparametric document memory, using retrieved evidence for knowledge-intensive tasks. Engineering uses of RAG are broader today; not every "search then answer" system is a complete implementation of the original paper.
+21590	Retrieval supplies candidate evidence, and generation uses it to form output; both can fail. Stale documents, missing chunk conditions and model misreadings can all cause wrong answers.
+21552	Retrieval does not "dig answers out" of the model
+26421	Input and conditions.</strong> The user asks for current configuration; parameter memory may contain only the old value 3, while the file now says 5.
+25877	Read the current file
+14884	Obtain 5 and its version.
+16112	Augment
+18870	Put evidence in the current request
+21713	The model now has information beyond its parameters.
+22802	Generate
+24141	Constrain the answer with evidence
+11787	Still prevent it from mixing in the old value.
+18902	Join the steps up.</strong> RAG connects external knowledge with generation without changing the model parameters themselves.
+14435	Original exercise: answer a question using a versioned configuration description, supplying full conditions, truncated conditions and a wrong version in turn. Observe how the conclusion should change.
+16658	Completion means locating failures in sourcing, retrieval, assembly or generation, rather than calling every problem "RAG is not good enough".
+6828	8.2 · Context-enhanced hybrid retrieval
+17417	Related material: Introducing Contextual Retrieval
+7298	Contextual Retrieval adds brief context from the original text to chunks before indexing, then combines terms, vectors and reranking. It helps isolated chunks retain references and background; it does not permit the model to invent situations for documents.
+12301	For example, "this field is off by default" needs the field, version and document position. Adding this information helps retrieval but may contaminate the index through summary errors, so original content and provenance must be retained.
+24483	Add context to a chunk so "it" keeps its referent
+26404	Input and conditions.</strong> The chunk says only "it is off by default"; the parent paragraph specifies "debug cache".
+24723	Missing background
+21322	A query for debug cache has difficulty matching
+9435	"It" has no specific referent.
+25140	Add context
+21339	Label "debug cache: off by default" and its source
+25431	Make the chunk interpretable.
+25146	The added sentence must not become "production cache is off"
+22820	Generated context can also introduce errors.
+18927	Join the steps up.</strong> Context enhancement should preserve provenance and correct references, not expand facts without evidence.
+24570	Continue the step-by-step calculation: <a href="../chapters/15.html#worked-Q057">Q029 · Cut one conditional sentence in half, and why even a successful recall can still answer wrongly
+14291	Original exercise: write two additions for a chunk with no subject, checking each item against the original text. Delete anything that cannot be inferred or mark it unknown.
+25625	Benefits reported by a paper or engineering article apply only to its test conditions. When exact code-symbol search is already strong, extra context may not be worthwhile.
+6829	8.3 · Reciprocal rank fusion: RRF
+17472	Related material: Reciprocal Rank Fusion
+8721	RRF fuses ranks from different retrieval results; a common form sums across lists
+10095	. It avoids directly adding raw scores on different scales, but cannot recover documents missed by all retrievers.
+18005	The smoothing constant affects the weight of rank differences; merge duplicates by actual document identity rather than title alone. Permissions should also be filtered before fusion.
+19533	Rank fusion uses ranks rather than score scales
+26323	Input and conditions.</strong> Ranking 1=[A,B], ranking 2=[B,A], c=60.
+24303	About 0.032522.
+23206	The same score.
+18000	Tie
+19475	Use stable order or additional information
+11080	Do not invent a clear advantage for A.
+18903	Join the steps up.</strong> RRF is not a universal judge; symmetric inputs should give equal results.
+14358	Original exercise: calculate RRF by hand for two rankings with shared and different documents. Observe how an item moderately high on both competes with the first-ranked item on only one.
+16631	Completion means understanding fusion's basis and limits. An RRF rank is neither a document's factual correctness rate nor the confidence of the final answer.
+6830	8.4 · Dense passage retrieval: DPR
+17380	Related material: Dense Passage Retrieval
+7382	DPR uses dense representations for passage retrieval, with queries and documents encoded separately. Precomputing document vectors helps retrieval efficiency, but quality depends on training data, encoders and task distribution.
+25791	Similar meaning can match different expressions but also confuse negation, versions or same-named entities. Exact terms and metadata filters remain useful.
+14790	Two-tower retrieval encodes queries and documents separately
+23427	Offline
+12901	Compute and store document vectors first
+10816	No need to encode them jointly with each query.
+15978	Online
+15051	Encode only q and compute dot products
+23181	Contrastive relevance examples shape distances
+15559	Nearby vectors do not automatically prove matching versions and facts.
+18999	Join the steps up.</strong> Two towers make pre-indexing convenient; fine-grained conditions still need later evidence checks.
+24571	Continue the step-by-step calculation: <a href="../chapters/15.html#worked-Q059">Q031 · Why retrieval vectors have to be trained rather than given arbitrary coordinates
+14410	Original exercise: compare chunks saying "enable caching" and "disable caching". Explain why similar overall meaning does not make them interchangeable. Then design version fields to prevent old descriptions being returned first.
+11163	Do not interpret vector similarity as the probability of a correct answer. Check retrieval results against context and provenance.
+6831	8.5 · Late interaction and multi-vector retrieval
+17359	Related material: ColBERT
+7285	ColBERT uses fine-grained token representations and late interaction to score multiple local matches between a query and a document. This differs from compressing an entire document into one vector and making one similarity comparison.
+16220	Multiple vectors preserve more matching detail but bring storage, indexing and compute trade-offs. The same design does not suit every scale and latency requirement.
+21320	Each query token finds its best document position
+26369	Input and conditions.</strong> Two query vectors [1,0] and [0,1]; document positions [0.8,0.6] and [0,1].
+23682	Query 1
+20547	Maximum similarity: 0.8
+14057	Matches document position 1.
+23728	Query 2
+20548	Maximum similarity: 1
+14058	Matches document position 2.
+22122	Sum
+10895	Do not simply sum all four similarities.
+19113	Join the steps up.</strong> Late interaction preserves detail across positions; this is the core of MaxSim rather than a full ColBERT implementation.
+24572	Continue the step-by-step calculation: <a href="../chapters/16.html#worked-Q062">Q034 · How ColBERT's "every query token finds its best match" is computed
+14360	Original exercise: for a query requiring "path", "exclude" and "nested" together, compare what one overall vector and multiple local matches may miss.
+16676	Completion means explaining the information gains and engineering costs of finer matching, without extending a benchmark advantage to every codebase.
+6832	8.6 · Retrieval aided by hypothetical documents
+17414	Related material: HyDE
+7724	HyDE generates a hypothetical answer document, then uses its representation to guide dense retrieval. The text constructs a query direction; it is not confirmed fact and must not be cited directly as a source.
+16464	It may help short queries express implicit needs, or introduce wrong assumptions into retrieval. Actual conclusions must still come from retrieved evidence.
+7723	A HyDE hypothetical document is not source evidence
+26503	Input and conditions.</strong> The question is "why is the build excluded"; the model guesses "perhaps a path prefix matched incorrectly".
+22810	Generate a candidate explanation
+27165	It has no factual status yet.
+22905	Use it to find relevant source code and issues
+14847	Find a startswith implementation.
+26875	Confirm only after running the ab counterexample
+12539	Even a plausible hypothesis cannot be cited directly as the root cause.
+19158	Join the steps up.</strong> Generated content can supply search clues but cannot pose as real source material.
+14354	Original exercise: generate two hypotheses for "why did the build miss a file", then check which real documents support each. Do not treat the first generated hypothesis as the root cause.
+16655	Completion means being able to overturn a hypothesis after obtaining evidence, rather than having retrieval seek only support for the model's first guess.
+6833	8.7 · Tree-structured summary indexes
+17466	Related material: RAPTOR
+8704	RAPTOR organizes a hierarchy through recursive summarization, helping retrieve cross-chunk and more global information. Leaves and higher-level summaries provide evidence at different granularities.
+17677	Hierarchical summaries may lower long-document navigation costs, but may also lose conditions or propagate errors at each level. The original chunks must remain accessible rather than keeping only a summary tree.
+8702	RAPTOR's upper summaries guide location; lower levels retain details
+26287	Input and conditions.</strong> Four documents form two groups, with summaries S1/S2 and an overall summary S0.
+17211	Broad question
+12809	Search S0/S1/S2 first
+18657	Find the relevant document group.
+24374	Detailed question
+9423	"What is the exact timeout value?"
+15672	Return to the corresponding original leaf.
+14673	The original changes but summaries are not updated
+18359	Invalidate or rebuild the derived nodes.
+19051	Join the steps up.</strong> Hierarchical summaries help cross-document overviews, but exact facts still depend on traceable leaves.
+14365	Original exercise: combine descriptions of three modules into a system summary, mark lost details, then design questions requiring the leaves to be reread.
+24162	Simple exact lookup may not need this structure. Adoption should depend on the share of global questions, update cost and actual task benefits.
+6834	8.8 · Code search syntax
+17400	Related material: GitHub Code Search Syntax
+7678	GitHub code search supports constraints on paths, languages, symbols, regular expressions and more. It narrows candidates, but its syntax differs from ordinary natural-language search and requires correctly combined conditions.
+15465	Same-named symbols may occur in tests, examples, old directories or different modules. A match does not prove membership in the actual execution path; call relationships and configuration still need reading.
+28811	Path restrictions make searches for same-named symbols more precise
+26198	Input and conditions.</strong> Both src and vendor in the repository contain parse.
+12959	Search the whole repository
+15594	Matches both locations and example documentation
+12511	Mixed candidates.
+25077	Restrict the scope
+15031	Search only the target language and src path
+12712	Remove irrelevant dependency copies first.
+18624	Expand the conditions
+25065	If the call comes from vendor
+13573	Expand for that reason, rather than permanently forbidding dependency reading.
+19195	Join the steps up.</strong> Scope control is a progressive strategy, not a permanent lock on all evidence.
+14281	Original exercise: for
+25655	, design queries from broad to narrow: locate the field, restrict the build directory and language, then find callers. Record the basis for each narrowing.
+11177	Do not treat the first match as the only implementation or read every file unconditionally because there are too many results.
+6835	8.9 · Exact search and scope control
+17517	Related material: ripgrep User Guide
+9302	ripgrep provides efficient text and regular-expression search; file filtering and scope control matter especially in code investigations. Exact search is usually low-cost and suits known error codes, fields or function names.
+19795	Default ignore rules, hidden-file handling, case sensitivity and other search behavior affect results. If nothing is found, check scope and configuration rather than immediately declaring the code absent.
+9183	No grep match does not immediately mean absence
+26521	Input and conditions.</strong> Default search ignores generated directories, and the target string appears only in generated/.
+25958	Negative result
+18232	No match within the current search scope
+10947	This does not mean absence across the entire filesystem.
+21325	Check configuration
+23395	Confirm ignore rules, case sensitivity and binary-file handling
+14846	Discover that generated is excluded.
+25152	Search again
+15931	Explicitly include the directory within the authorized scope
+14886	Obtain actual results.
+19098	Join the steps up.</strong> A search tool's scope is part of the conclusion.
+14339	Original exercise: put ordinary files, ignored files and same-named tests in a small directory; search them separately and explain the differences. Use only harmless local teaching data.
+16662	Completion means specifying "what was searched and where", treating results as candidate evidence rather than equating tool speed with semantic understanding.
+6821	8.10 · Syntax trees and incremental parsing
+17509	Related material: Tree-sitter
+9008	Tree-sitter provides incremental parsing and syntax trees, letting tools process code structure rather than text alone. An AST describes syntax without automatically including every type, dependency or runtime behavior.
+24415	Structured chunking can preserve function or class boundaries and reduce arbitrary cuts, but may still need file-level imports, comments or call context.
+19859	What an incremental syntax tree updates after a one-line change
+26245	Input and conditions.</strong> One function-body line changes from x+1 to x+2.
+25336	Parsing scope
+14923	Rebuild the affected expression and related parent nodes
+20248	The whole file need not always be parsed from scratch.
+21360	Tree nodes
+26873	The operator remains +; the constant changes from 1 to 2
+25804	The syntax change is very local.
+22461	Check whether test expectations should change
+25802	Valid syntax does not mean correct functionality.
+19029	Join the steps up.</strong> Incremental parsing makes structural updates more efficient without replacing business verification.
+24593	Continue the step-by-step calculation: <a href="../studies/chapters/14.html#worked-S14">S14 · Incrementally analyzing a function rename: which evidence needs updating
+14377	Original exercise: split an example with nested functions and same-named variables by fixed character counts and by syntax nodes. Compare whether each chunk can be understood independently.
+11165	Successful parsing does not mean correct code. Semantic checks, compilation and tests still have separate roles.
+6822	8.11 · Definitions, references and language services
+17428	Related material: Language Server Protocol
+7829	LSP defines interactions between editors and language services, including definitions, references, symbols and diagnostics. Results depend on the specific language server, project configuration and index state.
+16460	It can help an agent find actual symbol relationships, but dynamic languages, generated code or incomplete projects may limit analysis. No returned references does not necessarily mean no calls exist.
+15463	Same-named variables have different bindings
+26294	Input and conditions.</strong> An outer x=1 and a function parameter also named x.
+11343	Both are called x
+9184	grep cannot distinguish bindings.
+13687	Inside the function, x refers to the parameter
+10798	It does not refer to the outer value.
+28490	Rename
+11749	Rename only references bound to the parameter
+10793	Do not mechanically replace every x.
+19176	Join the steps up.</strong> Symbol services connect names with scope / types rather than only searching strings.
+14356	Original exercise: trace a function's definition and calls across files, then compare with a same-name text search. Explain which candidates share a name but have different bindings.
+16596	Completion means combining language services as structural evidence with text and runtime results, rather than treating a protocol name as a guarantee of perfect understanding of every language.
+6823	8.12 · Repository-level iterative retrieval and generation
+17475	Related material: RepoCoder
+8735	RepoCoder studies iterative retrieval and generation in repository-level code completion. Generated intermediate results may help the next retrieval round or introduce a wrong direction, requiring correction from real context.
+11919	Repository-level completion differs from full issue repair. Its evaluation does not directly show that an agent can handle deployment, test environments or long-term state.
+24041	A failed first generation improves subsequent retrieval
+26384	Input and conditions.</strong> The model guesses function parse(text); tests report a missing mode argument.
+28616	The error exposes a signature gap
+10916	Do not keep guessing what mode means.
+20185	New retrieval
+25865	Read the actual parse definition and call examples
+25095	Obtain the argument contract.
+13588	Generate again
+19476	Modify according to the signature and verify
+27654	New evidence gives iteration its value.
+19125	Join the steps up.</strong> Retrieval–generation iteration must absorb failure feedback rather than repeat the same prompt.
+14316	Original exercise: retrieve a related API using function comments, then narrow the search using symbols from a candidate implementation. Check whether every round obtains new necessary evidence.
+25052	If round two only returns the same chunks, another loop may have little value. Iteration needs information gain and stopping conditions.
+6824	8.13 · Repository-level completion evaluation
+17474	Related material: RepoBench
+8734	RepoBench evaluates repository-level code completion and context use, helping distinguish retrieval from generation capabilities. Data settings, visible files and task definitions affect result interpretation.
+10321	A system may retrieve correctly but complete incorrectly, or guess correctly from local patterns without repository evidence. Final scores alone make the mechanism hard to explain.
+11920	Repository completion evaluation must isolate leakage from nearby answers
+26398	Input and conditions.</strong> A test file is missing a code passage, but the training set contains a complete old copy of the same repository.
+22337	Leakage
+21673	The model may memorize an almost identical answer
+13774	A high score does not mean cross-repository understanding.
+13806	Split
+19414	Group by repository or time and near-duplicate relationships
+19662	Control overlap.
+23257	Inspect compilation / tests and semantics, not just string matches
+24124	Equivalent implementations may have different text.
+18948	Join the steps up.</strong> Code evaluation must prevent leakage and allow behavioral equivalence.
+14334	Original exercise: fix the generator and vary retrieval context, then fix context and compare generation methods. Record which step causes the difference.
+11174	Do not equate completion-benchmark performance directly with code review, cross-module edits or understanding user requirements.
+6825	8.14 · A code semantic-search dataset
+17357	Related material: CodeSearchNet Challenge
+7258	CodeSearchNet provides data and evaluation settings for code semantic search, focusing on matching natural-language queries with code. Naming, comments and language distribution affect task difficulty.
+16921	Real repositories may lack good comments and contain repeated templates, generated files and private terminology. Public-dataset performance does not automatically transfer to these conditions.
+24925	Natural-language code search cannot always rely on shared words
+26505	Input and conditions.</strong> The question is "ignore a directory"; the function is named should_skip.
+25762	Wording
+28705	The question contains no skip
+24202	Exact matching may miss it.
+15558	Vector-based or trained retrieval can find should_skip
+19744	Provides a candidate.
+25871	Read the function body, calls and tests
+23152	A similar candidate is not necessarily the right target.
+19224	Join the steps up.</strong> Semantic search bridges wording differences; structural and behavioral evidence is still needed at the end.
+14454	Original exercise: give the same function clear comments, vague comments and no comments, and compare what information the query should depend on.
+16626	Completion means understanding data distributions and task boundaries, rather than making semantic search the sole entry point replacing every symbol tool.
+6826	8.15 · Heterogeneous retrieval evaluation
+17336	Related material: BEIR
+7082	BEIR evaluates generalization through heterogeneous retrieval tasks, showing that a system's advantage on one dataset may not hold in another domain. Tasks, document lengths, query styles and relevance definitions all change results.
+11948	Code retrieval, Q&A passage retrieval and global document summarization have different needs. Evaluation should include your own real tasks rather than only the most favorable public leaderboard.
+15879	Tuning for one document type does not guarantee another works well
+26378	Input and conditions.</strong> Retriever A excels at technical documents; B at short Q&A.
+14138	Single dataset
+7036	A leads on the technical corpus
+14990	Supports only that setting.
+18146	Heterogeneous evaluation
+13978	Add news, forums, argumentation and factual queries
+25271	Observe cross-domain changes.
+19440	Use the actual business distribution or stratified results
+10709	Do not rely only on overall leaderboard rank.
+19126	Join the steps up.</strong> Retrieval generalization needs varied questions; gains in one setting cannot be extrapolated to every repository.
+14478	Original exercise: design exact-error-code, natural-language-intent and cross-document queries; compare term-based and vector methods for each.
+16673	Completion means explaining where a method works and fails, including cost and update difficulty in selection.
+6827	8.16 · Ranked retrieval metrics
+17389	Related material: Evaluation of Ranked Retrieval Results
+8047	Precision asks how many returned results are relevant; Recall asks how much necessary evidence was found; MRR, MAP and nDCG also consider ordering and degrees of relevance. They measure different objectives and cannot replace one another.
+23182	Relevance labels may themselves be incomplete, especially when code tasks require several pieces of evidence for one conclusion. One relevant chunk cannot complete all the reasoning.
+15490	Retrieving the same two items can still give different ranking quality
+26430	Input and conditions.</strong> Relevant set={A,B}, list X=[A,B,C], Y=[C,A,B].
+11399	Both have 2/2=1
+25251	The same coverage.
+29051	Reciprocal rank of the first relevant item
+7918	Different MRR contributions.
+22929	X is better if users inspect only the first item
+19391	Metrics should match downstream behavior.
+19093	Join the steps up.</strong> Ranking metrics measure "how early it is seen"; recall measures "whether it is seen".
+14480	Original exercise: suppose both files A and B are needed, but results contain only A and two noise files. Calculate Precision and Recall, then explain why the task may still fail.
+19390	Metrics should extend to context assembly and the final task outcome. Evidence present among candidates but truncated later does not count as evidence the agent actually received.
+9543	← Context engineering</a><a href="chapter-09.html">Long-term memory →
+28672	Long-term memory — AI Systems Engineering
+22328	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#coala">CoALA: the structure of memory and action</a><a href="#c09-section-2">Tiered storage and finite windows</a><a href="#c09-section-3">What is worth writing down</a><a href="#c09-section-4">How to retrieve valid memories</a><a href="#c09-section-5">Updates, conflicts and forgetting</a><a href="#c09-section-6">Memory evaluation</a><a href="#c09-section-7">The relationship with compaction</a><a href="#section-8">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-memory">The old worker comes back after the lease has expired
+16423	Storage and retrieval, updates, forgetting, conflicts and evidence governance
+28782	Stage 9</span><span class="chip">10 expanded lecture notes</span><span class="chip">Main text fully expanded
+7256	CoALA: the structure of memory and action
+7254	CoALA offers a cognitive-architecture perspective for analyzing language agents, connecting memory, decisions and actions. It does not prove that every agent replicates human cognition, nor is it a component that automatically grants long-term intelligence on installation. Working, episodic, semantic and procedural memory have different responsibilities.
+18240	A current test log is task evidence; a verified path convention is versioned project knowledge; a repeatedly applicable diagnostic method may become experience. A single guess must not be promoted directly into a permanent rule.
+13743	Tiered storage and finite windows
+7928	MemGPT draws on tiered storage to manage context swapping. "Virtual context" depends on external storage and scheduling; it does not let a single model call process unlimited content. Checkpoint saves thread execution state, while a long-term Store saves cross-task information; an in-memory implementation does not automatically persist across process restarts.
+14248	Original layering: small stable rules stay resident, the current task retains state, and full history is external. Rapidly changing facts may be better queried live than stored in static memory.
+12688	First assess future reuse, sufficiency of evidence and the cost of reacquisition. Not every easily read code fact needs copying; costly investigation conclusions can be saved with scope, provenance and invalidation conditions.
+27300	This is an original structure and does not require a complex database. Keep user preferences, project facts and model suggestions separate. New experience can enter as a candidate and be verified later to avoid model self-certification.
+18384	How to retrieve valid memories
+11740	Similarity alone may retrieve old versions; recency alone may miss stable rules. Filter by project, version and permission first, then retrieve and verify sources. Return conclusions with conditions and evidence so the model can judge applicability.
+7675	Generative Agents studies memory and reflection in simulated characters; A-MEM studies associative organization; Mem0 studies extraction and maintenance. Their tasks differ, so a memory benchmark score cannot directly establish benefits on coding tasks.
+20492	Updates, conflicts and forgetting
+20156	New information may correct a fact, narrow its scope or invalidate a rule rather than add an item. Opposite conclusions for different versions must not be forced into a vague summary. Five summaries from one generation are not five independent sources.
+14149	A dangerous loop is wrong conclusion stored → retrieved again → repetition mistaken for verification. Preserve provenance, status and independent evidence. Invalid rules leave active retrieval, while important history may remain for audit; storage retention and default injection are separate dimensions. Authorization or privacy requirements may require actual deletion.
+25613	Memory evaluation
+7866	LongMemEval and LoCoMo make long-term interaction memory measurable, but conversational Q&A does not establish that engineering errors stop recurring. An original experiment compares no memory, static rules and on-demand evidence memory, covering still-valid old rules, version changes, same names across projects and missing evidence.
+15478	Include writing and maintenance costs. Summarizing large amounts every time without reuse may not be worthwhile. An exact constraint in a simple file may outperform a complex system.
+11254	The relationship with compaction
+14209	Compaction serves the current long task; long-term memory serves future tasks. Summaries may become candidates, but temporary assumptions and failed paths must not be stored permanently without selection. Fitting in memory storage does not mean correct retrieval, much less correct use.
+24901	Self-check: does a vector database mean memory exists?</strong> It is only the foundation; writing, retrieval, validity and use are still needed. <strong>Does more memory mean greater intelligence?</strong> Not necessarily; duplicates, stale items and errors add interference.
+6847	9.1 · Cognitive architectures for language agents
+17354	Related material: CoALA
+7253	CoALA places language agents' memory, actions and decision processes within a unified cognitive-architecture perspective. Its categories aid analysis and design; they do not claim machines fully replicate the human mind.
+17715	Working, episodic, semantic and procedural memory have different lifecycles. Temporary task assumptions should not become permanent methods without verification.
+25600	How memory enters decisions without replacing the environment
+26179	Input and conditions.</strong> Past experience says tests use pytest; the current project may have changed.
+21588	Retrieve memory
+19745	Offer a candidate execution method
+24953	Reduce blind searching.
+25269	Observe the environment
+25892	Read current test configuration
+21405	Check continued applicability.
+19448	Run according to current facts
+25601	Memory assists rather than issuing immutable instructions.
+19206	Join the steps up.</strong> Cognitive-architecture components must connect through information flow, not just appear in a category diagram.
+14370	Original exercise: classify test logs, user preferences, version conventions and reusable diagnostic steps, and state what evidence is needed before saving them.
+16680	Completion means matching storage and retrieval rules to information use, not adding a complex database to every project for complete categorization.
+6849	9.2 · Tiered memory and context swapping
+17439	Related material: MemGPT
+7927	MemGPT draws on tiered storage to manage information inside and outside context under a finite window. External storage and swapping do not give one model call unlimited physical context.
+14882	Retrieval needs indexes, permissions and valid references; once content is external, details cannot be recovered solely because the model "should remember". Movement between tiers also costs calls and latency.
+19521	Swap out the main text, but keep an index for the current task
+26500	Input and conditions.</strong> Long log L occupies 5000 units; only an error summary and log path are currently needed.
+19520	Swap out
+16703	Put the complete L in an external file
+18249	The current window does not retain its full text.
+25593	Record error range 420—450 and task state
+23332	Know when and where to retrieve it.
+19519	Swap in
+28891	Reread that range when checking preceding causes
+11159	Do not confuse "stored outside" with "currently known".
+19032	Join the steps up.</strong> External storage expands retrievable capacity without letting the model read everything simultaneously.
+14379	Original exercise: divide a long task into a resident goal, current state and full history; design when to retrieve each tier. Test honest reporting when references become invalid.
+11161	Do not equate tiered memory with lossless compaction. Long-term recoverability needs both original evidence and state governance.
+6850	9.3 · Long-term memory types and namespaces
+17422	Related material: LangChain Long-Term Memory
+28679	Long-term memory can organize cross-task information through namespaces and storage interfaces. Storage APIs provide a foundation; application design still determines what to write, when to retrieve it and whether it remains valid.
+22918	User, project and version scopes need isolation. A semantically similar item from another project may cause errors or even leak information.
+15601	Namespaces prevent memories from different users being mixed
+26410	Input and conditions.</strong> User u1 prefers English; u2 prefers Chinese.
+13713	Bind each to its user scope
+10776	Do not store one globally unique language.
+21292	Query u2
+14963	Retrieve only u2's authorized records
+18317	Obtain Chinese.
+13054	Shared rules
+28961	The project requires code comments in English
+13571	Handle this by task scope rather than a global overwrite.
+19215	Join the steps up.</strong> Memory organization must first preserve identity and scope of use.
+24594	Continue the step-by-step calculation: <a href="../studies/chapters/15.html#worked-S15">S15 · A similar memory does not apply to the current environment
+14294	Original exercise: store opposite path conventions for two projects, filter by scope before retrieval, then judge content relevance.
+16688	Completion means proving correct use of memory on a new task, not merely that one record can be written and queried.
+6851	9.4 · Session state and the long-term Store
+17423	Related material: LangGraph Memory
+7834	LangGraph session checkpoints and the long-term Store have different duties. The former helps recover current thread state; the latter organizes information across threads. Persistence depends on the implementation used.
+27612	An in-process memory implementation does not imply persistence across restarts. A checkpointed plan does not establish completion of external actions; check against environment state.
+12125	Session checkpoints and the long-term Store save different lifecycles
+26215	Input and conditions.</strong> A task is at step 3; a long-term project fact is "test command: pytest".
+12385	Save step 3, unfinished calls and current version
+22866	Used to recover this task.
+28670	Long-term Store
+12389	Save the test command and its source
+15243	Retrievable by future tasks.
+24403	End the task
+21532	The checkpoint can be archived
+10815	Every execution step need not become permanent experience.
+18932	Join the steps up.</strong> Different lifecycles do not require different products, but their meaning must remain distinct.
+14340	Original exercise: simulate an interruption after tool execution but before recording the result; design recovery that queries facts before directly retrying.
+11154	The ability to store both kinds of data in a database does not justify merging task recovery and long-term experience governance into one object without distinct states.
+6852	9.5 · Memory streams, reflection and planning
+17398	Related material: Generative Agents
+7676	Generative Agents studies how memory streams, retrieval, reflection and plans support simulated character behavior. It offers memory-organization ideas, but evaluation of simulated behavior differs from evaluation of software engineering reliability.
+14826	Reflection may produce higher-level summaries or incorrectly generalize specific events. Generated summaries still need provenance and conditions of use.
+14828	Avoid overgeneralization when reflection turns events into experience
+26175	Input and conditions.</strong> Three slow afternoon builds all occurred on tasks with large logs.
+13719	Record time, load and log volume separately
+10872	Do not record only "slow in the afternoon".
+12514	Candidate pattern
+16252	Large logs may be related
+11773	It remains a hypothesis to verify.
+21601	Test
+10583	Compare large morning logs with small afternoon logs
+14074	Distinguish time effects from load effects.
+19211	Join the steps up.</strong> Memory reflection may generate hypotheses; co-occurrence alone cannot promote them into causal rules.
+14309	Original exercise: derive common experience from three different failures, checking whether they share a cause or merely similar surface wording.
+16565	Completion means distinguishing events, generalizations and verified methods, rather than automatically treating model-written "experience" as fact.
+6853	9.6 · Long-term interaction memory evaluation
+17434	Related material: LongMemEval
+7867	LongMemEval turns information retention, updating and use in long-term interactions into evaluable tasks. Storing much history does not mean retrieving the right version at the right time.
+28681	Long-term memory tests should include multiple sessions, time changes, conflicting information and cases where no answer should be given. Simple fact-repetition tests overestimate reliability.
+20278	After a preference update, answer with the new value
+26435	Input and conditions.</strong> The 1st interaction states a preference for English; the 20th explicitly changes it to Chinese.
+20318	Order by time
+18655	Find the explicit update rather than repeated mentions
+20158	The new preference applies now.
+9472	"Which language is preferred now?"
+15699	Answer Chinese.
+14182	Historical question
+9479	"What was said in the 1st interaction?"
+11759	English remains answerable; the historical fact is not deleted.
+19216	Join the steps up.</strong> Memory evaluation must distinguish current facts from historical recollection.
+14317	Original exercise: supply an old address, explicitly update it, then ask for the current and historical addresses, checking time semantics separately.
+11933	Coding tasks also need tests of whether memory reduces repeated errors. Conversational benchmark scores cannot directly replace actual engineering verification.
+6854	9.7 · Memory in very long conversations
+17431	Related material: LoCoMo
+7849	LoCoMo focuses on memory and association over very long conversations. Long time spans complicate entities, events and temporal relationships; the challenge is more than a larger input character count.
+19811	A summary may retain people and topics but lose order or conditions. Evaluation must check relationships rather than just search for keywords.
+26041	Very long conversations need more than sentence-copying tests
+26220	Input and conditions.</strong> Session 1 says project A belongs to Jia; session 8 says Jia moved to project B; the question asks who is currently responsible.
+26061	Connect across passages
+28903	Identify changes in people and projects
+10706	Do not merely match the latest same-named term.
+20309	Temporal order
+14082	Distinguish past from present
+28614	The wrong time gives a stale answer.
+27137	Return records supporting the current relationship
+20230	Keep the gap explicit when uncertain.
+19260	Join the steps up.</strong> Long-term memory involves association, updates and time, not length alone.
+14400	Original exercise: construct three stages of a changing plan, then ask for the final plan, the plan at one time and the reason for a change. Identify the evidence needed for each.
+16574	Completion means distinguishing understanding long-term relationships from finding one item, rather than generalizing one successful retrieval into complete memory capability.
+6855	9.8 · Dynamically linked memory organization
+17314	Related material: A-MEM
+6868	A-MEM explores dynamic organization, linking and updating of memories so new information can connect with existing content. Associations may help retrieval or propagate mistaken judgments through incorrect links.
+28586	Links should retain their evidence; a model's sense of similarity does not establish a factual relationship. New memories may also correct old items rather than append indefinitely.
+24820	Automatic edges may connect the wrong memories
+26467	Input and conditions.</strong> Memory A mentions "cache invalidation", B "permission cache"; they concern different domains.
+23151	Similar candidates
+13296	The same keywords
+15134	An association can be proposed.
+21376	Validate the edge
+7038	A concerns build caching; B concerns identity authorization
+10791	Do not treat them as the same repair experience.
+24604	Maintain
+28585	Attach a relationship type and source to links
+20695	Allow future removal rather than permanently propagating errors.
+18976	Join the steps up.</strong> Linked memory increases reachability and the cost of false associations.
+14388	Original exercise: link same-named errors from different projects and errors from different versions of one project. Explain which relationships are usable and which distinctions must remain.
+16562	Completion means judging task gains and maintenance costs from dynamic organization, rather than using link counts to prove greater intelligence.
+6856	9.9 · Memory extraction and update pipelines
+17438	Related material: Mem0
+7926	Mem0 studies memory extraction, maintenance and use at scale. Automatic extraction reduces manual records, but deciding what deserves long-term storage remains fallible.
+11622	Facts, preferences, temporary plans and model suggestions need different handling. Repeated retrieval of a wrong conclusion may reinforce itself rather than supply new independent evidence.
+25602	Check the memory-update pipeline item by item
+26348	Input and conditions.</strong> The old record says production timeout 5; a new message claims "it should change to 7", but this has not been executed.
+27309	This is a suggestion, not an established fact
+21328	Mark proposed.
+11114	Do not overwrite the currently valid 5 directly
+12420	Preserve the distinction between facts and plans.
+17790	Only after a tool reads back the actual 7
+18560	Update with version and time.
+19194	Join the steps up.</strong> Automatic extraction must preserve modality, state and evidence, not merely extract numbers.
+14457	Original exercise: given a conversation containing explicit preferences, temporary arrangements and unverified guesses, design different write states and check later updates.
+11151	Do not focus only on storage efficiency or a benchmark score. Calculate extraction cost, incorrect-use rate, deletion capability and actual benefits on new tasks.
+6848	9.10 · Graph structure and retrieval for global questions
+17405	Related material: GraphRAG
+7688	GraphRAG uses graph structure and summaries to support broader content relationships and queries. It helps organize cross-document information, but entity extraction, relationship construction and community summaries may all introduce errors.
+15827	Graph edges are not inherently true causal relationships. Distinguish co-occurrence, citations, temporal order and causality, returning to original evidence when needed.
+15844	Graph retrieval answers cross-document relationship questions
+26343	Input and conditions.</strong> Document 1 says module A depends on B; document 2 says B changed its interface in version v8.
+18107	Build relationships
+7018	A→depends on→B, B→changed in→v8
+26632	Attach sources to edges.
+9398	"Why is A affected by v8?"
+22171	Follow relationships to candidate explanations.
+21491	Check which interface A actually calls
+15865	Graph connectivity does not automatically prove a runtime failure.
+19024	Join the steps up.</strong> A graph helps navigate relationships; conclusions must still bind to evidence for the target path.
+14384	Original exercise: build a small graph of three modules and dependency documents, then answer "what relationships exist" and "why did it fail". Explain why the second needs stronger evidence.
+24216	Exact symbol lookup may not justify graph retrieval. Update costs and provenance also belong in architectural decisions.
+9560	← Retrieval and code intelligence</a><a href="chapter-10.html">Skills and multi-agent systems →
+8873	Skills and multi-agent systems — AI Systems Engineering
+22260	Follow this chapter through its objects and states</a><a href="#topic-2">Multi-agent: work that can run in parallel matters more than the number of agents</a><a href="#c10-section-1">Skills are professional work packages expanded as needed</a><a href="#c10-section-2">Responsibilities at each extension layer</a><a href="#c10-section-3">Routing is not single-label classification</a><a href="#c10-section-4">Multi-agent benefits come from task structure</a><a href="#c10-section-5">Effective delegation and context handoff</a><a href="#c10-section-6">Handoff and agents as tools</a><a href="#c10-section-7">Use ablation experiments to judge value</a><a href="#section-8">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-skills">Positive and negative samples for a routing regression test</a><a class="sub ap-toc" href="#agent-reading-delegation">The break-even point of parallelism
+22506	Progressive loading, routing, delegation and collaboration boundaries
+28767	Stage 10</span><span class="chip">12 expanded lecture notes</span><span class="chip">Main text fully expanded
+8875	Skills are professional work packages expanded as needed
+8876	Skills organize capabilities through names, descriptions, main text and resources. Discovering metadata first, loading relevant main text next, then reading scripts or references as needed follows progressive disclosure. It does not add model parameters or guarantee program-like execution of every step.
+12524	A hypothetical path-checking skill may include applicable situations, path semantics, necessary tests and counterexamples. Its description handles routing, main text supplies methods, resources supply evidence, and scripts perform deterministic operations. Even expert main text cannot help this turn if it is not selected.
+18631	Responsibilities at each extension layer
+7741	Instructions express lasting constraints; Skills provide task methods; Tools execute or obtain evidence; Hooks run programs at event points; custom agents organize roles and model / tool configuration; plugins package and distribute them. Product support varies.
+14487	Original choices: put global code style in guidance, migration-specific checks in skills, SQL execution in tools, pre-commit static checks in a Hook or CI, and reserve a dedicated agent for truly independent tasks. Mandatory prohibitions cannot live only in a skill.
+26077	Routing is not single-label classification
+12036	A task may need several skills or none. Retrieve necessary capabilities while avoiding useless loading. Boundary cases should include adjacent fields, explanation rather than implementation, explicit selection, cross-domain tasks and insufficient evidence.
+14234	Original examples: "optimize caching" may refer to Prompt Cache or Redis. Keywords alone cause misrouting. Identify the object and goal first, obtaining a little evidence to resolve ambiguity if necessary, rather than loading every candidate at once. Include routing cost in evaluation.
+16200	Multi-agent benefits come from task structure
+22743	Independent research, parallelizable tasks and valuable independent review may benefit. Several agents editing the same function invite conflict. Anthropic's multi-agent research demonstrates coordinator–worker patterns; Agentless offers a simple-process counterbaseline. Neither supports "more is always better" or "agents are never needed".
+18034	Parallel gains depend on dependencies, context copying and integration costs. Two agents investigating platform-specific paths may help; three agents repeating the same summary may add no independent evidence.
+20628	Effective delegation and context handoff
+27298	This is an original delegation example. A sub-agent needs enough established facts, not the main agent's whole history. Confirm permission and tool inheritance for the product, and have the main agent check returned results for missing limits. For code changes, specify workspace and file ownership.
+16749	For the full mechanism and a continuous example see <a href="../chapters/20.html#agent-practice-delegation">How do several agents run in parallel, and how is loss at handoff avoided?</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.
+7697	Handoff and agents as tools
+7698	Handoff often means transferring control; when an agent acts as a tool, the caller usually retains outer control; multi-agent conversation is another collaboration form. Specific SDKs differ in semantics and state filtering.
+17007	Transferring customer support to a specialized workflow and having the main agent request a read-only review suit different organizations. Frameworks do not automatically make handoff information minimal yet complete; check what is passed, how original evidence is obtained and how errors return.
+22481	Use ablation experiments to judge value
+14255	An original experiment compares one agent, then adds a skill, parallel investigation and independent review, changing only one item at a time. Report simple and complex tasks separately so averages do not hide regressions. If routing reduces missed skills but greatly increases irrelevant loading, judge actual loss rather than hit rate alone.
+24897	Self-check: does agreement among agents mean independent evidence?</strong> No. <strong>Is parallelism always faster?</strong> No; coordination and dependencies may cancel the gains. <strong>Are longer skills more professional?</strong> No; judge whether necessary knowledge is used correctly at the right time.
+6072	10.1 · Progressive skill loading
+17386	Related material: Equipping Agents with Agent Skills
+6951	The Agent Skills article proposes organizing expertise through progressive disclosure: show metadata first, expand relevant main text, then read resources as needed. This changes information supply, not model parameters through training.
+18671	Skill entry points need clarity for discovery, main text needs actionable methods, and resources need trustworthiness and freshness. Failure at any layer can make a skill ineffective.
+14962	What loading only relevant skills saves
+26351	Input and conditions.</strong> There are 10 skills, each with 1000 units of main text; only the testing skill is currently needed.
+12952	Load everything
+21820	10000 units of main text in total
+16255	Many irrelevant methods compete for context.
+22504	Progressive loading
+12861	Read short metadata first, then 1 relevant body
+15091	Only that body and necessary dependencies are needed.
+25044	If a truly necessary skill is missed
+23228	Saved length harms the task; evaluate both directions.
+19150	Join the steps up.</strong> Progressive loading aims for sufficiency and relevance, not minimum size alone.
+14380	Original exercise: split a long checklist into a default description, task body and on-demand references. Explain what should not load every turn.
+16557	Completion means reducing irrelevant context while preserving necessary capability, not merely splitting documents into more files.
+6076	10.2 · Skill specifications and resource organization
+17321	Related material: Agent Skills Open Specification
+18140	The open skill specification defines conventions for files, metadata and resource organization. Format compliance helps interoperability, but does not guarantee identical loading, permission or execution behavior in every client.
+25303	Specification compliance differs from correct skill content. A validly formatted skill may still have vague scope, stale steps or invalid references.
+8887	A skill body references a nonexistent script
+26161	Input and conditions.</strong> SKILL.md requires scripts/check.py, but that file is absent from the package.
+21457	Format check
+12636	Metadata parses
+27151	Still insufficient.
+26017	Resource check
+23224	The relative-path target does not exist
+18680	The skill execution chain is broken.
+12490	Correct the reference or supply the actual script
+11220	Do not let the model fabricate a successful run.
+19080	Join the steps up.</strong> Verify skill specifications, resource completeness and execution quality separately.
+14484	Original exercise: validate a toy SKILL.md's fields and resource paths, then check correct selection with a real task.
+11169	Do not treat format tests as evaluations of expertise. Loading, adherence and final engineering outcomes need separate verification.
+6077	10.3 · Skill selection and execution context
+17347	Related material: Claude Code Skills
+7244	Claude Code skills can be discovered and used through product-supported methods, with some settings affecting execution context. Check actual behavior against the version and documentation; the open specification alone cannot establish it.
+18667	When combining skills with sub-agents, check tools, state and return methods. Moving a task into a separate context does not automatically preserve all evidence.
+20447	An explicitly selected skill still needs current task constraints checked
+26414	Input and conditions.</strong> The user selects a deployment skill but also says "plan only" this turn.
+18672	Skill loading
+15146	Deployment methods may be read
+10946	This does not authorize actual deployment.
+12065	Task interpretation
+15083	Output only the plan and verification conditions
+12409	Preserve the execution boundary.
+22150	Do not issue production writes without approval
+18666	A skill cannot expand user authorization.
+19112	Join the steps up.</strong> Explicit skill selection and approval of side effects are separate matters.
+14322	Original exercise: use the same skill in the main session and an independent investigation, compare necessary inputs and handoffs, and check for duplicate reading.
+20981	This item concerns conditions of use and does not advocate isolating every skill. Direct loading may suit simple tasks better.
+6078	10.4 · Scope of Copilot skills
+17367	Related material: Copilot Agent Skills
+7306	Copilot skills provide task-specific guidance and resources. They differ from persistent repository instructions; do not add every skill body to every task by default.
+16240	Differences across interfaces require checking the execution environment first. Successful installation and loading this turn are separate facts; neither proves the other.
+10291	Skill support on one platform does not imply identical loading rules across interfaces
+26361	Input and conditions.</strong> The local CLI reads a skill successfully, but the cloud task lacks the corresponding directory.
+22108	Compare environments
+20949	Local uncommitted files are absent remotely
+10898	The description itself is not the error.
+15504	Synchronize sources
+19413	Supply resources through supported product methods
+23390	Confirm they actually exist in the cloud environment.
+13586	Retest
+12506	Inspect candidate discovery, loading and execution separately
+10935	Do not extrapolate directly from local results.
+19251	Join the steps up.</strong> Supported interfaces, versions and file distribution are factual conditions.
+14479	Original exercise: design three task groups: skills needed, unnecessary and ambiguous. Measure skill selection and final quality rather than file existence alone.
+16685	Completion means routing provides "just enough": necessary skills are not missed, and irrelevant ones add no burden.
+6079	10.5 · Codex skill loading and use
+17358	Related material: Codex Skills
+7269	Codex skill entry points and documentation may move; current general skill descriptions cannot unconditionally establish behavior in every historical Codex version. This book preserves the further-reading list's mappings without assuming all new extensions are backward compatible.
+21412	The core remains metadata discovery, loading when relevant and resource retrieval as needed. Check specific directories, triggers and configuration in the actual version.
+7270	Trace Codex skill issues along the data chain
+26318	Input and conditions.</strong> A skill is installed but unused by the task.
+23399	Confirm metadata appeared this turn
+12789	Rule out discovery problems first.
+23398	Confirm the skill content was read
+13592	Then inspect routing selection.
+25035	If the body requires unavailable tools
+19306	Report the capability gap rather than editing the description again.
+19083	Join the steps up.</strong> Effective repair requires breaking "unused" into specific missing steps.
+14332	Original exercise: fix the installed version, record evidence that a skill was discovered and read, then test explicit selection versus semantic selection.
+11180	Do not end verification because the final answer claims "the skill was used"; inspect actual inputs or observable behavior and results.
+21179	Source S123, Codex skill loading and use
+6080	10.6 · Choosing the right extension layer
+17373	Related material: Customization Cheat Sheet
+13576	When returning to the customization comparison table, focus on eliminating overlapping responsibilities. Global rules, expertise, tools, event checks and role orchestration should each have a clear authoritative source.
+15440	Copying one constraint across several files may seem reassuring briefly but cause version conflicts later. Establish its maintenance location and reference relationships.
+17976	Separate resident rules from on-demand specialist material
+26517	Input and conditions.</strong> The project always requires "do not leak credentials" and also has a 1000-character performance-tuning manual.
+28317	General constraint
+16361	Always relevant and brief
+17977	Suitable for resident context.
+11270	Specialist manual
+14969	Needed only for performance tasks
+19498	An on-demand skill or resource fits better.
+18172	Mandatory mechanical steps
+22053	Formatting checks at every commit
+11697	Use a deterministic process, not just written instructions in a manual.
+18963	Join the steps up.</strong> Judge content's role and frequency before choosing an extension mechanism.
+14363	Original exercise: place "tests must run" in instructions, a Skill and CI, explaining whether each layer provides a reminder, method or enforced verification.
+10890	Not every duplication needs removal; necessary execution safeguards may remain, but several text copies cannot replace actual checks.
+6081	10.7 · The main agent and parallel researchers
+17442	Related material: Multi-Agent Research System
+16202	Multi-agent research systems use coordinators and workers for separable research directions. Gains come from parallel exploration and task structure, alongside coordination, duplicate search and integration costs.
+23368	Research-task successes cannot be extended directly to several agents editing one file. Shared state and write conflicts may cancel parallel gains.
+18036	Give parallel researchers different evidence scopes
+26185	Input and conditions.</strong> Two sub-agents search identical keywords and websites.
+28486	Overlap
+15209	May return duplicate results
+11922	Paying twice does not mean broader coverage.
+13747	Divide work
+7043	A checks official mechanisms; B checks reproducible implementations and counterexamples
+20475	More likely to obtain complementary evidence.
+14708	Deduplicate and check conflicting claims and versions
+22587	The parent agent does more than concatenate summaries.
+19063	Join the steps up.</strong> Parallel research gains depend on task independence and complementary information.
+14378	Original exercise: split an investigation into three independent questions, then list a dependency chain that cannot be split. Calculate waiting and integration costs separately.
+16686	Completion means proving that decomposition adds evidence or shortens the critical path, not just adds roles.
+6082	10.8 · Workflows, parallelism and dynamic orchestration
+17425	Related material: LangGraph Workflows and Agents
+7833	LangGraph distinguishes predefined workflows from dynamic agents and offers orchestration patterns such as routing, parallelism and coordination. A framework's expressive power does not mean every pattern should be used.
+20448	Explicit state and boundaries help recovery and inspection, but overly fine nodes add configuration and handoff costs. Steps requiring flexible model judgment should not all be hard-coded.
+7364	DAG edges determine what can run simultaneously
+26150	Input and conditions.</strong> A reads module 1, B reads module 2, C needs A/B results, and D needs only A.
+18131	Start
+6887	A/B run in parallel
+10937	They do not wait for one another.
+7026	A finishes first
+7403	D can start
+7316	C must still wait for B.
+7131	B finishes
+7318	C starts
+19417	Schedule by dependencies rather than fixed barriers across whole stages.
+19131	Join the steps up.</strong> Correct dependencies reduce needless waits; shared writes still need additional constraints.
+14390	Original exercise: put fixed validation and investigation of unknown causes in different nodes. Explain which edges can be predefined and which depend on observations.
+16614	Completion means a flow that explains actual tasks, not a complex graph built to showcase framework capabilities.
+6083	10.9 · Transferring control
+17327	Related material: Agents SDK Handoffs
+7700	Handoff usually means transferring control to another agent, unlike calling a sub-agent as a tool and receiving a result. The SDK defines specific context filtering and control semantics.
+11696	A handoff must pass the goal, known facts and necessary state while avoiding unrelated sensitive content. Transferring control does not grant unlimited inherited permissions.
+9188	handoff differs from a call that returns a result
+26192	Input and conditions.</strong> The main agent transfers a customer's issue to a billing agent.
+19657	Control transfer
+15535	The billing role drives subsequent turns.
+12234	As a tool
+11568	The main agent calls billing analysis and waits for a result
+11567	The main agent continues the overall task.
+20394	Choose by whether sustained takeover is needed
+10862	The names are not interchangeable.
+18942	Join the steps up.</strong> Control-flow handoff and ordinary function-like delegation have different lifecycles.
+14477	Original exercise: design a handoff from general reception to a specialized workflow, then a read-only review call returning to the main agent. Compare responsibility for final answers and error handling.
+16615	Completion means clear control and state boundaries, avoiding repeated handoffs with nobody responsible for completion.
+6073	10.10 · Agent configuration and calling agents as tools
+17326	Related material: Agents SDK Agents
+6957	An Agent definition in Agents SDK organizes model, instruction and tool configuration and supports several collaboration methods. Defining the object does not guarantee completion; a runner, environment and acceptance are still needed.
+18697	When an agent acts as a tool, its caller usually consumes the result and continues the outer task. Define inputs and outputs rather than return unbounded history.
+6953	An Agent-as-tool return is still a result to verify
+26249	Input and conditions.</strong> An analysis sub-agent returns root cause X and evidence paths.
+11566	The main agent receives it
+23260	Sees a tool-style result
+11139	Does not automatically accept it as final.
+19310	Spot-check key facts
+25879	Read corresponding lines in the current version
+29081	Check whether X is supported.
+20072	Integrate other subtasks and test
+22593	The parent retains responsibility for completion.
+19082	Join the steps up.</strong> Wrapping an agent as a tool does not remove model errors or handoff losses.
+14352	Original exercise: define an investigator returning only an evidence summary; the main agent then decides whether to edit. Check whether findings include sources and uncertainty.
+28388	Avoid having every role repeat a full plan and review. Each role should correspond to a real independent responsibility.
+6074	10.11 · Simple processes as strong baselines
+17324	Related material: Agentless
+6956	Agentless uses a relatively simple localization, repair and verification process for software engineering tasks, reminding us that complex agent architectures need strong-baseline comparisons. It does not prove dynamic agents never have value.
+24161	Simple processes are easier to attribute and debug but may not suit open exploration or highly dynamic environments. Selection depends on task structure rather than names.
+24156	Build a strong simple baseline first
+26152	Input and conditions.</strong> A bug can be solved in three steps: locate, patch, test.
+15774	Fixed three-step process
+22406	Measure actual success and cost.
+16147	Complex approach
+16108	Add planning / multiple agents / memory
+15911	Compare on the same tasks.
+12441	Condition for keeping it
+16148	The complex approach gives reproducible net gains
+15577	Otherwise retain the simple path.
+18885	Join the steps up.</strong> An Agentless-style baseline tests which autonomous mechanisms are actually necessary.
+14357	Original exercise: run fixed workflows and dynamic exploration on a set of localized bugs. Record success, tool rounds and rework, and analyze the sources of differences.
+16654	Completion means keeping complexity that actually helps and removing orchestration layers unsupported by evidence.
+6075	10.12 · Multi-agent conversation frameworks
+17334	Related material: AutoGen
+7017	AutoGen supports collaboration through multi-agent conversation and configuration. Messages divide work but may also create loops, duplication and shared wrong premises.
+10760	Different roles expressing different views does not establish independent evidence. If all rely on the same wrong summary, neither agreement nor debate automatically produces truth.
+16199	Multi-agent conversations can loop through agreement
+26149	Input and conditions.</strong> A says a plan is viable, B repeats agreement, and A treats that agreement as new evidence.
+24054	First round
+15019	Only the original guess
+22145	No external verification.
+18330	Loop
+26021	Agreement spreads between roles
+25680	The amount of evidence has not increased.
+18572	Interrupt
+25240	Require a test or concrete counterexample
+18810	Turn conversation into action that adds information.
+19047	Join the steps up.</strong> Conversation count is not evidence count.
+14452	Original exercise: give two roles different but verifiable material, then compare with both sharing the same material. Require conclusions grounded in evidence rather than voting.
+16607	Completion means explicit speaking, control, stopping and verification rules, not equating continued conversation with continued progress.
+9573	← Long-term memory</a><a href="chapter-11.html">AI software engineering →
+16748	For the full mechanism and a continuous example see <a href="../chapters/19.html#agent-practice-skills">How does a progressively loaded skill go from "a file" to actual capability?</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.

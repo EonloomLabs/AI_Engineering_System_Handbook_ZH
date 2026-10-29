@@ -1,0 +1,458 @@
+23654	Lesson 16｜Retrieval, to begin with: catalogs, inverted indexes, vectors and approximate search — AI Systems Engineering
+21561	Retrieval finds candidates first, then judges whether they can answer</a><a href="#foundations-28-s1">Retrieval first answers "where to find candidates"</a><a href="#foundations-28-s2">Why an inverted index is called "inverted"</a><a href="#foundations-28-s3">Start with the roles of TF, IDF and BM25</a><a href="#foundations-28-s4">Why vector retrieval can find synonymous expressions</a><a href="#foundations-28-s5">Exact and approximate nearest neighbors</a><a href="#foundations-28-s6">Why chunking, cleaning and versions come before ranking</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-retrieval">How one document becomes two kinds of index
+23791	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="09.html">Lesson 44 · Probability, exponentials and softmax
+13005	All the steps and explanations</a><a href="../visual/F29.html">Lesson 17 · From two candidate lists to usable evidence</a><a href="../visual/F31.html">Lesson 23 · Long-term memory is not a note that is always right
+21564	Retrieval first answers "where to find candidates"
+21549	Retrieval</strong> finds items that may be relevant to a question among a collection of material. An <strong>index</strong> is an organizational structure prepared for this purpose, like the word index at the end of a book, but it can include positions, statistics and permissions.
+13229	Key difference:</strong> retrieval is only the first half of finding evidence; a relevant passage may not be enough to support a specific conclusion.
+17070	Easy to misread:</strong> do not treat a retrieval score as a measure of factual truth.
+23432	Offline indexing</strong> means preparing material and indexes before a query arrives; it does not mean the machine must be disconnected from the network. <strong>Online querying</strong> means retrieving when a user's question arrives; it does not necessarily mean accessing the public internet either.
+12495	Why an inverted index is called "inverted"
+14572	The original organization is "document → words it contains". The inverted organization becomes "word → documents it appears in". For example:
+13160	Key difference:</strong> an inverted index stores "which words occur in which documents" in advance, so a query does not have to scan every document in full.
+17152	Easy to misread:</strong> synonymous expressions that do not match may need semantic retrieval as a supplement.
+28231	Worked out cell by cell: inverted index: from "document contains words" to "word points to documents"
+23060	Directory points to D1 and D3, exclude points to D1, and rule points to D1 and D2
+21889	Step 1</span><span>Original D1: directory / exclude / rule; D2: file / path / rule; D3: directory / permission / check.
+21904	Step 2</span><span>Build the candidate list D1, D3 for the word "directory".
+21923	Step 3</span><span>Build the candidate list D1 for the word "exclude".
+21940	Step 4</span><span>Build the candidate list D1, D2 for the word "rule".
+21956	Step 5</span><span>At query time, retrieve candidates directly by word, but the candidates still need subsequent evidence checking.
+14518	The original data says "which words each document contains"; the index changes this to "which documents each word appears in", so searching for "directory" directly retrieves candidates D1 and D3.
+21234	A search for "directory exclude" can first visit the document lists for these words, without reading all documents from the beginning every time. Exact error codes, function names and configuration keys are often a good fit for this kind of term matching.
+8913	Start with the roles of TF, IDF and BM25
+8916	TF (term frequency)</strong> describes how many times a term appears in a document. <strong>DF (document frequency)</strong> describes how many documents contain the term; <strong>IDF (inverse document frequency)</strong> usually gives greater weight to rare terms that distinguish documents more strongly.
+8914	Start with the roles of TF, IDF and BM25: item by item
+8917	TF: how often the term appears
+7729	IDF: how rare the term is
+7091	BM25: combines term matches
+13225	Key difference:</strong> term frequency and rarity help with ranking, but they do not score the truth of the article's content.
+17014	Easy to misread:</strong> a BM25 score is not inherently a probability from 0 to 1.
+25041	If every document says "description", this word does little to distinguish the target; if only a few documents contain a particular error code, that code is more useful for locating it.
+7086	BM25 combines term frequency, rarity, document length and other factors into a ranking score. The gain from term frequency often saturates: 10 occurrences need not have 10 times the value of 1 occurrence; the effect of length must also be considered for longer documents. Advanced Q058 expands the full formula term by term.
+19538	A ranking score is not a probability</strong>. A BM25 score of 8.2 does not mean 82% correctness, nor does it guarantee that scores from different queries can be compared directly.
+15561	Why vector retrieval can find synonymous expressions
+10309	A retrieval model turns a question or document into a row of numbers, aiming to place related content closer together in vector space. A query for "program crash" can therefore match a document saying "abnormal process exit" even though the words differ.
+13183	Key difference:</strong> vector retrieval can find material with different wording but similar meaning, but it is affected by the embedding model.
+17109	Easy to misread:</strong> nearby vectors do not mean the document actually answers the question.
+20566	One of the most common comparisons is <strong>cosine similarity</strong>: the dot product divided by the product of the lengths of the two vectors. Length is the square root of the sum of squared components, or the norm. If x=[1,0] and y=[2,0], the cosine is 1; if y=[0,1], the cosine is 0. Zero vectors need special handling; division by zero is not allowed.
+27333	This compares the directions of representations; it does not automatically determine factual logic. "Access allowed" and "access not allowed" may concern very similar topics but reach opposite conclusions.
+24207	Exact and approximate nearest neighbors
+20593	Nearest neighbors</strong> are the vectors ranked highest by the chosen distance or similarity. Comparing all N records one by one gives an exact result, but the cost is high at very large scale.
+24208	Exact and approximate nearest neighbors: item by item
+24209	Exact nearest neighbors: find the true top k
+26906	Approximate ANN: faster but may miss some
+28884	A recall / latency trade-off is needed
+13095	Key difference:</strong> ANN gives up some retrieval accuracy for performance at scale; it should still be evaluated on the specific data distribution.
+17196	Easy to misread:</strong> with very strict filters, there may be too few candidates after ANN.
+6915	ANN (approximate nearest neighbors)</strong> uses additional structures to reduce the search space, giving up some recall for speed. HNSW navigates a hierarchical nearest-neighbor graph: first it jumps toward a nearby region in a sparser layer, then it expands the candidates in finer layers. The advanced chapters explain the process in detail.
+26916	An approximate algorithm's "recall" measures whether it finds all the exact neighbors, not whether an answer is factually correct; these are two different levels of evaluation.
+13727	Why chunking, cleaning and versions come before ranking
+28668	Long documents are usually split into <strong>chunks (content fragments)</strong>. Chunks that are too small may lose conditions and exceptions; chunks that are too large may include much irrelevant content. Headings, table headers, applicable dates and code scope may all need to accompany a chunk.
+24973	If an old rule has not been deleted or marked invalid, even excellent retrieval may find it accurately. If unauthorized content has already been given to the model, hiding its citation at the end may still allow a leak. Index structure, permissions and versions together determine which candidates may be used.
+5811	· Lesson 16
+10502	How three documents become one inverted index
+26329	Input and conditions.</strong> Teaching document A=
+10168	. Tokenization uses spaces, so every term is already explicit.
+28217	Scan document by document
+25587	Record which document each term appears in
+19551	Exclude→A, B; path→A, B; cache→B; log→C; output→C.
+12452	Keep term frequency
+9452	"Exclude" occurs 1 time in A and 2 times in B
+12497	A posting list can also record positions and counts.
+19740	Submit a query
+21293	Query "exclude"
+23130	Locate A and B directly, without treating C as a relevant candidate.
+25386	Compute discriminative value
+18423	3 documents in total, 2 containing the term
+7089	The example BM25 IDF is
+28659	Length correction
+7062	A has length 2, B length 4, and the average is 8/3
+7127	Two occurrences in B do not mean its score is exactly twice as high.
+19179	Join the steps up.</strong> An index lets us get back from words to documents quickly. Vector search is another way to find candidates; it does not automatically replace exact terms and version conditions.
+26772	Limits and counterexamples.</strong> Tokenizing on spaces is only used to make the computation explicit; it is not called a production Chinese tokenizer.
+15385	How one document becomes two kinds of index
+10342	A document is parsed first, then split into chunks. A lexical index records where terms occur; a vector index maps chunks into comparable vectors. A chunk ID should lead back to the source document, version, permissions and position. A query vector having the same length as the index vectors only shows shape compatibility; it does not show that they come from the same model space. Changing the embedding model usually requires matching re-encoding and an index switch.
+12496	Are an inverted index and a vocabulary the same thing?
+10851	No. A vocabulary maps tokens to IDs; an inverted index maps terms to documents or positions containing them. They serve different purposes.
+15557	If vector cosine similarity is very high, can we directly confirm that two sentences reach the same conclusion?
+10987	No. Similar meaning or topics may conceal differences in negation, dates and conditions of use; read the original text to check.
+6188	15｜The offline retrieval chain: how a document becomes a queryable index</a><br/><a href="../chapters/16.html">16｜The online retrieval chain: recall, fusion, reranking and evidence sufficiency</a><br/><a href="../chapters/17.html">17｜Code intelligence: from text search to symbols, versions and run evidence</a><br/><a href="../chapters/18.html">18｜Long-term memory: writing, retrieval, conflict, expiry and forgetting</a><br/><a href="../chapters/23.html">23｜Evaluation: how to prove an optimization really pays off
+21560	Retrieval finds candidates first, then judges whether they can answer</a><a href="#foundations-28-s1">Retrieval first answers "where to find candidates"</a><a href="#foundations-28-s2">Why an inverted index is called "inverted"</a><a href="#foundations-28-s3">Start with the roles of TF, IDF and BM25</a><a href="#foundations-28-s4">Why vector retrieval can find synonymous expressions</a><a href="#foundations-28-s5">Exact and approximate nearest neighbors</a><a href="#foundations-28-s6">Why chunking, cleaning and versions come before ranking</a><a href="#self-check">End-of-lesson self-check
+23664	Lesson 17｜From search results to a trustworthy answer: recall, reranking and evidence — AI Systems Engineering
+11825	From two candidate lists to usable evidence</a><a href="#foundations-29-s1">Why retrieval and reranking are two separate steps</a><a href="#foundations-29-s2">How keywords and vectors work together</a><a href="#foundations-29-s3">Why a cross-encoder is more detailed and more costly</a><a href="#foundations-29-s4">Relevant does not mean enough to answer</a><a href="#foundations-29-s5">The limits of query rewriting and hypothetical documents</a><a href="#foundations-29-s6">How to check every layer of a RAG chain</a><a href="#foundations-29-s7">Why an answer can look true and still be wrong</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-retrieval">Even the top-ranked result may be unusable
+23890	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="28.html">Lesson 16 · Retrieval, to begin with
+13004	All the steps and explanations</a><a href="../visual/F28.html">Lesson 16 · Retrieval finds candidates first, then judges whether they can answer</a><a href="../visual/O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+15099	Why retrieval and reranking are two separate steps
+15096	Candidate retrieval</strong> first finds a smaller set of candidates among a large volume of material, aiming to avoid missing key material while controlling cost. <strong>Reranking</strong> then orders these candidates using a more detailed assessment of relevance.
+13163	Key difference:</strong> expanding the coverage of relevant candidates first, then ranking them with a more costly method, can balance cost and quality.
+17201	Easy to misread:</strong> reranking cannot recover material that was never retrieved.
+12518	If the candidate set does not contain the right document, the reranker cannot recover it from nowhere. A stronger reranker does not mean the whole retrieval pipeline is more complete.
+13292	How keywords and vectors work together
+13294	Keywords work well for exact names; vectors work well for some semantic matches. <strong>Hybrid retrieval</strong> combines the results from two or more paths.
+13293	How keywords and vectors work together: item by item
+13295	Keyword retrieval
+15560	Vector retrieval
+25115	RRF fusion ranking
+13166	Key difference:</strong> keywords work well for exact terms, and vectors for similar meaning; fusion reduces the bias of a single path.
+17043	Easy to misread:</strong> the same document from different sources needs attention to deduplication and versions.
+23134	Simply adding a BM25 score of 8.2 to a cosine similarity of 0.7 may not be meaningful, because their scales and distributions differ. <strong>RRF (reciprocal rank fusion)</strong> combines ranks rather than raw scores. In one form, each path contributes
+29246	, and the contributions are added.
+12311	For example, with the teaching constant c=10, document A ranks 1 and 3 on the two paths, giving
+29485	; document B ranks 2 and 1, giving
+29291	, so B ranks slightly higher. This value is not a probability of correctness. If a candidate appears on only one path, the other path does not add points out of nowhere.
+7312	Why a cross-encoder is more detailed and more costly
+14795	A bi-encoder</strong> turns the query and document into vectors separately, then compares them quickly; document vectors can be stored in advance. A <strong>cross-encoder</strong> passes the query and candidate document to the model together, allowing more detailed term interactions, but each pair needs computation, so it is usually better suited to a smaller candidate set.
+13282	Key difference:</strong> reranking can examine interactions between the query and the article in greater detail, but it computes every candidate and is usually more costly.
+17071	Easy to misread:</strong> do not treat a reranking score directly as the truth value of the final answer.
+10462	One class of methods keeps multi-token representations for fine-grained interaction, occupying another point in the trade-off between computation and storage. Do not simply rank them by how "advanced" they are; consider scale, budget and task.
+23157	Relevant does not mean enough to answer
+22956	The user asks "Can the new version automatically retry write requests?" Finding a "retry overview" only establishes topical relevance. We also need the version, whether the write operation is idempotent, which errors allow retries, and how unknown results after a timeout are handled.
+23158	Relevant does not mean enough to answer: item by item
+9475	"Relevant": mentions the topic
+9422	"Sufficient": includes key conditions
+23316	An actual answer requires the latter
+13133	Key difference:</strong> even a highly relevant passage may omit the version, units or exceptions.
+17098	Easy to misread:</strong> citing only high-similarity passages does not automatically supply missing facts.
+25671	Evidence sufficiency</strong> is relative to the specific claims being answered: whether every conclusion has conditions of use and supporting material, not merely whether "several related articles were found".
+18157	Citations should also be bound to specific claims. Attaching one source to a whole paragraph containing several unrelated inferences may not prove everything in it.
+21309	The limits of query rewriting and hypothetical documents
+21306	Query rewriting</strong> turns the user's question into an expression better suited to search, but must not rewrite "it may be a cache issue" as "cache corruption is confirmed". Assumptions in a rewrite remain assumptions.
+13215	Key difference:</strong> rewriting can find different expressions, but must preserve the user's original constraints and entities.
+17143	Easy to misread:</strong> widening the topic through rewriting may also introduce spurious relevance.
+13881	Uses a generated hypothetical document to help retrieval; that document is a retrieval aid, not actual evidence.
+22885	Organizes retrieval through hierarchical summaries;
+13875	Uses entity relationships, community summaries and similar structures to organize information across documents. They address different failure modes; additional structure also brings update costs and costs from error propagation.
+10399	How to check every layer of a RAG chain
+8700	RAG (retrieval-augmented generation)</strong> is not a new kind of foundation model; it is a system approach that retrieves evidence first, then lets a generative model use it. It can be checked as follows:
+13521	Filtering can happen at several stages; the key is that unauthorized data must not enter components that should not see it.
+11524	Why an answer can look true and still be wrong
+15199	Chunking may have lost a negation, the index may mix versions, retrieval may miss an exception, reranking may favor an old document, or the model may turn advice into a mandatory requirement. Every layer needs observable evidence; simply switching to a larger generative model may only make the error more fluent.
+5812	· Lesson 17
+18749	Fuse two ranked lists, then check whether there is enough to answer
+26240	Input and conditions.</strong> Keyword retrieval returns
+29287	, and vector retrieval returns
+10052	. Use an RRF constant of 60, with ranks starting at 1 in each list. The question requires both configuration A and test B.
+25368	Compute A
+14971	Ranks 1 only in the 1st list
+25370	Compute B
+13704	Ranks 2 and 1 respectively
+25371	Compute C and D
+7322	C ranks 3 and 2; D ranks only 3
+7323	C is about 0.032002, D about 0.015873.
+25114	Fuse the rankings
+14964	The consequence of taking only the top 2
+10557	Put only B and C in context
+25107	Despite highly relevant results, configuration A is still missing, so the check requiring A and B cannot be completed.
+19094	Join the steps up.</strong> A high rank does not mean complete evidence; knowing which facts the question needs is what lets us judge how many results are enough.
+26664	Limits and counterexamples.</strong> The two ranked lists are a teaching construction, not values returned by an actual embedding service; the RRF arithmetic is actually executed.
+19535	Even the top-ranked result may be unusable
+12528	Suppose D2 ranks highest after fusion of two search paths, but D2 applies to an old version and the current question concerns a new version. It is relevant but inapplicable. The correct process checks relevance first, then version, permissions, conditions and whether the evidence covers the question. Two chunks from the same original text do not automatically count as two independent sources of support. Before answering, point every conclusion to specific evidence; if something is missing, search further or narrow the conclusion.
+8737	Can a reranker bring the right document back in from outside the retrieved set?
+11736	Not when it only reranks the given candidates; retrieval must be repeated or its scope expanded.
+7725	If HyDE generates a very plausible explanation, can it be used as a factual source?
+10969	No. It is hypothetical content that helps retrieval; real sources must support the final conclusion.
+6189	15｜The offline retrieval chain: how a document becomes a queryable index</a><br/><a href="../chapters/16.html">16｜The online retrieval chain: recall, fusion, reranking and evidence sufficiency</a><br/><a href="../chapters/17.html">17｜Code intelligence: from text search to symbols, versions and run evidence</a><br/><a href="../chapters/18.html">18｜Long-term memory: writing, retrieval, conflict, expiry and forgetting</a><br/><a href="../chapters/26.html">26｜Deep applications: composing components into a working system you can explain
+11824	From two candidate lists to usable evidence</a><a href="#foundations-29-s1">Why retrieval and reranking are two separate steps</a><a href="#foundations-29-s2">How keywords and vectors work together</a><a href="#foundations-29-s3">Why a cross-encoder is more detailed and more costly</a><a href="#foundations-29-s4">Relevant does not mean enough to answer</a><a href="#foundations-29-s5">The limits of query rewriting and hypothetical documents</a><a href="#foundations-29-s6">How to check every layer of a RAG chain</a><a href="#foundations-29-s7">Why an answer can look true and still be wrong</a><a href="#self-check">End-of-lesson self-check
+23674	Lesson 18｜Code is not an ordinary document: syntax trees, call relationships and versions — AI Systems Engineering
+11951	Code retrieval cannot rely on "semantically similar" alone</a><a href="#foundations-30-s1">Start with one line of code at different levels of observation</a><a href="#foundations-30-s2">LSP is not a model that automatically understands business needs</a><a href="#foundations-30-s3">How to read graphs, nodes and edges</a><a href="#foundations-30-s4">Why Git's different states all matter</a><a href="#foundations-30-s5">A concrete sequence for locating a bug</a><a href="#foundations-30-s6">What material is needed to "understand the business"</a><a href="#foundations-30-s7">How compilation, tests and runtime evidence work together</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-code">Positions, versions and execution results in code must line up
+23529	Lesson 01 · An agent is not another neural network</a><a class="pill" href="24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="29.html">Lesson 17 · From search results to a trustworthy answer
+13007	All the steps and explanations</a><a href="../visual/F34.html">Lesson 04 · A test looks for counterexamples; it does not stamp code green</a><a href="../visual/F40.html">Lesson 66 · Find which layer the error happens in before talking about changing models
+12653	Start with one line of code at different levels of observation
+20356	is a string of text, but also has structure: the left side is an assignment target, the right side is a multiplication expression, and price and count are variables. Text search finds characters, while parsing identifies relationships; they provide different information.
+12655	Start with one line of code at different levels of observation: item by item
+20116	Text level: string matching
+25801	Syntax level: AST structure
+25787	Semantic level: symbols and types
+13154	Key difference:</strong> code can be observed at the levels of text, structure and symbols; each answers different questions.
+17137	Easy to misread:</strong> finding a function with the same name does not mean finding the implementation actually bound at the call site.
+6931	An AST (abstract syntax tree)</strong> organizes code into syntax nodes; for example, an assignment node may contain a multiplication node. A <strong>symbol</strong> is a language entity such as a function, variable or type; identical strings may refer to different symbols, so full-text matching cannot always replace language understanding.
+7828	LSP is not a model that automatically understands business needs
+7832	LSP (Language Server Protocol)</strong> lets an editor ask a language service for capabilities such as "where is the definition", "what references are there" and "are there type errors". It is a communication protocol; the corresponding language service performs the actual analysis.
+13269	Key difference:</strong> a language service uses project structure and language rules to locate definitions and references; it is not a model that "understands business requirements".
+17115	Easy to misread:</strong> macros, dynamic reflection and generated code may still exceed the capabilities of static analysis.
+9449	"Finding the function definition" still differs from "knowing what data production passed in". A type system can rule out some errors, but a runtime issue caused by a particular configuration may need logs, tests or real input.
+11965	Positions, versions and execution results in code must line up
+19787	Finding foo in a search only locates a candidate. The current file, function definition, callers and work-tree version must be known. After the agent writes a patch, old test results no longer apply directly; even if the commit has not changed, uncommitted files have. Reading an LSP position also requires knowing its character-counting unit; byte counts for Chinese characters and emoji must not be treated as protocol column numbers. Being able to parse code does not mean the code has been verified.
+19275	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/17.html#agent-practice-code">Why does code evidence need the work-tree version, and not just the commit?</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+15824	How to read graphs, nodes and edges
+15823	A graph</strong> consists of nodes and edges. Functions are nodes, and call relationships are directed edges from callers to callees. A call graph helps us understand the scope of impact.
+13153	Key difference:</strong> a code dependency graph represents "who calls whom" and "who affects whom" as nodes and edges.
+17110	Easy to misread:</strong> a connected path in a graph does not mean that path is necessarily executed at runtime.
+7365	A DAG (directed acyclic graph)</strong> is a dependency graph with no route along the arrows back to itself. For example, B can start only after A finishes, C can also start after A, and finally D depends on both B and C. It is useful for scheduling tasks, and is not a concept unique to neural networks.
+9414	"Dependency closure" means following the necessary edges far enough to explain the relationships relevant to the current question; a "static call graph" is inferred from source code, while "dynamic call relationships" come from actual execution. Dynamic dispatch, reflection and plugins can make the static graph differ from the real path.
+7683	Why Git's different states all matter
+9155	A commit</strong> fixes a historical snapshot; a <strong>branch</strong> is a reference pointing to a line of commit history; the <strong>working tree</strong> is the currently checked-out files and uncommitted changes; unsaved editor text may not yet be on disk.
+7684	Why Git's different states all matter: item by item
+17700	Uncommitted files in the workspace
+20470	Staging area: Index
+7680	Git commit snapshot
+13247	Key difference:</strong> make clear which version of the code was seen, or verification may concern a different object.
+17019	Easy to misread:</strong> Git history does not include uncommitted changes.
+6985	If an agent reads an index from commit A but edits a working tree with local changes, it may produce a patch from stale content. The same path does not mean the same version.
+9166	A diff or patch</strong> describes what changed between the contents before and after an edit. A patch applying successfully only shows that some text or structure matched; it does not prove the business semantics are correct.
+10397	A concrete sequence for locating a bug
+12838	First establish a reproducible symptom with a failing input or error; locate the relevant entry point and function; read how callers pass arguments; check configuration, versions and boundary conditions; propose possible causes; distinguish them with a minimal experiment; then verify the current version after making the change.
+13099	Key difference:</strong> bug diagnosis first narrows the scope with low-cost, deterministic tools, then expands it step by step.
+17082	Easy to misread:</strong> scanning the entire repository first may reduce information density.
+12299	For example, if "directory exclude does not work", reading only the string comparison function may not reveal the issue. We need to know whether paths have been normalized, whether directory rules should match separator boundaries, and whether Windows and Unix separators are handled consistently. These are business and environment preconditions; reading a few more random files does not automatically supply them.
+9441	What material is needed to "understand the business"
+11290	Business objects, core invariants, terminology, external dependencies, exception handling and acceptance examples are more direct than a large volume of historical chat. An <strong>invariant</strong> is a condition that should always hold throughout the allowed operations, such as "public signatures must not be changed" or "committed records must be traceable".
+27261	These rules can live in project documents and tests and be provided through retrieval as needed. Putting all business knowledge into an endlessly growing prompt creates retrieval and maintenance problems.
+24694	How compilation, tests and runtime evidence work together
+24697	Compilation checks some syntax and type constraints; unit tests check specific local behavior; integration tests check how components work together; production logs reflect events in the real environment. Each kind of evidence has a scope; none can cover everything.
+18527	The ultimate goal of code retrieval is therefore not "finding the most files", but obtaining minimal sufficient, correctly versioned, verifiable evidence for the current change.
+5813	· Lesson 18
+15378	The same function name: why a text match is not an actual call
+26338	Input and conditions.</strong> File a.py defines
+29456	; b.py has the comment "build may fail"; c.py contains
+19784	Search for build
+10495	All three files can match, including the comment.
+25798	Syntax analysis
+14064	Distinguish function definitions, comments and call nodes
+9127	b.py has no call that executes build.
+24392	Binding analysis
+25321	Resolve the imports in c.py
+25780	This call points to build in a.py, not just any function with the same name.
+21409	Check the runtime entry point
+23387	Confirm whether c.py is on the execution path for this task
+28913	A static call does not mean it actually ran this time.
+21287	Inspect runtime evidence
+22432	Tests or logs record that the call occurred and which version ran
+11268	Combine this with the static structure to locate the issue.
+18912	Join the steps up.</strong> grep finds literals, an AST finds structure, language services find some semantic bindings, and runtime evidence shows what actually happened in one execution.
+26797	Limits and counterexamples.</strong> This is a small static Python example; dynamic imports, reflection, generated code and incomplete projects introduce more uncertainty.
+6929	Can an AST directly tell you what a real production database returned?
+28283	Usually not. An AST represents code structure; real runtime inputs need logs, tests or other evidence from the environment.
+24273	If the index is based on commit A and the working tree has uncommitted changes, are the contents read necessarily identical?
+10660	Not necessarily. Bind the evidence to a version and add the working-tree or editor differences to avoid overwriting new changes based on old evidence.
+6199	17｜Code intelligence: from text search to symbols, versions and run evidence</a><br/><a href="../chapters/19.html">19｜Skills and routing: loading exactly the expertise needed</a><br/><a href="../chapters/20.html">20｜Multi-agent: the gain from parallelism and the loss at handoff</a><br/><a href="../chapters/21.html">21｜Reliable execution: retries, idempotence, crashes and state recovery</a><br/><a href="../chapters/22.html">22｜Engineering quality: from requirements to tests, and on to code that can really be delivered
+11950	Code retrieval cannot rely on "semantically similar" alone</a><a href="#foundations-30-s1">Start with one line of code at different levels of observation</a><a href="#foundations-30-s2">LSP is not a model that automatically understands business needs</a><a href="#foundations-30-s3">How to read graphs, nodes and edges</a><a href="#foundations-30-s4">Why Git's different states all matter</a><a href="#foundations-30-s5">A concrete sequence for locating a bug</a><a href="#foundations-30-s6">What material is needed to "understand the business"</a><a href="#foundations-30-s7">How compilation, tests and runtime evidence work together</a><a href="#self-check">End-of-lesson self-check
+23711	Lesson 23｜Foundations of long-term memory: facts, episodes, procedures and time — AI Systems Engineering
+28676	Long-term memory is not a note that is always right</a><a href="#foundations-31-s1">Start with what is worth keeping across sessions</a><a href="#foundations-31-s2">Four kinds of memory are more than a set of names</a><a href="#foundations-31-s3">What questions must a usable memory answer at a minimum</a><a href="#foundations-31-s4">Why valid time and recorded time differ</a><a href="#foundations-31-s5">Updating is more than appending a new vector</a><a href="#foundations-31-s6">What forgetting means in engineering</a><a href="#foundations-31-s7">How to tell whether memory really helps</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-memory">A memory must explain "when it is still trustworthy"
+23563	Lesson 02 · State, events and checkpoints</a><a class="pill" href="27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="29.html">Lesson 17 · From search results to a trustworthy answer
+13000	All the steps and explanations</a><a href="../visual/F27.html">Lesson 22 · Compaction must keep the facts an action depends on</a><a href="../visual/F29.html">Lesson 17 · From two candidate lists to usable evidence
+12913	Start with what is worth keeping across sessions
+10339	A task log may contain tentative guesses, tool outputs, verified facts and outdated plans. Saving everything does not mean effective memory; retrieving an incorrect item next time may instead harm judgment.
+12915	Start with what is worth keeping across sessions: item by item
+11633	Factual memory: current rules
+18460	Episodic memory: what happened before
+23477	Procedural memory: how to do it
+13142	Key difference:</strong> the three kinds of information have different scopes of use; one experience must not be promoted directly into a permanent procedure.
+17202	Easy to misread:</strong> long-term memory is not an indiscriminate copy of all chat records.
+28673	Long-term memory</strong> is information the system keeps for future tasks and can use when needed. It can be stored in files or a database; a vector service is not a prerequisite. The technical focus is what to write, when to retrieve it, how to verify it and how to invalidate it.
+15663	Four kinds of memory are more than a set of names
+17714	Working memory</strong> serves the current task, such as which function to test next; <strong>episodic memory</strong> stores a past experience; <strong>semantic memory</strong> stores relatively stable facts; <strong>procedural memory</strong> stores methods for performing a kind of task.
+15664	Four kinds of memory are more than a set of names: item by item
+18216	Temporary state for the current task
+28671	Knowledge reused over the long term
+11404	The two need different storage strategies
+13155	Key difference:</strong> a task checkpoint supports recovery; long-term memory supports retrieval across tasks.
+17037	Easy to misread:</strong> the existence of a session history does not mean reliable long-term experience has been formed.
+12298	For example, "patch p7 failed yesterday because Windows testing was missed" is an experience; "the current project supports Windows" is a fact; "check both kinds of separator when changing path rules" is a procedure with conditions of use; "Windows tests have not run for this task yet" is working state.
+10329	One error is to turn an experience directly into an unconditional rule: "Every code change must run the entire test suite on every platform." Experience needs a scope of use and verified benefits; it must not expand costs without limit.
+10382	What questions must a usable memory answer at a minimum
+16497	What does it say? Which project and version does it apply to? Where is its evidence? When is it valid? When was it recorded? Are there still conflicts? What future task would need it?
+13223	Key difference:</strong> useful memory must at least answer "where it came from, when it is valid, and when it should not be used".
+17158	Easy to misread:</strong> summaries with no known source can accumulate false rules.
+27246	These do not all have to become complex database fields, but their meaning must be present. A brief record can include the "rule, scope of use, source and update time" together. High-risk systems are where stricter structure and approvals are needed.
+9023	Why valid time and recorded time differ
+20634	Valid time</strong> is when a fact holds in the business domain; <strong>recorded time</strong> is when the system learned or wrote it down.
+9024	Why valid time and recorded time differ: item by item
+11631	When the fact takes effect
+24267	When the system records it
+22940	When the user queries it
+13219	Key difference:</strong> new material may arrive late; when it is valid and when the system learns of it are not always the same.
+17097	Easy to misread:</strong> keeping only one update time cannot reconstruct the basis of historical judgments.
+28230	Worked out cell by cell: two kinds of time: when a rule is valid and when the system learns of it
+25279	The rule takes effect on October 1; the system records it only on October 10
+21899	Step 1</span><span>The rule takes effect on October 1.
+21918	Step 2</span><span>The system receives and records the rule only on October 10.
+21936	Step 3</span><span>Asking "what applied in the business domain" on October 5 requires the rule's valid time.
+21953	Step 4</span><span>Asking "what the system knew at the time" on October 5 also requires the recorded time.
+15695	Answering "what should have been followed on October 5" requires valid time; answering "what the system knew on October 5" also requires recorded time.
+12290	For example, the system reads a rule only on October 10, but that rule took effect on October 1. Asking "which rule applied on October 5" requires valid time; asking "what the system knew at the time on October 5" also requires recorded time.
+18757	Confusing the two may lead to judging an earlier decision using facts learned only later, or to applying a recorded rule before it takes effect.
+20494	Updating is more than appending a new vector
+15392	When the same fact changes, it must be clear whether the old record is superseded or remains valid for historical queries. Appending alone may retrieve both old and new records; deleting directly may remove the basis for historical tracing.
+13267	Key difference:</strong> memory updates must handle conflicts explicitly and revalidate derived items that depend on old facts.
+17146	Easy to misread:</strong> adding a "correction" does not mean the old memory automatically stops being retrieved.
+12238	Scope</strong> limits the projects, users, environments and tasks to which a memory applies. Do not apply project A's deployment rules to project B; do not carry one user's preferences over to another.
+28363	What forgetting means in engineering
+28361	Forgetting can mean strategies such as deletion, expiry, lower priority, merging duplicates or keeping only an index.
+20400	is a setting for storage validity or time to live, but expiry rules cannot replace checking the facts.
+22522	After a source document is withdrawn, its summaries, vectors and derived rules may remain. Track derivation relationships to avoid deleting the original while continuing to use false conclusions.
+18394	How to tell whether memory really helps
+17560	On new tasks that are similar but not identical, compare three approaches: no memory, static rules and experience retrieved as needed. Check whether repeated mistakes decrease, stale citations increase, and how task success rate and cost change.
+9432	"1000 items stored" only describes quantity; it does not prove quality. The point of memory is to make the next task more correct or efficient, not to build an ever larger filing cabinet.
+5815	· Lesson 23
+10390	A memory must explain "when it is still trustworthy"
+12302	For example, "this repository uses pytest" needs a source, scope and version. If the project has moved to another test entry point, old experience should be reconfirmed. How far the current task has progressed is a checkpoint; what to consult for a similar future task is experiential memory. Memory extraction may succeed without finding anything worth saving; that is not an error. Withdrawing an old fact must also invalidate the summaries and rules derived from it.
+19276	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/18.html#agent-practice-memory">Why is writing memory a pipeline with leases and acceptance?</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+6095	If a rule that took effect on October 1 is entered on October 10, are its valid time and recorded time the same?
+10730	No. The former starts on October 1, and the latter is October 10; they serve different purposes when answering historical questions.
+10410	Can a method that succeeded on one task be promoted directly into a mandatory rule for every project?
+10980	No. Keep the conditions of use, evidence and limits, and verify it on new tasks to avoid overfitting to experience.
+6169	14｜Context compaction: what is actually compacted, and how it is recovered once lost</a><br/><a href="../chapters/18.html">18｜Long-term memory: writing, retrieval, conflict, expiry and forgetting</a><br/><a href="../chapters/19.html">19｜Skills and routing: loading exactly the expertise needed</a><br/><a href="../chapters/24.html">24｜Security: instruction boundaries, sandboxes, permissions and memory poisoning</a><br/><a href="../chapters/26.html">26｜Deep applications: composing components into a working system you can explain
+28675	Long-term memory is not a note that is always right</a><a href="#foundations-31-s1">Start with what is worth keeping across sessions</a><a href="#foundations-31-s2">Four kinds of memory are more than a set of names</a><a href="#foundations-31-s3">What questions must a usable memory answer at a minimum</a><a href="#foundations-31-s4">Why valid time and recorded time differ</a><a href="#foundations-31-s5">Updating is more than appending a new vector</a><a href="#foundations-31-s6">What forgetting means in engineering</a><a href="#foundations-31-s7">How to tell whether memory really helps</a><a href="#self-check">End-of-lesson self-check
+23643	Lesson 13｜Skills, routing and multi-agent: first understand who is responsible for what — AI Systems Engineering
+8881	A skill exists — so why can it still be of no use at all?</a><a href="#foundations-32-s1">Do not mix five kinds of extension into one large prompt</a><a href="#foundations-32-s2">Routing means making a choice</a><a href="#foundations-32-s3">Why both missed loading and excessive loading are harmful</a><a href="#foundations-32-s4">A sub-agent is not a complete copy of the main agent</a><a href="#foundations-32-s5">Use a DAG to work out whether parallelism is worthwhile</a><a href="#foundations-32-s6">Why an independent reviewer can still be wrong</a><a href="#foundations-32-s7">How model routing can consider more than price</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-skills">Skills and sub-agents are not interchangeable add-ons
+16053	Foundations</span><span>approx. 2.6 thousand characters</span><span>Figures, tables and item-by-item explanations
+23530	Lesson 01 · An agent is not another neural network</a><a class="pill" href="25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="26.html">Lesson 11 · Assembling context</a><a class="pill" href="30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="31.html">Lesson 23 · Foundations of long-term memory
+12996	All the steps and explanations</a><a href="../visual/F22.html">Lesson 01 · Break one agent task into the turns that actually happen</a><a href="../visual/O11.html">O11 · Multi-agent: work that can run in parallel matters more than the number of agents
+11660	Do not mix five kinds of extension into one large prompt
+19756	provide constraints to follow over the long term;
+24369	organize the professional workflow and resources for a kind of task;
+19758	provide capabilities that can actually be executed;
+15922	run deterministic actions at event points in the harness;
+15750	carry out a task around the model, tools and state.
+11662	Do not mix five kinds of extension into one large prompt: item by item
+8077	Prompt: instructions for this turn
+8891	Skill: a reusable method
+7906	MCP: connects external tools
+13277	Key difference:</strong> these all extend agents, but address different kinds of information and execution boundaries.
+17140	Easy to misread:</strong> cramming everything into one permanent prompt creates interference.
+12304	For example, "follow the project style" suits guidance; "how to investigate a memory leak" can be a skill; "run tests" is a tool; "check directory boundaries before writing" can be implemented by a hook or executor. Writing hard permission rules only in a skill does not automatically create deterministic restrictions.
+26085	Routing means making a choice
+26076	Routing</strong> decides which skill, model or executor to choose for the current task. A skill's description is one entry point for the harness or model to judge relevance; a file's existence does not guarantee it will be loaded.
+13207	Key difference:</strong> skill routing is a matter of selection and loading; checking only whether a skill exists on disk is not enough.
+17175	Easy to misread:</strong> when a relevant skill is absent from this turn's context, the model may not follow it.
+17973	A common chain is: file exists → discovered by scanning → metadata enters the candidates → selected → main text read → relevant resources available → actually applied during execution. A break at any step may look like "the skill did not take effect".
+22541	Why both missed loading and excessive loading are harmful
+25778	Skipping a path-handling skill when it is needed may miss platform boundaries; loading a full architecture review for a typo correction adds irrelevant rules, time and conflicts.
+22542	Why both missed loading and excessive loading are harmful: item by item
+22543	Missed loading: a necessary process is absent
+26860	Excessive loading: irrelevant text is added
+23082	The goal is just enough
+13206	Key difference:</strong> both skill recall and the rate of irrelevant loading affect quality and efficiency; "load more" must not be the sole goal.
+17189	Easy to misread:</strong> semantic similarity does not mean a skill must be loaded.
+24211	Precision</strong> asks how many selected items are actually relevant; <strong>recall</strong> asks how many items that should be selected were found. F35 gives the formal calculations. Routing aims for task suitability, not just maximizing either number.
+8877	Skills and sub-agents are not interchangeable add-ons
+8885	A skill provides a method and resources; a sub-agent is a separate context for task execution. Loading a skill in the main agent does not guarantee the sub-agent has read it; receiving a summary of the parent task does not guarantee the sub-agent inherits tool connections. A handoff should specify the goal, evidence, allowed actions, output and acceptance. A simple change does not need several agents; first show that splitting it reduces time or errors rather than merely adding ceremony.
+19277	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/19.html#agent-practice-skills">How does a progressively loaded skill go from "a file" to actual capability?</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+16369	A sub-agent is not a complete copy of the main agent
+11565	The main agent may give a sub-agent a sub-goal, necessary evidence and tool permissions. The sub-agent has its own context and execution trace, then returns a result. It may not inherit the main agent's full history, uncommitted state or MCP configuration.
+13190	Key difference:</strong> do not assume a sub-agent's tool permissions, context and memory are identical to the main agent's.
+17078	Easy to misread:</strong> omitting key evidence during handoff can lead the subtask to a mistaken judgment.
+11685	A handoff</strong> must make clear the goal, scope of evidence, confirmed facts, unconfirmed assumptions, output requirements and completion conditions. Giving only "investigate the issue" may make the sub-agent repeat searches, work in the wrong scope or reach incompatible conclusions.
+22843	Use a DAG to work out whether parallelism is worthwhile
+12527	Suppose A takes 2 units of time to prepare input, B and C are independent checks taking 3 and 4 respectively, and D takes 1 to integrate. The serial total is 10; the ideal critical path with B/C in parallel is 2+max(3,4)+1=7.
+13200	Key difference:</strong> parallelism saves wall-clock time, but does not necessarily reduce total tokens or total work.
+17151	Easy to misread:</strong> forcing dependent tasks into parallel execution creates conflicts.
+12156	But if dispatch and integration add 4 units, the total is 11, which is slower. The <strong>critical path</strong> is the longest required chain in the dependency graph that determines the minimum completion time; more tasks do not mean faster completion.
+24960	If B and C both edit the same file, independence may no longer hold, and isolation, merging and revalidation are needed. Parallel computation and parallel writes carry different risks.
+22664	Why an independent reviewer can still be wrong
+11299	Two agents using the same model, the same flawed context and the same tests may repeat the same bias. "A different conversation" does not mean statistical independence.
+20629	Effective review should add different evidence: check missed boundaries, run tests that challenge the result, and verify requirements and versions. Small errors can be fixed directly during review and retested; the full analysis process need not restart every time.
+21782	How model routing can consider more than price
+20474	A cheaper model may raise total task cost if it causes more rework. Consider actual task success rate, tool-use quality, latency and the cost of failure together. Do not equate a short prompt with a simple task; "fix concurrency consistency" may require deep analysis.
+20859	The process given in this book is a design choice; it does not require fixed levels and complex configuration for every task. Start with one agent and a modest set of tools, then divide the work when the evidence shows a need.
+5810	· Lesson 13
+12493	Why correcting a typo and fixing a concurrency bug should not load the same skills
+26204	Input and conditions.</strong> Task A changes "timeout duraton" to "timeout duration" in the README; task B concerns two worker threads submitting the same operation twice.
+22788	Understand A's goal
+15024	Only document wording changes
+25884	Read the relevant passage, edit it and check the diff.
+22789	Understand B's gap
+22484	Involves concurrent side effects and retries
+28864	Inspect execution state, idempotency identity and duplicate-submission paths.
+28193	Choose resources
+7041	A needs no concurrency-design skill; B needs the relevant professional process
+10913	Do not load every skill into context merely because the word "project" appears.
+13795	Assign execution
+7034	A can be completed directly by one agent; for B, decide whether to delegate from the scope of independent evidence
+13748	Divided work must include the task goal and necessary evidence.
+21536	Check the result
+7052	For A, inspect the text diff; for B, run duplicate / timeout counterexample tests
+15366	The same "done" button should have different checks behind it.
+19229	Join the steps up.</strong> Routing is not meant to make the process look elaborate, but to provide exactly the professional judgment missing from this task.
+26798	Limits and counterexamples.</strong> This is an engineering decision example; it does not claim that fixed keywords can reliably classify every task.
+8884	If a skill is already on disk, why might it still not be applied?
+14848	Discovery, selection, reading its main text, and configuring resources and permissions may be incomplete; existence does not mean it entered this turn's context and influenced execution.
+11329	If two independent checks take 3 and 4 respectively, what is their ideal duration in parallel?
+18379	Ignoring other overhead, max(3,4)=4; real execution must also account for startup, resource contention and integration.
+6142	12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain</a><br/><a href="../chapters/13.html">13｜How each turn's prompt is assembled: context is a data pipeline</a><br/><a href="../chapters/19.html">19｜Skills and routing: loading exactly the expertise needed</a><br/><a href="../chapters/20.html">20｜Multi-agent: the gain from parallelism and the loss at handoff
+8880	A skill exists — so why can it still be of no use at all?</a><a href="#foundations-32-s1">Do not mix five kinds of extension into one large prompt</a><a href="#foundations-32-s2">Routing means making a choice</a><a href="#foundations-32-s3">Why both missed loading and excessive loading are harmful</a><a href="#foundations-32-s4">A sub-agent is not a complete copy of the main agent</a><a href="#foundations-32-s5">Use a DAG to work out whether parallelism is worthwhile</a><a href="#foundations-32-s6">Why an independent reviewer can still be wrong</a><a href="#foundations-32-s7">How model routing can consider more than price</a><a href="#self-check">End-of-lesson self-check
+23718	Lesson 26｜Retries, idempotence and transactions: why a timeout is no proof of failure — AI Systems Engineering
+26036	A timeout tells you nothing arrived, not that nothing happened</a><a href="#foundations-33-s1">Start with the most dangerous timeline</a><a href="#foundations-33-s2">Idempotence is more than "try not to break things on a retry"</a><a href="#foundations-33-s3">How far a database transaction's guarantees reach</a><a href="#foundations-33-s4">How CAS prevents overwriting a newer version</a><a href="#foundations-33-s5">What atomic replacement can and cannot do</a><a href="#foundations-33-s6">Retry, recovery, replay and compensation</a><a href="#foundations-33-s7">A minimal usable recovery record</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-recovery">No success message does not mean no successful action
+23599	Lesson 07 · APIs and streaming protocols</a><a class="pill" href="24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="32.html">Lesson 13 · Skills, routing and multi-agent
+12997	All the steps and explanations</a><a href="../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat</a><a href="../visual/F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+12855	Start with the most dangerous timeline
+17216	The harness sends "modify file" → the executor writes successfully → the network response reporting success is lost → the harness times out waiting. Retrying directly at this point may repeat the modification; rolling back directly may overwrite later changes.
+13271	Key difference:</strong> a timeout only proves the caller received no result; it does not prove the remote side did not execute.
+17174	Easy to misread:</strong> blind retries can cause duplicate payments or writes.
+28237	Worked out cell by cell: a timeout only means nothing was received, not that nothing happened
+20673	The server executes successfully but the response is lost; a client timeout cannot prove execution failed
+21900	Step 1</span><span>The caller sends a state-changing request downstream.
+21903	Step 2</span><span>The downstream system has already executed and successfully committed the side effect.
+21931	Step 3</span><span>The success acknowledgment is lost on the way back.
+21955	Step 4</span><span>The caller times out and knows only that the result is unconfirmed; it cannot conclude that the operation failed.
+21957	Step 5</span><span>A direct retry at this point may cause duplication; an idempotency key or external result check is needed.
+21879	At this point the caller has only an unknown state; it must rely on an idempotency key, stable operation ID or external verification, and must not directly treat the operation as failed and retry it.
+18529	Alongside success and failure, we therefore need <strong>unknown (result unknown)</strong>. It describes the observer's lack of confirmation, not some mysterious state of the outside world. The actual action may have succeeded or may not have happened; it must be checked.
+17980	Idempotence is more than "try not to break things on a retry"
+17979	Idempotent</strong> means that repeating the same operation, under specified semantics, produces the same intended effect as executing it once. Setting a value to 10 is usually easier to make idempotent than "add 10"; sending an email usually sends duplicates unless the server has a separate deduplication mechanism.
+17981	Idempotence is more than "try not to break things on a retry": item by item
+18483	Success: can be confirmed
+16280	Failure: non-completion can be confirmed
+20699	Unknown: insufficient evidence
+13243	Key difference:</strong> clearer state semantics make failure recovery safer; unknown must not be silently converted into failure.
+17147	Easy to misread:</strong> missing logs do not mean the outside world has not changed.
+17986	An idempotency key</strong> identifies the intent of one logical operation. Retries of the same intent reuse the same key; two different intents should not be treated as one operation merely because their arguments happen to match.
+20680	The server must persist the key, request semantics and result at an appropriate boundary, and handle concurrency, expiry and conflicts. A table stored by the client alone cannot automatically guarantee exactly one execution of a remote action.
+22137	No success message does not mean no successful action
+10612	The downstream system has written, but the harness crashes before recording success. Seeing only running after restart is no reason to write again directly. Use the same logical action key to query or deduplicate. Generating a new key for every retry cannot identify duplicates. Atomic file writes prevent partial writes; they do not automatically prevent overwriting a version someone else has just updated. Timeout, failure, cancellation and unknown results must be handled separately.
+19278	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/21.html#agent-practice-recovery">Written successfully but not confirmed: how a retry becomes a duplicated side effect</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+20047	How far a database transaction's guarantees reach
+11619	A transaction</strong> handles a group of database operations as a controlled unit, commonly discussed in terms of atomicity, consistency, isolation and durability. Here "atomic" means that outside observers do not see this group of operations in a partially completed state; the exact guarantees depend on the database and isolation level.
+13199	Key difference:</strong> idempotency must be implemented or verified by the target system; repeated client calls are not automatically safe.
+17080	Easy to misread:</strong> writing "executed" in a log is not a guarantee of idempotency.
+20054	A database committing a record does not mean an external file or email system committed at the same time. When two systems do not share a transaction boundary, additional protocols, verification or compensation are needed; putting them in the same function does not confer atomicity.
+7194	How CAS prevents overwriting a newer version
+7197	CAS (compare-and-swap)</strong> means "write the new state only if the current state still matches what I read". For example, read file version 7 and prepare a patch; if the version has become 8 before submission, refuse to overwrite and check again.
+7195	How CAS prevents overwriting a newer version: item by item
+20049	A database transaction can commit atomically
+8869	Shell file modifications are outside the transaction
+28907	Additional coordination or compensation is needed
+13224	Key difference:</strong> a local database's ACID guarantees do not automatically cover network calls or shell side effects.
+17063	Easy to misread:</strong> "a transaction was used" does not imply that every external action rolls back with it.
+22104	The comparison and update must be protected at the relevant boundary. If others can modify the state in between, ordinary code that checks first and writes later can still suffer a <strong>TOCTOU (time-of-check to time-of-use race)
+14657	What atomic replacement can and cannot do
+20947	A common approach for local files is to write a temporary file, then atomically rename it over the target under supported conditions, so readers do not see a partial file. Durability on disk, crossing filesystems, symbolic links and synchronization with database state all have additional conditions.
+13226	Key difference:</strong> a conditional update / CAS puts the comparison and replacement within one controlled atomic boundary.
+17083	Easy to misread:</strong> checking a version and then writing separately still leaves a race window.
+9426	"Atomic replacement" does not mean "no data can ever be lost in any power failure", nor does it create a transaction across multiple files and a remote API. The specific platform guarantees must be clear.
+28554	Retry, recovery, replay and compensation
+13565	attempt an operation again;
+11863	continue from saved progress;
+21438	reconstruct or re-execute from events;
+22890	use another action to counteract a previous effect.
+25143	Compensation may not truly restore the original state: a sent email cannot be made unread by its recipient. High-risk, irreversible actions therefore need more careful confirmation and verification; "roll back if something goes wrong" is not a general safety strategy.
+20558	A minimal usable recovery record
+24946	At a minimum, know the logical operation identity, target, expected version, currently known execution state, and result or verification method. After a restart, confirm unknown actions before deciding how to continue; do not act solely on a model summary saying "it seems we did this last time".
+27337	The complexity of these mechanisms should match their side effects. Read-only search usually needs no full transaction design; production deployment, sending, deletion and cross-system writes cannot be guaranteed by prompts alone.
+5816	· Lesson 26
+26030	After a timeout: retry the same operation, or accidentally execute a second one
+26302	Input and conditions.</strong> Send operation op7 for the teaching example "increment the counter by 1". The server adds 1, but the acknowledgment is lost on the way back.
+25940	Before the call
+25360	Counter: 10
+17005	The client records op7 as running.
+20661	Server execution
+25362	The counter becomes 11
+23282	The actual side effect has already happened.
+17006	Client timeout
+10941	It does not know whether the server executed
+21352	Mark unknown; a timeout does not imply failed.
+19518	Add 1 again under a new identity, op8
+25363	The counter becomes 12, duplicating the side effect.
+16506	Safer approach
+22895	Query or retry with the same business idempotency identity, op7
+25030	If the server guarantees that this identity is settled only once, it returns the original result, 11; otherwise, verify first and do not assume local deduplication is enough.
+19132	Join the steps up.</strong> Correctness depends on how the system producing the side effect recognizes "the same operation", not on how the client names a network request.
+26770	Limits and counterexamples.</strong> The example sends no real requests. Cross-system exactly-once needs additional protocols and transaction preconditions; one client-side table cannot guarantee it.
+9488	How do "set the balance to 100" and "increase the balance by 100" differ when executed repeatedly?
+13939	Under the same semantics, setting it repeatedly still leaves 100; the latter adds each time and changes the result, so it cannot be retried blindly in the same way.
+20052	Does a committed database transaction prove an email was sent exactly once?
+10991	No. The email system is a separate side-effect boundary and needs mechanisms such as server-side idempotency, result records and verification.
+6108	10｜How model output becomes a real tool call: protocol and execution boundary</a><br/><a href="../chapters/11.html">11｜Tool design and MCP: from connection to controlled execution</a><br/><a href="../chapters/14.html">14｜Context compaction: what is actually compacted, and how it is recovered once lost</a><br/><a href="../chapters/20.html">20｜Multi-agent: the gain from parallelism and the loss at handoff</a><br/><a href="../chapters/21.html">21｜Reliable execution: retries, idempotence, crashes and state recovery
+26035	A timeout tells you nothing arrived, not that nothing happened</a><a href="#foundations-33-s1">Start with the most dangerous timeline</a><a href="#foundations-33-s2">Idempotence is more than "try not to break things on a retry"</a><a href="#foundations-33-s3">How far a database transaction's guarantees reach</a><a href="#foundations-33-s4">How CAS prevents overwriting a newer version</a><a href="#foundations-33-s5">What atomic replacement can and cannot do</a><a href="#foundations-33-s6">Retry, recovery, replay and compensation</a><a href="#foundations-33-s7">A minimal usable recovery record</a><a href="#self-check">End-of-lesson self-check

@@ -1,61 +1,114 @@
-# 界面多语言
+# 教材多语言版本
 
-支持 5 个语种：简体中文、English、日本語、Español、Tiếng Việt。
+中文正本位于根目录，英文分页版位于 en/，英文连续版为 en/complete.html。
+日语沿用同一张去重表的 ja 字段。接手前读 [HANDOFF.md](HANDOFF.md)、
+[TRANSLATING.md](TRANSLATING.md) 和 [SOURCE-ISSUES.md](SOURCE-ISSUES.md)。
 
-本书正文为简体中文；**只有界面外壳做了多语言**。切换语言不会翻译课程内容，
-界面上会常驻一条说明（`lang.bodyNotice`），不让读者误以为正文会跟着切换。
+本任务不启动服务或长时间进程，不改中文页面、原始运行脚本、图形生成器或实验数据。
+只使用 Codex 翻译，不调用本地翻译服务。
 
-## 结构
+## 正文与派生产物
 
-```
-i18n/source.json      词条源表：key + zh-CN + en + ctx（用途说明）
-i18n/locales/*.json   各语种译文，每个文件是 key → 译文 的扁平对象
-i18n/build.py         打包成 assets/i18n-data.js，并做完整性校验
-assets/i18n.js        运行时：套用译文、设置 lang/dir、渲染切换器
-assets/i18n.css       切换器样式与 RTL 版式
-i18n/inline_complete.py  把上述三者内联进 complete.html（幂等，带哨兵标记）
-```
+table.json 是正文译文的唯一来源，按中文原串去重，每条有永久 id。
+写表必须保留整个顶层对象，包括 next_id、其他语言及未知元数据。
+译者只交付自己的批次文件，只能运行带 --check 的 ingest。
 
-打包成 JS 而非 JSON，是为了让本书在 `file://` 下直接打开也能工作。
+~~~text
+extract.py → content/ → units.py → units/ → table.py build → table.json
+batch.py export / ingest → apply.py → en/ 分页版
+gen_assets.py → 英文目录和搜索索引
+data_strings.py → 英文图解散文、模型说明与标签
+runtime_strings.py → 英文运行脚本文案
+figure_strings.py → SVG 排版与下载镜像
+build_complete.py → 英文连续版
+~~~
 
-## 改动流程
+每批英文译文入表后，依次运行：
 
-1. 改词条：编辑 `i18n/source.json`，再到各 `i18n/locales/*.json` 补同名 key。
-2. 重新打包：`python3 i18n/build.py`。有缺 key、多余 key、译文与中文原文
-   相同等情况会逐条报告并以非零状态退出。
-3. 校验是否忘了打包：`python3 i18n/build.py --check`。只比对不写入，
-   若 `assets/i18n-data.js` 与 `i18n/locales/` 不一致则报错退出。
-   页面加载的是打包产物，改了词条不重新打包，线上看到的仍是旧译文。
-4. 同步单文件版：`python3 i18n/inline_complete.py`。complete.html 不引用外部
-   资源，词条、运行时与样式都内联在其中，改完必须重新内联，否则单文件版
-   会比分页版旧。`--check` 只比对不写入，不一致即非零退出。
-5. 新增页面：给外壳元素加 `data-i18n="key"`（替换 textContent）或
-   `data-i18n-attr="aria-label:key"`（替换属性）。
+~~~bash
+python3 i18n/batch.py ingest pNN.en.txt --lang=en
+python3 i18n/spelling.py --fix
+python3 i18n/terms.py --fix
+python3 i18n/vocab.py --fix
+python3 i18n/consistency.py --fix
+python3 i18n/embedded.py --fix
+python3 i18n/apply.py --verify
+~~~
 
-## 约定
+页面及派生产物的最终生成顺序如下。apply.py 和 data_strings.py 会重新复制原 SVG，
+因此必须先于 figure_strings.py；连续版最后内联最终资产。
+首次生成或新增局部脚本时，先运行一次 runtime_strings.py write --lang=en，
+让 apply.py 能把脚本引用指向已存在的英文资产，再执行下列完整流程。
 
-- **不翻译的内容**：课程正文、算例数字、图解、代码、`visual/Fxx.html` 等
-  文件路径，以及 `search.pageHint` 里的检索示例（`张量`、`第39课`、`Q001`
-  是针对中文索引的真实查询，翻译后会搜不到）。
-- **占位符**：`{n}`、`{shown}` 在运行时替换，各语种必须原样保留。
-- **RTL**：`ar`、`he` 会把 `<html dir>` 设为 `rtl`；公式、代码、数表与
-  分步图解强制保持 `ltr`，它们不是自然语言。
-- **诚实性词条**：`lang.bodyNotice` 必须说明正文仍是中文；
-  `settings.note`、`article.readStatus` 等存储说明不得添加原文没有的承诺。
+~~~bash
+python3 i18n/apply.py --lang=en
+python3 i18n/gen_assets.py --lang=en
+python3 i18n/data_strings.py write --lang=en
+python3 i18n/runtime_strings.py write --lang=en
+python3 i18n/figure_strings.py write --lang=en
+python3 i18n/build_complete.py --lang=en
+python3 i18n/links.py --lang=en
+~~~
 
-## 范围边界：什么算界面，什么算内容
+figure_strings.py 使用当前发布的 SVG 节点，量宽、折行并调整纵向空间；不重跑训练，
+不手填数值。代码标识符、数值、横向比例及帧高亮保持。普通概念词可按英文语法变化，
+例如正文中的 API → APIs，代码里的 API() 仍须原样保留。
 
-判定依据是「这段文字描述的是**产品**还是**教材**」：
+模型数据的 sourceGroup 是从原始 group 复制的内部键，用于匹配未翻译的
+data-allowed-groups。播放器选项仍显示翻译后的 group。
+算例词元 我 / 爱 / 学习 / 你 / ！始终保留，以匹配参数行索引。
+代码数据、等宽对齐的算例文本及原文件名也保留；安全代码注释单独抽取翻译。
 
-**界面（翻译）**：顶栏与左侧目录的导航项、按钮、对话框、设置项、
-折叠控件的摘要、首页的行动按钮与工具面板、目录分组标题、
-搜索结果计数、前后导航的「上一课／下一课」。
+## 连续版验证
 
-**内容（保留简体中文）**：课次标题、单元名、正文、算例数字、
-图解内部文字、右侧提纲（它是正文小节标题的镜像）、
-摘要里写着具体问题的自检答案、书名「AI 系统工程」。
+连续版从当前分页正文组装，沿用原连续版的 250 节收录顺序，并保留资源节和两个工程附节。
+页内 ID、锚点和 ID 引用统一重写，搜索与图形数据取自 en/assets/。
+资源以 data URI 内联，正文与分页版共用译文。
 
-审计方法：按区域（顶栏／目录／提纲／对话框）扫描未带 `data-i18n`
-的中文文本节点，并排除 `rail-name`、`rail-code`、`rail-section-name`、
-`curriculum-title` 这些内容类节点。只验证「页面接入了 i18n」是不够的——
-曾因此漏掉整个首页与目录顶部的导航项。
+中文诊断只写临时文件，不改根目录 complete.html：
+
+~~~bash
+python3 i18n/build_complete.py --diagnose-zh --output /tmp/zh-complete-rebuilt.html --report /tmp/zh-complete-proof.json
+python3 i18n/build_complete.py --lang=en --check
+~~~
+
+旧中文连续版有已记录的同步差异，不能要求与当前分页版逐字相同。
+构建器逐节验证正文、代码、SVG 几何与折叠状态，并检查唯一 ID、锚点、搜索落点和资源。
+静态验证之外的调试与最终验收由用户进行。
+
+## 界面语言与完整版本
+
+source.json 与 locales/*.json 仍只管理 125 条共享界面词条，支持简体中文、English、
+日本語、Español、Tiếng Việt。界面切换不能代表正文已翻译。
+build.py 打包 assets/i18n-data.js，I18N_META.editions 只有全部分页齐备后才加入该语种。
+当前英文局部资产另行适配英文全文搜索提示；其他界面语种保持各自原有说明。
+英文局部 i18n.js 从本页 i18n-scope 读取正文版次提示，避免在切换未完成语种时误称正文为中文。
+
+~~~bash
+python3 i18n/build.py --check
+~~~
+
+i18n/inline_complete.py 用于根目录中文连续版的界面维护，本次翻译任务不运行它。
+英文连续版使用 build_complete.py，避免覆盖中文正本。
+
+## 日语续接
+
+共享层 12 批、6,628 条已完成；独有层 u01–u22、u24–u25、u54 又入表 10,726 条。
+日语累计 17,856 / 31,629 条，实例覆盖 93.2%，字数覆盖 56.2%，还缺 13,773 条。
+证据见 [validation.ja-shared.json](validation.ja-shared.json) 和
+[validation.ja-unique.json](validation.ja-unique.json)。67 页正文单位已齐译，
+运行脚本与图形适配尚未完成，暂不生成或发布混合版本。
+
+使用 i18n/work/_reference.ja.txt、glossary.ja.json 与协议中的日语约定。
+通过 batch.py export ... --lang=ja 和 ingest ... --lang=ja 复用永久 ID；
+源文件保留真实首尾空白，␣ 仅用于译文端的空白控制。
+
+英文拼写、术语和词元修复器含有英文规则，不可直接对日语运行 --fix。
+日语同形汉字或纯汉字标签被误判时，由主流程核对具体原串和译文，再记入 ja-approved.json。
+许可只匹配这一对文本，不跳过标签、文件名和空译文检查，也不用于生成译文。
+假名检测只认实际字母，单独的「・」「ー」或浊点不再算作假名证据。
+相关正反例与独立审查见 [validation.ja-kana.json](validation.ja-kana.json)。
+每批仍由主流程串行 ingest，运行 embedded.py --lang=ja --fix、apply.py --verify，
+并核对数字、标识符、转义和算例词元。日语页面未发布时，英文链接检查只验证既有英文产物。
+运行脚本、SVG 和连续版适配器目前只发布英文，日语全量阶段须逐项扩展并验证，
+不能仅替换 --lang 就宣称日语版完成。未齐备的页面不会生成，也不加入语言导航。

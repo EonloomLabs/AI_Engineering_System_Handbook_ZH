@@ -1,155 +1,148 @@
-# Already-translated strings from this book, most-used first.
-# Follow their terminology, register and punctuation. Do not re-translate them.
-# Regenerated after the spelling and 宿主→harness sweeps, so it is current.
-# (11596 strings are translated in all; these are the 900 that recur most.)
-
-# Settled house terms, which override anything that looks different below:
-#   宿主 → harness   (the book's glossary prints "Harness / 宿主执行框架");
-#                    but MCP's Host stays "host" - it is a role in that protocol
-#   追问： → Follow-up:        预备知识： → Prerequisite:
-#   子Agent → sub-agent        压缩 → compaction        显存 → VRAM
-#   产物 → artifact            推理 → inference (execution) / reasoning (reasoning models)
-#   Spelling is American; i18n/spelling.py sweeps it, so do not spend effort there.
+# Current English reference: 31,629 translated strings; 900 most frequent below.
+# Follow TRANSLATING.md; preserve identifiers, numbers, HTML attributes and worked vocabulary.
+# 宿主 → harness (MCP Host role → host); 压缩 → compaction; 子Agent → sub-agent.
+# 追问： → Follow-up:; 预备知识： → Prerequisite:; 显存 → VRAM; 产物 → artifact.
+# American spelling. Token/Embedding prose may use natural lowercase/plural; code identifiers stay literal.
 
 把一个Agent任务拆成真正发生的几轮	→	Break one agent task into the turns that actually happen
 MCP连起接口，不自动交出权限	→	MCP connects interfaces; it does not hand over permissions on its own
 长期记忆	→	Long-term memory
-一句话经过了哪些不同的对象	→	Which different objects does one sentence pass through
-新增一个轴，究竟多了什么	→	What exactly does one more axis add
-文字、字节、Token、编号是四件事	→	Text, bytes, tokens and IDs are four different things
-组批没有把两句话混成一句	→	Batching does not blend two sentences into one
 Embedding是查一行，不是把编号转二进制	→	An embedding is a row lookup, not an ID converted to binary
-数据搬到GPU，改变的是位置而不是含义	→	Moving data to the GPU changes where it is, not what it means
-矩阵乘法像逐格填写配方结果	→	Matrix multiplication is like filling in a recipe result cell by cell
-改摆法与改数值，分开看	→	Keep changing the arrangement separate from changing the values
-Softmax不是直接把分数除以它们的和	→	Softmax does not simply divide the scores by their sum
-网络层是在重组数值，不是在生成隐藏句子	→	A network layer rearranges numbers; it does not produce hidden sentences
+KV Cache：留下算过的，不省掉该读的	→	KV cache: keep what was computed, without skipping what must be read
 Mask是可见性表，不是额外语义	→	A mask is a visibility table, not extra meaning
-位置怎样进入数值计算	→	How position enters the numeric computation
+Skill存在，为什么仍可能完全没用？	→	A skill exists — so why can it still be of no use at all?
+Softmax不是直接把分数除以它们的和	→	Softmax does not simply divide the scores by their sum
+Trace要告诉你因果，不只是时间戳	→	A trace should tell you causation, not just timestamps
+一句话经过了哪些不同的对象	→	Which different objects does one sentence pass through
 一层Transformer不是只有Attention	→	A Transformer layer is not attention alone
 一次输入如何连着预测，直到结束	→	How one input connects to prediction, all the way to the end
-KV Cache：留下算过的，不省掉该读的	→	KV cache: keep what was computed, without skipping what must be read
-梯度像坡度，学习率像迈步大小	→	A gradient is like a slope; the learning rate is like step size
-训练：给每个位置一道“下一项”题	→	Training: give every position a "what comes next" question
-后训练改变行为，奖励不是事实裁判	→	Post-training changes behavior; a reward is not an arbiter of fact
-省参数、省位数、少激活不是同一种优化	→	Fewer parameters, fewer bits and fewer activations are not the same optimization
-算得慢，可能是东西搬得慢	→	Slow computation may mean things are being moved slowly
-字符完整、事件完整、工具参数完整是三道关	→	Complete characters, complete events and complete tool arguments are three separate gates
-任务状态不是聊天里的一句总结	→	Task state is not a one-line summary in the chat
-每轮上下文像一份有边界的工作资料	→	Each turn's context is like a working file with a boundary
-压缩要保留行动所依赖的事实	→	Compaction must keep the facts an action depends on
-检索先找候选，再判断能否回答	→	Retrieval finds candidates first, then judges whether they can answer
 从两个候选列表，走到可用证据	→	From two candidate lists to usable evidence
 代码检索不能只靠“语义相近”	→	Code retrieval cannot rely on "semantically similar" alone
-长期记忆不是永远正确的小纸条	→	Long-term memory is not a note that is always right
-Skill存在，为什么仍可能完全没用？	→	A skill exists — so why can it still be of no use at all?
-超时告诉你没收到，不告诉你没发生	→	A timeout tells you nothing arrived, not that nothing happened
-测试是找反例，不是给代码盖绿章	→	A test looks for counterexamples; it does not stamp code green
-读指标，先问它的分母是谁	→	When reading a metric, first ask what its denominator is
-涨了10个百分点，为什么还不能急着下结论？	→	It went up ten points — so why can we not conclude anything yet?
-资料能影响模型，不代表获得了权限	→	Material can influence a model without thereby gaining permission
-Trace要告诉你因果，不只是时间戳	→	A trace should tell you causation, not just timestamps
-图像表示与界面行动，是两层不同问题	→	Image representation and interface action are two different problems
+任务状态不是聊天里的一句总结	→	Task state is not a one-line summary in the chat
+位置怎样进入数值计算	→	How position enters the numeric computation
 先找错误发生在哪层，再谈换模型	→	Find which layer the error happens in before talking about changing models
-运行示例索引	→	Index of worked runs
-基础篇逐节图解索引	→	Index of section figures in Foundations
-正文图解与细算索引	→	Index of figures and detailed calculations
-Q/K/V：先算从哪读，再算读进多少	→	Q/K/V: first compute where to read from, then how much to read in
-GQA/MQA：减少的是K/V组数	→	GQA/MQA: what is reduced is the number of K/V groups
-量化：省存储，也引入近似	→	Quantization: saves storage, and introduces approximation
-LoRA：冻结大表，学习小增量	→	LoRA: freeze the large table, learn a small increment
-FlashAttention：一边读一边累计，不攒整张表	→	FlashAttention: accumulate while reading, without materializing the whole table
-PagedAttention：逻辑连续，物理可以分块	→	PagedAttention: logically contiguous, physically chunked
-连续组批：有座位空出来，就接下一位	→	Continuous batching: when a seat frees up, take the next one
-推测解码：草稿可以快，但必须正确校验	→	Speculative decoding: the draft may be fast, but it must be verified correctly
-MoE：每个Token选部分计算路径	→	MoE: each token takes part of the compute path
+压缩要保留行动所依赖的事实	→	Compaction must keep the facts an action depends on
+后训练改变行为，奖励不是事实裁判	→	Post-training changes behavior; a reward is not an arbiter of fact
+图像表示与界面行动，是两层不同问题	→	Image representation and interface action are two different problems
+字符完整、事件完整、工具参数完整是三道关	→	Complete characters, complete events and complete tool arguments are three separate gates
+改摆法与改数值，分开看	→	Keep changing the arrangement separate from changing the values
+数据搬到GPU，改变的是位置而不是含义	→	Moving data to the GPU changes where it is, not what it means
+文字、字节、Token、编号是四件事	→	Text, bytes, tokens and IDs are four different things
+新增一个轴，究竟多了什么	→	What exactly does one more axis add
+梯度像坡度，学习率像迈步大小	→	A gradient is like a slope; the learning rate is like step size
+检索先找候选，再判断能否回答	→	Retrieval finds candidates first, then judges whether they can answer
+每轮上下文像一份有边界的工作资料	→	Each turn's context is like a working file with a boundary
+测试是找反例，不是给代码盖绿章	→	A test looks for counterexamples; it does not stamp code green
+涨了10个百分点，为什么还不能急着下结论？	→	It went up 10 percentage points — so why can we not conclude anything yet?
+省参数、省位数、少激活不是同一种优化	→	Fewer parameters, fewer bits and fewer activations are not the same optimization
+矩阵乘法像逐格填写配方结果	→	Matrix multiplication is like filling in a recipe result cell by cell
+算得慢，可能是东西搬得慢	→	Slow computation may mean things are being moved slowly
+组批没有把两句话混成一句	→	Batching does not blend two sentences into one
+网络层是在重组数值，不是在生成隐藏句子	→	A network layer rearranges numbers; it does not produce hidden sentences
+训练：给每个位置一道“下一项”题	→	Training: give every position a "what comes next" question
+读指标，先问它的分母是谁	→	When reading a metric, first ask what its denominator is
+资料能影响模型，不代表获得了权限	→	Material can influence a model without thereby gaining permission
+超时告诉你没收到，不告诉你没发生	→	A timeout tells you nothing arrived, not that nothing happened
+长期记忆不是永远正确的小纸条	→	Long-term memory is not a note that is always right
 Activation Checkpointing：少存一点，反向时重算	→	Activation checkpointing: store less, recompute on the backward pass
+FlashAttention：一边读一边累计，不攒整张表	→	FlashAttention: accumulate while reading, without materializing the whole table
+GQA/MQA：减少的是K/V组数	→	GQA/MQA: what is reduced is the number of K/V groups
+LoRA：冻结大表，学习小增量	→	LoRA: freeze the large table, learn a small increment
+MoE：每个Token选部分计算路径	→	MoE: each token takes part of the compute path
+PagedAttention：逻辑连续，物理可以分块	→	PagedAttention: logically contiguous, physically chunked
+Q/K/V：先算从哪读，再算读进多少	→	Q/K/V: first compute where to read from, then how much to read in
 压缩、检索与Prompt Cache：三种不同的“省”	→	Compaction, retrieval and prompt cache: three different kinds of saving
 多Agent：可并行的工作，比Agent数量重要	→	Multi-agent: work that can run in parallel matters more than the number of agents
+推测解码：草稿可以快，但必须正确校验	→	Speculative decoding: the draft may be fast, but it must be verified correctly
 模型路由：便宜一次，不一定便宜一项成功任务	→	Model routing: cheaper per call is not cheaper per successful task
-专题研修：实现、验证与应用	→	Topic studies: implementation, verification and application
-全局认知	→	A global view
-模型内部	→	Model internals
-能力形成	→	How capability forms
-推理与服务	→	Inference and serving
-输入输出接口	→	Input and output interfaces
-Agent基础	→	Agent basics
-真实编码Agent	→	Real coding agents
-上下文工程	→	Context engineering
-检索与代码智能	→	Retrieval and code intelligence
-Skills与多Agent	→	Skills and multi-agent systems
+连续组批：有座位空出来，就接下一位	→	Continuous batching: when a seat frees up, take the next one
+量化：省存储，也引入近似	→	Quantization: saves storage, and introduces approximation
 AI软件工程	→	AI software engineering
-评测方法	→	Evaluation methods
-安全与权限	→	Security and permissions
-运行与性能	→	Runtime and performance
-高级专题	→	Advanced topics
-数学与实现补充	→	Mathematical and implementation appendix
-图解 Transformer	→	The Transformer, illustrated
-注意力机制，逐步算清	→	Attention, computed step by step
-LLM 的完整使用链路	→	The full chain of using an LLM
-怎样构建有效的 Agent	→	How to build effective agents
-展开 Codex 的执行循环	→	Unfolding Codex's execution loop
+Agent基础	→	Agent basics
 Claude Code 怎样工作	→	How Claude Code works
+LLM 的完整使用链路	→	The full chain of using an LLM
+Skills与多Agent	→	Skills and multi-agent systems
+上下文工程	→	Context engineering
 上下文工程的核心方法	→	Core methods of context engineering
-压缩后，怎样保持任务连续	→	Keeping a task continuous after compaction
-让检索提供真正需要的证据	→	Making retrieval supply the evidence actually needed
+专题研修：实现、验证与应用	→	Topic studies: implementation, verification and application
 从 CoALA 理解有效记忆	→	Understanding effective memory through CoALA
-用工程环境提高交付质量	→	Raising delivery quality with the engineering environment
+全局认知	→	A global view
+公式与术语：先认识对象，再理解运算	→	Formulas and terms: know the objects before the operations
+压缩后，怎样保持任务连续	→	Keeping a task continuous after compaction
+参考资料与适用范围	→	References and scope of use
+图解 Transformer	→	The Transformer, illustrated
+基础篇逐节图解索引	→	Index of section figures in Foundations
+安全与权限	→	Security and permissions
+展开 Codex 的执行循环	→	Unfolding Codex's execution loop
+怎样构建有效的 Agent	→	How to build effective agents
 怎样证明 Agent 优化有效	→	How to prove an agent optimization works
 拓展阅读：研究主题与中文讲义	→	Further reading: research topics and Chinese lecture notes
-来源与版本说明	→	Sources and version notes
+推理与服务	→	Inference and serving
+数学与实现补充	→	Mathematical and implementation appendix
 术语与符号速查	→	Terms and notation at a glance
-公式与术语：先认识对象，再理解运算	→	Formulas and terms: know the objects before the operations
+来源与版本说明	→	Sources and version notes
+检索与代码智能	→	Retrieval and code intelligence
+模型内部	→	Model internals
+正文图解与细算索引	→	Index of figures and detailed calculations
+注意力机制，逐步算清	→	Attention, computed step by step
+用工程环境提高交付质量	→	Raising delivery quality with the engineering environment
+真实编码Agent	→	Real coding agents
 知识主题索引	→	Index of knowledge topics
-参考资料与适用范围	→	References and scope of use
-把数字改一下，看每一步怎样变化	→	Change a number and watch how every step changes
-代码、数值与验证边界	→	Code, numbers and the limits of verification
-示例核验：数值、状态与代码	→	Example verification: numbers, state and code
-贯通算例：两句话怎样穿过一层模型	→	A worked calculation: how two sentences pass through one model layer
-示例：从两句话到三维表示	→	Example: from two sentences to a three-dimensional representation
-工程深挖：从机制到故障边界	→	Engineering deep dive: from mechanism to failure boundary
-实验手册：实现、反例与实测边界	→	Experiment handbook: implementation, counterexamples and measured limits
-实际结果 · 记录与轨迹全部展开	→	Actual results · records and traces fully expanded
-专题研修的阅读方法	→	How to read the topic studies
-完整实验源码 · 12个Python文件	→	Full experiment source · 12 Python files
-来源、版本与事实边界	→	Sources, versions and the limits of fact
-拓展阅读的来源与示例约定	→	Sources and example conventions for the further reading
-中英术语表	→	Chinese–English glossary
-教学 BPE：字符怎样合并成 Token	→	Teaching BPE: how characters merge into tokens
-手算注意力与因果掩码	→	Attention and the causal mask, worked by hand
+能力形成	→	How capability forms
+让检索提供真正需要的证据	→	Making retrieval supply the evidence actually needed
+评测方法	→	Evaluation methods
+输入输出接口	→	Input and output interfaces
+运行与性能	→	Runtime and performance
+运行示例索引	→	Index of worked runs
+高级专题	→	Advanced topics
+10个离线机制实验	→	10 offline mechanism experiments
 KV缓存估算与前缀复用	→	KV cache estimation and prefix reuse
 RRF与检索指标	→	RRF and retrieval metrics
-压缩保真：状态与否定不能丢	→	Compaction fidelity: state and negation must not be lost
-记忆范围、版本、过期与冲突	→	Memory scope, versions, expiry and conflict
-模型提议与程序执行分离	→	Separating what the model proposes from what the program executes
-成功率、配对比较与真实成本口径	→	Success rate, paired comparison and a true cost basis
+专题研修的阅读方法	→	How to read the topic studies
+中英术语表	→	Chinese–English glossary
 从契约到补丁与反例测试	→	From contract to patch and counterexample test
+代码、数值与验证边界	→	Code, numbers and the limits of verification
+压缩保真：状态与否定不能丢	→	Compaction fidelity: state and negation must not be lost
+完整实验源码 · 12个Python文件	→	Full experiment source · 12 Python files
+实际结果 · 记录与轨迹全部展开	→	Actual results · records and traces fully expanded
+实验手册：实现、反例与实测边界	→	Experiment handbook: implementation, counterexamples and measured limits
+工程深挖：从机制到故障边界	→	Engineering deep dive: from mechanism to failure boundary
 并行Trace：墙钟与操作总量不同	→	Parallel traces: wall clock and total work are different
-10个离线机制实验	→	Ten offline mechanism experiments
+成功率、配对比较与真实成本口径	→	Success rate, paired comparison and a true cost basis
+手算注意力与因果掩码	→	Attention and the causal mask, worked by hand
+把数字改一下，看每一步怎样变化	→	Change a number and watch how every step changes
 拓展阅读方法	→	How to read the further reading
-关于本书与证据边界	→	About this book and the limits of its evidence
+拓展阅读的来源与示例约定	→	Sources and example conventions for the further reading
+教学 BPE：字符怎样合并成 Token	→	Teaching BPE: how characters merge into tokens
+来源、版本与事实边界	→	Sources, versions and the limits of fact
+模型提议与程序执行分离	→	Separating what the model proposes from what the program executes
+示例核验：数值、状态与代码	→	Example verification: numbers, state and code
+示例：从两句话到三维表示	→	Example: from two sentences to a three-dimensional representation
+记忆范围、版本、过期与冲突	→	Memory scope, versions, expiry and conflict
+贯通算例：两句话怎样穿过一层模型	→	A worked calculation: how two sentences pass through one model layer
 运行示例：依据、参数与范围	→	Worked runs: basis, parameters and scope
 AI 系统工程	→	AI Systems Engineering
-模型实验：逐步查看训练与推理的中间值	→	Model experiment: step through the intermediate values of training and inference
+优化选择：收益与代价一起看	→	Choosing an optimization: weigh the gain together with the cost
+动态图解：把每一步看清楚	→	Step-by-step figures: see every step clearly
+图解的数值与程序	→	The numbers and programs behind the figures
+图解的来源与适用边界	→	Sources and limits of use for the figures
+图解计算与验证记录	→	Figure calculations and verification records
+故障反例、实际结果与完整代码	→	Failure counterexamples, actual results and full code
+模型实验源码与原始参数	→	Model experiment source and original parameters
 模型实验：参数、前向与梯度记录	→	Model experiment: parameters, forward pass and gradient records
 模型实验：完整代码与运行结果	→	Model experiment: full code and run results
-模型实验源码与原始参数	→	Model experiment source and original parameters
-动态图解：把每一步看清楚	→	Step-by-step figures: see every step clearly
-章节与图解对应表	→	Chapter-to-figure table
-优化选择：收益与代价一起看	→	Choosing an optimization: weigh the gain together with the cost
-图解的来源与适用边界	→	Sources and limits of use for the figures
-图解的数值与程序	→	The numbers and programs behind the figures
-故障反例、实际结果与完整代码	→	Failure counterexamples, actual results and full code
+模型实验：逐步查看训练与推理的中间值	→	Model experiment: step through the intermediate values of training and inference
 模型机制：原理来源与接口版本	→	Model mechanisms: where the principles come from, and interface versions
 正文图解的来源与适用条件	→	Sources and conditions of use for the figures in the text
-图解计算与验证记录	→	Figure calculations and verification records
+章节与图解对应表	→	Chapter-to-figure table
+关于本书与证据边界	→	About this book and the limits of its evidence
 。	→	.
 先认识这里的对象与符号	→	Start with the objects and symbols used here
-步骤与对象	→	Steps and objects
-内部动作	→	Internal action
+。示例输入和场景由本书明确设定。	→	. The example input and setting are stated explicitly by this book.
 中间结果 / 新状态	→	Intermediate result / new state
 依据与适用范围：	→	Basis and scope of use:
-。示例输入和场景由本书明确设定。	→	. The example input and setting are stated explicitly by this book.
+内部动作	→	Internal action
+步骤与对象	→	Steps and objects
 第07课｜API与流式协议：请求如何变成可执行数据	→	Lesson 07｜APIs and streaming protocols: how a request becomes executable data
 第29课｜安全基础：数据能影响模型，但不能因此获得权限	→	Lesson 29｜Security basics: data can influence a model, but gains no permission from that
 第35课｜模型的生命周期：对象、参数、训练与推理	→	Lesson 35｜The life cycle of a model: objects, parameters, training and inference
@@ -188,13 +181,14 @@ AI 系统工程	→	AI Systems Engineering
 第48课｜位置编号与RoPE：先懂位置，再懂旋转	→	Lesson 48｜Position IDs and RoPE: understand position before rotation
 第52课｜导数、梯度与链式法则：训练怎样找到调整方向	→	Lesson 52｜Derivatives, gradients and the chain rule: how training finds a direction to adjust
 第61课｜低秩、量化、专家：先看究竟少算了什么	→	Lesson 61｜Low rank, quantization, experts: start with what is actually not being computed
-本章目录	→	Chapter contents
 第66课｜从基础概念到系统分析：怎样定位问题，而不是再堆技术	→	Lesson 66｜From core concepts to system analysis: how to locate a problem instead of piling on more technology
+本章目录	→	Chapter contents
 第06课｜工程质量：从需求到测试，再到真正可交付的代码	→	Lesson 06｜Engineering quality: from requirements to tests, and on to code that can really be delivered
 第28课｜多Agent：并行的收益与交接的损失	→	Lesson 28｜Multi-agent: the gain from parallelism and the loss at handoff
 第34课｜生产运行：Trace、成本、队列、灰度与回滚	→	Lesson 34｜Production operation: traces, cost, queues, canary releases and rollback
 第63课｜推理服务：调度、吞吐、延迟和并行	→	Lesson 63｜Inference serving: scheduling, throughput, latency and parallelism
 第67课｜深度应用：把组件组合成能解释的工作系统	→	Lesson 67｜Deep applications: composing components into a working system you can explain
+02｜进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性	→	02｜Into the decoder: tensor shapes, RoPE, GQA and KV cache correctness
 第03课｜Agent一次任务的完整循环：谁在思考，谁在执行	→	Lesson 03｜One full agent task loop: who is thinking and who is executing
 第09课｜模型输出怎样变成真实工具调用：协议与执行边界	→	Lesson 09｜How model output becomes a real tool call: protocol and execution boundary
 第10课｜工具设计与MCP：从连接到可控执行	→	Lesson 10｜Tool design and MCP: from connection to controlled execution
@@ -217,18 +211,6 @@ AI 系统工程	→	AI Systems Engineering
 第60课｜KV Cache、FlashAttention与PagedAttention的内部过程	→	Lesson 60｜Inside KV cache, FlashAttention and PagedAttention
 第65课｜事实可靠性、多模态与可解释性：能力边界在哪里	→	Lesson 65｜Factual reliability, multimodality and interpretability: where the limits of capability lie
 第68课｜研究深水区与系统综合判断	→	Lesson 68｜Deep research waters and whole-system judgment
-机制依据：	→	Mechanism basis:
-02｜进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性	→	02｜Into the decoder: tensor shapes, RoPE, GQA and KV cache correctness
-前言与使用指南	→	Preface and reading guide
-目录与学习路径	→	Contents and learning paths
-全文搜索	→	Full-text search
-作业01｜观察：把一次任务变成可检查的轨迹	→	Assignment 01｜Observe: turn one task into a trace you can inspect
-作业05｜全栈：用一个可推翻的假设改进同一任务	→	Assignment 05｜Full stack: improve the same task with one falsifiable hypothesis
-全程拆解A｜一次输入怎样变成三个输出Token	→	Walkthrough A｜How one input becomes three output tokens
-全程拆解B｜一次仓库修复的每轮输入、输出、工具和恢复	→	Walkthrough B｜Every turn of a repository fix: input, output, tools and recovery
-全程拆解C｜从文档入库到检索、回答、记忆更新和遗忘	→	Walkthrough C｜From ingesting a document to retrieval, answering, memory update and forgetting
-全程拆解D｜一次“变慢且变差”的Agent回归怎样查到根因	→	Walkthrough D｜How the root cause of a "slower and worse" agent regression is found
-贯穿实验：代码与对象定位	→	Worked experiment: locating code and objects
 01｜文本怎样成为概率：Tokenizer、模板、目标函数与梯度	→	01｜How text becomes probability: tokenizer, template, objective and gradient
 03｜训练系统内部：数据、优化器、显存与分布式代价	→	03｜Inside the training system: data, optimizer, memory and the cost of distribution
 04｜后训练与推理模型：从偏好目标到可验证能力	→	04｜Post-training and reasoning models: from preference objectives to verifiable capability
@@ -259,8 +241,22 @@ AI 系统工程	→	AI Systems Engineering
 29｜故障诊断手册：从现象到最小有效修复	→	29｜Failure diagnosis handbook: from symptom to the smallest effective fix
 30｜资深能力验收：开放题、参考答案与毕业项目	→	30｜Senior-level acceptance: open questions, reference answers and a capstone project
 31｜推导附章：注意力反向传播与可训练检索	→	31｜Derivation appendix: attention backpropagation and trainable retrieval
+全文搜索	→	Full-text search
+全程拆解A｜一次输入怎样变成三个输出Token	→	Walkthrough A｜How one input becomes three output tokens
+全程拆解B｜一次仓库修复的每轮输入、输出、工具和恢复	→	Walkthrough B｜Every turn of a repository fix: input, output, tools and recovery
+全程拆解C｜从文档入库到检索、回答、记忆更新和遗忘	→	Walkthrough C｜From ingesting a document to retrieval, answering, memory update and forgetting
+全程拆解D｜一次“变慢且变差”的Agent回归怎样查到根因	→	Walkthrough D｜How the root cause of a "slower and worse" agent regression is found
+前言与使用指南	→	Preface and reading guide
+工程深挖的依据与适用范围	→	Basis and scope of the engineering deep dive
+机制依据：	→	Mechanism basis:
+目录与学习路径	→	Contents and learning paths
+专注模式	→	Focus mode
+作业01｜观察：把一次任务变成可检查的轨迹	→	Assignment 01｜Observe: turn one task into a trace you can inspect
+作业05｜全栈：用一个可推翻的假设改进同一任务	→	Assignment 05｜Full stack: improve the same task with one falsifiable hypothesis
 专题阅读索引与知识依赖	→	Topic reading index and knowledge dependencies
-进阶数值与Agent运行实验	→	Advanced numerics and agent run experiments
+作业02｜构建：接管循环、工具和验收	→	Assignment 02｜Build: take over the loop, the tools and the acceptance
+作业03｜优化：模型仍是黑盒时，改什么才有收益	→	Assignment 03｜Optimize: when the model is still a black box, what change actually pays
+作业04｜服务：从接口合同下探模型与引擎	→	Assignment 04｜Serve: probe the model and engine from the interface contract down
 单元01 · 从任务结果反推一次Agent运行	→	Unit 01 · Reconstruct one agent run from its task result
 单元02 · 把完成条件写成可以复查的证据	→	Unit 02 · Write completion conditions as evidence you can re-check
 单元03 · 把模型提议变成受控的工具调用	→	Unit 03 · Turn a model proposal into a controlled tool call
@@ -268,36 +264,63 @@ AI 系统工程	→	AI Systems Engineering
 单元05 · 让检索结果成为足够的证据	→	Unit 05 · Make retrieval results sufficient as evidence
 单元06 · 跨轮状态、压缩与长期记忆	→	Unit 06 · Cross-turn state, compaction and long-term memory
 单元07 · 失败恢复与协作边界	→	Unit 07 · Failure recovery and the limits of collaboration
-作业02｜构建：接管循环、工具和验收	→	Assignment 02｜Build: take over the loop, the tools and the acceptance
 单元08 · 从最小权限开始控制风险	→	Unit 08 · Control risk by starting from least privilege
 单元09 · 固定任务后再判断优化是否有效	→	Unit 09 · Fix the task first, then judge whether an optimization works
 单元10 · 把每个等待和调用计入整项任务	→	Unit 10 · Count every wait and every call against the whole task
-作业03｜优化：模型仍是黑盒时，改什么才有收益	→	Assignment 03｜Optimize: when the model is still a black box, what change actually pays
 单元11 · 从服务接口走进数字与模型输入	→	Unit 11 · From the service interface into numbers and model input
 单元12 · 把一次前向逐个乘加算清楚	→	Unit 12 · Work one forward pass out, multiply-add by multiply-add
 单元13 · 先训练，再冻结参数	→	Unit 13 · Train first, then freeze the parameters
 单元14 · 使用训练结果完成逐轮推理	→	Unit 14 · Use the training result to run inference turn by turn
 单元15 · 从算子走向GPU与服务调度	→	Unit 15 · From operators to the GPU and service scheduling
-作业04｜服务：从接口合同下探模型与引擎	→	Assignment 04｜Serve: probe the model and engine from the interface contract down
 单元16 · 把多模态与不确定性接回验收	→	Unit 16 · Bring multimodality and uncertainty back into acceptance
 单元17 · 跨层优化同一个系统	→	Unit 17 · Optimize one system across layers
 单元18 · 用可复查的项目结论完成课程	→	Unit 18 · Finish the course with project conclusions that can be re-checked
+贯穿实验：代码与对象定位	→	Worked experiment: locating code and objects
+进阶数值与Agent运行实验	→	Advanced numerics and agent run experiments
 Agent机制的可运行反例与验证范围	→	Runnable counterexamples for agent mechanisms, and the scope of verification
-工程深挖的依据与适用范围	→	Basis and scope of the engineering deep dive
-界面可切换语言；课程正文为简体中文。	→	English edition: the interface and the lesson text are translated from the Simplified Chinese original.
-阅读设置	→	Reading settings
+Claude Code与Copilot：公开机制、可验证行为与未知内部	→	Claude Code and Copilot: public mechanisms, verifiable behavior and unknown internals
+Codex源码追踪：从仓库规则到历史、循环和压缩	→	Tracing the Codex source: from repository rules to history, loop and compaction
+Harness内部：决策、执行、持久化与崩溃恢复	→	Inside the harness: decision, execution, persistence and crash recovery
+Skills、工具与模型路由：专业能力如何真正进入任务	→	Skills, tools and model routing: how expertise actually enters a task
+一次“变慢且变差”的Agent回归怎样查到根因	→	How the root cause of a "slower and worse" agent regression is found
+一次仓库修复的每轮输入、输出、工具和恢复	→	Every turn of a repository fix: input, output, tools and recovery
+一次输入怎样变成三个输出Token	→	How one input becomes three output tokens
+上下文编译器：信息选择、依赖闭包与预算	→	The context compiler: information selection, dependency closure and budget
+从文档入库到检索、回答、记忆更新和遗忘	→	From ingesting a document to retrieval, answering, memory update and forgetting
+代码智能内部：AST、LSP、依赖图与版本化证据	→	Inside code intelligence: AST, LSP, dependency graph and versioned evidence
+作业01</span><span class="rail-name">观察：把一次任务变成可检查的轨迹	→	Assignment 01</span><span class="rail-name">Observe: turn one task into a trace you can inspect
+作业02</span><span class="rail-name">构建：接管循环、工具和验收	→	Assignment 02</span><span class="rail-name">Build: take over the loop, the tools and the acceptance
+作业03</span><span class="rail-name">优化：模型仍是黑盒时，改什么才有收益	→	Assignment 03</span><span class="rail-name">Optimize: when the model is still a black box, what change actually pays
+作业04</span><span class="rail-name">服务：从接口合同下探模型与引擎	→	Assignment 04</span><span class="rail-name">Serve: probe the model and engine from the interface contract down
+作业05</span><span class="rail-name">全栈：用一个可推翻的假设改进同一任务	→	Assignment 05</span><span class="rail-name">Full stack: improve the same task with one falsifiable hypothesis
 全书章节目录	→	Book contents
+压缩的深层问题：有损状态、证据恢复与继续执行	→	The deeper problem with compaction: lossy state, evidence recovery and continued execution
+可信答案与可解释性：校准、拒答、证据与因果干预	→	Trustworthy answers and interpretability: calibration, abstention, evidence and causal intervention
+后训练与推理模型：从偏好目标到可验证能力	→	Post-training and reasoning models: from preference objectives to verifiable capability
+多Agent内部：DAG、上下文交接、并发冲突与相关错误	→	Inside multi-agent: DAGs, context handoff, concurrency conflicts and correlated errors
+多模态与计算机操作：表示、定位、观察—行动闭环	→	Multimodality and computer use: representation, grounding, and the observe–act loop
+安全内部：可信边界、MCP授权、沙箱与副作用控制	→	Inside security: trust boundaries, MCP authorization, sandboxes and side-effect control
 定位当前章节	→	Scroll the contents to the current lesson
+工程质量的核心：契约、测试、反例、Review与交付证据	→	The core of engineering quality: contracts, tests, counterexamples, review and delivery evidence
+微调、量化与蒸馏：改变模型，还是改变输入系统	→	Fine-tuning, quantization and distillation: change the model, or change the input system
+成本与性能决策：每个成功任务，而不是每个Token	→	Cost and performance decisions: per successful task, not per token
+推导附章：注意力反向传播与可训练检索	→	Derivation appendix: attention backpropagation and trainable retrieval
+推理服务的真实瓶颈：内存、FlashAttention、分页与调度	→	The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling
+搜索概念、章节或题号	→	Search concepts, chapters or question numbers
+故障诊断手册：从现象到最小有效修复	→	Failure diagnosis handbook: from symptom to the smallest effective fix
 教材章节	→	Book chapters
-导论：怎样学习一套复杂的AI系统	→	Introduction: how to study a complex AI system
-第01课｜Agent运行：从提议到执行，再到验收	→	Lesson 01｜Running an agent: from proposal to execution to acceptance
+文本怎样成为概率：Tokenizer、模板、目标函数与梯度	→	How text becomes probability: tokenizer, template, objective and gradient
+检索系统内部：BM25、向量、ANN、融合与索引新鲜度	→	Inside a retrieval system: BM25, vectors, ANN, fusion and index freshness
+模型接口内部：消息、输出项、SSE与工具调用协议	→	Inside the model interface: messages, output items, SSE and the tool-call protocol
+深度应用蓝图：企业问答、仓库诊断、研究与受控自动化	→	Blueprints for deep applications: enterprise Q&A, repository diagnosis, research and controlled automation
+生产可观测性与可靠运行：Trace、队列、取消和恢复	→	Production observability and reliable operation: traces, queues, cancellation and recovery
 第01课</span><span class="rail-name">Agent运行：从提议到执行，再到验收	→	Lesson 01</span><span class="rail-name">Running an agent: from proposal to execution to acceptance
+第01课｜Agent运行：从提议到执行，再到验收	→	Lesson 01｜Running an agent: from proposal to execution to acceptance
 第02课</span><span class="rail-name">状态、事件与检查点：模型知道和系统记录的区别	→	Lesson 02</span><span class="rail-name">State, events and checkpoints: what the model knows versus what the system records
 第03课</span><span class="rail-name">Agent一次任务的完整循环：谁在思考，谁在执行	→	Lesson 03</span><span class="rail-name">One full agent task loop: who is thinking and who is executing
 第04课</span><span class="rail-name">工程质量的基础：需求、反例、测试与审查	→	Lesson 04</span><span class="rail-name">Foundations of engineering quality: requirements, counterexamples, tests and review
 第05课</span><span class="rail-name">评测指标的分母：成功率、精确率、召回率和pass	→	Lesson 05</span><span class="rail-name">The denominator of an evaluation metric: success rate, precision, recall and pass
 第06课</span><span class="rail-name">工程质量：从需求到测试，再到真正可交付的代码	→	Lesson 06</span><span class="rail-name">Engineering quality: from requirements to tests, and on to code that can really be delivered
-作业01</span><span class="rail-name">观察：把一次任务变成可检查的轨迹	→	Assignment 01</span><span class="rail-name">Observe: turn one task into a trace you can inspect
 第07课</span><span class="rail-name">API与流式协议：请求如何变成可执行数据	→	Lesson 07</span><span class="rail-name">APIs and streaming protocols: how a request becomes executable data
 第08课</span><span class="rail-name">工具与MCP：连接、发现、授权、执行四层拆开	→	Lesson 08</span><span class="rail-name">Tools and MCP: connection, discovery, authorization and execution, taken apart
 第09课</span><span class="rail-name">模型输出怎样变成真实工具调用：协议与执行边界	→	Lesson 09</span><span class="rail-name">How model output becomes a real tool call: protocol and execution boundary
@@ -320,14 +343,12 @@ Agent机制的可运行反例与验证范围	→	Runnable counterexamples for ag
 第26课</span><span class="rail-name">重试、幂等和事务：为什么超时不是失败证明	→	Lesson 26</span><span class="rail-name">Retries, idempotence and transactions: why a timeout is no proof of failure
 第27课</span><span class="rail-name">可靠执行：重试、幂等、崩溃与状态恢复	→	Lesson 27</span><span class="rail-name">Reliable execution: retries, idempotence, crashes and state recovery
 第28课</span><span class="rail-name">多Agent：并行的收益与交接的损失	→	Lesson 28</span><span class="rail-name">Multi-agent: the gain from parallelism and the loss at handoff
-作业02</span><span class="rail-name">构建：接管循环、工具和验收	→	Assignment 02</span><span class="rail-name">Build: take over the loop, the tools and the acceptance
 第29课</span><span class="rail-name">安全基础：数据能影响模型，但不能因此获得权限	→	Lesson 29</span><span class="rail-name">Security basics: data can influence a model, but gains no permission from that
 第30课</span><span class="rail-name">安全：指令边界、沙箱、权限与记忆污染	→	Lesson 30</span><span class="rail-name">Security: instruction boundaries, sandboxes, permissions and memory poisoning
 第31课</span><span class="rail-name">别被几个百分点骗了：随机性、样本与统计判断	→	Lesson 31</span><span class="rail-name">Do not be fooled by a few percent: randomness, samples and statistical judgment
 第32课</span><span class="rail-name">Evaluation：怎样证明一次优化真有收益	→	Lesson 32</span><span class="rail-name">Evaluation: how to prove an optimization really pays off
 第33课</span><span class="rail-name">看懂生产运行：Trace、队列、成本和回滚	→	Lesson 33</span><span class="rail-name">Reading a production run: traces, queues, cost and rollback
 第34课</span><span class="rail-name">生产运行：Trace、成本、队列、灰度与回滚	→	Lesson 34</span><span class="rail-name">Production operation: traces, cost, queues, canary releases and rollback
-作业03</span><span class="rail-name">优化：模型仍是黑盒时，改什么才有收益	→	Assignment 03</span><span class="rail-name">Optimize: when the model is still a black box, what change actually pays
 第35课</span><span class="rail-name">模型的生命周期：对象、参数、训练与推理	→	Lesson 35</span><span class="rail-name">The life cycle of a model: objects, parameters, training and inference
 第36课</span><span class="rail-name">一排数、一张表和一叠表：读懂张量与形状	→	Lesson 36</span><span class="rail-name">A row of numbers, a table and a stack of tables: reading tensors and shapes
 第37课</span><span class="rail-name">文字怎样成为编号：分词、词表与序列边界	→	Lesson 37</span><span class="rail-name">How text becomes IDs: tokenization, vocabulary and sequence boundaries
@@ -344,8 +365,8 @@ Agent机制的可运行反例与验证范围	→	Runnable counterexamples for ag
 第48课</span><span class="rail-name">位置编号与RoPE：先懂位置，再懂旋转	→	Lesson 48</span><span class="rail-name">Position IDs and RoPE: understand position before rotation
 第49课</span><span class="rail-name">完成一次前向：残差、前馈网络与词表分数	→	Lesson 49</span><span class="rail-name">Completing one forward pass: residuals, the feed-forward network and vocabulary scores
 第50课</span><span class="rail-name">一次Transformer前向：逐张量、逐算子讲明白	→	Lesson 50</span><span class="rail-name">One Transformer forward pass: tensor by tensor, operator by operator
-第51课｜注意力的深入追问：位置、掩码与多头	→	Lesson 51｜Attention, pressed further: position, masks and multiple heads
 第51课</span><span class="rail-name">注意力的深入追问：位置、掩码与多头	→	Lesson 51</span><span class="rail-name">Attention, pressed further: position, masks and multiple heads
+第51课｜注意力的深入追问：位置、掩码与多头	→	Lesson 51｜Attention, pressed further: position, masks and multiple heads
 第52课</span><span class="rail-name">导数、梯度与链式法则：训练怎样找到调整方向	→	Lesson 52</span><span class="rail-name">Derivatives, gradients and the chain rule: how training finds a direction to adjust
 第53课</span><span class="rail-name">一次训练从头到尾：标签、损失、更新、验证与保存	→	Lesson 53</span><span class="rail-name">One training run end to end: labels, loss, update, validation and saving
 第54课</span><span class="rail-name">后训练：监督微调、偏好、奖励与参数适配	→	Lesson 54</span><span class="rail-name">Post-training: supervised fine-tuning, preference, reward and parameter adaptation
@@ -358,63 +379,35 @@ Agent机制的可运行反例与验证范围	→	Runnable counterexamples for ag
 第61课</span><span class="rail-name">低秩、量化、专家：先看究竟少算了什么	→	Lesson 61</span><span class="rail-name">Low rank, quantization, experts: start with what is actually not being computed
 第62课</span><span class="rail-name">算得快与装得下：复杂度、带宽、批处理和并行	→	Lesson 62</span><span class="rail-name">Computing fast and fitting in memory: complexity, bandwidth, batching and parallelism
 第63课</span><span class="rail-name">推理服务：调度、吞吐、延迟和并行	→	Lesson 63</span><span class="rail-name">Inference serving: scheduling, throughput, latency and parallelism
-作业04</span><span class="rail-name">服务：从接口合同下探模型与引擎	→	Assignment 04</span><span class="rail-name">Serve: probe the model and engine from the interface contract down
 第64课</span><span class="rail-name">多模态与可信度：图片怎样成为输入，解释为什么有限	→	Lesson 64</span><span class="rail-name">Multimodality and trustworthiness: how an image becomes input, and why the explanation is limited
 第65课</span><span class="rail-name">事实可靠性、多模态与可解释性：能力边界在哪里	→	Lesson 65</span><span class="rail-name">Factual reliability, multimodality and interpretability: where the limits of capability lie
 第66课</span><span class="rail-name">从基础概念到系统分析：怎样定位问题，而不是再堆技术	→	Lesson 66</span><span class="rail-name">From core concepts to system analysis: how to locate a problem instead of piling on more technology
 第67课</span><span class="rail-name">深度应用：把组件组合成能解释的工作系统	→	Lesson 67</span><span class="rail-name">Deep applications: composing components into a working system you can explain
-作业05</span><span class="rail-name">全栈：用一个可推翻的假设改进同一任务	→	Assignment 05</span><span class="rail-name">Full stack: improve the same task with one falsifiable hypothesis
 第68课</span><span class="rail-name">研究深水区与系统综合判断	→	Lesson 68</span><span class="rail-name">Deep research waters and whole-system judgment
-一次输入怎样变成三个输出Token	→	How one input becomes three output tokens
-一次仓库修复的每轮输入、输出、工具和恢复	→	Every turn of a repository fix: input, output, tools and recovery
-从文档入库到检索、回答、记忆更新和遗忘	→	From ingesting a document to retrieval, answering, memory update and forgetting
-一次“变慢且变差”的Agent回归怎样查到根因	→	How the root cause of a "slower and worse" agent regression is found
-贯穿实验代码	→	Worked experiment code
-可运行反例与验证范围	→	Runnable counterexamples and the scope of verification
-文本怎样成为概率：Tokenizer、模板、目标函数与梯度	→	How text becomes probability: tokenizer, template, objective and gradient
-进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性	→	Into the decoder: tensor shapes, RoPE, GQA and KV cache correctness
 训练系统内部：数据、优化器、显存与分布式代价	→	Inside the training system: data, optimizer, memory and the cost of distribution
-后训练与推理模型：从偏好目标到可验证能力	→	Post-training and reasoning models: from preference objectives to verifiable capability
-输出怎样被选中：采样、推测解码与停止条件	→	How the output is chosen: sampling, speculative decoding and stopping conditions
-推理服务的真实瓶颈：内存、FlashAttention、分页与调度	→	The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling
-模型接口内部：消息、输出项、SSE与工具调用协议	→	Inside the model interface: messages, output items, SSE and the tool-call protocol
-Harness内部：决策、执行、持久化与崩溃恢复	→	Inside the harness: decision, execution, persistence and crash recovery
-Codex源码追踪：从仓库规则到历史、循环和压缩	→	Tracing the Codex source: from repository rules to history, loop and compaction
-Claude Code与Copilot：公开机制、可验证行为与未知内部	→	Claude Code and Copilot: public mechanisms, verifiable behavior and unknown internals
-上下文编译器：信息选择、依赖闭包与预算	→	The context compiler: information selection, dependency closure and budget
-压缩的深层问题：有损状态、证据恢复与继续执行	→	The deeper problem with compaction: lossy state, evidence recovery and continued execution
-检索系统内部：BM25、向量、ANN、融合与索引新鲜度	→	Inside a retrieval system: BM25, vectors, ANN, fusion and index freshness
-代码智能内部：AST、LSP、依赖图与版本化证据	→	Inside code intelligence: AST, LSP, dependency graph and versioned evidence
 记忆系统内部：双时间、冲突、来源与有用的遗忘	→	Inside a memory system: bi-temporality, conflict, provenance and useful forgetting
-Skills、工具与模型路由：专业能力如何真正进入任务	→	Skills, tools and model routing: how expertise actually enters a task
-多Agent内部：DAG、上下文交接、并发冲突与相关错误	→	Inside multi-agent: DAGs, context handoff, concurrency conflicts and correlated errors
-工程质量的核心：契约、测试、反例、Review与交付证据	→	The core of engineering quality: contracts, tests, counterexamples, review and delivery evidence
-高级评测：配对实验、可靠性、因果归因与判分偏差	→	Advanced evaluation: paired experiments, reliability, causal attribution and grading bias
-安全内部：可信边界、MCP授权、沙箱与副作用控制	→	Inside security: trust boundaries, MCP authorization, sandboxes and side-effect control
-生产可观测性与可靠运行：Trace、队列、取消和恢复	→	Production observability and reliable operation: traces, queues, cancellation and recovery
-成本与性能决策：每个成功任务，而不是每个Token	→	Cost and performance decisions: per successful task, not per token
-微调、量化与蒸馏：改变模型，还是改变输入系统	→	Fine-tuning, quantization and distillation: change the model, or change the input system
-多模态与计算机操作：表示、定位、观察—行动闭环	→	Multimodality and computer use: representation, grounding, and the observe–act loop
-可信答案与可解释性：校准、拒答、证据与因果干预	→	Trustworthy answers and interpretability: calibration, abstention, evidence and causal intervention
-高级研究分支：架构、搜索、RAG与记忆方法的选择逻辑	→	Advanced research branches: the logic behind choosing architecture, search, RAG and memory methods
 贯穿案例：修复exclude，从原始失败到可恢复交付	→	Worked case: fixing exclude, from the original failure to a recoverable delivery
-深度应用蓝图：企业问答、仓库诊断、研究与受控自动化	→	Blueprints for deep applications: enterprise Q&A, repository diagnosis, research and controlled automation
-故障诊断手册：从现象到最小有效修复	→	Failure diagnosis handbook: from symptom to the smallest effective fix
 资深能力验收：开放题、参考答案与毕业项目	→	Senior-level acceptance: open questions, reference answers and a capstone project
-推导附章：注意力反向传播与可训练检索	→	Derivation appendix: attention backpropagation and trainable retrieval
+输出怎样被选中：采样、推测解码与停止条件	→	How the output is chosen: sampling, speculative decoding and stopping conditions
+进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性	→	Into the decoder: tensor shapes, RoPE, GQA and KV cache correctness
+阅读设置	→	Reading settings
+高级研究分支：架构、搜索、RAG与记忆方法的选择逻辑	→	Advanced research branches: the logic behind choosing architecture, search, RAG and memory methods
+高级评测：配对实验、可靠性、因果归因与判分偏差	→	Advanced evaluation: paired experiments, reliability, causal attribution and grading bias
 专题索引与知识依赖	→	Topic index and knowledge dependencies
+可运行反例与验证范围	→	Runnable counterexamples and the scope of verification
+导论：怎样学习一套复杂的AI系统	→	Introduction: how to study a complex AI system
+界面可切换语言；课程正文为简体中文。	→	English edition: the interface and the lesson text are translated from the Simplified Chinese original.
+贯穿实验代码	→	Worked experiment code
 进阶代码附录	→	Advanced code appendix
-搜索概念、章节或题号	→	Search concepts, chapters or question numbers
 切换专注模式	→	Toggle focus mode
-专注模式	→	Focus mode
 从基础概念到大语言模型内部机制、智能体执行与工程实践的中文学习教材。	→	A study guide covering core concepts, the internals of large language models, agent execution and engineering practice.
-怎样把图中的变化读明白	→	How to read the changes in the figure
 。本例数字和宿主场景为明确给定的教学设定，不是商业模型输出或生产性能测量。	→	. The numbers and harness setting in this example are an explicitly given teaching construction, not commercial model output or a production performance measurement.
+怎样把图中的变化读明白	→	How to read the changes in the figure
 本章提纲	→	On this page
+　·　练习与工程推导为本书独立编写。	→	·　The exercises and engineering derivations were written independently for this book.
+拓展阅读目录事实依据 	→	Factual basis for the further reading list
 标记已读	→	Mark as read
 边界与反例。</strong>本表是独立教学构造，用来解释该研究主题的一个局部机制，不是原论文实验或产品实测；完整方法与适用条件仍需结合本节正文。	→	Limits and counterexamples.</strong> This table is an independent teaching construction used to explain one local mechanism of that research topic; it is not an experiment from the original paper or a product measurement. For the complete method and its conditions of use, read this section's main text as well.
-拓展阅读目录事实依据 	→	Factual basis for the further reading list
-　·　练习与工程推导为本书独立编写。	→	·　The exercises and engineering derivations were written independently for this book.
 阅读信息	→	Reading information
 工程深挖的依据与适用范围</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="../engineering/agent-evidence.html"><span class="rail-name">Agent机制证据	→	Basis and scope of the engineering deep dive</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="../engineering/agent-evidence.html"><span class="rail-name">Evidence for agent mechanisms
 来源说明	→	Source note
@@ -424,6 +417,8 @@ Skills、工具与模型路由：专业能力如何真正进入任务	→	Skills
 依据：	→	Basis:
 对应参数、前向及梯度记录	→	Matching parameters, forward pass and gradient records
 各行是独立对象或条件的对照，不暗示上一行的结果自动进入下一行。	→	Each row is a comparison of an independent object or condition; it does not imply that the row above feeds into the one below.
+具体结果与边界	→	Specific result and limits
+本步动作 / 条件	→	Action / condition at this step
 加入本地逐步图解、对象释义、固定条件、原因/操作/风险/检验	→	Added local step-by-step figures, object definitions, fixed conditions, and reason / action / risk / check
 标记本节已读	→	Mark this section as read
 记录保存在本机浏览器。	→	Records are kept in this browser.
@@ -431,489 +426,486 @@ Skills、工具与模型路由：专业能力如何真正进入任务	→	Skills
 AI系统工程：从基础到内部<br/><a href="../contents.html">全书目录	→	AI Systems Engineering: from the basics to the internals<br/><a href="../contents.html">Book contents
 进入对应完整课程	→	Go to the matching full lesson
 核验依据：	→	Verification basis:
+保存此源文件	→	Save this source file
 对象／位置	→	Object / position
 核心回答	→	Core answer
 展示值经过舍入；后续运算使用未舍入值。	→	Displayed values are rounded; later computation uses the unrounded values.
-沿着对象与状态理解本章	→	Follow this chapter through its objects and states
+每行是一组对应关系；独立对照不视为前一行的继续运算。	→	Each row is one correspondence; independent comparisons do not continue the preceding row's computation.
 下方图解的固定输入在“输入与适用条件”中声明。它用于解释本章机制，不与本章其他独立例子的数值暗中接续。	→	The fixed input for the figure below is declared under "Input and conditions of use". It serves to explain this chapter's mechanism and does not quietly continue the numbers of this chapter's other independent examples.
-工程机制与失败边界	→	Engineering mechanisms and failure boundaries
+沿着对象与状态理解本章	→	Follow this chapter through its objects and states
 专题研修	→	Topic studies
+工程机制与失败边界	→	Engineering mechanisms and failure boundaries
 来源出处	→	Source
 保留原例并补证据边界	→	Original example kept, with the limits of evidence added
+。数值和运行场景为本书明确设定的教学例；资料出处不代替本页中文解释。	→	. The numbers and the run setting are a teaching example explicitly specified by this book; the cited source does not replace the explanation on this page.
 为什么需要	→	Why it is needed
-怎样实现	→	How to implement it
 可能的代价与误解	→	Possible costs and misreadings
 如何判断是否做对	→	How to tell whether it was done right
+怎样实现	→	How to implement it
 机制来源：	→	Mechanism source:
-。数值和运行场景为本书明确设定的教学例；资料出处不代替本页中文解释。	→	. The numbers and the run setting are a teaching example explicitly specified by this book; the cited source does not replace the explanation on this page.
 拓展阅读	→	Further reading
 对象	→	Object
 第0列	→	Column 0
 第1列	→	Column 1
 第2列	→	Column 2
 第3列	→	Column 3
-放大	→	Zoom
 下一步	→	Next step
+放大	→	Zoom
+t=2 · 爱	→	t=2 · 爱
+t=3 · 学习	→	t=3 · 学习
 SVG图源	→	SVG source
+t=1 · 我	→	t=1 · 我
 。源码限提交 86e17e98c7f9 和已读取路径；文章经验、公开文档与原创教学实验分别标注。<a href="../engineering/agent-evidence.html#acquisition">查看取得方式、阅读范围与限制	→	. The source is limited to commit 86e17e98c7f9 and the paths actually read; article experience, public documentation and original teaching experiments are labeled separately.<a href="../engineering/agent-evidence.html#acquisition">See how it was obtained, what was read, and the limits
-参见本步解释	→	See the explanation for this step
-上一步	→	Previous step
 播放	→	Play
+参见本步解释	→	See the explanation for this step
+旧	→	Old
+上一步	→	Previous step
 基础篇	→	Foundations
 外部原始出处（可选）：	→	External original source (optional):
-本地相关章节：	→	Related local sections:
-重置	→	Reset
 放大图形	→	Enlarge figure
-停留时间 	→	Dwell time
-每步停留时间	→	Dwell time per step
+本地相关章节：	→	Related local sections:
+1.5秒	→	1.5 s
 4.2秒	→	4.2 s
 7秒	→	7 s
-1.5秒	→	1.5 s
-步骤 	→	Step
-选择演示步骤	→	Choose a demo step
-窄屏可左右滑动图形，或点击“放大图形”。文字解释紧随图后。	→	On a narrow screen you can swipe the figure sideways, or tap "Enlarge figure". The text explanation follows right after it.
-图形，窄屏可横向滚动	→	Figure — scrolls sideways on a narrow screen
-默认静止。用“下一步”看完解释再继续；播放到最后一步自动停止。键盘聚焦播放器后，可用左右键逐步查看、空格播放/暂停。图中颜色辅助区分，含义同时用文字注明。	→	Still by default. Use "Next step" to finish reading an explanation before going on; playback stops automatically at the last step. With keyboard focus on the player, the arrow keys step through it and the space bar plays and pauses. Color in the figure helps tell things apart; every meaning is stated in words as well.
 JavaScript未启用；第一帧仍可阅读。完整图解页下方列出全部步骤说明。	→	JavaScript is off; the first frame is still readable. The full figure page lists every step's explanation below it.
+停留时间 	→	Dwell time
+图形，窄屏可横向滚动	→	Figure — scrolls sideways on a narrow screen
+步骤 	→	Step
+每步停留时间	→	Dwell time per step
+窄屏可左右滑动图形，或点击“放大图形”。文字解释紧随图后。	→	On a narrow screen you can swipe the figure sideways, or tap "Enlarge figure". The text explanation follows right after it.
+选择演示步骤	→	Choose a demo step
+重置	→	Reset
+默认静止。用“下一步”看完解释再继续；播放到最后一步自动停止。键盘聚焦播放器后，可用左右键逐步查看、空格播放/暂停。图中颜色辅助区分，含义同时用文字注明。	→	Still by default. Use "Next step" to finish reading an explanation before going on; playback stops automatically at the last step. With keyboard focus on the player, the arrow keys step through it and the space bar plays and pauses. Color in the figure helps tell things apart; every meaning is stated in words as well.
+特征0	→	Feature 0
+特征1	→	Feature 1
 核查日期：2026-10-17｜版本：见固定URL或核查日期；动态网页不等于本地版本	→	Checked on 2026-10-17｜Version: see the fixed URL or the check date; a live web page is not the same as the local version
 本图仅使用当前算例声明的输入；具体公式、来源和边界见紧邻正文。	→	This figure uses only the input declared for the current worked example; the formulas, sources and limits are given in the adjacent text.
 本图使用的数据与条件	→	The data and conditions used in this figure
+特征2	→	Feature 2
+特征3	→	Feature 3
 页面	→	Page
 继续阅读与机制对应	→	Continue reading, matched to the mechanism
-阅读关系	→	Reading relationship
 课程顺序	→	Course order
+阅读关系	→	Reading relationship
 顺序阅读	→	Read in order
-下一节：沿同一课程顺序继续	→	Next section: continue along the same course order
 上一节：复习本页使用的前置概念	→	Previous section: review the prerequisite concepts this page uses
-实验记录：字段与原值	→	Experiment record: fields and original values
-原始字段路径	→	Original field path
+下一节：沿同一课程顺序继续	→	Next section: continue along the same course order
 原始值	→	Original value
-这里是实际实验记录，不用条长或箭头伪装成额外证据；完整日志与解释仍保留在本节。	→	These are actual experiment records; bar length and arrows are not used to pass themselves off as extra evidence, and the full log and explanation stay in this section.
+原始字段路径	→	Original field path
+实验记录：字段与原值	→	Experiment record: fields and original values
 本图整理的是本小节已有的局部实验记录，不把通过局部测试扩展为产品在所有环境下可靠。原测试环境、输入和完整输出仍以本节记录为准。	→	This figure collects the local experiment records already present in this subsection; it does not extend passing a local test into a claim that the product is reliable in every environment. The original test environment, inputs and complete output remain as recorded in this section.
-系统篇	→	Systems
+这里是实际实验记录，不用条长或箭头伪装成额外证据；完整日志与解释仍保留在本节。	→	These are actual experiment records; bar length and arrows are not used to pass themselves off as extra evidence, and the full log and explanation stay in this section.
 图解 · 运行过程 · 工程取舍	→	Figures · how it runs · engineering trade-offs
-本地观察与复核入口	→	Local observation and re-checking entry points
+系统篇	→	Systems
+事实、推导与实验的边界	→	The boundary between fact, derivation and experiment
 以下为随包程序实际运行记录。数值算子、临时文件／数据库实验与教学逻辑模拟各自的范围，在实验页逐项注明；不能据此声称已测试商业模型或生产环境。	→	What follows is the actual run record of the programs shipped with this book. The scope of the numeric operators, the temporary-file and database experiments, and the teaching logic simulations is noted item by item on the experiment pages; none of it supports a claim that a commercial model or a production environment has been tested.
+动态图解	→	Step-by-step figures
+回到正文解释与反例 →	→	Back to the explanation and counterexamples →
+本地观察与复核入口	→	Local observation and re-checking entry points
 本条全部结果、验证范围与完整代码 →	→	All results for this item, the scope of verification, and the full code →
 证据核对：2026-10-21。	→	Evidence checked: 2026-10-21.
-事实、推导与实验的边界	→	The boundary between fact, derivation and experiment
-回到正文解释与反例 →	→	Back to the explanation and counterexamples →
-动态图解	→	Step-by-step figures
+对象或位置	→	Object or position
 编号	→	Index
 工程深挖的依据与适用范围</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="../../engineering/agent-evidence.html"><span class="rail-name">Agent机制证据	→	Basis and scope of the engineering deep dive</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="../../engineering/agent-evidence.html"><span class="rail-name">Evidence for agent mechanisms
 对象一	→	Object one
-对象二	→	Object two
 对象三	→	Object three
-t=2 · 爱	→	t=2 · 爱
-t=3 · 学习	→	t=3 · 学习
-版本／日期	→	Version / date
-核对日期	→	Check date
+对象二	→	Object two
 对应章节	→	Matching section
 支持的事实	→	Facts it supports
+核对日期	→	Check date
+版本／日期	→	Version / date
 适用边界	→	Limits of use
-t=1 · 我	→	t=1 · 我
-逐步说明与计算记录	→	Step-by-step explanation and calculation record
 以下解释全部展开，与播放器使用同一份数据；不是另换输入的第二个算例。	→	Every explanation below is expanded and uses the same data as the player; it is not a second worked example with different input.
 在上方查看第1步	→	See step 1 above
 在上方查看第2步	→	See step 2 above
 在上方查看第3步	→	See step 3 above
 在上方查看第4步	→	See step 4 above
-特征0	→	Feature 0
-特征1	→	Feature 1
-第0行	→	Row 0
+逐步说明与计算记录	→	Step-by-step explanation and calculation record
 AI系统工程：从基础到内部<br/><a href="../../contents.html">全书目录	→	AI Systems Engineering: from the basics to the internals<br/><a href="../../contents.html">Book contents
+第0行	→	Row 0
+K/V 已存	→	K/V stored
 官方出处／固定提交定位	→	Official source / pinned commit location
-本地中文研读笔记	→	Local Chinese reading notes
 显式输入的教学代数、数据结构或运行契约模拟；不是对应厂商产品集成或性能实测。	→	A teaching algebra, data structure or run-contract simulation with explicit input; not an integration with the corresponding vendor's product, and not a performance measurement.
+本地中文研读笔记	→	Local Chinese reading notes
 论文 · 资料记录日期：2026-10-17	→	Paper · source recorded on 2026-10-17
 、	→	,
+。本节数值与情景除另注外均为原创教学示例；来源不代替中文讲解。	→	. Unless noted otherwise, the numbers and settings in this section are original teaching examples; the source does not replace the explanation here.
 从具体对象与小例子开始，理解计算过程与适用条件。	→	Start from concrete objects and small examples, to understand the computation and the conditions under which it applies.
-课后自检	→	End-of-lesson self-check
+动态图解</span><span>约 1 千字</span><span>1 组可控演示	→	Step-by-step figures</span><span>approx. 1,000 characters</span><span>1 controllable demo
 自检 1	→	Self-check 1
 自检 2	→	Self-check 2
-。本节数值与情景除另注外均为原创教学示例；来源不代替中文讲解。	→	. Unless noted otherwise, the numbers and settings in this section are original teaching examples; the source does not replace the explanation here.
-动态图解</span><span>约 1 千字</span><span>1 组可控演示	→	Step-by-step figures</span><span>approx. 1,000 characters</span><span>1 controllable demo
-查看本例程序结果	→	See the program result for this example
+课后自检	→	End-of-lesson self-check
 完整可运行代码	→	Full runnable code
 延伸阅读：相关系统问题	→	Further reading: related system questions
-特征2	→	Feature 2
-特征3	→	Feature 3
-保留索引或代码阅读方式	→	Reading as an index or code page kept
+查看本例程序结果	→	See the program result for this example
+第1行	→	Row 1
+第2行	→	Row 2
+第3行	→	Row 3
 保留索引、代码或参考性质；补导航与全书入口	→	Index, code or reference character kept; navigation and a book-wide entry added
+保留索引或代码阅读方式	→	Reading as an index or code page kept
 本页目录	→	Page contents
 返回逐步讲解	→	Back to the step-by-step explanation
 方案／对象 A	→	Approach / object A
 方案／对象 B	→	Approach / object B
 方案／对象 C	→	Approach / object C
-第1行	→	Row 1
-第2行	→	Row 2
-第3行	→	Row 3
-用具体过程辅助理解：<a href="../visual/F22.html">把一个Agent任务拆成真正发生的几轮</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F22.html">Break one agent task into the turns that actually happen</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
 位置1 · 爱	→	position 1 · 爱
-局部核对例：以下输入以本例列出的条件为准，不能把它的中间值接到贯通模型的计算记录中。	→	Local check example: the input below follows the conditions listed for this example, and its intermediate values cannot be joined to the calculation record of the worked model.
-原始依据（可选核对）	→	Original basis (optional cross-check)
+用具体过程辅助理解：<a href="../visual/F22.html">把一个Agent任务拆成真正发生的几轮</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F22.html">Break one agent task into the turns that actually happen</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
 。源码限提交 86e17e98c7f9 和已读取路径；文章经验、公开文档与原创教学实验分别标注。<a href="../../engineering/agent-evidence.html#acquisition">查看取得方式、阅读范围与限制	→	. The source is limited to commit 86e17e98c7f9 and the paths actually read; article experience, public documentation and original teaching experiments are labeled separately.<a href="../../engineering/agent-evidence.html#acquisition">See how it was obtained, what was read, and the limits
+原始依据（可选核对）	→	Original basis (optional cross-check)
+局部核对例：以下输入以本例列出的条件为准，不能把它的中间值接到贯通模型的计算记录中。	→	Local check example: the input below follows the conditions listed for this example, and its intermediate values cannot be joined to the calculation record of the worked model.
+宿主	→	Harness
 第1步，共4步	→	Step 1 of 4
-本章预备知识	→	Prerequisites for this chapter
+外部资料可以提供证据，但不能签发工具权限	→	External material can supply evidence, but it cannot issue tool permissions
+文件已更新与宿主已确认，属于两条不同状态线	→	The file having been updated and the harness having confirmed it are two different state lines
+模型	→	Model
 本章各题列出所需基础。可先完成相应基础课，也可通过自检确认掌握程度。	→	Each question in this chapter lists the groundwork it needs. You can take the matching Foundations lesson first, or use the self-check to confirm how well you have it.
+本章预备知识	→	Prerequisites for this chapter
 术语带虚线时可点击速查。公式中的字母先看定义；不要用猜缩写替代推导。	→	A term with a dotted underline can be clicked for a quick reference. Read the definition of a letter in a formula first; do not let a guessed abbreviation stand in for the derivation.
 核心问题	→	Core question
 正文位置	→	Location in the text
 第1步，共5步	→	Step 1 of 5
+输入	→	Input
 Schema与Structured Outputs	→	Schema and Structured Outputs
+压缩必须保留否定与未完成状态，而不只是主题词	→	Compaction must keep negations and unfinished states, not only the topic words
 原始论文</span> <span class="badge gray">相关原文核查	→	Original paper</span> <span class="badge gray">Relevant original text checked
-模型分词器使用的片段单位。 例：可能是词、词的一部分、标点或部分字节。	→	The unit of fragment used by the model's tokenizer. Example: it may be a word, part of a word, punctuation or some bytes.
+向量同维度，不代表能放在同一个相似度空间	→	Vectors with the same number of dimensions need not belong in the same similarity space
+成功任务成本的分子，必须包含失败和返工	→	The numerator of cost per successful task must include failures and rework
+时间自上而下；行距不代表耗时。实线是请求/动作，虚线表示图中明确的返回。来源为本节固定教学消息，不推测闭源内部。	→	Time runs downward; row spacing does not indicate duration. Solid lines are requests/actions; dashed lines are the returns explicitly shown. Sources are this section's fixed teaching messages, with no speculation about closed-source internals.
+消息沿参与方流转；每条箭头标注同一轮的具体对象	→	Messages move between participants; each arrow names the specific object in the same turn
+计划	→	Plan
 Schema是一份字段和类型等结构规则；结构化输出机制让模型更容易返回符合规则的数据。字段合法仍不等于目标文件存在、已授权或业务正确。<span class="concept-micro">独立例：要求path为字符串；{"path":3}类型不合规则，{"path":"missing.py"}虽结构合规则仍可能找不到文件。	→	A schema is a set of structural rules about fields, types and the like; a structured-output mechanism makes it easier for the model to return data that follows those rules. Valid fields still do not mean that the target file exists, that access has been granted, or that the request is right for the business.<span class="concept-micro">Independent example: path is required to be a string; {"path":3} does not match the type rule, and {"path":"missing.py"} follows the structure yet may still find no file.
-核验后更新完整机制	→	Full mechanism updated after verification
 在上方查看第5步	→	See step 5 above
-从本页解释到可检查的实现	→	From the explanation on this page to an implementation you can inspect
-要核对什么	→	What to check
-事实与边界	→	Facts and limits
-本地依据	→	Local basis
-前向、损失与更新	→	Forward pass, loss and update
-固定的一层四维教学模型；不是任何商业模型的完整实现。	→	A fixed one-layer, four-dimensional teaching model; not a complete implementation of any commercial model.
-独立前向实现	→	An independent forward-pass implementation
-使用同一已保存权重，不使用PyTorch；用于复算而非另行训练。	→	Uses the same saved weights and no PyTorch; it is for recomputing, not for training again.
-错误是否能被发现	→	Whether the error can be caught
-因果性、梯度、标签移位、缓存位置均有正向检查和反例。	→	Causality, gradients, label shift and cache position each have a positive check and a counterexample.
-初始化的具体数字	→	The actual numbers at initialization
-所有参数均可查看；初值不等于训练后的参数。	→	Every parameter can be inspected; the initial values are not the parameters after training.
-实际运行记录	→	Actual run record
-仅来自本地CPU微型实验；不能推出商业能力或GPU性能。	→	From a tiny local CPU experiment only; no conclusion about commercial capability or GPU performance follows from it.
+核验后更新完整机制	→	Full mechanism updated after verification
+模型分词器使用的片段单位。 例：可能是词、词的一部分、标点或部分字节。	→	The unit of fragment used by the model's tokenizer. Example: it may be a word, part of a word, punctuation or some bytes.
+新	→	New
+空闲	→	Idle
 run.json 对应的数值记录	→	The matching numeric record in run.json
-得到 	→	Gives 
+事实与边界	→	Facts and limits
+仅来自本地CPU微型实验；不能推出商业能力或GPU性能。	→	From a tiny local CPU experiment only; no conclusion about commercial capability or GPU performance follows from it.
+从本页解释到可检查的实现	→	From the explanation on this page to an implementation you can inspect
+使用同一已保存权重，不使用PyTorch；用于复算而非另行训练。	→	Uses the same saved weights and no PyTorch; it is for recomputing, not for training again.
+初始化的具体数字	→	The actual numbers at initialization
+前向、损失与更新	→	Forward pass, loss and update
+因果性、梯度、标签移位、缓存位置均有正向检查和反例。	→	Causality, gradients, label shift and cache position each have a positive check and a counterexample.
+固定的一层四维教学模型；不是任何商业模型的完整实现。	→	A fixed one-layer, four-dimensional teaching model; not a complete implementation of any commercial model.
+实际运行记录	→	Actual run record
+所有参数均可查看；初值不等于训练后的参数。	→	Every parameter can be inspected; the initial values are not the parameters after training.
+执行	→	Execution
+本地依据	→	Local basis
+独立前向实现	→	An independent forward-pass implementation
+要核对什么	→	What to check
+错误是否能被发现	→	Whether the error can be caught
 Σ：按下标逐项求和	→	Σ: sum term by term over the subscript
+得到 	→	Gives 
 系统机制：用源码、反例和条件深入核对	→	System mechanisms: check them closely with source, counterexamples and conditions
-工程深挖的依据与适用范围</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="engineering/agent-evidence.html"><span class="rail-name">Agent机制证据	→	Basis and scope of the engineering deep dive</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="engineering/agent-evidence.html"><span class="rail-name">Evidence for agent mechanisms
-与	→	and
+规则	→	Rule
 证据	→	Evidence
 Σ是加法的简写。下标指出哪项在变化；没有被求和的下标保持不变。它不是一个额外参数，也不表示把数组拼在一起。<span class="concept-micro">独立微例：Σᵢ xᵢyᵢ，x=[1,2]、y=[3,4]，就是1×3+2×4=11。	→	Σ is shorthand for addition. The subscript says which term varies; a subscript that is not summed over stays fixed. It is not an extra parameter, and it does not mean concatenating arrays.<span class="concept-micro">Independent micro-example: Σᵢ xᵢyᵢ with x=[1,2] and y=[3,4] is just 1×3+2×4=11.
+θ尚未改变；训练目标在前向之外	→	θ has not changed yet; the training objective is outside the forward pass
+与	→	and
+固定初始参数θ₀；第0条训练输入[BOS,我,爱,学习,！]	→	Fixed initial parameters θ₀; training input 0 [BOS,我,爱,学习,！]
+工程深挖的依据与适用范围</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="engineering/agent-evidence.html"><span class="rail-name">Agent机制证据	→	Basis and scope of the engineering deep dive</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="engineering/agent-evidence.html"><span class="rail-name">Evidence for agent mechanisms
+更新前前向	→	Forward pass before the update
+查询保持4组	→	Keep 4 Query groups
 适用边界：贯通模型只执行随包配置中的结构；本节对后训练或现代结构的说明依据<a href="../reference/model-sources.html">对应原始论文与官方接口资料</a>，不代表本地训练已经实现这些扩展。	→	Limits of use: the worked model only runs the structure in the configuration shipped with this book. What this section says about post-training or modern structures rests on <a href="../reference/model-sources.html">the corresponding original papers and official interface material</a>, and does not mean the local training has already implemented those extensions.
-阅读指南与附录	→	Reading guide and appendix
+教学流程；高亮表示当前步骤，不表示真实耗时比例。	→	Teaching flow; highlighting marks the current step, not actual duration proportions.
 根据任务与观察调用模型和工具、持续推进的执行系统。 例：不只是一次写得很长的Prompt。	→	An execution system that calls the model and tools according to the task and what it observes, and keeps the work moving. Example: not just one very long prompt.
-第4列	→	Column 4
 理解衔接	→	Connecting the ideas
-和	→	and
+第4列	→	Column 4
+阅读指南与附录	→	Reading guide and appendix
+BM25把词频与长度放在同一个分母里比较	→	BM25 compares term frequency and length inside the same denominator
+BPE的合并次序，决定后面还能合并什么	→	The merge order in BPE decides what can still be merged later
+DAG上的最长依赖路径，决定并行任务最早何时结束	→	The longest dependency path in a DAG decides the earliest that parallel tasks can finish
+GQA保留多个Query，只让它们共享较少的K/V	→	GQA keeps several queries, and only has them share fewer K/V
+MoE的路由结果，要跟着每个Token逐个看	→	MoE routing results have to be followed token by token
+RoPE保留的是相对角度，不是每轮重新开始的位置	→	What RoPE keeps is the relative angle, not a position that starts over each turn
+Trace里的并行段不能直接相加成用户等待时间	→	Parallel spans in a trace cannot simply be added up into the user's waiting time
 checkpoint：必须看保存的对象	→	checkpoint: you must look at the object that was saved
-已取得范围：	→	Range obtained:
-（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：	→	(1-based requested range; to the actual last line when the file is shorter). <strong>Source Git blob:
-图解的手机逐步阅读版	→	A phone-friendly step-by-step version of the figure
-数值除特别标注外来自本章已明确设定的教学条件；示意图表达算法结构，不代表商业模型参数或实时GPU执行速度。	→	Unless marked otherwise, the numbers come from the teaching conditions this chapter sets out explicitly; the schematic expresses the structure of the algorithm and does not represent commercial model parameters or real GPU execution speed.
+“我有80%把握”是否可靠，要用一组实际结果校准	→	Whether "I am 80% sure" is reliable has to be calibrated against a set of actual results
+上下文预算，先扣掉必须保留的空间再选资料	→	In a context budget, subtract the space that must be kept before selecting material
+分页改变物理存放，不改变Token的逻辑次序	→	Paging changes physical placement, not the logical order of the tokens
+刚选出的Token，还没进入自己的那一轮计算	→	The token just selected has not yet entered the turn of computation that is its own
+反向不是把前向箭头倒放，而是把“影响”按依赖分配	→	The backward pass is not the forward arrows played in reverse; it distributes "influence" along the dependencies
+和	→	and
 回到 第36课 的完整讲解 →	→	Back to the full explanation in Lesson 36 →
+图像块向量与文字Embedding，输入来源不同但可接入同一计算链	→	Image-block vectors and text embeddings come from different inputs, yet can feed into the same computation chain
+图解的手机逐步阅读版	→	A phone-friendly step-by-step version of the figure
+字节、事件、参数三种完整性，分别用不同缓冲区处理	→	Byte completeness, event completeness and argument completeness are handled by different buffers
+完成记录	→	Completion recorded
 官方文档 · 资料记录日期：2026-10-17	→	Official documentation · source recorded on 2026-10-17
+已取得范围：	→	Range obtained:
+平均处理能力够，不代表高峰请求不用排队	→	Enough average throughput does not mean peak requests avoid the queue
+恢复核验	→	Verify during recovery
+拒绝草稿时的补偿，才保证目标分布不被带偏	→	It is the compensation when a draft is rejected that keeps the target distribution from being skewed
+数值除特别标注外来自本章已明确设定的教学条件；示意图表达算法结构，不代表商业模型参数或实时GPU执行速度。	→	Unless marked otherwise, the numbers come from the teaching conditions this chapter sets out explicitly; the schematic expresses the structure of the algorithm and does not represent commercial model parameters or real GPU execution speed.
+旧K/V为什么能复用：新Token不能反向改变旧前缀	→	Why old K/V can be reused: a new token cannot reach back and change the old prefix
+用户	→	The user
+结果未知	→	Result unknown
+缓存前缀是在复用相同前段，不是复用“差不多的意思”	→	A cached prefix reuses an identical leading segment, not "roughly the same meaning"
+训练显存不是“参数量乘两字节”这一笔账	→	Training VRAM is not the single sum "parameter count times two bytes"
+训练标签右移一格，代表每个位置要回答下一项	→	Shifting the training labels one slot to the right means every position answers for the next item
+连续组批把空出来的槽给新请求，但调度步不等于等长时间	→	Continuous batching gives a freed slot to a new request, but a scheduling step is not an equal length of time
+（1-based请求范围；文件较短时到实际末行）。<strong>源码Git blob：	→	(1-based requested range; to the actual last line when the file is shorter). <strong>Source Git blob:
 IDE、CLI、UI与DOM	→	IDE, CLI, UI and DOM
 JSON：结构化文本，不是执行动作	→	JSON: structured text, not an action being executed
-模型检查点保存权重或训练状态；激活检查点保存少量中间节点以便反向时重算；Agent任务检查点保存执行进展。三者同名，但恢复对象完全不同。<span class="concept-micro">看到checkpoint先问“恢复参数、重算激活，还是继续任务”。Agent保存摘要不会更新模型权重。	→	A model checkpoint saves weights or training state; activation checkpointing saves a few intermediate nodes so they can be recomputed on the backward pass; an agent task checkpoint saves how far execution has got. The three share a name, but what they restore is entirely different.<span class="concept-micro">When you see "checkpoint", first ask whether it restores parameters, recomputes activations, or continues a task. An agent saving a summary does not update model weights.
-第02课	→	Lesson 02
-第26课	→	Lesson 26
-条目与本地讲义	→	Items and local notes
-本模块全部条目的深入章节：	→	The in-depth chapters for every item in this module:
-逐项中文讲义	→	Item-by-item Chinese lecture notes
+L=2.244673167946；optimizer.step尚未发生	→	L=2.244673167946; optimizer.step has not happened yet
+一次任务里的两轮模型调用，各自多知道了什么	→	Two model calls in one task, and what each of them knows in addition
+位置2 · 学习	→	position 2 · 学习
 保留拓展阅读目录编号与A/B/C优先级；每项包括机制解释、边界与原创练习。	→	The further-reading list keeps its numbering and its A/B/C priorities; each item includes a mechanism explanation, its limits and an original exercise.
+同一θ₀、同一全批10个有效目标的平均loss	→	The same θ₀, the same average loss over all 10 valid targets in the full batch
+更新前反向	→	Backward pass before the update
+本模块全部条目的深入章节：	→	The in-depth chapters for every item in this module:
+条目与本地讲义	→	Items and local notes
+来源	→	Source
+模型检查点保存权重或训练状态；激活检查点保存少量中间节点以便反向时重算；Agent任务检查点保存执行进展。三者同名，但恢复对象完全不同。<span class="concept-micro">看到checkpoint先问“恢复参数、重算激活，还是继续任务”。Agent保存摘要不会更新模型权重。	→	A model checkpoint saves weights or training state; activation checkpointing saves a few intermediate nodes so they can be recomputed on the backward pass; an agent task checkpoint saves how far execution has got. The three share a name, but what they restore is entirely different.<span class="concept-micro">When you see "checkpoint", first ask whether it restores parameters, recomputes activations, or continues a task. An agent saving a summary does not update model weights.
+步1	→	Step 1
+步2	→	Step 2
+步3	→	Step 3
 用具体过程辅助理解：<a href="../visual/F40.html">先找错误发生在哪层，再谈换模型</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F40.html">Find which layer the error happens in before talking about changing models</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
 第01课	→	Lesson 01
-位置2 · 学习	→	position 2 · 学习
+第02课	→	Lesson 02
+第26课	→	Lesson 26
+这不是人工给出的上游梯度；来自实际交叉熵的解析反向。每行对应第0样本的一个输入位置；完整推导在M14—M15。	→	This is not a manually supplied upstream gradient; it comes from the analytical backward pass of the actual cross entropy. Each row corresponds to an input position in sample 0; the full derivation is in M14—M15.
+逐项中文讲义	→	Item-by-item Chinese lecture notes
 IDE是集成开发环境，CLI是命令行界面，UI是用户界面，DOM是网页文档的结构对象树。不同入口自动附带的代码、选区和页面信息可能不同。<span class="concept-micro">模型在IDE里看到选中函数，不代表同一任务在CLI里也已收到该函数；先检查本轮输入对象。	→	IDE is the integrated development environment, CLI the command-line interface, UI the user interface, and DOM the tree of structural objects of a web document. The code, selection and page information that each entry point attaches automatically can differ.<span class="concept-micro">The model seeing the selected function in the IDE does not mean the same task in the CLI has received that function; check this turn's input objects first.
 JSON是一种用对象、数组、字符串、数字等表达数据的文本格式。花括号对象把字段名映射到值，方括号数组保留项目顺序。解析JSON只得到数据，不会自动执行其中的工具名称。<span class="concept-micro">独立例：{"path":"a.py","limit":3}有两个字段；"3"是字符串而3是数值，Schema可以要求其中一种。	→	JSON is a text format that expresses data as objects, arrays, strings, numbers and so on. A braced object maps field names to values; a bracketed array keeps the order of its items. Parsing JSON only yields data; it does not automatically run a tool name inside it.<span class="concept-micro">Independent example: {"path":"a.py","limit":3} has two fields; "3" is a string while 3 is a number, and a schema can require either one.
 Query、Key、Value：三种中间数值表示	→	Query, Key, Value: three intermediate numeric representations
-约 	→	approx. 
-第05课	→	Lesson 05
-用具体过程辅助理解：<a href="../visual/F29.html">从两个候选列表，走到可用证据</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F29.html">From two candidate lists to usable evidence</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
 专题研修</span><span>约 1 千字	→	Topic studies</span><span>approx. 1,000 characters
-位置0 · 我	→	position 0 · 我
 位置0 · 你	→	position 0 · 你
-程序之间约定输入、输出与行为的接口。 例：不是人类界面的按钮本身。	→	An interface on which programs agree about input, output and behavior. Example: not the buttons of a human interface themselves.
+位置0 · 我	→	position 0 · 我
+功	→	succeeds
+用具体过程辅助理解：<a href="../visual/F29.html">从两个候选列表，走到可用证据</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F29.html">From two candidate lists to usable evidence</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+第05课	→	Lesson 05
+约 	→	approx. 
+记录请求	→	Record the request
+输出预留	→	Output reserve
+连接中断	→	Connection interrupted
+：	→	:
+01｜输入究竟是什么：从用户的一句话到模型张量	→	01｜What input really is: from the user's sentence to model tensors
 q是接收信息的一行查询表示；k是可读位置提供的一行匹配表示；v是该位置供混合的一行内容表示。大写Q/K/V把多行收集成表。它们由输入与参数计算得到，分别承担打分与提供内容的职责。<span class="concept-micro">某个q与两个k点积得到两个分数；softmax得到两个份额；这些份额分别乘两行v，再相加。这里不生成搜索词，也不直接选答案。	→	q is one row of query representation for the position receiving information; k is one row of matching representation offered by a readable position; v is one row of content representation that position contributes to the mix. Capital Q/K/V collect several rows into tables. They are computed from the input and the parameters, and they carry the separate jobs of scoring and of supplying content.<span class="concept-micro">One q dotted with two k gives two scores; softmax turns them into two shares; those shares multiply the two rows of v, and the results are added. Nothing here generates a search term, and nothing here picks an answer directly.
-第23课	→	Lesson 23
+任务	→	Task
+传递的具体内容	→	Specific content transmitted
 恢复	→	Recover
 日期／版本：	→	Date / version:
-第5列	→	Column 5
-第6列	→	Column 6
-第7列	→	Column 7
+校验	→	Validate
 用具体过程辅助理解：<a href="../visual/F20.html">省参数、省位数、少激活不是同一种优化</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F20.html">Fewer parameters, fewer bits and fewer activations are not the same optimization</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-01｜输入究竟是什么：从用户的一句话到模型张量	→	01｜What input really is: from the user's sentence to model tensors
+程序之间约定输入、输出与行为的接口。 例：不是人类界面的按钮本身。	→	An interface on which programs agree about input, output and behavior. Example: not the buttons of a human interface themselves.
+第23课	→	Lesson 23
+第4行	→	Row 4
+第5列	→	Column 5
+第5行	→	Row 5
+第6列	→	Column 6
+第6行	→	Row 6
+第7列	→	Column 7
+第7行	→	Row 7
+箭头表示本条消息方向，不表示模型直接操作文件。	→	The arrow shows this message's direction, not the model directly operating on a file.
 计算	→	Computation
-时刻	→	Moment
-文档	→	Document
+该组的K与V	→	This group's K and V
+这一步改变了什么	→	What this step changed
+unknown≠failed。文件替换成功与日志确认不是同一次提交；恢复不能把超时等同于“没有改过”。	→	unknown≠failed. Successful file replacement and log confirmation are separate commits; recovery must not equate a timeout with "no change made".
+不接受外部文字自授权限	→	Do not accept external text granting itself permissions
 为什么	→	Why
+仍不是执行授权	→	Still not execution authorization
+信息路径：外部内容进入模型	→	Information path: external content enters the model
+允许才执行	→	Execute only if permitted
+可能受到内容影响	→	May be influenced by the content
+含“忽略原任务”等引用文字	→	Contains quoted text such as "ignore the original task"
+固定操作 op1；版本 v7 → v8；本图展示回执丢失路径	→	Fixed operation op1; version v7 → v8; this figure shows the lost-acknowledgment path
+宿主记录	→	Harness record
+形状[2,5,4]；这里展示第0样本，数字来自第一次更新前。列的含义随本步骤改变：score/A为Key位置，logits/probabilities为词表，其他为特征。	→	Shape [2,5,4]; sample 0 is shown here, with numbers from before the first update. Column meanings change with the step: score/A uses Key positions, logits/probabilities uses the vocabulary, and the others use features.
+待执行动作	→	Action awaiting execution
+执行边界：由宿主与工具端强制检查	→	Execution boundary: enforced by the harness and tool endpoint
+持久化完成事实	→	Persist the fact of completion
 按对象与证据阅读这段过程	→	Read this process through its objects and evidence
-观察点	→	Observation point
+授权边界与模型阅读路径分开画	→	Draw authorization boundaries separately from the model's reading path
+提示词可降低风险，却不能替代路径、网络、身份与副作用控制。拒绝越界动作后仍可在原授权内继续任务。	→	Prompts may reduce risk but cannot replace path, network, identity and side-effect controls. Continue within the original authorization after rejecting an out-of-scope action.
+整合	→	Consolidate
+文档	→	Document
+时刻	→	Moment
 本步含义	→	What this step means
+来自可信会话/配置	→	From trusted session/configuration
+核验版本与操作ID	→	Verify version and operation ID
+检查目标、范围与批准	→	Check target, scope and approval
+模型生成提议	→	Model generates a proposal
 状态 / 范围	→	State / scope
+状态转移：必须具备明确的观察或事件	→	State transitions require explicit observations or events
+环境事实	→	Environment fact
 用具体过程辅助理解：<a href="../visual/F11.html">Q/K/V：先算从哪读，再算读进多少</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F11.html">Q/K/V: first compute where to read from, then how much to read in</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-爱	→	爱
-学习	→	学习
+真实身份与授权	→	Actual identity and authorization
+网页 / 源码 / 工具输出	→	Web pages / source code / tool output
+观察点	→	Observation point
+越界则拒绝	→	Reject actions outside the boundary
+02｜一次Transformer前向：逐张量、逐算子讲明白	→	02｜One Transformer forward pass: tensor by tensor, operator by operator
 OAuth、scope与授权	→	OAuth, scope and authorization
-，	→	,
-Top-k、Top-p与重新归一化	→	Top-k, Top-p and renormalization
-通过	→	Passed
-第04课	→	Lesson 04
 SQL、SQLite与事务对象	→	SQL, SQLite and the transaction object
+Top-k、Top-p与重新归一化	→	Top-k, Top-p and renormalization
+call_id、item_id、request_id	→	call_id,item_id,request_id
+创建一条记录；客户端等待回执	→	A record is created; the client waits for the receipt
+同一组分数 [2,1,0]，从计算到抽样	→	One set of scores [2,1,0], from computation to sampling
+学习	→	学习
+工具	→	Tool
+排队	→	Queuing
+数据搬到GPU，改变的是位置而不是含义：先数对象	→	Moving data to the GPU changes where it is, not what it means: count the objects first
+文件工具	→	File tool
+文字、字节、Token、编号是四件事：原文字	→	Text, bytes, tokens and IDs are four different things: the original text
+有3个历史位置、2个新Query时，因果关系取决于绝对位置	→	With 3 past positions and 2 new queries, the causal relation depends on the absolute position
+横条按本例给定时长等比例绘制。并行重叠区不能重复计入墙钟时间。	→	Bars are proportional to the durations given in this example. Parallel overlaps must not be counted twice in wall-clock time.
+横条长度使用共同总量作分母；没有把字节、参数个数与计算量混为同一单位。	→	Bar lengths share one total as their denominator; bytes, parameter counts and computation have not been conflated into one unit.
+横轴：时间（秒）	→	Horizontal axis: time (seconds)
+爱	→	爱
+用具体过程辅助理解：<a href="../visual/F34.html">测试是找反例，不是给代码盖绿章</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F34.html">A test looks for counterexamples; it does not stamp code green</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+用具体过程辅助理解：<a href="../visual/F36.html">涨了10个百分点，为什么还不能急着下结论？</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F36.html">It went up 10 percentage points — so why can we not conclude anything yet?</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+第04课	→	Lesson 04
 第22课	→	Lesson 22
+网络层是在重组数值，不是在生成隐藏句子：固定输入与参数	→	A network layer rearranges numbers; it does not produce hidden sentences: fixed input and parameters
+读取成功	→	Read succeeded
+通过	→	Passed
 阶段	→	Stage
 验证	→	Verification
-用具体过程辅助理解：<a href="../visual/F34.html">测试是找反例，不是给代码盖绿章</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F34.html">A test looks for counterexamples; it does not stamp code green</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-用具体过程辅助理解：<a href="../visual/F36.html">涨了10个百分点，为什么还不能急着下结论？</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F36.html">It went up ten points — so why can we not conclude anything yet?</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+，	→	,
+3 学习	→	3 学习
 AI系统工程：从基础到内部<br/><a href="contents.html">全书目录	→	AI Systems Engineering: from the basics to the internals<br/><a href="contents.html">Book contents
-时间	→	Time
-在授权场景，OAuth使应用能按授权取得访问凭据；scope声明一类访问范围，资源服务仍应检查具体权限。在记忆或任务场景，scope又可只表示适用范围，不能混成登录凭据。<span class="concept-micro">获准“读取日历”不等于获准删除所有事件；连接成功也不证明操作被批准。	→	In an authorization setting, OAuth lets an application obtain access credentials according to what was granted; a scope declares one class of access range, and the resource service should still check the specific permission. In a memory or task setting, scope can instead mean only the range over which something applies, and must not be conflated with a login credential.<span class="concept-micro">Being granted "read the calendar" is not being granted the deletion of every event; a successful connection is no proof that an operation was approved.
-02｜一次Transformer前向：逐张量、逐算子讲明白	→	02｜One Transformer forward pass: tensor by tensor, operator by operator
-步骤 / 对象	→	Step / object
-本步实际变化	→	What actually changes at this step
-结果	→	Result
-第53课	→	Lesson 53
-Top-k保留概率最高的k项；Top-p按概率降序保留累计概率达到阈值的候选前缀。用于抽样时，被保留的候选需按剩余总质量重新归一化。<span class="concept-micro">这里k是候选数量，p是累计概率阈值；不是注意力Key表K，也不是表示维度d_k。	→	Top-k keeps the k items with the highest probability; Top-p sorts by descending probability and keeps the leading candidates until the cumulative probability reaches a threshold. When used for sampling, the kept candidates have to be renormalized over the remaining total mass.<span class="concept-micro">Here k is a number of candidates and p a cumulative-probability threshold; k is not the attention Key table K, nor the representation width d_k.
 SQL是操作关系数据的语言；SQLite是可嵌入应用的数据库引擎。将操作状态写入数据库，是宿主程序的持久化动作，不会修改模型神经网络参数。<span class="concept-micro">一次事务可以同时保存本数据库中的业务行与待发送记录，但不能因此推断邮件服务也已一起原子提交。	→	SQL is the language for working with relational data; SQLite is a database engine that embeds into an application. Writing operational state into a database is a persistence action by the harness; it does not modify the model's neural network parameters.<span class="concept-micro">One transaction can save the business row in this database together with a pending-send record, but that does not let you infer that the mail service committed atomically along with it.
-无	→	None
-向量同维度，不代表能放在同一个相似度空间	→	Vectors with the same number of dimensions need not belong in the same similarity space
-第17课	→	Lesson 17
-第31课	→	Lesson 31
-成功任务成本的分子，必须包含失败和返工	→	The numerator of cost per successful task must include failures and rework
-第1步，共6步	→	Step 1 of 6
-来源 S008，注意力与Transformer原始架构	→	Source S008, attention and the original Transformer architecture
-用具体过程辅助理解：<a href="../visual/O06.html">连续组批：有座位空出来，就接下一位</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/O06.html">Continuous batching: when a seat frees up, take the next one</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-用具体过程辅助理解：<a href="../visual/O11.html">多Agent：可并行的工作，比Agent数量重要</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/O11.html">Multi-agent: work that can run in parallel matters more than the number of agents</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-查看实测结果	→	See the measured results
-第29课	→	Lesson 29
-怎么做	→	How to do it
+Top-k保留概率最高的k项；Top-p按概率降序保留累计概率达到阈值的候选前缀。用于抽样时，被保留的候选需按剩余总质量重新归一化。<span class="concept-micro">这里k是候选数量，p是累计概率阈值；不是注意力Key表K，也不是表示维度d_k。	→	Top-k keeps the k items with the highest probability; Top-p sorts by descending probability and keeps the leading candidates until the cumulative probability reaches a threshold. When used for sampling, the kept candidates have to be renormalized over the remaining total mass.<span class="concept-micro">Here k is a number of candidates and p a cumulative-probability threshold; k is not the attention Key table K, nor the representation width d_k.
+不得改公开 API	→	Must not change the public API
+不改公开 API	→	Keep the public API unchanged
 代价/错误条件	→	Cost / error condition
-怎么验证	→	How to verify it
-对数据字段及类型等结构的约束描述。 例：path是字符串，不表示可以读取任意路径。	→	A description of the constraints on the structure of data — fields, types and the like. Example: path being a string does not mean any path may be read.
-我	→	我
-Patch、图像通道与视觉投影	→	Patch, image channels and the visual projection
-MHA、MQA、GQA：头怎样共享	→	MHA, MQA, GQA: how heads are shared
-代码路径：	→	Code path:
-Mermaid源文件</a>。图的排布只表达数据／调用顺序，不代表计算耗时。	→	Mermaid source file</a>. The layout of the figure expresses the order of data and calls only; it does not represent computation time.
-方案	→	Approach
-选择	→	Selection
-这些是不同层对象的标识：工具调用、输出项、请求或响应。用来把增量和结果配回正确对象，不是模型输入的Token ID，也不天然是业务幂等键。<span class="concept-micro">两次read_file可分别有c1与c2；结果返回顺序颠倒时仍按调用标识配对，而不是按工具名称猜。	→	These are identifiers for objects at different layers: a tool call, an output item, a request or a response. They match increments and results back to the right object; they are not the token IDs of the model input, and they are not business idempotency keys by nature.<span class="concept-micro">Two read_file calls can carry c1 and c2; when the results come back in the reverse order they are still paired by call identifier, not guessed by tool name.
-工作树	→	Work tree
-汇总	→	Aggregate
-第07课	→	Lesson 07
-DAG、依赖与关键路径	→	DAG, dependencies and the critical path
-处理	→	Handling
-用具体过程辅助理解：<a href="../visual/F27.html">压缩要保留行动所依赖的事实</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F27.html">Compaction must keep the facts an action depends on</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-用具体过程辅助理解：<a href="../visual/F38.html">Trace要告诉你因果，不只是时间戳</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F38.html">A trace should tell you causation, not just timestamps</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-第44课	→	Lesson 44
-：	→	:
-图像中的patch是切分的小块，RGB是红绿蓝3个通道；软件工程中的patch则是代码补丁，两者同名。图像块展开后可通过可学习变换成为向量，不是查文字词表。<span class="concept-micro">独立图像例：16×16×3的一块含768个数，投影后可以变成d个特征。d由模型设计决定。	→	A patch in an image is a small block cut out of it, and RGB is the 3 channels red, green and blue; a patch in software engineering is a code patch — the same word for both. An image block, once flattened, can become a vector through a learnable transformation; it is not a lookup in a text vocabulary.<span class="concept-micro">Independent image example: one 16×16×3 block holds 768 numbers, and after projection it can become d features. d is fixed by the model design.
-DPR、DPI与坐标单位	→	DPR, DPI and coordinate units
-一个注意力头是一套匹配并聚合内容的路径。MHA常让每个Query头有自己的K/V头；MQA让多个Query头共用一组K/V；GQA在两者之间，分组共享。它们是结构选择，不是运行时随便改一个开关。<span class="concept-micro">独立形状例：8个Query头、2个K/V头，若均匀分组，每4个Query头共享1组K/V；缓存按K/V头数记账。	→	An attention head is one path that matches and then aggregates content. MHA usually gives every query head its own K/V head; MQA has several query heads share one group of K/V; GQA sits between them, sharing by group. These are structural choices, not a switch to be flipped at run time.<span class="concept-micro">Independent shape example: 8 query heads and 2 K/V heads, grouped evenly, means every 4 query heads share 1 group of K/V; the cache is accounted for by the number of K/V heads.
-第46课	→	Lesson 46
-步骤	→	Step
-LoRA、低秩及r	→	LoRA, low rank and r
-候选	→	Candidate
-观察	→	Observation
-事件	→	Event
-不变	→	Unchanged
-输入	→	Input
-DAG是有方向且没有环的任务依赖图。箭头A→B表示B依赖A完成；关键路径是在给定任务时长与依赖下决定最早完成时间的最长依赖链。<span class="concept-micro">独立例：A需2秒，B/C依赖A分别需3/5秒且可并行，则A后两者完成至少7秒，不是把2+3+5=10当墙钟时间。	→	A DAG is a task dependency graph that is directed and has no cycles. The arrow A→B means B depends on A finishing; the critical path is the longest dependency chain, the one that fixes the earliest finishing time given the task durations and dependencies.<span class="concept-micro">Independent example: A takes 2 seconds, B and C depend on A, take 3 and 5 seconds and can run in parallel, so finishing both after A takes at least 7 seconds — not 2+3+5=10 read as wall-clock time.
-绿色测试需要绑定“真的运行过”和“当前版本”	→	A green test has to be bound to "it really ran" and "the current version"
-pass@k、pass^k和一次成功率为什么不能混用？	→	Why can pass@k, pass^k and a single-attempt success rate not be used interchangeably?
-来源	→	Source
-第18课	→	Lesson 18
-第33课	→	Lesson 33
-第4行	→	Row 4
-第5行	→	Row 5
-第6行	→	Row 6
-第7行	→	Row 7
-回到 第37课 的完整讲解 →	→	Back to the full explanation in Lesson 37 →
-用具体过程辅助理解：<a href="../visual/F31.html">长期记忆不是永远正确的小纸条</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F31.html">Long-term memory is not a note that is always right</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-用具体过程辅助理解：<a href="../visual/F37.html">资料能影响模型，不代表获得了权限</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F37.html">Material can influence a model without thereby gaining permission</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-保存Python脚本	→	Save the Python script
-怎样观察与验证	→	How to observe and verify
-运行命令	→	Command to run
-完整教学代码	→	Full teaching code
-运行结果示例	→	Example of a run result
-以下结果由随包脚本产生。它们不是LLM或产品性能数据。	→	The results below are produced by the scripts shipped with this book. They are not LLM or product performance data.
-运行结果	→	Run result
-官方工程文章 · 资料记录日期：2026-10-17	→	Official engineering article · source recorded on 2026-10-17
-DPR常表示设备像素与CSS像素的比例；DPI表示每英寸的点数。截图像素、界面逻辑坐标和屏幕坐标不一定同单位，还可能有缩放、裁剪与偏移。<span class="concept-micro">在明确DPR=2且其他映射一致的独立例中，CSS横坐标100对应200个设备像素；不能把这条条件化关系直接套到所有截图。	→	DPR usually means the ratio of device pixels to CSS pixels; DPI means dots per inch. Screenshot pixels, the interface's logical coordinates and screen coordinates need not share a unit, and there may also be scaling, cropping and offsets.<span class="concept-micro">In an independent example where DPR=2 is stated and the other mappings agree, a CSS x-coordinate of 100 corresponds to 200 device pixels; this conditional relationship cannot be carried straight over to every screenshot.
-输出投影给各词表候选的未归一化分数。 例：可以是负数，还不是概率或Token编号。	→	The unnormalized score the output projection gives each vocabulary candidate. Example: it can be negative, and it is not yet a probability or a token ID.
-数据/调用方向以图中连线为准；参数与激活、训练与推理分别标注。	→	The direction of data and calls is as drawn by the lines in the figure; parameters and activations, and training and inference, are labeled separately.
-∂、∇：偏导与梯度	→	∂, ∇: partial derivative and gradient
-MoE、专家与路由器	→	MoE, experts and the router
-归一化	→	Normalization
-03｜注意力的深入追问：位置、掩码、多头与反向传播	→	03｜Attention, pressed further: position, masks, multiple heads and backpropagation
-第47课	→	Lesson 47
-LoRA用两个较小矩阵的乘积表示一部分权重增量，而不是重新训练整个大矩阵。r是中间维度，限制这个乘积的最大秩。不同资料采用行/列向量约定时，A、B的左右次序可能不同。<span class="concept-micro">右乘约定微例：W[4,6]，增量A[4,2]B[2,6]仍为[4,6]；r=2。A在这里不是注意力份额表。	→	LoRA represents part of a weight increment as the product of two smaller matrices instead of retraining the whole large matrix. r is the inner dimension, and it bounds the maximum rank of that product. Where sources use a row-vector or a column-vector convention, the left-right order of A and B can differ.<span class="concept-micro">Micro-example in the right-multiplication convention: with W[4,6], the increment A[4,2]B[2,6] is still [4,6]; r=2. A here is not the table of attention shares.
-解释	→	Explanation
-组织模型输入、工具、状态、权限和反馈的外围程序。 例：模型提出读文件，Harness执行并回填结果。	→	The surrounding program that organizes the model's input, tools, state, permissions and feedback. Example: the model proposes reading a file; the harness runs it and fills the result back in.
-第62课	→	Lesson 62
-一次任务里的两轮模型调用，各自多知道了什么	→	Two model calls in one task, and what each of them knows in addition
-授权	→	Authorization
-诊断	→	Diagnosis
-BM25及N、df、k₁、b	→	BM25 and N, df, k₁, b
-相关不等于可用：从召回到证据闭合	→	Relevant is not the same as usable: from recall to evidence closure
-保留	→	Kept
-整合	→	Consolidate
-发现	→	Discovery
-成功写入但没有确认：重试怎样变成重复副作用	→	Written successfully but not confirmed: how a retry becomes a duplicated side effect
-选取的原码摘录：</strong>不是完整文件，不具备独立可编译性；全文blob值仅用于标识来源，不冒称已对摘录完成整文件哈希验证。	→	Selected source extract:</strong> not the complete file and not independently compilable; the full-text blob value only identifies the source, and makes no claim that a whole-file hash has been verified for the extract.
-能	→	Yes
-一手教材／官方文档 · 资料记录日期：2026-10-17	→	First-hand textbook / official documentation · source recorded on 2026-10-17
-原始研究论文</span> <span class="badge gray">相关原文核查	→	Original research paper</span> <span class="badge gray">Relevant original text checked
-第37课	→	Lesson 37
-第11课	→	Lesson 11
-第66课	→	Lesson 66
-在上方查看第6步	→	See step 6 above
-你	→	你
-BPE的合并次序，决定后面还能合并什么	→	The merge order in BPE decides what can still be merged later
-第57课	→	Lesson 57
-是	→	is
-将各分数取指数，再除以所有指数之和。 例：分数[2,1,0]经Softmax后约为[0.6652,0.2447,0.0900]。	→	Take the exponential of each score, then divide by the sum of all the exponentials. Example: the scores [2,1,0] after Softmax are about [0.6652,0.2447,0.0900].
-基础课程：先读逐步讲解与统一算例	→	Foundation lessons: read the step-by-step explanation and the shared worked example first
-Norm、LayerNorm、RMSNorm：不是概率归一化	→	Norm, LayerNorm, RMSNorm: not a probability normalization
-不同查询头与K/V头共享方式的注意力结构。 例：共享更多K/V可减少缓存，但不保证质量完全相同。	→	Attention structures that differ in how query heads and K/V heads are shared. Example: sharing more K/V can reduce the cache, but it does not guarantee identical quality.
-通常在每个位置应用的前馈子网络。 例：常把宽度先扩展再缩回，带非线性或门控。	→	A feed-forward sub-network usually applied at every position. Example: it often widens first and then narrows back, with a nonlinearity or a gate.
-∂L/∂w询问保持其他独立变量不变时，w小幅改变会让损失L怎样变化。多个参数的这些变化率合成梯度∇L。它们是导数记号，不是把两个普通数直接相除。<span class="concept-micro">独立微例：L=w²时，w=3处的梯度为6。最简单更新w←w−η×6中，η是学习率。	→	∂L/∂w asks how the loss L changes when w changes a little while the other independent variables are held fixed. These rates of change across many parameters make up the gradient ∇L. They are derivative notation, not two ordinary numbers divided by each other.<span class="concept-micro">Independent micro-example: for L=w², the gradient at w=3 is 6. In the simplest update w←w−η×6, η is the learning rate.
-一起组织计算的一组输入。 例：普通样本batch不让不同用户相互读取内容。	→	A group of inputs organized for computation together. Example: an ordinary sample batch does not let different users read each other's content.
-MoE是包含多套子网络的模型结构；路由器为当前Token表示选择或加权少数专家。专家通常是数值子网络，不是被赋予“数学老师”等提示词的聊天Agent。<span class="concept-micro">独立例：有4个专家，每Token选2个，表示某次只激活其中2条专家路径；仍需保存模型设计要求的参数与路由状态。	→	MoE is a model structure that contains several sub-networks; the router selects or weights a few experts for the current token's representation. An expert is usually a numeric sub-network, not a chat agent given a prompt such as "math teacher".<span class="concept-micro">Independent example: with 4 experts and 2 chosen per token, one pass activates only 2 of the expert paths; the parameters and routing state that the model design requires still have to be stored.
-BOS / EOS：序列边界标记	→	BOS / EOS: sequence boundary markers
-RoPE保留的是相对角度，不是每轮重新开始的位置	→	What RoPE keeps is the relative angle, not a position that starts over each turn
-d_k、d_v、Dh：每行表示的宽度	→	d_k, d_v, Dh: the width of each row of representation
-GQA保留多个Query，只让它们共享较少的K/V	→	GQA keeps several queries, and only has them share fewer K/V
-反向不是把前向箭头倒放，而是把“影响”按依赖分配	→	The backward pass is not the forward arrows played in reverse; it distributes "influence" along the dependencies
-训练标签右移一格，代表每个位置要回答下一项	→	Shifting the training labels one slot to the right means every position answers for the next item
-含义	→	Meaning
-训练显存不是“参数量乘两字节”这一笔账	→	Training VRAM is not the single sum "parameter count times two bytes"
-MoE的路由结果，要跟着每个Token逐个看	→	MoE routing results have to be followed token by token
-刚选出的Token，还没进入自己的那一轮计算	→	The token just selected has not yet entered the turn of computation that is its own
-分别按候选个数或累计概率保留候选的策略。 例：筛选后通常还要重新归一化。	→	Strategies that keep candidates by their number or by cumulative probability. Example: after the filtering, the result usually has to be renormalized.
-FlashAttention：改变中间数据存取方式	→	FlashAttention: changing how intermediate data is stored and read
-旧K/V为什么能复用：新Token不能反向改变旧前缀	→	Why old K/V can be reused: a new token cannot reach back and change the old prefix
-分页改变物理存放，不改变Token的逻辑次序	→	Paging changes physical placement, not the logical order of the tokens
-连续组批把空出来的槽给新请求，但调度步不等于等长时间	→	Continuous batching gives a freed slot to a new request, but a scheduling step is not an equal length of time
-一次任务的执行轨迹与其中有开始结束的操作跨度。 例：并行跨度的耗时不能直接全加成墙钟时间。	→	The execution trace of one task, and the operation spans inside it that have a start and an end. Example: the durations of parallel spans cannot all be added up into wall-clock time.
-拒绝草稿时的补偿，才保证目标分布不被带偏	→	It is the compensation when a draft is rejected that keeps the target distribution from being skewed
-相关动态过程：<a href="../visual/F22.html">把一个Agent任务拆成真正发生的几轮</a>。本节下文继续展示更具体的计算与工程边界。	→	Related step-by-step process: <a href="../visual/F22.html">Break one agent task into the turns that actually happen</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
-一次回答结束，为什么任务仍未完成？	→	One answer has finished — so why is the task still not done?
-能证明什么	→	What it proves
-任务目标	→	Task goal
-无法确认外部动作是否已经完成的状态。 例：超时可能发生在成功执行之后。	→	A state in which it cannot be confirmed whether an external action has completed. Example: a timeout can happen after a successful execution.
-模型	→	Model
-SSE、chunk、delta：不同的分片层	→	SSE, chunk, delta: different layers of fragmentation
-字节、事件、参数三种完整性，分别用不同缓冲区处理	→	Byte completeness, event completeness and argument completeness are handled by different buffers
-第29课</a>。阅读顺序：先确认运行契约，再看反例与修复，最后检验边界。	→	Lesson 29</a>. Reading order: confirm the run contract first, then the counterexamples and the fix, and test the limits last.
-第08课	→	Lesson 08
-上下文预算，先扣掉必须保留的空间再选资料	→	In a context budget, subtract the space that must be kept before selecting material
-缓存前缀是在复用相同前段，不是复用“差不多的意思”	→	A cached prefix reuses an identical leading segment, not "roughly the same meaning"
-异步摘要生成期间又来了工具结果，怎样不丢数据？	→	A tool result arrives while the summary is being generated asynchronously — how is data kept from being lost?
-压缩候选生成期间，新工具结果不能被旧快照覆盖	→	While a compaction candidate is being produced, a new tool result must not be overwritten by the old snapshot
-BM25是词项检索打分公式。常见记号N是文档总数，df是含该词的文档数，tf是当前文档词频，|D|是当前文档长度，avgdl是平均长度；k₁和b是词频饱和与长度修正的设置。<span class="concept-micro">k₁不是Key向量k₁，b也不是神经网络偏置。分数只用于给候选排序，不能把8.2解释为82%正确率。	→	BM25 is a scoring formula for term-based retrieval. In the usual notation N is the total number of documents, df the number of documents containing the term, tf the term frequency in the current document, |D| the length of the current document and avgdl the average length; k₁ and b are the settings for term-frequency saturation and length correction.<span class="concept-micro">k₁ is not the Key vector k₁, and b is not a neural network bias. The score only orders candidates; 8.2 cannot be read as 82% accuracy.
-BM25把词频与长度放在同一个分母里比较	→	BM25 compares term frequency and length inside the same denominator
-RRF：按排名融合	→	RRF: fusing by rank
-代码证据为什么需要工作树版本，而不只是commit？	→	Why does code evidence need the work-tree version, and not just the commit?
-补丁	→	Patch
-记忆写入为什么是一条带租约与验收的流水线？	→	Why is writing memory a pipeline with leases and acceptance?
-Skill有效应用是一条证据链，不是一个“loaded”日志	→	A skill applied effectively is a chain of evidence, not one "loaded" log line
-便宜模型先试的收益，要减掉返工与漏检	→	Whatever is gained by trying the cheap model first has to have rework and missed checks subtracted from it
-DAG上的最长依赖路径，决定并行任务最早何时结束	→	The longest dependency path in a DAG decides the earliest that parallel tasks can finish
-第13课	→	Lesson 13
-CAS、版本检查与TOCTOU	→	CAS, version checks and TOCTOU
-长期任务如何避免每次重新开始或虚假完成？	→	How does a long task avoid starting over each time, or finishing falsely?
-旧版结果	→	Old version result
-新版成功	→	New version passed
-新版失败	→	New version failed
-旧版成功	→	Old version passed
-12：都对	→	12: both right
-1：退化	→	1: regressed
-旧版失败	→	Old version failed
-5：修复	→	5: fixed
-2：都错	→	2: both wrong
-总成功	→	Total passes
-新版17/20	→	New version 17/20
-旧版13/20	→	Old version 13/20
-同一20题上的配对结果。数值与状态属于本节明确设定的教学例；不是生产性能或商业模型实测。	→	Paired results on the same 20 questions. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
-Trace里的并行段不能直接相加成用户等待时间	→	Parallel spans in a trace cannot simply be added up into the user's waiting time
-平均处理能力够，不代表高峰请求不用排队	→	Enough average throughput does not mean peak requests avoid the queue
-“我有80%把握”是否可靠，要用一组实际结果校准	→	Whether "I am 80% sure" is reliable has to be calibrated against a set of actual results
-图像块向量与文字Embedding，输入来源不同但可接入同一计算链	→	Image-block vectors and text embeddings come from different inputs, yet can feed into the same computation chain
-3 · 学习	→	3 · 学习
-回到 第40课 的完整讲解 →	→	Back to the full explanation in Lesson 40 →
-回到 第62课 的完整讲解 →	→	Back to the full explanation in Lesson 62 →
-来源 S003，构建有效的智能体	→	Source S003, building effective agents
-用具体过程辅助理解：<a href="../visual/F23.html">字符完整、事件完整、工具参数完整是三道关</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F23.html">Complete characters, complete events and complete tool arguments are three separate gates</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
-固定实验记录	→	Fixed experiment record
-完整程序与复现方法 →	→	Full program and how to reproduce it →
-官方工程文章</span> <span class="badge gray">相关原文核查	→	Official engineering article</span> <span class="badge gray">Relevant original text checked
-第61课	→	Lesson 61
-综合案例	→	Worked cases
-键1 · 爱	→	key 1 · 爱
-按输入编号取出对应可学习向量的参数表及操作。 例：E形状[6,4]，编号2取E的第2行。	→	The parameter table, and the operation on it, that takes out the learnable vector for an input ID. Example: E has shape [6,4], and ID 2 takes row 2 of E.
-工具定义	→	Tool definition
-计算查询与可读候选的匹配份额，再加权组合内容。 例：先计算分数和权重，再用权重混合V。	→	Compute the matching shares between the query and the readable candidates, then combine the content by those weights. Example: compute the scores and the weights first, then mix V with the weights.
-SwiGLU、Wg/Wu/Wd：两路变换再合成	→	SwiGLU, Wg/Wu/Wd: two transformation paths, then combined
-Norm在层公式中表示一个规范化函数。LayerNorm通常按一个Token的特征减均值、除标准差，再缩放平移；RMSNorm通常不减均值，按均方根缩放。它们不等于softmax。<span class="concept-micro">独立微例，忽略稳定分母用的小正数ε与可学缩放：LayerNorm([1,3])=[-1,1]；RMSNorm([1,3])=[1/√5,3/√5]。	→	In a layer formula, Norm stands for a normalizing function. LayerNorm usually subtracts the mean over one token's features, divides by the standard deviation, then scales and shifts; RMSNorm usually does not subtract the mean and scales by the root mean square. Neither of them is softmax.<span class="concept-micro">Independent micro-example, ignoring the small positive ε that stabilizes the denominator and the learnable scaling: LayerNorm([1,3])=[-1,1]; RMSNorm([1,3])=[1/√5,3/√5].
-形状	→	Shape
-BOS通常表示序列起始，EOS表示结束的特殊Token；具体模型和消息模板可能使用不同名称、数量及结束标记。它们是输入/输出协议中的符号，不是语义正确性的证明。<span class="concept-micro">遇到EOS不自动切断两个训练样本之间的注意力；要隔离读取还需mask或实现支持的样本边界。	→	BOS is usually the special token for the start of a sequence and EOS the one for the end; a particular model or message template may use different names, counts and end markers. They are symbols in the input/output protocol, not proof of semantic correctness.<span class="concept-micro">Meeting an EOS does not automatically cut attention between two training samples; isolating the reads still needs a mask, or a sample boundary the implementation supports.
-d_k表示一个Query/Key向量有多少个分量；d_v表示一个Value向量有多少个分量。Dh或d_h在一些章节中是单头宽度。它们是尺寸整数，不是第k个Key或某个Value数值。<span class="concept-micro">形状微例：Q[2,3]、K[5,3]、V[5,4]，则分数[2,5]，输出[2,4]。Q/K配对宽度3，Value宽度4仍合法。	→	d_k is how many components one Query/Key vector has; d_v is how many components one Value vector has. Dh, or d_h, is the single-head width in some chapters. They are size integers, not the k-th Key or some Value number.<span class="concept-micro">Shape micro-example: with Q[2,3], K[5,3] and V[5,4], the scores are [2,5] and the output [2,4]. A pairing width of 3 for Q/K with a Value width of 4 is still legitimate.
-RLHF、奖励模型与策略	→	RLHF, the reward model and the policy
-量化	→	Quantization
-07｜KV Cache、FlashAttention与PagedAttention的内部过程	→	07｜Inside KV cache, FlashAttention and PagedAttention
-通过分块和在线归一化等方式，避免把完整注意力分数/权重矩阵长期写到较慢显存；目标仍是同一个注意力运算，浮点舍入可随运算次序变化。<span class="concept-micro">它不是把Token永久压缩，也不是跳过所有Key。区分“不把整张表落显存”与“没有进行这些数学计算”。	→	By means such as tiling and online normalization, it avoids keeping the full attention score/weight matrix in slower VRAM for long; the target is still the same attention computation, and floating-point rounding can vary with the order of operations.<span class="concept-micro">It does not compress tokens permanently, and it does not skip any Key. Keep "not writing the whole table to VRAM" apart from "not doing this arithmetic at all".
-反例	→	Counterexample
-输出	→	Output
-08｜推理服务：调度、吞吐、延迟和并行	→	08｜Inference serving: scheduling, throughput, latency and parallelism
-工具调用	→	Tool call
-为什么每次模型调用都需要一致的上下文快照？	→	Why does every model call need a consistent context snapshot?
-规则	→	Rule
-SSE是服务端发送事件的文本协议；网络chunk是这次收到的一段字节；delta是某个输出项的增量内容。三者边界不保证重合。一个完整事件也未必意味着完整工具参数。<span class="concept-micro">参数可能先收到{"path":"a，后收到.py"}；必须组装并等协议规定的完成条件，不能见到片段就执行。	→	SSE is the text protocol for server-sent events; a network chunk is the stretch of bytes received this time; a delta is the incremental content of one output item. Their boundaries are not guaranteed to coincide. One complete event does not necessarily mean complete tool arguments either.<span class="concept-micro">The arguments may arrive first as {"path":"a and then as .py"}; they have to be assembled and the protocol's completion condition awaited — seeing a fragment is no reason to execute.
-流式返回：什么时候参数真的可以执行？	→	Streaming back: when can the arguments really be executed?
-上下文组装为什么不能只做“取前N条”？	→	Why can assembling context not just be "take the first N items"?
-Skill、JIT与触发描述	→	Skill, JIT and the trigger description
-I：单位矩阵	→	I: the identity matrix
-RRF对某文档在每条召回路径上的排名r贡献1/(c+r)，再相加。c是平滑常数，r通常从1开始；没进入某条路径的候选不凭空获得该路贡献。<span class="concept-micro">独立例：c=10，某文档两路排名1、3，得1/11+1/13约0.167832。不是把BM25和余弦的原始分数相加。	→	For a document's rank r on each recall path, RRF contributes 1/(c+r), and these are added. c is a smoothing constant and r usually starts at 1; a candidate that did not appear on a path does not receive that path's contribution out of nowhere.<span class="concept-micro">Independent example: with c=10 and a document ranked 1 and 3 on two paths, it gets 1/11+1/13, about 0.167832. This is not adding the raw BM25 and cosine scores together.
-词法名次 / 向量名次	→	Lexical rank / vector rank
-分数	→	Score
-RRF按名次贡献，不加原始分数。数值与状态属于本节明确设定的教学例；不是生产性能或商业模型实测。	→	RRF contributes by rank and does not add raw scores. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
-ColBERT与MaxSim	→	ColBERT and MaxSim
-绑定对象	→	Bound object
-测试	→	Test
-排除	→	Excluded
-工作者完成	→	Worker finishes
-发布	→	Publish
-下游账本	→	Downstream ledger
-Agent日志	→	Agent log
-发送操作K	→	Send operation K
-无记录	→	No record
-下游提交K	→	Downstream commits K
-此刻崩溃	→	Crash at this point
-仍然K=done	→	Still K=done
-尚无成功确认	→	No success confirmation yet
-查询/复用K	→	Query / reuse K
-补记成功，不重复副作用	→	Record the success afterwards, without repeating the side effect
-崩溃发生在两个独立提交之间。数值与状态属于本节明确设定的教学例；不是生产性能或商业模型实测。	→	The crash falls between two independent commits. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
-CAS是比较预期版本/值仍匹配后再更新的受控操作。TOCTOU是检查与使用之间发生变化的竞态：分开的“先看版本再写”不自动等价原子CAS。<span class="concept-micro">读到版本7生成补丁，提交时已是8，应拒绝直接覆盖并重新处理；比较与写入间也要防并发插入。	→	CAS is a controlled operation that updates only after comparing that the expected version or value still matches. TOCTOU is the race in which something changes between the check and the use: a separate "look at the version, then write" is not automatically equivalent to an atomic CAS.<span class="concept-micro">If a patch was produced from version 7 and the version is already 8 at commit time, overwriting directly should be refused and the work redone; a concurrent insert between the comparison and the write has to be prevented as well.
-已验证	→	Verified
-测试结果	→	Test result
-pass@k与pass^k	→	pass@k and pass^k
+位置0	→	Position 0
+位置1	→	Position 1
+保留文件与测试证据	→	Retain file and test evidence
+修复 exclude 行为	→	Fix exclude behavior
+单元已过；集成未跑	→	Unit tests passed; integration tests not run
+单元已过；集成未运行	→	Unit tests passed; integration tests not run
+原始约束 / 事实	→	Original constraints / facts
+只留一句“进展顺利”	→	Keep only "progress is good"
+可以重构 API	→	May refactor the API
+可恢复摘要	→	Resumable summary
+同一exclude任务：比较可恢复摘要与错误摘要	→	Same exclude task: compare a resumable summary with an incorrect summary
+同一组输入与参数；只有最后的独立对照取消ReLU。数字是特征或输出值，不是句子。	→	Same inputs and parameters; only the final independent comparison removes ReLU. Numbers are features or output values, not sentences.
+回查原文件与当前版本	→	Recheck original files and current versions
+固定参数：W1=[[1,-1],[1,1]]，b1=[0,-2]	→	Fixed parameters: W1=[[1,-1],[1,1]], b1=[0,-2]
+在授权场景，OAuth使应用能按授权取得访问凭据；scope声明一类访问范围，资源服务仍应检查具体权限。在记忆或任务场景，scope又可只表示适用范围，不能混成登录凭据。<span class="concept-micro">获准“读取日历”不等于获准删除所有事件；连接成功也不证明操作被批准。	→	In an authorization setting, OAuth lets an application obtain access credentials according to what was granted; a scope declares one class of access range, and the resource service should still check the specific permission. In a memory or task setting, scope can instead mean only the range over which something applies, and must not be conflated with a login credential.<span class="concept-micro">Being granted "read the calendar" is not being granted the deletion of every event; a successful connection is no proof that an operation was approved.
 工具A	→	Tool A
 工具B	→	Tool B
-用一条Trace算清等待、用量和失败成本	→	Work out the waiting, the usage and the cost of failure from one trace
-Precision、Recall、MRR与nDCG	→	Precision, Recall, MRR and nDCG
-2 · 爱	→	2 · 爱
-证据与理解边界：</strong>分别记录任务、一次尝试、执行轨迹与环境结果；资源限制和未重置状态都会混淆比较。	→	Evidence and the limits of understanding:</strong> record the task, a single attempt, the execution trace and the environment's result separately; resource limits and state that was not reset both confound a comparison.
-回到 第45课 的完整讲解 →	→	Back to the full explanation in Lesson 45 →
-回到 第49课 的完整讲解 →	→	Back to the full explanation in Lesson 49 →
-回到 第57课 的完整讲解 →	→	Back to the full explanation in Lesson 57 →
-回到 第54课 的完整讲解 →	→	Back to the full explanation in Lesson 54 →
-回到 第61课 的完整讲解 →	→	Back to the full explanation in Lesson 61 →
-回到 第07课 的完整讲解 →	→	Back to the full explanation in Lesson 07 →
-范围：</strong>2026-10-21读取的官方文档	→	Scope:</strong> official documentation read on 2026-10-21
-第16课	→	Lesson 16
-第64课	→	Lesson 64
-表达对象、数组、字符串、数值等结构化数据的文本格式。 例：合法JSON不保证字段内容在业务上合法。	→	A text format that expresses structured data such as objects, arrays, strings and numbers. Example: valid JSON does not guarantee that the field contents are valid for the business.
-变成	→	becomes
-这是门控前馈结构。Wg生成要过SiLU的一路，Wu生成另一条内容路径，两路逐元素相乘，再用Wd映回原宽度。这些W是三组参数，不是三个Agent。<span class="concept-micro">读(SiLU(XWg)⊙XWu)Wd时，先算XWg和XWu，再SiLU，再⊙，最后乘Wd。每个位置独立用同一组参数。	→	This is a gated feed-forward structure. Wg produces the path that goes through SiLU, Wu produces the other content path, the two are multiplied element by element, and Wd maps the result back to the original width. These Ws are three sets of parameters, not three agents.<span class="concept-micro">To read (SiLU(XWg)⊙XWu)Wd, compute XWg and XWu first, then SiLU, then ⊙, and finally multiply by Wd. Every position uses the same set of parameters independently.
-⊙：逐元素乘，不是矩阵乘	→	⊙: element-wise multiplication, not matrix multiplication
+已测试通过	→	Tests passed
+怎么做	→	How to do it
+怎么验证	→	How to verify it
+无	→	None
+时间	→	Time
+本步实际变化	→	What actually changes at this step
+来源 S008，注意力与Transformer原始架构	→	Source S008, attention and the original Transformer architecture
+查看实测结果	→	See the measured results
+正在读取	→	Reading
+步4	→	Step 4
+步骤 / 对象	→	Step / object
+用具体过程辅助理解：<a href="../visual/O06.html">连续组批：有座位空出来，就接下一位</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/O06.html">Continuous batching: when a seat frees up, take the next one</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+用具体过程辅助理解：<a href="../visual/O11.html">多Agent：可并行的工作，比Agent数量重要</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/O11.html">Multi-agent: work that can run in parallel matters more than the number of agents</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+第17课	→	Lesson 17
+第1步，共6步	→	Step 1 of 6
+第29课	→	Lesson 29
+第31课	→	Lesson 31
+第53课	→	Lesson 53
+结果	→	Result
+继续修复 exclude	→	Continue fixing exclude
+路由权重 0.1本次不调用	→	Routing weight 0.1; not called in this pass
+配置超时30秒	→	configured timeout 30 seconds
+重设计整个接口	→	Redesign the whole interface
+错误列是明确构造的反例，不是下一步执行建议。摘要是恢复入口；环境改变后仍须重新核验证据。	→	The incorrect column is an explicitly constructed counterexample, not a recommendation for the next action. A summary is a recovery entry point; reverify evidence after the environment changes.
+错误摘要（反例）	→	Incorrect summary (counterexample)
+1 我	→	1 我
+2 爱	→	2 爱
+4 你	→	4 你
+DAG、依赖与关键路径	→	DAG, dependencies and the critical path
+Embedding是查一行，不是把编号转二进制：为“我”取第1行	→	An embedding is a row lookup, not an ID converted to binary: fetch row 1 for 我
+KV Cache：留下算过的，不省掉该读的：两层分别保存历史	→	KV cache: keep what was computed, without skipping what must be read: the two layers store history separately
+MHA、MQA、GQA：头怎样共享	→	MHA, MQA, GQA: how heads are shared
+Mask是可见性表，不是额外语义：处理绝对位置0	→	A mask is a visibility table, not extra meaning: handling absolute position 0
+Mermaid源文件</a>。图的排布只表达数据／调用顺序，不代表计算耗时。	→	Mermaid source file</a>. The layout of the figure expresses the order of data and calls only; it does not represent computation time.
+Patch、图像通道与视觉投影	→	Patch, image channels and the visual projection
+Softmax不是直接把分数除以它们的和：分数不是份额	→	Softmax does not simply divide the scores by their sum: a score is not a share
+Trace要告诉你因果，不只是时间戳：先看一条完整任务	→	A trace should tell you causation, not just timestamps: start with one complete task
+一层Transformer不是只有Attention：进入本层	→	A Transformer layer is not attention alone: entering this layer
+一次输入如何连着预测，直到结束：输入是“我爱”，还没有输出	→	How one input connects to prediction, all the way to the end: the input is "我爱", and there is no output yet
+两个排序列表怎样合并：排名贡献逐项相加	→	How two ranked lists are merged: the rank contributions are added item by item
+事件	→	Event
+从两个候选列表，走到可用证据：两种搜索给出不同名次	→	From two candidate lists to usable evidence: the two searches give different ranks
+代码路径：	→	Code path:
+任务结束；没有修改文件	→	Task ends; file unchanged
+位置怎样进入数值计算：位置0旋转到0度	→	How position enters the numeric computation: position 0 rotates to 0 degrees
+使用稳定操作ID核对或幂等重试	→	Check with a stable operation ID, or retry idempotently
+回执丢失	→	Acknowledgment lost
+图像表示与界面行动，是两层不同问题：图像也是规则数字表	→	Image representation and interface action are two different problems: an image is also a regular table of numbers
+处理	→	Handling
+字符完整、事件完整、工具参数完整是三道关：收到第一段字节	→	Complete characters, complete events and complete tool arguments are three separate gates: the first run of bytes arrives
+客户端超时，无法由此推断失败	→	The client timed out; failure cannot be inferred from that
+对数据字段及类型等结构的约束描述。 例：path是字符串，不表示可以读取任意路径。	→	A description of the constraints on the structure of data — fields, types and the like. Example: path being a string does not mean any path may be read.
+工作树	→	Work tree
+我	→	我
+换新操作ID重试，可能创建第二条	→	Retrying with a new operation ID may create a second record
+提供可用工具	→	Supply available tools
+改摆法与改数值，分开看：原来的两行	→	Keep changing the arrangement separate from changing the values: the original two rows
+新增一个轴，究竟多了什么：先数一排编号	→	What exactly does one more axis add: start by counting one row of IDs
+方案	→	Approach
+未读取文件	→	File not read yet
+梯度像坡度，学习率像迈步大小：预测偏小，但参数还没变	→	A gradient is like a slope; the learning rate is like step size: the prediction is too low, but the parameters have not changed yet
+检索先找候选，再判断能否回答：先有原文，不是先有向量	→	Retrieval finds candidates first, then judges whether they can answer: the original text comes first, not the vector
+模型回答完成	→	Model answer complete
+每轮上下文像一份有边界的工作资料：加入规则	→	Each turn's context is like a working file with a boundary: the rules are added
+汇总	→	Aggregate
+涨了10个百分点，为什么还不能急着下结论？：同20题，两版各跑一次	→	It went up 10 percentage points — so why can we not conclude anything yet?: the same 20 questions, each version run once
+用具体过程辅助理解：<a href="../visual/F27.html">压缩要保留行动所依赖的事实</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F27.html">Compaction must keep the facts an action depends on</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+用具体过程辅助理解：<a href="../visual/F38.html">Trace要告诉你因果，不只是时间戳</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F38.html">A trace should tell you causation, not just timestamps</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+矩阵乘法像逐格填写配方结果：填输出的第0行第0列	→	Matrix multiplication is like filling in a recipe result cell by cell: filling row 0, column 0 of the output
+第07课	→	Lesson 07
+第44课	→	Lesson 44
+算得慢，可能是东西搬得慢：先问算力和搬运谁更慢	→	Slow computation may mean things are being moved slowly: ask first which is slower, the computing or the moving
+组批没有把两句话混成一句：长度不同	→	Batching does not blend two sentences into one: the lengths differ
+训练：给每个位置一道“下一项”题：把输入和目标错开一格	→	Training: give every position a "what comes next" question: offset the input and the target by one
+记录已真实创建，副作用已发生	→	The record really was created, and the side effect has happened
+证据进入下一轮上下文	→	Evidence enters the next turn's context
+请求待执行；不等于已经读取	→	Request awaiting execution; the file has not been read yet
+读指标，先问它的分母是谁：四种结果先分开	→	When reading a metric, first ask what its denominator is: separate the four outcomes first
+超时告诉你没收到，不告诉你没发生：请求 op-1	→	A timeout tells you nothing arrived, not that nothing happened: request op-1
+超时进入unknown，恢复必须先核对副作用	→	A timeout goes to unknown, and recovery must check the side effects first
+返回原结果，或确认未执行后再重试	→	Return the original result, or confirm it was not executed before retrying
+这些是不同层对象的标识：工具调用、输出项、请求或响应。用来把增量和结果配回正确对象，不是模型输入的Token ID，也不天然是业务幂等键。<span class="concept-micro">两次read_file可分别有c1与c2；结果返回顺序颠倒时仍按调用标识配对，而不是按工具名称猜。	→	These are identifiers for objects at different layers: a tool call, an output item, a request or a response. They match increments and results back to the right object; they are not the token IDs of the model input, and they are not business idempotency keys by nature.<span class="concept-micro">Two read_file calls can carry c1 and c2; when the results come back in the reverse order they are still paired by call identifier, not guessed by tool name.
+选择	→	Selection
+配对评测：20个任务中，改对与改错必须同时计入	→	Paired evaluation: across the 20 tasks, both the fixes and the breakages have to be counted
+错误做法	→	The wrong way
+长期记忆不是永远正确的小纸条：1月1日 生效	→	Long-term memory is not a note that is always right: takes effect 1 January
+01  读config.txt中的timeout	→	01  Read timeout from config.txt
+02  任务 + read_file工具定义	→	02  Task + read_file tool definition
+03｜注意力的深入追问：位置、掩码、多头与反向传播	→	03｜Attention, pressed further: position, masks, multiple heads and backpropagation
+04  校验c1后读取文件	→	04  Validate c1, then read the file
+05  c1结果：timeout=30	→	05  c1 result: timeout=30
+06  原任务 + c1调用 + c1结果	→	06  Original task + c1 call + c1 result
+07  回答：配置的timeout为30	→	07  Answer: configured timeout is 30
+08  显示回答	→	08  Display the answer
+10 单位	→	10 units
+20 单位	→	20 units
+3 · 学习	→	3 · 学习
+DAG是有方向且没有环的任务依赖图。箭头A→B表示B依赖A完成；关键路径是在给定任务时长与依赖下决定最早完成时间的最长依赖链。<span class="concept-micro">独立例：A需2秒，B/C依赖A分别需3/5秒且可并行，则A后两者完成至少7秒，不是把2+3+5=10当墙钟时间。	→	A DAG is a task dependency graph that is directed and has no cycles. The arrow A→B means B depends on A finishing; the critical path is the longest dependency chain, the one that fixes the earliest finishing time given the task durations and dependencies.<span class="concept-micro">Independent example: A takes 2 seconds, B and C depend on A, take 3 and 5 seconds and can run in parallel, so finishing both after A takes at least 7 seconds — not 2+3+5=10 read as wall-clock time.
+DPR、DPI与坐标单位	→	DPR, DPI and coordinate units
+Host决定向模型暴露的集合	→	Host chooses the set to expose to the model
+LLM才得到新观察	→	Only then does the LLM receive the new observation
+LoRA、低秩及r	→	LoRA, low rank and r
+V = [1,2,3,4,5]；所有可见分数相同	→	V = [1,2,3,4,5]; all visible scores are equal
+pass@k、pass^k和一次成功率为什么不能混用？	→	Why can pass@k, pass^k and a single-attempt success rate not be used interchangeably?
+一个注意力头是一套匹配并聚合内容的路径。MHA常让每个Query头有自己的K/V头；MQA让多个Query头共用一组K/V；GQA在两者之间，分组共享。它们是结构选择，不是运行时随便改一个开关。<span class="concept-micro">独立形状例：8个Query头、2个K/V头，若均匀分组，每4个Query头共享1组K/V；缓存按K/V头数记账。	→	An attention head is one path that matches and then aggregates content. MHA usually gives every query head its own K/V head; MQA has several query heads share one group of K/V; GQA sits between them, sharing by group. These are structural choices, not a switch to be flipped at run time.<span class="concept-micro">Independent shape example: 8 query heads and 2 K/V heads, grouped evenly, means every 4 query heads share 1 group of K/V; the cache is accounted for by the number of K/V heads.
+不变	→	Unchanged
+以下结果由随包脚本产生。它们不是LLM或产品性能数据。	→	The results below are produced by the scripts shipped with this book. They are not LLM or product performance data.
+位置2	→	Position 2
+保存Python脚本	→	Save the Python script
+候选	→	Candidate
+先拆等待、首项、后续项，再问为什么慢	→	Separate the wait, the first item and the later items before asking why it is slow
+分数	→	Score
+删除源文档后，派生摘要与向量块还可能继续传播旧结论	→	Once the source document is deleted, derived summaries and vector chunks can still go on spreading the old conclusion
 动作	→	Action
-Dropout：训练中的随机置零规则	→	Dropout: the rule that randomly zeroes values during training
-Wq / W_Q：查询投影参数	→	Wq / W_Q: the query projection parameters
-04｜训练机制：损失、完整反向传播与参数更新	→	04｜Training mechanics: loss, the full backward pass and parameter updates
+参数和梯度是两份状态：只有step才改参数	→	Parameters and gradients are two separate states: only step changes the parameters
+发起发现	→	Initiate discovery
+只得到连接/能力，不等于授权	→	Only connection/capabilities obtained; this is not authorization
 
-# Glossary from the book itself (glossary.html):
-
+# The book glossary (related headings are not always exact synonyms).
 上下文	→	Context
 专家混合	→	MoE
 事件	→	Event

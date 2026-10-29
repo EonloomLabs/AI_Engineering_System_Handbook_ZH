@@ -1,0 +1,565 @@
+29222	An ordinary program that calls the model, accesses tools and manages tasks.
+29223	Loaded computational coefficients; ordinary inference in this figure does not update them.
+29224	Intermediate representation
+29225	Numbers the model actually computes for this input, not a secret Chinese draft.
+29226	The teaching text is 我爱; this figure only distinguishes objects and invents no real token IDs or answers from a commercial model. See F18 for complete generation rounds in a small model.
+29227	Axis
+29228	A level of indexing for data: which sentence, which position, which feature.
+29229	The number of choices at each indexing level, such as [2,3,4].
+29230	Feature
+29231	A numerical component used in later computation; individual cells need not have identifiable semantic names.
+29232	Continue with the text's two sentences, 6-item vocabulary and 4-dimensional embedding table. PAD only occupies positions; see F12 for masking it.
+29233	Count one row of IDs first
+29234	Arrange the second input next
+29235	Expand one cell into a row of numbers
+29236	Two tables with three rows and four columns
+29237	Byte
+29238	A unit for storing and transmitting text; a Chinese character in UTF-8 usually takes multiple bytes.
+29239	Vocabulary
+29240	A mapping between fragments and IDs.
+29241	This figure uses a manually specified vocabulary: PAD0, 我1, 爱2, 学习3, 你4, ！5; it does not demonstrate real BPE training.
+29242	Original text
+29243	Vocabulary mapping
+29244	Integer sequence
+29245	Decode and check
+29246	State the boundaries
+29247	B=2, T=3, right padding. Visibility and output-position selection must follow this convention.
+29248	Different lengths
+29249	Pad to the same length
+29250	Keep a table of valid positions
+29251	Select the final valid position
+29252	Select an entire row by integer ID.
+29253	Contextualization
+29254	The same initial vector produces different representations in different contexts.
+29255	Use exactly F05's 6×4 decimal parameter table. The diagram's dimension is feature width, not a count of binary bits.
+29256	Take row 1 for 我
+29257	Take row 2 for 爱
+29258	Take row 3 for 学习
+29259	Take row 4 for 你
+29260	Restore the original sentence order
+29261	A unit for measuring memory usage.
+29262	Precision
+29263	The fineness of numerical representation; low precision introduces rounding.
+29264	Bandwidth
+29265	The maximum data moved per second.
+29266	Count only one ID/feature tensor with B=2, T=3 and d=4, not total model memory, driver overhead or measured GPU speed.
+29267	Count the objects first
+29268	Specify bytes per number next
+29269	Change only feature precision
+29270	Include other memory in the calculation
+29271	Multiply two equal-length rows element by element, then sum.
+29272	Parameter table W
+29273	Coefficients controlling how input components combine.
+29274	Linear projection
+29275	Here, each row multiplies W without necessarily reducing dimension.
+29276	Use the section's main matrix-multiplication example: X=[[1,2,3],[4,5,6]], W=[[1,0],[0,1],[1,1]]; this is not the later independent two-dimensional example.
+29277	Fill output row 0, column 0
+29278	Fill output row 0, column 1
+29279	Fill output row 1, column 0
+29280	Fill output row 1, column 1
+29281	Original row i, column j maps to new row j, column i.
+29282	Broadcast
+29283	Let a small tensor participate in larger-tensor operations along permitted axes.
+29284	The three comparison operations across four frames all start from [[1,2,3],[4,5,6]]; each frame explicitly resets rather than continuing the previous computation.
+29285	The original two rows
+29286	reshape: regroup only
+29287	Transpose: swap row and column roles
+29288	Broadcast: now actually add
+29289	Exponential exp
+29290	Here, raise e to the specified power.
+29291	Divide each item by their shared total so the result sums to 1.
+29292	Keep candidates A/B/C, scores [2,1,0] and temperature 1 fixed, with no Top-k/Top-p filtering; introduce u=0.70 only at the end.
+29293	Scores are not shares
+29294	Shift all scores downward
+29295	Exponentiate each score
+29296	Divide each by the same total
+29297	Choose an item by probability interval
+29298	A vector computed for this input between two layers.
+29299	Fixed computational coefficients such as W and bias.
+29300	Use F10's two-layer vector example: x=[1,2], W1=[[1,−1],[1,1]], b1=[0,−2], W2=[2,1]. The final frame explicitly removes ReLU for comparison.
+29301	Fix inputs and parameters
+29302	Linear combination
+29303	Nonlinear filtering
+29304	Second-layer combination
+29305	Identify intermediate objects
+29306	Independent counterexample
+29307	Weights computed by softmax this round, distinct from parameter weights in W.
+29308	Use the independent two-position example from F11: X=[[1,1],[1,−1]]. This figure omits bias, RoPE, normalization and multiple heads. All Q/K/V and outputs are calculated by the accompanying program.
+29309	Same input, three parameter paths
+29310	Transform each row separately, without mixing positions yet
+29311	q爱=[1,0]; k我=[1,0]; k爱=[0,1]
+29312	The current receiver is 爱; compare two visible positions
+29313	Turn scores into reading shares
+29314	Shares = [0.6697615493,0.3302384507]
+29315	Once shares are set, mix V rather than K
+29316	Output=[6.697615,6.604769]
+29317	Causality
+29318	The current position does not read future positions.
+29319	Additive mask
+29320	Add 0 at allowed positions; use −∞ to exclude forbidden ones equivalently.
+29321	Position including the historical prefix, not a row number in the current small batch.
+29322	The first 3 frames use 3 valid positions; frame 4 is an explicit numerical masking comparison; frame 5 separately uses past=3, new=2 to show cache offsets. Current conditions are always labeled.
+29323	Process absolute position 0
+29324	Allowed Key positions ≤ 0
+29325	Process absolute position 1
+29326	Allowed Key positions ≤ 1
+29327	Process absolute position 2
+29328	Allowed Key positions ≤ 2
+29329	Prohibition is not simply "score times 0"
+29330	Cached positions must not restart from 0
+29331	An operation changing a two-dimensional vector's direction while preserving its length.
+29332	Independent two-dimensional illustration: initial vector [1,0], teaching frequency 30° per position; not actual RoPE frequencies in a commercial model.
+29333	Position 0 rotates by 0 degrees
+29334	Position 1 rotates by 30 degrees
+29335	Position 2 rotates by 60 degrees
+29336	Position 3 rotates by 90 degrees
+29337	Compare angle differences, not position names
+29338	Add a sublayer's input to its output.
+29339	Show computational dependencies in a common pre-norm structure without assuming every Transformer uses the same order. Full model numbers are in the existing worked calculation.
+29340	Enter this layer
+29341	Read context after normalization
+29342	First residual addition
+29343	Process each position
+29344	Second residual addition
+29345	Enter the next layer
+29346	Choose the highest-scoring candidate each time, rather than sampling according to probabilities.
+29347	Independent, reproducible tiny model: a 7-item teaching vocabulary, 4-dimensional representations, one layer and one causal attention head, residuals and a tanh feed-forward network; no normalization or positional encoding. The output head fits only three specified prefixes to demonstrate 学习→！→EOS, without general language capability. Full parameters and intermediate values are included.
+29348	Input is 我爱, with no output yet
+29349	Input=[1,2]; cache length=0
+29350	Process the complete input (Prefill)
+29351	cache_len=2; new input=[1, 2]
+29352	Selection 1: 学习
+29353	Selected=学习; cache_len=2
+29354	Display new text and prepare the next input
+29355	Next round: process only 学习
+29356	cache_len=3; new input=[3]
+29357	Selection 2: ！
+29358	Selected=！; cache_len=3
+29359	Next round: process only ！
+29360	cache_len=4; new input=[5]
+29361	Selection 3: EOS
+29362	Selected=EOS; cache_len=4
+29363	Ending does not mean every task succeeds
+29364	Visible text=学习！; stop_reason=EOS
+29365	K/V cache
+29366	Each layer saves Key and Value for processed positions.
+29367	Cache invalidation
+29368	The original result's conditions changed, preventing safe reuse.
+29369	Recomputation
+29370	Repeat computations performed earlier.
+29371	This figure illustrates state with two layers and three historical positions, a different teaching structure from F18's single-layer model; layer counts are explicitly labeled.
+29372	Each of two layers saves history
+29373	Each layer has cache_len=3
+29374	Select a new item without adding it to cache yet
+29375	Compute K/V only for the new position
+29376	Each layer has cache_len=4
+29377	Reuse history rather than delete it
+29378	Comparison: changing the prefix invalidates this cache
+29379	Prefix changes → affected suffix invalidated
+29380	A number measuring how far the current prediction is from the target.
+29381	The local rate of loss change when a parameter increases slightly.
+29382	Learning rate
+29383	A coefficient determining step size in the update direction.
+29384	Use the main example with x=2, target 4, w=1 and squared-error loss. The first three frames use learning rate 0.2; the final frame explicitly resets w=1 and changes only the learning rate to 0.6.
+29385	The prediction is too low, but parameters are unchanged
+29386	The gradient gives a local direction
+29387	Choose step size and actually update parameters
+29388	Independent counterexample: an excessive step
+29389	The actual next token used for grading.
+29390	Cross entropy
+29391	Here, the negative logarithm of the true target's probability.
+29392	Valid target count
+29393	The number of positions actually graded, not necessarily the padded length.
+29394	Label alignment uses a 5-item sequence; single-position cross entropy and PAD averaging are explicitly independent small examples, without claiming their probabilities come from the alignment figure's model.
+29395	Offset input and target by one slot
+29396	Input=[1,2,3,5]; target=[2,3,5,6]
+29397	Parallel training does not permit peeking
+29398	Score one position first
+29399	Mask invalid targets, then average
+29400	Exclude invalid targets from numerator and denominator
+29401	Gradients must still be followed by step
+29402	backward ≠ parameters updated
+29403	The probability rule for choosing output under the given context.
+29404	A frozen baseline for measuring relative change.
+29405	This figure shows only preference-training data relationships, not real product evaluations of candidates A/B; RLHF and DPO objective differences remain in the text.
+29406	Represent weight changes with two narrower matrices rather than delete the entire base weights.
+29407	Approximate numbers with limited levels, potentially introducing rounding and clipping errors.
+29408	A subnetwork within the architecture, not inherently a human specialty.
+29409	This figure compares what techniques act on; separate numerical comparisons in O02 quantization, O03 LoRA and O08 MoE declare independent inputs.
+29410	Compute work
+29411	The total operations required.
+29412	Bytes transferable per unit time.
+29413	Throughput
+29414	Work completed per unit time, not the time needed by one request.
+29415	Communication
+29416	The cost of exchanging data between devices.
+29417	Fixed teaching task and ideal rates. Frames two and three independently restore the baseline and change one factor; no actual runtime is claimed.
+29418	Ask whether computation or movement is slower
+29419	Computation=1ms; movement=8ms
+29420	Double only compute capacity
+29421	Computation=0.5ms; movement=8ms
+29422	Halve only the data moved
+29423	Computation=1ms; movement=4ms
+29424	A lower bound is not measured elapsed time
+29425	An ID linking a particular tool request to its result.
+29426	Content returned after actual execution by the program.
+29427	Information explicitly given to the model this round, not the entire computer state.
+29428	Constructed read-only teaching task: config.txt contains timeout=30. Swimlanes show responsibilities without claiming a real commercial API call; data and action order are fixed.
+29429	1. User task: read timeout in config.txt
+29430	Not read
+29431	2. Model request: task＋read_file tool definition
+29432	Tool provided
+29433	3. Model output: call_id=c1, path=config.txt
+29434	Request awaiting execution
+29435	4. The harness validates, then reads the file
+29436	Reading
+29437	5. Tool result: timeout=30
+29438	6. Next input: original task＋call＋result
+29439	Evidence enters context
+29440	7. Model answer: configured timeout is 30
+29441	Answer complete
+29442	8. The harness displays the answer; task ends
+29443	An actual small SSE text event is encoded, deliberately splitting 爱's three UTF-8 bytes into two parts. The example uses no vendor-specific event names.
+29444	Receive the first bytes
+29445	Receive the remaining bytes
+29446	Character decodable
+29447	A complete SSE event
+29448	Event complete
+29449	Parse structure, then interpret semantics
+29450	Text parsed
+29451	A recordable state change, such as completed file replacement.
+29452	Saved task state at a particular moment.
+29453	Constructed file-update recovery trace. v7/v8 are version labels for this example, not model versions; it illustrates recovery semantics without claiming files and databases share a transaction.
+29454	Preparation
+29455	Request recorded
+29456	Execution begins
+29457	Connection interrupted
+29458	Verify during recovery
+29459	Completion recorded
+29460	Allow a particular identity to perform a particular action within a particular scope.
+29461	The logical flow follows the public architecture, omitting specific transport and authentication fields. Capability details for different protocol versions depend on the project's declaration.
+29462	1. The Host establishes a connection; the Client and Server negotiate capabilities
+29463	2. The Client requests the list of available tools
+29464	3. The Server returns tool descriptions and input schemas
+29465	4. The Host selects the tools to expose to the model
+29466	5. Send the call after permission checks pass
+29467	6. Return tool results and error information
+29468	7. The Host places the results in the model's context for the next turn
+29469	Budget
+29470	The resource allowance available for this turn.
+29471	Necessary evidence
+29472	Original information without which a reliable judgment cannot be made.
+29473	Who provided this material, when it applies, and what conclusions it supports.
+29474	A teaching budget of 100 units, not a real tokenizer measurement: rules 20, task 10, tools 15, evidence 20, output reserve 20. The configuration stays the same throughout.
+29475	Add rules
+29476	Total allocated=20 / 100
+29477	Add task
+29478	Total allocated=30 / 100
+29479	Add tool definitions
+29480	Total allocated=45 / 100
+29481	Add necessary evidence
+29482	Total allocated=65 / 100
+29483	Add output reserve
+29484	Total allocated=85 / 100
+29485	Directly remove part of the context.
+29486	Summarize old information in new text, potentially introducing errors through rewording.
+29487	A current state record with explicit fields.
+29488	Evidence reference
+29489	Location information for retrieving the original text again.
+29490	A constructed exclude repair scenario; the negative status "integration tests have not run" is deliberately preserved. The incorrect summary is only a counterexample and must not be used as a recommended template.
+29491	The original history contains much noise
+29492	Recoverable snapshot
+29493	Preserve the goal and negative constraints
+29494	Preserve completed and incomplete status
+29495	An incorrect summary as a counterexample
+29496	Reread the evidence before resuming the task
+29497	A data structure built to find candidates quickly.
+29498	Retrieval
+29499	Find potentially relevant candidates in a large collection.
+29500	Approximate search
+29501	Check fewer candidates for speed, potentially missing true nearest neighbors.
+29502	The three documents are constructed for this book; the inverted relationships can be checked exactly. Semantic search only illustrates the process, without inventing measured scores from a vector service.
+29503	Start with original text, not vectors
+29504	A/B/C are document IDs
+29505	Inverted index: find documents containing a term
+29506	Vectors: another entry point for candidates
+29507	Retrieve the original text and verify the conditions
+29508	Reranking
+29509	Rank the retrieved candidates again by relevance.
+29510	Evidence sufficiency
+29511	Whether the material supports the conclusions and conditions the question requires.
+29512	An independent ranking example for this figure: keyword [A,B,C], semantic [B,C,A], k=60. All candidates stay the same throughout; ranking data from other chapters is not reused.
+29513	Two searches produce different rankings
+29514	Compute candidate A's fusion contribution
+29515	Compute candidate B's fusion contribution
+29516	Compute candidate C's fusion contribution
+29517	B ranks first, but is not yet the final answer
+29518	Ranking=B,A,C
+29519	Call graph
+29520	A graph with functions as nodes and possible calls as edges.
+29521	foo is a teaching symbol, not a reference to the user's repository. A call graph may be affected by dynamic calls, conditional compilation and runtime configuration.
+29522	Valid time
+29523	The time when a fact applies in reality or under business rules.
+29524	Record time
+29525	The time when the system receives or saves the information.
+29526	The project, user, version or environment to which the information applies.
+29527	An independent configuration example; months only illustrate the chronological order, with no reference to any real product's current parameters. 30 seconds and 20 seconds apply in different validity periods.
+29528	1/1: takes effect
+29529	Preserve scope and source
+29530	1/3: learned
+29531	Valid time differs from record time
+29532	2/1: takes effect
+29533	2/4: learned
+29534	2/5: query
+29535	Routing
+29536	Decide which capability or resource the current task calls on.
+29537	Progressive loading
+29538	Provide a description first, then read the full content and resources when relevant.
+29539	Effective application
+29540	Implementation of the skill's requirements that can be observed in actions or results.
+29541	A general skill execution diagram; it does not assume that Codex, Claude Code and Copilot have identical implementation details.
+29542	Idempotency
+29543	Repeating the same logical operation produces no additional side effects.
+29544	Operation ID
+29545	Identifies the same logical action; retries do not arbitrarily use a new ID.
+29546	Transaction
+29547	A mechanism that ensures consistency within a clearly defined system boundary.
+29548	A constructed external-write scenario; it does not promise that databases, file systems and remote APIs inherently share an "exactly once" transaction.
+29549	Request op-1
+29550	Teaching state
+29551	Server commits
+29552	Acknowledgment lost
+29553	Safe recovery
+29554	Definite result
+29555	A concrete input that exposes a problem in an incorrect implementation.
+29556	A change breaks behavior that previously held.
+29557	Delivery evidence
+29558	The check commands, results and scope corresponding to the current version.
+29559	This figure's independent convention: use project-relative paths and exclude only files under the root vendor/ directory; myvendor/ is not excluded. This is a teaching task explaining counterexample tests; it does not redefine the other independent wildcard examples in the text.
+29560	Evaluation unit
+29561	A task, a run, a document or a position: establish which one first.
+29562	This figure uses TP=6, FP=2 and FN=4 throughout; TN is undefined, so accuracy is not calculated. Percentages from different samples in other chapters cannot be directly combined.
+29563	Separate the four outcomes first
+29564	Precision looks at the selected set
+29565	Recall looks at the truly needed set
+29566	Do not optimize just one number
+29567	Results from both the old and new approaches for the same task.
+29568	Percentage points
+29569	Subtract two percentages directly, as in 70%−60%=10 percentage points.
+29570	Random variation
+29571	Repeated runs under the same conditions may still produce different results.
+29572	A constructed paired table of 20 questions: 10 succeed with both, 4 succeed with the new and fail with the old, 2 succeed with the old and fail with the new, 4 fail with both. Do not treat this as a real model's success rate.
+29573	The same 20 questions, each version run once
+29574	20 paired tasks; not 40 independent tasks
+29575	The old version succeeds on 12 questions
+29576	The new version succeeds on 14 questions
+29577	Improvements and regressions coexist
+29578	Return to the specific causes of failure
+29579	Trust boundary
+29580	A boundary between different sources and permissions that cannot be crossed arbitrarily.
+29581	A mechanism for isolating certain resources in the execution environment.
+29582	Grant only the scope of capabilities the current task needs.
+29583	Only the teaching injection phrase "ignore the original task" is shown, with no actual execution; no external systems are accessed and no dangerous actions are performed.
+29584	Receive external material
+29585	Preserve source labels
+29586	The model may be influenced
+29587	Block actions that cross the boundary
+29588	Continue completing the original task
+29589	Wall time
+29590	The actual elapsed time from task start to finish.
+29591	The dependency chain that determines completion time.
+29592	How many tasks finish per unit of time.
+29593	Fixed teaching durations in seconds, with no timing data from a real product. Frame 4 changes only tool A's duration; all other conditions stay the same.
+29594	Look at a complete task first
+29595	Baseline wall time 16 seconds; tool work 11 seconds
+29596	The two tools start together
+29597	Wall time is not a simple sum of every row
+29598	Optimize A, which is outside the critical path
+29599	Then consider queues and cost
+29600	Vision encoder
+29601	A network that processes pixels into representations the model can use.
+29602	Only 4×4 grayscale pixels and a constructed interface flow; this does not represent every multimodal model's preprocessing implementation or claim to show real browser interaction results.
+29603	An image is also a regular grid of numbers
+29604	Split into four 2×2 patches
+29605	Visual encoding is not a general-purpose fact parser
+29606	Interface actions require observing again
+29607	Coordinates must be tied to screenshot dimensions and page state
+29608	Attribution
+29609	Use evidence to identify the stage that caused an observed effect.
+29610	Change or remove one factor and see how the observed effect changes.
+29611	Smallest effective fix
+29612	A change that addresses the confirmed problem without adding unrelated complexity.
+29613	An independent diagnostic example: the current version r8 has timeout=30, while the old version r7 has 10; check whether the error occurs in synchronization, retrieval, summarization or generation, without treating a single improvement as proof of causation.
+29614	Head width
+29615	The length of a row of features in each head.
+29616	Independent resource count: 2 layers, batch 1, sequence 4, 4 query heads, head width 2, 2 bytes per number; change only the K/V group count 4→2→1.
+29617	MHA: each query head has its own K/V
+29618	GQA: every two query heads share a K/V group
+29619	MQA: all query heads share a K/V group
+29620	Reducing the cache does not guarantee that the original output stays bit-for-bit identical
+29621	Scale (scale)
+29622	The real-number interval represented by one integer step.
+29623	Rounding
+29624	Choose a nearby representable value.
+29625	Clip out-of-range values to the boundary, usually introducing larger errors.
+29626	Fixed weights [0.26,−0.14,0.36,0.91], scale 0.1, signed range [−8,7]. This is only a small uniform quantization example, not NF4 or every practical 4bit format.
+29627	The original four floating-point numbers
+29628	Divide by the scale and round to the nearest integer
+29629	The 4bit signed range is insufficient
+29630	Approximately reconstruct and check the error
+29631	Do not update this parameter in this training run; that does not mean it is not read or does not participate in the forward pass.
+29632	Rank r
+29633	An upper bound on the number of independent directions the increment can represent.
+29634	Under applicable conditions, add the increment back to the base weights for inference.
+29635	An independent small example: W is a 4×4 identity matrix, r=1, A=[[.1],[.2],[.3],[.4]], B=[[1,−1,.5,0]], x=[1,0,0,0], scale 1.
+29636	The original weights have not been removed
+29637	Two small tables represent an increment
+29638	The output is the original path plus the increment path
+29639	Less training does not automatically mean faster inference
+29640	Weighted accumulation
+29641	The sum of Value contributions before division by l.
+29642	An independent single-query example: read order C/A/B, scores [0,2,1], corresponding V values [[5,5],[10,0],[0,20]]. It is designed to show changes in the maximum, without reusing the candidate order from F09.
+29643	The ordinary formulation starts by imagining the whole score table
+29644	Process candidate 1 online
+29645	Process candidate 2 online
+29646	Process candidate 3 online
+29647	The same result, with fewer intermediate reads and writes
+29648	Logical page
+29649	A block number arranged in sequence order.
+29650	Physical page
+29651	A memory block that actually stores KV data.
+29652	Fragmentation
+29653	The currently unused portion of allocated space.
+29654	An independent allocation example: 5 physical pages, 2 slots per page; A initially has 3 items, B has 2. Each slot in the figure represents a set of KV for a token, not a byte.
+29655	Initially: A has only 3 positions
+29656	A: logical 0→physical 4, logical 1→physical 1; B→physical 3
+29657	A appends item 4
+29658	A still uses physical 4 and 1; B uses physical 3
+29659	A appends item 5
+29660	A: logical 0→4, 1→1, 2→0
+29661	Release a request
+29662	B finishes, so physical 3 can be released; A stays the same
+29663	Slot
+29664	A simplified representation of a request position that can be processed concurrently in one iteration.
+29665	Fairness
+29666	Prevent a class of requests from waiting indefinitely for resources.
+29667	Two slots and three requests; A/B/C require 2/4/2 equal-duration decode steps respectively. Ignore prefill and communication; this only explains the scheduling mechanism.
+29668	An ordinary batch waits for the whole batch to finish
+29669	A 2 steps; B 4 steps; C 2 steps; 2 slots
+29670	Continuous batching fills free slots promptly
+29671	Why latency is not halved for every user
+29672	Consider fairness when reading throughput too
+29673	Acceptance rate
+29674	The probability of accepting a candidate, given that it has been proposed.
+29675	Compensating distribution
+29676	The remaining probability mass used after rejection to recover the overall target distribution.
+29677	An independent single-step probability example with three candidates. Actual multi-token speculation must also handle accepted prefixes, cache rollback and batch verification. This figure does not equate it with greedy verification.
+29678	The draft distribution differs from the target distribution
+29679	Target p / draft q
+29680	The acceptance probability is determined by their ratio
+29681	Acceptance rate min(1,p/q)
+29682	The total accepted mass is still insufficient
+29683	Directly accepted probability mass
+29684	Sample from the remaining mass after rejection
+29685	Mass still needed / final distribution
+29686	Follow a specific rejection branch
+29687	Acceptance decision for this run
+29688	Load imbalance
+29689	Different experts receive different numbers of tokens.
+29690	Merging routed outputs
+29691	Combine the selected experts' results according to specified rules.
+29692	A teaching Top-2 structure with four experts, not a reproduction of the Switch paper's Top-1 configuration. Single-token weights [.1,.5,.3,.1]; the two expert functions are explicitly given.
+29693	Compute routing scores first
+29694	Select Top-2 experts
+29695	Combine the actual expert results
+29696	Sparse activation still has costs
+29697	Intermediate values produced by a forward computation.
+29698	Recomputation in the backward pass
+29699	Rerun a section of the forward pass to compute gradients.
+29700	Resident and peak usage
+29701	How much stays resident differs from the largest amount occupied at any one time.
+29702	An independent diagram of a four-stage computation chain, counting only three intermediate activations of 100 units each. The actual peak includes other tensors and temporary recomputation and must be measured.
+29703	Ordinary saving
+29704	Count only a1/a2/a3; no claim about the reduction in total peak usage
+29705	Keep only checkpoints
+29706	Restore the latter half first
+29707	Then restore the first half
+29708	Why consistency must be maintained
+29709	Input compaction
+29710	Replace or remove logical content.
+29711	Retrieve candidate material externally for the current question.
+29712	Prefix computation reuse
+29713	Identical, compatible prefixes can reuse existing computation.
+29714	An independent budget comparison: necessary input 65, old logs 40, output reserve 20, total window 100; a summary of 10 units is a teaching assumption, not a real tokenizer measurement.
+29715	Include everything without distinguishing content
+29716	Total allocated=125
+29717	Deleting only logs may lose state
+29718	Total allocated=85
+29719	Extract recoverable state
+29720	Total allocated=95
+29721	Shorter input still requires verification
+29722	Dependency
+29723	A step must wait for another result before proceeding.
+29724	Handoff package
+29725	Goal, scope, evidence, constraints, current state and delivery requirements.
+29726	Conflict
+29727	Multiple executors compete for the same mutable state.
+29728	Fixed durations: A 6 seconds, B 8 seconds, integration 3 seconds; the second/third frames change only the handoff cost from 2→8 seconds. This is teaching arithmetic, not a measurement of a commercial multi-agent system.
+29729	Complete two independent subtasks sequentially
+29730	Handoff overhead=0 seconds; sequential=17 seconds
+29731	Parallel work also needs handoffs
+29732	Handoff overhead=2 seconds; ideal parallel total time=13 seconds
+29733	Excessive handoff cost makes it slower
+29734	Handoff overhead=8 seconds; ideal parallel total time=19 seconds
+29735	Writing to the same file is not independent
+29736	Cascade
+29737	Try a lower-cost approach first, then escalate when the conditions are met.
+29738	Cost per successful task
+29739	Total investment divided by the number of actual successes, not the number of calls.
+29740	An incorrect result goes unrecognized by the validator, so fallback is not triggered.
+29741	All data is constructed: 20 questions, cost 1 per small-model call, cost 5 per strong-model call; the 19 successful questions for both the cascade and the all-strong-model approach are explicit assumptions, not any real product's pricing or success rate.
+29742	Start with the cheap model for all 20 questions
+29743	Send only the 6 confirmed failures to the strong model
+29744	Use successful tasks as the denominator
+29745	Missed errors undermine this assumed benefit
+29746	Forward pass before the update
+29747	embedding · look up E[input_ids]
+29748	Fixed initial parameters θ₀; training input 0 [BOS,我,爱,学习,！]
+29749	Shape [2,5,4]; sample 0 is shown here, with numbers from before the first update. Column meanings change with the step: score/A uses Key positions, logits/probabilities uses the vocabulary, and the others use features.
+29750	θ has not changed yet; the training objective is outside the forward pass
+29751	position · look up P[position_ids]
+29752	Shape [2,5,5]; sample 0 is shown here, with numbers from before the first update. Column meanings change with the step: score/A uses Key positions, logits/probabilities uses the vocabulary, and the others use features.
+29753	A · masked softmax along the Key axis
+29754	Shape [2,5,8]; sample 0 is shown here, with numbers from before the first update. Column meanings change with the step: score/A uses Key positions, logits/probabilities uses the vocabulary, and the others use features.
+29755	Feature 4
+29756	Feature 5
+29757	Feature 6
+29758	Feature 7
+29759	probabilities · softmax along the vocabulary axis
+29760	Backward pass before the update
+29761	The same θ₀, the same average loss over all 10 valid targets in the full batch
+29762	This is not a manually supplied upstream gradient; it comes from the analytical backward pass of the actual cross entropy. Each row corresponds to an input position in sample 0; the full derivation is in M14—M15.
+29763	L=2.244673167946; optimizer.step has not happened yet
+29764	Actual parameter update
+29765	AdamW step 1 · Wq[0,0]
+29766	Actual training configuration lr=.03, β1=.9, β2=.999, ε=1e-8, decay=.01
+29767	The same parameter cell
+29768	Gradient g
+29769	Parameter updates happen at step, not merely when gradients are computed. The gradient for step 2 comes from a new computation after all parameters have been updated.
+29770	Values recorded by the actual optimizer
+29771	AdamW step 2 · Wq[0,0]
+29772	Generate after loading
+29773	Round 1 · prefill
+29774	Input this round [6, 1, 2]; known prefix [6, 1, 2]
+29775	Candidate logits
+29776	Candidate probabilities
+29777	Select ID 3 "学习". The input and parameters come from an actual run after reloading the saved files.
+29778	cache: 0 → 3; the newly selected token has not yet been processed. Feed it in on the next round.
+29779	Round 2 · decode
+29780	Input this round [3]; known prefix [6, 1, 2, 3]
+29781	Select ID 5 "！". The input and parameters come from an actual run after reloading the saved files.
+29782	cache: 3 → 4; the newly selected token has not yet been processed. Feed it in on the next round.
+29783	Round 3 · decode
+29784	Input this round [5]; known prefix [6, 1, 2, 3, 5]
+29785	Select ID 7 "EOS". The input and parameters come from an actual run after reloading the saved files.
+29786	cache: 4 → 5; the newly selected token has not yet been processed. Stop on EOS.

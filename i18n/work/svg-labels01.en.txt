@@ -1,0 +1,800 @@
+30122	Time 0
+30123	Rule ①: merge adjacent a and b
+30124	Time 1
+30125	Rule ②: merge the newly formed ab and c
+30126	Time 2
+30127	Look up the fixed vocabulary
+30128	Time 3
+30129	One item remains; the original text is still abc
+30130	Each square is a current symbol item; one square need not equal one character.
+30131	This figure uses only X=[[1,0],[0,1]] from this example, not the four-dimensional training model
+30132	Input X [2,2]
+30133	Take q₁=[1,1] → dot products [1,1] → softmax([1,1]/√2)=[0.5,0.5]
+30134	Output = 0.5×[2,0] + 0.5×[0,4] = [1,2]
+30135	V on the right is the content being mixed by weighted sums. Q and K only determine the shares; the output is still a row of features.
+30136	Single-layer teaching model · retain both residual addition points
+30137	Multiply each row by Wq / Wk / Wv
+30138	QKᵀ / 2 → mask → softmax
+30139	Obtain A, then compute A @ V; mix across source positions
+30140	Multiply by Wo, then add X back
+30141	4 dimensions → 8 dimensions → 4 dimensions
+30142	Add R back, then apply RMSNorm
+30143	Multiply by U
+30144	Parameters: E, P
+30145	Parameters: g1, Wq, Wk, Wv
+30146	Parameters: Wo
+30147	Parameters: g2, W1, W2
+30148	Parameters: gf
+30149	Parameters: U
+30150	Arrows show data dependencies, not durations. Training and inference both call forward; loss, backpropagation and updates are outside this shared forward pass.
+30151	Each column always represents the same candidate
+30152	Calculation step
+30153	Raw scores
+30154	Subtract the maximum, 2
+30155	Exponentials
+30156	Divide by the sum
+30157	Sum of exponentials = 1 + 0.367879… + 0.135335… = 1.503215…
+30158	Bar lengths are proportional to probabilities; boundaries use unrounded cumulative probabilities. argmax selects A; a given sampling value of 0.70 selects B. This is not whole-answer accuracy.
+30159	Fixed scores [2,1,0] for A/B/C
+30160	Subtract 2
+30161	Probabilities
+30162	Sum of exponentials: 1.503214…
+30163	Locate u=0.70 in the cumulative ranges
+30164	0.70 lies in B's interval; A still has the highest probability. Calculations use unrounded values; displayed decimals are for reading only.
+30165	Same input, correct and incorrect permission tables compared
+30166	Correct: row i has absolute position 3+i
+30167	Incorrect: treat new Query positions as 0 and 1
+30168	V = [1,2,3,4,5]; all visible scores are equal
+30169	Output: [2.5, 3.0]
+30170	Output: [1.0, 1.5]
+30171	Both sides produce valid shapes but compute different averages. Here ✓ means logically permitted; check the API's boolean mask separately for the meaning of True.
+30172	Position difference 1: dot product 0
+30173	Add 1 to both: dot product still 0
+30174	New q incorrectly reset to zero: dot product 1
+30175	Blue=Key, brown=Query; two-dimensional lengths stay fixed while the match changes with relative angle. The frequency of 90° is a teaching setting.
+30176	Query head 0
+30177	Query head 1
+30178	Query head 2
+30179	Query head 3
+30180	Shared K0 / V0
+30181	Shared K1 / V1
+30182	The four Query vectors still compute separate shares and outputs; converging arrows mean they read the same KV group, not that their results match.
+30183	Upstream dO
+30184	With respect to V0 / V1
+30185	With respect to P
+30186	P-weighted dP baseline
+30187	With respect to scores S
+30188	dS sums to 0, reflecting that shifting both scores equally leaves softmax unchanged. This figure computes the loss's sensitivity to intermediate values.
+30189	Input positions and next-item labels
+30190	Visibility in this pass
+30191	Labels are shifted by one item; each row sees only its corresponding prefix. Here 1/0 indicates permission, not Token IDs.
+30192	Matches the teaching model's manual_backward objects item by item
+30193	Output probabilities and true labels produce gradients
+30194	dU, dfinal → final RMSNorm backward pass
+30195	Obtain dhidden and dgf
+30196	FFN backward pass: W2 → ReLU → W1
+30197	Obtain dW2, dW1 and dn2
+30198	Second RMSNorm backward pass and addition
+30199	Wo backward pass → A @ V backward pass
+30200	Obtain dWo, dA, dV
+30201	softmax backward pass → Q/K/V projection backward pass
+30202	Obtain dWq, dWk, dWv and dn1
+30203	First RMSNorm backward pass and addition
+30204	Accumulate by Token and position ID
+30205	Add contributions to the same Embedding row
+30206	Bypasses are gradient contributions that must be added, not decoration. After backpropagation computes gradients, an optimizer step must still update the parameters.
+30207	Total: 16000 B
+30208	Bar lengths share one total as their denominator; bytes, parameter counts and computation have not been conflated into one unit.
+30209	Routing probabilities for Token A
+30210	Routing probabilities for Token B
+30211	A selects E0/E1; B selects E3/E2. Bar heights are the routing probabilities given for this figure, not expert output quality.
+30212	Input / processed
+30213	Select 学习: the newly selected item has not had its own forward pass yet.
+30214	Process next turn
+30215	Select ！: the newly selected item has not had its own forward pass yet.
+30216	Process the turn after next
+30217	Select EOS: the newly selected item has not had its own forward pass yet.
+30218	Do not process EOS
+30219	The harness sees the end marker and stops further model computation.
+30220	The illustration assumes Token-by-Token causal decoding; it does not confuse the number of output IDs with the number already processed into the cache.
+30221	Layer 1's separate cache
+30222	Old
+30223	New
+30224	Layer 2's separate cache
+30225	The light highlight marks only the two data groups added for d this turn; old values differ between layers, so retaining only the top layer is insufficient.
+30226	Change only position 1: 我 → 你; model parameters and position conventions stay the same
+30227	Position 0
+30228	Position 1
+30229	Position 2
+30230	Position 3
+30231	Original input
+30232	New input
+30233	Cache decision
+30234	Reusable
+30235	Later Tokens are unchanged, but the prefixes they can read have changed.
+30236	Valid reuse also requires matching model versions, parameters, positions and computation settings. Comparing only the current Token's ID is insufficient.
+30237	Layer 1 K
+30238	Layer 1 V
+30239	Layer 2 K
+30240	Layer 2 V
+30241	Total: 192 B
+30242	Logical block 0, positions 0, 1
+30243	Locate physical block 6 via the mapping table
+30244	Logical block 1, positions 2, 3
+30245	Locate physical block 1 via the mapping table
+30246	Logical block 2, position 4, empty slot
+30247	Locate physical block 9 via the mapping table
+30248	Physical block IDs do not indicate Token order. Restore actual data by logical position, not by sorting physical IDs.
+30249	Allocation of two decoding slots at each step
+30250	Step 1
+30251	Step 2
+30252	Step 3
+30253	A ends
+30254	C ends
+30255	B ends
+30256	C is ready; prefill is excluded. Equal-width columns indicate scheduling steps, not equal actual durations.
+30257	Horizontal axis: time (seconds)
+30258	Bars are proportional to the durations given in this example. Parallel overlaps must not be counted twice in wall-clock time.
+30259	Probability mass from the draft distribution to the target distribution
+30260	Draft q
+30261	Final target p
+30262	All bars share a probability scale of 0—1; accepted mass in the middle totals 0.7, and rejection compensation restores the remaining 0.3 to B.
+30263	Messages move between participants; each arrow names the specific object in the same turn
+30264	01  Read timeout from config.txt
+30265	02  Question + read_file tool description
+30266	04  Execute c1
+30267	06  Original task + c1 + c1 result
+30268	07  Draft answer: timeout is 30, based on r7
+30269	08  Display the verified read-only result
+30270	Time runs downward; row spacing does not indicate duration. Solid lines are requests/actions; dashed lines are the returns explicitly shown. Sources are this section's fixed teaching messages, with no speculation about closed-source internals.
+30271	Four kinds of completion cannot replace one another
+30272	The same request binds the object being explained; authorization is still checked at execution
+30273	Post-action rejection does not roll back completed actions
+30274	Network fragment 1
+30275	Only the first two UTF-8 bytes of "爱"
+30276	Network fragment 2
+30277	Only joining E7 88 B1 decodes "爱"
+30278	One event complete
+30279	Not a complete JSON object
+30280	Call arguments complete
+30281	Only then begin parsing, type checking and authorization
+30282	The three boundaries have separate buffering rules. Receiving a network chunk does not authorize execution.
+30283	Assemble argument deltas by call ID
+30284	05  Select tool descriptions to expose
+30285	20 units
+30286	10 units
+30287	Remaining capacity
+30288	5 units
+30289	Evidence usable
+30290	35 units
+30291	Total: 100 units
+30292	Each row is a complete request; compare from the left
+30293	A/B share the first 3 contiguous items; B/C share only the first 1. Matching T1 later cannot bridge differing new items to form a shared prefix.
+30294	Merging a generated summary with the live suffix
+30295	Term-frequency–length factor at the same IDF
+30296	A: length 100 / term frequency 2
+30297	B: length 1000 / term frequency 4
+30298	Both bars share a 0—1.5 scale. B has higher term frequency but scores lower because its document is much longer; this is not a full BM25 measurement.
+30299	Both are two-dimensional, but coordinates may mean different things
+30300	Matched d
+30301	d after a model change
+30302	Only document vectors rotate; the query is unchanged. The distance formula still runs, but this pairing no longer guarantees the original relevance relationship.
+30303	RRF · k=60 · document identities A/B/C stay fixed
+30304	Lexical ranking
+30305	Vector ranking
+30306	Fused score
+30307	Lines connect only the same document, not semantic similarity. B ranks high on both paths, so it precedes A. Fusion uses ranks, not a sum of the two raw scores.
+30308	RRF contributes by rank, without adding raw scores
+30309	Source code and evidence version chain
+30310	Memory pipeline publication conditions
+30311	One fact has two timelines
+30312	Rule valid from day 1 to day 5
+30313	System records activation
+30314	System records revocation
+30315	Replay the 10/6 decision
+30316	Actual validity has ended, but the system learns of revocation only on 10/8.
+30317	Replay historical decisions with both the queried time and the information then known fixed. Do not slip later knowledge into past input.
+30318	Handoffs may consume parallelism's gains
+30319	A locate · 2 minutes
+30320	B implement · 4 minutes
+30321	C test · 3 minutes
+30322	D integrate · 1 minute
+30323	Critical path: A → B → D = 2+4+1 = 7 minutes
+30324	Total work is 10 minutes. Shortening noncritical branch C may not change delivery time; communication and integration overheads are not included yet.
+30325	Execution order differs from result-insertion order
+30326	Keep state nodes separate from transition conditions; unknown is not failure
+30327	Operation ID recorded
+30328	Action dispatched
+30329	Result received and persisted
+30330	No definite acknowledgment received
+30331	Verification confirms it did not occur
+30332	Verification confirms it occurred
+30333	Confirm the result
+30334	Timeout / connection interrupted
+30335	Query downstream state
+30336	Verify commit evidence by operation ID
+30337	Confirmed not to have occurred: retry according to policy
+30338	Confirmed to have occurred: record completion, do not execute again
+30339	This is a teaching harness's recovery design, not an API guarantee. Keep unknown and escalate if verification is inconclusive; no acknowledgment does not mean no side effect.
+30340	The crash occurs between two independent commits
+30341	Acceptance evidence binds to the final artifact
+30342	Paired results on the same 20 questions
+30343	Align the same tasks item by item, rather than compare unrelated samples
+30344	New: success
+30345	New: failure
+30346	Old: success
+30347	Old: failure
+30348	3 new fixes
+30349	1 regression
+30350	Net improvement = (3−1) / 20 = 10 percentage points
+30351	Old successes 13/20, new successes 15/20. Diagonal cells do not change the net difference; percentages from these 20 questions alone cannot prove stable population-wide gains.
+30352	Verify after D1 is withdrawn
+30353	Verify after C1 is withdrawn
+30354	Verify after S1 is withdrawn
+30355	Verify after M1 is withdrawn
+30356	Verify after the cache is withdrawn
+30357	Arrows show provenance dependencies, not multiple independent sources. After D1 is withdrawn, invalidate or reverify affected objects along the chain.
+30358	1. C1 vector chunk
+30359	2. S1 summary
+30360	3. M1 memory
+30361	4. Response cache
+30362	Each row is one correspondence; independent comparisons do not continue the preceding row's computation.
+30363	Optimize the critical path to change wall-clock time
+30364	Shared denominator: completing one successful task
+30365	A: per successful task
+30366	B: per successful task
+30367	A total cost 100 / successes 80 = 1.25; B total cost 70 / successes 50 = 1.40. Failed runs' costs remain in the numerator.
+30368	Service R1
+30369	Service R2
+30370	Service R3
+30371	Self-assessed accuracy
+30372	Actually verified accuracy
+30373	The same 100 answers: claimed confidence around 80%, with 60 actually correct. Teaching sample only, not a commercial model measurement.
+30374	32×32 RGB image → four 16×16 patches
+30375	Each patch: 16×16×3 = 768 pixel-channel values
+30376	768 is each flattened patch's width; 4 is the patch count; 8 is the teaching projection width. Images do not enter through a text Token ID lookup.
+30377	One computational core, two different execution paths
+30378	Training: target known
+30379	Inference: next item unknown
+30380	Training batch + labels
+30381	input=first 5 items; targets=last 5 items
+30382	Existing prefix
+30383	The same forward(ids, cache, …)
+30384	Produce gradients; parameters are still unchanged
+30385	Select the next Token
+30386	Fixed parameters; no backward or step call
+30387	θ₀ → θ₁; run a new forward pass next time
+30388	Append a Token or stop
+30389	Continue to the next turn only if not finished
+30390	Save trained weights → reload → use frozen
+30391	The two loops are parameter learning and Token-by-Token generation; a training update is not drawn as an inference output.
+30392	ID 1
+30393	ID 2
+30394	ID 3
+30395	One input × three positions; each cell is still an integer.
+30396	"Shape [3]" describes the arrangement of cells, not the values of the three numbers inside.
+30397	Locate a value in [2,3,4]
+30398	Sample 0: 3 positions, 4 features per position
+30399	Sample 1: 3 positions, 4 features per position
+30400	Object or position
+30401	Action / condition at this step
+30402	Specific result and limits
+30403	Text 0
+30404	Independent sample
+30405	Text 1
+30406	Data table at this step
+30407	Actual length 3
+30408	Actual length 2
+30409	Batching and padding
+30410	Input IDs and validity
+30411	我(1)
+30412	爱(2)
+30413	学习(3)
+30414	你(4)
+30415	First sentence
+30416	Second sentence
+30417	Parameter table E: 6 rows, 4 columns
+30418	我 → ID 1
+30419	Use the ID to select a row, not to expand it into binary.
+30420	The four features retrieved
+30421	Two inputs, with their original fragment order preserved
+30422	我／爱／学习 → [1, 2, 3]       你／爱／PAD → [4, 2, 0]
+30423	Parameter table E [6,4]
+30424	First input's result [3,4]
+30425	Second input's result [3,4]
+30426	Both occurrences of "爱" copy E[2]. The new axis is the 4 features at each position, not a binary bit count. A zero PAD row cannot replace a mask.
+30427	Each ID selects a whole row
+30428	The same parameter table E [6,4]
+30429	我／爱／学习 → [1,2,3]
+30430	你／爱／PAD → [4,2,0]
+30431	Both occurrences of "爱" retrieve E[2]; IDs are not converted to binary. The result is two 3×4 tables, with overall shape [2,3,4].
+30432	ID table [2,3]
+30433	6 integers
+30434	Feature table [2,3,4]
+30435	24 floating-point numbers
+30436	Input X
+30437	Coefficient table W
+30438	Output Y
+30439	Matrix multiplication, cell by cell
+30440	X (input)
+30441	W (parameters)
+30442	Y (output)
+30443	Original matrix [2,3]
+30444	Keep the original table fixed; the steps below are not "reshape, then transpose".
+30445	Fixed parameters: W1=[[1,-1],[1,1]], b1=[0,-2]
+30446	Same inputs and parameters; only the final independent comparison removes ReLU. Numbers are features or output values, not sentences.
+30447	When does θ actually change during an update?
+30448	Gradient .grad
+30449	Produced or used at this step
+30450	Clear / zero
+30451	Clear old gradients
+30452	Not computed yet
+30453	logits, loss, activations
+30454	Combine all gradients along the graph
+30455	Still gradients from the old forward pass
+30456	Update θ and Adam state
+30457	Next forward
+30458	Use θ₁
+30459	Clear / accumulate separately
+30460	New activations, new loss
+30461	Intentionally accumulating microbatch gradients differs from forgetting to clear old gradients. After backward but before step, weights cannot be claimed to have been updated.
+30462	Fixed initial parameters θ₀ · training sequence 0 · t=2 "爱"
+30463	Input for this pass n₁[0,2] [1,4]
+30464	Q: used to match
+30465	Parameters Wq [4,4]
+30466	K: matched against
+30467	Parameters Wk [4,4]
+30468	V: content to mix
+30469	Parameters Wv [4,4]
+30470	Q/K/V are activations computed in this pass; Wq/Wk/Wv are parameters. This stage mixes only features; cross-Token mixing occurs at A @ V. Tables retain 4 decimal places.
+30471	θ₀ · position 2 "爱"
+30472	Shared input n₁[0,2]
+30473	Q · used to match
+30474	K · matched against
+30475	V · provides content
+30476	All three paths use the same top row n₁; their parameters and results differ. Cross-Token mixing has not occurred yet.
+30477	Receiving position t=2 "爱"; may read only t≤2
+30478	V's feature 0
+30479	Weighted contribution
+30480	Sum the first three rows' contributions
+30481	The same shares also apply separately to the other three features
+30482	Shares are normalized along the "source position" axis; each V column is summed independently with these weights. This does not select a word or remix Keys.
+30483	Rows: current Query; columns: readable Key
+30484	Read row 0 now: 1=permitted, 0=forbidden.
+30485	Position 0: angle 0×30°
+30486	The same vector, with direction rotated
+30487	Original vector [1,0], rotated [1.0000,0.0000], length still 1
+30488	Current representation x, not a Token ID
+30489	Original x + attention output = h
+30490	Original h + FFN output = y
+30491	y becomes the next layer's input
+30492	Teaching flow; highlighting marks the current step, not actual duration proportions.
+30493	The same bypass has different roles in forward and backward passes
+30494	Forward: y = x + f(x)
+30495	Original-value bypass around f
+30496	Backward: dx = dy + df_path
+30497	Backward through f
+30498	The bypass directly contributes dy; do not omit it from the sum
+30499	Shared input x has multiple paths to the loss; add their gradients together, rather than propagate only through f.
+30500	Prediction=2
+30501	Loss=2
+30502	Parameter w
+30503	Loss L
+30504	Gradient descent numeric comparison
+30505	Before update w=1
+30506	x=2 → prediction 2, target 4
+30507	Gradient −4, learning rate 0.2
+30508	New w=1−0.2×(−4)=1.8
+30509	New loss=0.08
+30510	Input 0
+30511	Input 1
+30512	Input 2
+30513	Input 3
+30514	Target 0
+30515	Target 1
+30516	Target 2
+30517	Target 3
+30518	Training label shift
+30519	One forward pass can compute multiple positions in parallel, but each position targets the next Token
+30520	Input: "我"
+30521	Target: "爱"
+30522	Input: "爱"
+30523	Target: "学习"
+30524	Input: "学习"
+30525	Target: "EOS"
+30526	The timing gap between generation and caching
+30527	a,b,c already computed
+30528	First select d
+30529	Only the candidate is known
+30530	cache still=3
+30531	Process new d
+30532	Only now cache=4
+30533	Select e next turn
+30534	Candidate now available
+30535	cache still=4
+30536	Every turn uses θ*; parameters stay unchanged during inference
+30537	Actual input this turn
+30538	Cache coverage
+30539	Newly selected Token
+30540	The newly selected item has not had its own forward pass yet
+30541	EOS selected: the harness stops without adding a cache entry for EOS
+30542	Values and selections come from this package's actual CPU teaching experiment in run.json; argmax is the default. All three forward passes' logits match full recomputation.
+30543	To process this turn
+30544	Each layer's KV cache
+30545	Length 0; no forward pass yet
+30546	Layer 0
+30547	K/V stored
+30548	Layer 1
+30549	Before and after processing "学习": only this Token's K/V are added
+30550	Before processing: cache_len=3
+30551	This layer's K
+30552	This layer's V
+30553	After processing: cache_len=4
+30554	Append only new K/V
+30555	This turn's logits → select "！"
+30556	"！" is only the ID selected from the candidates; cache length becomes 5 only after it is input next turn.
+30557	This is a single-layer logical illustration; actual multiple layers retain different K/V separately. Output Token count is not the number of positions computed into the cache.
+30558	KV cache by layer
+30559	The same 3 historical Tokens have independently computed K/V in every Transformer layer
+30560	K0,0 and V0,0
+30561	K0,1 and V0,1
+30562	K0,2 and V0,2
+30563	K1,0 and V1,0
+30564	K1,1 and V1,1
+30565	K1,2 and V1,2
+30566	Quantization scale
+30567	Original value 0.26
+30568	Reconstructed quantized value 0.3
+30569	Horizontal axis: milliseconds; this is a teaching lower bound, not a GPU measurement.
+30570	Compute and bandwidth bottlenecks
+30571	Hypothetical task: compute lower bound 0.01 seconds, memory-transfer lower bound 0.10 seconds
+30572	0.01 seconds
+30573	Transfer
+30574	0.10 seconds
+30575	File tool
+30576	01  Read timeout from config.txt
+30577	File not read yet
+30578	02  Task + read_file tool definition
+30579	Supply available tools
+30580	Request awaiting execution; the file has not been read yet
+30581	04  Validate c1, then read the file
+30582	05  c1 result: timeout=30
+30583	06  Original task + c1 call + c1 result
+30584	Evidence enters the next turn's context
+30585	07  Answer: configured timeout is 30
+30586	Model answer complete
+30587	08  Display the answer
+30588	Task ends; file unchanged
+30589	Receiver buffer state
+30590	Already received
+30591	Next / explanation
+30592	Remaining bytes not received
+30593	Streaming protocol buffering
+30594	A single SSE event may be split into network fragments at arbitrary boundaries
+30595	\n (blank line)
+30596	Pass the frame to the parser only when the protocol event is complete; do not execute partial JSON at read①.
+30597	Fixed operation op1; version v7 → v8; this figure shows the lost-acknowledgment path
+30598	Harness record
+30599	Environment fact
+30600	File still v7
+30601	State transitions require explicit observations or events
+30602	Record the request
+30603	Verify version and operation ID
+30604	Persist the fact of completion
+30605	unknown≠failed. Successful file replacement and log confirmation are separate commits; recovery must not equate a timeout with "no change made".
+30606	01  Connect and negotiate capabilities with Server
+30607	Only connection/capabilities obtained; this is not authorization
+30608	02  Request the tool list
+30609	Initiate discovery
+30610	03  Return tool descriptions and input structures
+30611	Descriptions known; no execution yet
+30612	04  Deliver tool descriptions for Host to select
+30613	Host chooses the set to expose to the model
+30614	05  Send the call after Host approval
+30615	Check arguments and permissions independently
+30616	06  Return a result or error
+30617	Execution result can be inserted into history
+30618	07  Add the result to the next turn's input
+30619	Only then does the LLM receive the new observation
+30620	Total window budget: 100 teaching Token units
+30621	Allocated 20; remaining 80
+30622	Context budget bar
+30623	Teaching window total 2000 Tokens: every budget segment must be added up
+30624	History / evidence
+30625	Same exclude task: compare a resumable summary with an incorrect summary
+30626	Original constraints / facts
+30627	Resumable summary
+30628	Incorrect summary (counterexample)
+30629	Fix exclude behavior
+30630	Continue fixing exclude
+30631	Redesign the whole interface
+30632	Must not change the public API
+30633	Keep the public API unchanged
+30634	May refactor the API
+30635	Unit tests passed; integration tests not run
+30636	Unit tests passed; integration tests not run
+30637	Tests passed
+30638	Retain file and test evidence
+30639	Recheck original files and current versions
+30640	Keep only "progress is good"
+30641	The incorrect column is an explicitly constructed counterexample, not a recommendation for the next action. A summary is a recovery entry point; reverify evidence after the environment changes.
+30642	Deployment uses Docker
+30643	Testing uses pytest
+30644	Docker image build
+30645	Inverted index example
+30646	Original documents
+30647	Postings (look up directly during retrieval)
+30648	D1: directory exclusion rules
+30649	D2: file path rules
+30650	D3: directory permission checks
+30651	directory → D1,D3
+30652	exclusion → D1
+30653	rules → D1,D2
+30654	Candidate / keyword rank / semantic rank
+30655	Fusion in this example uses only ranks, without fabricating raw search scores.
+30656	Valid time and recorded time
+30657	10/1: rule takes effect
+30658	10/10: system records the rule
+30659	Already applicable to the business on 10/5, but the system may not know yet
+30660	Unknown-outcome timeline
+30661	Initiate
+30662	Downstream write succeeds
+30663	Caller times out
+30664	Executing again now may duplicate side effects.
+30665	Teaching count table
+30666	Selected
+30667	Not selected
+30668	Actually needed
+30669	Actually not needed
+30670	Not counted
+30671	The two denominators of precision and recall
+30672	There are 5 relevant documents; the system returns 4, including 3 relevant and 1 irrelevant.
+30673	Returned set (4 documents)
+30674	Relevant 1
+30675	Relevant 2
+30676	Relevant 3
+30677	Irrelevant
+30678	Both succeed
+30679	Only the new version
+30680	succeeds
+30681	Only the old version
+30682	Both fail
+30683	Same question set
+30684	Old: 12/20
+30685	New: 14/20
+30686	4 improvements, 2 regressions
+30687	Paired wins and losses on the same tasks
+30688	Both succeed: 13 questions
+30689	A alone wins: 2 questions
+30690	B alone wins: 4 questions
+30691	Both fail: 1 question
+30692	A: 13+2=15 / 20; B: 13+4=17 / 20; net gain of 2 questions
+30693	Draw authorization boundaries separately from the model's reading path
+30694	Information path: external content enters the model
+30695	Web pages / source code / tool output
+30696	Contains quoted text such as "ignore the original task"
+30697	Model generates a proposal
+30698	May be influenced by the content
+30699	Action awaiting execution
+30700	Still not execution authorization
+30701	Execution boundary: enforced by the harness and tool endpoint
+30702	Actual identity and authorization
+30703	From trusted session/configuration
+30704	Check target, scope and approval
+30705	Do not accept external text granting itself permissions
+30706	Execute only if permitted
+30707	Reject actions outside the boundary
+30708	Prompts may reduce risk but cannot replace path, network, identity and side-effect controls. Continue within the original authorization after rejecting an out-of-scope action.
+30709	Model call 1
+30710	Parallel tool A
+30711	Parallel tool B
+30712	Model call 2
+30713	16 seconds
+30714	Task time breakdown
+30715	This example assumes strictly sequential stages, so their durations add up
+30716	Summary
+30717	Tool testing at 8 seconds is the largest item; shortening only the final summary usually cannot halve total time.
+30718	4×4 grayscale pixels
+30719	Visual Patch mapping
+30720	3 color channels
+30721	768 pixel values in total
+30722	Flatten + project
+30723	768-dimensional raw patch → d-dimensional visual representation
+30724	d is determined by the visual model's design
+30725	Flow guide from input to continuous generation
+30726	Use existing context
+30727	Text input
+30728	Token → vector
+30729	IDs and numeric representations
+30730	Layer-by-layer computation
+30731	Candidates → selection
+30732	Next Token
+30733	Append → next turn
+30734	Continue or stop
+30735	Flow guide from input to generation
+30736	Append to context · continue or stop
+30737	The newly selected Token enters the next turn
+30738	"我爱" is human-readable content
+30739	Organize task, rules and history into messages
+30740	Teaching vocabulary: 我→1, 爱→2
+30741	Replace each ID with a row of floating-point numbers
+30742	Parameters fixed; intermediate values change in this pass
+30743	Display text, or execute tools after validation
+30744	我／爱／学习; 你／爱
+30745	我1, 爱2, 学习3, 你4
+30746	[1,2,3] and [4,2]
+30747	Restore fragments using the same rules
+30748	Not equivalent to character tokenization; not semantic scoring
+30749	Integer IDs
+30750	Number
+30751	Floating-point features
+30752	x=[1,2]; W1 and bias stay fixed
+30753	[3,0] is a temporary representation, not parameters
+30754	Removing ReLU gives 5, not 6
+30755	The same input X
+30756	Parameters Wq
+30757	Parameters Wk
+30758	Parameters Wv
+30759	Produce Q
+30760	Produce K
+30761	Produce V
+30762	A and B are preference candidates in this example
+30763	A is preferred here; this does not declare A absolutely true
+30764	Assign relative probabilities to A/B
+30765	Baseline for relative change
+30766	Drive relative probability changes for the preference pair
+30767	Check behavior, correctness, abstention and other aspects separately
+30768	Storage required, and possibly training
+30769	Freeze original weights, train a small increment
+30770	Store the same object on a coarser numeric scale
+30771	Multiple expert groups, only some computation activated
+30772	Total parameters / trainable parameters / active computation / bit width
+30773	Measure quality, VRAM and throughput separately
+30774	User task: read timeout from config.txt
+30775	Model request: task＋read_file tool definition
+30776	Model output: call_id=c1, path=config.txt
+30777	The harness validates, then reads the file
+30778	Tool result: timeout=30
+30779	Next turn's input: original task＋call＋result
+30780	Model answer: configured timeout is 30
+30781	The harness displays the answer; task ends
+30782	Host
+30783	Client
+30784	Server
+30785	Host connects; Client and Server negotiate capabilities
+30786	Client requests the available tool list
+30787	Server returns tool descriptions and input structures
+30788	Host selects tools to expose to the model
+30789	Send the call after permission checks pass
+30790	Return tool results and error information
+30791	Host puts the result into the next turn's model context
+30792	Fix exclude without changing the public API
+30793	Completed
+30794	Patch written; file version v8
+30795	Validation state
+30796	Unit tests passed; integration tests not run yet
+30797	Paths, line numbers and versions retained
+30798	Run integration tests on the current version
+30799	Find the string foo
+30800	Distinguish function definitions from comments
+30801	Determine which definition a reference actually binds to
+30802	Check who calls it and under which conditions
+30803	Check current source and dependency configuration
+30804	Verify candidate causes with execution evidence
+30805	Only the file's existence
+30806	The model or router knows its purpose
+30807	Determine relevance at this point
+30808	Rules and necessary resources enter context
+30809	Observable in code or tool steps
+30810	Expertise produces actual gains
+30811	Exclude *.tmp but retain other files
+30812	Confirm the old code actually fails to exclude correctly
+30813	Fix matching semantics without changing unrelated APIs
+30814	Check retention, exclusion, nesting and empty rules
+30815	Green results belong to the current code, not old files
+30816	Web page body contains "ignore the original task"
+30817	This is source content, not user authorization
+30818	Input content can influence probabilistic behavior
+30819	Tool permissions are limited by the harness/server
+30820	Do not expand permissions at the text's request
+30821	Use trusted, relevant evidence
+30822	Answer cites old configuration
+30823	Did new material enter the index/request?
+30824	Do candidates prioritize old versions?
+30825	Did long-term memory override new evidence?
+30826	Fix version filtering or invalidation conditions
+30827	Compare correctness, cost and regressions on the same question set
+30828	Q head 0
+30829	Keep 4 Query groups
+30830	Q head 1
+30831	Q head 2
+30832	Q head 3
+30833	KV group 0
+30834	This group's K and V
+30835	KV group 1
+30836	KV group 2
+30837	KV group 3
+30838	KV arrays only: 2×layers 2×batch 1×length 4×KV heads 4×width 2×bytes 2 = 256 bytes
+30839	Original weights
+30840	Frozen W: 16 values
+30841	A: 4 values
+30842	B: 4 values
+30843	Illustration: score table for multiple Queries × multiple Keys
+30844	Later reduced to a "one query, three candidates" online normalization example whose numbers can be recomputed.
+30845	Physical pages: 2 Token slots per page
+30846	Page 0
+30847	Page 1
+30848	Page 2
+30849	Page 3
+30850	Page 4
+30851	Logical→physical mapping
+30852	Only KV blocks are managed here; context content is not deleted.
+30853	Fixed batching: 6 steps
+30854	Idle
+30855	Step 4
+30856	Step 5
+30857	Step 6
+30858	Continuous batching: 4 steps
+30859	Simplifying assumption: equal duration per step; ✓ means a request completes at that step's end.
+30860	Current Token
+30861	Input scalar x=2
+30862	Expert E0
+30863	Routing weight 0.1; not called in this pass
+30864	Expert E1
+30865	Routing weight 0.5; selected in this pass
+30866	Expert E2
+30867	Routing weight 0.3; selected in this pass
+30868	Expert E3
+30869	Required input
+30870	Old logs /
+30871	summary
+30872	Total allocated=125 / 100
+30873	Main task
+30874	Shared goal and constraints
+30875	Subtask A
+30876	6 seconds / evidence and results
+30877	Subtask B
+30878	8 seconds / evidence and results
+30879	3 seconds / current-version validation
+30880	Counts in this frame (units stated in the text)
+30881	Small model
+30882	Position 0: share 0.248255
+30883	Coordinate 0: 0.248255 × 1 = 0.248255; coordinate 1: 0.248255 × 2 = 0.496510
+30884	Position 1: share 0.248255
+30885	Coordinate 0: 0.248255 × 3 = 0.744765; coordinate 1: 0.248255 × 4 = 0.993020
+30886	Position 2: share 0.503490
+30887	Coordinate 0: 0.503490 × 4 = 2.013959; coordinate 1: 0.503490 × 6 = 3.020939
+30888	Sum matching coordinates → [3.006980,4.510470]
+30889	Weights sum to 1; the two weighted output coordinates generally need not sum to 1.
+30890	Correct absolute-position permission table
+30891	Rows are this turn's Query vectors; columns include historical and new Keys. IDs consistently use absolute positions in the same sequence.
+30892	Model M1
+30893	Tool T1
+30894	Model M2
+30895	01  search_code call c1
+30896	The model only proposes a search
+30897	02  Execute authorized c1
+30898	The tool accesses workspace r42
+30899	03  c1: filter.py lines 20–35; test_filter.py lines 10–28
+30900	These are locating excerpts, not complete files
+30901	04  Original task＋constraints＋c1 call＋c1 result
+30902	M2 can decide which ranges to read next
+30903	Horizontal axis: seconds since task start
+30904	0—2 seconds
+30905	2—12 seconds
+30906	12—13 seconds
+30907	13—20 seconds
+30908	20—32 seconds
+30909	Rework
+30910	32—50 seconds
+30911	Compaction after c19 labels unknown as failed, leading subsequent steps into repeated edits. Rectangle lengths use the same time scale.
+30912	100 paired tasks
+30913	Old 75/100, new 80/100; 10 new successes, 5 new failures. Verify both kinds of change separately.
+30914	Interface text
+30915	User enters two characters
+30916	我爱; not converted to model input yet
+30917	1. Interface text
+30918	Which different objects does one sentence pass through: the harness assembles a request
+30919	Harness request
+30920	Collect this turn's messages
+30921	role=user, content=我爱

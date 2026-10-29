@@ -1,0 +1,864 @@
+6456	31｜Derivation appendix: attention backpropagation and trainable retrieval — AI Systems Engineering
+23113	Goal: derive gradients by hand along a computation graph, then verify them numerically, connecting how models learn with earlier inference mechanisms. Experiment:
+29346	, providing analytic backpropagation and finite differences.
+14812	Every gradient object in a backward derivation must match its forward operator and shape; first trace how local changes propagate backward.
+6025	1. Start with single-head attention
+25627	Let Q be m×d, K n×d and V n×dv. Define
+29341	, apply row-wise softmax to obtain P, and output
+10032	. Allow m to differ from n, covering new chunk queries against the full cached history. Let the upstream loss gradient with respect to output be G, of shape m×dv.
+13912	The forward pass has two steps: use Q/K to determine each row's weights, then mix V with them. The backward pass likewise has weight and content paths. This derivation uses matrix differentials and the softmax derivative, without anthropomorphizing attention.
+6280	2. Differentiate with respect to V and P first
+22998	From
+14784	and the trace form of a scalar loss, we obtain:
+24030	The first equation accumulates each Value's gradient from the query positions reading it. The second describes how changing one attention weight moves the output in the corresponding V direction and affects loss. Shape checks are part of the derivation, not merely memorized formulas.
+6414	3. The softmax Jacobian need not be built explicitly
+17261	For one row p, the Jacobian is
+10170	. Building an n×n matrix directly is wasteful; with upstream gradient g for that row, write:
+18823	Combining all rows:
+10215	. Each row's score gradients now sum to zero, matching the softmax invariance to adding the same constant to a whole row.
+25031	A position excluded by a fixed mask has P equal to zero and should also have zero score gradient. A fully masked row has no valid probability distribution and is explicitly rejected here. Production kernels with other semantics must keep forward and backward behavior consistent.
+6530	4. Propagate back to Q and K
+22346	Although K and V both come from historical positions, their gradient paths differ. Q/K affect selection weights; V affects aggregated content. Backpropagating only through V, not Q/K, may teach output content without correctly learning attention matching.
+8458	If Q, K and V all come from one X through separate projections, X's gradient sums the three paths. Each projection-weight gradient is the transposed input times the corresponding output gradient. The residual branch also adds the upstream gradient directly back. Multiple heads add shape rearrangements and per-head computation, with a correct inverse transformation needed at the final merge.
+20896	Conditions for this example:</strong> an independent, reproducible single-query example: Q=[0,√2·ln3], K is the 2×2 identity matrix, V=[[2,0],[0,4]], and scaling is by √2. Scores are [0,ln3], shares P=[0.25,0.75], and output O=[0.5,3]. Let loss L=O0+O1.
+19510	Loss gradients with respect to scaled scores; [-0.375,0.375] here.
+13723	Trace each Query and Key element's effect on loss separately.
+15011	Projection-parameter gradients can be calculated this way only when Q=XWq.
+15669	Backpropagation target
+13030	Formula and input
+17242	With respect to Q
+17240	With respect to K
+17248	With respect to Wq
+14949	Also set X=[1,2], Q=XWq
+14752	Parameter-matrix gradient
+22016	Each input feature times the corresponding dQ
+12757	First find the edge where computation occurs. Scores S are QKᵀ divided by √2, so backpropagation to Q or K must include that scaling coefficient. Multiplying back only dS inflates gradients.
+9161	dK has two rows because there are two Key positions; Q has one row, so dQ also has one. A gradient's shape must match the differentiated object, but correct shape alone does not establish correct scaling and transposition.
+11468	To continue back to Wq, this example uses X=[1,2] and Wq=[[0,√2·ln3],[0,0]], ensuring they actually produce the given Q. Projection weights shared across positions must also sum contributions from those positions.
+11189	Do not conflate:</strong> no training iteration runs in the figure. It checks the mathematical relationship between one forward pass and one local backward pass; implementation must also consider batches, heads, masks and other loss paths.
+6631	5. Backward-pass intuition for RoPE, RMSNorm and gating
+8750	For fixed positions, RoPE is an orthogonal linear transformation; backpropagation uses the transposed rotation matrix, rotating the upstream gradient by the opposite angle. Fixed positional frequencies need no optimization; architectures learning related parameters have different computation graphs and must be treated separately.
+8712	For RMSNorm, let
+10022	. Define
+29258	; the input gradient is then
+10229	. This is a direct term minus feedback from the normalization scale. Treating normalization as constant loses the second term, producing wrong gradients despite a normal-looking forward pass.
+8900	SwiGLU uses multiplicative gates; each branch receives the other branch's value times the upstream gradient. SiLU also needs its own derivative. Verifying individual operators before combining a whole layer usually locates problems more easily than final training loss alone.
+6722	6. Combining finite differences with automatic differentiation
+20723	This book uses
+21207	to construct a scalar objective, adding and subtracting ε at every Q/K/V element to compare numerical and analytic gradients. This is affordable for small matrices; large models sample dimensions or check directional derivatives.
+9384	Large ε gives substantial truncation error; overly small ε amplifies floating-point rounding. float64, moderate values and explicit tolerances help find logic errors. The accompanying tests compare all three gradients under non-square masks and verify zero gradients for future K/V when only the first output row contributes to loss.
+24815	Automatic differentiation still needs verification. Wrong masks, labels or dimensions faithfully produce gradients of the wrong objective. Finite differences establish derivatives only relative to the current forward implementation, not correct forward semantics. Mathematical invariances, negative controls and task tests must therefore form evidence together.
+6770	7. How a dense retriever learns "relevance"
+14788	A dual-encoder retriever can compute contrastive loss for query q, positive d+ and multiple negatives dj:
+16475	This makes the positive more similar relative to candidates, without giving absolute distance one universal business meaning. In-batch negatives improve efficiency but may include genuinely relevant documents, creating false negatives; hard negatives teach fine distinctions but may introduce label errors.
+16355	Training that distinguishes only topical relevance may miss new versus old versions or affirmation versus negation within one topic. Code retrieval needs positives, negatives and evaluation matching real tasks. More vector dimensions do not automatically repair a flawed objective.
+28516	Rerankers can learn finer query–document interactions, but training labels favoring long texts or particular formats also create bias. Retrieval training and the evaluation design in Lesson 14 must be considered together.
+6819	8. How to use this appendix
+12924	Run the existing experiment, then deliberately remove the within-row subtraction term from the softmax derivative and observe finite-difference failure; remove the mask next and observe causal-gradient test failure. Finally compare automatic differentiation in PyTorch training with the hand derivation: one enables efficient implementation and the other verification and understanding; they do not compete.
+21040	Meeting this chapter's standard means explaining why a gradient follows its path, experimentally catching incorrect derivatives and knowing the experiment's logical limits. It does not establish mastery of complete distributed training or GPU backward-kernel implementation.
+22848	Check matrix backpropagation with one directional derivative
+26244	Input and conditions.</strong> f(Q) is the dot product of upstream G and the Attention output; analytic gradient dQ=[0.5615202771,−0.1871734257] has been calculated, with direction v=[1,−2].
+25331	Analytic directional derivative
+24309	Approximately 0.9358671285.
+14873	Set ε=10^-6 and compute (f(Q+εv)−f(Q−εv))/(2ε)
+18072	It should approach the same number.
+16027	Coordinate checks
+13564	Then perturb every Q/K/V element separately
+24792	Locate transpose or softmax-Jacobian errors.
+17010	Tolerance
+22111	Compare absolute/relative error
+10918	Do not require identical printed floating-point decimals.
+21791	Model boundary
+28333	Passing gradient checks establishes only this operator implementation
+11225	Not correct training data or a correct whole agent task.
+18946	Join the steps up.</strong> One especially valuable example from mathematics to code uses independent numerical methods to falsify an incorrect implementation.
+26771	Limits and counterexamples.</strong> Inputs are differentiable and away from mask/selection transition boundaries; use finite differences cautiously at discontinuities and with low precision.
+25425	Training retrieval vectors: which way the query actually moves
+26368	Input and conditions.</strong> Query q=[1,0], positive a=[0.8,0.6] and negative b=[0,1]. Use dot-product scores, two-candidate softmax and positive-label cross entropy; update only q, not a or b, in this step.
+12756	Score first
+21812	Positive probability≈0.689974, negative≈0.310026.
+17287	Differentiate the scores
+21811	Positive gradient p_pos−1, negative gradient p_neg
+24321	Approximately [-0.310026,0.310026].
+12135	Propagate back to the query
+9168	dq=(p_pos−1)a+p_neg b
+18308	Gives [-0.248020,0.124010].
+20491	Update q
+16431	Learning rate 0.1, q_new=q−0.1dq
+18313	Gives [1.024802,−0.012401]; this small step increases the difference between positive and negative dot-product scores.
+13722	Increase and decrease each q component slightly, dividing the loss difference by the step size
+20654	Finite differences match the analytic gradient above.
+18922	Join the steps up.</strong> "Training better retrieval" means explicit objectives, candidates and gradients, not manually naming an embedding column and increasing it.
+26808	Limits and counterexamples.</strong> This uses dot-product similarity without renormalizing q after the update; cosine or normalization requires backpropagating its derivatives too.
+9537	← 30｜Senior-level acceptance: open questions, reference answers and a capstone project
+9119	attention_gradients.py — AI Systems Engineering
+25326	Analytic backpropagation. Corresponds to Chapter 31. Dependency: NumPy.
+25334	Analytic gradients and finite differences; not sufficient proof of task-objective correctness. <a href="../experiments.html">Read run instructions
+14505	Original Python file</a> · 65 lines
+9150	capstone.py — AI Systems Engineering
+16708	Complete exclude patch case. Corresponds to Chapters 18 and 27. Dependency: standard library.
+24801	Script-controlled actions, actual patches and tests; not autonomous LLM repair. <a href="../experiments.html">Read run instructions
+14496	Original Python file</a> · 114 lines
+9157	context_memory.py — AI Systems Engineering
+10578	Context packaging and bitemporal memory. Corresponds to Chapters 11, 12 and 15. Dependencies: standard library/SQLite.
+12639	Metadata and version contracts; not a test of natural-language semantic fidelity. <a href="../experiments.html">Read run instructions
+14507	Original Python file</a> · 80 lines
+9198	journal.py — AI Systems Engineering
+19837	Operation journal and actual crash recovery. Corresponds to Chapters 08, 20 and 21. Dependencies: standard library/SQLite.
+14129	Single-writer local recovery; not a complete security sandbox against malicious races. <a href="../experiments.html">Read run instructions
+14504	Original Python file</a> · 64 lines
+9215	live_readonly.py — AI Systems Engineering
+15271	Optional paid-API read-only adapter. Corresponds to Chapters 07 and 08. Dependencies: standard library+user API account.
+20690	Not tested in a live API run; network access/billing must be explicitly allowed, and sensitive directories must not be sent. <a href="../experiments.html">Read run instructions
+14502	Original Python file</a> · 53 lines
+9246	numerics.py — AI Systems Engineering
+20017	Numerical mechanisms and forward implementation. Corresponds to Chapters 01, 02, 04, 05 and 06. Dependency: NumPy.
+24623	Caching, chunked softmax, sampling and BPE; not a GPU service or commercial model. <a href="../experiments.html">Read run instructions
+14498	Original Python file</a> · 188 lines
+9301	retrieval.py — AI Systems Engineering
+7084	BM25, permissions, caching and AST. Corresponds to Chapters 13 and 14. Dependency: standard library.
+23311	Actual term retrieval; no vector encoder or ANN implementation. <a href="../experiments.html">Read run instructions
+14506	Original Python file</a> · 78 lines
+9305	run_all.py — AI Systems Engineering
+23431	Offline experiment entry point. Corresponds to the Experiment handbook. Dependencies: standard library; NumPy optional.
+26621	Produces actual results; missing dependencies cause explicitly marked skips. <a href="../experiments.html">Read run instructions
+14499	Original Python file</a> · 21 lines
+9325	sse_protocol.py — AI Systems Engineering
+8828	SSE and tool-argument state. Corresponds to Lesson 60. Dependency: standard library.
+14098	Protocol subset; not all events or a production SDK. <a href="../experiments.html">Read run instructions
+14501	Original Python file</a> · 50 lines
+9327	statistics_lab.py — AI Systems Engineering
+28463	Paired-evaluation statistics. Corresponds to Lesson 14. Dependency: standard library.
+13016	All inputs are synthetic data; no product-performance conclusion follows. <a href="../experiments.html">Read run instructions
+14500	Original Python file</a> · 35 lines
+9347	test_suite.py — AI Systems Engineering
+6563	49 unit and integration tests. Corresponds to the relevant experiment chapters. Dependencies: standard library; NumPy optional.
+20343	Explicit fault cases and assertions; all green does not mean production certification. <a href="../experiments.html">Read run instructions
+14497	Original Python file</a> · 178 lines
+9355	train_tiny_lm.py — AI Systems Engineering
+17620	Actual small-Transformer training. Corresponds to Lesson 51. Dependency: PyTorch.
+15332	Synthetic-data training; no conclusion about general language capability or test-set generalization. <a href="../experiments.html">Read run instructions
+14503	Original Python file</a> · 58 lines
+16975	Experiment handbook: implementation, counterexamples and measured limits — AI Systems Engineering
+11276	Topic studies</span><span>approx. 2 thousand characters
+26896	Runtime environment
+23436	Reading HTML offline needs neither Python nor networking. Code execution needs Python; the accompanying results ran under Python 3.13.5 / Linux, with NumPy and PyTorch installed. The scripts target Python 3.10 and above, but have not been verified individually on every Python version, Windows or macOS.
+29116	Default experiments send no network requests. NumPy provides numerics and backpropagation; PyTorch is used only for small-model training. Standard-library mechanism tests need neither; NumPy-dependent tests explicitly skip when it is missing, and skips must not be interpreted as passes. Installing dependencies may itself need networking and is outside running the offline textbook.
+15987	Run from the unpacked root directory:
+28457	The accompanying run record passed all 49 tests with no failures, errors or skips. Test counts are not proof of production quality; coverage and limits are explained item by item below.
+7804	L01｜Encoding, forward passes, caching and sampling
+16912	Implements reversible byte-level BPE, a small modern-decoder forward pass, RoPE/GQA, incremental KV caching, chunked online softmax, DPO loss and speculative sampling. NumPy float64 favors transparency and verifiability, not serving throughput.
+24656	The correct cache implementation differs from the full forward pass by at most about 1.55×10⁻¹⁵; an intentionally wrong position offset gives about 3.17, showing the test distinguishes faults. Chunked softmax differs from full computation by about 3.55×10⁻¹⁵. These are numerical results for the current random seed and small sizes, not guarantees for arbitrary precision, length or hardware.
+19671	Speculative sampling compares the target and empirical distributions over 30,000 draws. It verifies acceptance–rejection, not real-service acceleration. The program has no GPU, parallel draft model or production batch scheduler.
+7805	L02｜Actual analytic backpropagation
+14051	Includes single-head attention forward passes, analytic backpropagation and finite differences. Maximum absolute gradient errors for Q, K and V are about 9.14×10⁻¹¹, 1.96×10⁻¹⁰ and 1.17×10⁻¹⁰ respectively. Tests also cover zero future-position gradients, rejected fully masked rows and rejected shape errors.
+20656	Finite differences verify the current function's local derivative, not whether the objective suits the business; a shared mask error may mislead both analytic and numerical methods. Chapter 31 explains supplementary independent semantic properties.
+7806	L03｜Actual small-language-model training
+25442	Trains an 18,320-parameter, two-layer causal Transformer. PyTorch 2.10.0+cpu, 100 AdamW steps, synthetic cyclic token sequences. Training loss falls from 2.846790 to 0.003446, training token accuracy is 1.0, and causal-prefix error is 0.
+27209	This is not a preset printed curve: the script actually performs forward passes, loss, backpropagation and parameter updates. But the dataset is extremely simple, with no independent generalization or natural-language capability evaluation. Do not turn 100% training accuracy into a claim of language understanding.
+21880	For teaching convenience, this model uses learned position vectors, MHA and GELU; the forward numerical experiment instead uses RoPE, GQA and SwiGLU. They are different implementations and cannot jointly be called a reproduction of one commercial model.
+7807	L04｜Permissions, versions and term retrieval
+16904	Implements BM25, RRF and Python AST range extraction. Permissions, tenants and versions are filtered before scoring; cache keys include caller identity and version. Tests cover unauthorized documents, old versions, cache poisoning and index replacement.
+11426	Chinese tokenization is a character-by-character teaching strategy, with no actual vector encoder, ANN index or reranker. It establishes permission and index contracts, not production-level semantic recall. The text explains HNSW, IVF/PQ, ColBERT and reranking implementation trade-offs without claiming deployment in the experiments.
+7808	L05｜Context dependencies and bitemporal memory
+19754	Provides greedy packaging with dependency closure, deterministic checkpoint-field checks and SQLite fact memory. Budget numbers are teaching costs set by the author, not measured by a commercial model tokenizer.
+20320	Time tests distinguish when facts are valid from when the system knows them, showing that late information cannot rewrite past knowledge states. Conflicts return uncertainty rather than the latest text by force. The implementation covers only the limited lifecycle defined here, not a complete bitemporal database.
+7226	Checkpoint checks inspect only fields, versions and references; they cannot automatically judge whether a natural-language summary retains every negation. Real-model compaction-fidelity experiments must be performed separately.
+7809	L06｜Bytes and completion semantics in streaming protocols
+16126	Handles UTF-8 across fragments, SSE data lines, incremental arguments and completion events. Tests deliberately split the bytes of "中文.py", confirming correct final JSON; truncated streams, failure events and duplicate-ID conflicts do not count as successful tool calls.
+16480	This is a teaching implementation of a protocol subset, not complete SSE or an SDK for every Responses event. Waiting for the complete response before scheduling tools is this book's conservative policy, not a claim about all agents.
+7810	L07｜Actual crash windows and recovery
+15937	After replacing the file but before completing the database operation, call
+29431	to interrupt through an actual subprocess exit. Recovery finds the target file content already present, records reconciled and does not write again; mismatched prerequisite content or the same ID with different arguments is rejected.
+16481	This is a single-writer local example without atomic file safety under malicious concurrency. It does not claim defense against all symbolic-link/hard-link races or simulate power loss and file-system corruption. SQLite transactions cannot automatically cover external-service side effects.
+7811	L08｜A complete repository patch and tests
+13826	Creates a small repository and 8 tests. Initially 5 fail; the controller reads files and submits an original patch, after which all 8 pass. Changing the artifact afterward makes the completion check reject the old green results.
+14009	The action sequence is scripted, not autonomously planned by an LLM. Tests, files, subprocesses and patches execute for real. The results page expands full call traces, diffs, stdout and exit codes for item-by-item checking beyond the "passed" label.
+7812	L09｜Statistics and evaluation
+16905	Implements pass@k, Wilson intervals, paired task bootstrap and exact McNemar tests. All inputs are synthetic and verify only computation. Success-rate changes and confidence intervals in examples are not Codex, Claude or Copilot benchmark scores.
+17644	Resample by task rather than treat repeated runs of the same task as independent samples. p-values, intervals and effect sizes serve different purposes and cannot replace one another.
+7813	L10｜Optional actual read-only LLM experiments
+12415	Includes an OpenAI Responses read-only adapter requiring explicit activation; it does not run by default. Before use, confirm the API account, model availability, costs and directory to send. The program reads only allowed suffixes and sizes within the root directory. Credentials and sensitive source directories must not be experiment roots.
+16444	This is neither a complete production connector nor an evaluation platform. It does not automatically retry network writes or store API keys in the package. No actual API validation was performed; future product-interface changes require adjustment against current official interfaces.
+24443	How to read the results
+20424	contains raw records of mechanism tests and the worked case,
+20402	contains actual training records. They are separate to avoid conflating passing tests with model capability. Begin with the result explanations, then inspect code line by line and change fault points to reproduce failures.
+20716	Engineering judgment does not end at "all tests are green". Production projects also need real task sets, target-platform tests, permission threat analysis, cost and latency measurements, regressions and human acceptance. Chapter 30 lists additional evidence needed when transferring these experiments.
+16721	Full actual results and call traces</a><a class="pill" href="source-code.html">12 Python source files</a><a class="pill" href="reports/test_log.txt">Original test log
+11283	Topic studies: implementation, verification and application — AI Systems Engineering
+12002	Study model computation, agent execution and engineering systems in depth through runnable implementations and counterexample experiments.
+18123	Read selectively after completing the corresponding Foundations lessons and Systems chapters. Chapter numbers here apply only within Topic studies, and previous/next links stay within this part. The experiment handbook states entry points, dependencies, inputs and verification scope.
+16974	Experiment handbook</a><a class="button secondary" href="source-code.html">Full experiment code</a><a class="button secondary" href="results.html">Accompanying result records
+5966	01｜How text becomes probability: tokenizer, template, objective and gradient</a><a href="chapters/02.html">02｜Into the decoder: tensor shapes, RoPE, GQA and KV cache correctness</a><a href="chapters/03.html">03｜Inside the training system: data, optimizer, memory and the cost of distribution</a><a href="chapters/04.html">04｜Post-training and reasoning models: from preference objectives to verifiable capability</a><a href="chapters/05.html">05｜How the output is chosen: sampling, speculative decoding and stopping conditions</a><a href="chapters/06.html">06｜The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling</a><a href="chapters/07.html">07｜Inside the model interface: messages, output items, SSE and the tool-call protocol</a><a href="chapters/08.html">08｜Inside the harness: decision, execution, persistence and crash recovery</a><a href="chapters/09.html">09｜Tracing the Codex source: from repository rules to history, loop and compaction</a><a href="chapters/10.html">10｜Claude Code and Copilot: public mechanisms, verifiable behavior and unknown internals</a><a href="chapters/11.html">11｜The context compiler: information selection, dependency closure and budget</a><a href="chapters/12.html">12｜The deeper problem with compaction: lossy state, evidence recovery and continued execution</a><a href="chapters/13.html">13｜Inside a retrieval system: BM25, vectors, ANN, fusion and index freshness</a><a href="chapters/14.html">14｜Inside code intelligence: AST, LSP, dependency graph and versioned evidence</a><a href="chapters/15.html">15｜Inside a memory system: bi-temporality, conflict, provenance and useful forgetting</a><a href="chapters/16.html">16｜Skills, tools and model routing: how expertise actually enters a task</a><a href="chapters/17.html">17｜Inside multi-agent: DAGs, context handoff, concurrency conflicts and correlated errors</a><a href="chapters/18.html">18｜The core of engineering quality: contracts, tests, counterexamples, review and delivery evidence</a><a href="chapters/19.html">19｜Advanced evaluation: paired experiments, reliability, causal attribution and grading bias</a><a href="chapters/20.html">20｜Inside security: trust boundaries, MCP authorization, sandboxes and side-effect control</a><a href="chapters/21.html">21｜Production observability and reliable operation: traces, queues, cancellation and recovery</a><a href="chapters/22.html">22｜Cost and performance decisions: per successful task, not per token</a><a href="chapters/23.html">23｜Fine-tuning, quantization and distillation: change the model, or change the input system</a><a href="chapters/24.html">24｜Multimodality and computer use: representation, grounding, and the observe–act loop</a><a href="chapters/25.html">25｜Trustworthy answers and interpretability: calibration, abstention, evidence and causal intervention</a><a href="chapters/26.html">26｜Advanced research branches: the logic behind choosing architecture, search, RAG and memory methods</a><a href="chapters/27.html">27｜Worked case: fixing exclude, from the original failure to a recoverable delivery</a><a href="chapters/28.html">28｜Blueprints for deep applications: enterprise Q&A, repository diagnosis, research and controlled automation</a><a href="chapters/29.html">29｜Failure diagnosis handbook: from symptom to the smallest effective fix</a><a href="chapters/30.html">30｜Senior-level acceptance: open questions, reference answers and a capstone project</a><a href="chapters/31.html">31｜Derivation appendix: attention backpropagation and trainable retrieval
+16940	Actual results · records and traces fully expanded — AI Systems Engineering
+6564	49 offline tests passed, 0 failures, 0 errors, 0 skips.</strong> Small-model CPU training ran separately. Commercial models, GPU benchmarks and production security audits were not run. The reports below are actual results, not expected values.
+14494	Raw JSON
+22433	Test log
+25437	Training JSON
+16310	How to interpret these results
+18612	Execution environment and verification scope
+23286	Actual small-model CPU training
+20008	Numerical forward passes and sampling
+25324	Analytic backpropagation and finite differences
+21147	Permission-aware retrieval
+10552	Context and memory
+8831	SSE protocol fragments
+15333	Synthetic statistical experiments
+25987	Worked case: actual differences
+25988	Worked case: actual calls, stdout and exit codes
+21958	Step 1
+21959	Step 2
+21960	Step 3
+21961	Step 4
+13013	All test names and results
+11282	How to read the topic studies — AI Systems Engineering
+11273	Choose topics by question rather than completing everything linearly. Confirm the relevant basics first, then read derivations, implementations and counterexamples. Use the experiments to check understanding, not certify model capability or production security.
+25577	Record each topic's inputs, outputs, conditions of validity and failure conditions. After running a program, change one condition and explain why the result changes; establish requirements, samples and acceptance criteria again when applying the method to your project.
+21282	View topic contents
+27129	Back to book contents
+16723	Full experiment source · 12 Python files — AI Systems Engineering
+18534	All code is original teaching implementation for this book; third-party repository source is not bundled. Read everything offline below or open studies/labs in the package directly. The experiment handbook gives entry points, dependencies and verification boundaries.
+16908	Implementation
+29096	Verification scope and limits
+25325	Analytic backpropagation<br/><span class="meta">Chapter 31 · NumPy
+25333	Analytic gradients and finite differences; not sufficient proof of task-objective correctness
+16707	Complete exclude patch case<br/><span class="meta">Chapters 18 and 27 · Standard library
+24800	Script-controlled actions, actual patches and tests; not autonomous LLM repair
+10577	Context packaging and bitemporal memory<br/><span class="meta">Chapters 11, 12 and 15 · Standard library/SQLite
+12638	Metadata and version contracts; not a test of natural-language semantic fidelity
+19836	Operation journal and actual crash recovery<br/><span class="meta">Chapters 08, 20 and 21 · Standard library/SQLite
+14128	Single-writer local recovery; not a complete security sandbox against malicious races
+15270	Optional paid-API read-only adapter<br/><span class="meta">Chapters 07 and 08 · Standard library+user API account
+20689	Not tested in a live API run; network access/billing must be explicitly allowed, and sensitive directories must not be sent
+20016	Numerical mechanisms and forward implementation<br/><span class="meta">Chapters 01, 02, 04, 05 and 06 · NumPy
+24622	Caching, chunked softmax, sampling and BPE; not a GPU service or commercial model
+7083	BM25, permissions, caching and AST<br/><span class="meta">Chapters 13 and 14 · Standard library
+23310	Actual term retrieval; no vector encoder or ANN implementation
+23430	Offline experiment entry point<br/><span class="meta">Experiment handbook · Standard library; NumPy optional
+26620	Produces actual results; missing dependencies cause explicitly marked skips
+8827	SSE and tool-argument state<br/><span class="meta">Chapter 07 · Standard library
+14097	Protocol subset; not all events or a production SDK
+28462	Paired-evaluation statistics<br/><span class="meta">Chapter 19 · Standard library
+13015	All inputs are synthetic data; no product-performance conclusion follows
+6562	49 unit and integration tests<br/><span class="meta">Relevant experiment chapters · Standard library; NumPy optional
+20342	Explicit fault cases and assertions; all green does not mean production certification
+17619	Actual small-Transformer training<br/><span class="meta">Chapter 03 · PyTorch
+15331	Synthetic-data training; no conclusion about general language capability or test-set generalization
+16981	Experiment explanations</a><a class="pill" href="results.html">Actual results</a><a class="pill" href="reports/test_log.txt">Original log of 49 tests
+21183	Sources, versions and the limits of fact — AI Systems Engineering
+7952	N01 · Codex Agent Loop: model, context and tool loop</a><a href="#section-2">N02 · Codex project_doc.rs: project-rule discovery and budgets</a><a href="#section-3">N03 · Codex codex.rs: initial context and run_turn</a><a href="#section-4">N04 · Codex compact.rs: one local compaction path</a><a href="#section-5">N05 · Codex SSE response-event conversion</a><a href="#section-6">N06 · OpenAI Compaction: compaction state and continuous sessions
+7960	N32 · Stanford information retrieval textbook: BM25</a><a href="#section-33">N33 · Faiss index types</a><a href="#section-34">N34 · LSP 3.17 official metamodel
+11277	Topic studies</span><span>approx. 6.1 thousand characters
+11428	The Chinese text combines mechanism explanations, independent derivations, original implementations and cases, without replacing explanation with English links. The 80 records below provide provenance; N identifiers in the text link here. External links support checking and are not prerequisites for offline study.
+9476	"Relevant original text checked" means the mechanisms and relevant portions used here were checked, not that every appendix was proofread, every experiment reproduced or the latest version continuously monitored. Only the abstract of N95 was checked. The original further reading's 194 sources remain separate and are not included in these 80 records.
+7951	N01 · Codex Agent Loop: model, context and tool loop
+20802	Scope of use in this book:</strong> the call loop and input boundaries; not a complete server implementation
+7953	N02 · Codex project_doc.rs: project-rule discovery and budgets
+20794	Scope of use in this book:</strong> rule-candidate priorities, directory order and byte budgets; source reading without running Rust tests
+7954	N03 · Codex codex.rs: initial context and run_turn
+20739	Scope of use in this book:</strong> build_initial_context and run_turn paths; Codex was not compiled or run
+7955	N04 · Codex compact.rs: one local compaction path
+20772	Scope of use in this book:</strong> summary requests, history reconstruction and usage restoration; not every compaction implementation
+7956	N05 · Codex SSE response-event conversion
+20742	Scope of use in this book:</strong> event types, completion and failure; a different snapshot from N02—N04
+21415	Checked on 2026-10-17｜Version: 2a68b74b9bf16b64e285495c1b149d7d6ac8bdf4
+7957	N06 · OpenAI Compaction: compaction state and continuous sessions
+20774	Scope of use in this book:</strong> explicit and server-side compaction and compaction items; exact availability depends on version
+20738	Scope of use in this book:</strong> the Transformer, attention and original encoder-decoder architecture; this book's gradient derivations are independent mathematical explanations
+20777	Scope of use in this book:</strong> query heads and shared KV heads; paper performance data are not reproduced
+20773	Scope of use in this book:</strong> rotary position representations and relative position relationships
+20751	Scope of use in this book:</strong> tiling, online softmax and I/O efficiency; the CPU teaching implementation is not a CUDA kernel
+20735	Scope of use in this book:</strong> paged KV management, sharing and serving throughput; GPU benchmarks were not run
+20769	Scope of use in this book:</strong> acceptance–rejection and residual sampling; only distributions are verified, without claiming serving acceleration
+20765	Scope of use in this book:</strong> message serialization and special tokens for open models; documentation on main can change
+20791	Scope of use in this book:</strong> cache types and usage constraints; not long-term memory
+20734	Scope of use in this book:</strong> KL-regularized preference optimization and log-ratio objectives
+20766	Scope of use in this book:</strong> reinforcement learning, verifiable rewards and reasoning capability; experiments were not reproduced
+20760	Scope of use in this book:</strong> tool schemas, call IDs and result feedback; call intent is not execution
+20790	Scope of use in this book:</strong> structural constraints; no guarantee of factual fields or business semantics
+20798	Scope of use in this book:</strong> semantic stream events and incremental output; this book's SSE subset is a teaching implementation
+20750	Scope of use in this book:</strong> public tool loops, context and compaction; closed-source internals were not inspected
+20758	Scope of use in this book:</strong> sub-agent configuration, context and permission boundaries; depends on the specific version
+20730	Scope of use in this book:</strong> custom CLI agents, tool configuration and delegation; not generalized to every Copilot product surface
+20741	Scope of use in this book:</strong> context selection, external storage, summaries and task state; this book's budget algorithm is an original example
+20740	Scope of use in this book:</strong> context enhancement, hybrid retrieval and reranking; original experimental gains are not extrapolated
+20761	Scope of use in this book:</strong> tool semantics, output and evaluation; implementation advice needs local verification
+20763	Scope of use in this book:</strong> parallel research and coordination costs; no inference that coding tasks necessarily benefit
+18141	Open specification</span> <span class="badge gray">Relevant original text checked
+20768	Scope of use in this book:</strong> skill files, metadata and progressive disclosure; the format does not guarantee a harness's execution
+22611	Versioned protocol documentation</span> <span class="badge gray">Relevant original text checked
+20733	Scope of use in this book:</strong> Host, Client, Server and protocol responsibilities
+22612	Versioned protocol specification</span> <span class="badge gray">Relevant original text checked
+20732	Scope of use in this book:</strong> HTTP authorization, resource binding and differences from stdio; not a replacement for business ACLs
+16882	Official framework documentation</span> <span class="badge gray">Relevant original text checked
+20731	Scope of use in this book:</strong> checkpoints and persistence; framework concepts do not replace idempotency for external side effects
+16811	Official database documentation</span> <span class="badge gray">Relevant original text checked
+20743	Scope of use in this book:</strong> transaction-isolation boundaries; not files or network operations outside the database
+7959	N32 · Stanford information retrieval textbook: BM25
+16437	Academic textbook</span> <span class="badge gray">Relevant original text checked
+20797	Scope of use in this book:</strong> term-frequency saturation, length normalization and retrieval scoring
+7961	N33 · Faiss index types
+20789	Scope of use in this book:</strong> choosing indexes for exact retrieval, HNSW, IVF and PQ
+7962	N34 · LSP 3.17 official metamodel
+22610	Versioned protocol definition</span> <span class="badge gray">Relevant original text checked
+20787	Scope of use in this book:</strong> messages and types for symbols, definitions and references; language servers provide actual capabilities
+21416	Checked on 2026-10-17｜Version: 3.17
+20805	Scope of use in this book:</strong> evaluation dimensions for long-term interaction memory; this book did not run the benchmark
+20746	Scope of use in this book:</strong> tasks, traces, grading and real failure samples; statistical analysis is independently written for this book
+20756	Scope of use in this book:</strong> model–data trade-offs under fixed training compute; no direct optimum for serving
+20747	Scope of use in this book:</strong> low-rank incremental parameters and merging; this book did not fine-tune models
+20803	Scope of use in this book:</strong> quantized base models and parameter-efficient fine-tuning; hardware results were not reproduced
+20736	Scope of use in this book:</strong> design motivations for MoE, MLA and related mechanisms; not every commercial model architecture
+20759	Scope of use in this book:</strong> a framework of working memory, long-term memory and action spaces
+20775	Scope of use in this book:</strong> managing limited context and external memory; limits of the operating-system analogy
+20780	Scope of use in this book:</strong> activation-aware quantization error; layers are not equally sensitive
+20785	Scope of use in this book:</strong> real desktop tasks and environment evaluation; this book did not run GUI benchmarks
+20792	Scope of use in this book:</strong> conditions for confidence, self-evaluation and calibration; confidence does not guarantee correctness
+20749	Scope of use in this book:</strong> global questions, community summaries and graph organization; not a replacement for precise code search
+20788	Scope of use in this book:</strong> simple software-repair flows as a counterexample baseline
+20793	Scope of use in this book:</strong> reliability under rules and tools, and pass^k; this book's mathematical examples are not benchmark scores
+20779	Scope of use in this book:</strong> model-grading bias and conditions of use
+10369	First-hand engineering practice</span> <span class="badge gray">Relevant original text checked
+20745	Scope of use in this book:</strong> code health, review standards and the limits of perfectionism
+10370	First-hand engineering textbook</span> <span class="badge gray">Relevant original text checked
+20782	Scope of use in this book:</strong> user goals, service metrics and error budgets
+20800	Scope of use in this book:</strong> language feedback and subsequent tasks; reflection does not automatically become correct memory
+20778	Scope of use in this book:</strong> retrieval, generation and reflection signals; not simply another review prompt
+20771	Scope of use in this book:</strong> search, candidate states and evaluator costs
+20783	Scope of use in this book:</strong> supervised fine-tuning, reward models and preference post-training
+20770	Scope of use in this book:</strong> basic mechanisms combining reasoning and action feedback
+20754	Scope of use in this book:</strong> combining parametric models with nonparametric evidence
+20755	Scope of use in this book:</strong> dual encoders and contrastive training; this book develops the InfoNCE derivation independently
+20737	Scope of use in this book:</strong> token-level late interaction and retrieval costs
+20748	Scope of use in this book:</strong> hypothetical documents for recall, not factual evidence
+20752	Scope of use in this book:</strong> uses and losses of hierarchical summaries and tree retrieval
+20744	Scope of use in this book:</strong> iterative repository retrieval and generation; no guaranteed transfer rate across projects
+20804	Scope of use in this book:</strong> time, entities and cross-segment memory in long conversations; benchmarks were not reproduced
+20753	Scope of use in this book:</strong> dynamic linking and memory organization; method-level explanation rather than a complete implementation
+20796	Scope of use in this book:</strong> memory extraction and maintenance; author-reported results are distinguished from independent reproduction
+20728	Scope of use in this book:</strong> Agent-Computer Interface and software engineering tasks
+20784	Scope of use in this book:</strong> real issues, patches and test environments; this book's small repository is not SWE-bench
+20767	Scope of use in this book:</strong> screenshots, actions and environmental feedback; external GUI tasks were not performed
+20762	Scope of use in this book:</strong> the relocated GenAI conventions entry point; this book does not hardcode unstable fields
+16786	Official security material</span> <span class="badge gray">Relevant original text checked
+20729	Scope of use in this book:</strong> agent permissions, tools, memory and autonomous-execution risks; not product security certification
+16788	Official engineering guide</span> <span class="badge gray">Relevant original text checked
+20764	Scope of use in this book:</strong> input, output, request and tool contributions to latency; this book has no server-side benchmark scores
+20781	Scope of use in this book:</strong> environments, knowledge organization, verification feedback and engineering boundaries
+20806	Scope of use in this book:</strong> predefined workflows, dynamic agents and starting with a simple approach
+20786	Scope of use in this book:</strong> sparse features, reconstruction and interpretability evaluation; no SAE was trained
+14649	Original paper abstract</span> <span class="badge gray">Abstract checked
+20776	Scope of use in this book:</strong> source use is limited to abstract-level mechanisms; implementation choices also use N33, without claiming full-text reproduction
+16787	Official tool documentation</span> <span class="badge gray">Relevant original text checked
+20799	Scope of use in this book:</strong> syntax nodes and structural queries; not complete semantic binding
+20757	Scope of use in this book:</strong> image patches and Transformer representations; not evidence for closed-source multimodal architectures
+20795	Scope of use in this book:</strong> vision–language connections and instruction training; a typical public approach, not a universal architecture
+20801	Scope of use in this book:</strong> speech representations, transcription and model-training scope; this book performs no speech experiments
+20727	Scope of use in this book:</strong> checked on 2026-10-17: the old platform plans read-only access on 10/31 and closure on 11/30; these future dates may change
+23324	Index of knowledge topics — AI Systems Engineering
+28732	Reading tools</span><span>approx. 2.2 thousand characters
+19473	Find Foundations lessons, Systems chapters and further-reading notes by knowledge topic. The 206 entries below come from varied papers, courses and public documentation; mappings show topical relationships, not reproduction of every experiment and appendix.
+24263	Systems and prerequisites
+24232	Systems chapter
+16068	Foundations lesson
+6326	206 further-reading topics
+11580	Topics and Chinese lecture notes
+23187	Related Systems chapters
+14040	Step-by-step figures: see every step clearly — AI Systems Engineering
+28734	Reading tools</span><span>approx. 5.5 thousand characters
+11819	Start from one input and follow numbers, messages, evidence and execution state through the system step by step.
+15854	Figure inputs and conditions always appear before the figure. Optimizations claiming "the same result" state what they preserve and under which assumptions; approximate optimizations show what they change.
+19705	Start with two complete chains:</strong> <a href="visual/F15.html">Text input → first prediction → next round → EOS</a>　<a href="visual/F22.html">User → model → tool → result filled back in
+12106	Optimization comparison index
+15304	Chapter-to-figure table
+23463	Programs and scope of checks
+20025	Numbers and input representations
+10353	Which different objects does one sentence pass through: user text
+23754	Lesson 35 · 6 steps
+23769	Lesson 36 · 4 steps
+23779	Lesson 37 · 6 steps
+23799	Lesson 38 · 4 steps
+23808	Lesson 39 · 5 steps
+23822	Lesson 40 · 4 steps
+21762	Model computation, generation and stopping
+23841	Lesson 42 · 4 steps
+23863	Lesson 43 · 4 steps
+23870	Lesson 44 · 5 steps
+23898	Lesson 45 · 6 steps
+23904	Lesson 46 · 5 steps
+23915	Lesson 47 · 5 steps
+23922	Lesson 48 · 5 steps
+23925	Lesson 49 · 6 steps
+23960	Lesson 57 · 10 steps
+23967	Lesson 58 · 5 steps
+25449	Training and compute resources
+23933	Lesson 52 · 4 steps
+23939	Lesson 53 · 5 steps
+15545	Post-training changes behavior; a reward is not an arbiter of fact: one question, two answers
+23950	Lesson 54 · 6 steps
+23232	Fewer parameters, fewer bits and fewer activations are not the same optimization: the original large weights
+23980	Lesson 61 · 6 steps
+23986	Lesson 62 · 4 steps
+6959	Agents, protocols and context
+18731	Break one agent task into the turns that actually happen: 1. User task: read timeout in config.txt
+23519	Lesson 01 · 8 steps
+23590	Lesson 07 · 4 steps
+12060	Task state is not a one-line summary in the chat: preparation
+23540	Lesson 02 · 6 steps
+7904	MCP connects interfaces; it does not hand over permissions on its own: 1. Host establishes a connection; Client and Server negotiate capabilities
+23607	Lesson 08 · 7 steps
+23635	Lesson 11 · 5 steps
+14217	Compaction must keep the facts an action depends on: original history has much noise
+23696	Lesson 22 · 5 steps
+21551	Retrieval, memory, collaboration and reliable delivery
+23647	Lesson 16 · 4 steps
+23655	Lesson 17 · 5 steps
+11953	Code retrieval cannot rely on "semantically similar" alone: text search
+23665	Lesson 18 · 6 steps
+23707	Lesson 23 · 5 steps
+8883	A skill exists — so why can it still be of no use at all? A skill on disk
+23640	Lesson 13 · 6 steps
+23715	Lesson 26 · 6 steps
+22439	A test looks for counterexamples; it does not stamp code green: clarify requirements
+23574	Lesson 04 · 6 steps
+25710	Evaluation, security and production
+23580	Lesson 05 · 4 steps
+23742	Lesson 31 · 5 steps
+26014	Material can influence a model without thereby gaining permission: receive external material
+23722	Lesson 29 · 6 steps
+23748	Lesson 33 · 5 steps
+24002	Lesson 64 · 4 steps
+12765	Find which layer the error happens in before talking about changing models: symptom
+24007	Lesson 66 · 6 steps
+12108	Reasons, methods and costs of optimization
+7970	O01 · 4 steps
+7972	O02 · 4 steps
+7975	O03 · 4 steps
+7977	O04 · 5 steps
+7980	O05 · 4 steps
+7982	O06 · 4 steps
+7984	O07 · 5 steps
+7986	O08 · 4 steps
+7988	O09 · 5 steps
+7990	O10 · 4 steps
+7992	O11 · 4 steps
+7994	O12 · 4 steps
+10351	Which different objects does one sentence pass through — AI Systems Engineering
+10352	Which different objects does one sentence pass through</a><a href="#topic-3">Step-by-step explanation and calculation record
+28415	Accompanying text: <a href="../foundations/01.html">Foundations lesson F01
+23780	Lesson 37 · Text, bytes, tokens and IDs are four different things</a><a href="F05.html">Lesson 39 · An embedding is a row lookup, not an ID converted to binary</a><a href="F22.html">Lesson 01 · Break one agent task into the turns that actually happen
+20163	What exactly does one more axis add — AI Systems Engineering
+20164	What exactly does one more axis add</a><a href="#topic-3">Step-by-step explanation and calculation record
+28416	Accompanying text: <a href="../foundations/02.html">Foundations lesson F02
+6222	1. Count one row of IDs first
+6374	2. Arrange the second input next
+6499	3. Expand one cell into a row of numbers
+6579	4. Two tables with three rows and four columns
+23803	Lesson 38 · Batching does not blend two sentences into one</a><a href="F05.html">Lesson 39 · An embedding is a row lookup, not an ID converted to binary
+20102	Text, bytes, tokens and IDs are four different things — AI Systems Engineering
+20103	Text, bytes, tokens and IDs are four different things</a><a href="#topic-3">Step-by-step explanation and calculation record
+28417	Accompanying text: <a href="../foundations/03.html">Foundations lesson F03
+6234	1. Original text
+6388	2. Text fragments
+6510	3. Vocabulary mapping
+6600	4. Integer sequence
+6698	5. Decode and check
+6764	6. State the boundaries
+23805	Lesson 38 · Batching does not blend two sentences into one</a><a href="F23.html">Lesson 07 · Complete characters, complete events and complete tool arguments are three separate gates
+24362	Batching does not blend two sentences into one — AI Systems Engineering
+24363	Batching does not blend two sentences into one</a><a href="#topic-3">Step-by-step explanation and calculation record
+28418	Accompanying text: <a href="../foundations/04.html">Foundations lesson F04
+6257	1. Different lengths
+6396	2. Pad to the same length
+6481	3. Keep a table of valid positions
+6589	4. Select the final valid position
+23918	Lesson 47 · A mask is a visibility table, not extra meaning</a><a href="O06.html">O06 · Continuous batching: when a seat frees up, take the next one
+7608	An embedding is a row lookup, not an ID converted to binary — AI Systems Engineering
+7609	An embedding is a row lookup, not an ID converted to binary</a><a href="#topic-3">Step-by-step explanation and calculation record
+28419	Accompanying text: <a href="../foundations/05.html">Foundations lesson F05
+6219	1. Take row 1 for 我
+6367	2. Take row 2 for 爱
+6474	3. Take row 3 for 学习
+6580	4. Take row 4 for 你
+6691	5. Restore the original sentence order
+23776	Lesson 36 · What exactly does one more axis add</a><a href="F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in
+20057	Moving data to the GPU changes where it is, not what it means — AI Systems Engineering
+20058	Moving data to the GPU changes where it is, not what it means</a><a href="#topic-3">Step-by-step explanation and calculation record
+28420	Accompanying text: <a href="../foundations/06.html">Foundations lesson F06
+6223	1. Count the objects first
+6373	2. Specify bytes per number next
+6486	3. Change only feature precision
+6612	4. Include other memory in the calculation
+23996	Lesson 62 · Slow computation may mean things are being moved slowly</a><a href="O02.html">O02 · Quantization: saves storage, and introduces approximation
+23346	Matrix multiplication is like filling in a recipe result cell by cell — AI Systems Engineering
+23347	Matrix multiplication is like filling in a recipe result cell by cell</a><a href="#topic-3">Step-by-step explanation and calculation record
+28421	Accompanying text: <a href="../foundations/07.html">Foundations lesson F07
+6243	1. Fill output row 0, column 0
+6381	2. Fill output row 0, column 1
+6493	3. Fill output row 1, column 0
+6592	4. Fill output row 1, column 1
+23867	Lesson 43 · Keep changing the arrangement separate from changing the values</a><a href="F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in
+19888	Keep changing the arrangement separate from changing the values — AI Systems Engineering
+19889	Keep changing the arrangement separate from changing the values</a><a href="#topic-3">Step-by-step explanation and calculation record
+28422	Accompanying text: <a href="../foundations/08.html">Foundations lesson F08
+6236	1. The original two rows
+6362	2. reshape: regroup only
+6511	3. Transpose: swap row and column roles
+6594	4. Broadcast: now actually add
+23860	Lesson 42 · Matrix multiplication is like filling in a recipe result cell by cell</a><a href="F12.html">Lesson 47 · A mask is a visibility table, not extra meaning
+8892	Softmax does not simply divide the scores by their sum — AI Systems Engineering
+8893	Softmax does not simply divide the scores by their sum</a><a href="#topic-3">Step-by-step explanation and calculation record
+28423	Accompanying text: <a href="../foundations/09.html">Foundations lesson F09
+6230	1. Scores are not shares
+6387	2. Shift all scores downward
+6503	3. Exponentiate each score
+6590	4. Divide each by the same total
+6696	5. Choose an item by probability interval
+23908	Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="F15.html">Lesson 57 · How one input connects to prediction, all the way to the end</a><a href="O07.html">O07 · Speculative decoding: the draft may be fast, but it must be verified correctly
+24735	A network layer rearranges numbers; it does not produce hidden sentences — AI Systems Engineering
+24736	A network layer rearranges numbers; it does not produce hidden sentences</a><a href="#topic-3">Step-by-step explanation and calculation record
+28424	Accompanying text: <a href="../foundations/10.html">Foundations lesson F10
+6241	1. Fix inputs and parameters
+6394	2. Linear combination
+6514	3. Nonlinear filtering
+6609	4. Second-layer combination
+6693	5. Identify intermediate objects
+6765	6. Independent counterexample
+23907	Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="F14.html">Lesson 49 · A Transformer layer is not attention alone
+8089	Q/K/V: first compute where to read from, then how much to read in — AI Systems Engineering
+8090	Q/K/V: first compute where to read from, then how much to read in</a><a href="#topic-3">Step-by-step explanation and calculation record
+28425	Accompanying text: <a href="../foundations/11.html">Foundations lesson F11
+14031	Step-by-step figures · Lesson 46
+25868	Reading shares</strong> are the weights computed by softmax this round, distinct from parameter weights in W.
+26532	Input and conditions of use:</strong> the independent two-position example from F11: X=[[1,1],[1,−1]]. This figure omits bias, RoPE, normalization and multiple heads. All Q/K/V and outputs are calculated by the accompanying program.
+8091	Q/K/V: first compute where to read from, then how much to read in: step-by-step run figure
+6014	1 / 5 · Same input, three parameter paths
+6239	1. Same input, three parameter paths
+6392	2. Transform each row separately, without mixing positions yet
+6498	3. The current receiver is 爱; compare two visible positions
+6596	4. Turn scores into reading shares
+6682	5. Once shares are set, mix V rather than K
+23859	Lesson 42 · Matrix multiplication is like filling in a recipe result cell by cell</a><a href="F09.html">Lesson 44 · Softmax does not simply divide the scores by their sum</a><a href="F12.html">Lesson 47 · A mask is a visibility table, not extra meaning</a><a href="F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read
+7922	A mask is a visibility table, not extra meaning — AI Systems Engineering
+7923	A mask is a visibility table, not extra meaning</a><a href="#topic-3">Step-by-step explanation and calculation record
+28426	Accompanying text: <a href="../foundations/12.html">Foundations lesson F12
+6244	1. Process absolute position 0
+6383	2. Process absolute position 1
+6495	3. Process absolute position 2
+6607	4. Prohibition is not simply "score times 0"
+6694	5. Cached positions must not restart from 0
+23804	Lesson 38 · Batching does not blend two sentences into one</a><a href="F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read
+12178	How position enters the numeric computation — AI Systems Engineering
+12179	How position enters the numeric computation</a><a href="#topic-3">Step-by-step explanation and calculation record
+28427	Accompanying text: <a href="../foundations/13.html">Foundations lesson F13
+6220	1. Position 0 rotates by 0 degrees
+6369	2. Position 1 rotates by 30 degrees
+6479	3. Position 2 rotates by 60 degrees
+6583	4. Position 3 rotates by 90 degrees
+6695	5. Compare angle differences, not position names
+23909	Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read
+10357	A Transformer layer is not attention alone — AI Systems Engineering
+10358	A Transformer layer is not attention alone</a><a href="#topic-3">Step-by-step explanation and calculation record
+28428	Accompanying text: <a href="../foundations/14.html">Foundations lesson F14
+6256	1. Enter this layer
+6385	2. Read context after normalization
+6506	3. First residual addition
+6618	4. Process each position
+6697	5. Second residual addition
+6769	6. Enter the next layer
+23911	Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="F17.html">Lesson 52 · A gradient is like a slope; the learning rate is like step size</a><a href="O01.html">O01 · GQA/MQA: what is reduced is the number of K/V groups
+10443	How one input connects to prediction, all the way to the end — AI Systems Engineering
+10444	How one input connects to prediction, all the way to the end</a><a href="#topic-3">Step-by-step explanation and calculation record
+14035	Step-by-step figures</span><span>approx. 1.5 thousand characters</span><span>1 controllable demo
+28432	Accompanying text: <a href="../foundations/18.html">Foundations lesson F18
+6255	1. Input is 我爱, with no output yet
+6382	2. Process the complete input (Prefill)
+6505	3. Selection 1: 学习
+6601	4. Display new text and prepare the next input
+6692	5. Next round: process only 学习
+6767	6. Selection 2: ！
+6813	7. Display new text and prepare the next input
+6845	8. Next round: process only ！
+6860	9. Selection 3: EOS
+15883	See step 9 above
+6106	10. Ending does not mean every task succeeds
+15882	See step 10 above
+23781	Lesson 37 · Text, bytes, tokens and IDs are four different things</a><a href="F11.html">Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read</a><a href="O07.html">O07 · Speculative decoding: the draft may be fast, but it must be verified correctly
+7773	KV cache: keep what was computed, without skipping what must be read — AI Systems Engineering
+7774	KV cache: keep what was computed, without skipping what must be read</a><a href="#topic-3">Step-by-step explanation and calculation record
+28433	Accompanying text: <a href="../foundations/19.html">Foundations lesson F19
+6217	1. Each of two layers saves history
+6402	2. Select a new item without adding it to cache yet
+6487	3. Compute K/V only for the new position
+6588	4. Reuse history rather than delete it
+6688	5. Comparison: changing the prefix invalidates this cache
+23917	Lesson 47 · A mask is a visibility table, not extra meaning</a><a href="O01.html">O01 · GQA/MQA: what is reduced is the number of K/V groups</a><a href="O04.html">O04 · FlashAttention: accumulate while reading, without materializing the whole table
+21477	A gradient is like a slope; the learning rate is like step size — AI Systems Engineering
+21478	A gradient is like a slope; the learning rate is like step size</a><a href="#topic-3">Step-by-step explanation and calculation record
+28429	Accompanying text: <a href="../foundations/15.html">Foundations lesson F15
+6259	1. The prediction is too low, but parameters are unchanged
+6391	2. The gradient gives a local direction
+6513	3. Choose step size and actually update parameters
+6605	4. Independent counterexample: an excessive step
+23946	Lesson 53 · Training: give every position a "what comes next" question</a><a href="O09.html">O09 · Activation checkpointing: store less, recompute on the backward pass
+25538	Training: give every position a "what comes next" question — AI Systems Engineering
+25539	Training: give every position a "what comes next" question</a><a href="#topic-3">Step-by-step explanation and calculation record
+28430	Accompanying text: <a href="../foundations/16.html">Foundations lesson F16
+6246	1. Offset input and target by one slot
+6398	2. Parallel training does not permit peeking
+6483	3. Score one position first
+6593	4. Mask invalid targets, then average
+6699	5. Gradients must still be followed by step
+23916	Lesson 47 · A mask is a visibility table, not extra meaning</a><a href="F17.html">Lesson 52 · A gradient is like a slope; the learning rate is like step size
+15543	Post-training changes behavior; a reward is not an arbiter of fact — AI Systems Engineering
+15544	Post-training changes behavior; a reward is not an arbiter of fact</a><a href="#topic-3">Step-by-step explanation and calculation record
+28431	Accompanying text: <a href="../foundations/17.html">Foundations lesson F17
+23936	Lesson 52 · A gradient is like a slope; the learning rate is like step size</a><a href="F35.html">Lesson 05 · When reading a metric, first ask what its denominator is
+23230	Fewer parameters, fewer bits and fewer activations are not the same optimization — AI Systems Engineering
+23231	Fewer parameters, fewer bits and fewer activations are not the same optimization</a><a href="#topic-3">Step-by-step explanation and calculation record
+28434	Accompanying text: <a href="../foundations/20.html">Foundations lesson F20
+7974	O02 · Quantization: saves storage, and introduces approximation</a><a href="O03.html">O03 · LoRA: freeze the large table, learn a small increment</a><a href="O08.html">O08 · MoE: each token takes part of the compute path
+24174	Slow computation may mean things are being moved slowly — AI Systems Engineering
+24175	Slow computation may mean things are being moved slowly</a><a href="#topic-3">Step-by-step explanation and calculation record
+28435	Accompanying text: <a href="../foundations/21.html">Foundations lesson F21
+6228	1. Ask whether computation or movement is slower
+6379	2. Double only compute capacity
+6485	3. Halve only the data moved
+6577	4. A lower bound is not measured elapsed time
+7979	O04 · FlashAttention: accumulate while reading, without materializing the whole table</a><a href="O05.html">O05 · PagedAttention: logically contiguous, physically chunked</a><a href="O06.html">O06 · Continuous batching: when a seat frees up, take the next one</a><a href="O09.html">O09 · Activation checkpointing: store less, recompute on the backward pass
+18727	Break one agent task into the turns that actually happen — AI Systems Engineering
+18730	Break one agent task into the turns that actually happen</a><a href="#topic-3">Step-by-step explanation and calculation record
+14033	Step-by-step figures</span><span>approx. 1.2 thousand characters</span><span>1 controllable demo
+28436	Accompanying text: <a href="../foundations/22.html">Foundations lesson F22
+6213	1. 1. User task: read timeout in config.txt
+6359	2. 2. Model request: task＋read_file tool definition
+6469	3. 3. Model output: call_id=c1, path=config.txt
+6576	4. 4. The harness validates, then reads the file
+6677	5. 5. Tool result: timeout=30
+6760	6. 6. Next input: original task＋call＋result
+6811	7. 7. Model answer: configured timeout is 30
+6843	8. 8. The harness displays the answer; task ends
+23961	Lesson 57 · How one input connects to prediction, all the way to the end</a><a href="F23.html">Lesson 07 · Complete characters, complete events and complete tool arguments are three separate gates</a><a href="F24.html">Lesson 02 · Task state is not a one-line summary in the chat
+16403	Complete characters, complete events and complete tool arguments are three separate gates — AI Systems Engineering
+16406	Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#topic-3">Step-by-step explanation and calculation record
+28437	Accompanying text: <a href="../foundations/23.html">Foundations lesson F23
+6248	1. Receive the first bytes
+6395	2. Receive the remaining bytes
+6496	3. A complete SSE event
+6610	4. Parse structure, then interpret semantics
+23534	Lesson 01 · Break one agent task into the turns that actually happen</a><a href="F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened
+12056	Task state is not a one-line summary in the chat — AI Systems Engineering
+12059	Task state is not a one-line summary in the chat</a><a href="#topic-3">Step-by-step explanation and calculation record
+28438	Accompanying text: <a href="../foundations/24.html">Foundations lesson F24
+6229	1. Preparation
+6399	2. Request recorded
+6497	3. Execution starts
+6617	4. Connection interrupted
+6690	5. Recover and verify
+6762	6. Completion recorded
+23702	Lesson 22 · Compaction must keep the facts an action depends on</a><a href="F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened
+7900	MCP connects interfaces; it does not hand over permissions on its own — AI Systems Engineering
+7903	MCP connects interfaces; it does not hand over permissions on its own</a><a href="#topic-3">Step-by-step explanation and calculation record
+28439	Accompanying text: <a href="../foundations/25.html">Foundations lesson F25
+6212	1. 1. Host establishes a connection; Client and Server negotiate capabilities
+6358	2. 2. Client requests the available-tool list
+6468	3. 3. Server returns tool descriptions and input structures
+6575	4. 4. Host selects tools to expose to the model
+6678	5. 5. Send the call after permission checks
+6761	6. 6. Return tool results and errors
+6810	7. 7. Host places results in the model's next context
+23535	Lesson 01 · Break one agent task into the turns that actually happen</a><a href="F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+22072	Each turn's context is like a working file with a boundary — AI Systems Engineering
+22075	Each turn's context is like a working file with a boundary</a><a href="#topic-3">Step-by-step explanation and calculation record
+28440	Accompanying text: <a href="../foundations/26.html">Foundations lesson F26
+6232	1. Add rules
+6376	2. Add the task
+6484	3. Add tool definitions
+6587	4. Add necessary evidence
+6684	5. Add reserved output space
+23703	Lesson 22 · Compaction must keep the facts an action depends on</a><a href="O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+14213	Compaction must keep the facts an action depends on — AI Systems Engineering
+14216	Compaction must keep the facts an action depends on</a><a href="#topic-3">Step-by-step explanation and calculation record
+28441	Accompanying text: <a href="../foundations/27.html">Foundations lesson F27
+6233	1. The original history contains much noise
+6371	2. Preserve goals and negative constraints
+6480	3. Preserve completed and incomplete states
+6621	4. Counterexample: an incorrect summary
+6689	5. Reread evidence before resuming the task
+23542	Lesson 02 · Task state is not a one-line summary in the chat</a><a href="O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+21559	Retrieval finds candidates first, then judges whether they can answer — AI Systems Engineering
+21562	Retrieval finds candidates first, then judges whether they can answer</a><a href="#topic-3">Step-by-step explanation and calculation record
+28442	Accompanying text: <a href="../foundations/28.html">Foundations lesson F28
+6224	1. Original text comes before vectors
+6372	2. Inverted index: from a term to documents containing it
+6490	3. Vectors: another route to candidates
+6603	4. Retrieve the original and verify conditions
+23656	Lesson 17 · From two candidate lists to usable evidence</a><a href="F31.html">Lesson 23 · Long-term memory is not a note that is always right
+11823	From two candidate lists to usable evidence — AI Systems Engineering
+11826	From two candidate lists to usable evidence</a><a href="#topic-3">Step-by-step explanation and calculation record
+28443	Accompanying text: <a href="../foundations/29.html">Foundations lesson F29
+6218	1. Two searches yield different ranks
+6397	2. Calculate candidate A's fusion contribution
+6509	3. Calculate candidate B's fusion contribution
+6611	4. Calculate candidate C's fusion contribution
+6679	5. B ranks first but is not yet the final answer
+23650	Lesson 16 · Retrieval finds candidates first, then judges whether they can answer</a><a href="O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+11949	Code retrieval cannot rely on "semantically similar" alone — AI Systems Engineering
+11952	Code retrieval cannot rely on "semantically similar" alone</a><a href="#topic-3">Step-by-step explanation and calculation record
+28444	Accompanying text: <a href="../foundations/30.html">Foundations lesson F30
+23577	Lesson 04 · A test looks for counterexamples; it does not stamp code green</a><a href="F40.html">Lesson 66 · Find which layer the error happens in before talking about changing models
+28674	Long-term memory is not a note that is always right — AI Systems Engineering
+28677	Long-term memory is not a note that is always right</a><a href="#topic-3">Step-by-step explanation and calculation record
+28445	Accompanying text: <a href="../foundations/31.html">Foundations lesson F31
+6214	1. Effective: month 1, day 1
+6357	2. Known: month 1, day 3
+6467	3. Effective: month 2, day 1
+6574	4. Known: month 2, day 4
+6676	5. Query: month 2, day 5
+23701	Lesson 22 · Compaction must keep the facts an action depends on</a><a href="F29.html">Lesson 17 · From two candidate lists to usable evidence
+8879	A skill exists — so why can it still be of no use at all? — AI Systems Engineering
+8882	A skill exists — so why can it still be of no use at all?</a><a href="#topic-3">Step-by-step explanation and calculation record
+28446	Accompanying text: <a href="../foundations/32.html">Foundations lesson F32
+23536	Lesson 01 · Break one agent task into the turns that actually happen</a><a href="O11.html">O11 · Multi-agent: work that can run in parallel matters more than the number of agents
+26034	A timeout tells you nothing arrived, not that nothing happened — AI Systems Engineering
+26037	A timeout tells you nothing arrived, not that nothing happened</a><a href="#topic-3">Step-by-step explanation and calculation record
+28447	Accompanying text: <a href="../foundations/33.html">Foundations lesson F33
+6254	1. Request op-1
+6390	2. The server commits
+6491	3. The receipt is lost
+6620	4. Incorrect approach
+6687	5. Safe recovery
+6763	6. Establish the result
+23541	Lesson 02 · Task state is not a one-line summary in the chat</a><a href="F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+22435	A test looks for counterexamples; it does not stamp code green — AI Systems Engineering
+22438	A test looks for counterexamples; it does not stamp code green</a><a href="#topic-3">Step-by-step explanation and calculation record
+28448	Accompanying text: <a href="../foundations/34.html">Foundations lesson F34
+23585	Lesson 05 · When reading a metric, first ask what its denominator is</a><a href="O11.html">O11 · Multi-agent: work that can run in parallel matters more than the number of agents
+25896	When reading a metric, first ask what its denominator is — AI Systems Engineering
+25899	When reading a metric, first ask what its denominator is</a><a href="#topic-3">Step-by-step explanation and calculation record
+28449	Accompanying text: <a href="../foundations/35.html">Foundations lesson F35
+6240	1. Separate the four outcomes first
+6393	2. Precision examines the selected set
+6488	3. Recall examines the truly needed set
+6578	4. Do not optimize just one number
+23743	Lesson 31 · It went up 10 percentage points — so why can we not conclude anything yet?</a><a href="F40.html">Lesson 66 · Find which layer the error happens in before talking about changing models
+22485	It went up 10 percentage points — so why can we not conclude anything yet? — AI Systems Engineering
+22488	It went up 10 percentage points — so why can we not conclude anything yet?</a><a href="#topic-3">Step-by-step explanation and calculation record
+28450	Accompanying text: <a href="../foundations/36.html">Foundations lesson F36
+6238	1. Run both versions once on the same 20 questions
+6389	2. The old version succeeds on 12
+6501	3. The new version succeeds on 14
+6599	4. Improvements and regressions coexist
+6686	5. Return to specific failure causes
+23584	Lesson 05 · When reading a metric, first ask what its denominator is</a><a href="F38.html">Lesson 33 · A trace should tell you causation, not just timestamps
+26010	Material can influence a model without thereby gaining permission — AI Systems Engineering
+26013	Material can influence a model without thereby gaining permission</a><a href="#topic-3">Step-by-step explanation and calculation record
+28451	Accompanying text: <a href="../foundations/37.html">Foundations lesson F37
+6247	1. Receive external material
+6370	2. Keep provenance labels
+6502	3. The model may be influenced
+6595	4. Check before execution
+6701	5. Block actions outside authorization
+6768	6. Continue the original task
+23608	Lesson 08 · MCP connects interfaces; it does not hand over permissions on its own</a><a href="F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened
+8990	A trace should tell you causation, not just timestamps — AI Systems Engineering
+8993	A trace should tell you causation, not just timestamps</a><a href="#topic-3">Step-by-step explanation and calculation record
+28452	Accompanying text: <a href="../foundations/38.html">Foundations lesson F38
+6225	1. Examine a complete task first
+6365	2. Two tools start together
+6494	3. Wall-clock time is not simply every row added up
+6582	4. Optimize A outside the critical path
+6683	5. Then consider queues and costs
+23997	Lesson 62 · Slow computation may mean things are being moved slowly</a><a href="O06.html">O06 · Continuous batching: when a seat frees up, take the next one</a><a href="O11.html">O11 · Multi-agent: work that can run in parallel matters more than the number of agents
+15836	Image representation and interface action are two different problems — AI Systems Engineering
+15839	Image representation and interface action are two different problems</a><a href="#topic-3">Step-by-step explanation and calculation record
+28453	Accompanying text: <a href="../foundations/39.html">Foundations lesson F39
+6242	1. An image is also a regular table of numbers
+6375	2. Split it into four 2×2 patches
+6508	3. Visual encoding is not a universal fact parser
+6606	4. Interface actions need renewed observation
+23716	Lesson 26 · A timeout tells you nothing arrived, not that nothing happened</a><a href="F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+12761	Find which layer the error happens in before talking about changing models — AI Systems Engineering
+12764	Find which layer the error happens in before talking about changing models</a><a href="#topic-3">Step-by-step explanation and calculation record
+28454	Accompanying text: <a href="../foundations/40.html">Foundations lesson F40
+23649	Lesson 16 · Retrieval finds candidates first, then judges whether they can answer</a><a href="F31.html">Lesson 23 · Long-term memory is not a note that is always right</a><a href="F36.html">Lesson 31 · It went up 10 percentage points — so why can we not conclude anything yet?
+7652	GQA/MQA: what is reduced is the number of K/V groups — AI Systems Engineering
+7653	GQA/MQA: what is reduced is the number of K/V groups</a><a href="#topic-3">Step-by-step explanation and calculation record
+14019	Step-by-step figures · O01
+16284	Head width</strong> is the length of a feature row in each head.
+26537	Input and conditions of use:</strong> independent resource count: 2 layers, batch 1, sequence 4, 4 query heads, width 2 per head and 2 bytes per number; change only K/V group count 4→2→1.
+7654	GQA/MQA: what is reduced is the number of K/V groups: step-by-step run figure
+6005	1 / 4 · MHA: each query head has its own K/V
+6215	1. MHA: each query head has its own K/V
+6361	2. GQA: every two query heads share one K/V group
+6472	3. MQA: all query heads share one K/V group
+6586	4. Smaller cache does not guarantee bitwise-identical original output
+23910	Lesson 46 · Q/K/V: first compute where to read from, then how much to read in</a><a href="F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read</a><a href="O04.html">O04 · FlashAttention: accumulate while reading, without materializing the whole table
+28576	Quantization: saves storage, and introduces approximation — AI Systems Engineering
+28577	Quantization: saves storage, and introduces approximation</a><a href="#topic-3">Step-by-step explanation and calculation record
+14020	Step-by-step figures · O02
+17659	Scale</strong> is the real-valued interval represented by one integer step.
+24952	Rounding</strong> selects a nearby representable value.
+25224	Clipping</strong> limits out-of-range values to the boundary, usually causing larger errors.
+26531	Input and conditions of use:</strong> fixed weights [0.26,−0.14,0.36,0.91], scale 0.1 and signed range [−8,7]. This is a small uniform-quantization example, not NF4 or every actual 4bit format.
+28578	Quantization: saves storage, and introduces approximation: step-by-step run figure
+6011	1 / 4 · The original four floating-point numbers
+6237	1. The original four floating-point numbers
+6404	2. Divide by the scale and round to the nearest integer
+6470	3. The signed 4bit range is insufficient
+6616	4. Reconstruct approximately and check errors
+23836	Lesson 40 · Moving data to the GPU changes where it is, not what it means</a><a href="F20.html">Lesson 61 · Fewer parameters, fewer bits and fewer activations are not the same optimization
+7861	LoRA: freeze the large table, learn a small increment — AI Systems Engineering
+7862	LoRA: freeze the large table, learn a small increment</a><a href="#topic-3">Step-by-step explanation and calculation record
+14021	Step-by-step figures · O03
+13647	Frozen</strong> means this training does not update the parameter, not that it is unread or absent from the forward pass.
+23444	Rank r</strong> bounds the number of independent directions the increment can express.
+15314	Merging</strong> adds the increment back to base weights for inference under the applicable conditions.
+26535	Input and conditions of use:</strong> independent small example: W is the 4×4 identity matrix, r=1, A=[[.1],[.2],[.3],[.4]], B=[[1,−1,.5,0]], x=[1,0,0,0], scale 1.
+7863	LoRA: freeze the large table, learn a small increment: step-by-step run figure
+6010	1 / 4 · The original weights have not been deleted
+6235	1. The original weights have not been deleted
+6366	2. Two small tables represent an increment
+6512	3. Output combines the original and increment paths
+6613	4. Fewer trainable parameters do not automatically make inference faster
+23982	Lesson 61 · Fewer parameters, fewer bits and fewer activations are not the same optimization</a><a href="O09.html">O09 · Activation checkpointing: store less, recompute on the backward pass
+7640	FlashAttention: accumulate while reading, without materializing the whole table — AI Systems Engineering
+7641	FlashAttention: accumulate while reading, without materializing the whole table</a><a href="#topic-3">Step-by-step explanation and calculation record
+14022	Step-by-step figures · O04
+13991	Weighted accumulation</strong> is the sum of Value contributions before division by l.
+26534	Input and conditions of use:</strong> independent single-query example: read in order C/A/B, with scores [0,2,1] and corresponding V=[[5,5],[10,0],[0,20]]. This illustrates maximum-value changes and does not reuse F09's candidate order.
+7642	FlashAttention: accumulate while reading, without materializing the whole table: step-by-step run figure
+6016	1 / 5 · The ordinary approach considers the whole score table first
+6251	1. The ordinary approach considers the whole score table first
+6380	2. Process candidate 1 online
+6492	3. Process candidate 2 online
+6591	4. Process candidate 3 online
+6685	5. Preserve the result while reducing intermediate reads and writes
+23872	Lesson 44 · Softmax does not simply divide the scores by their sum</a><a href="F21.html">Lesson 62 · Slow computation may mean things are being moved slowly
+8039	PagedAttention: logically contiguous, physically chunked — AI Systems Engineering
+8040	PagedAttention: logically contiguous, physically chunked</a><a href="#topic-3">Step-by-step explanation and calculation record
+14023	Step-by-step figures · O05
+28354	Logical pages</strong> are block numbers in sequence order.
+22627	Physical pages</strong> are memory blocks actually storing KV data.
+23409	Fragmentation</strong> is the temporarily unused part of allocated space.
+26533	Input and conditions of use:</strong> independent allocation example: 5 physical pages with 2 slots each; A starts with 3 items and B with 2. Each slot represents a token's set of KV data, not one byte.
+8041	PagedAttention: logically contiguous, physically chunked: step-by-step run figure
+6009	1 / 4 · Initially, A has only 3 positions
+6231	1. Initially, A has only 3 positions
+6360	2. A appends item 4
+6471	3. A appends item 5
+6619	4. Release a request
+23971	Lesson 58 · KV cache: keep what was computed, without skipping what must be read</a><a href="O06.html">O06 · Continuous batching: when a seat frees up, take the next one
+27649	Continuous batching: when a seat frees up, take the next one — AI Systems Engineering
+27650	Continuous batching: when a seat frees up, take the next one</a><a href="#topic-3">Step-by-step explanation and calculation record
+14024	Step-by-step figures · O06
+21622	Slots</strong> are a simplified representation of request positions processed concurrently in one iteration.
+13021	Fairness</strong> prevents a request class from waiting indefinitely for resources.
+26526	Input and conditions of use:</strong> two slots and three requests; A/B/C need 2/4/2 equal-duration decode steps respectively. Prefill and communication are ignored; only scheduling is illustrated.
+27651	Continuous batching: when a seat frees up, take the next one: step-by-step run figure
+6012	1 / 4 · An ordinary batch waits for the whole batch to finish
+6252	1. An ordinary batch waits for the whole batch to finish
+6400	2. Continuous batching promptly fills vacancies
+6475	3. Why latency does not halve for every user
+6614	4. Check fairness when reading throughput
+23995	Lesson 62 · Slow computation may mean things are being moved slowly</a><a href="F38.html">Lesson 33 · A trace should tell you causation, not just timestamps

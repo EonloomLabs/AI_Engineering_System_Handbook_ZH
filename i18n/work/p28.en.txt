@@ -1,0 +1,835 @@
+24010	Lesson 66｜From core concepts to system analysis: how to locate a problem instead of piling on more technology — AI Systems Engineering
+12763	Find which layer the error happens in before talking about changing models</a><a href="#foundations-40-s1">First ask which layer failed</a><a href="#foundations-40-s2">A complete investigation without excessive complexity</a><a href="#foundations-40-s3">How to choose among prompts, RAG, memory, skills and fine-tuning</a><a href="#foundations-40-s4">Why advanced follow-up questions are still needed after the foundations</a><a href="#foundations-40-s5">How to keep interview-style answers from becoming memorized slogans</a><a href="#foundations-40-s6">Depth is not measured by the number of terms</a><a href="#foundations-40-s7">How to check that you have connected the main ideas</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-research">Locate the problem through the failure chain before adding more technology
+16054	Foundations</span><span>approx. 2.8 thousand characters</span><span>Figures, tables and item-by-item explanations
+23953	Lesson 54 · The mathematics needed before post-training</a><a class="pill" href="20.html">Lesson 61 · Low rank, quantization, experts</a><a class="pill" href="21.html">Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="36.html">Lesson 31 · Do not be fooled by a few percent</a><a class="pill" href="37.html">Lesson 29 · Security basics</a><a class="pill" href="38.html">Lesson 33 · Reading a production run</a><a class="pill" href="39.html">Lesson 64 · Multimodality and trustworthiness
+13003	All the steps and explanations</a><a href="../visual/F28.html">Lesson 16 · Retrieval finds candidates first, then judges whether they can answer</a><a href="../visual/F31.html">Lesson 23 · Long-term memory is not a note that is always right</a><a href="../visual/F36.html">Lesson 31 · It went up ten points — so why can we not conclude anything yet?
+12938	First ask which layer failed
+9395	"AI did not fix the bug" may mean the relevant file was not read, an old version was read, business conditions were missing, the model inferred incorrectly, the tool lacked permission, the edit's execution result was unknown, or the test criteria were too weak. "Use a larger model" cannot solve all these causes.
+13164	Key difference:</strong> identify the responsible layer first, so a quality issue does not immediately trigger a model change or another review.
+17154	Easy to misread:</strong> optimizing without evidence may complicate a simple task.
+22336	Ask step by step along the execution chain: What was the input? What information did the harness provide? What output did the model produce? What did the executor do? What did the environment become? How far does the verification prove anything? This turns the preceding foundations into diagnostic ability.
+10282	A complete investigation without excessive complexity
+22783	Symptom: the agent says the edit is complete, but tests still fail.
+12814	First check that the goal is clear and the tests really match the current requirements; then compare the final working tree with the version the agent read; check whether the tool response matches the actual files; then see whether the model read the key callers; only then analyze the reasoning or algorithm implementation.
+13270	Key difference:</strong> an investigation must be reproducible and should not loop through an unbounded search.
+17121	Easy to misread:</strong> repeatedly retrying a failed tool does not replace an escalation or skip strategy.
+25060	If the evidence shows that the tool never wrote successfully, there is no need to review the model's deep attention mechanisms first. If the files and environment are correct but the logic misses a boundary, add a counterexample, change the implementation and run regression checks. Failure evidence determines the depth of diagnosis.
+8068	How to choose among prompts, RAG, memory, skills and fine-tuning
+25258	Observed gap
+12091	Consider first
+10880	What it cannot directly solve
+12063	The task is ambiguously stated
+20346	Clarify the goal and acceptance; improve the input
+20234	Cannot automatically fix tool permissions
+24722	Current facts are missing
+21573	Retrieval and versioned evidence
+10690	Does not guarantee the model uses them correctly
+26052	Experience is repeatedly lost across tasks
+15266	Traceable long-term memory
+10948	Does not mean updating parameters
+23493	A stable professional process is missing
+8878	A skill and suitable tools
+10788	Should not replace hard security boundaries
+22631	A particular behavior distribution remains unsatisfactory
+25715	Consider fine-tuning after evaluation
+11231	Unsuitable as a real-time database
+18581	Execution and recovery are unreliable
+7706	Harness, state and idempotency design
+10878	More prompting does not establish correctness
+27252	These techniques can be combined, but every added layer should address an actual failure mode and have a way to verify it; otherwise it only adds system complexity.
+8069	How to choose among prompts, RAG, memory, skills and fine-tuning: item by item
+8078	Prompt: express the task
+8701	RAG: retrieve external facts
+7929	Memory: retain information across tasks
+13147	Key difference:</strong> different mechanisms address different gaps; choosing the wrong tool only adds context and maintenance burdens.
+17204	Easy to misread:</strong> when current code is needed, inspect the repository first rather than fine-tuning a model to memorize it.
+11534	Why advanced follow-up questions are still needed after the foundations
+12114	Computing the dot product of two vectors by hand is only the threshold for learning attention; multiple heads, position, gradients, caches and kernels still need to be understood. Defining idempotency likewise still leaves concurrency, state persistence and cross-system boundaries to understand.
+11535	Why advanced follow-up questions are still needed after the foundations: item by item
+16076	Foundations: explain the objects
+29108	Advanced lessons: examine implementation details
+17812	Engineering practice: design and verify
+13192	Key difference:</strong> depth of learning means tracing concepts through code state, failure boundaries and reproducible evidence.
+17108	Easy to misread:</strong> knowing many terms does not mean understanding system internals.
+24265	The 28 chapters and 112 questions in Systems expand these mechanisms further. Foundations explains the language and operations they use; advanced questions examine limits, derivations, counterexamples and engineering trade-offs. The two levels are not the same content under different titles.
+28930	How to keep interview-style answers from becoming memorized slogans
+25346	When explaining a mechanism, give at least: why it is needed, its inputs and outputs, its internal steps, a small example, a condition under which it fails, and how to verify it. When a product's internals are not public, explain what can be observed and where the unknowns begin.
+13285	Key difference:</strong> an interview-style answer works best with a derivation that supports follow-up questions, rather than only definitions of terms.
+17185	Easy to misread:</strong> memorizing conclusions without understanding their conditions of use can lead to incorrect engineering advice.
+12313	For example, an answer to "why can a KV cache be reused" needs more than "it reduces repeated computation"; it should explain the unchanged causal prefix, separate storage at each layer, position and weight constraints, the one-token gap before the new token is computed, and tests comparing full and incremental computation.
+22491	Depth is not measured by the number of terms
+18831	Memorizing the whole glossary may still leave you unable to locate where a request lost data; understanding only a small model may likewise be insufficient to judge production permission and version issues. Real depth connects layers while preserving the objects, conditions and evidence at every connection.
+19708	The recommended reading approach is to work through the foundational examples first, then move to the related advanced questions. Look up unfamiliar terms in the local definitions and return along the prerequisite lessons; there is no need to visit English web pages to fill in an entire course.
+18391	How to check that you have connected the main ideas
+15312	Close the text and explain what happens from two pieces of text to
+14858	; then explain how the model uses Q/K/V to produce new representations; then how it proposes a tool call and how the harness judges that an action is complete. Finally, take a real task and identify what evidence you would collect to distinguish two possible causes.
+16326	If any stretch is unclear, return to the matching lesson and recalculate the small example; there is no need to memorize every article again from the start. This path locates knowledge gaps rather than requiring all knowledge to be absorbed at once.
+5842	· Lesson 66
+18726	Locate "the answer is wrong" in a specific step that can be fixed
+26507	Input and conditions.</strong> The question is "the current timeout value for project A". Source r1 says 3 seconds and r2 says 5 seconds. The system answers 3 seconds.
+21528	Check the sources
+9286	File r2 exists and is accessible
+10919	The material is not entirely missing.
+21498	Check the candidates
+21579	The retrieval log already contains r1 and r2
+10874	Retrieval did not miss the new version.
+21525	Check the final input
+10576	Context assembly kept only r1
+12464	The information was lost during assembly.
+12595	Make the smallest fix
+19490	Keep r2 according to the applicable version; replay the same task
+11148	Do not change the model or add multiple agents first.
+29086	Verify other cases
+13587	Also test queries about historical rules, project B and missing dates
+28370	Avoid breaking historical questions by "always choosing the latest".
+19087	Join the steps up.</strong> Locating an error in a step supported by evidence leads to verifiable improvement more effectively than piling new technology onto the system.
+26711	Limits and counterexamples.</strong> All versions and results are teaching constructions; replay can verify this example's mechanism but cannot replace evaluation on a real task set.
+22904	Locate the problem through the failure chain before adding more technology
+12039	When a task fails, check in order: Are the requirements clear? Was the key evidence read? Did it enter the actual request? Did the model propose the correct action? Did the executor execute it? Was the result filled back in? Was completion verified? Each fix should address a located break. Before adding memory, multiple agents or review, state which specific error it will reduce, then compare gains and costs on the same task set.
+19282	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/26.html#agent-practice-research">How does a research agent avoid "searched a great deal, concluded nothing"?</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+21726	If the model did not read the latest configuration, is fine-tuning the first priority?
+28291	Usually, fix the retrieval, context and version chain first to provide correct current evidence, then assess whether a stable gap in behavioral capability remains.
+16304	How do "I remember the terms" and "I understand the mechanism" differ?
+24796	Being able to explain the objects and steps, calculate a small example by hand, give failure conditions and explain verification methods, rather than only repeating definitions.
+12762	Find which layer the error happens in before talking about changing models</a><a href="#foundations-40-s1">First ask which layer failed</a><a href="#foundations-40-s2">A complete investigation without excessive complexity</a><a href="#foundations-40-s3">How to choose among prompts, RAG, memory, skills and fine-tuning</a><a href="#foundations-40-s4">Why advanced follow-up questions are still needed after the foundations</a><a href="#foundations-40-s5">How to keep interview-style answers from becoming memorized slogans</a><a href="#foundations-40-s6">Depth is not measured by the number of terms</a><a href="#foundations-40-s7">How to check that you have connected the main ideas</a><a href="#self-check">End-of-lesson self-check
+21112	Terms and notation at a glance — AI Systems Engineering
+28736	Reading tools</span><span>approx. 9.2 thousand characters
+28894	To understand what a symbol stands for and where it comes from, read <a href="concepts.html">Formulas, terms and where the objects come from</a>. That page distinguishes parameters, inputs, intermediate results, dimensions and execution state, and provides independent micro-examples and entry points to the full lessons.
+27380	This is a quick reference, not foundational teaching reduced to definitions. Each item has examples and a link to the full prerequisite lesson; read the lessons first when learning, then use this page as a handy index.
+19786	Search for a term or question number
+21625	Model
+17934	A computation rule with learnable parameters that turns input representations into output scores or other results.
+13427	A concrete example:</strong> it cannot open files on your computer by itself; only the surrounding program can perform such actions.
+14715	Parameter
+21800	Numbers the model keeps over the long term and adjusts during training.
+13322	A concrete example:</strong> embedding tables and linear-layer weights are both parameters.
+25436	Training
+12339	The process of computing error from examples and a target, then adjusting parameters.
+13465	A concrete example:</strong> this book's scalar training updates w=1 to 1.8.
+19672	Inference
+12277	The process of using existing parameters to process input and produce output.
+13509	A concrete example:</strong> one chat usually does not permanently change the model's weights.
+13685	Function
+19482	An operation that maps input to output according to a rule.
+13350	A concrete example:</strong> f(x)=2x means input 3 gives output 6.
+21356	Scalar
+14111	A single numeric value.
+13320	A concrete example:</strong> 7, or one loss value.
+15553	Vector
+20617	An ordered row of numbers.
+13335	A concrete example:</strong> [0.2,-0.1,0.7,0.4] has 4 components.
+23341	Matrix
+20650	A regular table of numbers with rows and columns.
+13398	A concrete example:</strong> a table with two rows and three columns has shape [2,3].
+18161	Tensor
+21125	A data object used in machine-learning programs to store regularly arranged numbers.
+13342	A concrete example:</strong> [2,3,4] can be read as two tables of three rows and four columns.
+18279	Shape
+15296	The length of each axis, not the data's contents.
+13411	A concrete example:</strong> the contents [[1,2],[3,4]] have shape [2,2].
+26118	Axis
+18164	One indexing direction in a tensor.
+13346	A concrete example:</strong> the three axes of [B,T,d] are sample, position and feature.
+23442	Rank (axis count)
+18169	In tensor contexts, this often means the number of axes, which differs from matrix rank in linear algebra.
+13341	A concrete example:</strong> [2,128,4096] has 3 axes; see F20 for matrix rank.
+24271	Index
+22881	A way to locate data by position; this book's code counts from 0.
+13325	A concrete example:</strong> H[1,0] takes the first position of the second input.
+13812	Slice
+19479	Take data over a range, or from a set of positions while keeping an axis.
+13326	A concrete example:</strong> H[1,:,2] takes the third component at every position of the second input.
+18644	Batch size: the number of inputs organized for computation together.
+13321	A concrete example:</strong> B=2 means two inputs, not two network layers.
+21083	The number of sequence positions scheduled for this round; check whether the particular formula includes the cache.
+13494	A concrete example:</strong> T=128 after padding does not prove every actual input has 128 tokens.
+21985	The width of the internal representation at each position.
+13349	A concrete example:</strong> d=4096 means a row of 4096 numbers.
+7950	N / V (vocabulary)
+25758	The number of vocabulary entries; some papers use V, which must be distinguished from the Value in attention.
+13328	A concrete example:</strong> an embedding parameter table with N=6 and d=4 is [6,4].
+7875	L (layer count)
+11447	The number of model layers stacked in series.
+13483	A concrete example:</strong> the cache formula multiplies by L because each layer has its own K and V.
+10606	Subscript x_i
+15555	The i-th number in vector x, or an object indexed according to its definition.
+13356	A concrete example:</strong> when x=[7,2,9] and indexing starts at 0, x_1 is 2.
+9378	Σ / summation
+18865	Add the terms in a given range one by one.
+13360	A concrete example:</strong> Σ_i x_i expands to x_0+x_1+….
+9579	∈ reads "belongs to"; R denotes the set of real numbers.
+13334	A concrete example:</strong> X∈R^(2×3) means X is a table of real numbers with two rows and three columns.
+9582	≈ / approximately equal
+11412	The two sides are close because of rounding or approximation, rather than identical digit by digit.
+16395	Character
+20113	A written unit or encoded character in text, which cannot be equated directly with a token.
+13363	A concrete example:</strong> the UTF-8 encoding of "爱" occupies multiple bytes.
+16409	Byte
+6837	A storage unit consisting of 8 bits.
+13367	A concrete example:</strong> a float32 usually occupies 4 bytes.
+18709	A rule that encodes Unicode characters as variable-length byte sequences.
+13485	A concrete example:</strong> a network chunk may split the bytes of a Chinese character.
+21655	The fragment unit used by the model's tokenizer.
+13424	A concrete example:</strong> it may be a word, part of a word, punctuation or some bytes.
+21221	The integer address of a token in its vocabulary.
+13337	A concrete example:</strong> [1,2,3] is first a list of IDs, not three degrees of meaning.
+19464	A tool that converts between text and token IDs using the rules paired with the model.
+13395	A concrete example:</strong> a tokenizer cannot be swapped arbitrarily while keeping incompatible model parameters.
+28339	A class of methods that builds a subword vocabulary by progressively merging adjacent symbols.
+13499	A concrete example:</strong> the merge rules are trained first, then used to encode new inputs.
+14944	Another subword modeling method, often using longest-match encoding over a vocabulary.
+13500	A concrete example:</strong> its training objective differs from the BPE merge process; do not simply remember them as the same algorithm.
+11549	A class of subword models that assigns probabilities to candidate subwords and selects a segmentation.
+13389	A concrete example:</strong> it does not always take the longest string in the vocabulary.
+24768	Chat template
+18817	Organizes messages with roles into the input format agreed for the model.
+13496	A concrete example:</strong> roles and end markers may use dedicated tokens.
+7112	Batch
+10476	A group of inputs organized for computation together.
+13457	A concrete example:</strong> an ordinary sample batch does not let different users read each other's content.
+8033	Padding
+24484	Adds placeholders to shorter sequences so a particular organization can be used.
+13345	A concrete example:</strong> right-padding [4,2] gives [4,2,0].
+21797	The special padding item in the model configuration.
+13464	A concrete example:</strong> this book uses PAD ID 0; real models need not use 0.
+9010	Truncation
+13853	Removes part of an overlong input rather than adding placeholders.
+13421	A concrete example:</strong> it may remove key constraints and must not be conflated with summary-based compaction.
+7601	Embedding
+19487	The parameter table, and the operation on it, that retrieves the learnable vector for an input ID.
+13323	A concrete example:</strong> E has shape [6,4], and ID 2 takes row 2 of E.
+8000	One-hot encoding
+22856	An array of 0s and 1s the size of the vocabulary identifies an ID: only the selected position is 1 and all others are 0. This differs from an integer's binary storage and from the trainable floating-point vectors in an embedding table.
+13319	A concrete example:</strong> ID 2 in a 6-entry vocabulary is written as
+29503	; if E has shape [6,4], multiplying this one-hot vector by E is mathematically equivalent to taking E[2], but implementations usually look up the row directly.
+27516	Go to the full explanation and lookup example →
+7870	Lookup
+21442	Reads an entire entry by address rather than using the size of the address in a semantic computation.
+13484	A concrete example:</strong> ID 4 corresponds to [0.1,-0.5,0.9,0.3], rather than multiplying 4 by a vector.
+13752	Distributed representation
+10276	A meaning is expressed jointly by several numbers and their combinations, rather than each column having a fixed semantic label.
+13394	A concrete example:</strong> we cannot assert that dimension 12 always represents happiness.
+9169	dtype / data type
+25289	Specifies how each element is stored and used in computation.
+13452	A concrete example:</strong> integer IDs and floating-point representations usually have different dtypes.
+22468	Floating point
+22969	A computer format that approximates real numbers using a finite number of bits.
+13315	A concrete example:</strong> binary floating point cannot necessarily store 0.1 exactly.
+10754	Different 32-bit or 16-bit floating-point formats have different ranges and precision.
+13324	A concrete example:</strong> FP16 and BF16 both usually occupy 2 bytes, but they are not the same numeric format.
+28315	A general-purpose processor suited to many kinds of control and numeric tasks.
+13466	A concrete example:</strong> the foundational experiments in this package use the CPU and Python standard library.
+28136	A processor suited to large-scale parallel numeric computation.
+13451	A concrete example:</strong> moving data to the GPU does not change the meaning of IDs, but takes time and VRAM.
+7397	Device
+20056	The processor environment where data or computation resides.
+13469	A concrete example:</strong> model weights and input must satisfy compatible device constraints.
+20442	VRAM
+7650	GPU storage for parameters, inputs and intermediate results.
+13418	A concrete example:</strong> the embedding output's size alone is not the model's total VRAM use.
+11648	Binary storage units, equal to 2^20 and 2^30 bytes respectively.
+13316	A concrete example:</strong> 1,048,576 numbers of 2 bytes each occupy 2MiB.
+21127	Weight
+13643	A learnable coefficient that determines how input numbers are combined.
+13336	A concrete example:</strong> multiplying [1,2,3] by coefficients [2,0,1] and summing gives 5.
+22572	Dot product
+11331	Multiply two equal-length vectors element by element, then sum.
+23345	Matrix multiplication / Matmul
+18813	Takes the dot product of each row of the left table with each column of the right table.
+13343	A concrete example:</strong> [2,3] multiplied by [3,4] gives [2,4].
+26104	Transpose / ᵀ
+11680	Swaps a matrix's row and column directions.
+13348	A concrete example:</strong> transposing [[1,2,3],[4,5,6]] gives [[1,4],[2,5],[3,6]].
+25083	Norm
+25128	A class of functions measuring vector size; the L2 norm is the square root of the sum of squares.
+13344	A concrete example:</strong> the L2 norm of [3,4] is 5.
+12214	Cosine similarity / Cosine
+22583	The dot product divided by the two vectors' L2 norms, comparing direction.
+13399	A concrete example:</strong> similar topic directions do not guarantee the same facts or permissions.
+15894	Changes the data view or organized shape while keeping the total element count the same.
+13318	A concrete example:</strong> 6 numbers can be arranged as [2,3] or [3,2], but transposition has its own rearrangement rule.
+9266	permute
+28513	Reorders multiple axes.
+13347	A concrete example:</strong> [B,T,h,d_h] becomes [B,h,T,d_h].
+7121	Broadcast
+18771	Expands compatible singleton dimensions by a rule for combined computation.
+13471	A concrete example:</strong> a bias for each column can be applied to every row of the table; many copies of the bias are not learned first.
+8897	Stride
+22179	The element spacing crossed in the underlying storage when an index moves by one along an axis.
+13503	A concrete example:</strong> a transposed view may be non-contiguous, and a later reshape may need a copy.
+21605	Probability
+15985	The share of likelihood assigned to an event under given conditions and a model.
+13404	A concrete example:</strong> a candidate token's probability is not the correctness probability of the final answer.
+19380	The exponential function turns values into positive numbers; e is about 2.71828.
+19383	The inverse of exponentiation; when no base is specified, this book usually means the natural logarithm.
+13351	A concrete example:</strong> ln(1)=0 and ln(2) is about 0.6931.
+17605	Take the exponential of each score, then divide by the sum of all exponentials.
+13340	A concrete example:</strong> [2,1,0] after Softmax is about [0.6652,0.2447,0.0900].
+18179	Normalization
+19491	Adjusts scale by a chosen rule; the goal differs by context.
+13355	A concrete example:</strong> softmax makes the sum 1, while LayerNorm transforms using the mean and variance; they are different operations.
+24338	Linear layer
+17948	Often written XW+b: a weighted combination of the input, with a bias added.
+13504	A concrete example:</strong> the number of columns in W determines output width.
+12590	Bias (parameter)
+24339	The learnable constant term added by a linear layer.
+13373	A concrete example:</strong> it differs from statistical bias in evaluation.
+22549	Activation
+15179	May mean a layer's intermediate output or an activation function, depending on context.
+13333	A concrete example:</strong> ReLU turns negative numbers into 0; activation VRAM stores this run's intermediate results.
+28922	Nonlinearity
+11002	An operation that cannot be represented equivalently by a single linear transformation alone.
+13332	A concrete example:</strong> ReLU lets the network express more complex piecewise behavior.
+10755	Different nonlinear activation functions.
+13331	A concrete example:</strong> ReLU(x)=max(0,x), while the other two have smooth curves.
+28844	Hidden state
+24728	A row of representation numbers at a particular layer and position inside the network.
+13478	A concrete example:</strong> the same token may have different later-layer representations in different contexts.
+13908	Forward
+19478	Computes output from input according to the network definition.
+13498	A concrete example:</strong> both training and inference perform a forward pass; training also performs a backward pass and updates.
+7006	Attention
+25395	Computes matching shares between the query and readable candidates, then combines their content by those weights.
+13408	A concrete example:</strong> compute scores and weights first, then use the weights to mix V.
+18222	A set of numbers used by the current position to compare against candidates.
+13354	A concrete example:</strong> q=[1,0] is a projected representation, not the user's original words.
+22001	A set of numbers at each readable position for comparison with a query.
+13396	A concrete example:</strong> its dot product with Q produces a matching score.
+21998	The content representation at each readable position to be collected with weights.
+13507	A concrete example:</strong> V here is not the vocabulary size.
+7798	The Key width or width of each head, as defined in the particular formula.
+13431	A concrete example:</strong> a common dot-product scaling divides by sqrt(d_k).
+8864	Self-attention
+21297	The query and readable information come from representations of the same sequence.
+13475	A concrete example:</strong> generative models usually impose causal restrictions as well.
+25288	A constraint specifying which reads between positions are allowed.
+13445	A concrete example:</strong> an interface may use booleans or additive negative infinity; check the true/false convention.
+7221	Causal mask
+25424	Prevents the current position from reading positions that have not yet arrived.
+13402	A concrete example:</strong> position 1 can read 0 and 1, but not 2.
+19553	A marker excluding padding items from valid content.
+13330	A concrete example:</strong> an all-0 PAD vector still does not guarantee its softmax weight is automatically 0.
+25287	Specifies which positions' prediction errors count toward the training objective.
+13476	A concrete example:</strong> user text may be read without directly computing output loss for that segment.
+25188	An ID representing actual logical position, not token identity.
+13426	A concrete example:</strong> the same "爱" at position 1 or 7 may have the same token ID but different positions.
+28328	A method that introduces position information by rotating pairs of coordinates according to position.
+13400	A concrete example:</strong> a 90-degree rotation in two dimensions turns [2,3] into [-3,2].
+19727	Functions describing the horizontal and vertical coordinates corresponding to an angle on the two-dimensional unit circle.
+13454	A concrete example:</strong> a rotation matrix uses them to preserve length and change direction.
+8739	Residual connection / Residual
+18841	Adds a transformation's input back to its output.
+13358	A concrete example:</strong> y=x+f(x) requires shapes that can be added.
+28301	Usually computes the mean and variance of features at each position, standardizes them, then applies learnable scale and offset.
+13338	A concrete example:</strong> ignoring epsilon, [1,3] is standardized to [-1,1].
+19432	Normalizes by the root-mean-square scale, usually without subtracting the mean.
+13339	A concrete example:</strong> divide [1,3] by sqrt(5).
+28303	Usually a small positive number that avoids numeric problems such as division by zero; particular formulas may define it differently.
+13449	A concrete example:</strong> when added to the variance, it affects the exact values.
+28299	A feed-forward sub-network usually applied at every position.
+13430	A concrete example:</strong> it often widens first, then narrows back, with a nonlinearity or gate.
+8898	SwiGLU / gating
+11982	A feed-forward structure in which values from one branch modulate the output of another.
+13378	A concrete example:</strong> it modulates individual numbers rather than "letting one word through".
+18188	Structural arrangements placing normalization before a sublayer transformation or after the residual connection.
+13374	A concrete example:</strong> module names alone cannot determine the gradients and numeric behavior of different structures.
+26609	The unnormalized score the output projection assigns to each vocabulary candidate.
+13419	A concrete example:</strong> it can be negative and is not yet a probability or token ID.
+7003	Argmax / greedy selection
+28174	Selects the index of the candidate with the highest score or probability.
+13385	A concrete example:</strong> no random sampling by probability is involved.
+8842	Sampling
+12340	Draws a candidate according to a probability distribution.
+13479	A concrete example:</strong> the same input can give different outputs without the parameters having changed.
+8937	Temperature
+15874	A parameter that adjusts score scale before softmax.
+13470	A concrete example:</strong> a lower positive temperature generally concentrates the distribution; 0 needs handling according to the interface's special semantics.
+13703	Strategies that keep candidates by their number or cumulative probability.
+13481	A concrete example:</strong> filtering is usually followed by renormalization.
+21746	A token the model uses to end a sequence.
+13397	A concrete example:</strong> this differs from ending because of a maximum output length or user cancellation.
+24822	Autoregressive
+21443	Predicts subsequent items step by step from the existing sequence.
+13515	A concrete example:</strong> after predicting a new token, use it as a condition for later steps.
+16132	Processes a currently known input prefix.
+13436	A concrete example:</strong> obtains each layer's representations and reusable K/V.
+7391	Decode (inference stage)
+24549	The stage that continues generating new tokens step by step.
+13413	A concrete example:</strong> do not confuse it with a tokenizer's decode that turns IDs into text.
+12386	Stores the computed Keys and Values for existing positions at each layer for reuse.
+13383	A concrete example:</strong> this is neither a user's long-term memory nor a prompt summary.
+22874	A parameter or convention for tracking logical positions in the cache.
+13458	A concrete example:</strong> with a historical prefix present, a new query cannot restart at absolute position 0.
+17587	Derivative
+26554	The local rate of output change caused by a small input change.
+13357	A concrete example:</strong> the derivative of x² at x=3 is 6.
+21471	Gradient
+19509	The collection of the loss's partial derivatives with respect to each parameter.
+13382	A concrete example:</strong> these are computable rates of change, not the model's "thinking process".
+9577	∂ / partial derivative
+14996	Notation for a rate of change when only one variable changes and the others are held fixed as defined.
+13366	A concrete example:</strong> ∂L/∂w expresses the local influence of weight w on loss L.
+28583	Chain rule
+18797	Multiplies rates of change across stages of a composite computation and adds them over paths.
+13505	A concrete example:</strong> when output depends on w through intermediate quantities, propagate influence back along the computation chain.
+14805	Backpropagation / Backprop
+13883	An algorithm that uses the chain rule to compute each parameter's gradient efficiently.
+13472	A concrete example:</strong> it computes backward through an existing forward computation graph, rather than generating text in reverse.
+28338	Approximates a derivative from the difference in output after small positive and negative input changes.
+13420	A concrete example:</strong> it can check analytical gradients, but is not a routine substitute for training large models.
+21341	Label
+25453	The target the model is intended to predict during training.
+13490	A concrete example:</strong> the label at the current autoregressive position is usually the next token.
+11675	Cross entropy
+17559	A training objective that takes the negative logarithm of target probabilities and averages them, for example.
+13477	A concrete example:</strong> a target probability of 0.8 gives an individual loss −ln0.8 of about 0.2231.
+7842	Learning rate η
+13641	A coefficient determining the size of an update along the gradient.
+13878	Optimizers using first- and second-order gradient statistics; AdamW handles weight decay separately.
+13440	A concrete example:</strong> resuming training requires considering their state, not only model weights.
+7229	Checkpoint (training)
+12381	A persistent artifact storing the state needed to resume training.
+13423	A concrete example:</strong> it may include weights, optimizer, step count and random state.
+26862	Overfitting
+26859	Adapting excessively to training data and handling new samples poorly.
+13487	A concrete example:</strong> memorizing the teaching example's cyclic sequence does not imply natural-language reasoning ability.
+22961	Performs supervised fine-tuning using specified target answers.
+13428	A concrete example:</strong> this is parameter training, unlike loading a skill in a session.
+13868	Families of reinforcement-learning post-training methods using human or AI feedback.
+13417	A concrete example:</strong> check both the source of feedback and the objective, not just the abbreviation.
+24145	Policy
+24479	A probability distribution over actions or tokens given a state.
+13361	A concrete example:</strong> π(y|x) denotes the probability of producing output y given input x.
+16290	Reward
+22867	A signal used to evaluate actions or results and drive optimization.
+13516	A concrete example:</strong> a high reward does not automatically prove alignment with actual business goals.
+11998	A training method using preference pairs to compare policy probabilities relative to a reference model.
+13495	A concrete example:</strong> compute the conditional probability of the entire answer, not just the final token.
+7765	KL divergence
+25127	Measures the deviation of one probability distribution from another, usually with directionality.
+13327	A concrete example:</strong> KL(p||q) need not equal KL(q||p).
+10758	Different policy optimization methods using probability ratios, estimated signals and other means to control updates.
+13407	A concrete example:</strong> understand policies, rewards, baselines and relative changes before reading the specific formulas.
+23353	Matrix rank / Low rank
+23343	The number of independent directions in a matrix; low rank can approximate a transformation with the product of smaller matrices.
+13380	A concrete example:</strong> it is not the tensor's axis count; a rank2 update can still apply to a two-dimensional weight matrix.
+22882	A fine-tuning method that adapts original weights with low-rank parameter increments.
+13359	A concrete example:</strong> ΔW=AB; train A and B rather than all base weights.
+15998	A class of methods that trains low-rank adaptation parameters on a quantized base model.
+13376	A concrete example:</strong> this does not mean all computation uses 4-bit integers.
+8446	Quantization
+18829	Maps numeric values to discrete representations using fewer bits.
+13511	A concrete example:</strong> it usually needs metadata such as scales and introduces approximation error.
+7398	Distillation
+13877	Trains a student model using a teacher model's outputs or intermediate signals.
+13381	A concrete example:</strong> it is not simply cutting away half of a large model's parameters.
+7932	MoE / mixture of experts
+21453	An architecture that selects some expert sub-networks for computation according to the input.
+13438	A concrete example:</strong> count total parameters separately from parameters activated in this pass.
+10748	Attention structures that differ in how query heads and K/V heads are shared.
+13410	A concrete example:</strong> sharing more K/V can reduce the cache, but does not guarantee identical quality.
+16144	Complexity / O notation
+19731	Describes how the main computation or storage grows with scale, omitting constant details.
+13329	A concrete example:</strong> O(T²) does not mean a particular measurement takes exactly T² milliseconds.
+22469	A metric counting floating-point operations.
+13497	A concrete example:</strong> less computation may still be slow because of memory transfers.
+7111	Bandwidth
+14115	The amount of data that can be moved per unit time.
+13456	A concrete example:</strong> VRAM bandwidth and network bandwidth are different bottlenecks.
+28323	A class of implementations that computes attention through tiling and more effective memory access.
+13384	A concrete example:</strong> it is not sparse attention and does not summarize away old history.
+19434	A class of mechanisms that manages attention caches in blocks.
+13512	A concrete example:</strong> logical contiguity does not require one large contiguous physical memory region.
+18167	Different ways of splitting work with tensor, pipeline and data parallelism.
+13442	A concrete example:</strong> splitting operations, layers or samples has different communication requirements.
+9096	ZeRO / sharding
+28324	A class of methods that reduces duplication across devices by distributing stored training state.
+13387	A concrete example:</strong> this does not change the model's training objective.
+25088	A generation acceleration method in which a draft proposes candidates and the target model verifies and corrects them.
+13403	A concrete example:</strong> preserving the target distribution requires correct acceptance and rejection sampling.
+21439	An execution system that calls the model and tools according to the task and observations, and keeps making progress.
+13371	A concrete example:</strong> it is more than one very long prompt.
+7701	Harness
+24371	The surrounding program that organizes model input, tools, state, permissions and feedback.
+13468	A concrete example:</strong> the model proposes reading a file; the harness executes it and fills the result back in.
+9054	Workflow
+23009	A process whose main steps and branches are arranged by a program in advance.
+13388	A concrete example:</strong> not every step must be decided by the model on the fly.
+23465	An interface on which programs agree about inputs, outputs and behavior.
+13379	A concrete example:</strong> it is not the buttons of a human interface themselves.
+25205	A text format that expresses structured data such as objects, arrays, strings and numbers.
+13425	A concrete example:</strong> valid JSON does not guarantee that field contents are valid for the business.
+17525	A description of structural constraints such as data fields and types.
+13353	A concrete example:</strong> path being a string does not mean any path may be read.
+17953	A network protocol commonly used for client–server requests and responses.
+13448	A concrete example:</strong> receiving an HTTP response alone does not prove the business action succeeded.
+28319	A protocol form that sends server messages incrementally through an event stream.
+13401	A concrete example:</strong> a transport chunk boundary need not coincide with a complete event.
+8965	Tool call
+21702	A structured request proposed by the model, including a tool name and arguments.
+13446	A concrete example:</strong> proposing a call does not mean the tool has executed.
+22971	An identifier that matches a tool call with its result.
+13433	A concrete example:</strong> parallel calls cannot be paired solely by the order in which results arrive.
+8895	State
+24225	A record of the system's currently valid facts or progress.
+13429	A concrete example:</strong> submitted, running, succeeded, failed, result unknown.
+7616	Event
+25575	An unambiguous description recording that something happened.
+13362	A concrete example:</strong> "write started" and "write confirmed" are different events.
+7227	Checkpoint (task)
+11460	Task state saved so work can continue after an interruption.
+13390	A concrete example:</strong> it differs from a training checkpoint and from long-term experience.
+9022	Unknown result
+20232	A state in which completion of an external action cannot be confirmed.
+13502	A concrete example:</strong> a timeout may occur after successful execution.
+17213	A protocol for interaction between a host and external tools or resource servers.
+13377	A concrete example:</strong> it is not a general name for all communication between agents.
+7888	The application host, protocol client and capability-providing server roles in MCP.
+13368	A concrete example:</strong> one host may connect to different servers through multiple clients.
+19527	An authorization protocol and the scope of permitted operations.
+13493	A concrete example:</strong> permission to read a calendar does not mean permission to delete events.
+7295	Context
+21091	The collection of input information available to this model call.
+13510	A concrete example:</strong> it usually does not include everything on the entire hard drive.
+16157	Reuses computation for an identical input prefix.
+13391	A concrete example:</strong> it does not shorten the logical input length or write memory.
+7745	JIT / on-demand loading
+13885	Reads a resource in full only when the relevant task arises.
+13406	A concrete example:</strong> show a skill's name and description first, then read the main text when relevant.
+7286	Compaction
+22992	Replaces a longer history with more compact content or dedicated state.
+13460	A concrete example:</strong> a lossy summary should retain recoverable locations of the original evidence.
+8079	Provenance
+25585	Records where a conclusion came from and the corresponding version and conditions.
+13364	A concrete example:</strong> an exact path, range and version are easier to verify than "see file".
+7738	Index
+11558	An auxiliary data structure built for lookup.
+13461	A concrete example:</strong> having an index does not guarantee fresh content or correct permissions.
+12494	Inverted index
+11901	Finds records of documents containing a term from that term.
+13365	A concrete example:</strong> "timeout" → documents 1, 5 and 8.
+16042	A class of term relevance scores based on term frequency, document frequency and length correction.
+13386	A concrete example:</strong> it does not understand every synonymous expression or directly check facts.
+7615	Embedding (retrieval vector)
+11559	A set of representation numbers produced to match queries and documents.
+13375	A concrete example:</strong> it should not be interchanged arbitrarily with token input embeddings.
+26911	Approximate nearest-neighbor search and one of its graph-based indexing methods.
+13414	A concrete example:</strong> faster candidate lookup may sacrifice some recall.
+12823	A system pattern that retrieves external material, then has a model generate based on it.
+13459	A concrete example:</strong> citations or retrieval do not automatically guarantee an evidence-supported answer.
+8738	Reranking
+17307	Compares retrieved candidates in greater detail and reorders them.
+13492	A concrete example:</strong> if the right material was never retrieved, reranking cannot recover it from nowhere.
+18784	A method that fuses candidates by summing reciprocal forms of their ranks on different paths.
+13443	A concrete example:</strong> it uses rank rather than directly adding raw scores from different models.
+7722	HyDE / hypothetical document
+12519	A method that helps retrieval using representations of generated hypothetical answers.
+13405	A concrete example:</strong> hypothetical content is not a trustworthy fact; real evidence is needed.
+13872	Different methods that organize retrieval using graph relationships or hierarchical summaries.
+13482	A concrete example:</strong> structure can help with cross-document questions but also adds construction and maintenance costs.
+19312	An abstract syntax tree representing a program's syntax structure.
+13488	A concrete example:</strong> it can distinguish a function definition from an ordinary string, but does not contain every runtime fact.
+24699	A protocol for editor–language-service interaction, supporting definitions, references, diagnostics and more.
+13462	A concrete example:</strong> service capabilities depend on the language implementation and project configuration.
+7681	A Git commit snapshot and the contents of the current working directory.
+13463	A concrete example:</strong> uncommitted changes mean the two may differ.
+25783	Semantic / episodic / procedural memory
+13699	Memory categories focusing respectively on stable facts, specific experiences and reusable methods of execution.
+13369	A concrete example:</strong> one repair experience should not be promoted directly into a universal rule.
+11635	When a fact applies, and when the system records or learns it.
+13450	A concrete example:</strong> a policy takes effect on day 1 but is entered only on day 5; the two times are not interchangeable.
+8932	TTL / invalidation
+19459	A cached item or memory stops being used by default according to time or conditions.
+13506	A concrete example:</strong> expiry does not mean a historical record must be wrong, only that it no longer serves as a current fact.
+12334	Professional guidance and related resources available to an agent as needed.
+13372	A concrete example:</strong> this differs from adding a new set of model weights.
+8756	Routing
+21440	The process of choosing a model, tool, skill or execution branch according to the task.
+13501	A concrete example:</strong> evaluate incorrect and missed selections by their actual task loss.
+15929	A programmatic operation run at a specified point in execution.
+13508	A concrete example:</strong> useful for checks that must run, but also adds latency and possible failures.
+16370	A sub-agent and mechanisms for transferring control or tasks.
+13437	A concrete example:</strong> consider how context, permissions and result evidence are passed along.
+7362	DAG / critical path
+20241	A directed acyclic dependency graph and the longest dependency chain determining ideal completion time.
+13473	A concrete example:</strong> independent tasks run in parallel; dependent tasks must still wait.
+7736	Idempotency
+15357	The property or implementation goal that repeated requests for the same business action produce no extra effects.
+13480	A concrete example:</strong> a stable business key matters more than generating a new ID for every retry.
+11737	Updates only when the version or current value still matches expectations.
+13513	A concrete example:</strong> prevents old analysis from overwriting new edits, but does not cover every external side effect.
+8999	Transaction
+25415	A mechanism that gives a group of operations specified boundaries of atomicity, consistency and other guarantees.
+13416	A concrete example:</strong> a transaction within one database does not automatically include a remote network API.
+7005	Atomic operation / Atomic
+23220	An operation that does not expose partial completion relative to a specified observation boundary.
+13453	A concrete example:</strong> atomic file replacement differs from atomicity across files or databases.
+25236	A semantic goal requiring a business effect to occur exactly once.
+13491	A concrete example:</strong> at-least-once delivery plus idempotency can help achieve it; arbitrary systems do not guarantee it automatically.
+14799	Counterexamples / property testing
+22903	Checks behavior using failing examples or relationships that should generally hold.
+13444	A concrete example:</strong> after changing an exclusion rule, paths outside its exclusion scope should still be kept.
+15682	Regression testing / Regression
+21497	Checks that changes have not broken previously required behavior.
+13455	A concrete example:</strong> all old tests passing does not mean a new requirement is implemented.
+7947	Mutation testing / Mutation
+19923	Deliberately breaks the implementation to check whether tests detect the error.
+13439	A concrete example:</strong> if an implementation that always returns success also passes every test, the tests lack discriminating power.
+27145	The proportion of returned items that are correct, and the proportion of all items that should be found that are actually found.
+13412	A concrete example:</strong> their denominators differ; first define the labels for relevance or necessity.
+28294	Usually refer respectively to an estimate of at least one success in k attempts and reliability measures such as all attempts succeeding; use the benchmark's particular definitions.
+13352	A concrete example:</strong> with p=.8 and 3 independent attempts, at least one success is .992 and all successes is .512.
+13079	Retrieval metrics focusing on the first relevant item's position or on ranking quality with graded relevance.
+13393	A concrete example:</strong> they cannot replace final-answer accuracy and permission checks.
+28459	Paired experiment / Paired test
+15424	Compares two approaches on the same task set to reduce differences in task difficulty.
+13474	A concrete example:</strong> independent randomness and execution conditions still need control.
+24749	Confidence interval / Bootstrap
+25203	An interval expressing uncertainty in an estimate, and a resampling method.
+13415	A concrete example:</strong> the interval depends on sampling assumptions and does not guarantee future success.
+22976	A method that uses a model to evaluate outputs according to rules.
+13422	A concrete example:</strong> it may be affected by length, order or style and needs calibration and executable evidence.
+10721	An attack in which untrusted content attempts to change agent behavior or cross authorization boundaries.
+13486	A concrete example:</strong> "ignore the rules" in a web page's body is not a new user instruction.
+6902	ACL / tenant isolation
+17305	Restrictions on who can access an object, and data boundaries between different users or organizations.
+13467	A concrete example:</strong> both retrieval and caches must prevent leaks across permission boundaries.
+8843	Sandbox
+28808	An isolated environment restricting the files, network or resources a program can access.
+13514	A concrete example:</strong> tools outside the isolation boundary still need separate authorization.
+21517	A race in which the target changes between checking and use.
+13441	A concrete example:</strong> after file A is approved, the actual operation must not silently switch to file B.
+10411	A task's execution trace and the operation spans within it that have starts and ends.
+13434	A concrete example:</strong> durations of parallel spans cannot all be added into wall-clock time.
+29040	Runtime metrics such as time to first token and the quantile that 95% of samples do not exceed.
+13432	A concrete example:</strong> an ordinary average may still hide poor tail latency.
+7110	Backpressure / backoff
+26872	Mechanisms that limit continued upstream input under overload, and progressively increase the interval between failed retries.
+13435	A concrete example:</strong> delaying retries does not itself solve duplicate business execution.
+17628	Testing a new version on a small scale, and restoring an old version when problems occur.
+13447	A concrete example:</strong> prompts, models, indexes and tools should form a traceable version combination.
+8042	Patch / multimodal encoding
+18794	The process of splitting an image into patches or turning it into a numeric representation with a vision encoder.
+13317	A concrete example:</strong> splitting 224×224 into 16×16 patches gives 196 patches, but does not guarantee exactly 196 final tokens.
+7220	Calibration
+24752	The property that expressed confidence matches actual correctness frequencies over time.
+13370	A concrete example:</strong> a set of predictions at 90% confidence should be about 90% correct under comparable conditions.
+8794	SAE / interpretability
+23458	Techniques such as sparse autoencoders study features of internal representations.
+13489	A concrete example:</strong> explaining some features does not mean reading out every cause in full.
+6935	Ablation
+14704	A controlled comparison that removes or replaces a component to observe its effect.
+13409	A concrete example:</strong> first verify that adding a review actually reduces defects rather than merely adding steps.
+22632	Empirical relationships between scale, loss and other quantities observed under specific training settings.
+13392	A concrete example:</strong> they cannot be extrapolated unconditionally to every task or model.
+20848	This book's learning path, what its eight sections each address, how to read each section, and three optional entry paths.
+17593	Introduction: how to study a complex AI system — AI Systems Engineering
+18388	How to study a complex AI system
+28738	Reading guide</span><span>approx. 2 thousand characters</span><span>Recommended first reading
+27322	This book is for developers who want a systematic understanding of LLMs and their engineering applications. It starts from ordinary programming knowledge: first explain shared computation, then training and validation, then load training artifacts for inference, and finally cover agent execution and production engineering.
+19416	A learning path ordered by dependencies
+25924	The course order is "shared computation → training and validation → post-training inference → agents and engineering". Learn to read shapes and numbers before examining any implementation, so you can judge what it computes and where it may fail; memorized APIs become obsolete when the version or framework changes.
+15380	Each object is established only once in the book: tensors appear in <a href="foundations/02.html">Lesson 36</a> and are not redefined later; attention is worked through step by step in <a href="foundations/11.html">Lesson 46</a>, leaving Systems to examine implementation differences and limits.
+11533	Why training comes before inference
+19697	Inference loads the artifacts of training. Work through one training run first (<a href="foundations/16.html">Lesson 53</a>), then cover "loading the training result: predict, select and stop, one token at a time" (<a href="foundations/18.html">Lesson 57</a>), so the origins and values of the parameters need not be assumed.
+11656	Five stages, eighteen units
+25920	The course no longer separates "foundations" from "advanced material". It follows the order of understanding a real system: observe a run, build a controlled loop, optimize without opening the model, then enter the model itself, and finally return to acceptance across the full stack. Each stage ends with an assignment.
+25919	Lessons
+27181	What this unit addresses
+23518	Lessons 01—03
+11831	Reconstruct one agent run from its task result
+23573	Lessons 04—06
+18807	Write completion conditions as evidence you can re-check
+23589	Lessons 07—10
+18847	Turn a model proposal into a controlled tool call
+23634	Lessons 11—15
+11562	Assemble the right context for each request
+23646	Lessons 16—21
+25427	Make retrieval results sufficient as evidence
+23695	Lessons 22—25
+26065	Cross-turn state, compaction and long-term memory
+23714	Lessons 26—28
+16271	Failure recovery and the limits of collaboration
+23721	Lessons 29—30
+11878	Control risk by starting from least privilege
+23741	Lessons 31—32
+15778	Fix the task first, then judge whether an optimization works
+23747	Lessons 33—34
+18851	Count every wait and every call against the whole task
+23752	Lessons 35—41
+11879	From the service interface into numbers and model input
+23840	Lessons 42—51
+18742	Work one forward pass out, multiply-add by multiply-add
+23932	Lessons 52—56
+12906	Train first, then freeze the parameters
+23959	Lessons 57—60
+12285	Use the training result to run inference turn by turn
+23979	Lessons 61—63
+11896	From operators to the GPU and service scheduling
+24001	Lessons 64—65
+18800	Bring multimodality and uncertainty back into acceptance
+24006	Lessons 66—67
+26056	Optimize one system across layers
+24012	Lessons 68—68
+22892	Finish the course with project conclusions that can be re-checked
+16768	See <a href="contents.html">Course order and complete contents</a> for the full list of lessons and their units; each lesson's prerequisites and subsequent lessons are shown at the top of its page.
+10474	How to read a section
+12728	First recount the inputs, outputs and operations in between; then recalculate the numbers in the teaching example yourself. Next, read the error cases or limiting conditions for the mechanism. Finish the section's self-check before moving to the next section.
+10686	If you cannot explain a symbol, use its inline term explanation or the <a href="glossary.html">Term index</a> rather than jumping to an unrelated chapter. To change numbers and inspect the result, use the <a href="labs.html">Browser experiments</a>; for step-by-step animations, use <a href="visual-guides.html">Figures and animations
+15634	What is a principle, and what is a constructed example
+25621	Papers and public source code explain verifiable principles and public implementations. Model parameters, user tasks and agent execution traces constructed specifically for teaching are labeled in the text. Code run results prove only properties of the corresponding experiment; they do not directly establish real commercial models' success rates.
+16759	For the complete source list and scope of use, see <a href="sources.html">References</a>; for the verification limits of numbers and run records, see <a href="checks.html">Code, numbers and the limits of verification</a>; for the evidence scope of engineering conclusions, see <a href="engineering/sources.html">Basis of the engineering deep dive
+25894	The standard for understanding a mechanism
+11981	Take "why can a KV cache be reused": a foundational answer needs to know what K/V are and what the cache stores; an advanced answer must give the cache shape at each layer, explain why the causal mask keeps future tokens from affecting old representations, handle changes in position and batch, identify invalidation conditions after a prefix change, and explain how to verify agreement between cached and full forward passes.
+15433	The same standard applies to tool calls, context compaction and long-term memory: describe intermediate states, error windows and evidence of repairs as well as naming techniques. Read <a href="foundations/19.html">Lesson 58</a>, then <a href="chapters/07.html">System mechanism 07</a> to compare the two levels of answer.
+10514	Three optional entry paths
+26067	Path one
+11910	Read in order from the beginning
+22156	The default path without a background in linear algebra or machine learning. Start at Lesson 35, finish each lesson's self-check, then continue.
+23765	Lesson 35 · The life cycle of a model</a><a class="pill" href="examples/input-representation.html">Worked example
+26069	Path two
+17941	Start with a question
+17908	With the foundations already in place, start from a concrete question and read it through both the foundational and in-depth entry points.
+23325	Index of knowledge topics</a><a class="pill" href="search.html">Full-text search
+26068	Path three
+11815	Work back from an external source
+18552	With a paper or official document in hand, use the topic index to find the matching Chinese lecture notes and system chapters.
+11285	Topic index and knowledge dependencies</a><a class="pill" href="reading-notes/index.html">Further reading contents
+11790	Start reading from Lesson 35</a><a class="button secondary" href="contents.html">See the complete contents
+9550	← Preface and reading guide</a><a href="foundations/01.html">Lesson 35｜The life cycle of a model: objects, parameters, training and inference →
+18830	Change a number and watch how every step changes — AI Systems Engineering
+21685	Model experiments and evidence you can re-check
+25619	The explanations themselves are in Foundations and Systems; this area gathers only runnable programs, training artifacts and step-by-step numbers for checking against the text. The shared input, initial weights and trained weights each have explicit records.
+16977	Experiment material
+20018	Numeric viewer
+25264	Inspect the forward pass before updating, the backward pass, the actual update and generation after loading
+7621	F14 forward pass
+24219	Systems 04 backward pass
+17555	Compare every table and computation state
+7623	F16 training
+16761	Full program and run results
+16162	Recomputation and post-training inference
+7624	F18 loading and generation
+17944	Implementation with line numbers
+27663	Trace TinyLM.forward, manual_backward and generate
+24218	Systems 02 operator-by-operator forward pass
+15437	Recomputing training and inference for the same model
+20966	This experiment corresponds to Foundations Lessons 35—62 and Systems Chapters 01—08. Use the embedded numeric viewer directly while following the text; this page gathers the raw data and programs.
+28242	Step-by-step intermediate values
+26888	How to run it and the full code
+17945	Source evidence with line numbers
+14687	Sources for principles and interfaces
+28274	Progressive assignments and the worked experiment</a><a href="#lab-shape">1. Tensor shape and storage size</a><a href="#lab-embedding">2. Choose an ID and see which row it actually retrieves</a><a href="#lab-softmax">3. From scores to probabilities: all four steps written out</a><a href="#lab-mask">4. With a historical cache, which positions can be read
+28728	Reading tools</span><span>approx. 1 thousand characters
+15642	Four local interactive experiments. They make no network requests, call no commercial models and require no installation; they test your understanding of the relationships between numbers and objects, not a model's language ability.
+6245	1. Tensor shape and storage size
+12479	Change the lengths of three axes. The ID table has only B and T; the lookup result adds width d for each position.
+26561	Number of inputs B
+22048	Positions per input T
+22021	Width per position d
+22047	Bytes per number
+25766	Try setting T to 128, d to 4096 and bytes to 2. This estimates only this one output array, excluding model parameters and caches.
+6401	2. Choose an ID and see which row it actually retrieves
+21250	Look up ID
+18541	All numbers are deliberately chosen decimals and negative numbers, not a binary encoding of 0s and 1s; no column is assigned a fixed semantic meaning. After an ID is selected, the one-hot indicator for that ID and the floating-point vector actually looked up in the parameter table are both shown below.
+6478	3. From scores to probabilities: all four steps written out
+12345	Look in order: subtract the maximum, exponentiate, sum, divide by the sum. Adding 1000 to every score should leave the probabilities unchanged.
+13775	Scores (comma-separated)
+6602	4. With a historical cache, which positions can be read
+21301	Query positions are rows and readable positions are columns. When 3 positions already exist and 2 new ones are processed, the table is 2 rows by 5 columns, not 2 rows by 2 columns.
+17907	Number of historical positions
+20154	Number of new positions
+21882	This table shows only causal visibility. A real interface also needs padding and other masks combined, and its true/false and offset conventions checked.
+16704	Full Python code and run results →</a><a class="button secondary" href="examples/input-representation.html">Back to the input representation example
+28273	Progressive assignments and the worked experiment
+11654	Five assignments follow the same task: first turn the execution process into an inspectable record, then change it layer by layer and verify whether the changes actually help. The experiment stack, with its source code, metrics and run results, is under
+5843	and can be run independently.
+12220	Assignment 02｜Build the loop
+12224	Assignment 03｜Optimize the black box
+12228	Assignment 04｜Take over the model
+21688	Model experiment: full code and run results — AI Systems Engineering
+28741	Reading requires no dependency installation; retraining requires Python and PyTorch. Full training and tests were actually run in this CPU environment, with environment versions recorded in the result JSON.
+24065	The third program uses only the Python standard library and reads saved trained weights for an independent forward pass and generation.
+16960	Actual records
+21436	Verification item
+21004	Result from this run
+14745	Parameter count
+25499	Training updates
+6557	400 times
+13831	Initial loss
+20573	Final loss
+25323	Maximum difference: analytical backward pass vs autograd
+10533	Three-round KV vs full-logit difference
+9351	tiny_model.py · Full source
+9292	reference_inference.py · Full source
+9346	test_model.py · Full source
+21687	Model experiment: parameters, forward pass and gradient records — AI Systems Engineering
+16311	How to read the numeric tables
+11986	The following gives the complete parameters of the same model and the forward-pass record for sample 0. Before and after training are explicitly separated and never mixed within one chain. Original-precision data for both samples is in data/run.json; every displayed value is rounded only for display.
+13839	Initial parameters θ₀
+25463	Trained parameters θ*
+13846	Full forward pass with initial parameters (sample 0)
+25464	Full forward pass after training (sample 0)
+13833	Parameter gradients of the initial full-batch loss
+21689	Model experiment: step through the intermediate values of training and inference — AI Systems Engineering
+10389	One record through four states
+10627	Every frame below directly reads actual run records shipped with the book. Both forward and backward passes use θ₀ before updating; the parameter-update frames record real AdamW updates; generation frames use saved and reloaded θ*. Switching groups explicitly changes the stage, rather than mixing numbers from different weights in one forward pass.
+16763	Links to the full explanations
+13915	Forward-pass ledger
+16716	Full backward pass
+14749	Parameter update
+25462	Post-training generation with full forward passes
+24646	Cache comparison
+20688	JavaScript is off; open the static record pages below to read every table and step.
+16770	Complete static numeric tables
+23462	Programs and original records
+12216	Assignment 01: turn one task into an inspectable event trace and acknowledgments.
+12218	Assignment 01｜Observe: turn one task into a trace you can inspect — AI Systems Engineering
+28263	Progressive assignments · 01
+28264	Progressive assignments · 01</span><span>Observe
+12896	Observe a system before deciding which layer to change. The artifact is a run record matching the task, calls, files and acceptance, rather than a screenshot saying "success".
+12031	Task and deliverables
+26009	The document-indexing assistant's initial configuration is
+10167	. The user asks to exclude the root directory
+5869	and its subtree, but keep
+10217	. This is not an implementation of a complex search engine, but a small task that can be accepted independently and span every subsequent layer.
+19735	Submit a raw JSONL trace, a page for inspecting event fields, initial and final configurations, and observation notes you wrote yourself. This assignment is not the baseline for later performance comparisons; freeze the baseline only after the second assignment establishes the loop and measurement contract.
+12925	Run first, then explain
+20250	No internet connection or key is needed. The default backend is a deterministic
+29444	: it produces tool proposals according to known task rules and is not an LLM. This supports practice in observing events, but cannot evaluate intelligence, generalization or commercial model performance. Files are modified only in a newly created temporary directory; output records retain the final configuration and hashes, and the temporary workspace is then cleaned up.
+25895	Understand a trace
+25925	Who produces it
+11125	What it cannot prove
+13660	Preparation to send one request, and the request's byte count
+21693	That the model has accepted or understood it
+17230	The harness records a model proposal
+17743	Tool name, call_id and arguments
+23414	That the disk has already changed
+17807	Tool / harness
+27197	The result or error returned by this call
+20068	That every condition of the entire task is met
+22758	Independent acceptance checker
+18213	Which fixed checks the current artifact passed
+18543	That every unknown scenario is correct
+24375	Termination reason and this task's result
+21647	The model's internal reasoning process
+20315	Time field
+5910	is a monotonic time measured from the task's start;
+5911	is a single-step measurement. Do not add the two together.
+20409	is the serialized UTF-8 byte count, not billable tokens.
+10538	Three observation exercises
+12934	First hide the result fields, inspect only the proposals, and predict which call will change a file. Reveal the fields to check, and identify which observation
+21193	comes from.
+18658	Find the relationship between the fourth backend return and
+11589	: the model making no further tool calls does not mean acceptance can be skipped.
+10062	. The latter says done from the start, but the current file fails the requirements; use it to check whether a UI equating "final text＝success" is misleading.
+18868	Apply the observation method to a real agent
+20649	If you have your own Claude Code or Codex environment, start a separate restricted task, export the structured events the product supports, and retain the product version, permission settings and task directory. Do not assume that different products' event fields match this experiment; write a field mapping first, then present tools, subtasks and errors.
+16772	The official CS2680 A1 showcase repository provides student projects and replay modes, but some projects bypass approvals or listen on all network interfaces. Do not mistake a "working directory" for a sandbox, or expose a local agent control interface to the network without protection. This textbook does not automatically install, start or authorize these projects.
+29062	Acceptance and reflection
+15335	An acceptable page must distinguish proposals, execution, results, cancellation and unknown outcomes; if usage is absent, show "not provided" rather than filling in 0 or guessing costs. The page must link to the original events and final artifact. The observation report must come from your own run: describe one unexpected thing, one piece of evidence for locating it, and one conclusion that cannot yet be drawn; do not prefill personal experiences such as "I learned…".
+24837	Self-check reference answer: why do 17 events not mean 17 model calls?
+11606	Events include requests, responses, tool proposals, tool results, startup and acceptance. This experiment has 4 scripted-backend calls, 3 tool calls and other state events. Their counts and meaning come from the record structure; event totals cannot estimate model-call costs.
+19971	Teaching approach based on: <a href="../../sources.html#source-set-3e7382dd--harvard-a1">the CS2680 observation assignment and official showcase repository</a>. The task, code and trace were independently constructed and executed locally for this textbook.
+25270	Fix these identities before handing observations to the next assignment
+12368	Save the task ID, initial file fingerprint, tool-event call_id, final file fingerprint and independent acceptance. The model's own account is not a success label; missing traces must not be filled in with an attractive invented process.

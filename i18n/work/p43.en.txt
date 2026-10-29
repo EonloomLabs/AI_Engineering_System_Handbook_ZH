@@ -1,0 +1,359 @@
+6204	19｜Advanced evaluation: paired experiments, reliability, causal attribution and grading bias — AI Systems Engineering
+22305	Follow this chapter through its objects and states</a><a href="#topic-2">It went up 10 percentage points — so why can we not conclude anything yet?</a><a href="#c19-h1">1. Define evaluation units and success first</a><a href="#c19-h2">2. pass@1, pass@k and pass^k</a><a href="#c19-h3">3. Pairing controls task difficulty better than unpaired comparisons</a><a href="#c19-h4">4. Significance, practical value and multiple trials</a><a href="#c19-h5">5. Ablation and counterfactuals: why a change works</a><a href="#c19-h6">6. Biases of LLM-as-a-Judge</a><a href="#c19-h7">7. Environment noise and cost accounting</a><a href="#c19-h8">8. Minimal useful evaluation rather than a large platform</a><a class="sub ap-toc" href="#agent-study-eval">Locate regressions with a four-cell table
+23111	Goal: prove what an optimization improves and recognize when scores rise without the system improving. Experiment:
+29501	; all statistical examples are author-constructed, not commercial-agent benchmark scores.
+15720	Causal attribution requires paired tasks, the same environment and explicit changes; repeated runs identify random variation.
+6051	1. Define evaluation units and success first
+10315	A user task, a model response, a tool call and a test assertion are different samples. Engineering utility usually uses the complete task: within specified tools, permissions, time and budget, were requirements met without unauthorized actions or breaking other behavior? Trace metrics locate causes; they cannot replace final outcomes.
+18477	Current environment state and the acceptance checker should judge success. The model saying "Done" is not success, nor is runnable code that fails to meet requirements. Make the evaluation environment, visible tests, hidden tests and allowed edit scope explicit; otherwise an agent may score by changing the grading process.
+18795	When adapting benchmarks to business, record representativeness: languages, repository size, task types, risk and historical frequency. Public code-completion scores cannot directly represent cross-module refactoring, nor customer-service tool benchmarks local coding capability.
+6271	2. pass@1, pass@k and pass^k
+25005	For k independent attempts at one problem, each with success probability p, "at least one success" is
+29458	; "all k attempts succeed" is
+10043	. The former measures candidate capability; the latter is closer to repeat reliability. Actual runs may be correlated, so these simple probability formulas do not apply unconditionally.
+18258	Given n generated candidates, c successful, and k chosen without replacement, the common pass@k estimate is:
+16479	This is a combinatorial estimate from candidate-set sampling; it does not mean production can generate k answers for free or include the cost of selecting the correct one. If the user accepts only one run, focus on pass@1; if retries are allowed, count total time, tool side effects and verification costs together.
+12293	For example, with p=0.9, the probability that all five attempts succeed is about 0.59049 under independence. A high single-attempt score may still be insufficient for frequent automation. This is a mathematical example, not a product's measured reliability.
+6438	3. Pairing controls task difficulty better than unpaired comparisons
+15425	Run both old version A and new version B on the same tasks, obtaining each task's difference
+10107	. The mean difference expresses the change in success rate. Difficult tasks then appear on both sides, reducing differences in sampled task difficulty.
+25037	With multiple runs per task, resample by task clusters, preserving within-task correlation instead of flattening every run into an independent sample. This book's bootstrap resamples paired task rows and outputs a difference interval; it demonstrates a statistical process, not proof from a few dozen samples that any small gain is significant.
+21385	Small samples or success rates near 0/1 can distort simple normal intervals. Wilson intervals are a more robust choice for binomial proportions, but still require understanding the sampling unit. For paired binary outcomes, McNemar's test mainly uses discordant samples where only A or only B succeeds, not shared successes as evidence of improvement.
+6541	4. Significance, practical value and multiple trials
+24500	Statistical significance does not imply a large enough benefit. A success-rate gain of 0.2 percentage points that doubles cost may not be worthwhile; a reduction in a high-risk error may merit attention even with few samples. Report effect size, intervals, cost and error consequences together.
+14823	Trying ten prompts and reporting only the highest score creates selection bias. Use a development set for tuning and a test set not repeatedly inspected for final evaluation; control benchmark leakage as models or skills evolve. Adding failed test cases to a prompt can be a sensible improvement, but those same scores can no longer prove unseen generalization.
+11179	Do not mechanically let one p-value decide every engineering change. A clear deterministic bug fix can be established by counterexamples and regression checks; complex capability optimization needs broader statistics. Evaluation effort should match decision uncertainty.
+6646	5. Ablation and counterfactuals: why a change works
+15471	Changing the model, tools, skill descriptions and tests together prevents attribution even if success improves. Ablation removes one component at a time and observes changes, but components may interact, so individual effects differ from combined effects. Define the most important question first to avoid a full-factorial explosion.
+17245	For skill routing, compare description changes, specialist-body changes and default loading policies separately. For memory, compare no memory, retrieval only and retrieval with verification. For compaction, compare no compaction, ordinary summaries and structured state with access to evidence. Hold other conditions fixed and save actual traces to explain failures.
+25957	Negative controls matter too: an unrelated rule should not yield the same benefit, and deliberately removing key evidence should harm the corresponding tasks. If evaluation ignores these changes, the tasks may be too easy or grading too superficial.
+6704	6. Biases of LLM-as-a-Judge
+21768	Model graders may be influenced by position, length, language style, their own preferences and prompt injection. Research such as MT-Bench discusses these limits; model grading can scale evaluation but is not objective truth.
+17270	For code, begin with deterministic signals such as executable tests, static checks and actual artifact state, then use models to judge design or explanation quality. For complex trade-offs, blind candidate names, swap display order, calibrate against human samples and allow "Cannot judge". Do not show graders a candidate's self-claimed score or use the implementer's summary as the only grading material.
+25705	Graders need regression sets too: correct but brief, wrong but fluent, malicious grading instructions and insufficient information. Agreement with human judgments demonstrates calibration only within that sample scope, not reliability on every future task.
+6788	7. Environment noise and cost accounting
+12351	Dependency-installation failures, network variation and disk/CPU contention may change task results. Record infrastructure failures separately from model/agent failures without arbitrarily deleting unfavorable results. Predefine retries and exclusions, and report both the overall user experience and attributable model outcomes.
+18488	Costs include every attempt, tool call, retry, retrieval, compaction and human rework. Counting only successful paths underestimates approaches with expensive failures. Examine wall-clock time and total compute resources, especially with parallel agents.
+17821	Engineering case · D07
+25724	Evaluation diagnosis: one net question gained, one bootstrap, and a judge that always picks the left-hand answer
+12791	Rule out problems in the measurement system first
+15599	A command exiting 0 may have skipped everything; a judge may favor the left; discarding timeouts changes the denominator; hardware changes can alter coding-agent scores. Official pytest exit codes, model-judge research and infrastructure-noise research each identify these risks.
+20853	What this book's paired experiment actually calculates
+15752	With 8 fixed questions, old and new versions succeed on 4 and 5; per-task differences are [0,0,−1,1,1,0,0,0]. Resample tasks with replacement 10000 times, fix seed=20261021 and calculate a percentile interval. The result includes 0, so this small teaching sample cannot support a strong population-level gain claim; it still locates two improvements and one regression clearly.
+27234	This experiment demonstrates only a statistical method; it neither represents commercial-system success rates nor interprets a bootstrap interval as "A 95% probability that the true parameter is here". Actual projects must also define the sampled population, task clusters and multiple-trial issues.
+25220	Test the judge and abstention separately too
+11681	Swapping answer positions can expose position bias; raising the abstention threshold can improve conditional accuracy while reducing coverage. Do not combine judge scores and accuracy from answering only easy questions into an attractive overall score that hides unfinished business tasks.
+10270	An actionable release conclusion
+19302	Report the fixed version combination, task count, successes and regressions, failure causes, cost and tail latency. With insufficient samples, state that the conclusion concerns a specific mechanism fix only. Retain canary releases where necessary instead of replacing the full system for a small percentage gain. Fixing a deterministic failing case is valuable in itself and need not masquerade as a statistically significant population-wide improvement.
+7349	D07: how to read these results beyond "passed"
+12813	First check that tests actually ran, then inspect task pairing, resampling and judge order. Repeated runs of one question and new independent tasks are different samples.
+13093	Related question: <a href="../../chapters/22.html#engineering-E43">E43: The test command exits 0 — so why may not a single effective test have run?
+7554	E45: The success rate went up a few points — so why can the optimization not yet be declared effective?
+7557	E46: The blind spot of an LLM judge: swap left and right and the winner changes
+7582	E53: If only the questions you are sure of are answered, why might the rise in accuracy be nothing but a fall in coverage?
+6817	8. Minimal useful evaluation rather than a large platform
+11888	Build a small, trustworthy set from actual failures and representative tasks, saving input snapshots, acceptance checks, environments and outputs. Review key cases manually first, then automate repeated runs. No database dashboard is needed up front; a rerunnable script and clear report support many decisions.
+29076	Acceptance question: the new version passes 2 more of 20 tasks. Can you announce a 10% gain? You can describe a 10-percentage-point rise in this sample, but not directly generalize to the business population; inspect pairing, sample representativeness, repeated variation and intervals. Percent and percentage points must also be distinguished.
+18762	Once the tasks are stratified by difficulty, the overall win rate can point the other way
+26440	Input and conditions.</strong> On easy tasks, A succeeds on 9/10 and B on 80/100; on hard tasks, A succeeds on 20/100 and B on 1/10.
+24155	Easy stratum
+7042	A is better.
+15748	Hard stratum
+7024	A is better here too.
+20709	Unbalanced aggregate
+15709	B gets more easy questions, so appears better overall.
+25418	Use the same task set for both approaches or stratified weighting
+28373	Avoid differences in task composition.
+11068	An aggregate mean over nonequivalent samples is not a causal effect
+12810	Check denominators and distributions first.
+18951	Join the steps up.</strong> Task composition can reverse an overall comparison; representativeness and pairing matter more than extra decimal places.
+26804	Limits and counterexamples.</strong> This is a Simpson-style construction, not product results. Stratification variables should also be chosen reasonably in advance, not selected after the fact.
+9524	← 18｜The core of engineering quality: contracts, tests, counterexamples, review and delivery evidence</a><a href="20.html">20｜Inside security: trust boundaries, MCP authorization, sandboxes and side-effect control
+22304	Follow this chapter through its objects and states</a><a href="#topic-2">It went up 10 percentage points — so why can we not conclude anything yet?</a><a href="#c19-h1">1. Define evaluation units and success first</a><a href="#c19-h2">2. pass@1, pass@k and pass^k</a><a href="#c19-h3">3. Pairing controls task difficulty better than unpaired comparisons</a><a href="#c19-h4">4. Significance, practical value and multiple trials</a><a href="#c19-h5">5. Ablation and counterfactuals: why a change works</a><a href="#c19-h6">6. Biases of LLM-as-a-Judge</a><a href="#c19-h7">7. Environment noise and cost accounting</a><a href="#c19-h8">8. Minimal useful evaluation rather than a large platform
+6330	20｜Inside security: trust boundaries, MCP authorization, sandboxes and side-effect control — AI Systems Engineering
+22316	Follow this chapter through its objects and states</a><a href="#topic-2">Material can influence a model without thereby gaining permission</a><a href="#c20-h1">1. Draw data and permission flows first</a><a href="#c20-h2">2. Prompt injection, data poisoning and memory poisoning</a><a href="#c20-h3">3. MCP is a protocol, not a guarantee of trust</a><a href="#c20-h4">4. Least privilege and capability boundaries</a><a href="#c20-h5">5. Path checks and TOCTOU</a><a href="#c20-h6">6. Security semantics of external side effects</a><a href="#c20-h7">7. Logs, secrets and data retention</a><a href="#c20-h8">8. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-security">External differences between blocking before and after
+23116	Goal: align security measures with specific attack surfaces without endless approval for ordinary work. This chapter concerns defensive design; teaching code is not a production security sandbox.
+7905	MCP communication and business authorization are different layers; examine tool schemas, identity, network and file boundaries separately.
+23171	Related step-by-step process: <a href="../../visual/F37.html">Material can influence a model without thereby gaining permission</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24538	Related mechanisms to continue with: <a href="../../visual/F25.html">Lesson 08 · MCP connects interfaces; it does not hand over permissions on its own</a><a href="../../visual/F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened</a><a href="../../visual/F31.html">Lesson 23 · Long-term memory is not a note that is always right
+6030	1. Draw data and permission flows first
+22934	User authorization enters the harness; the model reads context and proposes actions; the tool executor accesses files or services under an identity; results enter the model and logs. Every edge may expand information or action scope. Threat modeling asks who controls input, holds credentials and can cause side effects, beyond listing the term "Prompt Injection".
+16181	External documents, code comments, web pages, retrieved results and tool returns are usually less-trusted data. They may contain relevant content or attempt to change the model's goal. Asking the model to ignore malicious instructions helps but cannot be the only defense; the executor must constrain action scope.
+22950	Asking for a document summary does not authorize its author to request sending emails. A web page claiming to be from an administrator does not gain administrator privileges. Identity comes from the trusted execution environment, not a claim in the text.
+16740	For the full mechanism and a continuing example, see <a href="../../chapters/24.html#agent-practice-security">Reading an "instruction" — why does that not mean it has permission?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+6283	2. Prompt injection, data poisoning and memory poisoning
+23140	Direct injection comes from requests; indirect injection hides in content being read. A subtler chain lets malicious content affect a summary, then stores it in long-term memory for repeated later use as "verified experience". Defenses must retain provenance and authority, without automatically promoting derived content to greater trust.
+21576	Retrieval limits visible material; context labels untrusted content; execution restricts actions; output checks sensitive-data leakage; memory controls writes and lifecycle. No layer independently guarantees a complete solution, but layering reduces the consequences of one mistaken judgment.
+16507	Security tests should include ordinary tasks so defenses do not reject every complex input. Metrics include attack success rate, false blocks on normal tasks, extra latency and human approval burden. The goal is appropriate autonomy with controlled risk, not an agent unable ever to act.
+6411	3. MCP is a protocol, not a guarantee of trust
+7890	MCP distinguishes Host, Client and Server and supports interfaces such as tools and resources. Discovering a tool only means its interface can be listed; calling it still needs transport, identity, authorization and server-side checks. Tool descriptions do not prove permission.
+20837	The authorization specification checked in this book is version 2026-07-28. Its HTTP authorization flow uses OAuth mechanisms with explicit resource targets and token purposes; credential handling for STDIO differs from HTTP, so web-login steps cannot be mechanically imposed on local processes.
+11291	The business layer must still check whether the user may access particular resources. A token permitting calls to
+23032	does not allow reading every user's files. Do not trust a model-supplied tenant field as identity; bind it through the session and authorization context. Forwarded tokens must satisfy audience/resource constraints, not pass arbitrarily from one service to another.
+6542	4. Least privilege and capability boundaries
+15079	Read-only research usually needs only a sample directory or query API; code edits need bounded repositories and branches; deployment needs additional explicit approval. Do not provide arbitrary host Shell access, the entire user directory and every credential by default for convenience.
+17739	Tools can separate capabilities such as reading, generating patches, running preset tests and committing changes. Alternatively, a general Shell can remain in strong isolation. The former requires more interfaces, the latter stronger isolation; the choice depends on task and environment, not an assumption that finer tools are safer.
+16984	Focus approvals on out-of-scope, irreversible, high-value or externally consequential actions. Confirming every
+28410	call can cause fatigue until users mechanically approve a truly dangerous operation. Use sandboxes and allowlists to reduce low-risk approvals, reserving attention for high-consequence decisions.
+6652	5. Path checks and TOCTOU
+20379	for containment within the root helps reject ordinary path escapes, but symlinks or directories may change concurrently between checking and opening. Hard links, mounts and platform path semantics complicate matters too. This book's
+20331	are explicitly not complete sandboxes against a malicious filesystem.
+20485	Stronger implementations may use directory-relative opens, safe flags, container filesystems, restricted writers and network egress limits. The choice requires support from the OS and deployment conditions. A string-filtering regex is not a cross-platform security boundary.
+17548	Likewise, do not execute untrusted repository code directly on a privileged host. Test scripts can delete files or send network requests; run them in isolation with restricted networking and resource quotas.
+6717	6. Security semantics of external side effects
+14868	Sending email, opening tickets, payments, deletion and deployment need target objects, identity, approval and idempotency. If model arguments change, old approval may no longer apply; bind approval to specific operation content or scope, not merely a record that the user once agreed.
+26033	An unknown outcome after a timeout requires reconciliation, not automatic repetition. Rollback is not universal: deleted data may be unrecoverable, sent email cannot truly be recalled, and migrations may be irreversible. Defining recovery boundaries in advance is more reliable than a model's explanation afterward.
+6783	7. Logs, secrets and data retention
+11164	Do not put secrets in prompts, source examples or complete traces. Logs should retain necessary request IDs, operation types, versions and summaries, with sensitive content stored under permission and retention policies. Debugging convenience does not justify keeping every user's data forever.
+24144	Answer caches, embedding indexes and long-term memory are derived data and also need deletion and access controls. This offline textbook's optional online experiments send sample-file contents, requiring manually prepared redacted directories; default tests use neither networking nor keys.
+17937	How a permission-aware retrieval tool avoids leaving authorization to the model's guess
+26411	Input and conditions.</strong> User u7 has read access only to project P1, but the model requests query(project="P2",text="deployment keys").
+26094	Identity source
+25407	The authenticated session confirms u7
+11234	Do not accept a model argument claiming administrator identity.
+21146	Permission check
+9357	u7 lacks authorization for P2
+15935	Reject before search or within a controlled candidate layer.
+26613	Minimize output
+27136	Return an authorization error, not matching P2 excerpts
+28620	Error messages must not leak sensitive content either.
+16994	Audit
+25547	Record the principal, action, target and outcome
+18343	Redact necessary fields.
+15507	The same user queries permitted P1 material
+19480	Return within scope; one denial need not disable every tool.
+19008	Join the steps up.</strong> Trusted identity and authorization belong to the harness/service, not to fields generated by a language model.
+26669	Limits and counterexamples.</strong> Shows only the authorization boundary, not a complete production authentication implementation; actual use must follow organizational security and data-retention policies.
+21757	A document induces the model to request a secret file, but the tool rejects it. Is that success? It can count as effective blocking at the execution boundary, but remains a failure of model resistance to injection. Overall task success also depends on completing the legitimate goal. Record layered metrics separately instead of hiding them in one success/failure result.
+9525	← 19｜Advanced evaluation: paired experiments, reliability, causal attribution and grading bias</a><a href="21.html">21｜Production observability and reliable operation: traces, queues, cancellation and recovery
+22315	Follow this chapter through its objects and states</a><a href="#topic-2">Material can influence a model without thereby gaining permission</a><a href="#c20-h1">1. Draw data and permission flows first</a><a href="#c20-h2">2. Prompt injection, data poisoning and memory poisoning</a><a href="#c20-h3">3. MCP is a protocol, not a guarantee of trust</a><a href="#c20-h4">4. Least privilege and capability boundaries</a><a href="#c20-h5">5. Path checks and TOCTOU</a><a href="#c20-h6">6. Security semantics of external side effects</a><a href="#c20-h7">7. Logs, secrets and data retention</a><a href="#c20-h8">8. Acceptance questions
+6331	21｜Production observability and reliable operation: traces, queues, cancellation and recovery — AI Systems Engineering
+22217	Follow this chapter through its objects and states</a><a href="#topic-2">A trace should tell you causation, not just timestamps</a><a href="#c21-h1">1. A trace expresses causation, not only timestamps</a><a href="#c21-h2">2. What to record to explain failures</a><a href="#c21-h3">3. Queuing and rate limits are system problems</a><a href="#c21-h4">4. How cancellation and timeouts propagate</a><a href="#c21-h5">5. Circuit breaking, degradation and human takeover</a><a href="#c21-h6">6. SLOs and error budgets</a><a href="#c21-h7">7. Incident reviews return to system boundaries</a><a class="sub ap-toc" href="#agent-study-production">Quantiles and failure costs
+23092	Goal: find actual bottlenecks from a complete task trace and define runnable failure strategies. This does not require every local script to build a distributed observability platform.
+19547	Queuing, execution, retries, cancellation and recovery together form waiting time; traces should show these causal relationships.
+6023	1. A trace expresses causation, not only timestamps
+28937	The top-level span represents the user task; lower spans distinguish retrieval, model requests, tools, compaction, delegation and verification. Parallel subtasks should record causal relationships and parents, not simply sum durations into wall-clock time. Waiting between model output and tool execution may come from approval, queues or parsing, not all from a slow model.
+8006	OpenTelemetry offers generative-AI semantic conventions whose locations and fields evolve. This book uses stable concepts such as tasks, calls, tools and verification rather than hardcoding an unstable field as an eternal standard. Pin SDK and convention versions for production integration.
+20259	Logs handle discrete events, metrics aggregate health, and traces connect individual paths. Metrics alone cannot reconstruct a wrongly written file, while saving every original input may leak data. Define the minimum necessary evidence and its access controls.
+16741	For the full mechanism and a continuing example, see <a href="../../chapters/25.html#agent-practice-production">Work out the waiting, the usage and the cost of failure from one trace</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+6293	2. What to record to explain failures
+21779	Model-call records include model identity, prompt/tool versions, token usage, response state and duration; retrieval records include index versions, filters, result IDs and truncation; tool records include action IDs, target scope, prerequisite versions, results and error types; verification records include command/checker versions and artifact versions.
+11181	Logs need not expose complete prompts or internal reasoning. Sensitive originals can be stored at controlled locations with references in traces. Redaction must not remove every metadata field that explains an error, such as replacing distinct call IDs with one identical string and breaking the causal chain.
+12041	Task-success metrics must come from acceptance checks, not model self-reports. An HTTP 200 response containing a refusal or incomplete result requires service-request success and user-task success to be counted separately.
+6428	3. Queuing and rate limits are system problems
+6921	APIs often limit requests, tokens or concurrency, with values varying by service and account; the textbook should not hardcode current allowances. Clients should constrain in-flight requests, output budgets and retries, without multiple sub-agents each assuming access to the entire shared allowance.
+19386	Exponential backoff with jitter reduces synchronized retries but belongs only to retryable errors. Permission denials, schema errors and deterministic business failures should not trigger blind backoff; unknown external side effects need reconciliation. Total retry attempts, time and cost need upper bounds.
+28754	Queues also need backpressure: congested downstream tools cannot be met with ever more plans and candidate actions. Long tasks can save recoverable state and release expensive runtime resources; interactive tasks should prioritize acceptable latency. Scheduling should follow business priority, not allocate resources to whoever generates more tokens.
+6536	4. How cancellation and timeouts propagate
+22924	After user cancellation, the main task should propagate signals to sub-agents, model requests and cancelable tools. Committed external actions may be irreversible and still need tracking to their final state. Distinguish "not started", "stopped", "completed but no further work" and "state unknown" in cancellation outcomes.
+26031	Layer timeouts too: connection timeout, idle-stream timeout, individual-tool timeout and whole-task budget. With little task budget left, do not start a large operation that cannot be canceled. Remaining time is not a hard guarantee, but must influence scheduling.
+27614	Recovery after a process restart reads persistent artifacts rather than asking the model where it left off. The model can interpret records but cannot create nonexistent execution facts. Lesson 63's action journal gives a minimal local example.
+17822	Engineering case · D08
+26903	Operations diagnosis: the critical path, retry amplification and state compatibility after a rollback
+18104	Calculate latency and cost separately
+18021	Parallel work of 3 and 5 seconds followed by a 2-second merge gives 7 seconds of wall-clock time and 10 seconds of total spans; shortening the noncritical branch need not improve the experience. Four tasks cost 12 and only 2 succeed, so cost per success is 6, not 1 after deleting failure costs. Interpret traces together with outcomes.
+28555	Retries and cancellation affect actual state
+10508	Three layers with 3 attempts each can amplify to 27 attempts; a shared deadline limits total waiting, but timeout still does not prove the downstream operation never committed. Check in-flight side effects after cancellation and after rollback alike.
+10288	A common rollback-format trap
+20291	Old state schema1 has timeout_seconds=5; new state schema2 has timeout_ms=5000. Rolling back only a model or application may leave an old reader misinterpreting new values. The experiment explicitly reads both versions, normalizes each to 5000ms and rejects unknown schemas; it does not guess milliseconds because the number looks large.
+17811	The minimum scale of engineering practice
+10285	A small project can record versions and idempotent intent in a JSON manifest rather than immediately introducing a distributed event platform. Units, change times, failure states and final acceptance artifacts still need clarity. Complexity should come from actual failure modes, not making an architecture look senior.
+27176	Validation in the target environment is still needed
+24741	Network queues, actual server rate limits, GPU execution and multitenant loads were not stress-tested here. Local textbook tests prove limited properties of accounting and recovery strategies; they cannot replace actual SLO and capacity tests.
+7351	D08: how to read these results beyond "passed"
+19286	Account separately for retry work, critical paths, failure costs and state compatibility. Speed optimization and rollback are comparable only under the same task definitions.
+13092	Related question: <a href="../../chapters/21.html#engineering-E42">E42: Three layers each retrying three times: why does the bottom one get hit 27 times?
+7567	E49: Wall clock, total span duration, p95, cost per success: the metric names look alike, and computing the wrong one means choosing the wrong optimization
+7572	E50: Why can rolling back the model name alone leave things in a worse tangle? A system version is a set of vectors
+6648	5. Circuit breaking, degradation and human takeover
+16184	A persistently failing external service can be temporarily cut off by a circuit breaker to avoid exhausting budgets, but distinguish global failures from one resource's permission issue. Degradation may reduce optional retrieval, switch to read-only reports or seek human confirmation; it should not silently reduce quality while retaining a "Verified complete" label.
+24986	If the primary model is unavailable, a fallback also needs tool, context and structured-output compatibility checks. Unreadable compaction state may not transfer across models or vendors; preserve understandable task state and access to evidence instead of assuming arbitrary binary state is universal.
+11714	Human takeover needs the current goal, executed actions, pending side effects, current version and next step, not a whole unorganized chat history. The person taking over first needs to know what must not be repeated.
+6706	6. SLOs and error budgets
+8817	SLOs should center on user value, such as the share of permitted tasks completed within specified resources and time, or zero unauthorized high-risk actions. Availability, correctness, latency and security are different dimensions that may not combine into one number. Google SRE practices offer methods for defining user-perceived metrics and error budgets.
+17998	Mean latency can hide a few very slow tasks, requiring tail analysis; mean success rates can hide regressions in a language or high-risk scenario, requiring stratification. Alerts should be actionable: persistent tool-permission errors call for configuration checks, not a vague alarm that the model is insufficiently intelligent.
+6775	7. Incident reviews return to system boundaries
+10400	An agent repeatedly editing a file may result from timeout retries, crash windows, unpersisted state, unstable operation IDs or missing prerequisite versions. Find the smallest reproducible sequence, add the corresponding failure test, then decide which layer to fix. Stronger prompt requests for care cannot replace repaired execution semantics.
+29074	Acceptance question: four subtasks each take 30 seconds and the parent 40 seconds. Can you report 120 seconds of execution? 120 seconds may represent total subtask resource time, while user wall-clock time is 40 seconds. Both are useful but need clear names and cannot be interchanged to prove speedups.
+28559	How a retry storm amplifies a temporary failure
+26139	Input and conditions.</strong> 100 requests hit a rate limit together. If all retry immediately, the next second still has 100 requests; starting another retry branch per request increases this further.
+20244	Unbounded retry
+16277	Resend immediately after failure
+25843	Request volume has not fallen and may worsen rate limiting.
+19385	Exponential backoff
+23686	Attempt 1 waits 1 second, attempt 2 waits 2 seconds, attempt 3 waits 4 seconds
+28806	Limits each request's retry frequency.
+13989	Add jitter
+15892	Stagger randomly within the permitted interval
+28369	Avoid all 100 requests waking together every time.
+18435	Total budget
+20544	Maximum retries, deadline and cancellation signal
+10668	Do not extend the task forever to "Guarantee success".
+13956	Side-effect check
+13620	Writes still need idempotency or verification
+28132	Backoff does not remove duplicate-execution risk.
+19016	Join the steps up.</strong> Reliability is more than extra attempts; retries need bounds from load, idempotency and user waiting.
+26634	Limits and counterexamples.</strong> 1/2/4 seconds are teaching parameters; real use should respect service retry guidance and business deadlines.
+9526	← 20｜Inside security: trust boundaries, MCP authorization, sandboxes and side-effect control</a><a href="22.html">22｜Cost and performance decisions: per successful task, not per token
+22216	Follow this chapter through its objects and states</a><a href="#topic-2">A trace should tell you causation, not just timestamps</a><a href="#c21-h1">1. A trace expresses causation, not only timestamps</a><a href="#c21-h2">2. What to record to explain failures</a><a href="#c21-h3">3. Queuing and rate limits are system problems</a><a href="#c21-h4">4. How cancellation and timeouts propagate</a><a href="#c21-h5">5. Circuit breaking, degradation and human takeover</a><a href="#c21-h6">6. SLOs and error budgets</a><a href="#c21-h7">7. Incident reviews return to system boundaries
+6333	22｜Cost and performance decisions: per successful task, not per token — AI Systems Engineering
+22219	Follow this chapter through its objects and states</a><a href="#topic-2">A trace should tell you causation, not just timestamps</a><a href="#c22-h1">1. The right cost denominator</a><a href="#c22-h2">2. A simplified expected cost for model cascades</a><a href="#c22-h3">3. Which layer should cache</a><a href="#c22-h4">4. Reducing turns is usually worth checking before trimming words</a><a href="#c22-h5">5. Optimize by bottleneck</a><a href="#c22-h6">6. A concise gain–risk assessment template</a><a href="#c22-h7">7. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-optimization">Model routing ablation
+11278	Topic studies</span><span>approx. 2.7k characters</span><span>Figures and item-by-item explanations
+23102	Goal: put model, context, caching, parallelism and review overheads into one decision model. All price examples are hypothetical, not current vendor quotes.
+18470	Cost per successful task has a denominator closer to actual user benefit than the price of one call.
+6045	1. The right cost denominator
+10412	A cheap call that fails may need more searches, retries and human rework, making the whole task more expensive. Calculate
+29282	, and separately report failed-task consumption. Selecting only successful cases produces an overly optimistic view of unstable systems.
+18496	Costs include at least input, output, cache reads/writes or service-defined billing items, tools, infrastructure and human time. Reasoning models may use extra internal reasoning compute; displayed text length does not represent every cost. Use actual bills and interfaces for current product usage, not estimates from old articles.
+27167	Distinguish cash costs, wall-clock time, development/maintenance costs and risk losses too. A complex cache service that saves a few tokens while adding failure points and maintenance may not be worthwhile.
+16742	For the full mechanism and a continuing example, see <a href="../../chapters/26.html#agent-practice-optimization">Optimization locates the bottleneck first; it is not about chasing fewer tokens</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+6287	2. A simplified expected cost for model cascades
+12546	Assume a small-model call costs Cs and succeeds with probability ps; failure is detected reliably and followed by a large-model call costing Cl. Simplified expected cost is
+29411	; compared with directly calling the large model at cost Cl, a cascade benefits when
+10025	. This model deliberately ignores misclassification, extra handoffs and failure side effects, so it is only a starting point.
+25074	If the verifier misses small-model errors, the system never escalates and quality falls; an expensive verifier adds Cv; an incorrect small-model patch that damages the environment adds recovery costs. Expand actual formulas by correct/incorrect detection branches instead of considering only one call's price.
+15731	Test cascades first on low-risk tasks that are easy to verify. Failures of cheap models may be harder to detect in ambiguous design, long permission chains or complex concurrency. Measurements decide whether to route; no default "task-complexity judge model" is required.
+6434	3. Which layer should cache
+15144	Retrieval results, tool results, model-prefix computation and final answers can be cached, with different invalidation conditions. Retrieval caches depend on queries, permissions and index versions; tool caches on resources and time; answer caches also on context, models and output constraints. Omitting tenants or permissions from cache keys turns a performance issue into a data leak.
+25792	Semantic caching reuses similar requests, but "Show me Alice's order" and "Show me Bob's order" have similar meanings and different objects and permissions. Do not return sensitive answers from vector similarity alone. For exact business state, conservative keys and short lifetimes are usually easier to verify.
+8074	Prompt caching depends on service-supported reusable prefixes. Stable system instructions and tool definitions may help, but dynamic task facts must not be frozen for hits. Lesson 59 distinguishes KV state from service billing caches.
+6532	4. Reducing turns is usually worth checking before trimming words
+14090	Ten serial model calls each incur fixed network and inference waiting; even 10% less input per call may yield limited end-to-end improvement. Removing a useless analysis or repeated review may reduce latency, tokens and state complexity together. Removing necessary verification lowers success, so distinguish useless steps from critical ones.
+17740	Tools can return more direct results: location and range together instead of listing directories and guessing files individually, or aggregated independent read-only queries instead of pointless serialization. Batch execution must retain each item's state rather than let one failure hide the others.
+18039	Parallelism suits independent tasks; performing risky actions early is not performance optimization. Faster first output can improve experience, but report total time if the final result is slower or unreliable.
+6634	5. Optimize by bottleneck
+25055	A faster model helps little when tools dominate; less unnecessary narration may help long outputs; repeated work calls for state and evidence repairs; noisy retrieval calls for recall and selection repairs. Traces locate problems; experiments supply evidence.
+11155	Do not add technology early because it is popular. Vector databases, graph memory, sub-agents, rerankers and compaction models all have fixed costs. Direct ripgrep and precise reads may be faster and more accurate for a small codebase. Reevaluate as scale and task distributions change.
+6726	6. A concise gain–risk assessment template
+13625	State the specific current failure, smallest change, expected causal mechanism, success metric, possible regressions, validation method and rollback conditions. A clear bug fix needs only a few sentences and a counterexample; architectural changes call for fuller experiments.
+12316	For example, semantic retrieval aims to improve locating code without symbol names; risks include stale versions and false same-name matches. Compare natural-language task descriptions with exact-symbol tasks and retain a path prioritizing exact retrieval. This guides implementation better than "Comprehensively improve intelligent retrieval".
+18481	When success rates differ by 1 percentage point, critical failures matter more than average cost
+26346	Input and conditions.</strong> Approach A succeeds on 990 of 1000 tasks at mean cost 1; B succeeds on 980 at mean cost 0.8, with all 10 extra failures involving incorrect release versions.
+18420	Total cost
+7149	B saves 200.
+22046	Per successful task
+27183	This average still makes B look cheaper.
+29033	Risk stratification
+6100	10 extra errors are concentrated in release tasks
+15232	May violate that stratum's risk limit.
+26084	Routing approach
+12429	Keep A for releases; evaluate B for ordinary tasks
+10812	A global either/or choice is unnecessary.
+10588	Release conditions
+19445	Validate success, losses and rollback by stratum
+11037	Do not accept high-loss failures solely for average overall savings.
+19074	Join the steps up.</strong> Cost matters but is not the only objective; failure losses can differ by orders of magnitude across tasks.
+26725	Limits and counterexamples.</strong> Numbers are hypothetical and do not constitute an estimate of economic returns; organizations must define their own acceptable risk.
+20209	Approach A costs 1 unit per attempt with 50% success; B costs 1.5 units with 90% success. With independent retries and no additional failure effects, cost per success is approximately 2 for A and 1.667 for B. Correlated retries or rework require recalculation. The lowest per-attempt cost need not mean the lowest cost per success.
+20543	Finally, saving tokens is not the only objective. For valuable engineering problems, reading necessary source or running another critical test may be highly worthwhile. Optimization seeks verifiable business capability from each cost, not a system that merely looks economical.
+9527	← 21｜Production observability and reliable operation: traces, queues, cancellation and recovery</a><a href="23.html">23｜Fine-tuning, quantization and distillation: change the model, or change the input system
+22218	Follow this chapter through its objects and states</a><a href="#topic-2">A trace should tell you causation, not just timestamps</a><a href="#c22-h1">1. The right cost denominator</a><a href="#c22-h2">2. A simplified expected cost for model cascades</a><a href="#c22-h3">3. Which layer should cache</a><a href="#c22-h4">4. Reducing turns is usually worth checking before trimming words</a><a href="#c22-h5">5. Optimize by bottleneck</a><a href="#c22-h6">6. A concise gain–risk assessment template</a><a href="#c22-h7">7. Acceptance questions
+6335	23｜Fine-tuning, quantization and distillation: change the model, or change the input system — AI Systems Engineering
+23110	Goal: judge when parameter adaptation is actually needed, understand constraints inside LoRA and quantization, and avoid using training methods to solve data-freshness problems.
+12687	First distinguish knowledge updates, behavioral adaptation and runtime resources, then consider retrieval, fine-tuning and quantization respectively.
+6031	1. Diagnose knowledge and behavior gaps first
+21636	For unknown recent interfaces, retrieve current documentation first; for repeated wrong output formats, first repair schemas and examples; consider fine-tuning only for systematic weakness on stable domain tasks. Memory supports cross-session information use, skills supply procedural methods, and the harness organizes execution; they do not replace parameter updates or one another.
+18338	Fine-tuning costs include data construction, training, evaluation, deployment, rollback and ongoing maintenance. A few hundred low-quality examples may be less useful than one clear tool interface. In particular, do not train every frequently changing repository implementation into a model, making every code edit leave the model stale.
+6267	2. LoRA's low-rank update
+17530	For weight matrix
+29144	, LoRA freezes base W and learns
+10050	. A parameter count of
+29320	, significantly reducing trainable parameters when r is small.
+13913	The forward pass can be written as
+10069	. Under suitable conditions, ΔW can merge into W at deployment to reduce extra computation; switching adapters, quantized bases and precision requirements change the best deployment choice. Low rank is a parameterization assumption and does not guarantee full-fine-tuning quality with tiny r on every task.
+28195	The choice of adapted layers matters too. Editing attention projections alone offers different capacity from also editing feed-forward layers; fewer parameters do not remove activation costs, and backpropagation still follows the relevant graph. Evaluation must include existing capabilities to detect regressions caused by specialist gains.
+6412	3. Where QLoRA's savings come from
+8441	QLoRA combines a frozen low-bit base with trainable adapters; the research uses particular quantization representations and memory-management methods. The key is low-bit base storage, dequantization/higher precision according to operator needs during computation, and gradient updates mainly on adapters.
+16442	This does not make every training state 4-bit or enable lossless fine-tuning of any 4-bit model. Quantization format, group scales, compute dtype, optimizer and sequence length jointly determine VRAM and quality. A claim that it fits on one GPU needs the complete configuration.
+12197	Low-bit deployment also depends on hardware-kernel support. Fewer theoretical weight bytes do not ensure faster end-to-end execution if frequent conversion or inefficient kernels intervene. Measure capacity gains separately from speed gains.
+6547	4. Why quantization error depends on activation distributions
+24341	A linear layer's error can be written as
+10047	. Even small mean squared weight error may cause large output error if concentrated in high-magnitude directions frequently used by input x. AWQ and similar methods use activation information to design quantization, showing why weight distributions alone may be insufficient.
+16020	Uniform quantization usually maps floating-point values to finite integer grid points using scales and possible zero points. Per-tensor, per-channel and per-group scales differ in storage and error. Outliers may expand the range and reduce effective resolution for most values. Clipping, grouping and mixed precision all have trade-offs; no default is lossless for every task.
+21368	Calibration sets should cover actual activation distributions. Calibrating only on English chat and deploying on long code and structured tool arguments may cause different regressions. Test long contexts, rare symbols, exact numbers and tool formats, not only ordinary Q&A.
+20907	Conditions for this example:</strong> independent linear example: weights W=[1.00,0.26] are quantized at scale 0.1 and restored as Ŵ=[1.00,0.30], so ΔW=[0,+0.04]. Test inputs xA=[1,1] and xB=[1,100] separately.
+21138	Weight error ΔW
+26912	Approximate weights minus original weights.
+26628	Output error Δy
+15451	Approximate output minus original output for the same input.
+22553	Activation distribution
+21684	The range of input values the model actually encounters, not only the weight range.
+14699	Original and approximate outputs
+23198	Output errors from the same ΔW
+21542	Check the error source
+24081	The second input feature rises from 1 to 100, amplifying error 100 times
+11374	Both runs use the same weights and quantization scale; only input changes. The second weight looks wrong by only 0.04, but matrix multiplication multiplies that error by its input value; input 100 contributes error 4.
+27343	This explains why maximum or mean weight error alone cannot judge safety on actual tasks. Use calibration and evaluation samples representative of actual inputs, observing final outputs and task metrics.
+10741	Later layers keep mixing these errors; the 100-fold factor in this small example cannot be mechanically applied to a whole language model. Quantization speed also depends on hardware and compute kernels.
+11208	Do not conflate:</strong> no quantization method is claimed here to guarantee losslessness. The example shows input sensitivity that can be derived exactly for linear computation.
+6650	5. Distillation: more than copying final answers
+25104	Distillation can use teacher probabilities or generated samples to teach student behavior. Soft targets include relationships among nonpreferred classes, but teachers make mistakes too; training on wrong answers scales errors. Tool-agent actions, observations and recovery strategies may also be learned from traces, but environment results must be genuine.
+19995	A teacher's explanation need not match its actual internal computation. Using visible reasoning text as the sole knowledge source may teach style rather than capability. Evaluate students on independent tasks in verifiable environments and measure cost–quality curves.
+6720	6. Data and version management
+12375	Save the base model, Tokenizer, chat template, adapter, training-data version, hyperparameters, evaluation set and deployment configuration. An adapter file alone may not restore behavior. Template changes can give the same weights different role markers, and quantization-version changes may affect results too.
+20039	Split data along actual relationship boundaries such as repositories, time or users, not random splits of highly similar excerpts. Distinguish human and model-generated data sources and define deduplication and contamination checks before evaluation. Tests seen during iteration become development data; repeatedly tuning them to high scores does not prove generalization.
+21139	Equal weight errors produce different output errors with different activations
+26373	Input and conditions.</strong> Scalar multiplication y=xw. Both channels have quantized weight error Δw=0.01, but activations are x1=100 and x2=0.1.
+26626	Output error 1
+26627	Output error 2
+21136	The absolute weight error is the same
+26606	Output effects differ by a factor of 1000.
+21363	Meaning for calibration
+19853	Collect representative activation distributions
+20612	Helps identify channels that need more protection.
+15082	Adjusting one weight does not implement AWQ
+16762	The full algorithm also needs equivalent scaling, quantization granularity and hardware representations.
+19257	Join the steps up.</strong> Quantization must examine not only weight error but how actual activations carry it into outputs.
+26721	Limits and counterexamples.</strong> The teaching linear error is a local principle, not the full AWQ algorithm or a reproduction of accuracy and performance.
+6777	7. Decisions and acceptance
+18255	Fine-tuning may be unwarranted when a base model with good retrieval already meets the task. If it significantly shortens prompts, stabilizes formats or improves specialist-task success, prove that on the same tasks with total costs. Rollback must restore the old model/adapter and confirm caches and state are not mixed.
+29070	Acceptance question: does LoRA's small parameter count prevent forgetting base capabilities? No guarantee. Few parameters can still change output distributions substantially. Retain both general and specialist regressions instead of inferring safety from the trainable-parameter share.
+9528	← 22｜Cost and performance decisions: per successful task, not per token</a><a href="24.html">24｜Multimodality and computer use: representation, grounding, and the observe–act loop
+6338	24｜Multimodality and computer use: representation, grounding, and the observe–act loop — AI Systems Engineering
+22255	Follow this chapter through its objects and states</a><a href="#topic-2">Image representation and interface action are two different problems</a><a href="#c24-h1">1. Multimodal input is more than adding an image to a text model</a><a href="#c24-h2">2. Why GUI agents are less certain than ordinary tool calls</a><a href="#c24-h3">3. Bind coordinates to state</a><a href="#c24-h4">4. Trust boundaries in browser tasks</a><a href="#c24-h5">5. How to check multimodal task completion</a><a href="#c24-h6">6. Combination strategies for deep applications</a><a href="#c24-h7">7. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-multimodal">Stale observations
+23105	Goal: distinguish images/audio entering a model from an agent operating an interface, and design verifiable, recoverable GUI tasks. This textbook ran neither commercial vision models nor the OSWorld benchmark.
+18515	Screenshot coordinates must match the actual current interface; observe again after acting instead of continuing clicks on an old image.
+6035	1. Multimodal input is more than adding an image to a text model
+17972	Common vision-language systems split images into patches or use a vision encoder to obtain representations, then connect them to language models through projection or other interaction mechanisms. Architectures differ widely. Resolution, cropping, scaling and position affect visible detail and cost; every image cannot be treated as one fixed token.
+28931	Audio also involves sampling rates, frame features, encoding and time alignment. Speech-recognition text preserves only some audio information; tone, speakers and timing relationships may be lost. Distinguish processing transcribed text from a model directly using modal representations.
+20814	This book explains only public general structures, without inventing unpublished multimodal networks behind Codex, Claude or Copilot. Check supported input types and limits against the actual model interface version.
+16744	For the full mechanism and a continuing example, see <a href="../../chapters/27.html#agent-practice-multimodal">The interface was read correctly — so why can the action still click the wrong thing?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+6266	2. Why GUI agents are less certain than ordinary tool calls
+24414	Structured APIs identify targets by object ID; GUI agents may see only screenshots or a DOM and must locate buttons, fields and current state. Interfaces may change between screenshot and action, with scrolling, scaling or window sizes invalidating coordinates. A successful click return does not establish business success.
+10331	A closed loop observes current state, identifies the target, performs a limited action, then observes and verifies the result. Long sequences of blind clicks can all fail after the first deviation. Before a high-risk final action, reconfirm the target object and page state.
+7368	DOM and vision both have limits. The DOM provides structure and semantics but may be unavailable for canvas, remote desktops or custom controls; screenshots reflect visual layout but may be imprecise in text details and targeting. Prefer reliable APIs when available, using GUIs when interface operation is required.
+6422	3. Bind coordinates to state
+16349	For coordinates predicted on a scaled screenshot, the executor must convert to the original window dimensions; crops also require offsets. Validate transforms as deterministic code rather than asking the model for verbal estimates. Include window scaling, DPI and scroll positions in current observation state.
+17271	On dynamic pages, actions can be tied to the latest screenshot version or visible-element conditions. If the page changes, observe again instead of using old coordinates. Seeing something in one screenshot is not a permanent fact, following the same freshness principle as source-code and retrieval versions.
+20110	Text recognition is not guaranteed either. Verify critical fields such as amounts, email addresses and versions through structured reads or double checks, especially before sending, purchasing or deleting. Visual similarity alone does not establish target identity.
+6518	4. Trust boundaries in browser tasks
+24746	Page content remains untrusted even when the browser is logged into the user's account. Pages can induce navigation, downloads or information leaks. Tools should constrain access scope, download execution and external submissions. A logged-in session gives capability, not authorization for every action in the current task.
+23362	Research usually needs only reading and summarization; filling a form does not submit it, and drafting does not send. Reports must distinguish preparation from actual completion. After cross-site navigation, recheck target domains and resources rather than transferring old-page trust automatically.
+28936	Why old coordinates click the wrong place after a page scrolls 200 pixels
+26316	Input and conditions.</strong> The button's screenshot viewport coordinate is y=300. After the screenshot, the page scrolls down 200 pixels while the button stays at the same document position.
+14226	Original relationship
+20120	Document y=viewport y+scrollY
+18263	At that time scrollY=0 and document y=300.
+22538	After scrolling
+20198	The new viewport y should be 100.
+20279	Clicking old coordinates
+11774	Still click y=300
+12117	Hits different content.
+23490	Robust process
+28538	Observe again or use reliable element targeting
+23404	Confirm target identity and visibility.
+24464	Verify the result
+12374	Check the actual value after saving
+10679	A coordinate hit is not evidence of business success.
+19199	Join the steps up.</strong> Page changes between observation and action make coordinates stale; GUIs also have version-consistency problems.
+26773	Limits and counterexamples.</strong> This simple one-dimensional scroll example omits fixed positioning, scaling and iframes; actual targeting needs checks against interface structure.
+6638	5. How to check multimodal task completion
+7997	Benchmarks such as OSWorld evaluate open-ended tasks in actual computer environments, emphasizing final state rather than only correct screenshot descriptions. OS, application version, resolution and initial state affect results; one benchmark score cannot directly establish arbitrary desktop-automation reliability.
+16966	Acceptance should read independent results where possible: was the file generated with correct content, was form data saved to the expected record, and does page state reflect the goal? Screenshots support evidence, but a button looking pressed does not prove business completion.
+18446	Recovery experiments should include slow loading, pop-ups, moving elements, page refreshes, expired logins and network failures. Action idempotency matters too: repeated "Create" clicks may produce several records. Lesson 63's unknown-outcome and reconciliation ideas apply to GUIs as well.
+6724	6. Combination strategies for deep applications
+10292	A reporting task can extract data through an API, calculate in code and inspect the display in a browser, avoiding cell-by-cell visual reading followed by mathematics. A UI regression task can control state with browser automation, inspect layout with screenshots and verify function with structured assertions. Let each tool handle its strengths.
+11147	Do not abandon deterministic tools for "AI throughout". Conversely, multimodal models can fill traditional automation gaps when visual understanding, complex document layouts or unstructured interfaces are truly needed. Actual observable capability determines boundaries, not technical preference.
+21653	A model correctly identifies a "Save" button in a screenshot. Does that establish it can operate the application? No. Recognition, grounding, execution, confirmation and recovery are different capabilities requiring complete-loop tests. Advanced applications need systems that know when evidence is insufficient to continue, instead of clicking until things look successful.
+9529	← 23｜Fine-tuning, quantization and distillation: change the model, or change the input system</a><a href="25.html">25｜Trustworthy answers and interpretability: calibration, abstention, evidence and causal intervention
+22254	Follow this chapter through its objects and states</a><a href="#topic-2">Image representation and interface action are two different problems</a><a href="#c24-h1">1. Multimodal input is more than adding an image to a text model</a><a href="#c24-h2">2. Why GUI agents are less certain than ordinary tool calls</a><a href="#c24-h3">3. Bind coordinates to state</a><a href="#c24-h4">4. Trust boundaries in browser tasks</a><a href="#c24-h5">5. How to check multimodal task completion</a><a href="#c24-h6">6. Combination strategies for deep applications</a><a href="#c24-h7">7. Acceptance questions

@@ -1,0 +1,612 @@
+21823	Index of figures and detailed calculations — AI Systems Engineering
+15855	The figures sit beside the specific mechanisms, calculations or failure records in their original chapters. This index follows their reading locations for easy review; you do not have to finish this page before entering the main text. The existing section figures in Foundations are retained; chapter-opening schematics use the same player and explicit inputs.
+21186	Sources and version scope
+25374	Checks of calculations, structure and content retention
+24266	Systems: the internal process behind each question
+8306	Q069 · What the model receives is one request, not the whole workspace</a><small>chapters/01.html · corresponding subsection in the text
+8308	Q070 · The merge order in BPE decides what can still be merged later</a><small>chapters/01.html · corresponding subsection in the text
+8311	Q071 · Instruction priority and execution permission are two separate gates</a><small>chapters/01.html · corresponding subsection in the text
+8313	Q072 · Four kinds of "vector", told apart by what the coordinates mean rather than by how they look</a><small>chapters/01.html · corresponding subsection in the text
+8317	Q073 · In one forward pass, which steps mix positions and which mix only features</a><small>chapters/02.html · corresponding subsection in the text
+8319	Q074 · Compute three branches from the same X, then arrive at one concrete output</a><small>chapters/02.html · corresponding subsection in the text
+8323	Q075 · Subtracting the maximum only changes the scale of the computation, not the probabilities between the candidates</a><small>chapters/02.html · corresponding subsection in the text
+8326	Q076 · The residual, normalization and the FFN are not attention done over again</a><small>chapters/02.html · corresponding subsection in the text
+8328	Q077 · The mask for cached decoding has to be filled in by absolute position; the small triangle cannot simply be copied</a><small>chapters/03.html · corresponding subsection in the text
+8331	Q078 · What RoPE keeps is the relative angle, not a position that starts over each turn</a><small>chapters/03.html · corresponding subsection in the text
+8334	Q079 · GQA keeps several queries, and only has them share fewer K/V</a><small>chapters/03.html · corresponding subsection in the text
+8340	Q081 · The backward pass is not the forward arrows played in reverse; it distributes "influence" along the dependencies</a><small>chapters/03.html · corresponding subsection in the text
+8367	Q089 · The token just selected has not yet entered the turn of computation that is its own</a><small>chapters/04.html · corresponding subsection in the text
+8370	Q090 · With the same scores, handling the sampling steps in a different order gives a different set of candidates</a><small>chapters/04.html · corresponding subsection in the text
+8373	Q091 · "Output stopped" and "task succeeded" have to be drawn on different state lines</a><small>chapters/04.html · corresponding subsection in the text
+8377	Q092 · An internal reasoning budget, external search and multi-agent are not on the same layer</a><small>chapters/04.html · corresponding subsection in the text
+8337	Q080 · Shifting the training labels one slot to the right means every position answers for the next item</a><small>chapters/05.html · corresponding subsection in the text
+8344	Q082 · AdamW's "historical state" is accounted for separately from this step's gradient</a><small>chapters/05.html · corresponding subsection in the text
+8348	Q083 · How one training sample enters the computation carrying its source and its label</a><small>chapters/05.html · corresponding subsection in the text
+8351	Q084 · Training VRAM is not the single sum "parameter count times two bytes"</a><small>chapters/05.html · corresponding subsection in the text
+8354	Q085 · What DPO compares is the "preference gain relative to the reference model"</a><small>chapters/06.html · corresponding subsection in the text
+8358	Q086 · A within-group reward is only a relative comparison, not proof of absolute correctness</a><small>chapters/06.html · corresponding subsection in the text
+8361	Q087 · MoE routing results have to be followed token by token</a><small>chapters/06.html · corresponding subsection in the text
+8364	Q088 · LoRA, quantization and distillation each change a different object</a><small>chapters/06.html · corresponding subsection in the text
+8379	Q093 · Why old K/V can be reused: a new token cannot reach back and change the old prefix</a><small>chapters/07.html · corresponding subsection in the text
+8383	Q094 · A cache is counted in bytes; the compute it saves is a separate account</a><small>chapters/07.html · corresponding subsection in the text
+8385	Q095 · The earlier and later blocks can be combined into the same answer without storing the full softmax table</a><small>chapters/07.html · corresponding subsection in the text
+8389	Q096 · Paging changes physical placement, not the logical order of the tokens</a><small>chapters/07.html · corresponding subsection in the text
+8392	Q097 · Continuous batching gives a freed slot to a new request, but a scheduling step is not an equal length of time</a><small>chapters/08.html · corresponding subsection in the text
+8395	Q098 · Separate the wait, the first item and the later items before asking why it is slow</a><small>chapters/08.html · corresponding subsection in the text
+8397	Q099 · It is the compensation when a draft is rejected that keeps the target distribution from being skewed</a><small>chapters/08.html · corresponding subsection in the text
+8402	Q100 · The "splitting" in distributed training: say first whether what is split is the samples, the matrices or the state</a><small>chapters/08.html · corresponding subsection in the text
+8092	Q001 · Two model calls in one task, and what each of them knows in addition</a><small>chapters/09.html · corresponding subsection in the text
+8097	Q002 · The model says "it is written", while the task record and the disk may each say something else</a><small>chapters/09.html · corresponding subsection in the text
+8099	Q003 · Stateful and stateless interfaces differ in who keeps the objects from the previous turn</a><small>chapters/09.html · corresponding subsection in the text
+8102	Q004 · Deciding to stop should depend on added evidence, not on the number of loops in itself</a><small>chapters/09.html · corresponding subsection in the text
+8118	Q009 · The JSON of a function call is the order; the executor is the one who fills it</a><small>chapters/10.html · corresponding subsection in the text
+8121	Q010 · Byte completeness, event completeness and argument completeness are handled by different buffers</a><small>chapters/10.html · corresponding subsection in the text
+8124	Q011 · A result arriving first does not mean it belongs to the first call</a><small>chapters/10.html · corresponding subsection in the text
+8126	Q012 · Once the schema passes, two layers of checking remain: business validity and authorization</a><small>chapters/10.html · corresponding subsection in the text
+8129	Q013 · Tool granularity should follow the common unit of work, rather than the idea that fewer functions is better</a><small>chapters/11.html · corresponding subsection in the text
+8131	Q014 · MCP negotiates capabilities first, then discovers tools, and only then attempts a call</a><small>chapters/11.html · corresponding subsection in the text
+8133	Q015 · Resources, prompts, tools and skills: their division of labor seen on one task</a><small>chapters/11.html · corresponding subsection in the text
+8135	Q016 · Which layer the error happens in decides whether to fix the parameters or fix the connection</a><small>chapters/11.html · corresponding subsection in the text
+8164	Q025 · When reading the source, take "register, expose, construct the call, dispatch" apart</a><small>chapters/12.html · corresponding subsection in the text
+8167	Q026 · What a sub-agent inherits has to be checked field by field, rather than declared to be "all of it"</a><small>chapters/12.html · corresponding subsection in the text
+8170	Q027 · The workspaces of the IDE, the CLI and a cloud task are not naturally one and the same</a><small>chapters/12.html · corresponding subsection in the text
+8173	Q028 · Turn "it does not understand my project" into four hypotheses you can rule out</a><small>chapters/12.html · corresponding subsection in the text
+8137	Q017 · In a context budget, subtract the space that must be kept before selecting material</a><small>chapters/13.html · corresponding subsection in the text
+8139	Q018 · Taking only the line that matched can throw away the condition for the judgment along with it</a><small>chapters/13.html · corresponding subsection in the text
+8142	Q019 · A cached prefix reuses an identical leading segment, not "roughly the same meaning"</a><small>chapters/13.html · corresponding subsection in the text
+8145	Q020 · An instruction conflict and a fact conflict cannot both be settled by the same "latest wins"</a><small>chapters/13.html · corresponding subsection in the text
+8215	Q041 · Four ways of "saving context" that keep completely different things</a><small>chapters/14.html · corresponding subsection in the text
+8217	Q042 · While a compaction candidate is being produced, a new tool result must not be overwritten by the old snapshot</a><small>chapters/14.html · corresponding subsection in the text
+8221	Q043 · Recovering evidence takes a content identity, not just a file name</a><small>chapters/14.html · corresponding subsection in the text
+8224	Q044 · A fidelity check has to ask "what can still be done correctly", not just whether the summary looks right</a><small>chapters/14.html · corresponding subsection in the text
+8176	Q029 · When chunking, the table header and the exception clause may be part of the answer</a><small>chapters/15.html · corresponding subsection in the text
+8178	Q030 · BM25 compares term frequency and length inside the same denominator</a><small>chapters/15.html · corresponding subsection in the text
+8182	Q031 · Vectors with the same number of dimensions need not belong in the same similarity space</a><small>chapters/15.html · corresponding subsection in the text
+8186	Q032 · Retrieving a few candidates first and filtering afterwards can leave no result at all</a><small>chapters/15.html · corresponding subsection in the text
+8188	Q033 · What RRF fuses is ranks; it does not force the BM25 and cosine scores into a sum</a><small>chapters/16.html · corresponding subsection in the text
+8193	Q034 · A reranker is finer-grained because it gets to look at the query and the candidate together</a><small>chapters/16.html · corresponding subsection in the text
+8196	Q035 · Which evidence a conclusion needs: only listing it sentence by sentence shows whether it is enough</a><small>chapters/16.html · corresponding subsection in the text
+8199	Q036 · Locate the type of retrieval failure first, then decide whether to add advanced RAG components</a><small>chapters/16.html · corresponding subsection in the text
+8202	Q037 · grep, AST, LSP and run logs each answer questions at a different layer</a><small>chapters/17.html · corresponding subsection in the text
+8205	Q038 · For one path, the commit, the work tree and the editor can hold three different contents</a><small>chapters/17.html · corresponding subsection in the text
+8209	Q039 · Locating a bug: use input that can tell the hypotheses apart, rather than blindly reading more files</a><small>chapters/17.html · corresponding subsection in the text
+8212	Q040 · A business rule needs an exception that can be executed, not just a slogan</a><small>chapters/17.html · corresponding subsection in the text
+8228	Q045 · Keep the four kinds of memory in different places and a temporary hypothesis will not be taken for a permanent rule</a><small>chapters/18.html · corresponding subsection in the text
+8231	Q046 · Before information is written to long-term memory, keep the observation, the hypothesis and the rule apart</a><small>chapters/18.html · corresponding subsection in the text
+8234	Q047 · Valid time and record time are two separate questions</a><small>chapters/18.html · corresponding subsection in the text
+8237	Q048 · Memory retrieval passes the applicability gate first, and compares semantic similarity second</a><small>chapters/18.html · corresponding subsection in the text
+8148	Q021 · A skill applied effectively is a chain of evidence, not one "loaded" log line</a><small>chapters/19.html · corresponding subsection in the text
+8153	Q022 · Whether a routing description is good depends on whether positive examples and near-miss negatives can be told apart</a><small>chapters/19.html · corresponding subsection in the text
+8156	Q023 · Put the actions that must certainly be carried out in the program, not only in the instructions</a><small>chapters/19.html · corresponding subsection in the text
+8159	Q024 · Whatever is gained by trying the cheap model first has to have rework and missed checks subtracted from it</a><small>chapters/19.html · corresponding subsection in the text
+8256	Q053 · A handoff package must at least let whoever takes over know the evidence and the unfinished actions</a><small>chapters/20.html · corresponding subsection in the text
+8259	Q054 · The longest dependency path in a DAG decides the earliest that parallel tasks can finish</a><small>chapters/20.html · corresponding subsection in the text
+8262	Q055 · Different files with no textual conflict can still produce a semantic conflict</a><small>chapters/20.html · corresponding subsection in the text
+8265	Q056 · Two reviewers agreeing may only mean they share one blind spot</a><small>chapters/20.html · corresponding subsection in the text
+8241	Q049 · The place where a timeout appears is between "request" and "response"</a><small>chapters/21.html · corresponding subsection in the text
+8245	Q050 · An idempotency key is bound to one business intent, not to each HTTP attempt</a><small>chapters/21.html · corresponding subsection in the text
+8249	Q051 · Atomic replacement prevents a half-written file and CAS prevents an overwrite; they are not the same thing</a><small>chapters/21.html · corresponding subsection in the text
+8253	Q052 · Retry, resume, replay and cancel mean different things for an action</a><small>chapters/21.html · corresponding subsection in the text
+8104	Q005 · A completion condition should include "what must not change", not just one successful example</a><small>chapters/22.html · corresponding subsection in the text
+8107	Q006 · A green test has to be bound to "it really ran" and "the current version"</a><small>chapters/22.html · corresponding subsection in the text
+8113	Q007 · Whether a review is worth it depends on new evidence, not on always doing one more round</a><small>chapters/22.html · corresponding subsection in the text
+8116	Q008 · Test the prompt's behavioral contract; do not treat every byte as a business requirement</a><small>chapters/22.html · corresponding subsection in the text
+8280	Q061 · Count tasks, trials, traces and outcomes separately and the denominator stays straight</a><small>chapters/23.html · corresponding subsection in the text
+8284	Q062 · pass@k and pass^k: one looks at the chance, the other at the stability</a><small>chapters/23.html · corresponding subsection in the text
+8288	Q063 · A paired comparison starts from which questions went from failing to passing, and which went the other way</a><small>chapters/23.html · corresponding subsection in the text
+8291	Q064 · A model judge should first see whether reordering the same answer changes its verdict</a><small>chapters/23.html · corresponding subsection in the text
+8268	Q057 · External content can become evidence; it cannot issue itself permission to execute</a><small>chapters/24.html · corresponding subsection in the text
+8272	Q058 · Files, the network and remote tools are three different ways in and out</a><small>chapters/24.html · corresponding subsection in the text
+8275	Q059 · Human approval has to be bound to the specific arguments and version, not to the tool name alone</a><small>chapters/24.html · corresponding subsection in the text
+8278	Q060 · Once the source document is deleted, derived summaries and vector chunks can still go on spreading the old conclusion</a><small>chapters/24.html · corresponding subsection in the text
+8294	Q065 · Parallel spans in a trace cannot simply be added up into the user's waiting time</a><small>chapters/25.html · corresponding subsection in the text
+8297	Q066 · The numerator of cost per successful task must include failures and rework</a><small>chapters/25.html · corresponding subsection in the text
+8301	Q067 · Enough average throughput does not mean peak requests avoid the queue</a><small>chapters/25.html · corresponding subsection in the text
+8304	Q068 · A rollback has to restore a compatible group of objects, not just put the model name back</a><small>chapters/25.html · corresponding subsection in the text
+8418	Q105 · A correct answer in enterprise Q&A has to pass three gates at once: scope, time and evidence</a><small>chapters/26.html · corresponding subsection in the text
+8421	Q106 · Even the smallest repository fixer should leave behind four objects that can be re-checked</a><small>chapters/26.html · corresponding subsection in the text
+8424	Q107 · When two sources contradict each other, line up the times and the definitions before arguing about which is right</a><small>chapters/26.html · corresponding subsection in the text
+8426	Q108 · Interface coordinates are valid only for that one screenshot and window state</a><small>chapters/26.html · corresponding subsection in the text
+8405	Q101 · Whether "I am 80% sure" is reliable has to be calibrated against a set of actual results</a><small>chapters/27.html · corresponding subsection in the text
+8409	Q102 · Effective reflection needs new evidence; repeated self-assessment may only rewrite the error</a><small>chapters/27.html · corresponding subsection in the text
+8412	Q103 · Image-block vectors and text embeddings come from different inputs, yet can feed into the same computation chain</a><small>chapters/27.html · corresponding subsection in the text
+8415	Q104 · An attention heat map is an observation; only causal intervention begins to test the explanation</a><small>chapters/27.html · corresponding subsection in the text
+8429	Q109 · A scaling law is a fit under given conditions, not a recipe that always applies</a><small>chapters/28.html · corresponding subsection in the text
+8431	Q110 · GQA stores fewer K/V groups; MLA tries to compress the K/V representation into latent variables</a><small>chapters/28.html · corresponding subsection in the text
+8434	Q111 · In-context learning changes the conditions of this run; it does not change the weight file</a><small>chapters/28.html · corresponding subsection in the text
+8436	Q112 · Find the earliest error boundary first, then decide whether to change the model or change the system</a><small>chapters/28.html · corresponding subsection in the text
+11284	Topic studies: detailed calculations and limits in the corresponding subsections
+8309	Q070 · The merge order in BPE decides what can still be merged later</a><small>studies/chapters/01.html · corresponding subsection in the text
+8338	Q080 · Shifting the training labels one slot to the right means every position answers for the next item</a><small>studies/chapters/01.html · corresponding subsection in the text
+6889	A001 · Why the gradient of cross entropy is "the predicted share minus the target share"</a><small>studies/chapters/01.html · corresponding subsection in the text
+8314	Q072 · Four kinds of "vector", told apart by what the coordinates mean rather than by how they look</a><small>studies/chapters/01.html · corresponding subsection in the text
+8329	Q077 · The mask for cached decoding has to be filled in by absolute position; the small triangle cannot simply be copied</a><small>studies/chapters/02.html · corresponding subsection in the text
+8332	Q078 · What RoPE keeps is the relative angle, not a position that starts over each turn</a><small>studies/chapters/02.html · corresponding subsection in the text
+8380	Q093 · Why old K/V can be reused: a new token cannot reach back and change the old prefix</a><small>studies/chapters/02.html · corresponding subsection in the text
+8335	Q079 · GQA keeps several queries, and only has them share fewer K/V</a><small>studies/chapters/02.html · corresponding subsection in the text
+8345	Q082 · AdamW's "historical state" is accounted for separately from this step's gradient</a><small>studies/chapters/03.html · corresponding subsection in the text
+8352	Q084 · Training VRAM is not the single sum "parameter count times two bytes"</a><small>studies/chapters/03.html · corresponding subsection in the text
+8403	Q100 · The "splitting" in distributed training: say first whether what is split is the samples, the matrices or the state</a><small>studies/chapters/03.html · corresponding subsection in the text
+8355	Q085 · What DPO compares is the "preference gain relative to the reference model"</a><small>studies/chapters/04.html · corresponding subsection in the text
+8359	Q086 · A within-group reward is only a relative comparison, not proof of absolute correctness</a><small>studies/chapters/04.html · corresponding subsection in the text
+8160	Q024 · Whatever is gained by trying the cheap model first has to have rework and missed checks subtracted from it</a><small>studies/chapters/04.html · corresponding subsection in the text
+8324	Q075 · Subtracting the maximum only changes the scale of the computation, not the probabilities between the candidates</a><small>studies/chapters/05.html · corresponding subsection in the text
+8398	Q099 · It is the compensation when a draft is rejected that keeps the target distribution from being skewed</a><small>studies/chapters/05.html · corresponding subsection in the text
+8374	Q091 · "Output stopped" and "task succeeded" have to be drawn on different state lines</a><small>studies/chapters/05.html · corresponding subsection in the text
+8386	Q095 · The earlier and later blocks can be combined into the same answer without storing the full softmax table</a><small>studies/chapters/06.html · corresponding subsection in the text
+8390	Q096 · Paging changes physical placement, not the logical order of the tokens</a><small>studies/chapters/06.html · corresponding subsection in the text
+8393	Q097 · Continuous batching gives a freed slot to a new request, but a scheduling step is not an equal length of time</a><small>studies/chapters/06.html · corresponding subsection in the text
+8122	Q010 · Byte completeness, event completeness and argument completeness are handled by different buffers</a><small>studies/chapters/07.html · corresponding subsection in the text
+8375	Q091 · "Output stopped" and "task succeeded" have to be drawn on different state lines</a><small>studies/chapters/07.html · corresponding subsection in the text
+8127	Q012 · Once the schema passes, two layers of checking remain: business validity and authorization</a><small>studies/chapters/07.html · corresponding subsection in the text
+8242	Q049 · The place where a timeout appears is between "request" and "response"</a><small>studies/chapters/08.html · corresponding subsection in the text
+8250	Q051 · Atomic replacement prevents a half-written file and CAS prevents an overwrite; they are not the same thing</a><small>studies/chapters/08.html · corresponding subsection in the text
+8108	Q006 · A green test has to be bound to "it really ran" and "the current version"</a><small>studies/chapters/08.html · corresponding subsection in the text
+8174	Q028 · Turn "it does not understand my project" into four hypotheses you can rule out</a><small>studies/chapters/09.html · corresponding subsection in the text
+8095	Q001 · Two model calls in one task, and what each of them knows in addition</a><small>studies/chapters/09.html · corresponding subsection in the text
+8218	Q042 · While a compaction candidate is being produced, a new tool result must not be overwritten by the old snapshot</a><small>studies/chapters/09.html · corresponding subsection in the text
+8100	Q003 · Stateful and stateless interfaces differ in who keeps the objects from the previous turn</a><small>studies/chapters/10.html · corresponding subsection in the text
+8168	Q026 · What a sub-agent inherits has to be checked field by field, rather than declared to be "all of it"</a><small>studies/chapters/10.html · corresponding subsection in the text
+8171	Q027 · The workspaces of the IDE, the CLI and a cloud task are not naturally one and the same</a><small>studies/chapters/10.html · corresponding subsection in the text
+8140	Q018 · Taking only the line that matched can throw away the condition for the judgment along with it</a><small>studies/chapters/11.html · corresponding subsection in the text
+8146	Q020 · An instruction conflict and a fact conflict cannot both be settled by the same "latest wins"</a><small>studies/chapters/11.html · corresponding subsection in the text
+8157	Q023 · Put the actions that must certainly be carried out in the program, not only in the instructions</a><small>studies/chapters/11.html · corresponding subsection in the text
+8225	Q044 · A fidelity check has to ask "what can still be done correctly", not just whether the summary looks right</a><small>studies/chapters/12.html · corresponding subsection in the text
+8219	Q042 · While a compaction candidate is being produced, a new tool result must not be overwritten by the old snapshot</a><small>studies/chapters/12.html · corresponding subsection in the text
+8222	Q043 · Recovering evidence takes a content identity, not just a file name</a><small>studies/chapters/12.html · corresponding subsection in the text
+8179	Q030 · BM25 compares term frequency and length inside the same denominator</a><small>studies/chapters/13.html · corresponding subsection in the text
+8183	Q031 · Vectors with the same number of dimensions need not belong in the same similarity space</a><small>studies/chapters/13.html · corresponding subsection in the text
+8190	Q033 · What RRF fuses is ranks; it does not force the BM25 and cosine scores into a sum</a><small>studies/chapters/13.html · corresponding subsection in the text
+8203	Q037 · grep, AST, LSP and run logs each answer questions at a different layer</a><small>studies/chapters/14.html · corresponding subsection in the text
+8149	Q021 · A skill applied effectively is a chain of evidence, not one "loaded" log line</a><small>studies/chapters/14.html · corresponding subsection in the text
+8206	Q038 · For one path, the commit, the work tree and the editor can hold three different contents</a><small>studies/chapters/14.html · corresponding subsection in the text
+8251	Q051 · Atomic replacement prevents a half-written file and CAS prevents an overwrite; they are not the same thing</a><small>studies/chapters/14.html · corresponding subsection in the text
+8232	Q046 · Before information is written to long-term memory, keep the observation, the hypothesis and the rule apart</a><small>studies/chapters/15.html · corresponding subsection in the text
+8235	Q047 · Valid time and record time are two separate questions</a><small>studies/chapters/15.html · corresponding subsection in the text
+8238	Q048 · Memory retrieval passes the applicability gate first, and compares semantic similarity second</a><small>studies/chapters/15.html · corresponding subsection in the text
+8154	Q022 · Whether a routing description is good depends on whether positive examples and near-miss negatives can be told apart</a><small>studies/chapters/16.html · corresponding subsection in the text
+8150	Q021 · A skill applied effectively is a chain of evidence, not one "loaded" log line</a><small>studies/chapters/16.html · corresponding subsection in the text
+8161	Q024 · Whatever is gained by trying the cheap model first has to have rework and missed checks subtracted from it</a><small>studies/chapters/16.html · corresponding subsection in the text
+8260	Q054 · The longest dependency path in a DAG decides the earliest that parallel tasks can finish</a><small>studies/chapters/17.html · corresponding subsection in the text
+8257	Q053 · A handoff package must at least let whoever takes over know the evidence and the unfinished actions</a><small>studies/chapters/17.html · corresponding subsection in the text
+8263	Q055 · Different files with no textual conflict can still produce a semantic conflict</a><small>studies/chapters/17.html · corresponding subsection in the text
+8266	Q056 · Two reviewers agreeing may only mean they share one blind spot</a><small>studies/chapters/17.html · corresponding subsection in the text
+8105	Q005 · A completion condition should include "what must not change", not just one successful example</a><small>studies/chapters/18.html · corresponding subsection in the text
+8114	Q007 · Whether a review is worth it depends on new evidence, not on always doing one more round</a><small>studies/chapters/18.html · corresponding subsection in the text
+8109	Q006 · A green test has to be bound to "it really ran" and "the current version"</a><small>studies/chapters/18.html · corresponding subsection in the text
+8281	Q061 · Count tasks, trials, traces and outcomes separately and the denominator stays straight</a><small>studies/chapters/19.html · corresponding subsection in the text
+8285	Q062 · pass@k and pass^k: one looks at the chance, the other at the stability</a><small>studies/chapters/19.html · corresponding subsection in the text
+8289	Q063 · A paired comparison starts from which questions went from failing to passing, and which went the other way</a><small>studies/chapters/19.html · corresponding subsection in the text
+8292	Q064 · A model judge should first see whether reordering the same answer changes its verdict</a><small>studies/chapters/19.html · corresponding subsection in the text
+8269	Q057 · External content can become evidence; it cannot issue itself permission to execute</a><small>studies/chapters/20.html · corresponding subsection in the text
+8273	Q058 · Files, the network and remote tools are three different ways in and out</a><small>studies/chapters/20.html · corresponding subsection in the text
+8276	Q059 · Human approval has to be bound to the specific arguments and version, not to the tool name alone</a><small>studies/chapters/20.html · corresponding subsection in the text
+8246	Q050 · An idempotency key is bound to one business intent, not to each HTTP attempt</a><small>studies/chapters/20.html · corresponding subsection in the text
+8295	Q065 · Parallel spans in a trace cannot simply be added up into the user's waiting time</a><small>studies/chapters/21.html · corresponding subsection in the text
+8302	Q067 · Enough average throughput does not mean peak requests avoid the queue</a><small>studies/chapters/21.html · corresponding subsection in the text
+8254	Q052 · Retry, resume, replay and cancel mean different things for an action</a><small>studies/chapters/21.html · corresponding subsection in the text
+8298	Q066 · The numerator of cost per successful task must include failures and rework</a><small>studies/chapters/22.html · corresponding subsection in the text
+8162	Q024 · Whatever is gained by trying the cheap model first has to have rework and missed checks subtracted from it</a><small>studies/chapters/22.html · corresponding subsection in the text
+8143	Q019 · A cached prefix reuses an identical leading segment, not "roughly the same meaning"</a><small>studies/chapters/22.html · corresponding subsection in the text
+8365	Q088 · LoRA, quantization and distillation each change a different object</a><small>studies/chapters/23.html · corresponding subsection in the text
+6891	A003 · Why the same quantization error suddenly grows on a different input</a><small>studies/chapters/23.html · corresponding subsection in the text
+8349	Q083 · How one training sample enters the computation carrying its source and its label</a><small>studies/chapters/23.html · corresponding subsection in the text
+8413	Q103 · Image-block vectors and text embeddings come from different inputs, yet can feed into the same computation chain</a><small>studies/chapters/24.html · corresponding subsection in the text
+8427	Q108 · Interface coordinates are valid only for that one screenshot and window state</a><small>studies/chapters/24.html · corresponding subsection in the text
+8270	Q057 · External content can become evidence; it cannot issue itself permission to execute</a><small>studies/chapters/24.html · corresponding subsection in the text
+8406	Q101 · Whether "I am 80% sure" is reliable has to be calibrated against a set of actual results</a><small>studies/chapters/25.html · corresponding subsection in the text
+8197	Q035 · Which evidence a conclusion needs: only listing it sentence by sentence shows whether it is enough</a><small>studies/chapters/25.html · corresponding subsection in the text
+8416	Q104 · An attention heat map is an observation; only causal intervention begins to test the explanation</a><small>studies/chapters/25.html · corresponding subsection in the text
+8410	Q102 · Effective reflection needs new evidence; repeated self-assessment may only rewrite the error</a><small>studies/chapters/25.html · corresponding subsection in the text
+8362	Q087 · MoE routing results have to be followed token by token</a><small>studies/chapters/26.html · corresponding subsection in the text
+8432	Q110 · GQA stores fewer K/V groups; MLA tries to compress the K/V representation into latent variables</a><small>studies/chapters/26.html · corresponding subsection in the text
+8200	Q036 · Locate the type of retrieval failure first, then decide whether to add advanced RAG components</a><small>studies/chapters/26.html · corresponding subsection in the text
+8210	Q039 · Locating a bug: use input that can tell the hypotheses apart, rather than blindly reading more files</a><small>studies/chapters/27.html · corresponding subsection in the text
+8110	Q006 · A green test has to be bound to "it really ran" and "the current version"</a><small>studies/chapters/27.html · corresponding subsection in the text
+8243	Q049 · The place where a timeout appears is between "request" and "response"</a><small>studies/chapters/27.html · corresponding subsection in the text
+8419	Q105 · A correct answer in enterprise Q&A has to pass three gates at once: scope, time and evidence</a><small>studies/chapters/28.html · corresponding subsection in the text
+8422	Q106 · Even the smallest repository fixer should leave behind four objects that can be re-checked</a><small>studies/chapters/28.html · corresponding subsection in the text
+8213	Q040 · A business rule needs an exception that can be executed, not just a slogan</a><small>studies/chapters/28.html · corresponding subsection in the text
+8151	Q021 · A skill applied effectively is a chain of evidence, not one "loaded" log line</a><small>studies/chapters/29.html · corresponding subsection in the text
+8226	Q044 · A fidelity check has to ask "what can still be done correctly", not just whether the summary looks right</a><small>studies/chapters/29.html · corresponding subsection in the text
+8207	Q038 · For one path, the commit, the work tree and the editor can hold three different contents</a><small>studies/chapters/29.html · corresponding subsection in the text
+8111	Q006 · A green test has to be bound to "it really ran" and "the current version"</a><small>studies/chapters/29.html · corresponding subsection in the text
+8299	Q066 · The numerator of cost per successful task must include failures and rework</a><small>studies/chapters/29.html · corresponding subsection in the text
+8247	Q050 · An idempotency key is bound to one business intent, not to each HTTP attempt</a><small>studies/chapters/29.html · corresponding subsection in the text
+8239	Q048 · Memory retrieval passes the applicability gate first, and compares semantic similarity second</a><small>studies/chapters/29.html · corresponding subsection in the text
+8437	Q112 · Find the earliest error boundary first, then decide whether to change the model or change the system</a><small>studies/chapters/29.html · corresponding subsection in the text
+8341	Q081 · The backward pass is not the forward arrows played in reverse; it distributes "influence" along the dependencies</a><small>studies/chapters/31.html · corresponding subsection in the text
+6890	A002 · From the attention scores, keep propagating back to Q, K and the projection parameters</a><small>studies/chapters/31.html · corresponding subsection in the text
+8184	Q031 · Vectors with the same number of dimensions need not belong in the same similarity space</a><small>studies/chapters/31.html · corresponding subsection in the text
+25990	Worked cases: retain the original case's objects and timing
+9033	WA02 · Staying with this case: where the 8-item vocabulary, the 3 positions and the 4 features each are</a><small>walkthroughs/a.html · corresponding subsection in the text
+9034	WA05 · Draw the contributions of A.5's three positions separately</a><small>walkthroughs/a.html · corresponding subsection in the text
+9035	WA09 · One and the same ID sequence: selected and already processed are one step apart</a><small>walkthroughs/a.html · corresponding subsection in the text
+9036	WA10 · How the two new queries should read the five keys</a><small>walkthroughs/a.html · corresponding subsection in the text
+9038	WB03 · How c1 joins M1's action to T1's evidence</a><small>walkthroughs/b.html · corresponding subsection in the text
+9039	WB04 · c2 and c3 can run in parallel, but the results must not be numbered in order of arrival</a><small>walkthroughs/b.html · corresponding subsection in the text
+9040	WB07 · When the response to c19 is lost, the state is not the same in the three places</a><small>walkthroughs/b.html · corresponding subsection in the text
+9041	WB08 · Which fields compaction has to keep for c19 to stay verifiable</a><small>walkthroughs/b.html · corresponding subsection in the text
+9042	WC01 · "90 days" appears in both, so why can the first hit not simply be the answer</a><small>walkthroughs/c.html · corresponding subsection in the text
+9043	WC05 · Reusing the four candidates to work out one fused ranking by hand</a><small>walkthroughs/c.html · corresponding subsection in the text
+9044	WC07 · Which piece of evidence the 7-day conclusion rests on, and what it does not prove</a><small>walkthroughs/c.html · corresponding subsection in the text
+9045	WC09 · The rule on 19 October and the rule the system knew at the time may differ</a><small>walkthroughs/c.html · corresponding subsection in the text
+9046	WD02 · In a 50-second trace, where does the state first become distorted</a><small>walkthroughs/d.html · corresponding subsection in the text
+9047	WD03 · Put the three states side by side and the error stops being "the model got dumber"</a><small>walkthroughs/d.html · corresponding subsection in the text
+9048	WD08 · The same 100 questions compared: besides the success rate, which two cells should you look at</a><small>walkthroughs/d.html · corresponding subsection in the text
+9049	WD09 · Before rolling the code back, check whether the old code understands the new state</a><small>walkthroughs/d.html · corresponding subsection in the text
+17882	Engineering deep dive: visualizing the original results
+7459	E17 · With previous_response_id, why can the rules or the tool context still be lost?</a><small>chapters/09.html · corresponding subsection in the text
+7462	E18 · The model finishing, the tool finishing and the task completing: three kinds of "done" cannot share one boolean</a><small>chapters/09.html · corresponding subsection in the text
+7447	E13 · Two dangers in sharing a cache: an incomplete identity, and aliasing of mutable objects</a><small>chapters/07.html · corresponding subsection in the text
+7450	E14 · Why must online softmax rescale the old running totals instead of averaging each block's answer?</a><small>chapters/07.html · corresponding subsection in the text
+7560	E47 · The path is under an allowed directory, so why can it still escape? Symlinks and substitution after the check</a><small>chapters/24.html · corresponding subsection in the text
+7563	E48 · The user confirmed once; if the model changes the arguments, does that approval still carry over?</a><small>chapters/24.html · corresponding subsection in the text
+7496	E29 · The vector dimensions are the same, so why can the query and the index still be in entirely different spaces?</a><small>chapters/15.html · corresponding subsection in the text
+7501	E30 · The vector query carries a WHERE clause, so why can it still return fewer than k rows?</a><small>chapters/15.html · corresponding subsection in the text
+7486	E26 · The context budget is not just the files already read: tool results, the generation and evidence dependencies all have to be reserved for as well</a><small>chapters/13.html · corresponding subsection in the text
+7483	E25 · The meaning has not changed and yet the cache misses: how an exact prefix, the tool specifications and dynamic fields affect one another</a><small>chapters/13.html · corresponding subsection in the text
+7552	E45 · The success rate went up a few points — so why can the optimization not yet be declared effective?</a><small>chapters/23.html · corresponding subsection in the text
+7556	E46 · The blind spot of an LLM judge: swap left and right and the winner changes</a><small>chapters/23.html · corresponding subsection in the text
+7566	E49 · Wall clock, total span duration, p95, cost per success: the metric names look alike, and computing the wrong one means choosing the wrong optimization</a><small>chapters/25.html · corresponding subsection in the text
+7571	E50 · Why can rolling back the model name alone leave things in a worse tangle? A system version is a set of vectors</a><small>chapters/25.html · corresponding subsection in the text
+7437	E10 · Mixed precision and recomputation: the wrong order makes the optimizer quietly take a wrong step</a><small>chapters/05.html · corresponding subsection in the text
+7434	E09 · The hidden bias in gradient accumulation: is the average taken over batches, or over valid tokens?</a><small>chapters/05.html · corresponding subsection in the text
+7588	E55 · Why compute-optimal training is not necessarily cheapest over a product's whole life cycle</a><small>chapters/28.html · corresponding subsection in the text
+7591	E56 · Deep troubleshooting does not end at "switch to a stronger model" but at finding the invariant that failed</a><small>chapters/28.html · corresponding subsection in the text
+7538	E41 · The external action succeeded but the log never got to confirm it: why can a local transaction not guarantee exactly-once execution?</a><small>chapters/21.html · corresponding subsection in the text
+7542	E42 · Three layers each retrying three times: why does the bottom one get hit 27 times?</a><small>chapters/21.html · corresponding subsection in the text
+7420	E05 · A boolean mask has the opposite meaning, and once a cache is added is_causal can also align to the wrong edge</a><small>chapters/03.html · corresponding subsection in the text
+7424	E06 · Position IDs, cache slots and RoPE: all called position, and not the same number</a><small>chapters/03.html · corresponding subsection in the text
+7407	E01 · The template has already added BOS — so why does tokenizing once more quietly change the task?</a><small>chapters/01.html · corresponding subsection in the text
+7410	E02 · Adding tokens, binding the output head and the optimizer: why does "it can be looked up" not yet mean "it can be learned"?</a><small>chapters/01.html · corresponding subsection in the text
+7489	E27 · Why can the result of compaction not keep only the item that "looks most condensed"?</a><small>chapters/14.html · corresponding subsection in the text
+7492	E28 · A tool result arrives just as compaction runs: how does one history replacement lose real progress?</a><small>chapters/14.html · corresponding subsection in the text
+7453	E15 · Throughput falls while the GPU is busy: it may be KV preemption and recomputation, not a shortage of compute</a><small>chapters/08.html · corresponding subsection in the text
+7456	E16 · After speculative sampling has rejected a draft, why can it not simply draw again from the target distribution?</a><small>chapters/08.html · corresponding subsection in the text
+7465	E19 · Streaming tool calls: complete UTF-8, complete JSON and a complete call are three different things</a><small>chapters/10.html · corresponding subsection in the text
+7468	E20 · Why can strict JSON still not drive a database write directly?</a><small>chapters/10.html · corresponding subsection in the text
+7532	E39 · Two people change different files — so why does it still break after the merge?</a><small>chapters/20.html · corresponding subsection in the text
+7535	E40 · Both review agents passed it, so why can the error rates not simply be multiplied?</a><small>chapters/20.html · corresponding subsection in the text
+7513	E33 · Get the unit of a code position wrong by one and an edit can change the wrong characters: UTF-8, UTF-16 and version numbers</a><small>chapters/17.html · corresponding subsection in the text
+7516	E34 · HEAD has not moved, so why is the evidence already stale? The working tree, the unsaved buffer and the index snapshot</a><small>chapters/17.html · corresponding subsection in the text
+7477	E23 · Pressing the Codex source: why are registered, visible, reachable and authorized four separate steps?</a><small>chapters/12.html · corresponding subsection in the text
+7480	E24 · Both are called a sub-agent, so why can "inheritance" in Claude and in Copilot not be taken on intuition?</a><small>chapters/12.html · corresponding subsection in the text
+7428	E07 · With attention_mask supplied, why can right-padded generation still read the wrong logits?</a><small>chapters/04.html · corresponding subsection in the text
+7431	E08 · Temperature, top-p and banned words: why may "the parameters are all the same" still not be the same sampling algorithm?</a><small>chapters/04.html · corresponding subsection in the text
+7519	E35 · "When it was true" and "when it became known": the two times in memory have to be kept apart</a><small>chapters/18.html · corresponding subsection in the text
+7522	E36 · Deleting the original text is not forgetting: summaries, caches and experience entries depend on it too</a><small>chapters/18.html · corresponding subsection in the text
+7575	E51 · What is still missing between "the material says a refund is possible" and "the refund can be carried out now"?</a><small>chapters/26.html · corresponding subsection in the text
+7578	E52 · Why can screenshot coordinates not be clicked directly? Scaling, DPR and page changes</a><small>chapters/26.html · corresponding subsection in the text
+7526	E37 · When a skill has no effect, why does editing the description over and over so often change the wrong layer?</a><small>chapters/19.html · corresponding subsection in the text
+7529	E38 · Does a small model plus a fallback really save money? What matters is whether the errors can be detected</a><small>chapters/19.html · corresponding subsection in the text
+7471	E21 · MCP connects but the tools are missing: how are initialization, pagination and the error levels checked one by one?</a><small>chapters/11.html · corresponding subsection in the text
+7474	E22 · Token audience, permission scope and session ID: three kinds of "credential" that cannot stand in for one another</a><small>chapters/11.html · corresponding subsection in the text
+7546	E43 · The test command exits 0 — so why may not a single effective test have run?</a><small>chapters/22.html · corresponding subsection in the text
+7549	E44 · A snapshot that looks unchanged does not mean the property is intact: how can a test be made to kill a wrong implementation?</a><small>chapters/22.html · corresponding subsection in the text
+7581	E53 · If only the questions you are sure of are answered, why might the rise in accuracy be nothing but a fall in coverage?</a><small>chapters/27.html · corresponding subsection in the text
+7585	E54 · Why is the brightest position in an attention heat map not necessarily the main reason for the answer?</a><small>chapters/27.html · corresponding subsection in the text
+7441	E11 · What DPO really compares is not the "probability of the good answer" but how much each has changed relative to the reference policy</a><small>chapters/06.html · corresponding subsection in the text
+7444	E12 · A zero gradient on A at LoRA's first step can be the design working normally, not a broken backward pass</a><small>chapters/06.html · corresponding subsection in the text
+7413	E03 · Projected twice, scaled twice, still random under eval: three traps in same-named Attention interfaces</a><small>chapters/02.html · corresponding subsection in the text
+7416	E04 · When a whole row is masked out, why does subtracting the maximum still not save softmax?</a><small>chapters/02.html · corresponding subsection in the text
+7505	E31 · RRF ignores the raw scores, so why can duplicate sources still skew the ranking?</a><small>chapters/16.html · corresponding subsection in the text
+7509	E32 · Relevant, citable, sufficient to support the conclusion: evidence must pass three different gates</a><small>chapters/16.html · corresponding subsection in the text
+7346	D06 · Memory diagnosis: the error is not "nothing was found" but taking the wrong time and picking up a retracted conclusion</a><small>studies/chapters/15.html · corresponding subsection in the text
+7344	D05 · Retrieval diagnosis: check the representation space first, then the authorized candidates, and the fusion ranking last</a><small>studies/chapters/13.html · corresponding subsection in the text
+7350	D08 · Operations diagnosis: the critical path, retry amplification and state compatibility after a rollback</a><small>studies/chapters/21.html · corresponding subsection in the text
+7338	D02 · Reading a real fix: from the gradient-accumulation incident to a test that tells the wrong objective apart</a><small>studies/chapters/03.html · corresponding subsection in the text
+7340	D03 · Fault injection: killing the execution process the moment after the side effect commits</a><small>studies/chapters/08.html · corresponding subsection in the text
+7342	D04 · Failure experiment: catching compaction overwriting a new event, with two database connections</a><small>studies/chapters/12.html · corresponding subsection in the text
+7348	D07 · Evaluation diagnosis: one net question gained, one bootstrap, and a judge that always picks the left-hand answer</a><small>studies/chapters/19.html · corresponding subsection in the text
+7336	D01 · Failure experiment: why is the uncached forward pass right while the incremental one is distorted?</a><small>studies/chapters/02.html · corresponding subsection in the text
+21411	Core reading guides: specific mechanisms
+8320	Q074 · Compute three branches from the same X, then arrive at one concrete output</a><small>reading-notes/guide-02.html · corresponding subsection in the text
+8368	Q089 · The token just selected has not yet entered the turn of computation that is its own</a><small>reading-notes/guide-03.html · corresponding subsection in the text
+8093	Q001 · Two model calls in one task, and what each of them knows in addition</a><small>reading-notes/guide-04.html · corresponding subsection in the text
+8165	Q025 · When reading the source, take "register, expose, construct the call, dispatch" apart</a><small>reading-notes/guide-05.html · corresponding subsection in the text
+8189	Q033 · What RRF fuses is ranks; it does not force the BM25 and cosine scores into a sum</a><small>reading-notes/guide-09.html · corresponding subsection in the text
+8229	Q045 · Keep the four kinds of memory in different places and a temporary hypothesis will not be taken for a permanent rule</a><small>reading-notes/guide-10.html · corresponding subsection in the text
+19335	Further-reading notes and original worked examples: matching actions to results
+8474	R00-01 · Distinguish boundaries from text input to tool result</a><small>reading-notes/chapter-00.html · corresponding subsection in the text
+8475	R00-02 · Two output tokens are decided in two separate steps</a><small>reading-notes/chapter-00.html · corresponding subsection in the text
+8476	R00-03 · Where a fixed workflow and an agent diverge</a><small>reading-notes/chapter-00.html · corresponding subsection in the text
+8477	R00-04 · One user sentence becomes multiple request turns</a><small>reading-notes/chapter-00.html · corresponding subsection in the text
+8478	R00-05 · The minimal acceptance sequence when implementing from scratch</a><small>reading-notes/chapter-00.html · corresponding subsection in the text
+8480	R01-01 · The position count does not shrink on its own after one layer</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8481	R01-02 · Merge priority, not longest-substring guessing</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8482	R01-03 · Visibility relationships in the original encoder and decoder</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8483	R01-04 · Matrix multiplication matches only after the axes are permuted</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8484	R01-05 · Word2Vec does not write integers in binary</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8485	R01-06 · Additive and dot-product attention can use different scorers</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8486	R01-07 · Shifting all positions together does not change the relative rotation</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8487	R01-08 · 4 Q heads share 2 KV heads</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8488	R01-09 · Sparse expert routing does not assign each word permanently to one expert</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8489	R01-10 · In-context learning of a temporary mapping</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8490	R01-11 · Draw an interface ledger before reading a model report</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8491	R01-12 · Do not combine total expert parameters and active parameters in one count</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8492	R01-13 · A different inference mode does not automatically add input facts</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8493	R01-14 · Put each technical name back at the layer it changes</a><small>reading-notes/chapter-01.html · corresponding subsection in the text
+8495	R02-01 · Improvement on a logarithmic scale does not guarantee proportional gains in accuracy</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8496	R02-02 · Trading parameters for data under fixed compute</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8497	R02-03 · 100 sources do not equal 100 independent pieces of information</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8498	R02-04 · Near-duplicates across training and validation contaminate evaluation</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8499	R02-05 · Training loss falls while validation loss rises</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8500	R02-06 · Instruction samples and preference samples provide different supervision</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8501	R02-07 · DPO compares changes relative to the reference model</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8502	R02-08 · How principle-based feedback constrains rewriting without replacing fact checks</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8503	R02-09 · Work through PPO clipping for positive advantage</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8504	R02-10 · External text cannot declare itself a system message</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8505	R02-11 · Multistep reasoning can reveal where arithmetic went wrong</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8506	R02-12 · How a verifiable reward scores candidates</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8507	R02-13 · The same result, but one set of intermediate steps is wrong and the other right</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8508	R02-14 · A self-consistency majority vote can still have a wrong majority</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8509	R02-15 · Branching and pruning in tree search</a><small>reading-notes/chapter-02.html · corresponding subsection in the text
+8511	R03-01 · Greedy selection and sampling start from the same probabilities</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8512	R03-02 · Why nucleus sampling keeps the item that crosses the threshold</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8513	R03-03 · Dynamic and preallocated caches use different amounts of storage</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8514	R03-04 · The reasoning budget also needs room within request capacity</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8515	R03-05 · A simple value lookup does not need tree reasoning in place of a tool</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8516	R03-06 · prefill processes three positions; decode processes one new position</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8517	R03-07 · The same prefix with different endings</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8518	R03-08 · Logical blocks and physical blocks</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8519	R03-09 · Rescaling in online softmax</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8520	R03-10 · The distribution after rejection cannot be chosen arbitrarily</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8521	R03-11 · How the active set changes between turns</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8522	R03-12 · Shortening output can sometimes save more time than shortening input</a><small>reading-notes/chapter-03.html · corresponding subsection in the text
+8524	R04-01 · Keep constraints, data and output requirements clearly separated</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8525	R04-02 · Tie prompt version changes to evaluation</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8526	R04-03 · Actual user instructions and conflicting demands in documents</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8527	R04-04 · call_id connects a call to its result</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8528	R04-05 · Facts still need checking after structured output passes</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8529	R04-06 · Network fragments and event boundaries</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8530	R04-07 · Use a counterexample to show that "concise" does not mean lacking evidence</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8531	R04-08 · Reasoning state is not ordinary text that can be concatenated arbitrarily</a><small>reading-notes/chapter-04.html · corresponding subsection in the text
+8533	R05-01 · An observation in ReAct changes the next step</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8534	R05-02 · Define a minimal deliverable task first</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8535	R05-03 · A planning node is not an execution node</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8536	R05-04 · What the Runner and Session each hold for the same task</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8537	R05-05 · When external results enter a sample during tool-use training</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8538	R05-06 · Reflection must preserve the specific reason for failure</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8539	R05-07 · A tool returning 10000 lines or 10 results with sources</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8540	R05-08 · Installing an MCP server does not mean the model can already use it</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8541	R05-09 · Which messages the Host, Client and Server each handle</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8542	R05-10 · When code combines three queries, which data need not enter the model</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8543	R05-11 · Events appended after the checkpoint must also be recovered</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8544	R05-12 · Receiving a result from another agent does not mean it can be executed</a><small>reading-notes/chapter-05.html · corresponding subsection in the text
+8546	R06-01 · A tool absent from the input cannot be blamed on the model failing to select it</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8547	R06-02 · How Thread and Turn lifecycles differ</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8548	R06-03 · How repository readability reduces repeated searches</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8549	R06-04 · Pin the commit before tracing a call chain</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8550	R06-05 · A managed execution environment does not decide business authorization for the application</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8551	R06-06 · A Claude Code-style loop observes before continuing</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8552	R06-07 · Context consists of more than the current chat</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8553	R06-08 · Project rules conflict with personal preferences</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8554	R06-09 · A sub-agent handoff does not automatically copy all history</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8555	R06-10 · A skill name appearing does not mean its body has been read</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8556	R06-11 · Which version a hook checks when intercepting a commit</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8557	R06-12 · An allowed command name does not make all its arguments safe</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8558	R06-13 · Handle small fixes directly and keep complex design separate</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8559	R06-14 · The CLI's current directory changes which project is visible</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8560	R06-15 · Overly broad responsibilities make custom agents duplicate work</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8561	R06-16 · Tasks started programmatically also need exit-state checks</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8562	R06-17 · Five extensions address different needs</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8563	R06-18 · Skill matching must include near-miss negative examples</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8564	R06-19 · Repository memory conflicts with current code</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8565	R06-20 · A plugin contains tools, but installation does not automatically authorize them</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8566	R06-21 · Automation scripts need to record reproducible inputs</a><small>reading-notes/chapter-06.html · corresponding subsection in the text
+8568	R07-01 · More relevant information is not always better</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8569	R07-02 · A position-effect experiment moves only the target evidence</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8570	R07-03 · Fitting in the window does not mean it can be used accurately</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8571	R07-04 · Long-context tasks cannot all be assessed by finding one sentence</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8572	R07-05 · How to test the effective window as interference increases</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8573	R07-06 · Opaque compaction items must be carried forward unchanged</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8574	R07-07 · Summaries must retain negation and unfinished work</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8575	R07-08 · Compaction at a stage boundary is easier to keep consistent than during writes</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8576	R07-09 · Keep a recoverable location before deleting a large log</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8577	R07-10 · The compaction threshold must not wait until the window is full</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8578	R07-11 · Compaction reduces tokens but changes the cache prefix</a><small>reading-notes/chapter-07.html · corresponding subsection in the text
+8580	R08-01 · Retrieval does not "dig the answer out" of the model</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8581	R08-02 · Add context to an excerpt so "it" keeps its referent</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8582	R08-03 · Rank fusion uses ranks rather than score scales</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8583	R08-04 · Dual-encoder retrieval encodes the query and document separately</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8584	R08-05 · Each query token finds its own best document position</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8585	R08-06 · A HyDE hypothetical document is not source evidence</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8586	R08-07 · RAPTOR's upper summaries help locate content; lower levels keep the details</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8587	R08-08 · Restricting paths makes searches for same-named symbols more precise</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8588	R08-09 · A failed grep does not justify immediately concluding that something is absent</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8589	R08-10 · What an incremental syntax tree updates after one line changes</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8590	R08-11 · Same-named variables have different bindings</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8591	R08-12 · A failed first generation feeds back into better retrieval</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8592	R08-13 · Repository completion evaluations must isolate leakage from nearby answers</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8593	R08-14 · Natural-language code search cannot always rely on matching the same words</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8594	R08-15 · Tuning for one document type does not guarantee good results on another</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8595	R08-16 · Two results recalled in each case can still have different ranking quality</a><small>reading-notes/chapter-08.html · corresponding subsection in the text
+8597	R09-01 · How memory enters decisions without directly replacing the environment</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8598	R09-02 · The body is swapped out; the current task still needs an index</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8599	R09-03 · Namespaces prevent mixing memories across users</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8600	R09-04 · Session checkpoints and long-term Store hold data with different lifecycles</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8601	R09-05 · Reflection must avoid overgeneralizing when turning events into experience</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8602	R09-06 · Answer with the new value after an old preference is updated</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8603	R09-07 · Very long sessions need tests beyond copying one sentence</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8604	R09-08 · Automatic links can also connect the wrong memories</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8605	R09-09 · Check each stage of the memory update pipeline</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8606	R09-10 · Graph retrieval answers relationships across documents</a><small>reading-notes/chapter-09.html · corresponding subsection in the text
+8608	R10-01 · What is saved by loading only relevant skills</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8609	R10-02 · A skill body refers to a nonexistent script</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8610	R10-03 · An explicitly requested skill still needs checks against current task constraints</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8611	R10-04 · A platform supporting skills does not mean every surface loads them the same way</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8612	R10-05 · Locate Codex skill problems along the data chain</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8613	R10-06 · Keep persistent rules separate from on-demand specialist material</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8614	R10-07 · Give parallel researchers different evidence scopes</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8615	R10-08 · DAG edges determine which tasks can run together</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8616	R10-09 · A handoff differs from a call that returns a result</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8617	R10-10 · Agent-as-tool returns still need verification</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8618	R10-11 · Build a simple, strong baseline first</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8619	R10-12 · Multi-agent conversations can loop through mutual agreement</a><small>reading-notes/chapter-10.html · corresponding subsection in the text
+8621	R11-01 · How a new context continues a fix without starting over</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8622	R11-02 · Develop a large application through verifiable features</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8623	R11-03 · How line numbers in a tool interface help patches locate their targets accurately</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8624	R11-04 · When review finds a small naming issue, how to avoid repeating the design</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8625	R11-05 · Compiler modules written in parallel need consistent interfaces</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8626	R11-06 · An agent review cannot merely restate the diff</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8627	R11-07 · Separate imperfect improvements to code from blocking defects</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8628	R11-08 · Judge design, complexity and tests together</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8629	R11-09 · Which errors the three test layers each catch</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8630	R11-10 · Continuous integration tests must target the merged result</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8631	R11-11 · Architecture decision records need conditions for abandoning the decision</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8632	R11-12 · When product quality regresses, distinguish the model from the harness first</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8633	R11-13 · External tasks may keep running after the model process is interrupted</a><small>reading-notes/chapter-11.html · corresponding subsection in the text
+8635	R12-01 · Define actual success before counting scores</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8636	R12-02 · One workflow step passing does not mean the full process passes</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8637	R12-03 · Trace grading reveals unauthorized actions behind an answer</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8638	R12-04 · Turn actual failures into continuing regression cases</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8639	R12-05 · Grading rules must distinguish missing information from guessing</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8640	R12-06 · Swap answer order to check judge bias</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8641	R12-07 · Evaluations on real Issues must verify patch behavior</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8642	R12-08 · Different test environments can give different results for the same patch</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8643	R12-09 · Resource noise cannot be counted as model error</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8644	R12-10 · Results across environments must be examined separately</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8645	R12-11 · Repeated success measures stable execution</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8646	R12-12 · Questions newer than the training cutoff are still not automatically free of contamination</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8647	R12-13 · General assistant tasks require reading, calculation and checking together</a><small>reading-notes/chapter-12.html · corresponding subsection in the text
+8649	R13-01 · Leaks can come from both input and logs</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8650	R13-02 · Agent risks include actual side effects</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8651	R13-03 · An untrusted excerpt cannot promote its own role</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8652	R13-04 · How to recognize injection that changes the task goal</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8653	R13-05 · Indirect injection may hide in a search-result summary</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8654	R13-06 · Blocking the network alone can still allow leaks into file logs</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8655	R13-07 · Count false blocks and missed blocks in automatic approval separately</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8656	R13-08 · Do not assume boundaries carry over across different execution surfaces</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8657	R13-09 · A threat model starts by specifying what to protect</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8658	R13-10 · Reading a file and deploying should not require the same level of confirmation</a><small>reading-notes/chapter-13.html · corresponding subsection in the text
+8660	R14-01 · How one trace connects the model and tools</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8661	R14-02 · Comparing backends requires consistent fields</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8662	R14-03 · A parent span includes waiting; child spans do not sum to the parent span</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8663	R14-04 · Rising queues warn of trouble even when success rates are normal</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8664	R14-05 · How much error budget a 99% target allows</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8665	R14-06 · Run a recoverable failure before release</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8666	R14-07 · Staying within RPM can still hit a TPM rate limit</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8667	R14-08 · Reducing operations off the critical path does not change total time</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8668	R14-09 · Reconnect to execution state by task ID after a model timeout</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8669	R14-10 · Change only one interpretable variable at a time</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8670	R14-11 · Combining tools can send less data without doing less verification</a><small>reading-notes/chapter-14.html · corresponding subsection in the text
+8672	R15-01 · What a rank-1 LoRA increment actually looks like</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8673	R15-02 · Keep quantized base weights separate from trainable adapter parameters</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8674	R15-03 · Activations amplify weight quantization error</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8675	R15-04 · What extra information a teacher's soft distribution gives beyond a single label</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8676	R15-05 · Multiple adapters must align with the base version</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8677	R15-06 · The model can repeat popular errors too</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8678	R15-07 · Reconcile an 80% probability with outcomes of the same kind</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8679	R15-08 · On-demand retrieval does not mean one fixed search for every sentence</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8680	R15-09 · Search again when retrieval goes wrong instead of forcing an answer from the wrong material</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8681	R15-10 · Computer use must read back the result</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8682	R15-11 · Screenshot scaling changes coordinates</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8683	R15-12 · Desktop task success is not judged by click count</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8684	R15-13 · Two buttons with the same text need context to locate them</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8685	R15-14 · DOM targeting and visual coordinates each have limits</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8686	R15-15 · What it means when one neuron responds to two concepts</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8687	R15-16 · A sparse autoencoder's two objectives can conflict</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8688	R15-17 · The difference between observing correlation and intervening on causes</a><small>reading-notes/chapter-15.html · corresponding subsection in the text
+8690	R16-01 · What autodiff propagates through the computation graph</a><small>reading-notes/chapter-16.html · corresponding subsection in the text
+8691	R16-02 · Even minimal GPT training must shift labels correctly</a><small>reading-notes/chapter-16.html · corresponding subsection in the text
+8692	R16-03 · The checking order for a runnable training system</a><small>reading-notes/chapter-16.html · corresponding subsection in the text
+8693	R16-04 · The Tokenizer and model weights must match</a><small>reading-notes/chapter-16.html · corresponding subsection in the text
+8694	R16-05 · Exponentials and logarithms must specify their base</a><small>reading-notes/chapter-16.html · corresponding subsection in the text
+8695	R16-06 · Gradients accumulate by default: why zero them</a><small>reading-notes/chapter-16.html · corresponding subsection in the text
+23912	Lesson 46 · From two pieces of content to one mixed vector, not to picking one sentence</a><small>reading-notes/guide-02.html · corresponding subsection in the text
+23764	Lesson 35 · What the one sentence "read the configuration" is in each of the four objects</a><small>reading-notes/guide-03.html · corresponding subsection in the text
+23537	Lesson 01 · Read, find the gap, read again: let one tool result decide the next step</a><small>reading-notes/guide-04.html · corresponding subsection in the text
+8094	Q001 · Two model calls in one task, and what each of them knows in addition</a><small>reading-notes/guide-05.html · corresponding subsection in the text
+8194	Q034 · A reranker is finer-grained because it gets to look at the query and the candidate together</a><small>reading-notes/guide-09.html · corresponding subsection in the text
+23708	Lesson 23 · Remembering "the timeout is 3": what is missing that makes it go wrong next time</a><small>reading-notes/guide-10.html · corresponding subsection in the text
+8760	S01 · When 爱 appears twice, how the gradients for its embedding row add up</a><small>studies/chapters/01.html · corresponding subsection in the text
+8761	S02 · When actual lengths differ within a batch, cache positions cannot depend only on padded length</a><small>studies/chapters/02.html · corresponding subsection in the text
+8762	S03 · Why accumulating gradients over four microbatches does not necessarily equal four times the learning rate</a><small>studies/chapters/03.html · corresponding subsection in the text
+9077	X05 · Using 1000 parameters to work out exactly which state ZeRO shards</a><small>studies/chapters/03.html · corresponding subsection in the text
+8763	S04 · PPO clips positive advantage, but handles negative advantage differently</a><small>studies/chapters/04.html · corresponding subsection in the text
+8764	S05 · The same probability table gives different candidate sets for nucleus sampling and greedy selection</a><small>studies/chapters/05.html · corresponding subsection in the text
+8765	S06 · Why a roofline estimate gives only a lower bound and cannot be treated as a measurement</a><small>studies/chapters/06.html · corresponding subsection in the text
+8766	S07 · Whether a call-end signal is still needed after the tool arguments' syntax is complete</a><small>studies/chapters/07.html · corresponding subsection in the text
+8767	S08 · The crash window between writing an external file and committing the local database</a><small>studies/chapters/08.html · corresponding subsection in the text
+8768	S09 · How a conclusion becomes invalid when the source function name stays the same but calling conditions change</a><small>studies/chapters/09.html · corresponding subsection in the text
+8769	S10 · A black-box product experiment: change only one instruction source</a><small>studies/chapters/10.html · corresponding subsection in the text
+8770	S11 · Selecting a high-scoring excerpt while missing the preceding negative clause</a><small>studies/chapters/11.html · corresponding subsection in the text
+8771	S12 · A compaction scheme saves 90%, but two kinds of error need separate counts</a><small>studies/chapters/12.html · corresponding subsection in the text
+8772	S13 · Why filtering permissions after recall can leave top-k short</a><small>studies/chapters/13.html · corresponding subsection in the text
+9083	X09 · Why approximate graph search can miss the genuinely nearest point</a><small>studies/chapters/13.html · corresponding subsection in the text
+8773	S14 · Which evidence to update when incrementally analyzing a function rename</a><small>studies/chapters/14.html · corresponding subsection in the text
+8774	S15 · A similar memory does not apply in the current environment</a><small>studies/chapters/15.html · corresponding subsection in the text
+8775	S16 · Does higher skill recall count as an optimization if false loading also rises</a><small>studies/chapters/16.html · corresponding subsection in the text
+8776	S17 · With correlated errors, do not multiply three agents' probabilities as if independent</a><small>studies/chapters/17.html · corresponding subsection in the text
+8777	S18 · A property test uses a family of inputs to catch prefix errors</a><small>studies/chapters/18.html · corresponding subsection in the text
+8778	S19 · Once the tasks are stratified by difficulty, the overall win rate can point the other way</a><small>studies/chapters/19.html · corresponding subsection in the text
+8781	S20 · How a permission-aware retrieval tool avoids leaving authorization to the model's guess</a><small>studies/chapters/20.html · corresponding subsection in the text
+8782	S21 · How a retry storm amplifies a temporary failure</a><small>studies/chapters/21.html · corresponding subsection in the text
+8783	S22 · When success rates differ by 1 percentage point, critical failures matter more than average cost</a><small>studies/chapters/22.html · corresponding subsection in the text
+8784	S23 · Equal weight errors produce different output errors with different activations</a><small>studies/chapters/23.html · corresponding subsection in the text
+8785	S24 · Why old coordinates click the wrong place after a page scrolls 200 pixels</a><small>studies/chapters/24.html · corresponding subsection in the text
+8786	S25 · Does a higher abstention rate and higher accuracy really mean better results</a><small>studies/chapters/25.html · corresponding subsection in the text
+8787	S26 · Before using tree search for deep research, check whether candidates can be judged</a><small>studies/chapters/26.html · corresponding subsection in the text
+8788	S27 · Why adding a log after a successful patch requires verification again</a><small>studies/chapters/27.html · corresponding subsection in the text
+8789	S28 · Which layer is missing when the same research conclusion becomes an automated action</a><small>studies/chapters/28.html · corresponding subsection in the text
+8790	S29 · Unchanged content but slower: align the execution traces before guessing</a><small>studies/chapters/29.html · corresponding subsection in the text
+8791	S30 · Acceptance evidence for the capstone project, not a "can chat" demo</a><small>studies/chapters/30.html · corresponding subsection in the text
+8793	S31 · Using one directional derivative to check that the matrix backward pass is wired up correctly</a><small>studies/chapters/31.html · corresponding subsection in the text
+9081	X08 · Letting retrieval vectors learn: which direction the query vector really moves in</a><small>studies/chapters/31.html · corresponding subsection in the text
+9072	X01 · Carrying on with 我爱学习/你爱, and computing one model layer right through</a><small>worked-model.html · corresponding subsection in the text
+21824	Sources and conditions of use for the figures in the text — AI Systems Engineering
+11996	The following material is used to check the interfaces and engineering boundaries in the added figures. The check date is 2026-10-21; sources with version numbers are interpreted according to those versions. Existing sources in the original document retain their original dates and must not all be treated as newly verified in this round.
+21819	The main text consists entirely of independently written Chinese explanations. Numbers, candidates, states and paths in the figures are declared teaching inputs; a source for the principles is not evidence of a commercial model's performance. JSON figures for existing failure experiments only redraw their original records, without changing the original environment or measurement scope.
+25082	Scope:</strong> fixed documentation version 2.13
+21400	Checks which mask values mean "allowed", non-square causal alignment and the dropout argument. This text explicitly constructs position-permission tables; the numbers are teaching inputs, not performance measurements.
+16775	Official original source: https://docs.pytorch.org/docs/2.13/generated/torch.nn.functional.scaled_dot_product_attention.html
+16996	Client-side function calls are handled by the application, which returns results by call identifier. The message table here uses a teaching harness, not a closed-source system prompt.
+16774	Official original source: https://developers.openai.com/api/docs/guides/function-calling
+21393	Checks reuse of past K/V at each layer, new-token positions and the boundary between caching and training; this does not promise that every framework accepts the same input form.
+16777	Official original source: https://huggingface.co/docs/transformers/cache_explanation
+25079	Scope:</strong> historical fix on 2024-10-16; rechecked on 2026-10-21
+25351	Explains the difference between normalizing by valid tokens and averaging microbatch means. It retains the historical context and does not claim that the current version still has this defect.
+16776	Official original source: https://huggingface.co/blog/gradient_accumulation
+9191	Regular communication starts after initialize, version/capability negotiation and notifications/initialized. This figure deliberately fixes the specification version and does not call it the latest version.
+16778	Official original source: https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle
+21397	Checks tool discovery, pagination and tools/call objects. Neither tool descriptions nor a successful connection confer extra authorization.
+16779	Official original source: https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+25080	Scope:</strong> article dated 2025-09-29; rechecked on 2026-10-21
+22860	Provides mechanism background for context selection and compaction. Conditional version updates, evidence constraints and related elements are engineering derivations and constructed experiments for this textbook, not claims about a vendor's internal implementation.
+16784	Official original source: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+14078	Distinguishes message-history management from session references. The application must still check that each turn's required rules, tools and evidence are available.
+16773	Official original source: https://developers.openai.com/api/docs/guides/conversation-state
+21399	Checks accumulation by 1/(k+rank), with ranks starting at 1; the candidate ranks here are an independent teaching construction.
+16785	Official original source: https://www.elastic.co/docs/reference/elasticsearch/rest-apis/reciprocal-rank-fusion
+25820	Explains database commit boundaries; unknown outcomes and idempotency across external side effects are engineering derivations. A local transaction must not be extended into a claim of remote exactly-once execution.
+16782	Official original source: https://sqlite.org/atomiccommit.html
+8894	Spans record operations and causal relationships; example durations are set by this book and are not platform measurements.
+16780	Official original source: https://opentelemetry.io/docs/concepts/signals/traces/
+21392	Checks quantile aggregation boundaries; group p95 values are not directly averaged.
+16781	Official original source: https://prometheus.io/docs/practices/histograms/
+25081	Scope:</strong> first-hand engineering material read on 2026-10-21
+14075	Distinguishes service objectives, user experience and error budgets; any example thresholds in the textbook are explicitly declared and are not universal standards.
+16783	Official original source: https://sre.google/workbook/implementing-slos/
+15863	Figure calculations and verification records — AI Systems Engineering
+21110	This page states what was actually checked in the added figures and teaching explanations, and what those checks cannot prove. Inputs, dimensions, message identifiers and experiment environments are declared in each example; constructed data is not treated as product effectiveness. Original textbook experiments retain their environment records; logs from this rerun are saved separately.
+13540	Content scope and insertion locations
+24251	Each of the 112 Systems questions has an explanation of its specific mechanism; 102 corresponding subsections in Topic studies add detailed calculations; 253 original worked examples are redrawn according to their original actions and results; figures for reading results are added near the original JSON for 56 engineering deep dives and 8 failure studies; each of the 4 walkthrough cases adds 4 locations using that case's own input. The 12 core reading guides have matching mechanism figures. The figures remain in the main text; this index does not replace reading it.
+13045	There are 559 additions to the main text in total, not 559 distinct research findings. Of these, 115 mechanism cases were written individually by hand and reused in suitable topics; figures of existing worked examples use only their original data. Desktop and phone figures are two layouts of the same mechanism, not two independent knowledge points.
+16062	Foundations: what was kept unchanged
+23753	The main text, lesson figures and self-check answers in Lessons 35–66 were not rewritten. Conditions and objects in 40 chapter-opening animations were checked; of these, 11 groups totaling 64 frames were redrawn as clearer numerical tables, states and correspondences, while the rest retain the original figures with their inputs already explained. The independent conditions of new figures and existing text are declared before the figures; two examples are not joined into one run.
+20010	Recomputing values and states
+20175	The added program ran 56 deterministic tests, all passing. All 411 tests in the original 9 unit-test groups were rerun and passed; two existing numeric/experiment runners also finished normally, without inflating the unit-test count by counting their output lines. Every check ran in a local CPU environment, without calling commercial model APIs or measuring GPU performance.
+20171	The added checks cover matrix multiplication, attention normalization, cache-offset masks, sampling order, finite differences for chain-rule gradients, original JSON boolean semantics, RRF ranks, conditional version updates, task pairing and parallel timing. Passing tests applies only to the declared inputs and invariants; it does not mean the explanations are unambiguous or that a real agent will necessarily succeed.
+14679	Original program groups
+14125	Unit-test count
+28125	Exit status
+20173	Actual terminal output of the added tests
+15841	Figures, pages and reading interactions
+15867	Chromium was used to check 1024 desktop/phone SVG layout instances: two sizes each for 115 mechanism figures, 253 original worked-example figures, 64 result figures, 16 walkthrough figures and 64 chapter-opening frames. Checks looked for text extending beyond the viewBox and obvious text overlaps. They can find clipped labels but cannot replace semantic review; the meaning of figure connections still needs the accompanying text.
+16965	Actual page spot checks covered matrix projection, masks, tool protocols, fused ranks, attention backpropagation, engineering records, Foundations chapter openings and phone pages. Figure enlargement, Esc to close, and native self-check expansion/collapse were also exercised. Overlapping vector labels and crowded phone boolean cells found by automated checks were fixed.
+22770	Environment limitation: direct browser navigation to file:// was blocked by the execution environment administrator's policy, so page checks used inline rendering of the original HTML, CSS and scripts; actual file paths and anchors were validated separately through static checks. No claim is made of measurements on the user's Mac, Safari or phone hardware. The textbook does not depend on remote scripts, network fonts or online services.
+20540	Final structure check: 246 HTML pages and 89,245 local file/anchor references, with no missing or duplicate IDs; all 475 original file paths were retained. Main-text comparison passed for 40/40 Foundations lessons. The standalone single file references no external scripts, styles or images.
+16164	How to recompute, with the complete added code
+25319	After extracting, enter the mechanisms directory and run
+10177	. The program uses only the Python standard library and reads the mechanism data and drawing functions actually used by this book from the same directory. The complete source is retained below; readers of the single-file edition can save it as the corresponding files. Original teaching-environment records remain as recorded in their respective experiment directories.

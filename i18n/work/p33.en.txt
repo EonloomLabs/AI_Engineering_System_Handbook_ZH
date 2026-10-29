@@ -1,0 +1,387 @@
+26578	Input and output interfaces — AI Systems Engineering
+22265	Follow this chapter through its objects and states</a><a href="#topic-2">Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#c04-section-1">The input the model actually receives</a><a href="#c04-section-2">Instruction hierarchy and trust boundaries</a><a href="#c04-section-3">Three levels of guarantee for structured outputs</a><a href="#function-calling">The complete protocol for tool calls</a><a href="#c04-section-5">Streaming output and reasoning state</a><a href="#c04-section-6">Prompt versions and experiments</a><a href="#section-7">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-stream">The protocol boundary and the business boundary</a><a class="sub ap-toc" href="#agent-reading-tools">Discoverable and authorizable
+22472	Messages, instructions, structured outputs and tool calls
+28777	Stage 4</span><span class="chip">8 expanded lecture notes</span><span class="chip">Main text fully expanded
+21682	The input the model actually receives
+22475	A message interface includes roles, content blocks, tool definitions and other configuration, not just free text. The client may add repository rules and task state, and the server may organize the input further. The visible chat history is not the complete request, much less all internal processing.
+27294	This is a vendor-independent teaching structure and cannot be used directly as an API request. Every piece of information needs provenance; a model assumption must not silently become a "confirmed fact".
+19364	Instruction hierarchy and trust boundaries
+7944	The Model Spec describes expected behavior; it is not a runtime permission system. This text explains the concepts using verifiable historical versions, without claiming they represent the latest behavior of every model. Lower-trust content can provide facts but cannot authorize itself; higher-priority instructions constrain behavior but do not make their external facts eternally correct.
+22530	A source-code comment asking for environment variables to be uploaded is still external text. The tool executor should check permissions rather than relying only on "please be safe" in the prompt. Source labels help organize information, but cannot replace actual access control.
+24420	Three levels of guarantee for structured outputs
+15336	Valid JSON guarantees syntax; a schema guarantees constraints such as structure, types and enumerations; facts, citations and business states within fields still need verification. The schema should allow real states such as insufficient evidence and tool failure, so intermediate results are not forced to masquerade as completion.
+27296	This is an original business example, not a requirement of any product. After parsing, also check truncation, refusal, whether field references exist, and whether files fall outside allowed paths. A confidence value from 0 to 1 is merely numerically valid; it does not automatically mean a calibrated probability.
+17796	The complete protocol for tool calls
+21701	The model proposes a tool name and arguments, the application validates and executes them, and the result returns to the model with an association ID; the model then decides whether to continue or answer. A generated call has not necessarily executed, and a successful return does not mean the whole task is complete.
+25873	Distinguish a nonexistent file, lack of permission, timeout and an empty file when handling read failures. Check dependencies before parallel calls: independent searches can run in parallel, but a patch based on code not yet read cannot be generated in parallel unconditionally.
+16746	For the full mechanism and continuing examples, see <a href="../chapters/11.html#agent-practice-tools">The tool exists, the model sees it, it can be called, it is authorized: four layers of checking</a>. This section retains its original derivations and experiments; the two explanations work at different levels and do not replace each other.
+22396	Streaming output and reasoning state
+22393	A streaming response may contain text, argument fragments and end events. A partial JSON object is not authorization to execute: assemble the complete call according to the protocol, then validate it. High-risk writes especially must not execute while arguments are still arriving.
+19684	Reasoning models may use invisible or protected state; pass it as the interface requires, without fabricating it. The final text's length does not equal total reasoning usage, and an explanation may not be a verbatim record of the internal process.
+8072	Prompt versions and experiments
+14261	An original experiment compares three inputs: a repair request alone; the request with explicit goals and necessary source code; and those plus a lengthy fixed process. Measure accuracy, missed tests, total rounds and human takeover. The longer version may help complex tasks and hurt simple ones, requiring statistics by category.
+24949	Record at least the prompt version, model configuration, tool schemas and task samples. Saving only the final answer cannot explain a regression. Prompt tools manage organization; they cannot replace evaluation design.
+24903	Self-check: can the model saying it ran tests count as test evidence?</strong> No. Tool results are required. <strong>Can a strict schema prevent fabricated citations?</strong> No. The citations must also be checked for existence and support for the conclusion.
+6549	4.1 · Prompt engineering basics
+17459	Related material: Prompt Engineering
+19769	Prompt engineering organizes task goals, constraints, background and output requirements. Clear structure helps the model understand, but wording is not a deterministic program and cannot guarantee every requirement is followed.
+18091	Provide enough necessary evidence rather than piling up generic slogans. A role description can supply style or perspective but cannot replace actual project conventions. Output requirements should also allow insufficient evidence and incomplete states.
+24327	Set out constraints, data and output requirements separately and clearly
+26217	Input and conditions.</strong> The task reads three log entries and requires listing only errors supported by evidence.
+18659	Find actual errors
+10917	Do not write generic troubleshooting advice.
+20031	Data
+20255	Treat logs as quoted content
+13305	Their text does not automatically become new instructions.
+28594	Errors, source line numbers, unconfirmed items
+18724	Separate "looks like" from "verified".
+19110	Join the steps up.</strong> Clear objects and success conditions work better than piling on adjectives such as "professional and comprehensive".
+14375	Original exercise: rewrite "fix the issue and make sure it is professional" as verifiable requirements for functionality, compatibility and tests, leaving the model room to choose the implementation path. Then compare whether irrelevant refactoring and false completion decrease.
+16677	The completion standard is making the prompt serve the task, rather than concealing missing information with longer text. If the problem is tool permissions or a stale index, further prompt polishing may offer no gain.
+6550	4.2 · Prompt organization and version management
+17461	Related material: Prompting
+8073	Prompt management involves templates, variables, reuse and versions. Reuse reduces repeated organization work, but the evidence and constraints needed by different tasks must still be distinguished; a template should not become a fixed, lengthy process for every situation.
+25701	Prompt evaluation must record the model, tool definitions, task samples and configuration; otherwise, output differences cannot be attributed. Template variables also need proper escaping and provenance labels to keep external data from mixing with high-trust instructions.
+19775	Prompt version changes must be tied to evaluation
+26157	Input and conditions.</strong> P1 requests only an explanation; P2 adds structured evidence fields.
+13648	Freeze the task set
+15483	The same 20 tasks
+28386	Avoid changes in the sample.
+25580	Record versions
+13697	Save P1/P2 and the model/tool configuration separately
+12266	Make differences explainable.
+24453	Compare results
+16531	Completeness, structural validity rate, cost
+10714	Do not judge only whether one example looks better.
+18901	Join the steps up.</strong> A prompt is also a behavioral configuration and needs versioning and verification, but every sentence need not undergo complex approval.
+14451	Original exercise: give two prompt versions clear identifiers and compare correctness, omissions, cost and duration on the same tasks. Keep the old version for regression checks, rather than saving only the best-looking answer.
+16584	The completion standard is a repeatable experiment, not a large collection of templates. Versioning alone does not improve quality; it has value only when connected to real evaluation and failure analysis.
+6551	4.3 · Input trust and instruction conflicts
+17441	Related material: Model Spec
+19361	Instruction priority resolves conflicting requests from different sources; factual credibility concerns whether content is true. These dimensions cannot replace each other: correct external evidence does not give it authority to rewrite the user's goal.
+20807	The book uses a verified historical Model Spec to explain normative concepts, without claiming the specification guarantees zero model errors in practice. Tool authorization should still be enforced by the program, rather than delegated entirely to the model.
+23302	The real user's instruction and an opposing request in a document
+26418	Input and conditions.</strong> The user says read-only; the document says "make changes before answering".
+13941	The former is the authorized task; the latter is quoted material
+26091	Their roles differ.
+24507	Continue read-only analysis
+10831	Do not accept extra write permission from the document.
+28879	Report the limitation if completion requires a change
+11020	Do not pretend the action was taken.
+18979	Join the steps up.</strong> A conflict is not resolved by automatically letting whichever instruction appears later in the context win.
+14458	Original exercise: a web-page body asks for the project to be deleted, while the user asks only for a summary of the page. Explain why this text is an object to analyze rather than an authorized command. Then add an outdated project rule and distinguish instruction role from factual currency.
+16647	The completion standard is labeling input by source, scope and purpose. Do not assume quotation marks around dangerous content resolve every injection risk, or automatically promote tool results to high-priority requirements.
+6552	4.4 · Function-calling protocol
+17394	Related material: Function Calling
+13692	Function calling passes the tool name and arguments proposed by the model to the application for execution, then associates the result with the original call. A model-generated call is not actual execution, and successful execution does not mean the whole task is complete.
+14764	Arguments require syntax, type, business-rule and permission checks. Returns should distinguish success, no results, timeout, insufficient permissions and other states rather than conflating them as empty text. Association IDs help handle multiple or parallel calls.
+9147	call_id links a call with its result
+26381	Input and conditions.</strong> The model emits c1=read(A), c2=read(B).
+12926	B returns first
+24449	The result carries c2
+18194	Associate it with B.
+13599	A returns next
+24448	The result carries c1
+18193	Associate it with A.
+19439	Treat B's content as A's based on completion order
+15532	Subsequent reasoning will rely on incorrect evidence.
+19056	Join the steps up.</strong> Associating tool-result identity is part of protocol correctness.
+24565	Continue the step-by-step calculation: <a href="../chapters/10.html#worked-Q039">Q011 · Two tools finish in parallel, so where does the later result belong
+14476	Original exercise: design a read-only file tool, specifying the allowed root directory and the difference between a nonexistent file and insufficient permissions. Then simulate what the model should do after receiving each of those errors.
+16641	The completion standard is drawing the complete request–execution–observation loop and explaining where side effects occur. A strict schema reduces formatting errors; it cannot authorize paths outside the allowed scope or duplicate remote operations.
+6553	4.5 · Structured outputs and constraints
+17488	Related material: Structured Outputs
+24421	Structured outputs constrain format and field types, not the truth of field contents. Valid JSON, schema compliance and business validity are three levels.
+21805	Schema design should include real states such as missing evidence, unverified results and tool failure. Allowing only successful conclusions may force the model to place an intermediate state in the wrong category. Refusal and truncation also need separate handling.
+24422	Facts still need checking after structured-output validation passes
+26491	Input and conditions.</strong> The output is {"version":"v8","tests_passed":true}, but the actual test record is for v7.
+16400	The string and Boolean types are both correct
+24429	The structure passes.
+22616	The versions do not match
+11059	Testing cannot be claimed for v8.
+25153	Test v8 or mark the field unknown
+11035	Simply formatting the JSON is not a fix.
+18897	Join the steps up.</strong> Valid JSON does not mean correct business facts.
+24566	Continue the step-by-step calculation: <a href="../chapters/10.html#worked-Q040">Q012 · The JSON format is perfectly correct, so why can it still not be executed
+14475	Original exercise: design code-fix report fields requiring changed files, tests run and unverified items, then add a validator to check whether reference IDs and files exist. A model filling in fields does not make the evidence real.
+16595	The completion standard is separating successful parsing from task acceptance. Even a confidence field constrained from 0 to 1 does not automatically become a calibrated probability; independent data are still needed to evaluate it.
+6554	4.6 · Streaming responses and event assembly
+17487	Related material: Streaming API Responses
+22392	Streaming responses deliver text, arguments or events in batches. Receiving a portion does not establish that a complete object exists; follow the protocol's completion signals and error states.
+17734	Tool arguments may span multiple fragments; do not guess completion using fragile string rules. High-risk actions especially must wait for complete arguments, authorization and validation, rather than operating unconditionally as generation streams in.
+24730	Network fragments and event boundaries
+26171	Input and conditions.</strong> One event's text arrives in two parts, with the blank line appearing only at the end of the second fragment.
+24049	First fragment
+24615	Buffer the incomplete text
+10671	Do not send it to the complete-event handler.
+24102	Second fragment
+25157	Complete the blank line
+21874	Only now is the event recognized as complete.
+14719	Argument delta
+11607	Even a complete event may contain only part of the arguments
+27178	They still need aggregation by call.
+19138	Join the steps up.</strong> Every protocol layer has its own completion condition.
+24564	Continue the step-by-step calculation: <a href="../chapters/10.html#worked-Q038">Q010 · A Chinese character is split into three network fragments, so why can it not be decoded fragment by fragment
+14376	Original exercise: split one JSON call into three parts, with the final part containing the target path's suffix. Compare premature execution with execution after full assembly, then simulate a connection interruption.
+16649	The completion standard is distinguishing incremental user-visible feedback from committing a background action. Showing text sooner may improve the experience, but should not announce completion of a business operation prematurely.
+6555	4.7 · Claude prompt design
+17352	Related material: Claude Prompt Engineering
+7252	Claude's prompt-design documentation offers methods such as clear tasks, context organization and examples. Validate them with the model and task; they are not laws that transfer unchanged to every product.
+23418	Examples should represent the target distribution with consistent labels and output formats. Complex information may be divided into sections, but delimiters themselves are not security boundaries. Specific business facts still need provenance.
+24474	Use counterexamples to clarify that "concise" does not mean lacking evidence
+26360	Input and conditions.</strong> Expected response: "timeout=3, from config:7, unit not declared".
+20638	Includes the value, location and limitation
+23517	Meets the goal.
+9490	"The timeout is 3 seconds, confirmed"
+19829	Adds a unit without justification.
+19767	The prompt's role
+25430	Show the model the boundaries that must be retained
+16920	Actual task evaluation is still needed to verify this.
+19037	Join the steps up.</strong> A good demonstration shows not only the format, but also what must not be inferred.
+14382	Original exercise: divide a prompt mixing rules, logs and user requests into clear sections, then check whether all necessary limitations remain. Compare restructuring it with simply adding more text.
+16696	The completion standard is finding effective wording through real tasks, not believing a particular tag format has magic powers. Formatting cannot automatically remove conflicting rules or outdated material.
+21174	Source S050, Claude prompt design
+6556	4.8 · Extended reasoning and state continuity
+17392	Related material: Extended Thinking
+7617	Extended Thinking involves additional model reasoning and its interface state. Visible reasoning summaries, final answers and protected state should not be conflated into ordinary chat text.
+17793	Related state may need to persist between tool calls; follow the model and API in use. Do not edit or delete protected content and assume equivalent behavior, or estimate total usage from the final word count.
+19696	Reasoning state is not ordinary text that can be freely concatenated
+26358	Input and conditions.</strong> The service returns an opaque reasoning or compaction state block R.
+19402	Keep the original state object as required by the API
+11156	Do not rewrite it as a readable explanation.
+27623	Send it back with the necessary call results
+12410	Preserve interface continuity.
+26855	Migration
+19524	Check support conditions when changing models or sessions
+11018	Do not assume every service can decode R.
+19153	Join the steps up.</strong> State transfer follows the protocol; invisible internals must not be explained through invention.
+24563	Continue the step-by-step calculation: <a href="../chapters/09.html#worked-Q035">Q003 · The same session_id does not mean the same model input
+14445	Original exercise: draw the event sequence of reasoning, tool call, tool observation and continued reasoning, marking what the application saves and what the model service manages. Then design verification for truncation or recovery.
+16684	The completion standard is giving users checkable evidence and conclusions, not demanding unlimited exposure of internal processes. More reasoning budget cannot make up for nonexistent tool permissions or private knowledge that was never supplied.
+9558	← Inference and serving</a><a href="chapter-05.html">Agent basics →
+6969	Agent basics — AI Systems Engineering
+22272	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#c05-section-1">From response to decision loop</a><a href="#c05-section-2">Combining workflows and agents</a><a href="#c05-section-3">Tool design is interaction interface design</a><a href="#c05-section-4">Three states: conversation, execution and environment</a><a href="#c05-section-5">Feedback, reflection and stopping</a><a href="#c05-section-6">The boundaries of MCP and A2A</a><a href="#section-7">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-loop">Acceptance is tied to a version</a><a class="sub ap-toc" href="#agent-reading-recovery">The real crash window
+18605	Execution loops, tools, state, recovery and protocols
+28778	Stage 5</span><span class="chip">12 expanded lecture notes</span><span class="chip">Main text fully expanded
+11847	From response to decision loop
+6974	An agent connects model output to the real environment, then returns observations to the model. ReAct studies alternating reasoning, actions and observations; its key insight is that actions obtain new information, which revises the next step. It does not require production systems to expose all internal reasoning, or prove that longer chains are better.
+20563	A minimal system includes a model, tools, state and loop control. The model proposes actions, the program executes and records them, and the controller checks budgets, permissions and termination. Frameworks package these responsibilities but do not make them disappear.
+23285	Real implementations also need timeouts, cancellation, retries and persistence. The initial version can be simple, but side effects and recovery cannot rely only on the model "remembering".
+9055	Combining workflows and agents
+17918	Flows with known steps suit explicit orchestration; steps whose next action depends on new observations suit dynamic decisions. Fixed report extraction need not use complex exploration, while an unknown bug may need search, reproduction and backtracking. They can be combined: an outer flow constrains stages and permissions, while an inner agent explores the unknown.
+14249	An original decision rule: before seeing the observation, can the next step already be determined reliably? Program the determinate parts where possible; give the model the parts that require understanding new evidence. Once the task becomes stable, turn repeatedly effective methods into code and tests rather than repeating the reasoning forever.
+17783	Tool design is interaction interface design
+17781	A tool should state its purpose, input units, scope, results and failures. Tools with overly narrow functions increase round trips; overly broad tools increase permissions and noise. Search results should include paths, snippets and truncation markers; write results should describe actual changes, not merely accepted requests.
+22084	is easier to control than "search everything". Returning only file names causes repeated reads, while returning the whole repository adds interference. Verify suitable granularity by task.
+17759	A tool execution failure must not be disguised as success with an empty string. Distinguishing no matches, lack of permission, timeouts and syntax errors lets the model choose appropriate recovery actions. An automated executor must still validate model arguments; schema validity should not grant access to arbitrary paths or commands.
+17567	Three states: conversation, execution and environment
+17572	Conversation state is visible messages and compaction information; execution state is calls, pending approvals and verification records; environment state is actual files and remote changes. Losing the conversation does not automatically roll back the environment, and restarting the program does not mean a remote action never occurred.
+14235	Original example: a PR is created successfully, but the network response is lost. A blind retry may create a duplicate PR. Query the actual state before deciding whether to retry. Idempotency keys, action IDs and result queries help; writing "do not repeat operations" is not enough.
+7225	A checkpoint saves a recovery point, while long-term memory saves reusable knowledge. Both persist data, but they are different objects. If the code has changed after recovery, an old passing test record must also be reassessed.
+14833	Feedback, reflection and stopping
+8969	Toolformer studies learning tool use during training; Reflexion uses language feedback to influence later attempts. A session summary is not parameter training, and model self-criticism does not guarantee correctness.
+9403	"In the nested_paths test, input src/a.py was incorrectly retained" is more actionable than "please be more careful". Termination states should include success, insufficient evidence, missing permissions, environmental failure and budget exhaustion, so the model does not disguise incomplete work as finished to submit a final answer.
+7887	The boundaries of MCP and A2A
+7899	MCP connects Host, Client and Server, distinguishing tools, resources and prompts. The protocol standardizes interaction but does not guarantee trustworthy services, inherited permissions or a model call. Versions, authentication and capability negotiation still need checking.
+11945	Code execution can filter and aggregate large tool results before they enter context, reducing the content transferred. This requires an execution environment and security boundaries; not every MCP client supports it automatically. A2A concerns discovery and task communication among agents, which is not synonymous with tool integration.
+24894	Self-check: can a checkpoint retract a message already sent?</strong> No. Restoring state differs from undoing side effects. <strong>Are multiple models reliable if they agree?</strong> Not necessarily; they may share the same incorrect premise.
+6655	5.1 · Reasoning, action and observation
+17469	Related material: ReAct
+8726	ReAct alternates reasoning and action; actions obtain new information, and observations help revise later judgments. This differs from continually generating an answer from fixed input alone.
+13289	The key is the information loop, not a required lengthy output format. Actions can fail and observations can be incomplete; the model should continue from actual results rather than pretend success while following its original plan.
+8725	Observations in ReAct change the next step
+26438	Input and conditions.</strong> The first search for foo returns no results.
+19673	Reasoning/action
+19761	Propose checking the symbol name and directory
+10925	Do not immediately fabricate foo's implementation.
+23057	The directory listing reveals the name foo_v2
+25096	New evidence is obtained.
+25864	Read the definition of foo_v2
+25121	Observation updates the action.
+19067	Join the steps up.</strong> The loop's value is connecting to environmental feedback, not putting three labels in the answer.
+14355	Original exercise: investigate an unknown function error by searching, reading the definition, then running a minimal test. At every step, write down new facts and ruled-out hypotheses, and identify when further exploration is unnecessary.
+16670	The completion standard is explaining how actions reduce uncertainty. Tool counts and loop rounds are not capability metrics; without new evidence, repeated reasoning may merely waste resources.
+6660	5.2 · Practical methods for building agents
+17312	Related material: A Practical Guide to Building Agents
+16913	The practical guide to agents treats models, tools and instructions as basic components and discusses when dynamic decisions are needed. Agents suit some complex flows, but not every automation needs an LLM to control each step.
+12805	Clarify the goal and verifiable result first, then choose the model and tools. Program low-risk, determinate steps, give uncertain judgments to the model, and retain boundaries for high-risk side effects.
+12865	Define a minimal deliverable task first
+26427	Input and conditions.</strong> The goal is a read-only report on why tests failed, with no automatic changes.
+17804	Tool set
+9289	read/search/test, read-only or controlled
+10832	No commit permission is provided.
+16894	Locate the failing assertion and related code
+11036	Do more than generically suggest a retry.
+16275	Failure condition
+22443	The test environment cannot run
+16314	Report the gap honestly and provide the evidence obtained.
+18947	Join the steps up.</strong> A small task with clear boundaries is easier to verify than starting with a multi-role platform.
+14364	Original exercise: divide a work task into determinate steps and new information that requires understanding, then build a minimal viable loop. For each added mechanism, explain which real failure it prevents.
+16609	The completion standard is an executable loop, not a complex architecture diagram. Frameworks and guides provide a starting point; the application still designs actual tool semantics, state and acceptance.
+6662	5.3 · Agent components and workflows
+17325	Related material: Agents Documentation
+6975	Agent documentation organizes capabilities such as models, tools, state and workflows. Product entry points evolve; focus on responsibilities rather than treating every name in one interface as a permanent standard.
+18089	The application must decide information sources, tool scopes, failure handling and completion conditions. Managed capabilities reduce some infrastructure work but do not automatically understand the user's business rules.
+25358	A planning node is not an execution node
+26461	Input and conditions.</strong> The plan says "run tests", but the execution log has no test event.
+25182	Expresses intent
+10863	Not a fact.
+11712	Produces an execution request
+11598	Still not necessarily complete.
+28128	The exit code and log match the current version
+18563	Only then is this verification evidence.
+19154	Join the steps up.</strong> A state machine must explicitly distinguish planned/requested/completed.
+14303	Original exercise: list inputs, allowed tools, state, outputs and exceptions for a file-investigation agent. Then mark what is delegated to the platform and what you must implement yourself, avoiding gaps in responsibility.
+16616	The completion standard is understanding the execution system beyond API calls. One successful model response means only that one call ended, not that the external goal was achieved.
+21175	Source S054, agent components and workflows
+6664	5.4 · Runners, sessions and traces
+17448	Related material: OpenAI Agents SDK
+6958	The Agents SDK provides abstractions such as Agent, Runner, sessions, handoffs and tracing. Runner organizes the loop, Agent describes configuration, and tools perform actions; abstractions aid implementation but cannot replace requirements and security boundaries.
+12121	Keep session history, business state and the external environment separate. An SDK saving messages does not mean remote side effects can be rolled back, and a trace is not a business database.
+15396	What Runner and Session each hold for the same task
+26209	Input and conditions.</strong> A runner executes task T, a session saves history, and a trace records timing.
+19721	Advance the call and tool loop
+13633	Determine when to continue/finish.
+12402	Save state that must be referenced across rounds
+10945	This is not the truth about all external data.
+25588	Record calls, tools and durations
+22865	Used for diagnosis; does not automatically undo business side effects.
+19235	Join the steps up.</strong> Running, persistence and observation cannot be collapsed into one concept of "session".
+14443	Original exercise: design a read-only research agent through interfaces on paper, listing paths for normal completion, no results, rate limiting and cancellation. Test control flow with a mock model and mock tools first, then connect a real model.
+16627	The completion standard is understanding the state machine behind the framework. Do not stack handoffs and multiple agents before defining failure semantics, or debugging will become harder.
+6666	5.5 · Learning tool use during training
+17502	Related material: Toolformer
+8970	Toolformer studies language models learning when and how to use external tools through training. It follows a capability-training approach; listing a few tools for an ordinary model does not reproduce the same mechanism.
+17742	Tools can add computation and external information, but whether a call helps depends on selection, arguments and interpretation of results. A model may use a tool and still misinterpret its return.
+25471	When external results enter samples during tool-use training
+26342	Input and conditions.</strong> The text needs the exact result of 17×19, and the candidate tool returns 323.
+20224	Without a tool
+21670	The model may guess a number
+28634	There is a risk of error.
+19783	Insert the call and result
+23415	The example contains a calculator request and 323
+15533	Subsequent text can be conditioned on the actual result.
+22114	Compare how the call helps target prediction
+10887	Not every position needs a tool call.
+19053	Join the steps up.</strong> Tool learning changes when/how external capabilities are requested; arithmetic verifies 323.
+14421	Original exercise: compare mental arithmetic, calculator use and document retrieval. Judge when tools reduce uncertainty and when they merely add round trips. Design result verification rather than checking only that a call occurred.
+16572	The completion standard is distinguishing tool capability learned through training from the application-layer tool protocol. More frequent tool use does not mean greater intelligence; the key is whether necessary calls improve the final task.
+6667	5.6 · Language feedback and task reflection
+17473	Related material: Reflexion
+8733	Reflexion turns task feedback into written reflection that influences later attempts. External experience can change behavior without parameter updates, but the reflection itself may be wrong.
+16269	A failure summary should connect to actual observations rather than a generic "be more careful next time". If the root-cause judgment is wrong, reflection may entrench the error as a rule for later work.
+14827	Reflection must retain the specific cause of failure
+26178	Input and conditions.</strong> The previous fix still used startswith, and the ab counterexample failed.
+25552	Record feedback
+9117	ab is excluded even though it is not inside directory a
+13520	Concrete evidence.
+18276	Form an improvement
+19861	Switch to a directory-boundary check
+25122	The action targets an actual failure.
+10619	Verify in the next round
+28562	Rerun the ab counterexample and the positive subdirectory case
+10869	Do more than write "be more careful in future".
+19011	Join the steps up.</strong> Reusable reflection should produce a testable behavioral change.
+14362	Original exercise: write one evidence-based lesson and one unverified guess about a test failure, labeling their states. On the next similar task, verify their conditions of use before applying them.
+16587	The completion standard is treating reflection as knowledge to verify, not self-certification. Repeatedly generating the same summary does not create independent evidence; multiple rounds of reflection may be less effective than one actual test.
+6668	5.7 · Designing tools for agents
+17515	Related material: Writing Effective Tools for Agents
+17785	Tool design should make purpose, boundaries, input units and return semantics clear to the model. Vague names, overlapping arguments and verbose results increase misuse and context costs.
+26870	Tools with overly narrow functions cause repeated round trips; overly broad tools expand permissions and are hard to verify. Provide suitable granularity around typical tasks, and clearly report truncation and failure.
+17803	A tool returning 10000 lines or 10 results with sources
+26219	Input and conditions.</strong> The task needs recent failed-build records.
+24147	Filter
+20679	The server limits relevant states and time ranges
+13674	Reduce irrelevant content.
+6098	10 records with IDs, times, errors and truncation markers
+11758	The original content can still be retrieved.
+11228	Insufficient
+22960	The user needs earlier records
+13800	Paginate or fetch by ID; do not falsely claim everything was supplied.
+18992	Join the steps up.</strong> Compacting tool output requires preserving task information and a way to recover the source.
+14431	Original exercise: compare a tool returning all logs with one returning relevant errors, commands, exit codes and the full log's location. Check whether the model can still trace the original evidence and whether repeated reads decrease.
+16635	The completion standard is evaluating the interface by task success and misuse rates, not merely a tidy function signature. Tool descriptions cannot replace actual executor checks of paths, arguments and side effects.
+6669	5.8 · The role and boundaries of MCP
+17437	Related material: MCP Introduction
+7889	MCP provides standardized interaction for model applications to access external capabilities. It is not a model or a guarantee that every tool is available, and does not automatically solve authorization.
+17002	The client must support the protocol and capabilities, the server must provide an implementation, and the host decides what to expose to the model. Successful connection and an actual model call are different states.
+25230	Installing an MCP server does not mean the model can already use it
+26355	Input and conditions.</strong> The server starts successfully and listens on a local port.
+27624	Connection
+17001	The client completes protocol initialization
+15006	Only the communication path is established.
+9353	tools/list obtains tool definitions
+21715	The model may not receive them.
+20473	Exposure and authorization
+17223	The host selects the tools allowed this round
+21868	Only then can an executable proposal be generated.
+19246	Join the steps up.</strong> Connection, discovery, visibility and authorization are four different gates.
+14447	Original exercise: draw the relationships among a local agent, an MCP client and a file server, marking tool discovery, call initiation and result return. Then simulate a reachable server whose tools have not been exposed.
+16659	The completion standard is locating the layer where connection, capability discovery, permissions or model selection fails. Do not treat "supports MCP" as a model capability that automatically improves every task.
+6670	5.9 · MCP hosts, clients and servers
+17436	Related material: MCP Architecture Overview
+7896	The MCP architecture distinguishes Host, Client and Server, organizing primitives such as tools, resources and prompts. Tools execute actions, resources provide content, and prompts provide reusable interaction structures; their responsibilities differ.
+14103	Protocol versions, transports, authentication and capability negotiation may affect interoperability. Server-returned data must still be handled according to trust boundaries; a standard protocol does not make it a high-priority instruction.
+7716	Which messages Host, Client and Server each handle
+26452	Input and conditions.</strong> An agent running in an editor needs to read from an MCP file service.
+24186	Manage the user task and model
+13639	Decide whether to provide tools.
+24605	Maintain protocol connections and request IDs
+14865	Send tools/call.
+18603	Perform the authorized read and return
+11140	It does not automatically decide the user's overall task.
+18990	Join the steps up.</strong> Protocol roles and LLM roles are not one-to-one synonyms.
+14288	Original exercise: for a code-documentation service, choose what to expose as resources, what as search tools, and what is merely a prompt template. Then make clear that permission to read does not mean permission to write.
+16621	The completion standard is understanding how a protocol reduces integration friction while recognizing that it does not handle every aspect of business correctness, data freshness and security authorization.
+6657	5.10 · Combining tools through code
+17356	Related material: Code Execution with MCP
+28321	Combining MCP tools through code execution lets an execution environment filter and aggregate large results before passing necessary information to the model. This approach reduces context transfers; it does not imply automatic support from every client.
+18584	Executing code adds flexibility along with environmental, permission and debugging burdens. Fewer transmitted tokens do not justify ignoring script errors or the destinations of sensitive data.
+22879	Combining three queries in code: which data need not enter the model
+26433	Input and conditions.</strong> The program fetches 3 pages of 100 records each and needs only a count of failed records.
+11943	Code execution
+15907	Fetch and iterate in a controlled environment
+6452	All 300 records need not become conversation content.
+24773	Aggregate
+9179	The failed counts are 2, 3 and 1 respectively
+18408	6 in total.
+26926	Return 6, the query scope and error/pagination state
+11101	Do not omit a failed page and still claim completeness.
+19170	Join the steps up.</strong> Deterministic aggregation reduces context, but environmental permissions, provenance and completeness must still be preserved.
+14313	Original exercise: suppose a tool returns ten thousand records. Compare passing them all to the model with filtering relevant items in code first. Keep query conditions, counts and the original results' location so filtering does not prevent auditing.
+16575	The completion standard is evaluating information retention, program correctness and cost together. Code aggregation is an engineering choice, not an all-purpose compaction method requiring no verification.
+6658	5.11 · Checkpoints, recovery and state persistence
+17424	Related material: LangGraph Persistence
+19348	Persistence and checkpoints save execution state so work can continue after interruption. They do not automatically copy the whole environment or roll back external side effects.
+18456	Recovery requires knowing the saved point's code version, which actions occurred and which were only planned. After a network timeout, a retry may duplicate a remote operation that already succeeded.
+21533	Events appended after a checkpoint also need recovery
+26376	Input and conditions.</strong> The checkpoint records through 10; afterward, event 11 writes successfully and 12 passes tests.
+13999	Load point
+12755	Restore state 10 first
+11111	Do not immediately treat it as current.
+18080	Apply the suffix
+28520	Replay 11/12 into local state
+18323	Obtain the latest verified state.
+16178	External operation
+10768	Do not write the file again just because 11 is replayed
+28522	Separate replay from re-execution.
+19072	Join the steps up.</strong> Recovery is the checkpoint plus events it does not contain, not merely reading a summary.
+14406	Original exercise: simulate a lost response after creating a record, and design action IDs, state queries and an idempotency strategy. Check the facts before recovery; do not equate "no success received" with "not executed".
+16569	The completion standard is distinguishing message history, control state and the actual environment. Choosing a persistence library cannot replace designing replay, cancellation, concurrency and side-effect semantics.
+6659	5.12 · Cross-agent communication protocols
+17322	Related material: Agent2Agent Protocol
+6895	A2A concerns discovery, tasks and message interactions among agents. It differs in focus from MCP tool integration; it is not a new name for the same protocol.
+26063	Collaboration across systems also requires handling task state, permissions, identities, results and failures. A standard message structure does not guarantee that another agent's conclusion is correct or its execution meets local requirements.
+26050	Receiving a result from another agent does not mean it can be executed
+26147	Input and conditions.</strong> Agent B returns "deploy v8", while the parent task permits research only.
+22473	Message transport and identity association succeed
+28276	Communication is complete.
+21521	Check whether it falls within the original task's scope
+23359	Research does not authorize deployment.
+24436	Use of the result
+18819	Treat the suggestion as a reference; do not execute writes
+22594	The parent remains responsible for permissions and integration.
+18882	Join the steps up.</strong> A2A interoperability does not replace authorization or judgments of truth.
+14280	Original exercise: a research agent delegates independent material to another agent, specifying input scope, returned evidence and end state. Then simulate timeout, partial completion and refused authorization.
+16578	The completion standard is choosing a protocol for real interoperability needs, rather than adding a cross-service architecture to a small, single-process task. Protocols address communication contracts; you must still define business acceptance.
+9571	← Input and output interfaces</a><a href="chapter-06.html">Real coding agents →

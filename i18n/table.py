@@ -19,35 +19,66 @@ CJK = re.compile(r'[一-鿿]')
 TAG = re.compile(r'<[^>]+>')
 
 
-def build():
-    prev = json.loads(TABLE.read_text(encoding='utf-8')) if TABLE.exists() else {}
-    old = prev.get('s', {})
-    # An id, once given out, must never move: a translator's file is keyed by
-    # it. New strings take the next free one, and a string that disappears
-    # keeps its id reserved so a later rebuild cannot reuse it.
-    next_id = prev.get('next_id', 0)
+def source_counts(units):
+    """Current HTML occurrences, independent of the previous table counts."""
     seen = {}
-    for p in sorted(UNITS.glob('*.json')):
+    for p in sorted(units.glob('*.json')):
         d = json.loads(p.read_text(encoding='utf-8'))
         for it in d['items']:
             e = seen.setdefault(it['zh'], {'n': 0, 'pages': set()})
             e['n'] += 1
             e['pages'].add(d['page'])
+    return seen
+
+
+def reconcile(document, html, data):
+    """Keep permanent identity and translations; replace all source counts."""
+    old = document.get('s', {})
+    next_id = max(document.get('next_id', 0),
+                  max((v['id'] for v in old.values() if v.get('id') is not None),
+                      default=-1) + 1)
+    first_id = next_id
     out = {}
-    fresh = 0
-    for k, v in seen.items():
-        was = old.get(k, {})
-        i = was.get('id')
-        if i is None:
-            i, next_id, fresh = next_id, next_id + 1, fresh + 1
-        row = {'id': i, 'n': v['n'], 'p': len(v['pages'])}
-        for lang in ('en', 'ja', 'es', 'vi'):
-            if was.get(lang):
-                row[lang] = was[lang]
+    # Retired entries reserve their ids but have no active occurrences.
+    # Legacy data-only entries may lack ids and must be numbered as well.
+    for k in dict.fromkeys((*old, *html, *data)):
+        row = dict(old.get(k, {}))
+        if row.get('id') is None:
+            row['id'], next_id = next_id, next_id + 1
+        h = html.get(k, {'n': 0, 'pages': set()})
+        d = data.get(k, {'n': 0, 'pages': set()})
+        row.update(n=h['n'] + d['n'], p=len(h['pages'] | d['pages']),
+                   data_n=d['n'])
         out[k] = row
-    TABLE.write_text(json.dumps({'s': out, 'next_id': next_id},
-                                ensure_ascii=False), encoding='utf-8')
-    print('新增 %d 条字符串（id 自 %d 起）' % (fresh, next_id - fresh))
+    document.update(s=out, next_id=next_id)
+    return len(out) - len(old), first_id
+
+
+def auxiliary_counts(root):
+    """Original JS prose plus explicitly collected localization sources."""
+    import importlib
+    import data_strings
+
+    counts = data_strings.source_counts(root)
+    for name, registry in [('runtime_strings', 'runtime-registry.json'),
+                           ('figure_strings', 'figure-registry.json'),
+                           ('complete_strings', 'complete-registry.json')]:
+        if not (root / 'i18n' / registry).is_file():
+            continue
+        module = importlib.import_module(name)
+        for text, contribution in module.source_counts(root).items():
+            row = counts.setdefault(text, {'n': 0, 'pages': set()})
+            row['n'] += contribution['n']
+            row['pages'].update(contribution['pages'])
+    return counts
+
+
+def build():
+    prev = json.loads(TABLE.read_text(encoding='utf-8')) if TABLE.exists() else {}
+    fresh, first_id = reconcile(prev, source_counts(UNITS),
+                                auxiliary_counts(ROOT))
+    TABLE.write_text(json.dumps(prev, ensure_ascii=False), encoding='utf-8')
+    print('新增 %d 条字符串（id 自 %d 起）' % (fresh, first_id))
     status()
 
 
@@ -69,7 +100,7 @@ def status():
     for lo, hi in tiers:
         g = [v for v in t.values() if lo <= v['n'] <= hi]
         print('%-14s %10s %11.1f%%' % ('%d–%s 次' % (lo, hi if hi < 10 ** 9 else '∞'),
-                                       format(len(g), ','), 100 * sum(v['n'] for v in g) / inst))
+                                       format(len(g), ','), 100 * sum(v['n'] for v in g) / inst if inst else 0))
 
 
 if __name__ == '__main__':

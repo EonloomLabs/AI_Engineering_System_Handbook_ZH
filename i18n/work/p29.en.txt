@@ -1,0 +1,210 @@
+12219	Assignment 02: build an execution loop that can be interrupted and resumed.
+12221	Assignment 02｜Build the loop — AI Systems Engineering
+28265	Progressive assignment · 02
+28266	Progressive assignment · 02</span><span>Build the loop
+12446	Keep the same indexing task and replace the part where "someone else controls the flow for you". Begin establishing the task set, execution contract and baseline that later optimizations will reuse.
+12673	Write the loop's contract first
+10479	A round receives
+29284	, and the backend returns an assistant message. The message may contain multiple function calls or end generation. The harness first validates the structure and IDs of the entire call list, then executes the allowed tools one by one and fills their results back in by
+15675	. Only after the results are filled back in can the model revise its next step based on actual observations.
+27313	This is a teaching summary of the experiment's control structure. For the actual exception branches, budget counting and field handling, see
+29182	; do not treat the pseudocode as a complete service ready for deployment.
+11512	Why these three tools
+26524	Input and result
+13301	Key errors
+14957	Allows only rules.json and README.md; returns content, SHA-256 and redundant diagnostics
+26074	Paths outside the allowed scope, symbolic links, unknown files
+21454	Root directory name＋observed hash; changes only the configuration
+28921	Invalid directory names, stale observations, extra fields
+20223	No arguments; checks the four conditions on the current configuration
+18244	Current state does not match; changing the grading rules is forbidden
+17776	The tools are narrow so that interface errors can be located. A real coding agent can provide more general shell or patch tools, but that adds authorization, escaping, environment and side-effect issues; changing the function names alone does not complete a security upgrade.
+26878	Run and inject faults
+12943	First read
+29430	, and check each of these paths: invalid JSON, duplicate call_id, unknown tools, wrong argument types, stale hashes, premature final and budget exhaustion. For cases that can be expressed as tool errors, fill the results back in; for backend or protocol errors, leave a clear stop reason. Do not swallow every exception just to "finish the run".
+10885	Merely "calling the tests" does not count as a pass
+29065	The acceptance checker reads the actual configuration again after the loop ends. The agent's internal
+20376	is an available observation, while the final harness check determines delivery acceptance; even if the agent forgets to verify, the harness cannot simply trust its final statement. Conversely, a correct artifact with an exhausted budget is still recorded as not having completed normally, to distinguish different failure paths.
+18112	Establish a comparable baseline
+13017	The eight public synthetic tasks vary only the root directory name. The first six are labeled development and the last two heldout-demo. This demonstrates a split, not a secret test; the tasks also have similar structures and cannot establish generalization across repositories. Comparing real agent capability requires your own varied tasks, initial states, recheckable answers and a fixed acceptance program.
+18796	Save the baseline as a combination of code version, prompt, tool schemas, task files, model version, decoding configuration and budget. Record every attempt, including bad environments and failures; explain any task exclusions and apply the same rules to every candidate. A later model change introduces a new experimental condition and cannot be presented as changing only the context.
+18332	The loop's output must be directly comparable with the observation baseline
+22195	Keep the task semantics and acceptance rules from assignment 1, and record the harness version, tool schema version and failure/unknown states. When adding a real model adapter, label the run mode separately rather than grouping scripted decision traces with LLM capability results.
+28898	Changes to make yourself
+16098	Add a task where "no change should be made", a call with valid content but invalid business arguments, and a test that simulates another writer making a change after a read. Explain the difference between a hash check with a single process and writer and a true cross-process CAS. Do not modify the tests to make incorrect behavior pass.
+11666	Delivery and grading basis
+11667	Deliver the code, baseline inventory, all run results, failure categories and a manual trace from request to acceptance. Reproducing faults matters more than reporting a high pass rate. Grading considers a clear contract, observable errors, testable boundaries and reproducible results; it does not align with Harvard leaderboard scores.
+14777	Reference answer: why can duplicate call_id values not be repaired by array position?
+7734	IDs link model proposals, tool results and history recovery. The harness renaming them on its own may conflict with persistent server state. Reject them explicitly or handle them according to a declared replay protocol, rather than silently interpreting an uncertain call as a new call.
+20212	Method reference: <a href="../../sources.html#source-set-3e7382dd--harvard-a2">the CS2680 loop assignment</a>. The tasks, backend fixtures, rubric and tests here are original to this textbook, not its unpublished tests or assignment answers.
+12223	Assignment 03: make controlled optimizations without changing the model, and compare them.
+12225	Assignment 03｜Optimize the black box — AI Systems Engineering
+28267	Progressive assignment · 03
+28268	Progressive assignment · 03</span><span>Optimize the black box
+22199	Reuse the model, tools, tasks and acceptance criteria from the build assignment. Write a hypothesis first, then change one factor. Measure interface data reduction separately from actual model quality, cost and latency.
+15242	A falsifiable hypothesis
+20971	In this experiment,
+27131	returns content, a hash and 120 lines of deliberately added redundant diagnostics. The hypothesis is that removing only diagnostics reduces the bytes in later requests while preserving the information this fixed policy needs for its next step. It does not assume that "all tool logs can be removed", or guarantee equivalent behavior in a real LLM.
+15399	The same task set, two policies
+16141	copies the full history into the request;
+16140	copies it, then removes one specified field from tool results. Both use the same task list, scripted backend and acceptance checker. Because prepare_history does not modify the original history, the original evidence remains auditable; this does not mean every production system has the same retention mechanism.
+12815	Check the units before checking the gain
+28564	Quantity
+20959	Available locally?
+21862	Correct interpretation
+12042	Number of successful tasks
+18224	Results for the current public synthetic tasks and scripted policy, not an LLM capability score
+24289	Cumulative request_bytes
+18049	Total bytes of serialized requests, including repeated transmissions
+16916	Actual tokens and cache hits
+16286	Not provided by the fixture
+25542	Record null; for a real service, check the returned usage or billing records
+26004	Cost
+16287	The fixture does not bill
+9244	null is not a price of zero; the actual price version and a ledger of every call are needed
+16089	Wall-clock p50/p95
+20978	Local short-task timing, including scheduling noise; cannot be treated as a GPU inference benchmark
+23466	The program uses the nearest-rank definition of quantiles and states the method in the results. With eight trials, p95 is near the maximum; the sample is too small to claim a stable improvement in tail latency.
+16165	Recalculate paired results
+11972	Let a be success for both, b success for the baseline alone, c success for the candidate alone, and d failure for both. The sample size is n=a+b+c+d; the baseline success rate is (a+b)/n and the candidate's is (a+c)/n. A net gain of c−b does not cancel the b regressions; even one regression on a business-critical task may make the candidate unacceptable.
+18495	Cost per successful trial＝cost of all runs÷number of successful trials. Costs include failures, online retries, routing, compaction and verification; offline policy search and evaluation grading are listed separately. With zero successes, this ratio is undefined and does not return 0. Do not also charge a "hypothetical API price" for the same computation on your own GPU.
+29109	A black-box comparison must retain unsuccessful attempts
+15776	Fix task IDs, the model snapshot, prompt and tool versions, budget and grader; record input/output usage, waits and retries. A reduction in request bytes in a scripted fixture cannot be converted directly into real token costs or improved model success rates.
+27510	Intervene further, but do not change everything at once
+15273	Choose one intervention: fewer unnecessary round trips, retrieval on demand, a fixed prefix, tool batching or model routing. First diagram the work it removes, then list new overhead and evidence that may be lost. Parallelism requires safe, independent tools; routing must include the router, failed cheap attempts and recovery costs; summaries must include the costs of generation and retrieving again.
+23299	Real-model validation is a separate level
+20924	The HTTP adapter in this package covers only Chat-Completions-compatible interfaces. Protocols such as OpenAI Responses and Anthropic Messages cannot be supported merely by replacing the URL; their tool items, incremental events and result messages need separate adapters. The model must also support the tool format actually supplied; "interface compatibility" does not imply semantic compatibility.
+25771	This command runs only one demonstration task; it does not automatically complete a full model benchmark. To establish that an optimization works, repeatedly run the real backend on the same tasks, save usage and configuration, check for quality regressions, and separate the policy-selection set from the final evaluation set.
+10337	A hypothesis filled in beforehand, a pair of complete results, a table of paired gains and losses, a counterexample and a conclusion with a defined scope. You may conclude that "bytes fell, but tail latency showed no credible improvement"; do not force a negative result into a success story.
+14766	Reference answer: if both approaches achieve 8/8, why can we still not say their quality is the same?
+29117	The default is a fixed script, so it does not make mistakes from differences in language understanding; the tasks vary only the directory name. Passing every item in a finite sample supports only observations under these fixtures. Real-model distributions, randomness, long contexts and exceptional tasks still need measurement.
+20214	Method comparison: <a href="../../sources.html#source-set-3e7382dd--harvard-a3">the black-box optimization assignment
+25727	evaluation notes</a>. The formulas and fixtures are independently constructed for this textbook.
+12227	Assignment 04: take over the model inference path and measure its costs.
+12229	Assignment 04｜Take over the model — AI Systems Engineering
+28269	Progressive assignment · 04
+28270	Progressive assignment · 04</span><span>Take over the model
+18814	Connect the existing agent to a model service you manage. Do not treat "HTTP connects", "the weights compute" and "the real service meets the performance target" as the same success.
+10499	Three levels of acceptance
+24137	Level
+20922	What this package provides
+20384	Has it actually run?
+27149	What it cannot yet establish
+14101	Protocol connection
+9218	A scripted Chat interface on localhost with real HTTP transport
+10914	Not a neural-network service; no GPU computation
+21761	Model computation
+13998	Loads the existing small-model weights and generates round by round on the CPU
+10920	Not a general-purpose coding model; cannot perform tool tasks
+18155	Engine and workload
+23297	Instructions for connecting a real model, measurement templates and acceptance rules
+22146	No results from official GPU or commercial API runs, or from a formal task benchmark
+12818	Check the interface and model before pursuing performance
+23472	The program starts a temporary HTTP service bound only to the loopback address, completes the indexing task through the same run_episode, then closes the service. It separately loads
+27615	for actual CPU computation. The two sets of results are saved separately, and the former is not passed off as the latter.
+17626	The small model's input IDs are
+29298	, and the full result is
+10085	. It uses trained weights; the final 7 is EOS in this teaching vocabulary. Its vocabulary and parameter structure apply only to this model's learning path; these IDs cannot be sent directly to an external large model.
+13663	A minimal checklist for preparing a real engine
+12870	First establish the model license and weight source, model and tokenizer versions, engine version, GPU model/VRAM/driver, precision, parallelism, context limit, chat template and tool parser. A model's ability to output ordinary text does not guarantee that it can make calls using this course's tool protocol. Verify an ordinary request first, then a read-only tool call, and finally run the same task set.
+7709	Harvard-assigned accounts, GPUs and private evaluation environments are not included with this textbook. The course's public assignments may update hardware and model specifications; this book does not present older equipment as a universal requirement. Keep the full startup command and version for your own engine; this text does not pretend it has already run on that hardware.
+19567	Boundaries easily missed during integration
+29115	Only localhost endpoints are accepted by default. Remote mode requires HTTPS and explicit confirmation. Do not put tokens in URLs or commit them to the repository. A service's API key may not cover every route; monitoring endpoints, administration endpoints and other compatible interfaces also need a gateway or firewall. Listening on 0.0.0.0 and then setting a key is not equivalent to complete access control. TLS, authentication and authorization for task tools operate at different layers.
+26891	Measure during the run, not just from logs afterward
+12908	First record cold start and model loading, then run microbenchmarks with fixed request lengths, concurrency and generation limits. Next run the same multi-turn agent, continuously collecting queue data, prefill/decode, KV occupancy, cache hits, request timing and runtime
+29129	(if provided by the engine), correlated by request ID. Static QPS microbenchmarks and the gaps between a real agent's tool calls cannot be mixed in the same calculation.
+12912	One intervention to try first
+18362	Costs that must be checked
+28687	Long input blocks short requests
+28752	Queue waits and prefill intervals
+13732	Chunking or scheduling policy
+15570	Throughput, tail latency, implementation constraints
+18017	Concurrent requests do not fit in memory
+14722	Parameters, activations, KV and reserved memory
+28654	Length/concurrency limits or suitable precision
+19331	Rejection rate, quality and recomputation
+17748	The prefix must be recomputed when a tool returns
+13926	Prefix reuse and cache retention time
+24661	Cache policy or a stable request prefix
+17209	The opportunity cost of capacity, stale state
+8950	Tokens get faster but the task does not
+16712	The full dependency timeline
+17757	Tools or control flow
+29029	Extra work and task accuracy
+11911	When replacing a black box with your own service, verify the interface before discussing speedups
+29043	First check templates, stop reasons, tool-call structure and error responses; then use the same tasks to measure quality and end-to-end time. The tiny CPU model verifies only numerical behavior and the protocol; mark fields for an unrun real GPU engine NOT_RUN rather than filling them with estimates.
+12840	Use the ledger to rule out impossible explanations first
+24478	Given a common KV layout, the cache size in bytes is
+10027	. For example, 16 layers, 8 sequences, 4 KV heads, 64 dimensions per head, 1024 positions and 2-byte precision give 134,217,728 bytes＝128MiB. This excludes parameters, activations, alignment and engine reservations, and does not apply to every compressed-attention structure.
+23340	The matrix product
+23031	requires about 2mkn FLOPs for its main forward computation; training also computes input gradients and weight gradients, for a rough total of 6mkn. When summarizing weight multiplication across multiple layers as about 2N per token for inference and 6N for training, state that this ignores attention's length-dependent terms, normalization, the optimizer, recomputation and communication; it is not a formula for GPU time.
+11669	Deliver the actual engine configuration, task results, raw metrics, request traces, comparisons changing one variable at a time, and limitations. If the real engine has not run, keep
+10097	. Completing the first two levels is valuable preparation, but cannot replace the third.
+14767	Reference answer: why not use the local HTTP fixture's p95 as a service benchmark?
+16474	It executes a fixed Python policy without loading a large model, running prefill/decode GPU operators or experiencing real KV capacity pressure. It can establish that the HTTP contract and agent integration path work, but cannot establish model or GPU performance.
+25923	Course method reference: <a href="../../sources.html#source-set-3e7382dd--harvard-a4">the CS2680 serving assignment</a>. For actual adapter boundaries, see <a href="../../sources.html#source-set-3e7382dd--live-apis">interface sources
+12231	Assignment 05: improve the same task across the full stack with one falsifiable hypothesis.
+12233	Assignment 05｜Full stack: improve the same task with one falsifiable hypothesis — AI Systems Engineering
+28271	Progressive assignment · 05
+28272	Progressive assignment · 05</span><span>Full stack
+6960	Being able to change the agent, model and service does not mean they should all change at once. The core of this final integrated experiment is explaining causation: what work was removed, what overhead was shifted, and why the task remains correct.
+12733	Define one claim first
+16301	A good claim specifies an object, conditions and an outcome. For example: "With the local public fixtures, fixed tasks and scripted backend, removing unnecessary diagnostics reduces cumulative request bytes; whether it reduces real model charges and end-to-end latency remains to be verified." This is narrower than "context optimization improved system performance", but can be rechecked.
+23314	A real project may make stronger claims, but must add matching evidence. GPU kernel speedups, preferences for model answers and task success rates cannot be rolled into one "percentage improvement".
+23433	Practice the method offline
+14055	includes a resource ledger, an independently constructed critical path and Amdahl estimates. Constructed durations are not measurements;
+13824	records actual local fixture runs. Figures and reports must retain this distinction.
+11315	Two checks by hand
+10481	A task performs 40 milliseconds of model computation, then a 20-millisecond read and a 60-millisecond retrieval in parallel, then a 30-millisecond summary. Given the dependencies, the earliest completion time is 40+max(20,60)+30＝130 milliseconds, while the total work is 150 milliseconds. Speeding up the 20-millisecond read to 10 milliseconds leaves the critical path at 130; it may save resources without reducing the task's minimum wall-clock time.
+24955	If the part accounting for 60% of total time is sped up 2-fold, the ideal overall speedup is
+10225	. This assumes the proportions and other overhead stay unchanged; new communication, extra verification, queuing and cache invalidation reduce the actual gain. Do not turn a 2-fold local speedup directly into a claim of a 2-fold task speedup.
+16979	Experiment matrix
+16967	Experiment
+6979	Agent policy
+21802	Model/engine
+23120	Purpose
+23383	Establish accuracy, resource use and failure types
+14136	Change only the agent
+14992	Change only one factor
+13787	Isolate control-flow or context effects
+14137	Change only the service
+14993	Change only one service factor
+13788	Isolate cache, scheduling or precision effects
+17930	Verified policy
+17931	Verified configuration
+21495	Check interactions; do not assume gains can be added
+14800	Counterexamples and stress
+28639	Long contexts, concurrency, failure recovery and out-of-distribution tasks
+20488	Changing the model may alter tool selection, trace length and the number of verification steps, so substituting the new single-call latency into the old trace does not justify declaring the new system faster. Model routing likewise requires running the candidate policy all the way to task completion.
+11671	Delivery directory
+20580	The final report needs only one claim that a counterexample could falsify
+28145	Choose a specific bottleneck, fix the baseline and acceptance criteria, predict the result, then make one main intervention and run an ablation. Retain failed changes, exhausted budgets and differences that cannot be reproduced; the conclusion must be no stronger than the scope of measurement.
+20591	Two tracks for the final project
+11707	Product track:</strong> start from work you actually repeat in daily life, such as answering questions from documents or diagnosing a repository. Demonstrate that the intended users can complete the task, errors are recoverable, permissions are clear and costs are affordable. <strong>Research track:</strong> pose a question the existing baseline cannot explain, provide controls and ablations that distinguish mechanisms, and state the kinds of workload for which the result holds. The research track cannot substitute demonstrations for experiments, and the product track cannot substitute high scores for usability.
+13618	Before writing the report, have someone else reproduce one success and one failure. The book's reference answers cover mechanisms only; they do not fabricate project observations for you. When using AI to help with code or text, record which outputs you checked and which conclusions came from runs you performed yourself.
+24827	Self-study grading rubric
+24601	Dimension
+18074	Evidence to provide
+28696	Problem and value
+23280	Real tasks, users and unacceptable consequences, rather than a pile of technical terms
+21121	Understanding of mechanisms
+26136	Inputs, state, key computations or call chains, and their boundaries
+16976	Experimental validity
+18175	Strong baselines, paired data, quality constraints and failure costs
+16155	Reproducibility and integrity
+14574	Raw records, environment, commands, NOT_RUN items and limitations
+19850	Complexity, maintenance, security and rollback costs beyond the gains
+25781	This rubric is for self-study with this textbook, not Harvard's official grading policy. As of 2026-10-23, CS2680's A5 has only public overall objectives; full task specifications have not yet been released. This assignment is an original extension and cannot be called a translation of the official A5.
+14768	Reference answer: when can a negative result still complete the course?
+12557	When the hypothesis is clear, the baseline fair and the experiment reproducible, and the reason the mechanism did not deliver has been identified, a negative result can inform the next design. What cannot complete the course is claiming optimization success without measurements, or filling unperformed measurements with simulated numbers.
+20213	Method reference: <a href="../../sources.html#source-set-3e7382dd--harvard-project">CS2680 project and discussion requirements</a>. The full experiment plan and grading rubric were written independently for this textbook.
+25985	Source code and object locations for the worked experiment: where to find every function, metric and run record.
+25986	Worked experiment: locating code and objects — AI Systems Engineering
+25983	Worked experiment
+25984	Worked experiment</span><span>Source code and object locations
+19444	Trace the worked experiment by object, function and line number. The content below comes directly from the programs shipped with this book, not simplified pseudocode. The default backend is a scripted fixture; for model computation, see the existing model experiments separately.
+12391	Save source</a> · 210 lines · SHA-256
+12393	Save source</a> · 56 lines · SHA-256
+12392	Save source</a> · 33 lines · SHA-256
+12394	Save source</a> · 58 lines · SHA-256
+12390	Save source</a> · 117 lines · SHA-256

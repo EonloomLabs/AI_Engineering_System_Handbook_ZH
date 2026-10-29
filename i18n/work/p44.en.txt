@@ -1,0 +1,340 @@
+6340	25｜Trustworthy answers and interpretability: calibration, abstention, evidence and causal intervention — AI Systems Engineering
+22257	Follow this chapter through its objects and states</a><a href="#topic-2">Image representation and interface action are two different problems</a><a href="#c25-h1">1. Hallucination is more than inventing entities</a><a href="#c25-h2">2. Calibration: is "80%" really about 80% correct?</a><a href="#c25-h3">3. Selective answering and risk–coverage</a><a href="#c25-h4">4. Evidence support and answer structure</a><a href="#c25-h5">5. Attention weights are not a complete explanation</a><a href="#c25-h6">6. Causal intervention goes beyond correlation</a><a href="#c25-h7">7. Limits on self-reflection</a><a href="#c25-h8">8. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-research">Repeated evidence is not independent verification
+23096	Goal: distinguish "the model is confident" from "it deserves trust", and understand what interpretability tools can answer and which engineering checks they cannot replace.
+24794	Reasons need not be faithful; tracing sources and measuring interventions provides more verifiable evidence than fluent explanation.
+6036	1. Hallucination is more than inventing entities
+28602	Errors include misreading real sources, using wrong versions, confusing correlation with causation, extending local conclusions universally and claiming unrun tests passed. All can sound fluent. "Fully verified" in an engineering report without actual commands and results is unreliable output too.
+21735	Model conditional probabilities are not probabilities of real-world facts. Common false claims may be easy to continue; rare correct facts may have low probability. Retrieved evidence does not automatically remove errors; a model may still cite passages that do not support its conclusion.
+18062	Distinguish factual existence, source support, valid inference, temporal applicability and action authorization. A factually correct answer may still describe an unauthorized action; a real tool result may cover only limited scope.
+6286	2. Calibration: is "80%" really about 80% correct?
+25053	For binary judgments with confidence p and actual label y∈{0,1}, the Brier score averages
+29356	, penalizing errors while accounting for confidence. ECE bins samples by confidence, compares each bin's mean confidence with accuracy, then weights the differences. Binning, sample size and task distribution affect it; it is not a complete quality metric alone.
+9399	"Language Models (Mostly) Know What They Know" studies uncertainty expression and self-assessment, but capability depends on questions and methods. Its title does not establish that models always know when they are wrong.
+23149	Asking "how confident are you?" supplies a signal that must be calibrated on independent data.
+15888	For coding tasks, explicit source, tests and versions may support confidence better than subjective percentages. When design judgment remains uncertain, key assumptions and counterexamples convey more than a falsely precise 87%.
+6437	3. Selective answering and risk–coverage
+24224	With insufficient evidence, a system can request information, use tools or abstain from a definite conclusion. A higher abstention threshold usually reduces answer coverage and may lower risk among answered questions. Plot risk against coverage rather than demand answers to everything.
+12153	Abstention has costs too. Declining a question solvable by reading a file wastes capability. Distinguish "missing material can be obtained", "current tools cannot verify" and "the question is inherently uncertain", then choose retrieval, experiments or explicit limits on conclusions.
+12206	Low-risk tasks allow quick attempts and verification; high-risk actions need stronger evidence. Consequences and recoverability determine thresholds; ordinary queries do not all need the same strict approval process.
+6545	4. Evidence support and answer structure
+10274	A reliable technical conclusion separates observations, inferences, recommendations and unverified areas. "Current source consumes the budget at the root first" is an observation; "deeper rules may be truncated" an inference; "check budget before changing routing" a recommendation. Combining them as assertions makes all seem confirmed.
+18159	Citations must support their sentences, not merely decorate paragraph ends with authoritative-looking links. Explain cross-document connections and source conflicts through versions or conditions. An article about research tasks cannot prove suitability of multiple agents for every coding task.
+17276	Automatic reports can require claim–evidence links and programmatically check that evidence IDs exist; actual semantic support still needs model / human checking. Lesson 15 emphasized that structural validity is not semantic validity.
+25686	Repeated evidence is not independent verification
+25416	Have three research branches return citations, check whether all trace to one original source, then seek independent code or experimental counterexamples.
+13300	Key boundary:</strong> measure research by reduced uncertainty rather than visited links.
+28970	Follow it further through the source or the engineering basis:</strong> organize research around claims and evidence gaps rather than tool counts. Check cancellation, version changes and unknown results alongside successful paths.
+16743	For the full mechanism and a continuous example see <a href="../../chapters/26.html#agent-practice-research">How does a research agent avoid "searched a great deal, concluded nothing"?</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.
+6623	5. Attention weights are not a complete explanation
+21227	A head assigning high weight to text does not make it the sole cause of a final decision. Residual connections across layers, feed-forward networks, other heads and later computation jointly affect output. Calling a heatmap "the model's real thoughts" overinterprets it.
+21119	Mechanistic interpretability studies internal features and circuits. Sparse autoencoders decompose activations into sparse feature combinations, commonly training an encoder / decoder with reconstruction error and sparsity constraints. Features may be more interpretable than raw neurons, but reconstruction error, feature splitting, correlation and causation still differ.
+20840	This book trains no SAE and accesses no commercial model's internal activations. It explains methods and limits without claiming to reveal the actual internal reasoning behind a Codex or Claude answer.
+6716	6. Causal intervention goes beyond correlation
+22551	Activation patching generally replaces activations at a layer and position between normal and perturbed inputs, then observes recovery of a target output. Recovery indicates a causal contribution under those experimental conditions, not immediately a unique or universal mechanism.
+22482	Performance loss after ablating a head may also reflect out-of-distribution perturbation or disrupted redundancy. Use control positions, varied inputs, multiple seeds and explicit metrics. Calling a feature "safety" in natural language does not justify controlling production permissions with it directly.
+21123	Mechanism research complements engineering traces: the former examines network computation, the latter external information and actions. Tool-permission issues usually benefit from execution traces first; representation questions in training research need internal activation analysis.
+6789	7. Limits on self-reflection
+25429	Model self-review can catch errors, especially with independent evidence or test feedback; repeated reflection without new information may simply reinforce a conclusion in new words. Reflexion studies textual experience from task feedback; it is not synonymous with parameter-level reinforcement learning or a guarantee of accurate self-assessment.
+20518	Bind reflection to specific failures: a failed test, conflicting evidence or a refuted assumption. With no new evidence, alternatives or stronger verification, further Review rounds usually have questionable marginal value.
+19319	Higher abstention and higher accuracy: is it really better?
+26140	Input and conditions.</strong> Of 100 questions, A answers all 100 with 80 correct; B answers only 50 with 45 correct and abstains on the other 50.
+15701	Accuracy among answers
+7129	B is more accurate on its answered subset.
+25249	Coverage
+7142	B serves substantially fewer questions.
+18425	Total correct answers
+11045	Do not merely claim B's "capability rose 10 points".
+29034	Risk setting
+28595	When mistakes are especially costly
+20512	More abstention may be reasonable, but define the objective.
+13019	Fair presentation
+15475	Plot or list accuracy and coverage together
+19409	Choose thresholds by business-acceptable risk.
+19006	Join the steps up.</strong> Measure trustworthiness together with coverage; abstention does not provide accuracy for free.
+26746	Limits and counterexamples.</strong> Constructed data does not represent real models; abstention policies also need fairness checks across users and question groups.
+10310	If a model accurately explains every API field but makes an unauthorized call, does it "not understand the API"? Not necessarily. Knowledge, instruction following, authorization judgment and execution restrictions are separate dimensions. Fix the actual boundary rather than blame insufficient intelligence generally.
+9530	← 24｜Multimodality and computer use: representation, grounding, and the observe–act loop</a><a href="26.html">26｜Advanced research branches: the logic behind choosing architecture, search, RAG and memory methods
+22256	Follow this chapter through its objects and states</a><a href="#topic-2">Image representation and interface action are two different problems</a><a href="#c25-h1">1. Hallucination is more than inventing entities</a><a href="#c25-h2">2. Calibration: is "80%" really about 80% correct?</a><a href="#c25-h3">3. Selective answering and risk–coverage</a><a href="#c25-h4">4. Evidence support and answer structure</a><a href="#c25-h5">5. Attention weights are not a complete explanation</a><a href="#c25-h6">6. Causal intervention goes beyond correlation</a><a href="#c25-h7">7. Limits on self-reflection</a><a href="#c25-h8">8. Acceptance questions
+6342	26｜Advanced research branches: the logic behind choosing architecture, search, RAG and memory methods — AI Systems Engineering
+22238	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#c26-h1">1. MoE: conditional computation does not use every parameter for every token</a><a href="#c26-h2">2. MLA and GQA take different approaches to caching</a><a href="#c26-h3">3. Comparing GPT, Llama, Qwen and DeepSeek reports</a><a href="#c26-h4">4. CoT, self-consistency, ToT and ReAct occupy different layers</a><a href="#c26-h5">5. Which gaps each RAG extension addresses</a><a href="#c26-h6">6. Dimensions for evaluating memory methods</a><a href="#c26-h7">7. Read benchmarks through capability boundaries</a><a href="#c26-h8">8. Read new papers without being led by conclusions</a><a class="sub ap-toc" href="#agent-study-synthesis">The reach of a local change
+23100	Goal: place advanced papers from the further-reading list in one mechanism framework and understand their bottlenecks rather than memorize more names. This deepens topics without claiming to reproduce every paper's experiments and appendices.
+10757	Methods may optimize different benchmarks; reconstruct assumptions before judging task suitability.
+24542	Related mechanisms to continue with: <a href="../../visual/O01.html">O01 · GQA/MQA: what is reduced is the number of K/V groups</a><a href="../../visual/O04.html">O04 · FlashAttention: accumulate while reading, without materializing the whole table</a><a href="../../visual/O07.html">O07 · Speculative decoding: the draft may be fast, but it must be verified correctly</a><a href="../../visual/F36.html">Lesson 31 · It went up 10 percentage points — so why can we not conclude anything yet?
+6021	1. MoE: conditional computation does not use every parameter for every token
+23488	A dense feed-forward layer applies the same parameter computation to every token; MoE routes to selected experts, expressible as
+10113	. Total parameters therefore differ from activated parameters per token. Greater total capacity does not imply proportionately greater per-token computation, but expert-weight storage, cross-device communication and load balancing still cost resources.
+26081	Routing collapse overloads a few experts; capacity limits may affect token assignment; expert parallelism sends activations to the corresponding devices. Reported throughput gains depend on networks and kernels, not activated parameter counts alone. Switch-style research and later MoE reports use different balancing strategies; read their versions separately rather than combine an architecture that never existed.
+20719	This book does not reproduce large-scale MoE training; Lesson 51 explains distributed constraints, Lesson 59 computation / bandwidth, and Chapter 31 further discusses gradients and gating boundaries.
+6268	2. MLA and GQA take different approaches to caching
+7659	GQA reduces caches through shared KV heads; MLA-style structures compact attention-related state into low-rank latent representations with particular positional designs. DeepSeek-V3 includes specific MLA and MoE approaches; it is not simply "GQA with fewer heads".
+25025	When K and V are projections of latent vectors, some matrices can be recombined during inference to reduce long-lived state; position–projection interactions limit direct combination. Draw training computation and inference-cache graphs, comparing stored tensors with those recovered on demand.
+10747	KV memory formulas differ by architecture; Lesson 50's GQA formula cannot be applied directly to MLA. Identify representations and cached contents before estimating memory, rather than copy context lengths and total parameter counts.
+6410	3. Comparing GPT, Llama, Qwen and DeepSeek reports
+22102	Separate architecture, data, training budget, post-training, inference modes, tool interfaces and evaluation conditions. Public weights do not imply public training data or all production-serving details; technical reports are bounded evidence too.
+17633	Few-shot learning shows adaptation through context examples, not parameter updates on every inference call. Vocabularies, data and training objectives jointly shape multilingual ability. Gains on a reported code dataset do not prove equal gains on your languages, frameworks and repositories.
+7649	Further reading covers related GPT-3, Llama 3, Qwen3 and DeepSeek-V3 topics. Topic Chapters 01—06 explain shared mechanisms; understand report-specific architectures separately rather than infer mechanisms from model names or leaderboards.
+6519	4. CoT, self-consistency, ToT and ReAct occupy different layers
+7257	CoT methods change intermediate-reasoning generation; self-consistency aggregates sampled answers; ToT organizes candidate intermediate states into a search tree for generation, evaluation and selection; ReAct loops between reasoning and environmental actions. The first two mainly affect reasoning paths; the latter two involve more explicit search or external feedback.
+19791	Search costs grow with branching, depth and evaluation. Keeping b candidates per level and expanding d levels can make a naive full tree grow rapidly; pruning needs reliable evaluators or may discard correct paths early. Methods useful for verifiable puzzles may not suit business workflows with irreversible actions.
+8968	Toolformer explores learning when to use tools; runtime Function Calling protocols handle call encoding and execution. Training research and interface engineering differ. Lesson 55 explains learning objectives; Chapters 07—08 cover protocols and execution.
+6629	5. Which gaps each RAG extension addresses
+24380	Classic RAG combines documents with generation; DPR studies dense passage retrieval; ColBERT uses multi-token late interaction; HyDE rewrites queries through hypothetical documents. These primarily affect candidate retrieval or matching, not automatic source authorization and updating.
+8703	RAPTOR builds hierarchical representations through clustering and recursive summaries for cross-chunk understanding; GraphRAG uses entities / relationships and community summaries for some global questions. They add summarization and graph-extraction costs, including extraction errors, provenance and invalidation after updates.
+8861	Self-RAG learns / generates retrieval and reflection behavior; adding "reflect for yourself" before an ordinary model is not reproducing it. Corrective RAG methods evaluate evidence quality and decide on further retrieval, but evaluators may also fail.
+28183	Classify questions first: exact facts, natural-language location, cross-document combination, global topic summary or insufficient evidence. Retrieval structures differ; a repository-wide summary graph for locating one function may be slower and less reliable than exact retrieval.
+6728	6. Dimensions for evaluating memory methods
+7674	Generative Agents, MemGPT, A-MEM and Mem0 illustrate event streams / reflection, tiered storage, dynamic associations and engineered extraction respectively; their objectives are not identical. Long-conversation memory scores do not equal reusable coding-experience scores.
+25699	Evaluate write accuracy, updates, temporal reasoning, conflicts, forgetting and retrieval separately, then final task gains. LoCoMo and LongMemEval test long interactions differently; this book's Lesson 19 bi-temporal conflict model is an original engineering example, not a claimed implementation of these systems.
+6778	7. Read benchmarks through capability boundaries
+8839	SWE-bench studies real issue repair; AgentBench, τ-bench and GAIA cover agent capabilities in different environments; LiveCodeBench addresses code evaluation and temporal change; OSWorld covers computer environments. Scores cannot be compared directly across different tasks, tools, budgets and acceptance criteria.
+28641	Lost in the Middle, LongBench and RULER distinguish nominal context capacity from actual task capability. One successful "needle in a haystack" retrieval does not establish reliable multi-evidence combination, conflict handling or long-task recovery. Lesson 15 therefore tests constraints and continued execution rather than one hidden middle number.
+6815	8. Read new papers without being led by conclusions
+12671	State the failure addressed and the layer changed; check baseline fairness, extra computation, data leakage and evaluation of real objectives. Design a minimal transfer experiment rather than move the entire architecture into your project by default.
+16344	Without clear local benefits, retain the knowledge but not necessarily the code. Senior capability means explaining adoption or rejection and what new evidence would change it, not using the most technologies.
+22494	Before tree search for deep research, check whether candidate quality can be judged
+26462	Input and conditions.</strong> Generate 3 repair routes A/B/C, exploring 2 variants each for at most 6 candidates, but no tests can distinguish correctness.
+12509	More candidates
+18485	Greater cost and context coordination.
+25697	Evaluation gap
+15035	The same model only judges "looks reasonable"
+15219	May amplify the same bias.
+12746	Establish criteria first
+13980	Add counterexamples hitting the bug and regression tests
+12508	Candidate search then has reliable feedback.
+13954	Prune
+16276	Do not expand failed candidates without bounds
+12451	Keep evidence-supported directions.
+25050	If a direct small fix is already verified
+10810	Do not add branches just to use tree search.
+19099	Join the steps up.</strong> Search and evaluation constrain each other; complex search without reliable feedback may be no better than simple execution.
+26657	Limits and counterexamples.</strong> This shows engineering conditions of use, not a full reproduction of Tree of Thoughts or similar papers.
+9531	← 25｜Trustworthy answers and interpretability: calibration, abstention, evidence and causal intervention</a><a href="27.html">27｜Worked case: fixing exclude, from the original failure to a recoverable delivery
+22237	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#c26-h1">1. MoE: conditional computation does not use every parameter for every token</a><a href="#c26-h2">2. MLA and GQA take different approaches to caching</a><a href="#c26-h3">3. Comparing GPT, Llama, Qwen and DeepSeek reports</a><a href="#c26-h4">4. CoT, self-consistency, ToT and ReAct occupy different layers</a><a href="#c26-h5">5. Which gaps each RAG extension addresses</a><a href="#c26-h6">6. Dimensions for evaluating memory methods</a><a href="#c26-h7">7. Read benchmarks through capability boundaries</a><a href="#c26-h8">8. Read new papers without being led by conclusions
+6343	27｜Worked case: fixing exclude, from the original failure to a recoverable delivery — AI Systems Engineering
+22298	Follow this chapter through its objects and states</a><a href="#topic-2">A test looks for counterexamples; it does not stamp code green</a><a href="#c27-h1">1. Why choose this problem</a><a href="#c27-h2">2. Initial defect and failure evidence</a><a href="#c27-h3">3. Implementation: change only necessary behavior</a><a href="#c27-h4">4. Verification: green results must belong to current files</a><a href="#c27-h5">5. Another real experiment: crash after writing</a><a href="#c27-h6">6. The gap from a real LLM agent</a><a href="#c27-h7">7. Extensions for readers</a><a href="#c27-h8">8. An acceptable delivery-report example</a><a class="sub ap-toc" href="#agent-study-code">Test evidence invalidated</a><a class="sub ap-toc" href="#agent-study-recovery">A real crash window
+23097	Goal: connect input, retrieval, patches, tools, state, tests and reporting in one runnable case. All code and samples are original; a scripted controller supplies patches, not a model independently discovering bugs or a review of the user's real PSBuild repository.
+16713	The complete repair case centers on connected evidence at every step, not a preset count of agent roles.
+6024	1. Why choose this problem
+9177	exclude looks like string matching but includes path contracts, directory boundaries, platform separators, user input and regressions. It is small enough for a complete demonstration yet exposes "only looks finished" failures. Production glob, gitignore, case or symbolic-link support needs separate definitions; this example does not silently expand scope.
+16289	Contract: paths are relative to the repository root; ordinary rules match exactly; trailing-slash rules match directories and descendants; backslash separators are normalized; parent traversal is rejected. For example,
+10796	should not be excluded by rule
+19555	;
+18093	should be excluded by
+19556	, while
+10797	should not be excluded accidentally.
+6281	2. Initial defect and failure evidence
+13834	The initial function first takes
+29244	, then checks rules. Dropped directory information breaks nested exact-path matches and wrongly excludes same-named files elsewhere. Testing only top-level
+12116	misses these errors.
+16963	Actual execution runs 8 tests, initially failing 5 for nested paths, same-name boundaries, directory rules, Windows separators and parent traversal. Test stdout, exit codes and artifact versions are saved in
+23028	's capstone field. These numbers match the supplied run record, not expected results.
+21596	Retrieval uses Python AST to return function ranges, only locating code rather than inferring types or building cross-file call graphs. The reading tool returns the complete small file and version so a patch can bind to a known prior state.
+6425	3. Implementation: change only necessary behavior
+12473	The fix normalizes paths into relative POSIX form and rejects out-of-bounds forms. Ordinary rules compare complete relative paths; directory rules compare equality or a
+13934	prefix, preventing vendor from matching vendor2. No new routing service, global configuration layer or generic matching framework is added.
+20505	Updates go through the action log's CAS entry point. expected must equal the last-read content to avoid overwriting concurrent changes; duplicate operation IDs with different arguments are rejected. Tool writes are confined to
+29383	, while the teaching harness creates test files and executes them in a fixed way.
+27223	This is not complete isolation against malicious agents. Production untrusted code and tests belong in a sandbox; verification resources may need to live outside the workspace. The example focuses on ordinary failure windows and version freshness.
+6548	4. Verification: green results must belong to current files
+12482	After the edit, all 8 unchanged tests pass. A completion check confirms the current file version matches the latest tested version. The experiment then deliberately changes the artifact by appending a comment; another finish is rejected, showing that old green results do not automatically apply to new files.
+17562	Whether comments require full retesting can be optimized by risk in real projects, but establish trustworthy reuse conditions first. A model's "small change" judgment cannot justify stale verification. This example uses a conservative policy for clarity.
+18530	Tests do not cover full glob semantics, filesystem symbolic links, Unicode normalization, huge rule-set performance or every Windows path form. Success applies only to the explicit contract and listed tests, not a complete production exclude library.
+6637	5. Another real experiment: crash after writing
+15963	runs the file updater in a separate subprocess that exits immediately after
+11587	but before SQLite marks completion. The parent observes exit code 75 and recovers the same operation. The current file already equals the target version, so the system marks reconciled without writing again.
+27235	This tests recovery when local side effects succeed but logs remain unfinished, a dimension independent of the functional bug above. Functional tests do not establish reliable recovery, and recovery tests do not establish matching semantics. Advanced experiments verify these dimensions separately.
+6710	6. The gap from a real LLM agent
+23428	The offline harness's actions are prearranged, so it does not measure whether models find causes, choose tools, generate correct patches or resist context interference. It proves runnable execution boundaries and verification mechanisms. This is not a report of "a model's 100% repair success rate".
+15268	The optional
+17687	shows a real API integration structure but permits only read-only file analysis; this entry point is untested. For real code-writing evaluation, first provide restricted patch tools, external acceptance and budgets in disposable repositories; record model output and every call over repeated runs. Do not let an unverified adapter edit production projects directly.
+6790	7. Extensions for readers
+18626	Extension one: edit files between read and replace and verify stale is returned without overwriting. Two: time out the test command and check finish cannot pass. Three: add contracts for similar directory names, absolute paths and empty rules. Four: compare candidate patches by functional correctness and complexity rather than code length.
+18628	Extension five: add real-model read-only analysis and assess root-cause findings separately from scripted control. Six: add irrelevant long history and test effects on constraints and location. These exercises are unrun and contain no prefilled successes.
+6814	8. An acceptable delivery-report example
+9417	"Fixed relative-path errors caused by basename comparison and added directory-boundary separators; 8 contract tests passed on the current artifact, and stale-result rejection was checked. Full glob and cross-platform path libraries are unimplemented; production performance is unverified."
+27328	This short report says what changed, why, the proof and limits. It meets senior engineering evidence standards better than "comprehensively optimized, significantly improved quality".
+25135	Why another log added after a successful patch needs revalidation
+26222	Input and conditions.</strong> Fixing exclude produces v8 with passing tests; the agent then adds logging to make v9, containing an undefined variable.
+14702	Original verification
+8696	R8 covers only v8
+18265	Valid at the time.
+27658	Additional edit
+9365	v9 adds a new runtime path
+14693	The old green result cannot cover it.
+28561	Rerun
+25952	A call triggers the logging branch
+14845	NameError appears; the current task fails.
+23125	Fix directly
+14703	Remove or correct logging to make v10
+13598	Run relevant tests again.
+13083	Bind v10 to its verification results
+10804	Do not keep citing R8 as current evidence.
+19114	Join the steps up.</strong> After the final meaningful edit, verification must realign with the target version.
+26660	Limits and counterexamples.</strong> Every comment edit need not rerun the most expensive full suite; verification scope should match actual change risk.
+9532	← 26｜Advanced research branches: the logic behind choosing architecture, search, RAG and memory methods</a><a href="28.html">28｜Blueprints for deep applications: enterprise Q&A, repository diagnosis, research and controlled automation
+22297	Follow this chapter through its objects and states</a><a href="#topic-2">A test looks for counterexamples; it does not stamp code green</a><a href="#c27-h1">1. Why choose this problem</a><a href="#c27-h2">2. Initial defect and failure evidence</a><a href="#c27-h3">3. Implementation: change only necessary behavior</a><a href="#c27-h4">4. Verification: green results must belong to current files</a><a href="#c27-h5">5. Another real experiment: crash after writing</a><a href="#c27-h6">6. The gap from a real LLM agent</a><a href="#c27-h7">7. Extensions for readers</a><a href="#c27-h8">8. An acceptable delivery-report example
+6345	28｜Blueprints for deep applications: enterprise Q&A, repository diagnosis, research and controlled automation — AI Systems Engineering
+22240	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#c28-h1">1. Enterprise Q&A is not a public vector database</a><a href="#c28-h2">2. Repository diagnosis: locate before deciding to implement</a><a href="#c28-h3">3. Research assistant: from accumulated material to traceable conclusions</a><a href="#c28-h4">4. Operations automation: start read-only and add side effects in stages</a><a href="#c28-h5">5. Shared components and logic that should remain separate</a><a href="#c28-h6">6. A minimal evidence package for production release</a><a class="sub ap-toc" href="#agent-study-quality">Fix non-blocking problems directly
+23099	Goal: transfer principles to real business, specifying dataflows, invalidation, verification and release boundaries. These are original reference designs, not deployed or benchmarked products.
+11822	Connect business input, evidence, actions and verification in an inspectable chain before identifying missing components.
+6027	1. Enterprise Q&A is not a public vector database
+16005	Scenario: an employee asks about internal API migration across documents, PRs and meeting notes. Bind employee identity and project permissions first and identify product versions. Retrieve within the authorized set, returning chunks, sources, versions and context ranges; distinguish current plans from historical decisions in answers.
+10304	A minimal data model contains
+9982	. Record embedding versions separately for rebuilding. Derived summaries retain source dependencies so source withdrawal or permission changes identify summaries and answer caches requiring invalidation.
+29064	Acceptance includes answerable and unanswerable questions, old-version conflicts, cross-document combinations, users with similar permissions and authorization revocation. Measure evidence support, current-version accuracy, unauthorized leakage, abstention coverage and latency, not fluency alone. Retrieving secrets then asking the model "do not reveal them" is not adequate authorization design.
+10586	Start release with read-only Q&A, retaining human feedback and errors; automatic document editing need not exist on day one. Writes need separate authorization and review. Chapters 13, 15 and 20 supply retrieval, lifecycle and security foundations respectively.
+6279	2. Repository diagnosis: locate before deciding to implement
+16007	Scenario: a developer reports a regression. Read the current branch, working-tree state and user description; locate logs, entry points and relevant tests. Start with "evidence-supported candidate cause + minimal reproduction" rather than immediate broad edits.
+20064	The data path is task → exact search → AST/LSP expansion → source / tests → hypothesis verification. Consult Git for historical reasons or versioned official documentation for external APIs. Expand retrieval progressively rather than load the whole repository by default. Current source outranks old memory, which may still identify valuable entry points.
+12621	When implementation is authorized, bind patches to read versions, limit scope, run original failing tests and necessary regressions, and inspect the final diff. Add independent review for high-risk changes; routine small fixes need no default multi-agent process. Bind verification to the final artifact, not an intermediate chat version.
+25722	Stratify real tasks: simple bugs, cross-module features, concurrency / storage, build configuration and documentation. Compare skills, memory and retrieval strategies under the same model to distinguish expertise gains from tool improvements. Static routing success is no substitute for code outcomes.
+6433	3. Research assistant: from accumulated material to traceable conclusions
+16008	Scenario: a research team evaluates adopting an agent technique. Define the decision and baseline first, then gather original papers, official documentation and reproduction experiments. Retain source, version, experimental conditions and whether each conclusion is the author's inference.
+25676	Evidence objects may contain
+10218	. This is minimal meaning to prevent "effective on one research set" becoming "universally best practice", not a mandatory database table. Articles citing the same experiment are not independent evidence.
+23363	Stop research when evidence sufficiently resolves key decision uncertainty or remaining gaps clearly require local experiments. Unlimited similar reading does not automatically increase certainty. Explain adoption, deferral, local trials and evidence that would change the decision.
+25691	Evaluate source accuracy, supported conclusions, counterevidence coverage, executable experiments and decision value, not article counts. Report search scope and gaps without inventing references. Add graph retrieval or multiple agents only when cross-source scale or independent exploration actually requires them.
+6546	4. Operations automation: start read-only and add side effects in stages
+16009	Scenario: a system checks build failures and recommends retries. Read-only stages gather state, logs and recent changes; recommendations provide checkable reasons; execution alone permits retrying particular tasks or creating tickets. Each stage has different permissions and completion conditions; analysis capability does not confer production writes.
+10427	Bind execution to user / service identity, target object, prior state and operation ID. Preserve unknown after service timeouts and reconcile through task-state queries to avoid duplicate creation. Retry only known retryable errors; do not bypass authorization errors or retry configuration failures indefinitely.
+10589	Release through shadow mode or gradual permission grants with human confirmation: observe recommendation quality and false triggers before permitting low-risk actions. Shadow mode has no real side effects and cannot prove recovery reliability, so separate sandbox fault injection and reconciliation tests remain necessary.
+6635	5. Shared components and logic that should remain separate
+26090	Identity, tracing, budgets, tool protocols and basic retrieval can be reused; business acceptance, risk thresholds and skills usually vary by application. One all-purpose agent may grow permissions and context endlessly; one service per step may overengineer the system.
+12747	Start with a clear single-process or small-service boundary; split only for concurrency, isolation, scaling or team ownership. Shared modules need real reuse cases rather than "possibly someday".
+6725	6. A minimal evidence package for production release
+14049	Include representative tasks, error categories, permission and recovery tests, cost / latency, deletion policies, rollback conditions and unverified scope. High-risk systems need stricter audits; personal read-only assistants can simplify without omitting credential or data boundaries.
+29072	Acceptance question: can three businesses using one LLM share a success-rate metric? No. Knowledge Q&A concerns evidence and permissions, code tasks artifacts and regressions, operations automation external state and side effects. The same model does not imply the same business quality.
+15403	Which layer must be added to turn research conclusions into automated actions
+26432	Input and conditions.</strong> A research report recommends "raise the service timeout to 5 seconds"; real automation would edit project P's production configuration.
+23369	Research conclusion
+20651	Evidence supports a recommendation
+11754	It is still not a user-authorized write.
+14012	Action specification
+20350	Specify project, environment, field, old value and new value
+28381	Do not confuse test configuration with production.
+29032	Risk and permissions
+23391	Confirm permitted execution and appropriate approval
+11108	The report cannot authorize itself.
+18583	Execution and verification
+19469	Write conditionally on version, read back and run necessary checks
+18127	A correct recommendation does not guarantee correct execution.
+16270	Failure recovery
+26028	Timeouts, unknown results and rollback conditions
+15900	Design before acting, not by guessing after failure.
+18945	Join the steps up.</strong> Moving from recommendations to actions crosses permission and side-effect boundaries and requires additional engineering guarantees.
+26666	Limits and counterexamples.</strong> This is a controlled-automation design example, not authorization for real production changes.
+9533	← 27｜Worked case: fixing exclude, from the original failure to a recoverable delivery</a><a href="29.html">29｜Failure diagnosis handbook: from symptom to the smallest effective fix
+22239	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#c28-h1">1. Enterprise Q&A is not a public vector database</a><a href="#c28-h2">2. Repository diagnosis: locate before deciding to implement</a><a href="#c28-h3">3. Research assistant: from accumulated material to traceable conclusions</a><a href="#c28-h4">4. Operations automation: start read-only and add side effects in stages</a><a href="#c28-h5">5. Shared components and logic that should remain separate</a><a href="#c28-h6">6. A minimal evidence package for production release
+6346	29｜Failure diagnosis handbook: from symptom to the smallest effective fix — AI Systems Engineering
+22242	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#c29-h1">Case one: a Skill appears loaded, but the code lacks domain expertise</a><a href="#c29-h2">Case two: work changes direction after compaction</a><a href="#c29-h3">Case three: relevant retrieval results are always outdated</a><a href="#c29-h4">Case four: tests pass, but users still find problems</a><a href="#c29-h5">Case five: slower tasks and more tokens</a><a href="#c29-h6">Case six: retries duplicate side effects</a><a href="#c29-h7">Case seven: more memory makes errors more persistent</a><a href="#c29-h8">A unified diagnostic method</a><a class="sub ap-toc" href="#agent-study-recovery">A real crash window</a><a class="sub ap-toc" href="#agent-study-snapshot">An immutable request and mutable authorization
+23119	Goal: respond to failure with competing explanations, distinguishing evidence and repairs at the correct layer rather than immediate model changes or more rules. These cases are author constructions, not confirmed incidents in the user's repository.
+19928	Check input facts, retrieval, state, execution and verification before attributing every failure to the model.
+21462	Case one: a Skill appears loaded, but the code lacks domain expertise
+25275	Observation: the log names the skill, but output ignores transaction timeouts. Explanations include metadata-only loading, a trimmed body, omitted content in a sub-agent, ineffective specialist content, visible but unused content, or tests not requiring this behavior.
+20559	First inspect loaded scope and skill text, then relevant risks in execution traces, and finally tasks triggering the error. Do not begin with another routing agent when selection may be correct. A repair may need only concrete transaction-boundary knowledge and its test.
+15678	Include transaction-handling and unrelated tasks in regressions so everything does not become distributed-systems analysis. Acceptance means fewer errors, not more mentions of "transactions".
+21465	Case two: work changes direction after compaction
+25273	Observation: "change only description" becomes executor refactoring after compaction. Explanations include lost prohibitions, promoted assumptions, overriding old memory, missing new user input or truncated subtask instructions.
+14879	Compare task state before and after compaction for retained prohibitions, and compare downstream delegation with the current authoritative goal. If harness compaction is opaque, fork an identical prefix and continue to test specific constraints. First persist a few key constraints and evidence locations rather than build a second full-history summarization service by default.
+15679	Include repeated compaction and new goal changes so old constraints do not prevent later authorized changes. Fidelity preserves time and authority correctly rather than freezing everything forever.
+21464	Case three: relevant retrieval results are always outdated
+25274	Observation: terminology is right but API fields are obsolete. Causes may include stale indexes, semantic preference for old long documents, versionless cache keys, missing time filters in reranking or old evidence mixed during generation.
+22334	Trace current-document ingestion, candidate inclusion, post-filter retention, ranking / selection loss and final citations. Fixes may concern index generations and version filtering rather than a new embedding model.
+15677	Add same-named versions, rollbacks and historical queries to regression tests. Always choosing the latest record fails questions about old migration reasons. Lesson 19's valid time and time of knowledge distinguish these needs.
+21468	Case four: tests pass, but users still find problems
+15200	Tests may never have run, key cases may be skipped or weakened by the model, versions may be stale, new requirements uncovered, or environments unlike production. Read actual commands, counts, exit codes and artifact versions rather than the model summary alone.
+12474	Fix the cause: explicitly fail empty test sets, add assertions for new requirements, bind verification to current versions and isolate high-risk test resources. Do not mechanically add three natural-language Review rounds that may trust the same false green report.
+15680	Deliberately change files after testing, delete key assertions and cause timeouts, then observe success claims. Lesson 65 actually measures stale-verification rejection among these cases.
+21466	Case five: slower tasks and more tokens
+12683	Separate model, tool, queue, retrieval, compaction and Review time first. Causes include agents rereading the same files, all skills loading by default, verbose output, retries, excessive model effort or slow external tools.
+10328	One targeted fix returns exact evidence locations from research subtasks so the main agent stops rediscovering the whole repository; another removes repeated redesign for small issues. Optimization requires lower cost without weaker expertise. Smaller input with more failures is not success.
+15684	Cover complex tasks so simple speedups do not hide oversimplification. Use cost per successful task as the main criterion rather than mean tokens.
+21467	Case six: retries duplicate side effects
+25277	Observation: two tickets appear after a network timeout. Retries may generate new operation IDs, or the server lacks idempotency while the client treats unknown as failure. Repair requires business idempotency / reconciliation rather than a "do not repeat" prompt.
+22429	Disconnect after remote success but before client receipt, not merely before a call. This book's local-file crash experiment verifies a similar window, but remote operations need corresponding service capabilities; file hashes cannot simply be transferred.
+21463	Case seven: more memory makes errors more persistent
+25276	Observation: the system insists on old experience despite contrary current code. Inspect memory provenance, version, scope, write permissions and retrieval priority. A guess automatically saved as active may become a "verified rule" over repeated summaries.
+12471	Correct false authority and applicability first, then assess write policies. Reduce memory if necessary rather than add complex graphs. Regressions should include new evidence overturning old claims, revocations, conflicts and no matches; the system must be able to leave memory unused.
+24496	A unified diagnostic method
+18856	Connect symptoms, competing explanations, distinguishing evidence, minimal repairs and regressions. Every extra read should resolve important uncertainty, every code change a real failure. "Comprehensive optimization" without these links expands systems without improving capability.
+23374	Fix deterministic bugs with tests, information gaps with retrieval, expertise gaps with knowledge and execution gaps with the harness; consider models or training at capability limits. This is not an absolute ordering, but avoids blaming every issue on model intelligence.
+13539	Unchanged content, slower execution: align traces before guessing
+26187	Input and conditions.</strong> Two tasks share model and Prompt. Old retrieval takes 200ms and new retrieval takes 200ms; model time is 2 seconds in both; the new tool queue adds 3 seconds.
+28247	Align spans
+21555	Retrieval and model durations match
+10879	Neither causes the added latency.
+25735	Identify the addition
+28751	Queue wait: 3 seconds
+12811	Check concurrency, rate limits, retries and tool resources first.
+25932	Adjust queue configuration confirmed unreasonable
+10695	Do not start by shortening prompts or changing models.
+16153	Remeasure
+15458	Same task and load definition
+21509	Check recovered latency without a higher error rate.
+26119	Improvement under light load does not establish improvement at peaks
+22414	Test representative loads.
+19086	Join the steps up.</strong> Locating symptoms along a trace avoids repairing a layer that is not broken.
+26731	Limits and counterexamples.</strong> Times form a teaching trace, not real performance measurements; production logs should avoid sensitive content.
+9534	← 28｜Blueprints for deep applications: enterprise Q&A, repository diagnosis, research and controlled automation</a><a href="30.html">30｜Senior-level acceptance: open questions, reference answers and a capstone project
+22241	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#c29-h1">Case one: a Skill appears loaded, but the code lacks domain expertise</a><a href="#c29-h2">Case two: work changes direction after compaction</a><a href="#c29-h3">Case three: relevant retrieval results are always outdated</a><a href="#c29-h4">Case four: tests pass, but users still find problems</a><a href="#c29-h5">Case five: slower tasks and more tokens</a><a href="#c29-h6">Case six: retries duplicate side effects</a><a href="#c29-h7">Case seven: more memory makes errors more persistent</a><a href="#c29-h8">A unified diagnostic method
+6455	30｜Senior-level acceptance: open questions, reference answers and a capstone project — AI Systems Engineering
+22307	Follow this chapter through its objects and states</a><a href="#topic-2">It went up 10 percentage points — so why can we not conclude anything yet?</a><a href="#c30-h1">1. Questions on numerics and model internals</a><a href="#c30-h2">2. Questions on training and post-training</a><a href="#c30-h3">3. Questions on context and compaction</a><a href="#c30-h4">4. Retrieval questions</a><a href="#c30-h5">5. Memory questions</a><a href="#c30-h6">6. Execution reliability questions</a><a href="#c30-h7">7. Engineering quality and routing questions</a><a href="#c30-h8">8. Evaluation questions</a><a href="#c30-h9">9. Security and observability questions</a><a href="#c30-h10">10. Capstone project A: a recoverable repository repair system</a><a href="#c30-h11">11. Capstone project B: an evidence- and permission-aware knowledge system</a><a href="#c30-h12">12. Capstone project C: empirical skill and context optimization</a><a class="sub ap-toc" href="#agent-study-eval">Locating a regression from the four-cell table</a><a class="sub ap-toc" href="#agent-study-synthesis">The reach of a local change
+21022	This is not a memorization test. The goal is explanation, implementation, refutation, measurement and trade-offs. Finishing the reading does not establish senior capability; actual artifacts and independent verification provide evidence.
+18142	Open questions allow several reasonable designs; assess them through constraints, counterexamples and verification costs.
+6038	1. Questions on numerics and model internals
+29020	Question: a Decoder works with full-sequence inference but fails token by token, while all tensor shapes are correct. Give a diagnostic order and explain it.
+14771	Reference answer: fix parameters and disable stochastic operators; compare the first step, then locate the first divergence. Check cache concatenation axes, separate per-layer caches, position offsets, non-square causal masks, GQA mapping and dtype. Test consistency across whole-sequence, token-by-token and varied chunks; change future tokens to test causality. Reset positions corrupt RoPE relative positions; a top-left triangular mask prevents new queries seeing the full prefix.
+26854	Meeting the standard means distinguishing causes with minimal counterexamples, not merely "check KV Cache". Explain why numeric tolerances cannot hide logical errors.
+6292	2. Questions on training and post-training
+29019	Question: SFT improves answer style but not code accuracy; DPO raises preference scores while unauthorized tool calls increase. How should this be assessed?
+14774	Reference answer: objectives may reward style or superficial completeness. Check demonstration / preference coverage, loss masks, verifiers and task distributions before training-induced regressions. Add independent functional, permission and regression evaluation. Parameter training cannot replace executor authorization; deterministic boundaries should block unauthorized actions first. High overall preference scores alone do not justify release.
+6417	3. Questions on context and compaction
+29022	Question: a summary retains every keyword, but continued execution fails. How would you design stronger fidelity evaluation?
+14769	Reference answer: include negations, hypotheses versus facts, revoked decisions, version freshness and unresolved side effects. Predefine recovery questions and continuation tasks; compare uncompacted history, compaction and manually minimal state; test repeated compaction and varied positions. Structural checks establish fields and source existence only; semantic support and completion need separate testing.
+6544	4. Retrieval questions
+29018	Question: ANN has 99% Recall@10 against exact vector search, but key source code remains missing. Why?
+14775	Reference answer: this metric only says the approximate index retains vector neighbors; embeddings may not rank key source highly. Chunking, version filters, permissions or query wording may also fail. Start with exact symbols / BM25, inspect candidate-evidence recall, then reranking and context selection. High ANN metrics do not establish good retrieval.
+6651	5. Memory questions
+29025	Question: on day 30, a system learns configuration changed on day 20. How should it answer what it knew on day 25 versus what it now judges true on day 25?
+14778	Reference answer: distinguish valid time from recorded/transaction time. Historical knowledge queries use only evidence recorded before day 25; today's retrospective can use later-arriving material valid on day 25. The teaching implementation has both time filters, but not full withdrawal history or concurrent merging; do not overstate it.
+6719	6. Execution reliability questions
+29026	Question: a remote action times out and the model requests a retry. When is it safe?
+14770	Reference answer: read-only or known repeatable operations without side effects are usually easier to retry; writes need idempotency keys, state queries or reliable reconciliation. Preserve unknown if occurrence is unclear; do not resend blindly. Bind idempotency keys to the same business operation and arguments rather than generate a new key each retry.
+6781	7. Engineering quality and routing questions
+29024	Question: a router raises required-Skill recall from 80% to 95% on samples, but tasks take longer and code quality falls slightly. What should be done?
+14776	Reference answer: routing is intermediate. Check new loading crowding out source evidence, outdated skills or excessive processes; ablate descriptions, bodies and loading strategies separately and stratify simple and complex tasks. Do not sacrifice final quality for routing scores. Without positive net gains, roll back or restrict to evidenced subcases.
+6818	8. Evaluation questions
+29021	Question: you try 20 Prompts and report the best improvement on the same test set. What is wrong?
+14773	Reference answer: using tests for selection introduces selection bias. Retain independent tests or new tasks, predefine comparisons and costs, and report repeated runs and intervals. Handle failed tasks and tool / infrastructure issues by predefined rules rather than selective deletion.
+6846	9. Security and observability questions
+29023	Question: a document induces a model to send secrets, the executor refuses, and the system completes the legitimate summary. How should this be reported?
+14772	Reference answer: separately record induced model behavior, successful execution-boundary blocking and final legitimate task success. Record action and permission-denial evidence without secrets in ordinary logs. Retain this regression when changing models or tool permissions.
+6071	10. Capstone project A: a recoverable repository repair system
+15909	Implement reading, patching, preset tests and completion checks in a disposable sample repository, adding version preconditions, actual process-crash recovery and cancellation. First verify execution with a scripted controller, then explicitly choose a model for real tasks. Report the two results separately.
+11668	Deliver current code, task contract, failing cases, traces, test results, cost and unverified scope. Show at least one initial failure becoming a pass, one negative control caught and one unrecoverable / unknown state correctly blocked. A success video or model summary alone is insufficient.
+6109	11. Capstone project B: an evidence- and permission-aware knowledge system
+18114	Build documents with versions, ACLs, updates and deletions; compare BM25, semantic and hybrid retrieval. Preserve answer sources and handle missing answers and conflicts. Test revocations, obsolete-version interference, query drift and cross-document combinations. With no budget, start by verifying only term retrieval and data governance, explicitly marking semantic models untested.
+22117	Graduation does not require deploying every technique; explain selection and rejection. Simple retrieval on a small corpus can qualify when results and constraints support it.
+6125	12. Capstone project C: empirical skill and context optimization
+12012	Compare old and new Skills and loading strategies on the same real harness version and task set. Record actual discovery, loading, use and outcomes; separate static format checks from real tasks. Perform at least one ablation and one regression-scenario check, reporting cost per success rather than token reductions alone.
+20576	Final assessment
+24790	The book's revised goal requires explaining mechanisms, implementing key subsystems, designing error-catching tests, reading source and version boundaries, rejecting unjustified complexity and substantiating outcomes. Specialized areas such as GPU kernel optimization, full RL training or formal safety still need deeper practice; coverage in a contents list does not imply mastery of those fields.
+22119	Capstone acceptance evidence, not a "can chat" demonstration
+26519	Input and conditions.</strong> Project goal: read-only repository retrieval to identify an exclude defect and propose a patch, without automatic commits.
+19755	Provide a repository with a known defect
+21837	Correctly locate and explain the ab counterexample.
+23227	Adjacent negative case
+19753	Provide a repaired repository
+10784	Do not manufacture changes to show capability.
+19931	Fault injection
+19333	Deny a key file read or return a stale index
+21844	Report the gap correctly rather than invent evidence.
+26824	Boundary verification
+17772	The tool cannot commit
+14163	A textual commit proposal must not become actual execution.
+13718	Record task, version, outcome, cost and limits separately
+26853	Meeting goals matters more than feature-button counts.
+19193	Join the steps up.</strong> Capability acceptance needs normal cases, counterexamples and faults, not one carefully selected success.
+26802	Limits and counterexamples.</strong> This is a self-built project test design; readers can still choose to expand self-check answers and grading notes.
+9536	← 29｜Failure diagnosis handbook: from symptom to the smallest effective fix</a><a href="31.html">31｜Derivation appendix: attention backpropagation and trainable retrieval
+22306	Follow this chapter through its objects and states</a><a href="#topic-2">It went up 10 percentage points — so why can we not conclude anything yet?</a><a href="#c30-h1">1. Questions on numerics and model internals</a><a href="#c30-h2">2. Questions on training and post-training</a><a href="#c30-h3">3. Questions on context and compaction</a><a href="#c30-h4">4. Retrieval questions</a><a href="#c30-h5">5. Memory questions</a><a href="#c30-h6">6. Execution reliability questions</a><a href="#c30-h7">7. Engineering quality and routing questions</a><a href="#c30-h8">8. Evaluation questions</a><a href="#c30-h9">9. Security and observability questions</a><a href="#c30-h10">10. Capstone project A: a recoverable repository repair system</a><a href="#c30-h11">11. Capstone project B: an evidence- and permission-aware knowledge system</a><a href="#c30-h12">12. Capstone project C: empirical skill and context optimization

@@ -32,6 +32,11 @@ EXCEPT = {k: v for k, v in json.loads(
 
 
 def harness(en):
+    return ''.join(part if part.startswith('<') else harness_prose(part)
+                   for part in re.split(r'(<[^>]+>)', en))
+
+
+def harness_prose(en):
     out = re.sub(r'\bhosts\b', 'harnesses', en)
     out = re.sub(r'\bhost\b', 'harness', out)
     out = re.sub(r'\bHosts\b', 'Harnesses', out)
@@ -43,23 +48,34 @@ def main():
     D = json.loads(TABLE.read_text(encoding='utf-8'))
     t = D['s']
     changed, kept = [], []
+    subagents = 0
     for k, v in t.items():
         en = v.get(LANG)
-        if not en or '宿主' not in k:
+        if not en:
             continue
-        if k in EXCEPT:
-            if re.search(r'\bharness', en, re.I):
-                kept.append((k, en))      # wrongly converted earlier
-            continue
-        out = harness(en)
+        out = en
+        if '宿主' in k:
+            if k in EXCEPT:
+                if re.search(r'\bharness', en, re.I):
+                    kept.append((k, en))      # wrongly converted earlier
+            else:
+                out = harness(en)
+        if LANG == 'en':
+            normalized = ''.join(
+                part if part.startswith('<') else re.sub(
+                    r'\b(sub)(agents?)\b', r'\1-\2', part, flags=re.I)
+                for part in re.split(r'(<[^>]+>)', out))
+            subagents += normalized != out
+            out = normalized
         if out != en:
             changed.append((k, en, out))
             if FIX:
                 v[LANG] = out
     if FIX and changed:
         TABLE.write_text(json.dumps(D, ensure_ascii=False), encoding='utf-8')
-    print('[%s] 宿主 → harness: %d 条%s' %
+    print('[%s] 已定术语需统一: %d 条%s' %
           (LANG, len(changed), '（已改）' if FIX else '待改'))
+    print('[%s] 其中 subagent → sub-agent: %d 条' % (LANG, subagents))
     if kept:
         print('应保留 host 但已被改成 harness 的: %d 条' % len(kept))
         for k, en in kept[:5]:

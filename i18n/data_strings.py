@@ -7,8 +7,9 @@ through the same table as the HTML, which is what keeps a figure's caption and
 the lesson text around it using the same words.
 
 Their svg and mobileSvg fields are figure markup, not prose: the labels inside
-them are laid out by the figure generators, which measure text width, so they
-are regenerated rather than translated in place. This script leaves them alone.
+them are handled by figure_strings after this script. This script leaves them
+alone. Localized MODEL_FRAMES also retain sourceGroup as an internal selector
+key, since the original HTML's data-allowed-groups values are machine data.
 
 Run: python3 i18n/data_strings.py collect          add their strings to the table
      python3 i18n/data_strings.py write --lang=en  write <lang>/assets/*.js
@@ -24,8 +25,8 @@ FILES = ('assets/visual-data.js', 'assets/model-data.js')
 SKIP = ('svg', 'mobileSvg')
 
 
-def read(rel):
-    s = (ROOT / rel).read_text(encoding='utf-8')
+def read(rel, root=None):
+    s = ((ROOT if root is None else root) / rel).read_text(encoding='utf-8')
     g = re.findall(r'window\.(\w+)=', s)[0]
     return g, json.loads(re.search(r'window\.' + g + r'=(.*?);\s*$', s, re.S).group(1))
 
@@ -41,25 +42,31 @@ def walk(o, key=None, fn=None):
     return o
 
 
-def collect():
-    t = json.loads(TABLE.read_text(encoding='utf-8'))['s']
+def source_counts(root=None):
+    """Current JS prose occurrences and source files, excluding SVG markup."""
     seen = {}
 
     def note(s):
-        seen[s] = seen.get(s, 0) + 1
+        e = seen.setdefault(s, {'n': 0, 'pages': set()})
+        e['n'] += 1
+        e['pages'].add(rel)
         return s
 
     for rel in FILES:
-        _, d = read(rel)
+        _, d = read(rel, root)
         walk(d, None, note)
-    added = 0
-    for s, n in seen.items():
-        if s in t:
-            t[s]['n'] += n
-        else:
-            t[s] = {'en': None, 'n': n, 'p': 1}
-            added += 1
-    TABLE.write_text(json.dumps({'s': t}, ensure_ascii=False), encoding='utf-8')
+    return seen
+
+
+def collect():
+    import table
+
+    document = json.loads(TABLE.read_text(encoding='utf-8'))
+    seen = source_counts()
+    added = sum(s not in document['s'] for s in seen)
+    table.reconcile(document, table.source_counts(ROOT / 'i18n/units'),
+                    table.auxiliary_counts(ROOT))
+    TABLE.write_text(json.dumps(document, ensure_ascii=False), encoding='utf-8')
     print('数据文件散文 %s 条（新增 %s 条到表）| %s 字' %
           (format(len(seen), ','), format(added, ','),
            format(sum(len(CJK.findall(s)) for s in seen), ',')))
@@ -76,19 +83,27 @@ def write(lang):
             return s
         return v
 
-    out = ROOT / lang / 'assets'
-    out.mkdir(parents=True, exist_ok=True)
+    prepared = []
     for rel in FILES:
         g, d = read(rel)
-        (out / Path(rel).name).write_text(
-            'window.%s=%s;\n' % (g, json.dumps(walk(d, None, tr), ensure_ascii=False)),
-            encoding='utf-8')
-    print('%s/assets/visual-data.js 与 model-data.js 已写出' % lang)
+        translated = walk(d, None, tr)
+        if g == 'MODEL_FRAMES':
+            for original, frame in zip(d, translated):
+                frame['sourceGroup'] = original['group']
+        prepared.append((Path(rel).name,
+                         'window.%s=%s;\n' % (g, json.dumps(translated, ensure_ascii=False))))
     if miss:
         print('缺译文 %s 条，例: %s' % (format(len(set(miss)), ','), list(dict.fromkeys(miss))[0][:50]))
+        return 1
+    out = ROOT / lang / 'assets'
+    out.mkdir(parents=True, exist_ok=True)
+    for name, payload in prepared:
+        (out / name).write_text(payload, encoding='utf-8')
+    print('%s/assets/visual-data.js 与 model-data.js 已写出' % lang)
+    return 0
 
 
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else 'collect'
     lang = next((a.split('=', 1)[1] for a in sys.argv[2:] if a.startswith('--lang=')), 'en')
-    {'collect': collect, 'write': lambda: write(lang)}[cmd]()
+    sys.exit({'collect': collect, 'write': lambda: write(lang)}[cmd]() or 0)

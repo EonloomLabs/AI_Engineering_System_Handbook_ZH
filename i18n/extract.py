@@ -1,11 +1,11 @@
-"""Extract every translatable run in a page, with exact byte offsets.
+"""Extract every translatable run in a page, with exact string offsets.
 
 Covers the whole document - head, header, book rail, article, footer - because
 the rail alone carries 60% of the book's Chinese and sits outside <article>.
 
-Two things are deliberately left alone. Code and figures (script, style, pre,
-code, kbd, and the inside of svg) must stay exact, per AGENTS.md: numbers,
-source refs, anchors, data keys and file paths all live there. And an element
+Code and figures must stay exact, per AGENTS.md: numbers, source refs, anchors,
+data keys and file paths all live there. Only lexed comment bodies and accessible
+line labels are extracted inside pre/code. And an element
 that already draws from the interface catalogue (data-i18n) keeps its key; its
 English comes from the reviewed bundle, not from a second translation.
 
@@ -16,6 +16,7 @@ Run: python3 i18n/extract.py <page.html> [...]  -> i18n/content/<slug>.json
 """
 import json, re, sys
 from pathlib import Path
+from code_comments import extract_code_units
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -74,6 +75,8 @@ def extract(doc):
                                       'attr:' + am.group(1), am.group(2)))
             end = low.find(CLOSE[tag], lt)
             i = n if end == -1 else end + len(CLOSE[tag])
+            if tag in ('pre', 'code') and end != -1 and not stack:
+                items.extend(extract_code_units(doc[lt:i], lt))
             continue
         gt = doc.find('>', lt)
         if gt == -1:

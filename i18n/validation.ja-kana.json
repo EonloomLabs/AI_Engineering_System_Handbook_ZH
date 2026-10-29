@@ -1,0 +1,78 @@
+{
+  "scope": "KANA assignment and adjacent explanation only",
+  "baseline": "/tmp/batch-before-kana.py",
+  "narrow_diff": "--- /tmp/batch-before-kana.py\n+++ i18n/batch.py\n@@ -35,7 +35,12 @@\n # Japanese shares its kanji with Chinese, so 'still Chinese' cannot be detected\n # that way. Identical prose and long kanji-only text are review signals;\n # source-bound Japanese labels and literal units have explicit exceptions.\n-KANA = re.compile(r'[ぁ-ヿ]')\n+# Require a kana letter, not punctuation, a voicing/length/iteration mark.\n+# Includes full-width, small/archaic and half-width kana letters (Unicode 16).\n+KANA = re.compile(\n+    r'[\\u3041-\\u3096\\u309f\\u30a1-\\u30fa\\u30ff\\u31f0-\\u31ff'\n+    r'\\uff66-\\uff6f\\uff71-\\uff9d\\U0001b000-\\U0001b122'\n+    r'\\U0001b132\\U0001b150-\\U0001b152\\U0001b155\\U0001b164-\\U0001b167]')\n JA_KANJI_TRANSLATIONS = {\n     '旧': '旧',  # The same ordinary adjective in Japanese (shell key 30222).\n     '图解 Transformer': '図解Transformer',  # Kanji plus the model name (key 348).\n",
+  "source_hash_before": "c47d4b7ac8a087c52fe65dd54c848fec8908ba23373fc4949da5d5e0d1e8f4f5",
+  "source_hash_after": "4d6e47c6d17bbfae9c8cbbf45b4ee105e12acdc2f089300d57e83e9be057bd75",
+  "unicode_database": "16.0.0",
+  "matched_letter_category": "Lo",
+  "matched_letters_in_kana_blocks": 549,
+  "negative_marks": 14,
+  "positive_words": 10,
+  "chinese_punctuation_red": [
+    "・",
+    "゠",
+    "ー"
+  ],
+  "exact_kanji_approval_guard": "pass",
+  "english_no_approval_read": "pass",
+  "readonly_ja_checks": {
+    "u01": 550,
+    "u02": 550,
+    "u03": 535,
+    "u04": 539,
+    "u05": 550,
+    "u06": 439,
+    "u07": 429,
+    "u54": 38
+  },
+  "total_rows": 3630,
+  "new_unapproved_candidates": 0,
+  "limits": [
+    "Kana remains a script-presence heuristic, not a Japanese quality judgment.",
+    "Only the requested completed batches were checked."
+  ],
+  "parent_recheck": {
+    "ast_except_kana_equal": true,
+    "negative_characters": [
+      "・",
+      "゠",
+      "ー",
+      "ﾞ",
+      "ﾟ",
+      "゙",
+      "゚",
+      "゛",
+      "゜",
+      "ゝ",
+      "ゞ",
+      "ヽ",
+      "ヾ",
+      "ｰ"
+    ],
+    "positive_samples": [
+      "ひらがな",
+      "カタカナ",
+      "ㇰㇱ",
+      "ｶﾀｶﾅ",
+      "が",
+      "ガ",
+      "ヷ",
+      "ゟ",
+      "ヿ",
+      "𛀀"
+    ]
+  },
+  "updated_at": "2026-10-29T15:05:57.450718+00:00",
+  "review": {
+    "agent": "review_table_tools",
+    "findings": [],
+    "source_sha256": "4d6e47c6d17bbfae9c8cbbf45b4ee105e12acdc2f089300d57e83e9be057bd75",
+    "independent_negative_controls": 14,
+    "independent_positive_controls": 15,
+    "matched_letters": 549,
+    "exact_approval_and_non_ja_behavior": "pass",
+    "batch_check_rerun_by_reviewer": false,
+    "scope": "Read whole current batch.py; assessed only the specified KANA change against /tmp/batch-before-kana.py."
+  }
+}

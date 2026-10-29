@@ -14,6 +14,7 @@ Read both, every time:
   first, plus the book's own bilingual glossary. Follow their terminology,
   register and punctuation. They set the house style. Do not re-translate them.
 - `i18n/glossary.json` — the 104 term pairs from the book's own `glossary.html`.
+  For Japanese, also read `i18n/glossary.ja.json` and the Japanese rules below.
 
 ## The file protocol
 
@@ -56,7 +57,7 @@ same `N` values, same order, nothing else but optional `#` comments.
   token itself. The checker exempts these four characters, so they pass.
   Sentences *about* the example may gloss a token once for the reader, e.g.
   "the teaching text is 我爱 (I love)", but the labels keep the glyphs.
-- **Spelling follows the book's own glossary**, which prints `optimization`,
+- **English spelling follows the book's own glossary**, which prints `optimization`,
   `Quantization`, `Normalization` - so American `-ize/-ization`, and
   `behavior`, `color`, `catalog`, `labeled`. (Earlier batches used British
   forms; those have been normalized, and `_reference.en.txt` is now correct.)
@@ -95,6 +96,43 @@ These were split across batches and have been normalized; follow them.
 
 `python3 i18n/spelling.py` sweeps the -ize family and the other American forms,
 so do not spend effort on spelling; write what comes naturally and it is fixed.
+
+## Japanese edition
+
+- Write clear technical Japanese in the です・ます register for explanations.
+  Short headings and labels may use noun phrases. Use Japanese punctuation and
+  word order; do not add English seam spaces. Preserve the source's `｜` and `·`.
+- `第NN课` becomes `第NN課`, `单元NN` becomes `ユニットNN`, and `作业NN`
+  becomes `課題NN`. Keep the original digits, including leading zeroes.
+- `AI 系统工程` is `AIシステム工学`; Token in prose is `トークン`.
+  The worked vocabulary glyphs still remain Chinese, exactly as specified above.
+- `宿主` in the execution framework is `ハーネス`; MCP's Host role is `ホスト`.
+  `压缩` in context management is `コンパクション`, rather than file compression.
+  Model execution and reasoning can both be `推論`; distinguish them explicitly
+  when the sentence contrasts them. An RL policy may be `方策`, while access or
+  execution policy is `ポリシー`. A learning-rate step is not an array stride.
+- The English glossary contains related concepts, not only synonyms. Translate
+  the Chinese concept in context: `置信区间` is `信頼区間`, not Bootstrap;
+  `矩阵秩` is `行列のランク`, not necessarily low rank; `退避` is `バックオフ`,
+  while backpressure is `バックプレッシャー`.
+- Document retrieval/search is `検索`; branching through candidate reasoning
+  states, such as ToT tree search, is `探索`. Preserve that distinction.
+- Existing `locales/ja.json` wording describes the shared interface on a Chinese
+  page. Do not copy its "the lesson body remains Chinese" notice into a Japanese
+  edition. The scope note for the translated edition must state that both the
+  interface and lesson text are translated from the Chinese original.
+- Do not run the English spelling, terminology, vocabulary or template fixers
+  with `--lang=ja`; their rewrite rules contain English wording. Use the batch
+  check and report legitimate identical Japanese kanji labels rather than
+  distorting the translation to satisfy a heuristic.
+- The maintainer may use `embedded.py --lang=ja`: it aligns text through source
+  structure and contains no English rewrite templates. A rail title uses the
+  wording of its corresponding full lesson heading, preserving its HTML tags.
+- A natural kanji-only label can be identical in both languages. Report the
+  exact source, target and ID when the heuristic rejects it. After review, the
+  maintainer records that exact pair in `ja-approved.json`. This file only
+  suppresses the identical-text/kana warning; tag, file-name and empty-value
+  checks still apply. Translators must not edit this validation file.
 
 ## When one string needs two translations
 

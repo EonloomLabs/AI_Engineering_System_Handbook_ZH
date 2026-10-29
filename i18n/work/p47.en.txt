@@ -1,0 +1,648 @@
+12966	Walkthrough C｜From ingesting a document to retrieval, answering, memory update and forgetting — AI Systems Engineering
+22332	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#walkc-s1">C.1｜Start with original sources, without rushing to generate vectors</a><a href="#walkc-s2">C.2｜What meaning parsed objects should preserve</a><a href="#walkc-s3">C.3｜How to chunk content and why parent–child relationships matter</a><a href="#walkc-s4">C.4｜Set query conditions when a query arrives</a><a href="#walkc-s5">C.5｜What BM25 and vector retrieval each provide</a><a href="#walkc-s6">C.6｜Why applicability checks remain necessary after reranking</a><a href="#walkc-s7">C.7｜Final model context should be more than a bag of similar passages</a><a href="#walkc-s8">C.8｜What to remember after answering</a><a href="#walkc-s9">C.9｜Correcting rules: express old and new facts without overwriting history</a><a href="#walkc-s10">C.10｜How deletion and permission revocation propagate</a><a href="#walkc-s11">C.11｜Counterexamples showing the system answers more than one question</a><a href="#walkc-s12">C.12｜Derive an explainable account of the run</a><a class="sub ap-toc" href="#agent-walkthrough-indexing">Switching index generations</a><a class="sub ap-toc" href="#agent-walkthrough-retrieval">Fused ranking and independent evidence</a><a class="sub ap-toc" href="#agent-walkthrough-memory">The old worker comes back after the lease has expired
+27645	Prerequisites for the continuous case</span> Understand relevance, evidence sufficiency, permissions and effective dates before tracing knowledge flows.
+23553	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+20878	This example uses fictional "project A log-retention rules", not a real company's policy. Dates, documents and rankings are teaching data. It tracks changes across information objects, especially why finding relevant documents is insufficient for a correct answer.
+22931	On 2026-10-17, the user asks: <strong>"How long should project A's error logs be retained, and how is this configured?"
+7157	C.1｜Start with original sources, without rushing to generate vectors
+13537	Content summary
+22828	Effective scope
+15248	Visibility
+20467	Ordinary project logs default to 90 days
+6319	2026-01-01 through 10-09
+20460	Ordinary logs default to 30 days; logs with sensitive fields to 7 days
+6068	From 10-10
+28939	Project A error logs contain sensitive fields and require the 7-day rule
+6069	From 10-12
+28471	Configuration item
+19577	accepts an integer number of days
+6000	From 09-01
+28940	Project B has approval to retain certain logs for 90 days
+6070	From 10-15
+11751	Project B members only
+20302	Old migration record: A's retention was once set to 90 days
+14178	Historical record, not current policy
+14654	The originals contain easily confused relationships: document versions, general rules and project exceptions, policies and past execution records, and related content from another project that this user cannot read.
+16325	If ingestion keeps only body text and drops effective dates, permissions and document types, even precise vectors cannot reliably recover them. Deep retrieval engineering begins with data modeling, not vector-database selection.
+22183	Use the original C.1 sources with the query conditions 2026-10-17 and project A membership.
+11522	Why it seems relevant
+24787	Can it support current retention for A's error logs?
+7352	D1@v1: 90 days
+15429	The same logging policy
+17926	Expired; cannot be used directly
+7354	D1@v2: ordinary 30 / sensitive 7 days
+18252	Current rule
+27166	Log category still missing
+7356	D2@v3: A's error logs are sensitive
+28941	Project and category match
+11248	Together with D1@v2, supports 7 days
+7359	D4@v1: B's 90-day exception
+20253	Matches logs, project and days
+13311	Another project; no read permission
+7361	D5: A was once set to 90 days
+23385	An actual historical execution record
+10908	Not current policy
+27364	More matching keywords do not mean correctness. Exclude unauthorized material first, then check validity, document types and project conditions.
+15010	Only the complete condition chain from D1@v2 and D2@v3 supports 7 days for A's error logs. D3 says only that retention_days accepts integers, not which integer to use.
+7158	C.2｜What meaning parsed objects should preserve
+7353	D1@v2 might be represented as:
+25210	expresses when the rule applies;
+25208	expresses when the system knows it; these may differ. If a correction effective 10/12 is entered only on 10/17, historical answers must distinguish actual applicability from what the system knew then.
+25337	Parsing also preserves source locations for citations and human checking. Page and section titles, table headers and footnotes may determine scope. Cutting "except sensitive fields" into another chunk can reverse the remaining text's meaning.
+7159	C.3｜How to chunk content and why parent–child relationships matter
+10452	One teaching split uses C1 for general rules, C2 for sensitive exceptions, C3 for project A's category and C4 for configuration syntax. Each carries source, version, validity and permissions; C2 points to C1, and C3 to the applicable rule family.
+21580	Retrieve small chunks for precise location, then their sections or related exceptions for complete conditions. Large graph databases are not mandatory; document IDs and parent-paragraph references suffice at small scale. Add graphs only when complex cross-document links have demonstrated benefits.
+7233	Chunk boundaries depend on tasks. Small chunks lose conditions; large ones dilute term and semantic signals and consume context. "500 characters is always optimal" has no universal guarantee; measure key-evidence recall and final accuracy on your own questions.
+22614	Version changes require updates to affected chunks and indexes, not endless additions without invalidating old chunks. Otherwise conflicting versions accumulate in retrieval results.
+7160	C.4｜Set query conditions when a query arrives
+28701	The question specifies project A, error logs, retention duration and configuration. Authentication supplies project A membership; the model does not infer it from wording. With no historical date specified, the application may use today, explicitly recording that interpretation internally.
+7360	D4 mentions 90 days, logs and projects, but the user cannot read it; exclude it before sending content to models or third-party rerankers. Permission design determines internal metadata access, but invisible bodies must not be sent out first and hidden only in final answers.
+21308	Rewriting may add "retention" or "retention_days", but this aids search rather than supplies evidence. A generated "project A should use 30 days" must not become a confirmed premise through query expansion.
+7161	C.5｜What BM25 and vector retrieval each provide
+17256	may work well on exact terms such as "project A" and "retention_days"; vector retrieval connects "how long to keep" with "retention duration". Both produce candidates rather than decide factual truth.
+11464	To demonstrate fusion, suppose permission-filtered candidates have these <strong>manually specified rankings</strong>, not actual
+22446	test results:
+17539	For each candidate, compute
+10092	. This solves incompatible score scales, but does not understand "project A contains sensitive fields" or guarantee a high-ranking chunk can answer the full question alone.
+25000	C3 alone gives the category but may miss configuration syntax; C4 alone gives field syntax but not its value. Aim for the smallest sufficient evidence set covering required claims, not only the highest-scoring chunk.
+13291	Keyword list [C4,C3,C1,C2]; semantic list [C3,C2,C1,C4]. This figure fixes k=60 and 1-based ranks for recomputation; rankings are a teaching construction.
+11409	Ranks on both paths
+6066	1/(60+r_lexical)+1/(60+r_semantic)
+7189	C3 Project category
+6261	2 and 1
+24302	About 0.032522
+7190	C4 Configuration syntax
+6018	1 and 4
+24301	About 0.032018
+7186	C2 Sensitive exception
+6516	4 and 2
+24300	About 0.031754
+7175	C1 Ordinary rule
+6406	3 and 3
+24299	About 0.031746
+25113	C3 ranks highest after fusion but establishes only the category, not configuration syntax. High rank and sufficient evidence for every claim are different goals.
+7188	C2 and C1 score closely; that small difference confers no factual authority. Complete exceptions and parent rules as the task needs rather than generate from just the first chunk.
+7162	C.6｜Why applicability checks remain necessary after reranking
+28517	A reranker may move C3 and C2 higher, but check whether D1@v2 is effective now, D2@v3 concerns project A error rather than access logs, D5 is merely historical, and evidence supports one another.
+21201	Construct an evidence matrix:
+18292	Claim to answer
+19844	Supporting chunk
+20381	Sufficient?
+28899	Further reading needed
+7060	A's error logs belong to the sensitive category
+18241	Current version and matching project
+19940	Sensitive logs are retained for 7 days
+7187	C2 and its parent rule
+21164	Complete conditions
+10473	General-rule context
+28470	Configuration key and value type
+25797	Sufficient syntax
+12485	Is the change deployed?
+10694	Insufficient
+28909	Runtime tools needed
+20528	The last row matters: knowledge says how configuration should work, not whether production changed. "How do I write it?" needs no automatic action; modification also needs specified resources, authorization and verification.
+7163	C.7｜Final model context should be more than a bag of similar passages
+10456	A teaching context package might be:
+27268	It contains roles, time, exclusion reasons and limits as well as content. From it the model generates: under these teaching sources, project A error logs require 7 days and can use
+29505	; this answer neither checks live state nor changes configuration.
+16350	For 30-day output, check lost C3-to-C2 conditions; for 90 days, check stale-version filtering or history mistaken for policy; for "modified", check confused task boundaries and action facts. Errors point to different layers, not one universal "stronger model" fix.
+22184	Use C.7 evidence E1/E2/E3; answer configuration only, without execution permission.
+28886	Claim requiring an answer
+25685	Evidence link
+15264	Permitted conclusion
+7061	Category of A's error logs
+17689	Sensitive category
+19941	Days for sensitive logs
+19939	Sensitive logs: 7 days
+28469	Configuration field and type
+22799	Has production changed?
+22159	No runtime evidence
+15060	Explain configuration, without claiming deployment
+18852	Link each conclusion to evidence to expose gaps: documents support what should happen, not what actually happened.
+25008	For 30 days, inspect missing category conditions; for 90, old versions or history; for claimed edits, task and action boundaries.
+7164	C.8｜What to remember after answering
+10795	Do not save "all project logs: 7 days". Save a scoped item: project A error logs are sensitive during the applicable period, supported by D2@v3 and D1@v2. It aids later retrieval for similar questions; recheck source validity before use.
+25596	Memory is not unconditional authority. If the next question concerns project B or access logs, "One training run end to end: labels, loss, update, validation and saving" does not apply. Saving repeated knowledge-base information avoids rediscovery rather than makes a model believe a number forever.
+23476	Procedural experience differs: "For log retention, identify category and effective date before general rules and exceptions." It may span projects but should not mandate a fixed database or a multi-
+22401	process.
+7165	C.9｜Correcting rules: express old and new facts without overwriting history
+12525	Suppose D2@v4 arrives on 10/20, saying project A removed sensitive fields from 10/18, so new error logs use the ordinary 30-day rule. The system learns this only on 10/20:
+22955	For "what should retention have been on 10/17?", the answer remains 7 days. For "what rule applied on 10/19?", current knowledge says 30 days. For "how would the system have answered on 10/19?", it may still have used the old 7-day record. These differ and cannot be resolved by latest update time alone.
+14681	Do not delete the original entry "One training run end to end: labels, loss, update, validation and saving" without traceable history or keep it active forever. Close its validity interval, retain provenance and link its replacement. Dynamic engineering memories need updates and invalidation rather than endless natural-language additions.
+22186	Use D2@v4: sensitive fields removed from 10/18, received only on 10/20. Old fact [10/12,10/18), new fact [10/18,∞).
+22946	The actual temporal question
+15276	Permitted evidence time
+6084	What actually applied on 10/17?
+18227	Current knowledge looking back to 10/17
+6807	7 days
+6085	What rule actually applied on 10/19?
+12615	May use retrospective material entered on 10/20
+6454	30 days
+24220	How would the system have answered on 10/19?
+15056	Only material known before 10/19
+15196	May still use the old 7-day record
+15386	A date in the question is insufficient: distinguish actual effective state from replaying the system's past knowledge.
+12437	Retain old validity intervals and recording times to explain past errors and correction dates rather than overwrite all history with the latest item.
+7154	C.10｜How deletion and permission revocation propagate
+25073	Revoked project A document permissions may leave caches, summaries, memories, search results and citation previews exposing old content. Deleting originals fixes only one layer; identify derived objects and sources and invalidate by permissions and retention policies.
+18043	Not every system needs detailed lineage, but at least track which memories derive from controlled sources. Sourceless summaries are hard to withdraw safely or explain when experience remains in use.
+17274	Execution-log retention may conflict with audit needs; follow real organizational requirements, as this example gives no legal judgment. Distinguish "unusable for answers" from "retained for controlled audit" rather than one delete boolean.
+7155	C.11｜Counterexamples showing the system answers more than one question
+21215	Create neighboring questions: A's ordinary runtime logs, A's error logs on 10/5, B's exception, unauthorized users, missing category material, D2/D1 version conflicts and changed key spelling. Specify expected evidence and acceptable uncertainty for each.
+16342	Without D2, the system must not confidently label A's error logs sensitive; a 7-day answer may indicate stale memory or guessing. Changing D2 to ordinary should change the answer, not leave it fixed at 7 by previous Few-shot examples.
+27336	These counterfactuals test whether data dependencies matter. One correct answer cannot prove effective
+9973	, memory or permission engineering.
+7156	C.12｜Derive an explainable account of the run
+12904	Authenticate and establish time, parse conditions and sources, build updateable indexes, retrieve candidates and filter permissions before external delivery, fuse and rerank, complete related exceptions, form a claim–evidence matrix, then generate and check citations. Save only necessary scoped memories with provenance and validity; update indexes, caches and derived memories with sources.
+27239	This goes beyond "RAG retrieves then generates" because every step explains objects, constraints and failure. Missing steps have specific consequences rather than a generic "accuracy may fall".
+9548	← Walkthrough B｜Every turn of a repository fix: input, output, tools and recovery</a><a href="d.html">Walkthrough D｜How the root cause of a "slower and worse" agent regression is found →
+22331	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#walkc-s1">C.1｜Start with original sources, without rushing to generate vectors</a><a href="#walkc-s2">C.2｜What meaning parsed objects should preserve</a><a href="#walkc-s3">C.3｜How to chunk content and why parent–child relationships matter</a><a href="#walkc-s4">C.4｜Set query conditions when a query arrives</a><a href="#walkc-s5">C.5｜What BM25 and vector retrieval each provide</a><a href="#walkc-s6">C.6｜Why applicability checks remain necessary after reranking</a><a href="#walkc-s7">C.7｜Final model context should be more than a bag of similar passages</a><a href="#walkc-s8">C.8｜What to remember after answering</a><a href="#walkc-s9">C.9｜Correcting rules: express old and new facts without overwriting history</a><a href="#walkc-s10">C.10｜How deletion and permission revocation propagate</a><a href="#walkc-s11">C.11｜Counterexamples showing the system answers more than one question</a><a href="#walkc-s12">C.12｜Derive an explainable account of the run
+12967	Walkthrough D｜How the root cause of a "slower and worse" agent regression is found — AI Systems Engineering
+22244	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#walkd-s1">D.1｜Turn subjective feedback into observable goals</a><a href="#walkd-s2">D.2｜Start with one failed task's timeline</a><a href="#walkd-s3">D.3｜Compare three states: chat, runner and the outside world</a><a href="#walkd-s4">D.4｜Minimal experiments that distinguish hypotheses</a><a href="#walkd-s5">D.5｜Why extra skills can create misleading cost-reduction metrics</a><a href="#walkd-s6">D.6｜Break time down by critical path rather than sum every duration</a><a href="#walkd-s7">D.7｜Match repairs to causes rather than refactor the platform</a><a href="#walkd-s8">D.8｜Show improved quality rather than a few chance successes</a><a href="#walkd-s9">D.9｜Release and rollback: can old state keep errors alive?</a><a href="#walkd-s10">D.10｜Six follow-up questions and directions for complete answers</a><a href="#walkd-s11">D.11｜Condense system diagnosis into an interview statement</a><a class="sub ap-toc" href="#agent-walkthrough-snapshot">An immutable request and mutable authorization</a><a class="sub ap-toc" href="#agent-walkthrough-eval">Locating a regression from the four-cell table</a><a class="sub ap-toc" href="#agent-walkthrough-production">Quantiles and the cost of failures
+27644	Prerequisites for the continuous case</span> Distinguish task success from speed metrics before locating bottlenecks in traces; these numbers are teaching comparisons, not production measurements.
+23987	Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent</a><a class="pill" href="../foundations/38.html">Lesson 33 · Reading a production run
+20884	This complete system-diagnosis example uses author-constructed data, not a company incident review or measured evaluation of any model version. Practice eliminating competing explanations layer by layer rather than blaming a less intelligent model intuitively.
+16006	Scenario: after a context-policy update, similar repairs seem slower and sometimes repeat edits to already-fixed files. Some propose a stronger model, others another Review
+29487	; others would double context. What should happen first?
+7326	D.1｜Turn subjective feedback into observable goals
+12734	Define three symptoms: longer completion time, repeated logical actions and genuinely worse final outcomes. Do not rely on perception or claim optimization merely because average
+13672	decreases.
+19854	Collect old and new traces on the same representative tasks, recording model, prompt, tool, index, compaction and runner versions. If models changed too, acknowledge confounding rather than attribute everything to compaction.
+20879	Here the model and executor are unchanged, but history is compacted earlier, summary templates shortened and more skills loaded by default. These are three variables requiring separate checks.
+7327	D.2｜Start with one failed task's timeline
+18137	Start, seconds
+24408	End, seconds
+15596	Find the correct source r42
+25991	Model call 1
+21845	Correctly propose patch p1
+20092	File becomes r43; response lost
+24810	Automatic compaction
+19820	Summary turns a timeout into "repair failed"
+25992	Model call 2
+21446	Propose the same kind of edit again from the summary
+28398	Partly repeated edit
+22411	Testing and rework
+20202	New error; repair continues
+27375	A strong clue is already visible: the original model found the code and proposed a correct patch; the error lies between external results and the summary. A new model may not fix state semantics, and Review may merely delay discovering repeated edits.
+27170	Confirm that "file became r43" comes from disk or operation logs, not model claims. If it is a guess, verify it before building a seemingly complete root-cause story from assumptions.
+16522	Use D.2's exact start and end seconds; these teaching durations are not production measurements.
+19897	Enlarged figure: where does state first become distorted in the 50-second trace?
+20569	The first repair boundary is how "modified but acknowledgment lost" enters the summary. Later repetition follows from it and does not independently prove weaker model capability.
+27374	These sequential spans form 50 seconds of wall time. Spans from other parallel tasks cannot simply be added to this waiting chain.
+7328	D.3｜Compare three states: chat, runner and the outside world
+23323	The contradiction arises when the summary converts
+26102	to failed. unknown means the effect is unconfirmed; failed usually encourages retries. The words differ little but have different execution consequences.
+14161	Even perfect adherence to this summary produces wrong actions. The cause is wrong supplied state, not merely "the model did not listen". Preserve unconfirmed operations structurally, prevent compaction from changing their meaning and check actual effects before continuing.
+13603	Why was c19's response lost? Network or process issues still need repair, but "never time out" cannot eliminate every distributed failure window. Reliability must handle lost responses rather than only hope for fewer.
+22197	Use the same c19 and r43; the three objects' meanings are not interchangeable.
+22647	State location
+25550	Recorded content
+20387	Enough evidence?
+23291	Actual file
+9250	p1 applied, r43
+28870	Needs disk / operation-log verification
+18617	Execution ledger
+9136	c19 timed out, unknown
+10939	Effect unconfirmed
+12472	Repair failed; retry needed
+19828	Wrongly promotes unknown to failure
+19822	A summary's last sentence affects the next model action. Retrying from a wrong summary does not prove the first tool execution failed.
+12476	Keep unknown in summaries and block direct repetition of unknown actions in the executor; another Reviewer also needs actual state evidence.
+7329	D.4｜Minimal experiments that distinguish hypotheses
+12503	Candidates: H1 weaker new model, H2 state lost in summary, H3 skill overload, H4 test-environment noise.
+28580	For the same known failure trace, prepare original history, the faulty summary, a summary preserving unknown, and that corrected summary plus operation verification. Fix model, visible tools and task; observe next actions. Errors tracking summary state rather than model version support H2 more strongly.
+27169	Test the runner too: reject direct start from unknown; only verified_not_applied permits an appropriate retry, while verified_applied leads to verification rather than another edit. Package state-machine witness tests cover this local rule without claiming commercial models choose correctly.
+16968	Do not select only one success. Cover applied, unapplied, partially applied and verification-failed cases. Otherwise a fix may merely guess every unknown succeeded, trading one error for another.
+7330	D.5｜Why extra skills can create misleading cost-reduction metrics
+12554	Suppose 40K uncached input becomes a 20K summary, but resident skills add 10K per turn. Input still falls slightly, yet compaction adds one model call and repeated actions two rounds; total time and cost may rise.
+23289	Sum uncached, cached and output fees across every turn, including failure rework. Comparing the last pre-compaction turn with the first afterward is insufficient. Stable prefixes and tool-output trimming also affect bills.
+18673	Excess skills may change task interpretation or create conflicts. Inspect the final request manifest: selection reasons, overlap and long guides better read in relevant portions on demand. Gather irrelevant-loading examples and missed-required-skill counterexamples before narrowing descriptions, so one fix does not damage specialist recall.
+7331	D.6｜Break time down by critical path rather than sum every duration
+24979	Two read-only searches taking 3 and 4 seconds in parallel may mean about 4 seconds of waiting; serially they take 7 seconds. Task
+18095	should record actual dependencies rather than totals by operation category alone.
+20915	The compaction from 13 to 20 seconds lies on the critical path and cannot hide behind later model work. If saved
+20316	time is less than these 7 seconds and only one turn remains, compaction may cost more than it saves. Longer tasks may benefit through lower later context costs; trigger by remaining work rather than one occupancy threshold for every task.
+13589	M2's 20-to-31-second span may include queues, Prefill, internal reasoning and output transfer. Without server breakdowns, do not invent components from 11 seconds. Only end-to-end call time is confirmed; other explanations await verification.
+7332	D.7｜Match repairs to causes rather than refactor the platform
+20517	Minimal changes may preserve structured pending/unknown operations, make these states non-droppable summary facts, verify before recovery, add version preconditions and bind tests to final versions. Each addresses the observed failure window.
+18009	Large memory databases, layered contracts, per-step signatures or more agents are not necessarily needed. Correct existing task-state storage where available. Transactions and remote idempotency depend on actual side-effect boundaries, not one example requiring identical architectures everywhere.
+17275	For skill overload, reduce irrelevant resident content while preserving required recall; for early compaction, consider stage and recent outputs rather than only thresholds. Make optimizations independently switchable to locate regressions.
+7333	D.8｜Show improved quality rather than a few chance successes
+22902	Use paired comparisons on representative fixed tasks, running both versions under controlled environments and budgets. Repeat stochastic runs reasonably and analyze by task cluster; repeated attempts on one task are not wholly independent tasks.
+19949	Teaching two-by-two table: among 100 tasks, both versions pass 70, only old passes 5, only new passes 10, and both fail 15. Old passes 75 and new 80, apparently gaining 5 percentage points; the paired difference actually rests on the 15 discordant tasks, 5 versus 10. Limited samples do not establish stable major gains from 5 percentage points alone.
+18487	Costs include every attempt. A version completing only simple tasks may reduce mean duration among successes without improving user goals. Report coverage, success, failure types and complexity strata together; mark infrastructure faults separately from model capability.
+22185	Use D.8, without mixing Foundations or other independent 20-question examples.
+19896	Enlarged figure: the same 100 tasks compared— which two cells matter beyond success rate?
+20282	Old passes 70+5=75, new 70+10=80. The net 5 tasks come from discordant counts 5 and 10, not every one of 100 tasks improving by 5%.
+25243	Inspect regression types and risks and handle repeats at task level. One +5-percentage-point result is not a stable, universal gain worth releasing.
+7334	D.9｜Release and rollback: can old state keep errors alive?
+20201	After a runner release, old checkpoints may still label unknown operations "failed". New summary templates do not repair existing tasks automatically. Identify affected versions and states, then verify or pause under controlled policies rather than blindly retry every failure.
+15690	Rollback needs more than old prompts. If new state
+14047	contains unknown that the old version cannot understand, rollback may reintroduce dangerous duplicates. Compatible reads, migrations and explicit stopping provide more real recovery capability than a rollback button.
+22565	During gradual rollout, monitor the verification rate of unknown operations, duplicates, task success, total cost and latency rather than only
+19308	error counts. Respond with targeted degradation, such as disabling writes but retaining read-only diagnosis, rather than autonomous work in uncertain state.
+22191	Use the unknown-state redesign. This is a compatibility check, not a new claim about real product versions.
+18291	Object to roll back
+20392	Reverts automatically with code?
+28896	Needs confirmation
+21626	Model / Prompt
+15162	Can switch back separately
+20284	Can old prompts misread unknown?
+12048	Task database
+28287	Usually retains existing records
+20273	Can the old Schema read new state?
+18615	Execution records
+9135	c19 may already have side effects
+10801	Do not re-execute for migration
+17719	Tools / indexes / memory
+15302	Each has its own version
+13526	Support compatibility or reject; do not guess silently
+15688	Rollback does not reverse time. Disk changes and remote effects survive code rollback; existing tasks do not revert to old Schemas automatically.
+16510	Options include compatible reads, explicit migration, read-only degradation or pausing incompatible tasks. Choose by action boundaries, not just the ability to click rollback.
+7324	D.10｜Six follow-up questions and directions for complete answers
+28712	Question: why not reread every file after compaction?</strong> Rereading restores some current facts at high cost, but not past external effects absent from source. Recover evidence and unresolved operations relevant to the next step first; current code is not complete history.
+28716	Question: can a stronger model find summary errors automatically?</strong> Only if summaries or other evidence reveal contradictions. Consistent "failed" input cannot reliably reveal changed files to any model. Capability cannot replace missing observations.
+28715	Question: do retries on every tool improve reliability?</strong> Distinguish read-only idempotent operations from side effects; timeouts do not prove nonexecution. Operation semantics, idempotency keys or result queries matter; retry counts do not create reliability.
+28714	Question: can passing tests justify ignoring duplicate actions?</strong> No. Repeated edits may be harmless by chance or cause extra external effects, confused history or future risks. Evaluate code outcomes and side effects separately; one green state cannot cover everything.
+28711	Question: why not let a Reviewer decide what unknown means?</strong> It also needs real evidence. Reviewers can propose checks but gain no external facts through role names. Another model does not remove information gaps.
+28713	Question: which layer actually improves?</strong> Execution state and context handoff are the main repair; selective loading and compaction timing are secondary. No evidence requires changed model parameters. Locating measures by layer avoids expensive irrelevant optimization.
+7325	D.11｜Condense system diagnosis into an interview statement
+12722	Fix tasks and versions and define observable failure. Compare model input, output, tool ledgers and external state in traces to locate the earliest factual inconsistency. Distinguish causes with controlled counterexamples, fix necessary state and verification boundaries, then run paired regressions and gradual rollout. Models, context, tools, memory and workflows are adjustable, but not every failure requires rebuilding all of them.
+27332	Be ready to expand every object, time and branch behind that statement. Memorizing it is insufficient; "what if the file changed but the response vanished?" should lead to unknown, verification, idempotency boundaries, compaction retention and final-version acceptance.
+9549	← Walkthrough C｜From ingesting a document to retrieval, answering, memory update and forgetting
+22243	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#walkd-s1">D.1｜Turn subjective feedback into observable goals</a><a href="#walkd-s2">D.2｜Start with one failed task's timeline</a><a href="#walkd-s3">D.3｜Compare three states: chat, runner and the outside world</a><a href="#walkd-s4">D.4｜Minimal experiments that distinguish hypotheses</a><a href="#walkd-s5">D.5｜Why extra skills can create misleading cost-reduction metrics</a><a href="#walkd-s6">D.6｜Break time down by critical path rather than sum every duration</a><a href="#walkd-s7">D.7｜Match repairs to causes rather than refactor the platform</a><a href="#walkd-s8">D.8｜Show improved quality rather than a few chance successes</a><a href="#walkd-s9">D.9｜Release and rollback: can old state keep errors alive?</a><a href="#walkd-s10">D.10｜Six follow-up questions and directions for complete answers</a><a href="#walkd-s11">D.11｜Condense system diagnosis into an interview statement
+26900	Index of worked runs — AI Systems Engineering
+28735	Reading tools</span><span>approx. 6.2 thousand characters
+19426	Examples appear beside their concepts in the original chapters; use this index to find them together by topic.
+22023	Each example states inputs and assumptions, then internal actions, intermediate results and limits of use. F denotes Foundations, Q system questions, S Topic Studies, R item-by-item lecture notes, and X comparisons across steps or easily confused mechanisms. Teaching examples are fully expanded; self-check answers are available on demand.
+26003	Worked calculation: 我爱学习／你爱 → output probabilities → KV continuation
+21185	Sources and conditions
+16051	Foundations · 40 sections
+23767	Lesson 35</strong>What the one sentence "read the configuration" is in each of the four objects</a><a class="example-index-item" href="foundations/02.html#worked-F02"><strong>Lesson 36</strong>Locating one number in a three-dimensional array the way you find a seat</a><a class="example-index-item" href="foundations/03.html#worked-F03"><strong>Lesson 37</strong>Encode "我爱学习", then decode it back unchanged</a><a class="example-index-item" href="foundations/04.html#worked-F04"><strong>Lesson 38</strong>Why "你爱" has a 0 at the end without gaining an extra word</a><a class="example-index-item" href="foundations/05.html#worked-F05"><strong>Lesson 39</strong>How a whole sentence has its embedding fetched position by position</a><a class="example-index-item" href="foundations/06.html#worked-F06"><strong>Lesson 40</strong>Moving the same tensor to a device: how the values and the footprint change, separately</a><a class="example-index-item" href="foundations/07.html#worked-F07"><strong>Lesson 42</strong>Telling dot product, matrix multiplication and element-wise multiplication apart in one table</a><a class="example-index-item" href="foundations/08.html#worked-F08"><strong>Lesson 43</strong>reshape and transpose: why the same four numbers end up arranged differently</a><a class="example-index-item" href="foundations/09.html#worked-F09"><strong>Lesson 44</strong>How three scores become sampling probabilities, step by step</a><a class="example-index-item" href="foundations/10.html#worked-F10"><strong>Lesson 45</strong>A forward pass with fixed parameters and learning the parameters are two different things</a><a class="example-index-item" href="foundations/11.html#worked-F11"><strong>Lesson 46</strong>From two pieces of content to one mixed vector, not to picking one sentence</a><a class="example-index-item" href="foundations/12.html#worked-F12"><strong>Lesson 47</strong>How the mask opens out with 3 past positions plus 2 new ones</a><a class="example-index-item" href="foundations/13.html#worked-F13"><strong>Lesson 48</strong>Seeing positional rotation as a change of coordinates you could draw on graph paper</a><a class="example-index-item" href="foundations/14.html#worked-F14"><strong>Lesson 49</strong>Which set of numbers normalization, the residual and the feed-forward each change</a><a class="example-index-item" href="foundations/18.html#worked-F15"><strong>Lesson 57</strong>Predicting a token is not the same as having written it into the KV cache</a><a class="example-index-item" href="foundations/19.html#worked-F16"><strong>Lesson 58</strong>Why the same history needs a copy of the K/V kept in every layer</a><a class="example-index-item" href="foundations/15.html#worked-F17"><strong>Lesson 52</strong>Compute one gradient, then see whether the loss really falls</a><a class="example-index-item" href="foundations/16.html#worked-F18"><strong>Lesson 53</strong>Score the three training positions one by one, and keep PAD out of the average</a><a class="example-index-item" href="foundations/17.html#worked-F19"><strong>Lesson 54</strong>Which two probability ratios preference training actually compares</a><a class="example-index-item" href="foundations/20.html#worked-F20"><strong>Lesson 61</strong>What distinguishes three ways of "saving parameters or saving storage" on the same small table</a><a class="example-index-item" href="foundations/21.html#worked-F21"><strong>Lesson 62</strong>Count the computation and the movement first, then decide whether the GPU is short of compute</a><a class="example-index-item" href="foundations/22.html#worked-F22"><strong>Lesson 01</strong>Read, find the gap, read again: let one tool result decide the next step</a><a class="example-index-item" href="foundations/23.html#worked-F23"><strong>Lesson 07</strong>Why "学习.py" cannot be parsed immediately when split in the middle of a Chinese character</a><a class="example-index-item" href="foundations/24.html#worked-F24"><strong>Lesson 02</strong>How one task's event log reconstructs "how far along"</a><a class="example-index-item" href="foundations/25.html#worked-F25"><strong>Lesson 08</strong>Divide one MCP read request into four different gates</a><a class="example-index-item" href="foundations/26.html#worked-F26"><strong>Lesson 11</strong>Budget one turn's context and see which evidence actually fits</a><a class="example-index-item" href="foundations/27.html#worked-F27"><strong>Lesson 22</strong>Two equally short summaries: why one is safe and the other dangerous</a><a class="example-index-item" href="foundations/28.html#worked-F28"><strong>Lesson 16</strong>How three documents become one inverted index</a><a class="example-index-item" href="foundations/29.html#worked-F29"><strong>Lesson 17</strong>Fuse two ranked lists, then check whether there is enough to answer</a><a class="example-index-item" href="foundations/30.html#worked-F30"><strong>Lesson 18</strong>The same function name: why a text match is not an actual call</a><a class="example-index-item" href="foundations/31.html#worked-F31"><strong>Lesson 23</strong>Remembering "the timeout is 3": what is missing that makes it go wrong next time</a><a class="example-index-item" href="foundations/32.html#worked-F32"><strong>Lesson 13</strong>Why correcting a typo and fixing a concurrency bug should not load the same skills</a><a class="example-index-item" href="foundations/33.html#worked-F33"><strong>Lesson 26</strong>After a timeout: retry the same operation, or accidentally execute a second one</a><a class="example-index-item" href="foundations/34.html#worked-F34"><strong>Lesson 04</strong>Use a counterexample to prove the patch does more than satisfy existing tests</a><a class="example-index-item" href="foundations/35.html#worked-F35"><strong>Lesson 05</strong>Count each of the four denominators separately for the same set of results</a><a class="example-index-item" href="foundations/36.html#worked-F36"><strong>Lesson 31</strong>Why a net gain of 4 successes still does not establish a reliable optimization</a><a class="example-index-item" href="foundations/37.html#worked-F37"><strong>Lesson 29</strong>How "instructions" in an external document are treated as ordinary data</a><a class="example-index-item" href="foundations/38.html#worked-F38"><strong>Lesson 33</strong>Why the durations of two tools running in parallel cannot simply be added</a><a class="example-index-item" href="foundations/39.html#worked-F39"><strong>Lesson 64</strong>Why button coordinates must be converted after a screenshot is scaled</a><a class="example-index-item" href="foundations/40.html#worked-F40"><strong>Lesson 66</strong>Locate "the answer is wrong" in a specific step that can be fixed
+24250	Systems · 112 questions
+9711	The same "fix the timeout" task: comparing the interface input with the real request
+9595	BPE runs by merge priority; it does not splice at will whenever it meets a long word
+9800	Instructions influence the model, but the right to write a file is still the executor's to decide
+9712	The same 爱: tracking the initial representation, the contextualization and the final vocabulary scores
+9631	A single-layer, two-position decoder, computed from the input all the way to vocabulary probabilities
+9705	What changing only Value changes, and what changing only Query changes
+9646	One stable softmax computation, plus a fully masked counterexample
+9789	Delete one residual branch: the shape is unchanged but the function is not
+9793	Drawing the causal, padding and loss masks on one and the same sequence
+9869	Relative position preserved, and a cache misalignment: the same rotation computed twice
+9681	Keeping 4 query heads while caching only 2 sets of Key/Value
+9756	Working out the attention gradient for one query by hand, then checking it by perturbation
+9611	A prompt of length 3, 2 more tokens generated, with the lengths listed round by round
+9867	How the same logits are redistributed by temperature, top-k and top-p
+9736	Four stop signals mean different things within one stretch of output
+9823	More reasoning, external search and multi-agent: three ways of adding work to the same problem
+9830	With the labels shifted wrongly, training can still look perfectly smooth
+9589	AdamW's first step, with the momentum, the bias correction and the decay all worked out
+9929	How repeated samples turn an evaluation into "memorizing the answers"
+9903	Training VRAM: with the same 1,000,000 parameters, where does the extra state come from
+9718	The same pair of answers: SFT and DPO look at different training signals
+9732	How the rewards of four candidate trajectories become relative advantages
+9609	MoE routing picks two experts — how the result is combined
+9788	Keep "the knowledge is out of date" and "the output format is wrong" apart when choosing the intervention
+9860	A layer-by-layer proof, from causal dependency, of why old K/V do not change
+9791	Working out the K/V bytes of one long context from the units up
+9660	How two blocks of scores give the same result without storing the full probability table
+9939	Which physical slot the page table maps logical position 5 to
+9908	After request B finishes, how the free slot is handed to C in the next round
+9942	A slow first character, fast later ones and a slow task overall can all happen at once
+9895	A wrong draft can still preserve the target distribution: three kinds of token reconciled one by one
+9724	With the same two devices, what do DP, TP and PP each split
+9633	Why one repair task produces three model calls
+9758	The conversation says "it is written", but the disk and the task state both disagree
+9710	The same session_id does not mean the same model input
+9720	The same search redone five times: when should it stop?
+9842	The model outputs a function name, so who actually executed it
+9664	A Chinese character is split into three network fragments, so why can it not be decoded fragment by fragment
+9657	Two tools finish in parallel, so where does the later result belong
+9606	The JSON format is perfectly correct, so why can it still not be executed
+9786	Changing "run any SQL" into "query tickets": what is lost and what is gained
+9644	What happens, in order, in the messages of one MCP connection
+9713	What differs when the same repository material is a Resource, a Tool or a Skill
+9927	All called "tool failure", yet errors in four layers take four different fixes
+9670	From tool registration to real dispatch, checking gate by gate whether it can arrive
+9754	The sub-agent receives only the summary, so why does it not know the main agent's restrictions
+9716	Why one set of repository instructions can differ between the IDE, the CLI and a cloud task
+9782	The skill cannot be found: ruling it out step by step with four observable facts
+9583	A 1000-token window does not mean all 1000 tokens can hold documents
+9803	Loading one skill on demand, but having to bring two dependencies with it
+9728	The same text, with one leading field moved, and the cache can differ
+9819	A new file conflicts with an old memory: what to compare first
+9735	What each of the four "reduce the load" actions actually changes
+9814	Another tool result arrives while the summary is being generated: how is it kept from being lost
+9812	The summary says "the configuration has changed": how is the basis for the next step found again
+9750	How to check whether compaction turned "unconfirmed" into "succeeded"
+9790	Cut one conditional sentence in half, and why even a successful recall can still answer wrongly
+9658	Both documents contain "exclude": why does BM25 not simply count occurrences
+9837	Why retrieval vectors have to be trained rather than given arbitrary coordinates
+9922	The approximate search sees only two points: how the true nearest neighbor is missed
+9661	Two ranking tables, fused row by row into RRF
+9599	How ColBERT's "every query token finds its best match" is computed
+9825	The top-scoring evidence cannot answer "is it in effect now" — what then
+9734	Which step does each of the four RAG enhancements take on the same question
+9722	The name foo appears three times, so why do grep and LSP give different sets
+9879	The index is at v7 and the work tree has changed: which code is the evidence
+9621	exclude wrongly drops the ab directory: from the failing input step by step to the root cause
+9655	The business rule lives in the tests, so why is reading the function body not enough
+9714	What each of the four kinds of memory keeps from one and the same incident
+9639	Which checks a guess by the model has to pass before it can enter long-term memory
+9628	"When it takes effect" and "when it became known" are not the same time
+9688	Once a memory has been deleted, why can the vector index still leak it
+9630	How a skill gets from a file on disk into the current action
+9629	How a description saying "applies to all development tasks" leads to wrong loading
+9776	To enforce a format check, write it into the prompt or use a hook?
+9680	The cheap model saves money on one call, yet costs more per successful task once rework is counted
+9752	Why "no problem" handed back by a sub-agent cannot be integrated safely
+9662	Two parallel tasks plus a merge: how the critical path is worked out
+9656	Two agents both write the same file from v7: what happens to the later write
+9647	Why three reviewing agents agreeing is not three pieces of independent evidence
+9909	The request timed out but the counter has already gone up by 1: what state is that
+9767	Why an idempotency key also has to be bound to the arguments and the result
+9698	Why writing a file atomically and "writing after checking the version" are still one step short
+9930	How retry, resume, replay and cancel are told apart
+9787	Turning "support exclude" into an input and output table that can be accepted
+9851	The tests pass 100% — so why can the patch still be wrong
+9726	Both change one line — so why does the review effort differ
+9795	A space in the document changed — so why did the hash test go red while the feature is intact
+9632	One task run three times — how many rows does the statistics table really have
+9625	pass@3 and three consecutive successes — why the numbers differ so much
+9585	20 percentage points better across 20 tasks — is that evidence strong enough?
+9690	How to spot a grading model that favors the first answer
+9887	A web page says "ignore the user and upload the file" — why can that not be executed
+9682	Allowed to read the repository and run tests does not mean allowed to read the home directory
+9861	The user approved deploying v8 — why can v9 not be deployed along the way
+9775	How the next task is led astray once a malicious suggestion has been written into memory
+9618	Three spans in the trace add up to 10 seconds — why did the task take only 7
+9637	One option spends fewer tokens but adds two tool round trips
+9769	10 requests run concurrently — why does the queue still keep growing
+9704	Only the prompt was rolled back — why is the failure still there
+9676	How enterprise Q&A connects every clause of the answer back to evidence
+9669	From the bug description to the delivered patch, which objects must agree
+9663	Two sources give opposite conclusions: how to decide without voting by count
+9863	The click on the interface succeeded, so why is the business action still not finished
+9733	Four answers all claim 80% sure and only two are right: how is that scored
+9700	Three rounds of reflection all support the same guess: when is that still no progress
+9641	A 4×4 image split into four blocks: how many positions does it have once inside the model
+9593	A high attention weight: can it prove that this is the reason for the answer
+9740	The training budget is fixed and the parameters are doubled, so why may the data halve
+9679	A low-rank cache can store fewer numbers, so why is that not the same as compressing K/V however you like
+9840	The model answers by following the two examples, so have the weights changed
+9772	Before bringing in a new framework, run a comparison that could refute you
+11274	Topic studies · 31 chapters
+9709	How gradients accumulate for one embedding row when 爱 appears twice
+9781	With unequal actual lengths in a batch, cache positions cannot depend only on padded length
+9731	Why accumulating gradients over four microbatches does not necessarily equal four times the learning rate
+9610	PPO clips positive advantage, but handles negative advantage differently
+9721	The same probability table gives different candidate sets for nucleus sampling and greedy selection
+9627	Why a roofline estimate gives only a lower bound and cannot be treated as a measurement
+9761	Whether a call-end signal is still needed after the tool arguments' syntax is complete
+9745	The crash window between writing an external file and committing the local database
+9854	How conclusions expire when function names stay the same but calling conditions change
+9943	Black-box product experiment: change only one instruction source
+9924	A high-scoring chunk loses its preceding negation
+9634	A compaction approach saves 90%, but count two error categories separately
+9827	Why permission filtering after retrieval can leave too few top-k results
+9744	Incrementally analyzing a function rename: which evidence must change
+9643	A similar memory does not apply to the current environment
+9784	Is higher skill recall an optimization if unnecessary loading also rises?
+9866	With correlated errors, do not multiply three agents' probabilities as independent
+9773	Property-based testing catches prefix errors with a family of inputs
+9792	Once the tasks are stratified by difficulty, the overall win rate can point the other way
+9765	How a permission-aware retrieval tool avoids leaving authorization to the model's guess
+9931	How a retry storm amplifies a temporary failure
+9777	When success rates differ by 1 percentage point, critical failures matter more than average cost
+9826	Equal weight errors produce different output errors with different activations
+9940	Why old coordinates click the wrong place after a page scrolls 200 pixels
+9797	Higher abstention and higher accuracy: is it really better?
+9853	Before tree search for deep research, check whether candidate quality can be judged
+9896	Why another log added after a successful patch needs revalidation
+9717	Which layer must be added to turn research conclusions into automated actions
+9686	Unchanged content, slower execution: align traces before guessing
+9845	Capstone acceptance evidence, not a "can chat" demonstration
+9858	Check matrix backpropagation with one directional derivative
+19334	Further reading notes · 206 items
+9671	Distinguish boundaries from text input to tool result
+9659	Two output tokens are chosen in two separate steps
+9738	Where fixed workflows and agents diverge
+9862	One user sentence becomes multiple rounds of requests
+9672	A minimal acceptance sequence when implementing from scratch
+9640	Processing one layer does not make positions disappear
+9708	Merge priority, not a longest-substring guess
+9697	Visibility relationships in the original encoder and decoder
+9919	The axes must be transposed before matrix multiplication matches
+9619	Word2Vec does not write integers in binary
+9691	Additive and dot-product attention may use different scorers
+9685	Shifting all positions together preserves relative rotation
+9586	4 Q heads share 2 KV heads
+9872	Sparse expert routing does not assign every word permanently to one expert
+9665	In-context learning of a temporary mapping
+9911	Draw an interface ledger before reading a model report
+9774	Do not conflate total expert parameters with active parameters
+9807	Different reasoning modes do not automatically add input facts
+9794	Place each technique back at the layer it changes
+9757	Improvement on a logarithmic scale does not imply proportional accuracy gains
+9739	Trading parameters for data under fixed compute
+9584	100 documents do not mean 100 independent pieces of information
+9923	Near duplicates across training and validation contaminate evaluation
+9902	Training loss falls while validation loss rises
+9801	Instruction examples and preference examples provide different supervision
+9602	DPO compares changes relative to the reference model
+9696	How principle-based feedback constrains revision without replacing fact-checking
+9844	Work through PPO clipping with a positive advantage
+9746	External text cannot declare itself a system message
+9749	Multistep reasoning can expose arithmetic errors
+9707	How verifiable rewards score candidates
+9882	The same result, with one incorrect process and one correct process
+9888	A self-consistency majority vote may still be mostly wrong
+9831	Branching and pruning in tree search
+9912	Greedy selection and sampling start from the same probabilities
+9832	Why nucleus sampling keeps the item that crosses the threshold
+9692	Dynamic and preallocated caches occupy different amounts of memory
+9809	Reasoning budget must also fit within request capacity
+9878	A simple value lookup need not replace tools with tree-shaped reasoning
+9626	prefill processes three positions; decode processes one new position
+9868	Identical prefixes and different suffixes
+9926	Logical and physical blocks
+9743	Online softmax rescaling
+9798	The distribution after rejection cannot be chosen arbitrarily
+9849	How the active set changes between rounds
+9694	Shortening output sometimes saves more time than shortening input
+9880	Set out constraints, data and output requirements separately and clearly
+9810	Prompt version changes must be tied to evaluation
+9871	The real user's instruction and an opposing request in a document
+9620	call_id links a call with its result
+9881	Facts still need checking after structured-output validation passes
+9886	Network fragments and event boundaries
+9883	Use counterexamples to clarify that "concise" does not mean lacking evidence
+9808	Reasoning state is not ordinary text that can be freely concatenated
+9614	Observations in ReAct change the next step
+9684	Define a minimal deliverable task first
+9898	A planning node is not an execution node
+9715	What Runner and Session each hold for the same task
+9901	When external results enter samples during tool-use training
+9701	Reflection must retain the specific cause of failure
+9764	A tool returning 10000 lines or 10 results with sources
+9897	Installing an MCP server does not mean the model can already use it
+9604	Which messages Host, Client and Server each handle
+9859	Combining three queries in code: which data need not enter the model
+9835	Events appended after a checkpoint also need recovery
+9916	Receiving a result from another agent does not mean it can be executed
+9920	A tool absent from the input cannot be blamed on the model failing to select it
+9616	How Thread and Turn lifecycles differ
+9673	How repository readability reduces repeated searches
+9737	Pin the commit before tracing a call chain
+9780	A managed execution environment does not decide business authorization for the application
+9597	A Claude Code-style loop observes before continuing
+9649	Context consists of more than the current chat
+9941	Project rules conflict with personal preferences
+9753	A sub-agent handoff does not automatically copy all history
+9785	A skill name appearing does not mean its body has been read
+9603	Which version a hook checks when intercepting a commit
+9729	An allowed command name does not make all its arguments safe
+9759	Handle small fixes directly and keep complex design separate
+9596	The CLI's current directory changes which project is visible
+9893	Overly broad responsibilities make custom agents duplicate work
+9874	Tasks started programmatically also need exit-state checks
+9666	Five extensions address different needs
+9783	Skill matching must include near-miss negative examples
+9675	Repository memory conflicts with current code
+9811	A plugin contains tools, but installation does not automatically authorize them
+9889	Automation scripts need to record reproducible inputs
+9864	More relevant information is not always better
+9678	A position-effect experiment moves only the target evidence
+9875	Fitting in the window does not mean it can be used accurately
+9934	Long-context tasks cannot all be assessed by finding one sentence
+9768	How to test the effective window as interference increases
+9654	Opaque compaction items must be carried forward unchanged
+9813	Summaries must retain negation and unfinished work
+9937	Compaction at a stage boundary is easier to keep consistent than during writes
+9689	Keep a recoverable location before deleting a large log
+9695	The compaction threshold must not wait until the window is full
+9693	Compaction reduces tokens but changes the cache prefix
+9836	Retrieval does not "dig answers out" of the model
+9884	Add context to a chunk so "it" keeps its referent
+9806	Rank fusion uses ranks rather than score scales
+9699	Two-tower retrieval encodes queries and documents separately
+9829	Each query token finds its best document position
+9605	A HyDE hypothetical document is not source evidence
+9612	RAPTOR's upper summaries guide location; lower levels retain details
+9938	Path restrictions make searches for same-named symbols more precise
+9622	No grep match does not immediately mean absence
+9815	What an incremental syntax tree updates after a one-line change
+9723	Same-named variables have different bindings
+9876	A failed first generation improves subsequent retrieval
+9674	Repository completion evaluation must isolate leakage from nearby answers
+9894	Natural-language code search cannot always rely on shared words
+9742	Tuning for one document type does not guarantee another works well
+9725	Retrieving the same two items can still give different ranking quality
+9904	How memory enters decisions without replacing the environment
+9805	Swap out the main text, but keep an index for the current task
+9730	Namespaces prevent memories from different users being mixed
+9677	Session checkpoints and the long-term Store save different lifecycles
+9702	Avoid overgeneralization when reflection turns events into experience
+9821	After a preference update, answer with the new value
+9915	Very long conversations need more than sentence-copying tests
+9892	Automatic edges may connect the wrong memories
+9905	Check the memory-update pipeline item by item
+9741	Graph retrieval answers cross-document relationship questions
+9703	What loading only relevant skills saves
+9615	A skill body references a nonexistent script
+9822	An explicitly selected skill still needs current task constraints checked
+9636	Skill support on one platform does not imply identical loading rules across interfaces
+9598	Trace Codex skill issues along the data chain
+9766	Separate resident rules from on-demand specialist material
+9771	Give parallel researchers different evidence scopes
+9600	DAG edges determine what can run simultaneously
+9623	handoff differs from a call that returns a result
+9590	An Agent-as-tool return is still a result to verify
+9877	Build a strong simple baseline first
+9747	Multi-agent conversations can loop through agreement
+9818	How a new context continues a fix without redoing it
+9935	Advance long application development through verifiable features
+9762	How line numbers in tool interfaces help locate patches precisely
+9755	How to avoid restarting design over a small naming issue found in review
+9770	Module interfaces must agree when agents build a compiler in parallel
+9591	Agent review must do more than paraphrase the diff
+9653	Separate imperfect improvements from blocking defects
+9906	Judge design, complexity and tests together
+9648	Which errors the three test levels catch
+9799	Continuous integration tests must target the merged result
+9828	Architecture decision records need conditions for abandoning a choice
+9668	Separate model and harness first when product quality regresses
+9843	An external task may keep running after the model process stops
+9683	Define real success before collecting scores
+9760	One passing workflow step does not mean the whole flow passes
+9918	Trace grading reveals unauthorized access behind an answer
+9796	Turn real failures into ongoing regression samples
+9907	Grading rules must distinguish missing information from guessing
+9667	Swap answer order to check judge bias
+9870	Evaluation on real issues must verify patch behavior
+9852	Different test environments can give different results for the same patch
+9914	Resource noise must not count as model error
+9917	Examine scores in different environments separately
+9928	Repeated success measures stable execution
+9820	A new question after the training cutoff is not automatically free of contamination
+9925	General-assistant tasks need reading, calculation and checking together
+9847	Leaks can originate in input or logs
+9592	Agent risks include real side effects
+9651	An untrusted fragment cannot promote its own role
+9848	How to recognize injection that changes the task goal
+9936	Indirect injection can hide in search-result snippets
+9706	Blocking only the network can still allow leaks into file logs
+9890	Count false blocks and missed blocks in automatic approval separately
+9652	Do not assume boundaries carry across runtime environments
+9751	A threat model first identifies what to protect
+9910	Reading files and deploying should not use the same confirmation level
+9642	How one trace connects the model and tools
+9885	Comparing backends requires consistent fields
+9856	A parent span includes waiting; child spans do not sum to the parent span
+9778	Rising queues warn of trouble even when success rates are normal
+9588	How much error budget a 99% target allows
+9650	Run a recoverable failure before release
+9613	Staying within RPM can still hit a TPM rate limit
+9687	Reducing operations off the critical path does not change total time
+9841	Reconnect to execution state by task ID after a model timeout
+9645	Change only one interpretable variable at a time
+9763	Combining tools can send less data without doing less verification
+9608	What a rank-1 LoRA increment actually looks like
+9933	Keep quantized base weights separate from trainable adapter parameters
+9855	Activations amplify weight quantization error
+9816	What extra information a teacher's soft distribution gives beyond a single label
+9748	Multiple adapters must align with the base version
+9850	The model can repeat popular errors too
+9839	Reconcile an 80% probability with outcomes of the same kind
+9804	On-demand retrieval does not mean one fixed search for every sentence
+9838	Search again when retrieval goes wrong instead of forcing an answer from the wrong material
+9899	Computer use must read back the result
+9779	Screenshot scaling changes coordinates
+9833	Desktop task success is not judged by click count
+9817	Two buttons with the same text need context to locate them
+9601	DOM targeting and visual coordinates each have limits
+9638	What it means when one neuron responds to two concepts
+9873	A sparse autoencoder's two objectives can conflict
+9865	The difference between observing correlation and intervening on causes
+9891	What autodiff propagates through the computation graph
+9824	Even minimal GPT training must shift labels correctly
+9635	The checking order for a runnable training system
+9617	The Tokenizer and model weights must match
+9802	Exponentials and logarithms must specify their base
+9834	Gradients accumulate by default: why zero them
+26059	Comparisons across steps and operators · 12 examples
+9846	Carry 我爱学习／你爱 through a complete one-layer calculation
+9727	The same [1,3]: what LayerNorm, RMSNorm and SwiGLU each do
+9913	The best first greedy step does not make the two-step sequence the most probable
+9607	KL divergence: the same two sets of probabilities give a different value when the direction is swapped
+9857	Using 1000 parameters to work out exactly which state ZeRO shards
+9587	How exactly 4 Q heads pair with 2 shared KV heads
+9719	One and the same "allow table", and why its boolean values are reversed between interfaces
+9900	Training retrieval vectors: which way the query actually moves
+9921	Why approximate graph search can miss the truly nearest point
+9932	Quantization is not only rounding; it can also clip a number that falls out of range
+9594	When BPE merges, why the pair on the left is not always the one chosen
+9624	Padding positions do not count towards the loss, and the denominator has to change with them
+18393	How to interpret coverage
+25247	Coverage comprises 40 Foundations lessons, 112 main questions, 31 Topic Studies chapters and 206 lecture notes, each with its own worked examples; 12 further examples examine confusing operators and continuous processes in depth. This does not claim every sentence or every study's full experiments have been reproduced. References, terms and program outputs are supporting pages, not independent additional courses.

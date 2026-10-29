@@ -1,0 +1,588 @@
+11434	Chinese–English glossary — AI Systems Engineering
+6857	94 key terms: understand their meanings before opening the local lecture notes.
+25740	Token
+21681	A discrete symbol processed by a model: a word, subword, punctuation mark or byte fragment, with no fixed one-to-one mapping to words or Chinese characters.
+13793	Tokenizer
+18879	A component that converts input to token IDs and decodes them by its rules; it must match the model's conventions.
+17696	Embedding
+17611	Maps discrete IDs to continuous vectors; initial word vectors differ from context-processed representations.
+27554	Go to lecture note 1.5 →
+24738	An internal representation at a network layer and position, not a fixed factual entry that can be read directly.
+27552	Go to lecture note 1.1 →
+22349	Attention
+21448	An internal model operation that combines Values with weights based on matches between Queries and Keys.
+21294	Query, Key and Value
+22353	Different attention projection representations used for matching and content combination, not same-named objects in an external database.
+15721	Causal mask
+28804	Restricts positions to permitted past information, preventing access to future targets during generation.
+21298	A form of attention where query and queried representations come from different sequences or sources.
+27555	Go to lecture note 1.6 →
+21971	Residual connection
+18878	Adds the input back to the transformed result along a direct path, helping information and gradients propagate.
+19653	An operation controlling internal numeric scales; its position and form depend on the architecture.
+20217	Rotary position encoding
+28331	Introduces positional relationships into attention through rotation without automatically guaranteeing generalization to arbitrary lengths.
+27556	Go to lecture note 1.7 →
+16222	Multi-head, multi-query and grouped-query attention
+14084	One difference is how query heads share Key and Value heads, affecting cache and inference trade-offs.
+27557	Go to lecture note 1.8 →
+22496	Mixture of experts
+21648	A sparse structure whose internal router selects some expert networks, not a meeting of several chat agents.
+27558	Go to lecture note 1.9 →
+20691	Unnormalized scores
+26608	Candidate scores from the output projection, processed by softmax or similar operations into a distribution; they are not factual confidence.
+18187	Normalized exponential function
+18772	Turns scores into positive weights summing to 1; stable implementations usually subtract the maximum first.
+24821	Autoregressive
+19446	Predicts and selects subsequent tokens from an existing prefix, then uses the results for the next step.
+27551	Go to lecture note 0.2 →
+29008	Pretraining
+28327	Updates parameters through large-scale training objectives to develop transferable representations and capabilities.
+27582	Go to lecture note 2.1 →
+23050	Supervised fine-tuning
+13882	Adjusts model behavior using paired inputs and target responses.
+11715	Reinforcement learning from human feedback
+18768	A training route combining preferences, rewards and policy optimization, not ordinary chat feedback.
+16295	Reward model
+26913	A model approximating an evaluation or preference; high reward need not mean factual or business correctness.
+26920	Proximal policy optimization
+10455	A reinforcement-learning method controlling policy updates, not the entire RLHF system.
+27587	Go to lecture note 2.9 →
+23126	Direct preference optimization
+13870	A training method that optimizes a model directly with preference pairs and still updates parameters.
+27586	Go to lecture note 2.7 →
+10560	In-context learning
+13876	Adapts to a task using examples in the current input, usually without updating weights during that inference call.
+27553	Go to lecture note 1.10 →
+18402	Chain of thought
+11436	Prompt or output forms involving intermediate reasoning steps; long explanations guarantee neither correctness nor disclosure of all internal reasoning.
+27583	Go to lecture note 2.11 →
+19680	Reasoning effort setting
+28397	A control over reasoning computation offered by some model interfaces; support and meaning vary by product.
+27591	Go to lecture note 3.4 →
+25693	A training signal evaluating intermediate steps, unlike evaluating only final outcomes.
+27584	Go to lecture note 2.13 →
+24804	Self-consistency
+17302	Aggregates answers from multiple sampled paths rather than cross-checking independent sources.
+27585	Go to lecture note 2.14 →
+28975	Prefill
+16131	The stage processing existing input context, with resource characteristics different from step-by-step Decode.
+25344	Decoding and generation
+16039	The stage producing subsequent tokens from current state, usually with serial dependencies.
+28636	KV cache
+16160	Reuses intermediate computations from past positions to reduce repeated inference; it is not long-term knowledge memory.
+27590	Go to lecture note 3.3 →
+16158	Reuses processing results for eligible identical input prefixes; it is not content compaction.
+27592	Go to lecture note 3.7 →
+22511	Temperature
+25933	A parameter controlling sampling-distribution sharpness; it cannot automatically improve factual correctness.
+21417	Nucleus sampling
+12449	Samples after keeping candidates whose cumulative probability reaches a threshold; the candidate count can vary dynamically.
+27589	Go to lecture note 3.2 →
+7735	Attention IO optimization
+28329	Improves attention implementation efficiency through better tiling and data movement, not arbitrary information deletion.
+27594	Go to lecture note 3.9 →
+13803	Paged attention-cache management
+19435	Organizes KV caches in blocks, mainly improving server memory management and throughput.
+27593	Go to lecture note 3.8 →
+25089	A draft proposes candidates for target-model verification to accelerate generation; benefits depend on acceptance rate and overhead.
+27588	Go to lecture note 3.10 →
+24418	Structured outputs
+19404	Constrains format and fields through a Schema without guaranteeing factual truth within fields.
+27595	Go to lecture note 4.5 →
+13691	Function calling
+21700	The model proposes a tool and arguments; an external system validates and executes, then returns the result.
+22395	Streaming output
+12004	Delivers content through incremental events, requiring full assembly and recognition of completion states.
+27596	Go to lecture note 4.6 →
+26892	Execution harness
+24370	The surrounding system organizing model input, tools, state, permissions and the execution loop.
+27602	Go to lecture note 6.3 →
+20468	Agent loop
+21652	A loop of model decisions, tool actions, observation feedback and continued execution.
+27597	Go to lecture note 5.1 →
+17705	Workflow
+11576	Orchestration with a predefined main path that can combine with dynamic agents.
+27562	Go to lecture note 10.8 →
+17769	Tool schema
+19729	Describes tool arguments and structure to guide model calls and support programmatic validation.
+21632	Model Context Protocol
+27626	A tool and data protocol connecting Host, Client and Server, without automatically guaranteeing permissions or service trustworthiness.
+27600	Go to lecture note 5.9 →
+6988	Protocol between agents
+28926	A protocol for agent discovery, tasks and message interaction, with a different focus from MCP.
+27599	Go to lecture note 5.12 →
+12373	Saves recoverable task state, not cross-task experience.
+27598	Go to lecture note 5.11 →
+17983	Idempotency
+15427	Repeated submissions of the same operation produce no unintended extra side effects; the execution system must support it.
+10574	Context assembly
+13640	Determines what this turn's input contains, where it comes from and how it is structured.
+10555	Context compaction
+22968	Maintains task continuity through a more compact representation, possibly with information loss or opaque state.
+27603	Go to lecture note 7.6 →
+12465	Information offloading
+17606	Keeps full material externally, replacing resident input with references and retrieving it when needed.
+21574	Retrieval-augmented generation
+13873	Uses external retrieved evidence to support generation; retrieval and generation each have independent failure modes.
+27604	Go to lecture note 8.1 →
+25765	Term-relevance methods
+16041	Ranks by term statistics, length and similar factors, suited to exact-term information.
+23489	Dense retrieval
+13871	Retrieves semantically related content through vector representations; similarity is not a probability of correctness.
+27607	Go to lecture note 8.4 →
+22497	Hybrid retrieval
+24400	Combines term-based, vector and other retrieval paths, requiring fusion and deduplication.
+28515	Reranking
+17282	Ranks candidates more finely but cannot recover all evidence that was never retrieved.
+12499	Reciprocal rank fusion
+19428	Fuses multiple lists by rank rather than raw scores.
+13533	Chunking
+17609	Splits documents or code into retrieval units, balancing independent meaning, granularity and context.
+19311	Abstract syntax tree
+11963	A representation of code syntax without automatically containing all types and runtime semantics.
+27605	Go to lecture note 8.10 →
+25807	Language Server Protocol
+19750	An interaction convention for language services such as definitions, references and diagnostics.
+27606	Go to lecture note 8.11 →
+13900	Recall at k
+18349	How many required relevant results appear in the first k items; it depends on relevance labels.
+13901	Precision at k
+13899	The proportion of relevant results among the first k items, with a different focus from recall.
+17997	Mean reciprocal rank
+17293	The mean reciprocal rank of each query's first relevant result.
+18186	Normalized discounted cumulative gain
+15476	A metric considering both ranking position and degree of relevance.
+19843	Visible information and state supporting the current task.
+12371	Stores specific experiences, events and results.
+12379	Stores scoped knowledge or facts with evidence.
+12372	Stores reusable methods and processes, while avoiding overfitting to experience.
+25606	Memory contamination
+28609	False or malicious content saved and misused later, potentially becoming self-reinforcing.
+27608	Go to lecture note 9.9 →
+18677	Skill package
+19499	Provides expertise and resources as needed, not parameter training or deterministic permission controls.
+27559	Go to lecture note 10.1 →
+22509	Progressive disclosure
+12792	Provides entry-point metadata first, then expands main text and resources as needed.
+27560	Go to lecture note 10.2 →
+11616	Event hooks
+15942	Runs programmatic actions at explicit lifecycle points.
+27601	Go to lecture note 6.11 →
+17601	Transfers task control to another agent, unlike a tool-style call returning a result.
+27563	Go to lecture note 10.9 →
+14107	Coordinator–worker
+23001	A pattern where a main role decomposes and coordinates relatively independent tasks.
+27561	Go to lecture note 10.7 →
+21219	Architecture decision record
+25592	Records the background, options and consequences of important choices for later reassessment.
+27564	Go to lecture note 11.11 →
+22966	Judges capabilities and regressions using explicit tasks, conditions, scoring and evidence.
+27565	Go to lecture note 12.1 →
+25704	Grader
+21449	Evaluates results or processes by particular criteria; it can be a program, model or human.
+27567	Go to lecture note 12.6 →
+24937	Metric for at least one success
+24756	Considers at least one success in k attempts, requiring explicit sampling and selection definitions.
+28494	Metric for success on every repeated attempt
+18177	Emphasizes reliability across repeated successes; it must not be confused with pass@k.
+22480	Ablation experiment
+23447	Removes or changes one mechanism independently to help assess its contribution.
+27566	Go to lecture note 12.2 →
+21614	Probability calibration
+28993	Agreement between predicted confidence and actual correctness frequency in corresponding samples.
+27581	Go to lecture note 15.7 →
+19770	Prompt injection
+10723	Untrusted content induces a system to depart from its authorized goal, potentially indirectly through external material.
+27569	Go to lecture note 13.4 →
+28807	An isolated environment limiting the impact of file, network or execution resources.
+27570	Go to lecture note 13.6 →
+14987	Grants only the resource and operation permissions necessary for the task.
+27568	Go to lecture note 13.10 →
+26096	Traces and operation spans
+13705	Describe task causality and an individual operation respectively; account for overlap in parallel execution.
+27571	Go to lecture note 14.1 →
+29037	Time to first token
+13895	The wait until the first output, not the final task-completion time.
+27573	Go to lecture note 14.8 →
+20668	Service objectives
+17521	Measurable commitments for service behavior such as success and latency.
+27572	Go to lecture note 14.5 →
+28131	Backoff
+16273	Delays retries after failure or rate limiting, requiring a budget and error classification.
+12202	Low-rank adaptation
+13651	A class of parameter-efficient methods freezing base weights and training low-rank increments.
+27574	Go to lecture note 15.1 →
+28569	Quantized low-rank fine-tuning
+24401	Combines a quantized base model with low-rank adaptation to lower training memory use.
+27578	Go to lecture note 15.2 →
+12017	Represents weights or state at lower precision, affecting error, storage and execution conditions.
+27579	Go to lecture note 15.3 →
+28330	Trains a student using teacher signals; data and capacity limit capability transfer.
+27580	Go to lecture note 15.4 →
+23013	UI grounding
+18872	Connects language goals with graphical-interface positions, without completing the whole task by itself.
+27575	Go to lecture note 15.13 →
+21118	Mechanistic interpretability
+23364	Studies how internal representations and computation cause behavior, requiring a distinction between correlation and causation.
+27577	Go to lecture note 15.17 →
+23455	Sparse autoencoder
+28341	A research tool extracting representation features through reconstruction and sparsity constraints.
+27576	Go to lecture note 15.16 →
+15851	The Transformer, illustrated — AI Systems Engineering
+22207	Follow this chapter through its objects and states</a><a href="#topic-2">Q/K/V: first compute where to read from, then how much to read in</a><a href="#g01-section-1">From "entering a sentence" to "matrices in the network"</a><a href="#g01-section-2">Why "the same word" changes with context</a><a href="#g01-section-3">How a complete layer works</a><a href="#g01-section-4">Why position and causal restrictions are needed</a><a href="#g01-section-5">Check understanding with a counterexample
+11870	Build intuition about model internals, from text and vectors to a network layer.
+19709	Recommended reading 01 / 12</span><span class="chip">Local Chinese reading guide
+17494	Related material: The Illustrated Transformer
+11804	From "entering a sentence" to "matrices in the network"
+21053	This article covers the theme of The Illustrated Transformer, using this book's own examples to build intuition rather than translating the original sentence by sentence. First distinguish three levels: strings are human input, token IDs are discrete symbols, and hidden vectors are representations used in network computation. Vector dimensions have no predefined Chinese meanings; do not imagine them as a table full of facts.
+12552	Suppose a teaching Tokenizer splits "check path filtering" into three tokens, with IDs 7, 12 and 3. A real Tokenizer may segment differently; this is only for tracing the process. An embedding lookup produces three vectors forming a
+23342	matrix. Each subsequent layer updates representations through position, contextual relationships and nonlinear transformations.
+11477	Why "the same word" changes with context
+15136	may mean a directory root, a tree root or an object's name. The initial word vector supplies a learned statistical starting point; function calls, comments and type clues in context affect later representations. The network does not first look up "the one meaning of root" and use it unchanged; computation across layers forms a representation suited to the current input.
+12157	A representation's ability to resolve ambiguity does not mean the model has executed a language parser. In real code, which variable
+24393	binds to, or whether a function is called, may still require LSP, source code and runtime evidence. Underlying capabilities and engineering tools complement one another.
+10283	How a complete layer works
+22376	Attention lets the current position combine information from other visible positions; a feed-forward network transforms each position nonlinearly; residual connections provide information paths across sublayers; normalization controls numeric scales. Models may differ in order and components; the original 2017 architecture diagram cannot describe every modern model.
+19981	The teaching structure can be written as:
+14510	The original Transformer includes an encoder and decoder. The encoder forms source-sequence representations; the decoder combines the generated prefix with source representations to continue generation. GPT-style Decoder-only models mainly generate from causal prefixes. Understand the shared components while preserving structural differences.
+11544	Why position and causal restrictions are needed
+9450	"Exclude A, keep B" and "keep A, exclude B" use similar words but differ in meaning through order. Position encoding supplies sequence information; a causal mask prevents generation positions from reading future answers. Position encoding is not long-term memory, and a mask is not user permission control; both operate inside model computation.
+25496	During training, the target sequence is known, so prediction losses at several positions can be computed in parallel. During generation, the next token depends on the previous selected result, usually creating serial dependencies. "Transformers allow parallelism" does not mean "every answer is generated at once without dependencies".
+22846	Check understanding with a counterexample
+21737	Seeing four Chinese characters that say "tests passed" does not mean tests actually ran. The network can process this text but does not know whether it is a tool fact, user statement or model guess unless input and trained behavior help distinguish them. Engineering systems must preserve provenance and actual state.
+24349	Exercise answer:</strong> if an agent says only "it should pass" after editing, record a conjecture rather than promote it to a verification result. Understanding the model explains how output forms; engineering verification determines whether it matches reality.
+24517	Go deeper: <a href="chapter-01.html">Lesson 41 · Model internals</a> or read <a href="chapter-01.html#m-01-01">the item-by-item notes for further-reading entry 1.1</a>. All links lead to local content.
+22372	Attention, computed step by step →
+22371	Attention, computed step by step — AI Systems Engineering
+22205	Follow this chapter through its objects and states</a><a href="#topic-2">A mask is a visibility table, not extra meaning</a><a href="#g02-section-1">What each quantity in the attention formula represents</a><a href="#g02-section-2">Compute one combination by hand</a><a href="#g02-section-3">What changes with a causal mask</a><a href="#g02-section-4">Why multiple heads, position and feed-forward layers are still needed</a><a href="#g02-section-5">Two common misunderstandings
+18556	Compute Q, K, V, softmax and a causal mask by hand.
+19710	Recommended reading 02 / 12</span><span class="chip">Local Chinese reading guide
+17332	Related material: Attention Is All You Need
+22360	What each quantity in the attention formula represents
+21052	This article covers the core mechanism of Attention Is All You Need. Let the current representations of three tokens form matrix X, projected into Q, K and V. Query matches Key, and matching weights act on Value. This is continuous computation within the model, not external database retrieval.
+16317	If X has n rows of hidden width d, and Q and K have d_k dimensions per head, then
+10087	. It describes paired scores between query and queried positions. Checking dimensions is one of the most effective ways to understand a formula.
+18558	Compute one combination by hand
+11989	All values below are original teaching examples. Suppose one position's scores for three visible positions are
+10120	. Their exponentials are approximately
+29318	, giving normalized weights of approximately
+10194	. If one Value dimension is
+29418	, the output in that dimension is about 25.75.
+26592	The output does not simply copy 30; it combines values with weights. The highest weight contributes most, but the other two still matter. Real models also have multiple heads, residual connections and later layers, so the position with the highest attention cannot fully explain the final answer.
+13964	What changes with a causal mask
+12548	Suppose the current position can see only the first two positions; the mask sets the third score to negative infinity. After softmax, the third weight is zero and the first two renormalize to approximately
+9989	. The third Value must not affect this position's output.
+27285	This gives a testable property: changing future Values should leave the current causal output unchanged. The accompanying experiment checks this with small matrices, requiring no model training and making no claim to reproduce any commercial model's internal values.
+16221	Why multiple heads, position and feed-forward layers are still needed
+10737	Different heads use different projections to provide several relationship subspaces; position mechanisms provide sequence information; feed-forward networks transform combined features nonlinearly. They jointly provide expressive power; the model cannot be reduced to one similarity matrix.
+7657	GQA lets several query heads share fewer KV heads, affecting cache cost; MoE changes feed-forward expert selection. Both are internal model structures, distinct from collaboration among external agents.
+11314	Two common misunderstandings
+9468	"Attention weights are model confidence."</strong> No. They are information-combination weights in one layer and head, not the probability that the final answer is correct.
+9455	"Attention prevents input from being missed."</strong> No. Computation permits information exchange but does not guarantee reliable use of every complex constraint by the trained network. Long-context research must evaluate task performance.
+16539	After this article, you should be able to trace matrix shapes, explain a mask, compute softmax by hand and identify capabilities the formula does not promise.
+24518	Go deeper: <a href="chapter-01.html">Lesson 41 · Model internals</a> or read <a href="chapter-01.html#m-01-03">the item-by-item notes for further-reading entry 1.3</a>. All links lead to local content.
+26310	Input and conditions.</strong> Current query
+29279	, visible Keys
+29300	, and corresponding Values
+10154	. Width per head: 2.
+26764	Limits and counterexamples.</strong> Q/K/V are supplied directly to isolate attention; a real network must first project them from inputs.
+9552	← The Transformer, illustrated</a><a href="guide-03.html">The full chain of using an LLM →
+7816	The full chain of using an LLM — AI Systems Engineering
+22282	Follow this chapter through its objects and states</a><a href="#topic-2">Text, bytes, tokens and IDs are four different things</a><a href="#g03-section-1">Build an overview of model use through the tool ecosystem</a><a href="#g03-section-2">The checking order for one input and output</a><a href="#g03-section-3">Distinguishing training, fine-tuning and inference</a><a href="#g03-section-4">Data has a lifecycle too</a><a href="#g03-section-5">Why models still need agents
+18689	Connect Tokenizers, models, training and inference interfaces.
+19711	Recommended reading 03 / 12</span><span class="chip">Local Chinese reading guide
+17413	Related material: Hugging Face LLM Course
+11860	Build an overview of model use through the tool ecosystem
+21050	This article covers introductory topics in the Hugging Face LLM Course. When using a high-level pipeline, understand encoding, the model's forward pass and postprocessing too, rather than treating interface output as an unanalyzable black box.
+8947	The Tokenizer handles discrete encoding; model parameters determine computation; the task head determines output form; the generation strategy determines how subsequent tokens are chosen. Classification, embedding extraction and text generation differ even when they use similar Transformer foundations.
+10445	The checking order for one input and output
+12872	First confirm that model and Tokenizer match, then inspect input length and special tokens, output shapes and task meanings, and finally postprocessing and stopping state.
+14242	Original examples: a score vector whose width is the vocabulary size may contain next-token Logits, not a quality score for the whole sentence. Treating its maximum as factual confidence creates an error at the interface-understanding stage.
+25440	Distinguishing training, fine-tuning and inference
+25509	Training updates parameters using loss and gradients; fine-tuning adapts existing parameters to particular objectives; inference usually computes output without parameter learning. Few-shot examples change current input and do not constitute fine-tuning.
+21461	A framework's model object may be used for training or inference, but its execution mode, gradient graph and data uses must be explicit. Different behavior after a chat may merely reflect changed context; do not infer automatic weight updates.
+20034	Data has a lifecycle too
+13662	Data preparation needs provenance, cleaning, deduplication, splits and versions. Training data drives updates, validation data supports development choices, and an independent test set supports evaluation. Repeatedly changing a model based on test data destroys its independence.
+14237	Original examples: two similar versions of one README enter training and testing separately. They look like different files but may overlap heavily in content. Model success does not necessarily prove understanding of a wholly new project.
+21637	Why models still need agents
+21697	A model interface generates content but does not automatically manage tools, permissions, execution state or acceptance. An agent connects these surrounding components into a loop. A classification pipeline usually needs no complex agent; investigating an unknown bug may need repeated evidence gathering and action.
+24353	Exercise:</strong> draw separate systems for "classify a log" and "fix the bug causing the log". The first may need one encoding and classification; the second needs retrieval, edits, testing and recovery. Using an LLM in both does not imply identical architectures.
+16541	After this article, you should be able to decompose a high-level call and explain when a model alone suffices and when an external execution system is needed.
+24516	Go deeper: <a href="chapter-00.html">Chapter 0 · A global view</a> or read <a href="chapter-00.html#m-00-01">the item-by-item notes for further-reading entry 0.1</a>. All links lead to local content.
+9563	← Attention, computed step by step</a><a href="guide-04.html">How to build effective agents →
+18390	How to build effective agents — AI Systems Engineering
+22278	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#g04-section-1">An agent is not "a prompt with many roles"</a><a href="#g04-section-2">Choosing among five organizational patterns</a><a href="#g04-section-3">Separate probabilistic judgment from deterministic execution</a><a href="#g04-section-4">How to know when to stop</a><a href="#g04-section-5">A minimal controlled comparison</a><a class="sub ap-toc" href="#agent-guide-loop">Binding acceptance to a version
+14069	Distinguish fixed workflows from dynamic actions and understand when complexity is needed.
+19712	Recommended reading 04 / 12</span><span class="chip">Local Chinese reading guide
+17339	Related material: Building Effective Agents
+6961	An agent is not "a prompt with many roles"
+21042	This article covers Building Effective Agents. The key question is whether the next step can be determined before seeing environmental feedback. Stable steps favor a direct workflow; dynamic agents add value when new evidence determines actions. The two can be combined.
+14271	Original case: given an explicit file list and filter rules, an ordinary program can compute the result; investigating why a real build failed to exclude files needs search, reading and tests. Do not reimplement existing deterministic logic merely to use an agent.
+11663	Choosing among five organizational patterns
+28582	Chaining suits clear stage outputs; routing suits categories requiring different capabilities; parallelism suits independent work; coordinator–worker patterns suit dynamic decomposition; evaluation feedback suits results that can be judged and improved effectively.
+22065	Every pattern has costs. Chains propagate earlier errors; routing may misclassify; parallelism needs integration; coordination duplicates assignments; unreliable evaluators may spoil correct answers. Choose patterns using counterexamples rather than successful demonstrations alone.
+18844	Separate probabilistic judgment from deterministic execution
+21661	A model may propose the next file to read; the program checks path authorization. A model may propose a patch; the tool reports whether it was actually applied. A model may judge the task apparently complete; tests and business state provide final evidence.
+10303	A minimal loop needs no ten framework components: assemble input, obtain an action, validate, execute, record observations and judge completion. Add checkpoints, concurrency and recovery as real problems emerge.
+18395	How to know when to stop
+18471	Successful termination requires acceptance; unsuccessful termination may reflect insufficient evidence, limited permissions, environment failures or an exhausted budget. Explicitly reporting incomplete work is more reliable than forcing every run to produce a "success summary".
+14243	Original examples: if the test environment lacks dependencies, the agent can finish a patch and static checks but should report unfinished runtime verification. It must not fabricate passing logs to make the task look complete.
+10302	A minimal controlled comparison
+11551	Compare a fixed workflow, one agent and multiple agents on the same hypothetical tasks. Record functional correctness, important omissions, call rounds, time and human takeover separately. Do not compare output length alone.
+18256	Consider removing complexity that does not reduce real failures. Conversely, keep independent investigation when it finds boundaries one agent repeatedly misses. This is engineering judgment, not a doctrine that "simple is always best".
+16542	After this article, you should be able to explain the specific error each added step addresses and what happens without it.
+24519	Go deeper: <a href="chapter-05.html">Lesson 56 · Agent basics</a> or read <a href="chapter-00.html#m-00-03">the item-by-item notes for further-reading entry 0.3</a>. All links lead to local content.
+9541	← The full chain of using an LLM</a><a href="guide-05.html">Unfolding Codex's execution loop →
+17683	Unfolding Codex's execution loop — AI Systems Engineering
+22279	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#g05-section-1">Unfold a Codex task into multiple input rounds</a><a href="#g05-section-2">Input assembly determines what the model "knows"</a><a href="#g05-section-3">How tool outputs are used</a><a href="#g05-section-4">Why long tasks need compaction and offloading</a><a href="#g05-section-5">Separating runtime state from the interface</a><a class="sub ap-toc" href="#agent-guide-snapshot">An immutable request and mutable authorization
+25267	Observe changing inputs each turn and how tool results are filled back in.
+19713	Recommended reading 05 / 12</span><span class="chip">Local Chinese reading guide
+17512	Related material: Unrolling the Codex Agent Loop
+18741	Unfold a Codex task into multiple input rounds
+21044	This article covers public Codex Agent Loop mechanisms. The trace below is an original teaching example, not an actual product log or a claim to reveal hidden prompts. Model and tools alternate, while the harness maintains calls and results.
+26573	Input assembly determines what the model "knows"
+17713	Source code existing in the working directory does not mean it entered the input. Tool definitions describe available actions without establishing they happened. A historical "tests may pass" must not become a passed state.
+15742	When debugging agents, distinguish accessible, read, interpreted and verified. Fix retrieval and input when evidence is missing; consider prompts, models or verification methods when evidence exists but is misused.
+17801	How tool outputs are used
+27134	Returns should contain sufficient context and explicit error types. Missing files, insufficient permissions and empty files must not all become empty strings. Different observations enable the model to choose suitable next actions.
+14241	Original examples: a search returning only "filter.py" makes the model guess a path; returning "path, matching lines, excerpt and truncation status" helps location. Returning the entire repository creates another kind of noise.
+28643	Why long tasks need compaction and offloading
+22076	Results accumulate each turn and history grows. Compaction preserves task continuity but cannot guarantee recovery of every detail. Offload important original logs and versions and retain references.
+11162	Do not treat compaction as the model relearning a task or a cache hit as permanent memory. They change content representation and computation reuse respectively.
+26895	Separating runtime state from the interface
+7002	Interfaces such as App Server let clients interact through sessions and events. Interface progress, model intent and actual environment outcomes must remain distinct.
+24350	Exercise:</strong> disconnect the client after applying a patch. On recovery, inspect file versions and execution records before continuing. Displaying one message twice may be harmless; repeating an action with side effects may cause problems.
+16536	After this article, you should be able to trace a final answer back to necessary actions and evidence rather than judge completion from the model's own account.
+24520	Go deeper: <a href="chapter-06.html">Lesson 59 · Real coding agents</a> or read <a href="chapter-06.html#m-06-01">the item-by-item notes for further-reading entry 6.1</a>. All links lead to local content.
+9556	← How to build effective agents</a><a href="guide-06.html">How Claude Code works →
+7236	How Claude Code works — AI Systems Engineering
+22280	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#g06-section-1">Understand real agent products through Claude Code</a><a href="#g06-section-2">Instructions, memory and permissions must remain distinct</a><a href="#g06-section-3">Sub-agent gains and losses</a><a href="#g06-section-4">Skills and Hooks execute differently</a><a href="#g06-section-5">How to observe quality problems</a><a class="sub ap-toc" href="#agent-guide-products">Product behavior against the facts of the code
+13784	Distinguish the duties of guidance, memory, permissions, skills and sub-agents.
+19714	Recommended reading 06 / 12</span><span class="chip">Local Chinese reading guide
+17410	Related material: How Claude Code Works
+22835	Understand real agent products through Claude Code
+21049	This article covers How Claude Code Works. Official explanations connect context gathering, action and verification in a loop, with project guidance, tools, context management and sub-agents. Support and default behavior depend on version and configuration.
+16427	Learn more than product commands: know which layer each affects, whether the current conversation, project guidance, tool authorization, sub-agent context or external environment.
+19359	Instructions, memory and permissions must remain distinct
+28958	Project instructions guide, automatic memory retains reusable information, and permission configuration restricts execution. The first two provide information; product and tool mechanisms should enforce the third. The model "knowing not to edit" does not mean the system blocks writes.
+17238	Current support for files such as CLAUDE.md and AGENTS.md has conditions; avoid absolute claims across versions. Check file location, coexistence, actual loading and adherence.
+16379	Sub-agent gains and losses
+22671	Independent context isolates extensive investigation, but a main agent receiving only the result may lose key conditions. Delegation needs goals, scope, known facts and returned evidence rather than a title alone.
+14253	Original delegation example: "Read-only investigation of Windows path separators; do not edit code. Return actual call sites, tests run, evidence and unconfirmed points." This is easier to accept than "you are a Windows expert; analyze everything".
+8872	Skills and Hooks execute differently
+8888	A Skill organizes methods and resources; assess selection and the effectiveness of its body separately. A Hook runs programmatic logic at lifecycle points, suitable for deterministic checks but potentially slow or fallible.
+14247	Original examples: put path-convention investigation in a Skill; existing pre-commit static checks can run through a Hook or CI. Do not hard-code every semantic judgment into Hooks or place mandatory prohibitions only in Skills.
+16309	How to observe quality problems
+18269	When quality declines, inspect model configuration, input scope, history cleanup, tool results and verification separately. Official quality retrospectives show harness changes can also affect product experience; not every regression comes from model parameters.
+24351	Exercise:</strong> run the same test task in a short new session and a long-history session, saving read evidence, compaction events and results. If only the long session regresses, investigate state and context before adding more prompts.
+16537	After this article, you should be able to experiment with mechanisms through product features while identifying internal details without public evidence.
+24522	Go deeper: <a href="chapter-06.html">Lesson 59 · Real coding agents</a> or read <a href="chapter-06.html#m-06-06">the item-by-item notes for further-reading entry 6.6</a>. All links lead to local content.
+9555	← Unfolding Codex's execution loop</a><a href="guide-07.html">Core methods of context engineering →
+10566	Core methods of context engineering — AI Systems Engineering
+22291	Follow this chapter through its objects and states</a><a href="#topic-2">Each turn's context is like a working file with a boundary</a><a href="#g07-section-1">Context engineering targets "this turn's decision"</a><a href="#g07-section-2">An actionable information hierarchy</a><a href="#g07-section-3">Five ways to reduce load must be distinguished</a><a href="#g07-section-4">A before-and-after comparison</a><a href="#g07-section-5">How to judge whether "more content" is harmful</a><a class="sub ap-toc" href="#agent-guide-context">A compacted input with a lost dependency
+11458	Choose information for the next step rather than accumulate all history.
+19715	Recommended reading 07 / 12</span><span class="chip">Local Chinese reading guide
+17384	Related material: Effective Context Engineering
+10565	Context engineering targets "this turn's decision"
+21047	This article covers Effective Context Engineering. The key question is which constraints, facts, state and tool information the next step needs, rather than how to fit more material. Content value changes with the task stage.
+14245	Original examples: investigation needs failure logs and call relationships; implementation needs interface constraints and relevant code; delivery needs the patch and latest verification. Copying all history into every turn increases costs and may preserve old assumptions as contamination.
+10269	An actionable information hierarchy
+18876	Divide input into four tiers: stable constraints, current task state, current evidence and rereadable history. Constraints should be short and explicit; state records completed and unfinished work; evidence carries provenance and versions; history remains external with accessible paths.
+27217	This does not require a complex database. Small projects can use concise files and tool-result references. Add infrastructure only when retrieval, updates or multi-user scale create real bottlenecks.
+11658	Five ways to reduce load must be distinguished
+28184	Selection omits; trimming deletes; summarization rewrites; offloading keeps elsewhere; retrieval gets it back when needed. Prompt Cache reuses computation without changing the semantic roles of this content.
+22063	Every method can fail. Omission may miss evidence, deletion may lose failure clues, summaries may change certainty, offloaded references may break, and retrieval may find the wrong version. Define recovery paths.
+10264	A before-and-after comparison
+14250	An original pre-compaction history contains ten searches, three ruled-out causes, one unconfirmed hypothesis, two failed tests and an interface that must not change.
+14196	After compaction, retain the goal, prohibitions, ruled-out causes and evidence, current hypothesis status, latest edits and verification. "Investigated extensively; ready to fix" is insufficient to guide continued work.
+18383	How to judge whether "more content" is harmful
+28642	Long-context research distinguishes capacity from effective use; particular findings do not prove every new model must fail at some position. Measure on your own tasks.
+14259	An original experiment fixes necessary evidence and adds irrelevant logs, then fixes total length and adds simultaneously required constraints. The two groups measure interference and combinatorial complexity, closer to engineering than testing whether one sentence can be found.
+16535	After this article, you should be able to explain each context segment: "why it is needed now, when it can be removed, and how it can be retrieved later".
+24523	Go deeper: <a href="chapter-07.html">Lesson 60 · Context engineering</a> or read <a href="chapter-07.html#m-07-01">the item-by-item notes for further-reading entry 7.1</a>. All links lead to local content.
+9540	← How Claude Code works</a><a href="guide-08.html">Keeping a task continuous after compaction →
+14199	Keeping a task continuous after compaction — AI Systems Engineering
+22250	Follow this chapter through its objects and states</a><a href="#topic-2">Compaction must keep the facts an action depends on</a><a href="#g08-section-1">Compaction does not make chat history a lossless ZIP</a><a href="#g08-section-2">Define the propositions that must survive first</a><a href="#g08-section-3">How structured state helps handoff</a><a href="#g08-section-4">Three levels of fidelity evaluation</a><a href="#g08-section-5">When compaction is worthwhile</a><a class="sub ap-toc" href="#agent-guide-compaction">Checking the generation number when a candidate is installed
+14066	Distinguish compacted state, original evidence and verifiable fidelity.
+19716	Recommended reading 08 / 12</span><span class="chip">Local Chinese reading guide
+17451	Related material: OpenAI Compaction
+14187	Compaction does not make chat history a lossless ZIP
+21051	This article covers OpenAI Compaction alongside other public context mechanisms. A dedicated compaction result may contain opaque state; applications should pass it as the API requires rather than pretend to reconstruct everything manually.
+17808	Engineering systems should still retain original evidence. Compaction preserves continuity; full logs support exact checks and audits. Their goals differ.
+12738	Define the propositions that must survive first
+14279	An original example contains five propositions: the public interface must not change; configuration loading is confirmed working; path normalization is only a candidate cause; the patch is not yet applied; old-version tests passed and the new version awaits verification.
+14218	Compaction quality cannot be checked only by the keywords "interface, configuration, path, patch, test". Preserve negation, certainty, execution state and version relationships. "Path issue confirmed and tests passed" retains the words but severely distorts the facts.
+24416	How structured state helps handoff
+27289	This is an original teaching format, not a vendor's internal compaction Schema. The format can be simplified, but intentions, facts and environmental outcomes must not merge into one vague summary.
+10507	Three levels of fidelity evaluation
+24027	First check recoverability of key propositions; then whether evidence and versions still correspond; finally continue the task and check for repeated work, violated constraints or premature termination. Correct answers to summary probes do not guarantee correct subsequent actions.
+28413	The accompanying experiment includes a summary with deliberately incorrect state. Its verifier identifies differences such as "hypothesis became conclusion" and "not executed became executed". It demonstrates a checking method without claiming to judge arbitrary natural-language summaries automatically.
+12211	When compaction is worthwhile
+26020	Resource thresholds determine when space must be freed; task stages indicate easier handoff points. Compaction near completion may add a call; longer tasks with many remaining turns may gain more.
+22103	Comparisons must include compaction cost, cache changes, input reduction, evidence rereading and rework, not just compaction ratios or cache percentages.
+16538	After this article, you should be able to explain what evidence is needed to judge information loss after compaction and what should be retained independently over the long term.
+24524	Go deeper: <a href="chapter-07.html">Lesson 60 · Context engineering</a> or read <a href="chapter-07.html#m-07-06">the item-by-item notes for further-reading entry 7.6</a>. All links lead to local content.
+9544	← Core methods of context engineering</a><a href="guide-09.html">Making retrieval supply the evidence actually needed →
+25426	Making retrieval supply the evidence actually needed — AI Systems Engineering
+22226	Follow this chapter through its objects and states</a><a href="#topic-2">From two candidate lists to usable evidence</a><a href="#g09-section-1">Retrieval quality starts with source material</a><a href="#g09-section-2">Add verifiable background to isolated chunks</a><a href="#g09-section-3">How terms and vectors complement one another</a><a href="#g09-section-4">Compute retrieval metrics with a small example</a><a href="#g09-section-5">A progressive path for code retrieval</a><a class="sub ap-toc" href="#agent-guide-retrieval">Fused ranking and independent evidence
+16428	Learn chunking, hybrid retrieval, reranking and code structure.
+19717	Recommended reading 09 / 12</span><span class="chip">Local Chinese reading guide
+17418	Related material: Introducing Contextual Retrieval
+21591	Retrieval quality starts with source material
+21045	This article covers Contextual Retrieval. Retrieval involves more than choosing a vector database: it is a chain from provenance, chunking and indexing through queries, candidate retrieval and reranking to context assembly.
+14522	With stale source material, even precise retrieval only finds old facts faster. If chunking removes "applies only to v3", a model may cite correctly but apply the wrong scope. Evidence therefore needs provenance, versions and enough context.
+24476	Add verifiable background to isolated chunks
+14276	Original chunk: "Off by default; enabled after upgrade." Its field and version are missing. If the original text explicitly describes a change to
+11801	during the migration from v2 to v3, this information can be added; if not, it must not be invented.
+7297	Contextual Retrieval helps chunks retain their background, then combines retrieval and reranking. The article's experimental gains have particular conditions, not fixed improvements for every codebase.
+25764	How terms and vectors complement one another
+28624	Error codes, symbols and paths suit exact matching; semantic retrieval helps match intentions expressed differently.
+25790	They are semantically close but behaviorally opposite; versions and negations especially need checking.
+8723	RRF fuses lists by rank rather than directly adding different scores. Reranking further judges candidate relevance but cannot recover evidence missed by all retrievers.
+22910	Compute retrieval metrics with a small example
+12561	Suppose a correct judgment needs files A and B, while retrieval returns A, X, Y: Precision@3 is 1/3 and Recall@3 is 1/2. One relevant file was found, yet missing B may still cause task failure. All numbers are original teaching examples.
+13552	Now suppose A and B are candidates but assembly retains only A. Candidate retrieval succeeded, but agent input remains insufficient. Evaluation must span candidates, ranking and context.
+11955	A progressive path for code retrieval
+12758	Find fields and entry points, then definitions, references and calls, then tests and history, and finally run a reproduction. Tree-sitter provides syntax structure and LSP language services; neither automatically proves runtime behavior.
+16534	After this article, you should be able to locate a wrong answer in bad sources, missing index content, a misdirected query, reranking removal, truncation or model misuse. This diagnosis is more useful than unconditionally increasing Top-k.
+24525	Go deeper: <a href="chapter-08.html">Lesson 63 · Retrieval and code intelligence</a> or read <a href="chapter-08.html#m-08-02">the item-by-item notes for further-reading entry 8.2</a>. All links lead to local content.
+9551	← Keeping a task continuous after compaction</a><a href="guide-10.html">Understanding effective memory through CoALA →
+11789	Understanding effective memory through CoALA — AI Systems Engineering
+22329	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#g10-section-1">The goal of memory is not to store as much as possible</a><a href="#g10-section-2">What is worth writing down</a><a href="#g10-section-3">Conflict does not necessarily mean someone is wrong</a><a href="#g10-section-4">Beware of self-reinforcement</a><a href="#g10-section-5">Forgetting and recovery are separate matters</a><a class="sub ap-toc" href="#agent-guide-memory">The old worker comes back after the lease has expired
+18821	Manage current state, facts, experiences and methods separately.
+19718	Recommended reading 10 / 12</span><span class="chip">Local Chinese reading guide
+17355	Related material: CoALA
+25609	The goal of memory is not to store as much as possible
+21043	This article covers CoALA. Working memory supports the current task, episodic memory retains experiences, semantic memory retains facts, and procedural memory retains methods. These categories guide different storage and retrieval rules; they do not claim agents possess complete human cognition.
+14270	In an original case, a test failure is an event; project v3's path convention is a fact; investigating path issues is a method; current progress is state. Storing everything as "experience" confuses updates and retrieval.
+12940	First ask whether it will be reused, has evidence and is costly to reacquire. Facts easily reread from current source code may need no copy; costly investigation conclusions may merit storage, but require scope and evidence.
+27299	This is an original minimal record requiring no database. Its value lies in retrieving conclusions together with conditions.
+13628	Conflict does not necessarily mean someone is wrong
+12556	Suppose old memory says "relative to the configuration file" and new documentation says "relative to the repository root". Versions or modules may differ; recency or highest similarity alone cannot choose one.
+21563	Check scope and time before comparing evidence. Preserve an explicit conflict when evidence is insufficient rather than blending opposite rules into a vague summary.
+25355	Beware of self-reinforcement
+21771	A model stores a mistaken conclusion, retrieves it next time and treats repetition as multisource confirmation. Five summaries from one generation still have only one source.
+24819	Automatic memory methods offer extraction, linking and maintenance ideas, but evaluation conditions differ. A score cannot establish suitability for every engineering setting.
+28360	Forgetting and recovery are separate matters
+26864	Expired rules may leave active retrieval while important history remains for audit; privacy requirements may require actual deletion. A Checkpoint recovers tasks; long-term memory supports new tasks. They must not be conflated.
+24354	Exercise:</strong> compare no memory, fixed rules and on-demand evidence-backed memory, including version changes and same names across projects. Evaluate correct and incorrect use rather than write volume alone.
+24526	Go deeper: <a href="chapter-09.html">Lesson 03 · Long-term memory</a> or read <a href="chapter-09.html#m-09-01">the item-by-item notes for further-reading entry 9.1</a>. All links lead to local content.
+9569	← Making retrieval supply the evidence actually needed</a><a href="guide-11.html">Raising delivery quality with the engineering environment →
+22912	Raising delivery quality with the engineering environment — AI Systems Engineering
+22299	Follow this chapter through its objects and states</a><a href="#topic-2">A test looks for counterexamples; it does not stamp code green</a><a href="#g11-section-1">Make the code environment a reliable information and feedback system</a><a href="#g11-section-2">Put rules in suitable locations</a><a href="#g11-section-3">Choose processes from failure modes</a><a href="#g11-section-4">Long-task handoffs must be recoverable</a><a href="#g11-section-5">Engineering mechanisms also need regression tests</a><a class="sub ap-toc" href="#agent-guide-quality">Fix non-blocking problems directly
+25433	Make knowledge discoverable and key constraints and outcomes verifiable.
+19719	Recommended reading 11 / 12</span><span class="chip">Local Chinese reading guide
+17408	Related material: Harness Engineering
+25421	Make the code environment a reliable information and feedback system
+21048	This article covers Harness Engineering. Beyond model capability, discoverable repository knowledge, clear tools and runnable tests affect delivery. The official article shares one team's experience, not a universal efficiency promise.
+14262	Original comparison: project A says only "strictly follow the standards"; project B supplies module entry points, path conventions, runnable tests and important boundaries. The latter provides actionable evidence rather than demanding understanding without input.
+18869	Put rules in suitable locations
+12955	A global entry point provides a map, module documents local facts, Skills specialist methods, and tests and static checks enforce stable constraints. Repeated rules can conflict; identify an authoritative source.
+10889	Not every rule should become an enforced check. Automate stable constraints with serious consequences when violated; retain principles and evidence for contextual judgments rather than hard-code complex issues into brittle rules.
+11853	Choose processes from failure modes
+24152	A simple bug with a clear reproduction and local patch can be edited and verified quickly. Unclear cross-module conventions need investigation; high-risk changes need stronger independent checks. A fixed Analysis→Task→Review process is not optimal for every task.
+11938	Code review should improve code health without indefinite blocking over nonessential imperfections. Small clear issues can be fixed and reverified directly; important design disagreements return to decisions.
+28644	Long-task handoffs must be recoverable
+11687	Preserve the goal, current code, completed work, verification and remaining tasks. "Feature complete" is insufficient without its version. Recovery must also avoid blindly repeating external actions.
+14244	Original examples: the patch is applied but tests are not run. A new session should confirm files, then verify; it should not reapply the patch and claim repetition is safer.
+17814	Engineering mechanisms also need regression tests
+8071	Prompts, tools, context trimming and model configuration can all change quality. Official product retrospectives show harness adjustments can cause regressions too, requiring coverage of long tasks, compaction, recovery and boundary tasks.
+16540	After this article, you should be able to answer for every rule: which error it prevents, what evidence supports it, how much execution costs, and whether model or environment changes leave it necessary.
+24521	Go deeper: <a href="chapter-06.html">Lesson 59 · Real coding agents</a> or read <a href="chapter-06.html#m-06-03">the item-by-item notes for further-reading entry 6.3</a>. All links lead to local content.
+9545	← Understanding effective memory through CoALA</a><a href="guide-12.html">How to prove an agent optimization works →
+18396	How to prove an agent optimization works — AI Systems Engineering
+22308	Follow this chapter through its objects and states</a><a href="#topic-2">It went up ten points — so why can we not conclude anything yet?</a><a href="#g12-section-1">Define task success before choosing grading tools</a><a href="#g12-section-2">Evaluate different properties with different evidence</a><a href="#g12-section-3">One success and reliable success</a><a href="#g12-section-4">How to make a fair comparison</a><a href="#g12-section-5">Evaluation assets should remain reusable over time</a><a class="sub ap-toc" href="#agent-guide-eval">Locating a regression from the four-cell table
+18110	Build controlled comparisons of tasks, grading, traces and cost.
+19720	Recommended reading 12 / 12</span><span class="chip">Local Chinese reading guide
+17379	Related material: Demystifying Evals for AI Agents
+12736	Define task success before choosing grading tools
+21046	This article covers Demystifying Evals for AI Agents. Tasks, attempts, graders and traces are different objects. A final answer may be fluent while files remain unchanged; tools may execute successfully while business goals remain unmet.
+14230	An original bug task defines success as fixing the target failure, preserving key regression behavior, staying within authorization and reporting real verification. "Looks good" cannot replace these four dimensions.
+22855	Evaluate different properties with different evidence
+22462	Tests verify behavior, static checks some boundaries, traces locate process breaks, and model or human review judges harder-to-program semantics and maintainability. Model judges need calibration; they are not inherent ground truth.
+11211	Successful traces need not be identical. Two agents may read different but sufficient evidence while meeting goals and constraints. Process scoring should check necessary conditions rather than enforce imitation of one demonstration.
+10424	One success and reliable success
+15960	Under the teaching assumptions of independent attempts and fixed success probability, p=0.8 and k=3 give 0.992 for at least one success and 0.512 for all three. Real attempts may be correlated; these formulas only help distinguish objectives.
+9261	pass@k can reflect gains from repeated attempts and selection, but does not equal a user's ordinary single-run success rate. Reports must state budgets, retries and selection methods.
+18382	How to make a fair comparison
+15777	Fix tasks, baseline code, tools, resources and acceptance, then run old and new approaches. Changing model, prompt and retrieval together evaluates a combination, not precise attribution.
+14263	Original small-sample example: a new approach succeeds on two more of ten tasks. Check which task types, other regressions, chance effects and cost changes before claiming a universal 20-percentage-point improvement.
+16065	Infrastructure affects coding evaluations; record memory, timeout and dependency issues. Define failure-exclusion rules in advance rather than deleting unfavorable results afterward.
+25728	Evaluation assets should remain reusable over time
+12369	Save task JSON, grading code, configuration and execution evidence for comparisons after platform changes. Some platforms in the further-reading list have lifecycle announcements; the book retains verification and planned dates without treating future plans as completed events.
+24352	Exercise:</strong> change just routing, memory or Review and compare task success, important defects, irrelevant reads, call counts and cost. Complexity without actual gains should not remain merely because it looks "more complete".
+24527	Go deeper: <a href="chapter-12.html">Lesson 15 · Evaluation methods</a> or read <a href="chapter-12.html#m-12-01">the item-by-item notes for further-reading entry 12.1</a>. All links lead to local content.
+9564	← Raising delivery quality with the engineering environment
+19341	Further reading: research topics and Chinese lecture notes — AI Systems Engineering
+19412	Understand research papers, public documents and engineering methods by topic, connecting them with concrete mechanisms in the book.
+21106	This part contains topic guides and 206 Chinese lecture notes. A marks core topics, B important advanced material, and C specialized depth; item numbers support references and searches. These are independently written Chinese explanations, not sentence-by-sentence full translations of original sources.
+11581	Topic guides
+29015	Domain lecture notes
+26122	Supporting material
+16048	Foundational mechanism experiments
+21107	References for this part
+19942	Teaching BPE: how characters merge into tokens — AI Systems Engineering
+22284	Follow this chapter through its objects and states</a><a href="#topic-2">Text, bytes, tokens and IDs are four different things</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22653	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-01.html#m-01-02">Matching lecture note 1.2
+18559	Attention and the causal mask, worked by hand — AI Systems Engineering
+22206	Follow this chapter through its objects and states</a><a href="#topic-2">A mask is a visibility table, not extra meaning</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22654	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-01.html#m-01-03">Matching lecture note 1.3
+7786	KV cache estimation and prefix reuse — AI Systems Engineering
+22202	Follow this chapter through its objects and states</a><a href="#topic-2">FlashAttention: accumulate while reading, without materializing the whole table</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22655	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-03.html#m-03-03">Matching lecture note 3.3
+8717	RRF and retrieval metrics — AI Systems Engineering
+22227	Follow this chapter through its objects and states</a><a href="#topic-2">From two candidate lists to usable evidence</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22658	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-08.html#m-08-16">Matching lecture note 8.16
+14190	Compaction fidelity: state and negation must not be lost — AI Systems Engineering
+22251	Follow this chapter through its objects and states</a><a href="#topic-2">Compaction must keep the facts an action depends on</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22657	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-07.html#m-07-06">Matching lecture note 7.6
+27386	patch here means a field update
+21019	This program modifies fields in structured proposition records to create incorrect summaries; it does not split images into patches or create source-code diffs. Read function arguments according to this program's definitions.
+25611	Memory scope, versions, expiry and conflict — AI Systems Engineering
+22330	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22659	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-09.html#m-09-01">Matching lecture note 9.1
+21704	Separating what the model proposes from what the program executes — AI Systems Engineering
+22281	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22656	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-05.html#m-05-01">Matching lecture note 5.1
+18479	Success rate, paired comparison and a true cost basis — AI Systems Engineering
+22309	Follow this chapter through its objects and states</a><a href="#topic-2">It went up ten points — so why can we not conclude anything yet?</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22661	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-12.html#m-12-11">Matching lecture note 12.11
+11854	From contract to patch and counterexample test — AI Systems Engineering
+22300	Follow this chapter through its objects and states</a><a href="#topic-2">A test looks for counterexamples; it does not stamp code green</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22660	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-11.html#m-11-09">Matching lecture note 11.9
+18025	Parallel traces: wall clock and total work are different — AI Systems Engineering
+22220	Follow this chapter through its objects and states</a><a href="#topic-2">A trace should tell you causation, not just timestamps</a><a href="#method">How to observe and verify</a><a href="#run">Command to run</a><a href="#code">Full teaching code</a><a href="#result">Example of a run result
+22662	Status: self-check actually passed · Environment: Python standard library · Type: synthetic / simulated teaching experiment<br/><a href="chapter-14.html#m-14-03">Matching lecture note 14.3
+6093	Ten offline mechanism experiments — AI Systems Engineering
+26887	How to run</a><a href="#section-2">01 · Teaching BPE: how characters merge into tokens</a><a href="#section-3">02 · Attention and the causal mask, worked by hand</a><a href="#section-4">03 · KV cache estimation and prefix reuse</a><a href="#section-5">04 · RRF and retrieval metrics</a><a href="#section-6">05 · Compaction fidelity: state and negation must not be lost</a><a href="#section-7">06 · Memory scope, versions, expiry and conflict</a><a href="#section-8">07 · Separating what the model proposes from what the program executes</a><a href="#section-9">08 · Success rate, paired comparison and a true cost basis</a><a href="#section-10">09 · From contract to patch and counterexample test</a><a href="#section-11">10 · Parallel traces: wall clock and total work are different
+8084	Python 3.10 or later, standard library only; no API, account or network required.
+12973	All experiments use constructed data or simulated environments without accessing real user material. All 10 experimental self-checks were run and passed when this package was generated. They verify textbook examples, not production audits or any product benchmark scores.
+26886	How to run
+12898	Unzip the package first, then open a terminal in the directory containing index.html:
+11596	Each script can also run independently. Every local experiment page provides explanations, full source and matching run records.
+5964	01 · Teaching BPE: how characters merge into tokens
+24912	Self-check: passed · <a href="lab-01.html#code">Full local code
+5975	02 · Attention and the causal mask, worked by hand
+24913	Self-check: passed · <a href="lab-02.html#code">Full local code
+5980	03 · KV cache estimation and prefix reuse
+24914	Self-check: passed · <a href="lab-03.html#code">Full local code
+5983	04 · RRF and retrieval metrics
+24915	Self-check: passed · <a href="lab-04.html#code">Full local code
+5985	05 · Compaction fidelity: state and negation must not be lost
+24916	Self-check: passed · <a href="lab-05.html#code">Full local code
+5989	06 · Memory scope, versions, expiry and conflict
+24917	Self-check: passed · <a href="lab-06.html#code">Full local code
+5994	07 · Separating what the model proposes from what the program executes
+24918	Self-check: passed · <a href="lab-07.html#code">Full local code
+5996	08 · Success rate, paired comparison and a true cost basis
+24919	Self-check: passed · <a href="lab-08.html#code">Full local code
+5999	09 · From contract to patch and counterexample test
+24920	Self-check: passed · <a href="lab-09.html#code">Full local code
+6067	10 · Parallel traces: wall clock and total work are different
+24921	Self-check: passed · <a href="lab-10.html#code">Full local code
+19337	How to read the further reading — AI Systems Engineering
+12933	First learn terms and operations through Foundations, then select Systems and Topic Studies by question. Further-reading notes locate research mechanisms, conditions of use and limits.
+25584	Record the problem a study addresses, its core mechanism, conditions, known limits and testable engineering hypotheses. Do not equate gains on one dataset with gains in your project, or one teaching simulation with production verification.
+28723	Reading priorities A, B and C allocate effort rather than rank paper quality. Trace sources through item numbers when needed; the Chinese main text is independently readable offline.
+21284	See the further-reading contents

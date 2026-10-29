@@ -1,0 +1,633 @@
+26877	Runtime and performance — AI Systems Engineering
+22215	Follow this chapter through its objects and states</a><a href="#topic-2">A trace should tell you causation, not just timestamps</a><a href="#c14-section-1">Observe the task's causal structure</a><a href="#c14-section-2">Metrics start from user goals</a><a href="#c14-section-3">Cost per successful task and model routing</a><a href="#c14-section-4">Rate limits, timeouts and retries</a><a href="#c14-section-5">Sessions, executors and storage</a><a href="#c14-section-6">SLOs and degradation</a><a href="#c14-section-7">Optimization order</a><a href="#section-8">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-production">Quantiles and failure costs</a><a class="sub ap-toc" href="#agent-reading-optimization">Model routing ablation
+15250	Observability, cost, reliability and model selection
+28771	Stage 14</span><span class="chip">11 expanded notes</span><span class="chip">Main text fully expanded
+25255	Observe the task's causal structure
+8994	A trace connects the model, tools, retrieval, handoffs and verification within one task; a span represents an operation; an event records a point in time; metrics aggregate distributions. Agents SDK and OpenTelemetry offer tracing entry points, but standard fields and their stability need verification against the version.
+18024	Parallel spans overlap and cannot simply be summed into wall-clock time. Large volumes of logs without correlation IDs may still fail to explain a failure.
+19389	Metrics start from user goals
+8930	TTFT is the wait for the first token, generation throughput is output speed, and tool latency comes from external dependencies; total duration reflects the whole task. Both means and high percentiles matter. Saying "Starting work" quickly does not mean finishing quickly. SRE emphasizes defining monitoring and objectives through user-visible behavior.
+25970	Quality should cover goal fulfillment, regressions, security and human takeover; distinguish input, cache, output, tools and execution resources in costs. Products bill differently, and token counts are not a universal currency.
+18468	Cost per successful task and model routing
+14278	Original idealized example: A costs 1 yuan per attempt with a success rate of 50%; B costs 1.5 yuan with a success rate of 90%. Using the rough approximation cost/success rate, A costs 2 yuan and B about 1.67 yuan. Actual retry correlations, human costs and task distributions change the conclusion.
+26078	Routing can consider complexity, risk, context and verification capability, but must count its own cost and the handoff when switching. Sending small tasks to a cheap model is a strategy to test, not a theorem. Reasoning budgets should also follow the quality–cost curve rather than maximize thought length.
+16751	For the full mechanism and a continuing example, see <a href="../chapters/26.html#agent-practice-optimization">Optimization locates the bottleneck first; it is not about chasing fewer tokens</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+28816	Rate limits, timeouts and retries
+28817	Rate limits may apply to requests, tokens or other resources. Transient failures can use backoff with jitter; invalid arguments and insufficient permissions should not be retried blindly. After a side-effect timeout, query the actual state before deciding whether to resend.
+14906	Canceling a model request does not guarantee the tool process stops. Task-level and operation-level timeouts, cancellation propagation, idempotency and deduplication are needed. Unlimited retries are uncontrolled risk, not continued work.
+12118	Sessions, executors and storage
+7921	The Managed Agents case decouples session events, the harness and the sandbox, reducing coupling to execution-environment failures. A small local agent need not split immediately into several services, but can keep interfaces clear and gradually add recovery capability.
+20258	Logs must distinguish intent from executed facts. "Preparing to run tests" is not a result. Event replay usually restores state and should not unconditionally repeat every side effect.
+8816	SLOs and degradation
+8819	An SLO must state task scope, the success definition, time window and budget. Read-only Q&A and automatic editing should have different objectives. When dependencies are unavailable, the system can degrade to evidence and suggestions without claiming execution; when permissions are insufficient, stop the corresponding action while completing independent parts where possible.
+15591	Alerts should point to user impact that needs attention. One recoverable timeout may not warrant disturbing a person; sustained failures, abnormal costs, unauthorized actions and lost state deserve more attention. Trace data also needs redaction and retention policies.
+12110	Optimization order
+12760	Find the bottleneck first: frequent round trips suggest checking tool granularity; noise suggests retrieval; long output suggests requirements; repeated retries suggest the environment; insufficient capability suggests the model or evidence. Aggregating tool results in code may save context but also increases execution complexity, so verify it for the task.
+24896	Self-check: is reducing call count always good?</strong> No; necessary verification may be removed. <strong>Does HTTP success mean agent success?</strong> No; check the business goal.
+6156	14.1 · Tracing models, tools and handoffs
+17328	Related material: Agents SDK Tracing
+8998	Tracing connects model calls, tool executions, handoffs and other steps into a task trace. It helps explain the process, but the existence of records does not mean their content is complete or their conclusions correct.
+28880	Distinguish tasks, spans, events and final outcomes. Parallel steps may overlap, so durations cannot simply be added. Sensitive prompts and credentials should not be logged indiscriminately.
+10379	How one trace connects the model and tools
+26207	Input and conditions.</strong> In task T1, model span M1 proposes call c7, and tool span U7 performs the read.
+13082	Associate
+9017	U7 records c7 and T1
+15105	Trace the action back to the request.
+9016	M2 receives the observation after U7 ends
+18274	Forms a causal sequence.
+7879	M2 lacks U7's result
+16893	Locate the result-feedback problem rather than assuming the tool itself failed.
+18915	Join the steps up.</strong> A trace needs correlated identities and order, not just many independent logs.
+14301	Original exercise: establish correlation IDs for search, edit and test steps, simulate one step failing, and check whether the correct task and version can be located.
+16652	Completion means answering "At which step, based on what, and what happened?", not merely collecting large amounts of text that cannot be correlated.
+6159	14.2 · Semantic conventions for generative AI
+17454	Related material: OpenTelemetry GenAI Conventions
+8007	OpenTelemetry's GenAI semantic conventions aim to standardize how generative AI operations are recorded. The specifications keep evolving; fields and support need verification against the version.
+24493	Consistent naming helps analysis across systems, but cannot replace an application's business definitions. Two systems may both record tokens while counting them differently.
+24494	Comparing backends requires consistent fields
+26285	Input and conditions.</strong> Backend A uses input_tokens; B calls it prompt_tokens.
+20351	Map
+12871	First confirm their meanings and whether they include cached tokens
+11034	Do not just rename the field.
+24490	Standardize
+12398	Save standard fields and retain the source's counting basis
+20205	Makes comparisons easier.
+16392	Record the specification version when field definitions change
+28375	Avoid breaks in historical metrics.
+19225	Join the steps up.</strong> Semantic conventions reduce confusion, but metrics must truly mean the same thing.
+24580	Continue the step-by-step calculation: <a href="../chapters/25.html#worked-Q098">Q066 · One option spends fewer tokens but adds two tool round trips
+14304	Original exercise: define a minimal set of fields for model requests, tool calls and task success, with explicit units, sources and sensitivity.
+16606	Completion means data can be compared and explained, not treating an evolving attribute as a standard already supported identically by every platform.
+6160	14.3 · Model and agent spans
+17455	Related material: OpenTelemetry GenAI Spans
+7672	GenAI span conventions describe how to represent model or agent operations. Parent-child relationships and time boundaries determine whether execution structure can be reconstructed correctly.
+18148	Asynchronous and parallel tasks especially need clear associations; a span ending may mean only that a request ended, not that the external business action finally completed.
+22590	A parent span includes waiting; child spans do not sum to the parent span
+26183	Input and conditions.</strong> Two tools run over [0,3] and [0,5], while the parent span is [0,5].
+16384	Child sum
+24296	Accumulated active time.
+22591	Parent duration
+14053	Includes parallel overlap.
+13776	Analyze
+25045	If the parent becomes 8, check for serialization
+13884	Do not simply add durations into wall-clock time.
+18913	Join the steps up.</strong> Examine span structure and the critical path together.
+14444	Original exercise: draw a trace with two parallel searches followed by a serial verification, and calculate wall-clock time and total operation time separately.
+16690	Completion means identifying the critical path and actual waiting, not summing every span to exaggerate the user's time.
+6161	14.4 · Choosing monitoring signals
+17404	Related material: Google SRE Monitoring
+8825	SRE monitoring emphasizes choosing signals from service behavior and user impact. Logs, metrics and alerts each have a purpose; collecting more does not necessarily make problems easier to find.
+6978	Agent monitoring should track task success, tail latency, sustained failures and human takeover, beyond API return codes. A model returning 200 without completing the task is still a user-level failure.
+18482	Rising queues warn of trouble even when success rates are normal
+26144	Input and conditions.</strong> Over 5 minutes the error rate remains low, but the queue grows from 10 to 200.
+18251	Current outcomes
+25620	Many requests have not finished
+12204	A low error rate may lag behind.
+29014	Leading signal
+24135	Queue length and waiting age increase
+19768	Indicates capacity pressure.
+21238	Check arrival/completion rates, retries and resources
+10951	Do not wait for mass timeouts before alerting.
+19162	Join the steps up.</strong> Monitoring examines outcomes as well as backlogs and resources.
+14470	Original exercise: design a policy that alerts only on sustained failures, distinguishing one recoverable timeout from many blocked tasks.
+16577	Completion means actionable alerts and signals that explain user impact, without ongoing interruptions from normal fluctuations.
+6162	14.5 · Service objectives and error budgets
+17403	Related material: Google SRE Implementing SLOs
+8818	An SLO defines a service objective as a measurable agreement; an error budget helps interpret the allowed room for failure and the risk of changes. Metrics must state their scope, time window and success conditions.
+6967	Agent tasks vary widely; read-only Q&A and automatic edits should not be forced into identical objectives. Speed and quality both need consideration.
+6859	How much error budget a 99% target allows
+26450	Input and conditions.</strong> The measurement window includes 10000 eligible requests, and the SLO success rate is 99%.
+12620	Allowed failures
+28997	A budget of 100.
+17902	Failures so far
+25018	If 80 have already occurred
+13951	20 remain.
+28506	Major changes can use the budget to guide cautious canary releases
+10828	Do not interpret a 99% objective as a guaranteed 99% for every user.
+18906	Join the steps up.</strong> An SLO must define eligible requests, the time window and what counts as failure.
+14283	Original exercise: define success and duration objectives separately for "read-only analysis" and "a fix with tests", and explain why HTTP success is insufficient.
+16642	Completion means objectives guide engineering trade-offs, instead of a "high reliability" slogan with no measurement basis.
+6163	14.6 · Engineering checks before deployment
+17315	Related material: API Deployment Checklist
+28401	Deployment checks cover quality, cost, permissions, failure handling and operational readiness. A callable API is only the start; production also needs monitoring, budgets and recovery design.
+20040	Data and tool boundaries, model versions, output verification and rollback should be explicit. One development-environment success is not direct proof of release readiness.
+10587	Run a recoverable failure before release
+26396	Input and conditions.</strong> The test tool simulates a timeout, but the external file has already been written.
+22340	Inject a fault
+19656	Place it after the write and before the response
+11710	Creates an unknown-outcome scenario.
+21396	Check the actual content and action ID
+11239	Do not blindly write again.
+24223	The system reports state accurately
+22086	Tests production readiness better than a success-only demo.
+19102	Join the steps up.</strong> Failure experiments belong in harmless, isolated environments, not in trial and error on production user data.
+14335	Original exercise: simulate rate limits, incorrect output, missing permissions and tool timeouts before release, checking for understandable degraded results.
+16637	Completion means users can tell what is complete and what is not; the system does not hide failures to chase a higher success rate.
+6164	14.7 · Rate limits, backoff and budgets
+17468	Related material: Rate Limits
+28344	Rate limits may apply to requests, tokens or other resource dimensions. Retries must respect service feedback and distinguish transient failures from permanent errors.
+19387	Exponential backoff and jitter can reduce synchronized retries, but cannot fix invalid arguments or insufficient authorization. Before retrying an action with side effects, also confirm whether it has already run.
+8716	Staying within RPM can still hit a TPM rate limit
+26512	Input and conditions.</strong> Assume limits of 60 requests and 6000 tokens per minute, with 2000 tokens per request.
+25841	Request count
+10347	4 calls in one minute
+27620	Far below 60.
+8954	Token count
+26038	Exceeds 6000.
+19441	Schedule against both actual budgets
+10767	Few requests do not mean the rate limit is wrong.
+19254	Join the steps up.</strong> Rate limits have different dimensions; these numbers are for teaching, not a real service's current limits.
+14307	Original exercise: design separate handling branches for rate limits, argument errors and network disconnections, with maximum attempts and a total budget.
+16697	Completion means retries have a reason, boundaries and observability, rather than treating an infinite loop as automatic recovery.
+6165	14.8 · End-to-end task latency
+18100	Latency optimization requires analyzing the complete timeline of requests, input, output, tools and orchestration. Removing a model call may help, but may also remove necessary evidence or verification.
+29038	A fast first token does not mean a fast task completion; a high cache-hit rate does not guarantee low end-to-end cost. Optimize around actual bottlenecks.
+13680	Reducing operations off the critical path does not change total time
+26145	Input and conditions.</strong> A takes 3 seconds and B 5 seconds in parallel; C takes 2 seconds and waits for both.
+14224	Original task
+7139	B is the critical path.
+7028	Reduce A to 1 second
+11753	Still max(1,5)+2=7
+16090	Wall-clock time is unchanged.
+7125	Reduce B to 2 seconds
+13298	A becomes the critical path.
+18955	Join the steps up.</strong> Optimization gains depend on the current bottleneck; savings from individual spans cannot simply be added.
+14432	Original exercise: compare task traces with long output, slow tools and repeated retrieval. Choose a different improvement for each instead of uniformly compacting prompts.
+16579	Completion means improving the user's task duration without degrading quality, not only optimizing an easily displayed metric.
+21173	Source S044, end-to-end task latency
+6166	14.9 · Decoupling execution state from model execution
+18764	Decoupling session state, the harness and the execution environment helps recovery and resource management. A small system can begin by keeping responsibilities clear rather than immediately splitting into multiple services.
+22648	State persistence must distinguish intended actions, executed facts and outcomes awaiting confirmation. Recovery must not blindly replay external side effects.
+21781	Reconnect to execution state by task ID after a model timeout
+26296	Input and conditions.</strong> External long-running task job9 is in progress when the inference request disconnects.
+12453	Retain identity
+9197	job9, its goal and permitted actions
+10713	Not only a natural-language plan.
+16171	External job9 has finished
+18452	Recover the result.
+28391	Avoid duplication
+11240	Do not start job10 to repeat the same side effect
+24506	Continue the original task.
+19236	Join the steps up.</strong> Decoupling the runtime environment requires persistent task identity alongside it.
+14348	Original exercise: simulate a restart after a deployment request is sent but its response is lost. Query operation state before deciding whether to compensate or retry.
+16585	Completion means recovered state matches the actual environment, not merely that text generation can continue.
+6157	14.10 · Prompts, evaluation and model optimization
+17440	Related material: Model Optimization
+21641	Model optimization should center on task evaluation, treating prompts, model selection, training and the tool environment as different intervention layers. A cheaper model does not necessarily lower cost per successful task.
+28632	Retries after errors, human repairs and longer processes may all offset a lower per-call price. Switching models also adds handoff and routing overhead.
+10417	Change only one interpretable variable at a time
+26313	Input and conditions.</strong> The success rate is low, and you want to change the model, prompt and index together.
+25558	Record the fixed task and all three versions
+23336	Know the old state.
+12665	First repair the index already confirmed to be stale
+25260	Observe the gain.
+21627	Compare the model/prompt separately
+10829	Do not arbitrarily attribute the combined gain to one component.
+19218	Join the steps up.</strong> Evaluation gives causal clues for optimization, but real interactions still need dedicated comparisons.
+14436	Original exercise: calculate two approaches using assumed costs and success rates, then add failure costs and see whether their ranking changes.
+16549	Completion means choosing from actual task quality–cost–latency curves, instead of deciding only by parameter count or unit price.
+6158	14.11 · Tool combinations and cost boundaries
+17353	Related material: Claude Tool Combinations
+17779	Tool combinations affect how information flows to the model. Filtering large results through code may reduce context; returning results directly is simpler but may introduce redundancy.
+24358	Combination capabilities depend on product support, permissions and the execution environment. Do not assume all tools can run arbitrarily in parallel or share state.
+17778	Combining tools can send less data without doing less verification
+26264	Input and conditions.</strong> The original process passes 300 records to the model to count failures.
+23380	Deterministic aggregation
+23482	The program counts 2+3+1=6
+13679	Reduces long context.
+12443	Retain query conditions, page counts and error state
+15255	Makes the total explainable.
+21640	The model's task
+25349	Explain and propose next steps
+11237	Do not recalculate a verifiable aggregate by hand.
+19055	Join the steps up.</strong> Combining tools changes the division of work; correctness comes from complete queries and explicit calculations.
+14422	Original exercise: compare passing a thousand records to the model with first aggregating them in code and providing a summary. What verification and access to original evidence does each need?
+16558	Completion means reducing useless transfers while retaining traceability, not using a summary to hide important anomalies that were filtered out.
+9553	← Security and permissions</a><a href="chapter-15.html">Advanced topics →
+29105	Advanced topics — AI Systems Engineering
+22236	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#c15-section-1">Choose the right intervention layer first</a><a href="#c15-section-2">LoRA, QLoRA, AWQ and distillation</a><a href="#c15-section-3">Facts, hallucinations and calibration</a><a href="#c15-section-4">Adaptive and corrective RAG</a><a href="#c15-section-5">The observe–act loop in Computer Use</a><a href="#c15-section-6">The limits of mechanistic interpretability</a><a href="#section-7">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-multimodal">Stale observations</a><a class="sub ap-toc" href="#agent-reading-synthesis">The impact scope of a local change
+18337	Fine-tuning, factual reliability, multimodality and interpretability
+28772	Stage 15</span><span class="chip">17 expanded notes</span><span class="chip">Main text fully expanded
+12930	Choose the right intervention layer first
+8698	RAG supplies external evidence, memory preserves information across tasks, skills organize methods, the harness manages execution, and fine-tuning changes parameterized behavior. Retrieve first for unknown recent source code, fix the executor first for permission errors, and consider training only for stable behavioral biases.
+18339	Fine-tuning needs representative data and independent evaluation; training loss or demos alone are insufficient. Retain regression checks for existing capabilities to avoid overfitting to one task.
+7850	LoRA, QLoRA, AWQ and distillation
+7852	LoRA freezes the base weights and uses a low-rank increment
+25441	for training. Original calculation: a 1024×1024 matrix has 1,048,576 parameters, while the two increment matrices with r=8 have 16,384 parameters in total. This describes only the training increment for that matrix, not a proportional reduction in the whole model's VRAM.
+8443	QLoRA combines a quantized base model with low-rank adaptation; AWQ uses activation information to guide low-bit weight quantization. Quantized weights do not mean every computation uses the same low bit width; speed still depends on kernels and hardware. Distillation trains a student with teacher signals and does not guarantee copying every capability. PEFT supplies implementations, not a replacement for data governance.
+11623	Facts, hallucinations and calibration
+9012	TruthfulQA studies the problem of imitating common misconceptions; research on model self-knowledge observes self-assessment under certain conditions and does not justify treating arbitrary verbal confidence as an accurate probability. Generation probability, factual accuracy and calibration are different concepts.
+14236	Original example: ten answers all report 0.9 confidence, but only five are correct, showing overconfidence on this sample. The sample is also too small to estimate overall calibration precisely. Reliable approaches include obtaining evidence, expressing unknowns, checking citations, calculation and testing; no single one guarantees absolute correctness.
+24933	Adaptive and corrective RAG
+8862	Self-RAG studies learning when to retrieve and how to evaluate generation, beyond adding "self-check" to an ordinary prompt; CRAG studies correction when evidence quality is insufficient. Retrieval bridges and self-assessments are not established facts.
+14273	An original process classifies evidence as sufficient, conflicting or insufficient: investigate further when insufficient, check sources and time when conflicting, and generate sourced conclusions when sufficient. Do not search forever to avoid judgment, or treat hypothetical documents as original evidence.
+7291	The observe–act loop in Computer Use
+25313	Visual input is only one capability. A GUI agent also needs screenshots, action execution, new observations and state verification. The model outputting click coordinates does not mean the action succeeded; resolution, scaling, pop-ups and page changes all affect targeting.
+14266	Original loop: observe the current interface → identify the target → check authorization → execute → observe again → verify business state. A stable API usually allows more precise control; a GUI remains valuable when no structured interface exists or actual UI verification is needed.
+8856	SeeClick studies interface grounding; OSWorld evaluates actual desktop tasks. Hitting the "Save" button does not mean saving succeeded; missing required fields may cause failure. An integrated executor needs to verify actual state instead of relying only on coordinates or model claims.
+21120	The limits of mechanistic interpretability
+8982	Towards Monosemanticity explores decomposing activations into more interpretable features, suggesting that a single neuron may not be the best unit. Sparse autoencoders balance reconstruction and sparsity; later research evaluates scale and feature quality. Correlated activation is not a complete causal explanation; intervention, ablation and behavioral verification are needed.
+9000	Transformer Circuits is an entry point into a research program, not a set of conclusions that fully explains any commercial model. Natural-language explanations also differ from evidence in mechanistic research.
+24899	Self-check: can fine-tuning replace looking up new material?</strong> Not guaranteed. <strong>Does a model explaining itself mean its internal mechanisms are understood?</strong> No.
+6171	15.1 · Low-rank parameter adaptation
+17432	Related material: LoRA
+7860	LoRA learns increments to base weights through low-rank matrices, usually freezing the original weights to reduce trainable parameters. It changes parameterized behavior; it is not retrieval or session memory.
+12199	The rank, target modules and training data determine adaptation quality. Fewer trainable parameters do not imply the whole training VRAM falls by the same proportion.
+7858	What a rank-1 LoRA increment actually looks like
+23150	Multiply
+18695	Add AB to base W, which can remain frozen
+15069	Behavior can still change when only adapter parameters are trained.
+16249	Size
+20871	The 4 factorization parameters here equal the full matrix's 4
+17615	This small example saves no parameters; low rank at thousand-dimensional scales offers a clear accounting advantage.
+18956	Join the steps up.</strong> The low-rank example shows structure; it must not falsely claim parameter savings at every size.
+14461	Original exercise: calculate the parameter counts for a 1024×1024 matrix and a rank-8 increment, explaining why base weights, activations and optimizer state still need consideration.
+16625	Completion means understanding cost sources and conditions of use, not equating parameter efficiency with lossless performance on every task.
+6180	15.2 · Efficient fine-tuning on quantized models
+17464	Related material: QLoRA
+8442	QLoRA combines a quantized base model with low-rank adaptation to lower fine-tuning memory needs. Quantization, compute precision and adapter parameters are different layers.
+16050	The base model usually stays frozen, with training focused on the adapter; specific numeric formats and system support affect results and cannot be exchanged arbitrarily.
+28571	Keep quantized base weights separate from trainable adapter parameters
+26293	Input and conditions.</strong> Base W uses low-bit storage, while adapters A/B retain the precision needed for training.
+19483	Dequantize according to the compute method or use a low-bit kernel
+10936	Do not directly treat integer codes as actual weights.
+14803	Backward pass
+21482	Gradients update adapter parameters
+16077	The quantized base weights usually stay frozen.
+11786	Adapter gradients, optimizer state and activations are still needed
+11029	Do not report only 4bit weight size as total training VRAM.
+19133	Join the steps up.</strong> This is a schematic of QLoRA-style responsibilities, not a reproduction of every quantization format and paged optimizer.
+14325	Original exercise: list four memory categories—weights, gradients, optimizer state and activations—and judge which parts low rank and quantization affect.
+16664	Completion means explaining why a "low-bit model" does not perform every operation at the same low precision, or guarantee greater speed on arbitrary hardware.
+6181	15.3 · Activation-aware weight quantization
+17316	Related material: AWQ
+6934	AWQ uses activation-related information to guide weight quantization, focusing on quality and efficiency in low-bit deployment. Quantization changes representation and execution conditions; it does not automatically add model knowledge.
+16923	Actual speedups depend on kernels, devices and batching; a smaller file alone does not prove faster end-to-end execution.
+22556	Activations amplify weight quantization error
+26189	Input and conditions.</strong> Both channels have Δw of 0.01, with activations of 100 and 0.1.
+28342	Channel 1
+25813	Error 100×0.01=1
+18289	Large effect.
+28343	Channel 2
+25812	Error 0.1×0.01=0.001
+18290	Small effect.
+15589	Insight
+21364	Inspect activation distributions during calibration
+11031	Importance cannot be decided only by absolute weight values.
+19003	Join the steps up.</strong> This is only a local reason for activation awareness, not the full AWQ algorithm.
+24596	Continue the step-by-step calculation: <a href="../studies/chapters/23.html#worked-S23">S23 · Equal weight errors produce different output errors with different activations
+14425	Original exercise: compare model weight size, loading time, inference latency and task quality, explaining why each needs its own measurement.
+16567	Completion means distinguishing storage reduction, numeric error and runtime performance, not using one gain to replace the full evaluation.
+6182	15.4 · Knowledge distillation
+17382	Related material: Distilling the Knowledge in a Neural Network
+23330	Knowledge distillation trains a student with teacher signals; soft distributions can contain richer relative information than a single label. Student capability remains limited by capacity, data coverage and objectives.
+19997	Teacher errors can also be passed on; distillation does not automatically give the student every teacher tool, context or reasoning capability.
+19996	What extra information a teacher's soft distribution gives beyond a single label
+26336	Input and conditions.</strong> The teacher distribution is [0.7,0.2,0.1], while the hard label points only to class 1.
+23371	Hard supervision
+14965	Only identifies the target class
+20703	Does not express how close classes 2/3 are.
+26116	Soft supervision
+12411	Retains the relative information in 0.2 and 0.1
+16439	The student can fit the probability structure.
+19994	The teacher can be wrong too
+16438	Distillation alone cannot automatically make the student overcome every teacher error.
+19196	Join the steps up.</strong> The distillation objective changes the supervision content; it does not copy knowledge and capabilities in full.
+14414	Original exercise: compare training signals that provide only the correct class with signals that provide probabilities for several classes, explaining the extra relationships in the latter.
+16629	Completion means understanding the conditions for knowledge transfer and checking them on independent tasks, not merely judging how closely the student's wording imitates the teacher.
+6183	15.5 · Engineering parameter-efficient fine-tuning
+17456	Related material: PEFT Documentation
+8024	The PEFT library organizes parameter-efficient fine-tuning methods to help implement adapter training. Tools reduce implementation costs but do not replace management of training data, licensing, evaluation and deployment compatibility.
+10745	Methods modify different parameters or prompt representations; sharing the name PEFT does not make their mechanisms identical.
+16216	Multiple adapters must align with the base version
+26498	Input and conditions.</strong> Adapter A was trained on base worked model 1 but is mistakenly attached to M2 at runtime.
+19583	Interface
+23352	Matrix shapes may happen to match
+10691	This does not guarantee semantic compatibility.
+16049	Different base weights change the combined behavior
+28908	Record dependencies.
+15965	Evaluate the target M and A combination
+11056	Do not reuse M1+A results.
+18998	Join the steps up.</strong> Parameter efficiency does not remove version and quality management.
+14315	Original exercise: define a stable output-behavior goal first, then decide on samples, a held-out set and regression checks, and only then choose the implementation method.
+16610	Completion means evidence shows parameter training is more suitable for the current problem than prompts, skills or retrieval.
+6184	15.6 · Factuality and imitating misconceptions
+17510	Related material: TruthfulQA
+9013	TruthfulQA studies models repeating common human misconceptions and emphasizes the difference between linguistic imitation and factual correctness. Fluency and commonness do not make something true.
+11637	Factual questions need reliable sources or verifiable calculation. Raising generation probability or lowering temperature cannot automatically correct false knowledge.
+22403	The model can repeat popular errors too
+26466	Input and conditions.</strong> The training corpus repeatedly contains false proposition P, while actual evidence supports not-P.
+21623	Pressure to imitate
+17964	Common phrasing may increase P's generation probability
+22400	Fluent does not mean true.
+11634	Factual evaluation
+28697	Questions specifically distinguish P from not-P
+21522	Check for repeated misconceptions.
+14920	Gather evidence
+15280	Reliable sources and verification constraints
+28387	Do not use repetition across many web pages as a vote for truth.
+18941	Join the steps up.</strong> Evaluating factuality needs correct labels and evidence, not popularity treated as truth.
+24582	Continue the step-by-step calculation: <a href="../chapters/26.html#worked-Q103">Q107 · Two sources give opposite conclusions: how to decide without voting by count
+14411	Original exercise: compare a widespread false claim with less common correct information, explaining why text frequency alone is insufficient.
+16675	Completion means requiring conclusions to match evidence and allowing "I don't know" when information is insufficient, instead of filling gaps with confidence.
+6185	15.7 · Confidence and calibration
+17426	Related material: Language Models Mostly Know What They Know
+21756	Research on model self-knowledge explores models' ability to judge the correctness of their own answers. Signals observed under research conditions do not mean every model's verbal confidence is calibrated.
+22818	Distinguish generation probability, subjective scores and actual frequencies of correctness. A valid number from 0 to 1 does not necessarily have a probability interpretation.
+21606	Reconcile an 80% probability with outcomes of the same kind
+26143	Input and conditions.</strong> 4 predictions have p=0.8, with labels [1,1,0,0].
+14145	Per-item loss
+18004	Squared error.
+17995	Average
+7119	Brier score.
+21386	Sample limitation
+11726	Only 4 questions
+11088	This cannot support a precise claim about overall calibration.
+19269	Join the steps up.</strong> The cost of high-confidence errors belongs in the evaluation.
+24583	Continue the step-by-step calculation: <a href="../chapters/27.html#worked-Q105">Q101 · Four answers all claim 80% sure and only two are right: how is that scored
+14399	Original exercise: group predictions by confidence and compare each group's actual accuracy, also stating uncertainty when samples are small.
+16639	Completion means checking calibration with independent data, not abandoning fact verification because the model says it is "very certain".
+6186	15.8 · On-demand retrieval and self-evaluation
+17485	Related material: Self-RAG
+8863	Self-RAG studies learning when to retrieve and how to evaluate related generation, involving dedicated training mechanisms. It does not equal adding "Please reflect on yourself" to an arbitrary chat model.
+21597	Judging the need for retrieval and evaluating evidence can both go wrong. Self-evaluation is only one kind of signal and cannot replace actual sources and external verification.
+19500	On-demand retrieval does not mean one fixed search for every sentence
+26501	Input and conditions.</strong> Question A asks for 3+4 in a table already supplied; B asks for parameters in the current version.
+22782	Existing evidence is sufficient
+23146	Calculate 7 directly, without extra search.
+18212	Current facts are missing
+28893	Retrieval is needed.
+24931	Self-evaluation
+21570	Still check how well the evidence supports the answer after retrieval
+10899	Having searched does not automatically make it trustworthy.
+18908	Join the steps up.</strong> Self-RAG methods involve training and control mechanisms; ordinary handwritten conditions are only a local illustration.
+14329	Original exercise: distinguish three tasks: directly calculable, requiring current information, and already supported by sufficient evidence. Design different retrieval behavior for each.
+16602	Completion means obtaining information as needed and handling insufficiency, not turning every task into an endless search loop.
+6187	15.9 · Correcting insufficient retrieved evidence
+17371	Related material: Corrective RAG
+7218	CRAG focuses on corrective paths when retrieval quality is insufficient, evaluating evidence to decide what to do next. Retrieval failures need recognition, not answers forced from irrelevant excerpts.
+25668	Insufficient, conflicting and stale evidence are different problems, calling for actions such as broader queries, source comparisons or updated data.
+21595	Search again when retrieval goes wrong instead of forcing an answer from the wrong material
+26508	Input and conditions.</strong> The question concerns production configuration, but every returned document concerns the test environment.
+21547	Detect
+22765	Environment conditions do not match
+15097	Recall is insufficient.
+24297	Correct
+16106	Add production scope or read authoritative configuration
+19878	Change the query/source.
+11778	Still missing
+15698	Answer with uncertainty
+11053	Do not pick one merely because the generation stage must output something.
+19181	Join the steps up.</strong> Correcting retrieval requires recognizing relevant but inapplicable evidence.
+14456	Original exercise: given three conflicting version descriptions, first establish their times and scopes, then decide whether to answer.
+16646	Completion means correcting the information supply, not hiding evidence gaps behind longer generation.
+6172	15.10 · The observe–act loop in computer use
+17452	Related material: OpenAI Computer Use
+7290	Computer Use connects visual observations to actions such as mouse and keyboard input. The model proposes an action; an external executor carries it out and returns a new observation. Proposing coordinates does not mean the action succeeded.
+28933	Page changes, scaling, asynchronous loading and pop-ups all affect the next step. An old screenshot cannot be used unconditionally for a new state.
+25393	Computer use must read back the result
+26401	Input and conditions.</strong> An error appears in the interface after clicking Save.
+22570	The click was executed
+15073	Only proves the input event completed.
+14854	Validation failure is found
+11292	The business operation did not succeed.
+19453	Fill missing fields as authorized or report a block
+11226	Do not say "Saved".
+19198	Join the steps up.</strong> Observe–act–verify closes the GUI loop.
+14468	Original exercise: design the loop "Open form → fill in → save → check result", specifying success evidence at each step instead of checking only click positions.
+16698	Completion means verifying actual application state while maintaining authorization boundaries for important side effects such as sending, purchasing and deleting.
+6173	15.11 · Screenshots, coordinates and action feedback
+17349	Related material: Claude Computer Use Tool
+7249	The Claude Computer Use tool provides a product mechanism connecting interface observations and actions. Integrators still need to prepare the execution environment, screenshot feedback and permission controls.
+17799	Tool output may show an action executed while the business layer still rejects it, for example because form validation fails. The model should continue judging from new observations.
+18520	Screenshot scaling changes coordinates
+26314	Input and conditions.</strong> The screenshot has 2 times the resolution, and the target point is (120,80).
+19525	Convert
+28818	Divide by 2
+25304	Viewport (60,40).
+13921	Prerequisite
+20245	No cropping, offset or scrolling changes
+15580	Otherwise additional transforms are needed.
+28539	Observe the target and click result again
+10995	One conversion is not permanently valid.
+19027	Join the steps up.</strong> Coordinates must match the screenshot and the execution coordinate system.
+14407	Original exercise: simulate an error message after a button click. Require the system to report incomplete status and correct it instead of declaring success from the old plan.
+16679	Completion means connecting actions and observations in a loop; a sequence of mouse commands cannot prove task completion.
+6174	15.12 · Evaluating actual desktop tasks
+17444	Related material: OSWorld
+7996	OSWorld evaluates multimodal agent tasks in actual computer environments. Tasks include planning, targeting, actions and outcome verification, beyond recognizing interface elements.
+22767	Environment versions, software state and execution limits affect results. A benchmark score cannot directly represent arbitrary enterprise desktop workflows.
+21469	Desktop task success is not judged by click count
+26212	Input and conditions.</strong> The task is to change a spreadsheet cell to 7 and save it; the agent makes 10 clicks.
+25120	Behavior record
+6099	10 actions
+10881	Not evidence of completion.
+22651	Check state
+28530	Reopen the file and read the target cell
+18054	It should be 7.
+12376	Saving fails or the path is wrong
+14151	Even a long action trace should be judged incomplete.
+19167	Join the steps up.</strong> Real-environment evaluation needs outcome state and permission boundaries.
+14391	Original exercise: classify failures as targeting errors, planning errors, ineffective actions and missing final checks, and design evidence for each.
+16560	Completion means analyzing where real tasks break, not blaming every GUI failure on an insufficiently strong vision model.
+6175	15.13 · Graphical interface grounding
+17483	Related material: SeeClick
+8855	SeeClick focuses on GUI Grounding, matching language goals to interface locations. Grounding is part of computer use; it is not complete task planning or business understanding.
+23154	Similar buttons, occlusion and page-layout changes may create ambiguity. Correct targeting still needs confirmation of the action's effect.
+20105	Two buttons with the same text need context to locate them
+26516	Input and conditions.</strong> The page has two "Delete" buttons, one for drafts and one for official projects.
+20115	Text match
+18652	Two locations found
+20228	The target is not uniquely determined.
+22927	The user permits deleting drafts only
+13084	Associate the containing card and object ID.
+13582	Check the target and approval again
+11134	Do not execute the first match found.
+18895	Join the steps up.</strong> GUI grounding needs object identity, not only label text.
+14336	Original exercise: add context to a schematic interface with two same-named "Save" buttons, explaining what information the model needs to disambiguate them.
+16564	Completion means distinguishing "Find the target" from "Achieve the user's goal", evaluating grounding and task success separately.
+6176	15.14 · Integrating browser and desktop execution environments
+17362	Related material: Computer Use Integration Recipes
+7292	Computer Use integration connects model actions to browser or desktop execution environments, then collects new observations. The executor must handle coordinates, waiting, errors and state instead of only forwarding text.
+23491	Where stable APIs or structured tools exist, compare them with GUI approaches. The latter suit tasks requiring actual interfaces or lacking APIs, but should not be preferred unconditionally.
+7369	DOM targeting and visual coordinates each have limits
+26322	Input and conditions.</strong> A button is readable in the DOM, but a canvas control has no semantic node.
+24424	Structured tool
+17528	Locate ordinary buttons using stable attributes
+28799	Reduces coordinate drift.
+25307	Visual tool
+9148	The canvas requires a screenshot to identify the location
+20338	Make the coordinate system explicit.
+13062	Shared check
+14006	Read state after the action
+12020	No targeting method replaces result verification.
+18952	Join the steps up.</strong> Prefer reliable structured interfaces and add vision when needed; not every operation needs screenshot-based clicks.
+14359	Original exercise: design API and interface approaches for the same data-reading task, comparing permissions, fragility and verification costs.
+16695	Completion means choosing a controllable, reliable interface and retaining final state checks, beyond the appearance of automation.
+6177	15.15 · Monosemantic features and sparse decomposition
+17503	Related material: Towards Monosemanticity
+8983	Towards Monosemanticity studies decomposing model activations into more interpretable features and notes that a single neuron may not be the best unit for semantic analysis. This book explains the core idea from the research team's accessible official introduction and does not claim to cover every experimental appendix.
+22634	A feature's association with a class of input does not explain the full decision. Labels are researchers' summaries of behavior and still need intervention tests.
+10318	What it means when one neuron responds to two concepts
+26255	Input and conditions.</strong> Single neuron z=x1+x2 outputs 1 for both [1,0] and [0,1].
+11370	Both concepts activate z
+11112	Do not directly name z after only one concept.
+15205	Superposition or polysemanticity may be present
+14142	A single-point label is insufficient.
+23358	Research
+18154	Introduce more features and controlled interventions
+21524	Check whether their different effects can be separated.
+19242	Join the steps up.</strong> This shows a simple possibility for polysemantic representations; it does not prove the semantics of a neuron in an actual model.
+14328	Original exercise: distinguish "A feature activates in path-related text" from "This feature causes correct reasoning about paths", listing the additional evidence needed for the latter.
+16561	Completion means separating correlation, explanatory hypotheses and causal verification, not treating visualization as complete mind reading.
+6178	15.16 · Scaling and evaluating sparse autoencoders
+17482	Related material: Scaling and Evaluating Sparse Autoencoders
+23456	Sparse autoencoders try to reconstruct internal model representations with fewer active features. Scaling research must evaluate reconstruction quality, sparsity and feature interpretability together.
+28508	Better reconstruction does not necessarily mean clearer explanations, and sparser features may lose information. Different metrics need trade-offs.
+23457	A sparse autoencoder's two objectives can conflict
+26485	Input and conditions.</strong> Input x=[1,0], and the teaching decoder matrix is the identity. Encoding h=[1,0] reconstructs x exactly; with h=[0,0], squared reconstruction error is 1.
+28509	Reconstruction term
+29120	Encourages restoring the original activation
+13671	Reduces distortion.
+23459	Sparsity term
+29119	Encourages few active features
+19778	Improves analyzability.
+21126	Trade-off
+23452	An excessively strong sparsity penalty
+15194	May lose important information; fewer active features alone are not enough.
+19015	Join the steps up.</strong> Interpretability tools also need evaluation of reconstruction quality and feature usefulness.
+14442	Original exercise: use simple two-dimensional data to show that "Reconstruct the original vector" and "Obtain meaningful factors" are different objectives.
+16632	Completion means understanding the evaluation problem and recognizing that mechanistic interpretability still cannot fully explain an arbitrary commercial model's answer.
+6179	15.17 · Research methods for mechanistic interpretability
+17507	Related material: Transformer Circuits
+9001	Transformer Circuits collects research approaches to mechanistic interpretability, examining how internal model computations implement particular behaviors. It is an ongoing field of research, not a manual that has exhausted every model mechanism.
+25268	Observing activations, proposing feature explanations, intervening and verifying behavioral changes are different steps. A model's natural-language self-description cannot replace this evidence.
+23183	The difference between observing correlation and intervening on causes
+26406	Input and conditions.</strong> Feature f often activates with correct answers.
+23188	Correlational observation
+9182	f and correctness occur together
+11221	Does not prove f causes correctness.
+14925	Controlled intervention
+15908	Suppress/replace f under comparable inputs
+25272	Observe output changes.
+25352	Limits of explanation
+17993	Intervention may take the model outside its training distribution
+27177	Controls and localized analysis are still needed.
+19120	Join the steps up.</strong> Mechanistic explanations need testable causal evidence, not attractive visualization names.
+14290	Original exercise: propose two possible internal explanations for a simple behavior and design an intervention to distinguish them, rather than only observing correlation.
+16551	Completion means keeping research hypotheses separate from empirical conclusions and recognizing that a local mechanism is not the entire cause of whole-system behavior.
+9572	← Runtime and performance</a><a href="chapter-16.html">Mathematical and implementation appendix →
+16752	For the full mechanism and a continuing example, see <a href="../chapters/27.html#agent-practice-multimodal">The interface was read correctly — so why can the action still click the wrong thing?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+16753	For the full mechanism and a continuing example, see <a href="../chapters/28.html#agent-practice-synthesis">How is a knowledge graph turned into engineering judgment rather than a compendium of concepts?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+20027	Mathematical and implementation appendix — AI Systems Engineering
+22311	Follow this chapter through its objects and states</a><a href="#topic-2">Training: give every position a "what comes next" question</a><a href="#c16-section-1">Essential mathematics and implementation basics</a><a href="#c16-section-2">One gradient update</a><a href="#c16-section-3">Connect the full chain with a character model</a><a href="#c16-section-4">Data splitting and generalization</a><a href="#c16-section-5">Five completion criteria</a><a href="#section-6">Item-by-item Chinese lecture notes
+11898	A practical branch from automatic differentiation to small language models
+28773	Stage 16</span><span class="chip">6 expanded notes</span><span class="chip">Main text fully expanded
+18345	Essential mathematics and implementation basics
+15556	Vectors, matrices, conditional probability, logarithms, derivatives and the chain rule are entry points for understanding small language models. Deep-learning textbooks supply the basics, while CS336 and courses on implementation from scratch connect concepts to models. You need not finish all mathematics before experimenting, but should be able to explain the quantities in every formula.
+15566	Vectors represent features, matrices transform them, dot products calculate compatibility, softmax normalizes scores, and negative log likelihood penalizes low probability for the true target. These computational roles do not mean every dimension corresponds to a concept a person can name.
+10428	One gradient update
+14231	Original example:
+9999	. With x=2, t=5, w=1 and b=0, y=2 and L=9; the gradient is
+10079	. Updating with learning rate 0.1 gives w=2.2 and b=0.6, making y exactly 5. This is a coincidence of these particular numbers, not a claim that one gradient-descent step always reaches the optimum.
+24817	Autodiff propagates gradients through the computation graph; it does not judge whether the loss objective is right. Calculating gradients differs from an optimizer updating parameters; inference usually does not need the gradient graph used in training.
+11856	Connect the full chain with a character model
+14256	An original experiment can build a character vocabulary from your own short text, construct input and right-shifted targets, train a small autoregressive model and then sample. Character-level modeling suits teaching and is not a complete replacement for modern subword tokenizers.
+8953	Token tensors are often B×T, becoming B×T×D after embedding; attention computes across sequence positions, and the output gives each position's vocabulary scores. The causal mask and right-shifted targets prevent looking at the answers. nanoGPT offers a concise implementation entry point; this book does not claim to have trained it or reproduced its results.
+20038	Data splitting and generalization
+25536	The training set updates parameters, the validation set selects configurations, and the test set offers relatively independent evaluation. Repeatedly inspecting the test set to change the model turns it into development data. Random splits of adjacent or near-duplicate content may leak information; consider splits by document, time or source.
+14233	Original example: training on an old README and testing on its new version may involve substantial overlap and cannot prove generalization to a new project. Getting a pipeline to run also does not establish understanding of target alignment and overfitting.
+11655	Five completion criteria
+19372	Identify tokenizer output; trace embedding and attention dimensions; work out softmax by hand; explain the loss; state why inference does not update weights. Then run controlled experiments: does removing the mask leak information, what happens when targets are shuffled, does a small dataset overfit, and does temperature change a distribution or verify facts?
+28414	The accompanying experiments need no API and help isolate mechanisms; they do not replace actual model evaluation. Basic knowledge ultimately serves engineering diagnosis: caching is not memory, compaction is not training, tool results are only new input, and a long window does not guarantee constraints hold.
+24910	Self-check: training loss falls but test performance worsens?</strong> Overfitting or a distribution difference is possible; this cannot directly be called greater intelligence. <strong>Can a small experiment prove a commercial agent's quality?</strong> No; it can explain only a local mechanism.
+6191	16.1 · From automatic differentiation to language models
+17443	Related material: Neural Networks Zero to Hero
+9102	Zero to Hero progresses from basic neural networks and automatic differentiation to language models, using implementation to understand computation graphs, training and generation. Its content is not an entire set of prerequisites that must be completed before using agents.
+12788	Master a complete chain first—input, computation, loss, gradients, updates and evaluation—then extend the model structure. Merely copying training code makes it easy to miss target alignment and data problems.
+24816	What autodiff propagates through the computation graph
+12380	Saves necessary intermediate values.
+17666	Local derivatives
+28584	Multiplied through the chain.
+12101	The optimizer then decides how to update w.
+19140	Join the steps up.</strong> Differentiation and updates are separate steps; this is not the model judging in language that it "knows what went wrong".
+14374	Original exercise: work out a scalar model's gradient by hand, then check it with finite differences and explain where the error comes from.
+16666	Completion means explaining every computation and the training objective, not merely seeing a falling loss curve.
+6192	16.2 · A minimal GPT training system
+17516	Related material: nanoGPT
+9243	nanoGPT connects data, a GPT model, training and sampling in a relatively concise implementation. It suits source study, but this book does not claim to have downloaded or trained it or reproduced its performance.
+28742	Pin a version when reading, and trace input shapes, the causal mask, right-shifted targets and the generation loop. Training and inference code perform different work.
+20551	Even minimal GPT training must shift labels correctly
+26307	Input and conditions.</strong> The sequence is [A,B,C,D].
+22020	Each position can see only the past.
+28988	Predict the next item, not the current position itself.
+28600	Incorrect counterexample
+21345	Labels also use [A,B,C]
+15207	It may learn to copy, with low loss but without the target capability.
+18944	Join the steps up.</strong> Starting with a small model does not remove the need for causal and supervision alignment.
+14346	Original exercise: list a batch's inputs and targets on paper, check for future-information leakage, then explain why inference has no gradient updates.
+16656	Completion means locating key components; it does not require first training a model at a practically useful scale.
+6193	16.3 · A practical route to training from scratch
+13584	When returning to the CS336 practice branch, focus on organizing model, data and systems experiments into a reproducible process. Configuration, versions and evaluation conditions matter as much as code.
+25473	Training anomalies may come from data, optimization, precision or implementation; do not assume a bigger model is needed first. Small experiments help isolate variables.
+10273	The checking order for a runnable training system
+26386	Input and conditions.</strong> The model output suddenly becomes NaN.
+26552	Input layer
+21492	Check ID ranges and empty batches
+12790	Rule out data errors first.
+20015	Numeric layer
+21493	Check fully masked softmax, division by zero and overflow
+18661	Find the first nonfinite value.
+25470	Training layer
+13574	Then check gradients, learning rate and updates
+11145	Do not begin by enlarging the model or switching datasets.
+18983	Join the steps up.</strong> Layered checks locate the actual cause more easily than random parameter changes.
+24551	Continue the step-by-step calculation: <a href="../chapters/02.html#worked-Q007">Q075 · One stable softmax computation, plus a fully masked counterexample
+14474	Original exercise: design a comparison changing only the learning rate, with fixed data and random settings, and record training and validation changes.
+16657	Completion means proposing and testing causal hypotheses, not changing many parameters together and keeping only the best run.
+6194	16.4 · Using the model ecosystem in practice
+7719	The Hugging Face tool ecosystem helps load models, tokenizers and data, and organize training and inference. High-level interfaces lower the barrier to use but should not hide the meaning of underlying inputs and outputs.
+15354	The same pipeline name may use different models and configurations; interpret results with the actual resources. Record library versions and model files too.
+8945	The Tokenizer and model weights must match
+26385	Input and conditions.</strong> In the model vocabulary, ID2 is 爱, but another Tokenizer treats 2 as 你.
+7730	The ID is still in the valid range
+23461	The program will not necessarily report an error.
+21237	The wrong vocabulary row was looked up
+26576	Input is systematically misinterpreted.
+24391	Bind the Tokenizer, template and weights
+11049	Checking tensor sizes alone is insufficient.
+19103	Join the steps up.</strong> Valid numbers do not guarantee correct symbol mappings.
+14381	Original exercise: split a high-level call into encoding, model forward pass and postprocessing, checking each layer's shapes and output types.
+16653	Completion means locating the corresponding layer when a high-level interface fails, rather than only rewriting natural-language prompts repeatedly.
+6195	16.5 · Mathematics, probability and optimization basics
+17375	Related material: Deep Learning Book
+22493	Deep-learning textbooks provide foundations in linear algebra, probability, optimization and networks. For this course, the key is understanding the connections between matrix transformations, conditional probability, loss and the chain rule.
+20028	Mathematical formulas should translate into concrete calculations and dimension checks. Memorizing symbols cannot replace understanding, and experimenting need not stop until all theory has been mastered.
+19382	Exponentials and logarithms must specify their base
+26449	Input and conditions.</strong> Given probability p=0.5, cross entropy uses the natural logarithm.
+24922	Natural logarithm
+14114	The unit is nat.
+11649	Binary logarithm
+14113	The unit is bit.
+11394	The two differ only by a fixed factor
+11062	Do not treat 0.693 and 1 as differences in model performance.
+19104	Join the steps up.</strong> Mathematical definitions and units are part of a worked example's accuracy.
+24587	Continue the step-by-step calculation: <a href="../foundations/09.html#worked-F09">Lesson 44 · How three scores become sampling probabilities, step by step
+14373	Original exercise: work out softmax, cross entropy and a simple gradient by hand, explaining which learning signals the numerical changes represent.
+16674	Completion means reading the small model's core formulas and knowing which conclusions depend on specific assumptions.
+6196	16.6 · Tensors, automatic differentiation and model training
+17463	Related material: PyTorch Documentation
+8082	PyTorch supports model implementation with tensors and automatic differentiation. Autodiff calculates gradients; the optimizer updates parameters. These are different actions, and inference usually need not save the same training graph.
+21458	The framework does not judge whether the loss expresses the right business objective or automatically prevent data leakage. Dimensions, targets and training/validation modes still need checks.
+21489	Gradients accumulate by default: why zero them
+26272	Input and conditions.</strong> Two backward calls each contribute 2 to the same parameter.
+17910	Already accumulated.
+10928	Without zeroing before the second call
+20429	It sums rather than automatically replacing.
+28892	Use the correct denominator for intentional gradient accumulation; zero gradients for an ordinary next step
+28379	Avoid unintentionally enlarging the learning step.
+18883	Join the steps up.</strong> API behavior must match training intent.
+24590	Continue the step-by-step calculation: <a href="../studies/chapters/03.html#worked-S03">S03 · Why accumulating gradients over four microbatches does not necessarily equal four times the learning rate
+14440	Original exercise: verify gradients first with this book's dependency-free scalar experiment, then move to a tensor library in a suitable environment and compare results.
+16628	Completion means understanding the framework's responsibilities and the developer's. Reading this package and running its basic experiments does not depend on a particular current PyTorch version.
+9574	← Advanced topics

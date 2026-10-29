@@ -1,0 +1,934 @@
+# Japanese unique-string batch u52; 550 entries; source IDs/whitespace immutable.
+# Read TRANSLATING.md, _reference.ja.txt and glossary.ja.json; only write u52.ja.txt.
+# Keep numbers, identifiers, filenames, escapes, HTML attributes, model vocabulary and evidence limits unchanged.
+# page: assets/visual-data.js#.F10.scenario
+29300	沿用F10两层向量例：x=[1,2]，W1=[[1,−1],[1,1]]，b1=[0,−2]，W2=[2,1]。最后一帧是明确的去ReLU对照。
+# page: assets/visual-data.js#.F10.terms[1][1]
+29298	两层之间为本次输入算出的向量。
+# page: assets/visual-data.js#.F10.terms[2][1]
+29299	W、偏置等控制运算的固定系数。
+# page: assets/visual-data.js#.F11.frames[0].title
+29309	同一输入，三条参数路径
+# page: assets/visual-data.js#.F11.frames[1].state
+29311	q爱=[1,0]；k我=[1,0]；k爱=[0,1]
+# page: assets/visual-data.js#.F11.frames[1].title
+29310	每行分别变换，尚未混合位置
+# page: assets/visual-data.js#.F11.frames[2].title
+29312	当前接收者是“爱”，比较两个可见位置
+# page: assets/visual-data.js#.F11.frames[3].state
+29314	份额 = [0.6697615493,0.3302384507]
+# page: assets/visual-data.js#.F11.frames[3].title
+29313	把分数变成读取份额
+# page: assets/visual-data.js#.F11.frames[4].state
+29316	输出=[6.697615,6.604769]
+# page: assets/visual-data.js#.F11.frames[4].title
+29315	份额确定后，混合的是V而不是K
+# page: assets/visual-data.js#.F11.scenario
+29308	沿用F11正文的独立两位置算例：X=[[1,1],[1,−1]]。本图省略偏置、RoPE、归一化和多头。所有Q/K/V和输出都由配套程序计算。
+# page: assets/visual-data.js#.F11.terms[3][1]
+29307	本轮通过softmax算出的权重，区别于参数W里的权重。
+# page: assets/visual-data.js#.F12.frames[0].state
+29324	允许Key位置 ≤ 0
+# page: assets/visual-data.js#.F12.frames[0].title
+29323	处理绝对位置0
+# page: assets/visual-data.js#.F12.frames[1].state
+29326	允许Key位置 ≤ 1
+# page: assets/visual-data.js#.F12.frames[1].title
+29325	处理绝对位置1
+# page: assets/visual-data.js#.F12.frames[2].state
+29328	允许Key位置 ≤ 2
+# page: assets/visual-data.js#.F12.frames[2].title
+29327	处理绝对位置2
+# page: assets/visual-data.js#.F12.frames[3].title
+29329	禁止不是简单“分数乘0”
+# page: assets/visual-data.js#.F12.frames[4].title
+29330	有缓存时不能从0重新编号
+# page: assets/visual-data.js#.F12.scenario
+29322	前3帧用3个有效位置；第4帧是明确的屏蔽数值对照；第5帧另设past=3、new=2展示缓存偏移。图内始终标出当前条件。
+# page: assets/visual-data.js#.F12.terms[0][0]
+29317	因果
+# page: assets/visual-data.js#.F12.terms[0][1]
+29318	当前位置不读取将来位置。
+# page: assets/visual-data.js#.F12.terms[1][0]
+29319	加性mask
+# page: assets/visual-data.js#.F12.terms[1][1]
+29320	允许处加0，禁止处用−∞等价地排除。
+# page: assets/visual-data.js#.F12.terms[2][1]
+29321	加上历史前缀后的位置，而不是当前小批次中的行号。
+# page: assets/visual-data.js#.F13.frames[0].title
+29333	位置0旋转到0度
+# page: assets/visual-data.js#.F13.frames[1].title
+29334	位置1旋转到30度
+# page: assets/visual-data.js#.F13.frames[2].title
+29335	位置2旋转到60度
+# page: assets/visual-data.js#.F13.frames[3].title
+29336	位置3旋转到90度
+# page: assets/visual-data.js#.F13.frames[4].title
+29337	比较角度差，而不是位置名字
+# page: assets/visual-data.js#.F13.scenario
+29332	独立二维说明图：初始向量[1,0]，教学频率每位置30°；不是商业模型实际RoPE频率。
+# page: assets/visual-data.js#.F13.terms[0][1]
+29331	改变二维向量方向、保持长度的运算。
+# page: assets/visual-data.js#.F14.scenario
+29339	展示常见pre-norm结构的运算依赖，不假定所有Transformer采用相同顺序。完整模型数值见已有贯通算例。
+# page: assets/visual-data.js#.F14.terms[0][1]
+29338	把子层输入与子层输出相加。
+# page: assets/visual-data.js#.F15.frames[0].state
+29349	输入=[1,2]；缓存长度=0
+# page: assets/visual-data.js#.F15.frames[0].title
+29348	输入是“我爱”，还没有输出
+# page: assets/visual-data.js#.F15.frames[1].state
+29351	cache_len=2；新输入=[1, 2]
+# page: assets/visual-data.js#.F15.frames[1].title
+29350	处理完整输入（Prefill）
+# page: assets/visual-data.js#.F15.frames[2].state
+29353	已选出=学习；cache_len=2
+# page: assets/visual-data.js#.F15.frames[2].title
+29352	第1次选择：学习
+# page: assets/visual-data.js#.F15.frames[4].state
+29356	cache_len=3；新输入=[3]
+# page: assets/visual-data.js#.F15.frames[4].title
+29355	新一轮：只处理“学习”
+# page: assets/visual-data.js#.F15.frames[5].state
+29358	已选出=！；cache_len=3
+# page: assets/visual-data.js#.F15.frames[5].title
+29357	第2次选择：！
+# page: assets/visual-data.js#.F15.frames[7].state
+29360	cache_len=4；新输入=[5]
+# page: assets/visual-data.js#.F15.frames[7].title
+29359	新一轮：只处理“！”
+# page: assets/visual-data.js#.F15.frames[8].state
+29362	已选出=EOS；cache_len=4
+# page: assets/visual-data.js#.F15.frames[8].title
+29361	第3次选择：EOS
+# page: assets/visual-data.js#.F15.frames[9].state
+29364	可见文本=学习！；stop_reason=EOS
+# page: assets/visual-data.js#.F15.frames[9].title
+29363	结束不等于每个任务都成功
+# page: assets/visual-data.js#.F15.scenario
+29347	独立、可复算的微型模型：7项教学词表、4维表示、单层单头因果Attention、残差与tanh前馈；省略归一化和位置编码。输出头只用三条指定前缀拟合，目的是演示“学习→！→EOS”，不具有通用语言能力。完整参数与中间值随包提供。
+# page: assets/visual-data.js#.F15.terms[3][1]
+29346	每次取最高分候选，不是概率抽样。
+# page: assets/visual-data.js#.F16.frames[0].title
+29372	两层分别保存历史
+# page: assets/visual-data.js#.F16.frames[1].title
+29374	选出新项，暂不算进缓存
+# page: assets/visual-data.js#.F16.frames[2].title
+29375	只给新位置计算K/V
+# page: assets/visual-data.js#.F16.frames[3].title
+29377	历史被复用，不是被删除
+# page: assets/visual-data.js#.F16.frames[4].state
+29379	发生前缀修改 → 受影响后缀失效
+# page: assets/visual-data.js#.F16.frames[4].title
+29378	对照：修改前缀就不再是同一份缓存
+# page: assets/visual-data.js#.F16.scenario
+29371	本图用两层、三个历史位置演示状态；与F18单层小模型是不同教学结构，图内明确标层数。
+# page: assets/visual-data.js#.F16.terms[0][0]
+29365	K/V缓存
+# page: assets/visual-data.js#.F16.terms[0][1]
+29366	每层保存已处理位置的Key和Value。
+# page: assets/visual-data.js#.F16.terms[1][0]
+29367	缓存失效
+# page: assets/visual-data.js#.F16.terms[1][1]
+29368	原来结果的前提改变，不能安全继续复用。
+# page: assets/visual-data.js#.F16.terms[2][1]
+29370	重新执行此前算过的部分运算。
+# page: assets/visual-data.js#.F17.frames[0].title
+29385	预测偏小，但参数还没变
+# page: assets/visual-data.js#.F17.frames[1].title
+29386	梯度告诉局部方向
+# page: assets/visual-data.js#.F17.frames[2].title
+29387	选定步长，实际改参数
+# page: assets/visual-data.js#.F17.frames[3].title
+29388	独立反例：步长太大
+# page: assets/visual-data.js#.F17.scenario
+29384	沿用主算例x=2、目标4、w=1、平方误差损失。前三帧学习率0.2；最后一帧明确重置w=1并只改学习率为0.6。
+# page: assets/visual-data.js#.F17.terms[0][1]
+29380	衡量当前预测偏离目标的数。
+# page: assets/visual-data.js#.F17.terms[1][1]
+29381	参数轻微增加时损失的局部变化率。
+# page: assets/visual-data.js#.F17.terms[2][0]
+29382	学习率
+# page: assets/visual-data.js#.F17.terms[2][1]
+29383	沿更新方向迈多大一步的系数。
+# page: assets/visual-data.js#.F18.frames[0].state
+29396	输入=[1,2,3,5]；目标=[2,3,5,6]
+# page: assets/visual-data.js#.F18.frames[0].title
+29395	把输入和目标错开一格
+# page: assets/visual-data.js#.F18.frames[1].title
+29397	训练能同时算，不等于能偷看
+# page: assets/visual-data.js#.F18.frames[2].title
+29398	先给一个位置评分
+# page: assets/visual-data.js#.F18.frames[3].state
+29400	分子与分母都排除无效目标
+# page: assets/visual-data.js#.F18.frames[3].title
+29399	屏蔽无效目标，再平均
+# page: assets/visual-data.js#.F18.frames[4].state
+29402	backward ≠ 参数已更新
+# page: assets/visual-data.js#.F18.frames[4].title
+29401	计算梯度之后还要step
+# page: assets/visual-data.js#.F18.scenario
+29394	标签对齐使用5项序列；单位置交叉熵与PAD平均分别是明确独立的小例，不假称那些概率来自对齐图的模型。
+# page: assets/visual-data.js#.F18.terms[0][1]
+29389	用于评分的真实下一Token。
+# page: assets/visual-data.js#.F18.terms[1][0]
+29390	交叉熵
+# page: assets/visual-data.js#.F18.terms[1][1]
+29391	本例为真实目标概率的负对数。
+# page: assets/visual-data.js#.F18.terms[2][0]
+29392	有效目标数
+# page: assets/visual-data.js#.F18.terms[2][1]
+29393	实际参与评分的位置数，不必等于补齐长度。
+# page: assets/visual-data.js#.F19.scenario
+29405	本图仅展示偏好训练的数据关系，不把候选A/B标为真实产品测评；RLHF与DPO的具体目标区别保留在正文。
+# page: assets/visual-data.js#.F19.terms[1][1]
+29403	模型在给定上下文下选择输出的概率规则。
+# page: assets/visual-data.js#.F19.terms[2][1]
+29404	用来衡量相对变化的冻结基线。
+# page: assets/visual-data.js#.F20.scenario
+29409	本图比较技术作用对象；具体数值对照分别在O02量化、O03 LoRA、O08 MoE中声明独立输入。
+# page: assets/visual-data.js#.F20.terms[0][1]
+29406	用两张较窄矩阵表示权重变化，不是把整套基础权重删掉。
+# page: assets/visual-data.js#.F20.terms[1][1]
+29407	以有限刻度近似原数，可能有舍入和裁剪误差。
+# page: assets/visual-data.js#.F20.terms[2][1]
+29408	网络结构中的子网络，不天然对应某个人类专业。
+# page: assets/visual-data.js#.F21.frames[0].state
+29419	计算=1ms；搬运=8ms
+# page: assets/visual-data.js#.F21.frames[0].title
+29418	先问算力和搬运谁更慢
+# page: assets/visual-data.js#.F21.frames[1].state
+29421	计算=0.5ms；搬运=8ms
+# page: assets/visual-data.js#.F21.frames[1].title
+29420	只把算力翻倍
+# page: assets/visual-data.js#.F21.frames[2].title
+29422	只把搬运量减半
+# page: assets/visual-data.js#.F21.frames[3].title
+29424	下界不是实测耗时
+# page: assets/visual-data.js#.F21.scenario
+29417	固定教学任务与理想速率。第二、三帧是各自恢复基准后只改一个因素的独立对照；不宣称真实运行时间。
+# page: assets/visual-data.js#.F21.terms[0][0]
+29410	计算量
+# page: assets/visual-data.js#.F21.terms[0][1]
+29411	要做的运算总数。
+# page: assets/visual-data.js#.F21.terms[1][1]
+29412	单位时间能搬运的字节数。
+# page: assets/visual-data.js#.F21.terms[2][1]
+29414	单位时间完成多少工作；不同于一条请求要多久。
+# page: assets/visual-data.js#.F21.terms[3][0]
+29415	通信
+# page: assets/visual-data.js#.F21.terms[3][1]
+29416	数据在设备之间交换产生的成本。
+# page: assets/visual-data.js#.F22.frames[0].state
+29430	未读取
+# page: assets/visual-data.js#.F22.frames[0].title
+29429	1. 用户任务：读config.txt中的timeout
+# page: assets/visual-data.js#.F22.frames[1].state
+29432	提供工具
+# page: assets/visual-data.js#.F22.frames[1].title
+29431	2. 模型请求：任务＋read_file工具定义
+# page: assets/visual-data.js#.F22.frames[2].state
+29434	请求待执行
+# page: assets/visual-data.js#.F22.frames[2].title
+29433	3. 模型输出：call_id=c1，path=config.txt
+# page: assets/visual-data.js#.F22.frames[3].title
+29435	4. 宿主校验后读取文件
+# page: assets/visual-data.js#.F22.frames[4].title
+29437	5. 工具结果：timeout=30
+# page: assets/visual-data.js#.F22.frames[5].state
+29439	证据入上下文
+# page: assets/visual-data.js#.F22.frames[5].title
+29438	6. 下一轮输入：原任务＋调用＋结果
+# page: assets/visual-data.js#.F22.frames[6].state
+29441	回答完成
+# page: assets/visual-data.js#.F22.frames[6].title
+29440	7. 模型回答：配置的timeout为30
+# page: assets/visual-data.js#.F22.frames[7].title
+29442	8. 宿主显示回答；任务结束
+# page: assets/visual-data.js#.F22.scenario
+29428	构造的只读教学任务：文件config.txt含timeout=30。泳道展示职责边界，不声称调用了真实商业API；数据和动作顺序固定。
+# page: assets/visual-data.js#.F22.terms[0][1]
+29425	把某次工具请求与其结果连接的ID。
+# page: assets/visual-data.js#.F22.terms[1][1]
+29426	程序实际执行后返回的内容。
+# page: assets/visual-data.js#.F22.terms[2][1]
+29427	本轮明确交给模型的信息，而非整个电脑状态。
+# page: assets/visual-data.js#.F23.frames[0].title
+29444	收到第一段字节
+# page: assets/visual-data.js#.F23.frames[1].title
+29445	继续收到剩余字节
+# page: assets/visual-data.js#.F23.frames[2].title
+29447	完整SSE事件
+# page: assets/visual-data.js#.F23.frames[3].title
+29449	解析结构，再解释语义
+# page: assets/visual-data.js#.F23.scenario
+29443	真实编码了一个小SSE文本事件，故意把“爱”的三个UTF-8字节拆成两段。示例并不使用厂商特定的事件命名。
+# page: assets/visual-data.js#.F24.scenario
+29453	构造的文件更新恢复轨迹。v7/v8是本例的版本标签，不是模型版本；只说明恢复语义，不宣称文件系统和数据库共享事务。
+# page: assets/visual-data.js#.F24.terms[0][1]
+29451	一次可记录的状态变化，例如文件替换完成。
+# page: assets/visual-data.js#.F24.terms[1][1]
+29452	某个时刻对任务状态的保存。
+# page: assets/visual-data.js#.F25.frames[0].title
+29462	1. Host建立连接，Client与Server协商能力
+# page: assets/visual-data.js#.F25.frames[1].title
+29463	2. Client请求可用工具列表
+# page: assets/visual-data.js#.F25.frames[2].title
+29464	3. Server返回工具描述和输入结构
+# page: assets/visual-data.js#.F25.frames[3].title
+29465	4. Host选定要向模型暴露的工具
+# page: assets/visual-data.js#.F25.frames[4].title
+29466	5. 通过权限检查后发送调用
+# page: assets/visual-data.js#.F25.frames[5].title
+29467	6. 返回工具结果与错误信息
+# page: assets/visual-data.js#.F25.frames[6].title
+29468	7. Host将结果放入模型下一轮上下文
+# page: assets/visual-data.js#.F25.scenario
+29461	按公开架构画逻辑流程，省略具体传输和认证字段。不同协议版本的能力细节以项目声明为准。
+# page: assets/visual-data.js#.F25.terms[3][1]
+29460	允许某个身份在某个范围执行某个动作。
+# page: assets/visual-data.js#.F26.frames[0].state
+29476	累计安排=20 / 100
+# page: assets/visual-data.js#.F26.frames[0].title
+29475	加入规则
+# page: assets/visual-data.js#.F26.frames[1].state
+29478	累计安排=30 / 100
+# page: assets/visual-data.js#.F26.frames[1].title
+29477	加入任务
+# page: assets/visual-data.js#.F26.frames[2].state
+29480	累计安排=45 / 100
+# page: assets/visual-data.js#.F26.frames[2].title
+29479	加入工具定义
+# page: assets/visual-data.js#.F26.frames[3].state
+29482	累计安排=65 / 100
+# page: assets/visual-data.js#.F26.frames[3].title
+29481	加入必要证据
+# page: assets/visual-data.js#.F26.frames[4].state
+29484	累计安排=85 / 100
+# page: assets/visual-data.js#.F26.frames[4].title
+29483	加入输出预留
+# page: assets/visual-data.js#.F26.scenario
+29474	100单位的教学预算，不是真实Tokenizer测量：规则20、任务10、工具15、证据20、输出预留20。全程同一配置。
+# page: assets/visual-data.js#.F26.terms[0][0]
+29469	预算
+# page: assets/visual-data.js#.F26.terms[0][1]
+29470	本轮允许使用的资源额度。
+# page: assets/visual-data.js#.F26.terms[1][1]
+29472	缺少它就无法可靠判断的原始信息。
+# page: assets/visual-data.js#.F26.terms[2][1]
+29473	这段材料是谁给的、何时有效、能支持什么结论。
+# page: assets/visual-data.js#.F27.frames[0].title
+29491	原历史有很多噪声
+# page: assets/visual-data.js#.F27.frames[1].title
+29493	保留目标与否定约束
+# page: assets/visual-data.js#.F27.frames[2].title
+29494	保留完成与未完成状态
+# page: assets/visual-data.js#.F27.frames[3].title
+29495	错误摘要的反例
+# page: assets/visual-data.js#.F27.frames[4].title
+29496	恢复任务前重新读证据
+# page: assets/visual-data.js#.F27.scenario
+29490	构造的exclude修复场景；有意保留“集成测试尚未运行”这一否定状态。错误摘要只作为反例，禁止当作推荐模板。
+# page: assets/visual-data.js#.F27.terms[0][1]
+29485	直接删掉一部分上下文。
+# page: assets/visual-data.js#.F27.terms[1][1]
+29486	用新文本概括旧信息，可能引入改写错误。
+# page: assets/visual-data.js#.F27.terms[2][1]
+29487	明确字段的当前状态记录。
+# page: assets/visual-data.js#.F27.terms[3][0]
+29488	证据引用
+# page: assets/visual-data.js#.F27.terms[3][1]
+29489	重新获取原文的定位信息。
+# page: assets/visual-data.js#.F28.frames[0].state
+29504	A/B/C是文档ID
+# page: assets/visual-data.js#.F28.frames[0].title
+29503	先有原文，不是先有向量
+# page: assets/visual-data.js#.F28.frames[1].title
+29505	倒排：从词找到包含它的文档
+# page: assets/visual-data.js#.F28.frames[2].title
+29506	向量：另一种候选入口
+# page: assets/visual-data.js#.F28.frames[3].title
+29507	查回原文，验证条件
+# page: assets/visual-data.js#.F28.scenario
+29502	三个文档为本书构造；倒排关系可精确核验，语义搜索只作流程说明，不编造向量服务实测分数。
+# page: assets/visual-data.js#.F28.terms[0][1]
+29497	为快速找候选而建立的数据结构。
+# page: assets/visual-data.js#.F28.terms[1][0]
+29498	召回
+# page: assets/visual-data.js#.F28.terms[1][1]
+29499	从大集合中找出可能相关的候选。
+# page: assets/visual-data.js#.F28.terms[2][0]
+29500	近似搜索
+# page: assets/visual-data.js#.F28.terms[2][1]
+29501	以少检查部分候选换速度，可能漏掉真实近邻。
+# page: assets/visual-data.js#.F29.frames[0].title
+29513	两种搜索给出不同名次
+# page: assets/visual-data.js#.F29.frames[1].title
+29514	计算候选A的融合贡献
+# page: assets/visual-data.js#.F29.frames[2].title
+29515	计算候选B的融合贡献
+# page: assets/visual-data.js#.F29.frames[3].title
+29516	计算候选C的融合贡献
+# page: assets/visual-data.js#.F29.frames[4].state
+29518	排序=B,A,C
+# page: assets/visual-data.js#.F29.frames[4].title
+29517	B排第一，但还不是最终答案
+# page: assets/visual-data.js#.F29.scenario
+29512	本图独立排名算例：关键词[A,B,C]、语义[B,C,A]、k=60。所有候选始终不变，不接用其他章节的排名数据。
+# page: assets/visual-data.js#.F29.terms[1][0]
+29508	重排
+# page: assets/visual-data.js#.F29.terms[1][1]
+29509	对召回后的候选重新作相关性排序。
+# page: assets/visual-data.js#.F29.terms[2][0]
+29510	证据充分性
+# page: assets/visual-data.js#.F29.terms[2][1]
+29511	材料能否支持问题要求的结论和条件。
+# page: assets/visual-data.js#.F30.scenario
+29521	以foo为教学符号，不指向用户仓库。调用图可能受动态调用、条件编译与运行配置影响。
+# page: assets/visual-data.js#.F30.terms[2][0]
+29519	调用图
+# page: assets/visual-data.js#.F30.terms[2][1]
+29520	以函数为节点、可能的调用为边的关系图。
+# page: assets/visual-data.js#.F31.scenario
+29527	独立配置案例；月份只用于展示时间顺序，不涉及真实产品当前参数。30秒与20秒属于不同有效期。
+# page: assets/visual-data.js#.F31.terms[0][1]
+29523	事实在现实或业务规则中适用的时间。
+# page: assets/visual-data.js#.F31.terms[1][1]
+29525	系统收到或保存该信息的时间。
+# page: assets/visual-data.js#.F31.terms[2][1]
+29526	信息适用的项目、用户、版本或环境。
+# page: assets/visual-data.js#.F32.scenario
+29541	通用Skill运行示意，不假定Codex、Claude Code和Copilot的实现细节完全相同。
+# page: assets/visual-data.js#.F32.terms[0][0]
+29535	路由
+# page: assets/visual-data.js#.F32.terms[0][1]
+29536	决定当前任务调用哪份能力或资源。
+# page: assets/visual-data.js#.F32.terms[1][0]
+29537	渐进加载
+# page: assets/visual-data.js#.F32.terms[1][1]
+29538	先提供描述，相关时再读完整内容和资源。
+# page: assets/visual-data.js#.F32.terms[2][0]
+29539	有效应用
+# page: assets/visual-data.js#.F32.terms[2][1]
+29540	能从行动或结果中观察到技能要求的落实。
+# page: assets/visual-data.js#.F33.scenario
+29548	构造的外部写入场景；不承诺跨数据库、文件系统和远程API天然具备“恰好一次”事务。
+# page: assets/visual-data.js#.F33.terms[0][0]
+29542	幂等
+# page: assets/visual-data.js#.F33.terms[0][1]
+29543	重复同一逻辑操作不产生额外副作用。
+# page: assets/visual-data.js#.F33.terms[1][0]
+29544	操作ID
+# page: assets/visual-data.js#.F33.terms[1][1]
+29545	标识同一次逻辑动作，重试不随意换新ID。
+# page: assets/visual-data.js#.F33.terms[2][0]
+29546	事务
+# page: assets/visual-data.js#.F33.terms[2][1]
+29547	在某个明确系统边界内保证一致性的机制。
+# page: assets/visual-data.js#.F34.scenario
+29559	本图独立约定：按项目相对路径，只排除根目录vendor/内文件；myvendor/不排除。它是解释反例测试的教学任务，不改写正文其他独立通配符例子的定义。
+# page: assets/visual-data.js#.F34.terms[0][1]
+29555	能让错误实现暴露问题的具体输入。
+# page: assets/visual-data.js#.F34.terms[1][1]
+29556	修改破坏了本来成立的行为。
+# page: assets/visual-data.js#.F34.terms[2][0]
+29557	交付证据
+# page: assets/visual-data.js#.F34.terms[2][1]
+29558	当前版本对应的检查命令、结果与范围。
+# page: assets/visual-data.js#.F35.frames[0].title
+29563	四种结果先分开
+# page: assets/visual-data.js#.F35.frames[1].title
+29564	精确率看选中的集合
+# page: assets/visual-data.js#.F35.frames[2].title
+29565	召回率看真正需要的集合
+# page: assets/visual-data.js#.F35.frames[3].title
+29566	不能只优化一个数
+# page: assets/visual-data.js#.F35.scenario
+29562	本图始终TP=6、FP=2、FN=4；未定义TN，不计算准确率。与其他章节不同样本的百分比不可直接拼接。
+# page: assets/visual-data.js#.F35.terms[3][0]
+29560	评测单位
+# page: assets/visual-data.js#.F35.terms[3][1]
+29561	一次任务、一次运行、一个文档或一个位置，必须先定清。
+# page: assets/visual-data.js#.F36.frames[0].title
+29573	同20题，两版各跑一次
+# page: assets/visual-data.js#.F36.frames[1].title
+29575	旧版12题成功
+# page: assets/visual-data.js#.F36.frames[2].title
+29576	新版14题成功
+# page: assets/visual-data.js#.F36.frames[3].title
+29577	改进与退化同时存在
+# page: assets/visual-data.js#.F36.frames[4].title
+29578	回到具体失败原因
+# page: assets/visual-data.js#.F36.scenario
+29572	构造的20题配对表：10都成、4新成旧败、2旧成新败、4都败。不把它当真实模型胜率。
+# page: assets/visual-data.js#.F36.terms[0][1]
+29567	同一任务同时有新旧方案结果。
+# page: assets/visual-data.js#.F36.terms[1][0]
+29568	百分点
+# page: assets/visual-data.js#.F36.terms[1][1]
+29569	两个百分率直接相减，如70%−60%=10个百分点。
+# page: assets/visual-data.js#.F36.terms[2][0]
+29570	随机波动
+# page: assets/visual-data.js#.F36.terms[2][1]
+29571	在相同条件下多次运行也可能有不同结果。
+# page: assets/visual-data.js#.F37.scenario
+29583	只展示无实际执行的教学注入句“忽略原任务”；不访问外部系统或执行危险动作。
+# page: assets/visual-data.js#.F37.terms[0][0]
+29579	可信边界
+# page: assets/visual-data.js#.F37.terms[0][1]
+29580	不同来源与权限之间不能随意跨越的分界。
+# page: assets/visual-data.js#.F37.terms[1][1]
+29581	对执行环境某些资源进行隔离的机制。
+# page: assets/visual-data.js#.F37.terms[2][1]
+29582	只给当前任务需要的能力范围。
+# page: assets/visual-data.js#.F38.frames[0].title
+29594	先看一条完整任务
+# page: assets/visual-data.js#.F38.frames[1].title
+29596	两个工具同时开始
+# page: assets/visual-data.js#.F38.frames[2].title
+29597	墙钟不是每行简单相加
+# page: assets/visual-data.js#.F38.frames[3].title
+29598	优化不在关键路径的A
+# page: assets/visual-data.js#.F38.frames[4].title
+29599	再考虑队列与成本
+# page: assets/visual-data.js#.F38.scenario
+29593	固定教学秒数，无真实产品耗时数据。第4帧只改变工具A时长，其他条件保持不变。
+# page: assets/visual-data.js#.F38.terms[1][0]
+29589	墙钟时间
+# page: assets/visual-data.js#.F38.terms[1][1]
+29590	从任务开始到结束真正经过多久。
+# page: assets/visual-data.js#.F38.terms[2][1]
+29591	决定完成时间的依赖链。
+# page: assets/visual-data.js#.F38.terms[3][1]
+29592	单位时间完成多少任务。
+# page: assets/visual-data.js#.F39.frames[0].title
+29603	图像也是规则数字表
+# page: assets/visual-data.js#.F39.frames[1].title
+29604	分成四个2×2小块
+# page: assets/visual-data.js#.F39.frames[2].title
+29605	视觉编码不是通用事实解析器
+# page: assets/visual-data.js#.F39.frames[3].state
+29607	坐标必须绑定截图尺寸与页面状态
+# page: assets/visual-data.js#.F39.frames[3].title
+29606	界面行动需要重新观察
+# page: assets/visual-data.js#.F39.scenario
+29602	仅4×4灰度像素与构造界面流程；不代表所有多模态模型的预处理实现，也不冒充真实浏览器操控结果。
+# page: assets/visual-data.js#.F39.terms[1][0]
+29600	视觉编码器
+# page: assets/visual-data.js#.F39.terms[1][1]
+29601	把像素处理成模型可用表示的网络。
+# page: assets/visual-data.js#.F40.scenario
+29613	独立诊断例：当前版本r8的timeout=30，旧版本r7为10；核对错误发生在同步、检索、摘要还是生成层，不将单次改善视为因果证明。
+# page: assets/visual-data.js#.F40.terms[0][0]
+29608	归因
+# page: assets/visual-data.js#.F40.terms[0][1]
+29609	用证据判断导致现象的环节。
+# page: assets/visual-data.js#.F40.terms[1][1]
+29610	改变或移除一个因素，看现象如何变化。
+# page: assets/visual-data.js#.F40.terms[2][0]
+29611	最小有效修复
+# page: assets/visual-data.js#.F40.terms[2][1]
+29612	能处理已确认问题而不扩大无关复杂度的改动。
+# page: assets/visual-data.js#.O01.frames[0].title
+29617	MHA：每个查询头有自己的K/V
+# page: assets/visual-data.js#.O01.frames[1].title
+29618	GQA：每两个查询头共享一组K/V
+# page: assets/visual-data.js#.O01.frames[2].title
+29619	MQA：所有查询头共享一组K/V
+# page: assets/visual-data.js#.O01.frames[3].title
+29620	减小缓存，不保证原输出逐位不变
+# page: assets/visual-data.js#.O01.scenario
+29616	独立资源计数：2层、批1、序列4、4个查询头、每头宽2、每数2字节；只改K/V组数4→2→1。
+# page: assets/visual-data.js#.O01.terms[2][0]
+29614	头宽度
+# page: assets/visual-data.js#.O01.terms[2][1]
+29615	每个头里的一排特征有多长。
+# page: assets/visual-data.js#.O02.frames[0].title
+29627	原来的四个浮点数
+# page: assets/visual-data.js#.O02.frames[1].title
+29628	除以尺度并取最近整数
+# page: assets/visual-data.js#.O02.frames[2].title
+29629	4bit有符号范围不够
+# page: assets/visual-data.js#.O02.frames[3].title
+29630	近似还原，检查误差
+# page: assets/visual-data.js#.O02.scenario
+29626	固定权重[0.26,−0.14,0.36,0.91]，尺度0.1，有符号范围[−8,7]。只是均匀量化小例，不等于NF4或所有实际4bit格式。
+# page: assets/visual-data.js#.O02.terms[0][0]
+29621	尺度scale
+# page: assets/visual-data.js#.O02.terms[0][1]
+29622	一个整数刻度对应多大的实数间隔。
+# page: assets/visual-data.js#.O02.terms[1][0]
+29623	舍入
+# page: assets/visual-data.js#.O02.terms[1][1]
+29624	取邻近可表示值。
+# page: assets/visual-data.js#.O02.terms[2][1]
+29625	把超范围值截到边界，通常产生更大的误差。
+# page: assets/visual-data.js#.O03.frames[0].title
+29636	原权重并没有被删除
+# page: assets/visual-data.js#.O03.frames[1].title
+29637	两张小表表示一个增量
+# page: assets/visual-data.js#.O03.frames[2].title
+29638	输出是原路径加增量路径
+# page: assets/visual-data.js#.O03.frames[3].title
+29639	训练少了，不等于推理自动更快
+# page: assets/visual-data.js#.O03.scenario
+29635	独立小例：W为4×4单位矩阵，r=1，A=[[.1],[.2],[.3],[.4]]，B=[[1,−1,.5,0]]，x=[1,0,0,0]，缩放1。
+# page: assets/visual-data.js#.O03.terms[0][1]
+29631	本次训练不更新该参数，不表示不读取或不参与前向。
+# page: assets/visual-data.js#.O03.terms[1][0]
+29632	秩r
+# page: assets/visual-data.js#.O03.terms[1][1]
+29633	增量能表达的独立方向数的上限。
+# page: assets/visual-data.js#.O03.terms[2][1]
+29634	在适用条件下把增量加回基础权重供推理。
+# page: assets/visual-data.js#.O04.frames[0].title
+29643	普通写法先想象整张分数表
+# page: assets/visual-data.js#.O04.frames[1].title
+29644	在线处理第1个候选
+# page: assets/visual-data.js#.O04.frames[2].title
+29645	在线处理第2个候选
+# page: assets/visual-data.js#.O04.frames[3].title
+29646	在线处理第3个候选
+# page: assets/visual-data.js#.O04.frames[4].title
+29647	同一结果，减少的是中间读写
+# page: assets/visual-data.js#.O04.scenario
+29642	独立单查询例：读取顺序C/A/B，分数[0,2,1]，对应V为[[5,5],[10,0],[0,20]]。为展示最大值变化而设，不接用F09候选顺序。
+# page: assets/visual-data.js#.O04.terms[2][0]
+29640	加权累计
+# page: assets/visual-data.js#.O04.terms[2][1]
+29641	尚未除以l的Value贡献和。
+# page: assets/visual-data.js#.O05.frames[0].title
+29655	初始：A仅3个位置
+# page: assets/visual-data.js#.O05.frames[1].title
+29657	A追加第4项
+# page: assets/visual-data.js#.O05.frames[2].title
+29659	A再追加第5项
+# page: assets/visual-data.js#.O05.frames[3].title
+29661	释放一个请求
+# page: assets/visual-data.js#.O05.scenario
+29654	独立分配示例：5个物理页、每页2槽；A初始3项，B2项；图中槽位代表Token对应的一组KV，不是一个字节。
+# page: assets/visual-data.js#.O05.terms[0][0]
+29648	逻辑页
+# page: assets/visual-data.js#.O05.terms[0][1]
+29649	按序列顺序排列的块号。
+# page: assets/visual-data.js#.O05.terms[1][0]
+29650	物理页
+# page: assets/visual-data.js#.O05.terms[1][1]
+29651	实际存放KV数据的内存块。
+# page: assets/visual-data.js#.O05.terms[2][0]
+29652	碎片
+# page: assets/visual-data.js#.O05.terms[2][1]
+29653	已分配空间里暂未使用的部分。
+# page: assets/visual-data.js#.O06.frames[0].title
+29668	普通批次等待整体结束
+# page: assets/visual-data.js#.O06.frames[1].title
+29670	连续组批及时补位
+# page: assets/visual-data.js#.O06.frames[2].title
+29671	为什么不是所有用户延迟都减半
+# page: assets/visual-data.js#.O06.frames[3].title
+29672	读吞吐也要看公平性
+# page: assets/visual-data.js#.O06.scenario
+29667	两槽位、三请求，A/B/C分别需2/4/2个等时decode步骤。忽略prefill和通信，只说明调度机制。
+# page: assets/visual-data.js#.O06.terms[0][0]
+29663	槽位
+# page: assets/visual-data.js#.O06.terms[0][1]
+29664	简化表示一次迭代能同时处理的请求位置。
+# page: assets/visual-data.js#.O06.terms[2][0]
+29665	公平性
+# page: assets/visual-data.js#.O06.terms[2][1]
+29666	避免某类请求长期等不到资源。
+# page: assets/visual-data.js#.O07.frames[0].title
+29678	草稿分布与目标分布不同
+# page: assets/visual-data.js#.O07.frames[1].title
+29680	接受概率由两者比值决定
+# page: assets/visual-data.js#.O07.frames[2].title
+29682	被接受的总质量还不够
+# page: assets/visual-data.js#.O07.frames[3].title
+29684	拒绝后从剩余质量采样
+# page: assets/visual-data.js#.O07.frames[4].title
+29686	走一次具体拒绝分支
+# page: assets/visual-data.js#.O07.scenario
+29677	独立的三候选、单步概率算例。实际多Token推测还要处理接受前缀、回退缓存和批量验证。本图不把它等同于贪心校验。
+# page: assets/visual-data.js#.O07.terms[2][0]
+29673	接受率
+# page: assets/visual-data.js#.O07.terms[2][1]
+29674	在已提出某个候选条件下接受它的概率。
+# page: assets/visual-data.js#.O07.terms[3][0]
+29675	补偿分布
+# page: assets/visual-data.js#.O07.terms[3][1]
+29676	拒绝后用于恢复目标总体分布的剩余概率质量。
+# page: assets/visual-data.js#.O08.frames[0].title
+29693	先算路由分数
+# page: assets/visual-data.js#.O08.frames[1].title
+29694	选择Top-2专家
+# page: assets/visual-data.js#.O08.frames[2].title
+29695	合并实际专家结果
+# page: assets/visual-data.js#.O08.frames[3].title
+29696	稀疏激活仍有代价
+# page: assets/visual-data.js#.O08.scenario
+29692	四专家的教学Top-2结构，不复现Switch论文的Top-1配置。单Token权重[.1,.5,.3,.1]，两专家函数明确给定。
+# page: assets/visual-data.js#.O08.terms[1][0]
+29688	负载不均
+# page: assets/visual-data.js#.O08.terms[1][1]
+29689	不同专家接到的Token数量不同。
+# page: assets/visual-data.js#.O08.terms[2][0]
+29690	路由合并
+# page: assets/visual-data.js#.O08.terms[2][1]
+29691	将所选专家结果按指定规则组合。
+# page: assets/visual-data.js#.O09.frames[0].title
+29703	普通保存
+# page: assets/visual-data.js#.O09.frames[1].title
+29705	只保留检查点
+# page: assets/visual-data.js#.O09.frames[2].title
+29706	先恢复后半段
+# page: assets/visual-data.js#.O09.frames[3].title
+29707	再恢复前半段
+# page: assets/visual-data.js#.O09.frames[4].title
+29708	为什么必须保持一致
+# page: assets/visual-data.js#.O09.scenario
+29702	四段计算链的独立示意，只计三个各100单位的中间激活。实际峰值含其他张量与临时重算，必须实测。
+# page: assets/visual-data.js#.O09.terms[0][1]
+29697	一次前向计算产生的中间数值。
+# page: assets/visual-data.js#.O09.terms[1][0]
+29698	反向重算
+# page: assets/visual-data.js#.O09.terms[1][1]
+29699	为求梯度重新执行某段前向。
+# page: assets/visual-data.js#.O09.terms[2][0]
+29700	驻留与峰值
+# page: assets/visual-data.js#.O09.terms[2][1]
+29701	一直留着多少，与某时刻最多占多少，并不一样。
+# page: assets/visual-data.js#.O10.frames[0].state
+29716	总安排=125
+# page: assets/visual-data.js#.O10.frames[0].title
+29715	不区分内容，全塞进来
+# page: assets/visual-data.js#.O10.frames[1].state
+29718	总安排=85
+# page: assets/visual-data.js#.O10.frames[1].title
+29717	仅删日志可能丢失状态
+# page: assets/visual-data.js#.O10.frames[2].title
+29719	抽取可恢复状态
+# page: assets/visual-data.js#.O10.frames[3].title
+29721	输入更短仍需核验
+# page: assets/visual-data.js#.O10.scenario
+29714	独立预算对照，必要输入65、旧日志40、输出预留20、总窗口100；10单位摘要是教学设定，不是真实Tokenizer测量。
+# page: assets/visual-data.js#.O10.terms[0][0]
+29709	输入压缩
+# page: assets/visual-data.js#.O10.terms[0][1]
+29710	替换或删除逻辑内容。
+# page: assets/visual-data.js#.O10.terms[1][1]
+29711	按本次问题从外部取回候选资料。
+# page: assets/visual-data.js#.O10.terms[2][0]
+29712	前缀计算复用
+# page: assets/visual-data.js#.O10.terms[2][1]
+29713	相同且兼容的前缀可以复用已有计算。
+# page: assets/visual-data.js#.O11.frames[0].state
+29730	交接开销=0秒；顺序=17秒
+# page: assets/visual-data.js#.O11.frames[0].title
+29729	顺序完成两个独立子任务
+# page: assets/visual-data.js#.O11.frames[1].title
+29731	并行也需要交接
+# page: assets/visual-data.js#.O11.frames[2].state
+29734	交接开销=8秒；并行理想总耗时=19秒
+# page: assets/visual-data.js#.O11.frames[2].title
+29733	交接成本过大就更慢
+# page: assets/visual-data.js#.O11.frames[3].title
+29735	写同一文件不独立
+# page: assets/visual-data.js#.O11.scenario
+29728	固定A6秒、B8秒、集成3秒；第二/三帧仅改变交接成本2→8秒。这是教学算账，不是商业多Agent实测。
+# page: assets/visual-data.js#.O11.terms[0][0]
+29722	依赖
+# page: assets/visual-data.js#.O11.terms[0][1]
+29723	某一步必须等待另一结果才能进行。
+# page: assets/visual-data.js#.O11.terms[1][0]
+29724	交接包
+# page: assets/visual-data.js#.O11.terms[1][1]
+29725	目标、范围、证据、约束、当前状态与交付要求。
+# page: assets/visual-data.js#.O11.terms[2][0]
+29726	冲突
+# page: assets/visual-data.js#.O11.terms[2][1]
+29727	多个执行者竞争同一份可变状态。
+# page: assets/visual-data.js#.O12.scenario
+29741	全为构造数据：20题、小模型单次1、强模型单次5；级联与全强模型的19题成功均为明确假设，不代表任何真实产品定价或胜率。
+# page: assets/visual-data.js#.O12.terms[0][1]
+29737	先尝试较低成本方案，满足条件时升级。
+# page: assets/visual-data.js#.O12.terms[1][0]
+29738	成功任务成本
+# page: assets/visual-data.js#.O12.terms[1][1]
+29739	总投入除以实际成功数，而不是调用次数。
+# page: assets/visual-data.js#.O12.terms[2][1]
+29740	错误结果未被验证器识别，导致没有触发回退。
+# page: complete.html
+31675	AI系统工程：从基础到内部 · 完整阅读
+31676	Agent机制证据
+31677	当前 <span data-nav-current-label=""></span></span><a href="#contents">查看完整目录 [tags]
+31678	沿基础课程与系统机制连续阅读：共通计算、训练和验证、训练后推理，再进入Agent与工程。图解解释关系，原生表格保留数据。
+31679	全书目录
+31680	关闭目录
+31681	本地源文件
+# page: coverage.html
+10878	206 项中文专题讲义按模块分组，并给出 28 章进阶章节的先修基础对照。
+10879	专题阅读索引与知识依赖 — AI系统工程
+10880	参考资料</span><span>206 项专题讲义</span><span>28 章前置对照 [tags]
+10881	本书收录 206 项专题阅读讲义，涵盖论文、官方文档和工程资料。以下对照可帮助从知识主题进入相关的基础章节、进阶章节与本地中文讲义。讲义为中文阐述，不是原论文的逐字完整翻译。
+10883	进阶章节与先修知识
+10884	深入章节
+10885	可回退的基础章节
+10886	第35课 · 先分清</a><a class="pill" href="foundations/02.html">第36课 · 一排数、一张表和一叠表</a><a class="pill" href="foundations/03.html">第37课 · 文字为什么要先变成Token编号</a><a class="pill" href="foundations/04.html">第38课 · 组批和补齐</a><a class="pill" href="foundations/05.html">第39课 · Embedding查表</a><a class="pill" href="foundations/06.html">第40课 · “放到设备”是什么</a><a class="pill" href="foundations/09.html">第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/15.html">第52课 · 从最后一排数到一个Token，再到一句回答</a><a class="pill" href="foundations/18.html">第57课 · 一次训练从头到尾</a><a class="pill" href="foundations/22.html">第01课 · Agent不是另一个神经网络</a><a class="pill" href="foundations/37.html">第29课 · 安全基础 [tags]
+10887	第42课 · 模型最常做的算术</a><a class="pill" href="foundations/08.html">第43课 · reshape、转轴、广播</a><a class="pill" href="foundations/09.html">第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/10.html">第45课 · 神经网络最小模型</a><a class="pill" href="foundations/11.html">第46课 · Attention慢速版</a><a class="pill" href="foundations/14.html">第49课 · 把Attention装进一层 [tags]
+10888	第43课 · reshape、转轴、广播</a><a class="pill" href="foundations/11.html">第46课 · Attention慢速版</a><a class="pill" href="foundations/12.html">第47课 · Mask不是黑箱</a><a class="pill" href="foundations/13.html">第48课 · 位置编号与RoPE</a><a class="pill" href="foundations/14.html">第49课 · 把Attention装进一层</a><a class="pill" href="foundations/17.html">第54课 · 微积分只学用得上的部分</a><a class="pill" href="foundations/18.html">第57课 · 一次训练从头到尾 [tags]
+10890	第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/14.html">第49课 · 把Attention装进一层</a><a class="pill" href="foundations/15.html">第52课 · 从最后一排数到一个Token，再到一句回答</a><a class="pill" href="foundations/16.html">第53课 · KV Cache从零解释</a><a class="pill" href="foundations/21.html">第62课 · 算得快与装得下 [tags]
+10892	第40课 · “放到设备”是什么</a><a class="pill" href="foundations/09.html">第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/17.html">第54课 · 微积分只学用得上的部分</a><a class="pill" href="foundations/18.html">第57课 · 一次训练从头到尾</a><a class="pill" href="foundations/21.html">第62课 · 算得快与装得下 [tags]
+10894	第42课 · 模型最常做的算术</a><a class="pill" href="foundations/09.html">第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/18.html">第57课 · 一次训练从头到尾</a><a class="pill" href="foundations/19.html">第58课 · 后训练的前置数学</a><a class="pill" href="foundations/20.html">第61课 · 低秩、量化、专家 [tags]
+10895	第40课 · “放到设备”是什么</a><a class="pill" href="foundations/07.html">第42课 · 模型最常做的算术</a><a class="pill" href="foundations/08.html">第43课 · reshape、转轴、广播</a><a class="pill" href="foundations/11.html">第46课 · Attention慢速版</a><a class="pill" href="foundations/12.html">第47课 · Mask不是黑箱</a><a class="pill" href="foundations/13.html">第48课 · 位置编号与RoPE</a><a class="pill" href="foundations/16.html">第53课 · KV Cache从零解释</a><a class="pill" href="foundations/21.html">第62课 · 算得快与装得下 [tags]
+10896	第40课 · “放到设备”是什么</a><a class="pill" href="foundations/09.html">第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/16.html">第53课 · KV Cache从零解释</a><a class="pill" href="foundations/20.html">第61课 · 低秩、量化、专家</a><a class="pill" href="foundations/21.html">第62课 · 算得快与装得下</a><a class="pill" href="foundations/38.html">第33课 · 看懂生产运行 [tags]
+10897	第35课 · 先分清</a><a class="pill" href="foundations/15.html">第52课 · 从最后一排数到一个Token，再到一句回答</a><a class="pill" href="foundations/22.html">第01课 · Agent不是另一个神经网络</a><a class="pill" href="foundations/23.html">第07课 · API与流式协议</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点 [tags]
+10898	第37课 · 文字为什么要先变成Token编号</a><a class="pill" href="foundations/22.html">第01课 · Agent不是另一个神经网络</a><a class="pill" href="foundations/23.html">第07课 · API与流式协议</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务 [tags]
+10899	第07课 · API与流式协议</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/25.html">第08课 · 工具与MCP</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/37.html">第29课 · 安全基础 [tags]
+10900	第01课 · Agent不是另一个神经网络</a><a class="pill" href="foundations/23.html">第07课 · API与流式协议</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/25.html">第08课 · 工具与MCP</a><a class="pill" href="foundations/26.html">第11课 · 上下文组装</a><a class="pill" href="foundations/27.html">第22课 · 压缩不是魔法</a><a class="pill" href="foundations/32.html">第13课 · Skill、路由和多Agent</a><a class="pill" href="foundations/37.html">第29课 · 安全基础 [tags]
+10901	第37课 · 文字为什么要先变成Token编号</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/25.html">第08课 · 工具与MCP</a><a class="pill" href="foundations/26.html">第11课 · 上下文组装</a><a class="pill" href="foundations/27.html">第22课 · 压缩不是魔法</a><a class="pill" href="foundations/32.html">第13课 · Skill、路由和多Agent [tags]
+10902	第53课 · KV Cache从零解释</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/26.html">第11课 · 上下文组装</a><a class="pill" href="foundations/27.html">第22课 · 压缩不是魔法</a><a class="pill" href="foundations/31.html">第23课 · 长期记忆的基础</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母 [tags]
+10903	第37课 · 文字为什么要先变成Token编号</a><a class="pill" href="foundations/07.html">第42课 · 模型最常做的算术</a><a class="pill" href="foundations/09.html">第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/28.html">第16课 · 检索入门</a><a class="pill" href="foundations/29.html">第17课 · 从搜索结果到可信答案</a><a class="pill" href="foundations/37.html">第29课 · 安全基础 [tags]
+10904	第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/28.html">第16课 · 检索入门</a><a class="pill" href="foundations/29.html">第17课 · 从搜索结果到可信答案</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母 [tags]
+10905	第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/28.html">第16课 · 检索入门</a><a class="pill" href="foundations/29.html">第17课 · 从搜索结果到可信答案</a><a class="pill" href="foundations/30.html">第18课 · 代码不是普通文档</a><a class="pill" href="foundations/34.html">第04课 · 工程质量的基础 [tags]
+10906	第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/27.html">第22课 · 压缩不是魔法</a><a class="pill" href="foundations/28.html">第16课 · 检索入门</a><a class="pill" href="foundations/29.html">第17课 · 从搜索结果到可信答案</a><a class="pill" href="foundations/31.html">第23课 · 长期记忆的基础</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母 [tags]
+10907	第01课 · Agent不是另一个神经网络</a><a class="pill" href="foundations/25.html">第08课 · 工具与MCP</a><a class="pill" href="foundations/26.html">第11课 · 上下文组装</a><a class="pill" href="foundations/30.html">第18课 · 代码不是普通文档</a><a class="pill" href="foundations/31.html">第23课 · 长期记忆的基础</a><a class="pill" href="foundations/32.html">第13课 · Skill、路由和多Agent</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母 [tags]
+10908	第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/30.html">第18课 · 代码不是普通文档</a><a class="pill" href="foundations/32.html">第13课 · Skill、路由和多Agent</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/34.html">第04课 · 工程质量的基础</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母 [tags]
+10909	第07课 · API与流式协议</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/30.html">第18课 · 代码不是普通文档</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/37.html">第29课 · 安全基础 [tags]
+10910	第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/30.html">第18课 · 代码不是普通文档</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/34.html">第04课 · 工程质量的基础</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母 [tags]
+10911	第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/28.html">第16课 · 检索入门</a><a class="pill" href="foundations/34.html">第04课 · 工程质量的基础</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母</a><a class="pill" href="foundations/36.html">第31课 · 别被几个百分点骗了 [tags]
+10912	第07课 · API与流式协议</a><a class="pill" href="foundations/25.html">第08课 · 工具与MCP</a><a class="pill" href="foundations/31.html">第23课 · 长期记忆的基础</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/37.html">第29课 · 安全基础 [tags]
+10913	第62课 · 算得快与装得下</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母</a><a class="pill" href="foundations/36.html">第31课 · 别被几个百分点骗了</a><a class="pill" href="foundations/37.html">第29课 · 安全基础</a><a class="pill" href="foundations/38.html">第33课 · 看懂生产运行 [tags]
+10914	第01课 · Agent不是另一个神经网络</a><a class="pill" href="foundations/24.html">第02课 · 状态、事件与检查点</a><a class="pill" href="foundations/27.html">第22课 · 压缩不是魔法</a><a class="pill" href="foundations/29.html">第17课 · 从搜索结果到可信答案</a><a class="pill" href="foundations/30.html">第18课 · 代码不是普通文档</a><a class="pill" href="foundations/31.html">第23课 · 长期记忆的基础</a><a class="pill" href="foundations/33.html">第26课 · 重试、幂等和事务</a><a class="pill" href="foundations/34.html">第04课 · 工程质量的基础</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母</a><a class="pill" href="foundations/37.html">第29课 · 安全基础</a><a class="pill" href="foundations/38.html">第33课 · 看懂生产运行</a><a class="pill" href="foundations/39.html">第64课 · 多模态与可信度 [tags]
+10915	第44课 · 概率、指数与softmax</a><a class="pill" href="foundations/14.html">第49课 · 把Attention装进一层</a><a class="pill" href="foundations/17.html">第54课 · 微积分只学用得上的部分</a><a class="pill" href="foundations/19.html">第58课 · 后训练的前置数学</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母</a><a class="pill" href="foundations/36.html">第31课 · 别被几个百分点骗了</a><a class="pill" href="foundations/39.html">第64课 · 多模态与可信度 [tags]
+10916	第42课 · 模型最常做的算术</a><a class="pill" href="foundations/11.html">第46课 · Attention慢速版</a><a class="pill" href="foundations/16.html">第53课 · KV Cache从零解释</a><a class="pill" href="foundations/18.html">第57课 · 一次训练从头到尾</a><a class="pill" href="foundations/19.html">第58课 · 后训练的前置数学</a><a class="pill" href="foundations/20.html">第61课 · 低秩、量化、专家</a><a class="pill" href="foundations/21.html">第62课 · 算得快与装得下</a><a class="pill" href="foundations/26.html">第11课 · 上下文组装</a><a class="pill" href="foundations/27.html">第22课 · 压缩不是魔法</a><a class="pill" href="foundations/35.html">第05课 · 评测指标的分母</a><a class="pill" href="foundations/36.html">第31课 · 别被几个百分点骗了</a><a class="pill" href="foundations/39.html">第64课 · 多模态与可信度</a><a class="pill" href="foundations/40.html">第66课 · 把基础接回高级 [tags]
+10917	206项中文专题讲义
+10918	按 17 个模块分组。模块编号 R
+10919	 与 <a href="reading-notes/index.html">拓展阅读</a> 的章节一一对应；同一模块内所有条目共用一组深入章节，列在该模块末尾。 [tags]
+10920	模块跳转
+10921	R00 全局认知</a><a href="#module-01">R01 模型内部</a><a href="#module-02">R02 能力形成</a><a href="#module-03">R03 推理与服务</a><a href="#module-04">R04 输入输出接口</a><a href="#module-05">R05 Agent基础</a><a href="#module-06">R06 真实编码Agent</a><a href="#module-07">R07 上下文工程</a><a href="#module-08">R08 检索与代码智能</a><a href="#module-09">R09 长期记忆</a><a href="#module-10">R10 Skills与多Agent</a><a href="#module-11">R11 AI软件工程</a><a href="#module-12">R12 评测方法</a><a href="#module-13">R13 安全与权限</a><a href="#module-14">R14 运行与性能</a><a href="#module-15">R15 高级专题</a><a href="#module-16">R16 数学与实现补充 [tags]
+10922	R00 · 全局认知<span class="module-count">5 项 [tags]
+10930	系统篇 01</a><a class="pill" href="chapters/09.html">系统篇 09</a><a class="pill" href="chapters/12.html">系统篇 12 [tags]
+10931	R01 · 模型内部<span class="module-count">14 项 [tags]
+10946	系统篇 01</a><a class="pill" href="chapters/02.html">系统篇 02</a><a class="pill" href="chapters/03.html">系统篇 03</a><a class="pill" href="chapters/06.html">系统篇 06</a><a class="pill" href="chapters/28.html">系统篇 28 [tags]
+10947	R02 · 能力形成<span class="module-count">15 项 [tags]
+10963	系统篇 05</a><a class="pill" href="chapters/06.html">系统篇 06</a><a class="pill" href="chapters/28.html">系统篇 28 [tags]
+10964	R03 · 推理与服务<span class="module-count">12 项 [tags]
+10976	系统篇 04</a><a class="pill" href="chapters/07.html">系统篇 07</a><a class="pill" href="chapters/08.html">系统篇 08</a><a class="pill" href="chapters/25.html">系统篇 25 [tags]
+10977	R04 · 输入输出接口<span class="module-count">8 项 [tags]
+10986	系统篇 01</a><a class="pill" href="chapters/10.html">系统篇 10</a><a class="pill" href="chapters/13.html">系统篇 13 [tags]
+10987	R05 · Agent基础<span class="module-count">12 项 [tags]
+11000	系统篇 09</a><a class="pill" href="chapters/10.html">系统篇 10</a><a class="pill" href="chapters/11.html">系统篇 11</a><a class="pill" href="chapters/21.html">系统篇 21 [tags]
+11001	R06 · 真实编码Agent<span class="module-count">21 项 [tags]
+11023	系统篇 12</a><a class="pill" href="chapters/13.html">系统篇 13</a><a class="pill" href="chapters/14.html">系统篇 14</a><a class="pill" href="chapters/19.html">系统篇 19</a><a class="pill" href="chapters/20.html">系统篇 20 [tags]
+11024	R07 · 上下文工程<span class="module-count">11 项 [tags]
+11036	系统篇 07</a><a class="pill" href="chapters/13.html">系统篇 13</a><a class="pill" href="chapters/14.html">系统篇 14 [tags]
+11037	R08 · 检索与代码智能<span class="module-count">16 项 [tags]
+11054	系统篇 15</a><a class="pill" href="chapters/16.html">系统篇 16</a><a class="pill" href="chapters/17.html">系统篇 17 [tags]
+11055	R09 · 长期记忆<span class="module-count">10 项 [tags]
+11066	系统篇 14</a><a class="pill" href="chapters/18.html">系统篇 18 [tags]
+11067	R10 · Skills与多Agent<span class="module-count">12 项 [tags]
+11080	系统篇 11</a><a class="pill" href="chapters/19.html">系统篇 19</a><a class="pill" href="chapters/20.html">系统篇 20 [tags]
+11081	R11 · AI软件工程<span class="module-count">13 项 [tags]
+11095	系统篇 21</a><a class="pill" href="chapters/22.html">系统篇 22</a><a class="pill" href="chapters/26.html">系统篇 26 [tags]
+11096	R12 · 评测方法<span class="module-count">13 项 [tags]
+11110	系统篇 23</a><a class="pill" href="chapters/27.html">系统篇 27 [tags]
+11111	R13 · 安全与权限<span class="module-count">10 项 [tags]
+11122	系统篇 11</a><a class="pill" href="chapters/21.html">系统篇 21</a><a class="pill" href="chapters/24.html">系统篇 24 [tags]
+11123	R14 · 运行与性能<span class="module-count">11 项 [tags]
+11135	系统篇 08</a><a class="pill" href="chapters/25.html">系统篇 25 [tags]
+11136	R15 · 高级专题<span class="module-count">17 项 [tags]
+11154	系统篇 06</a><a class="pill" href="chapters/26.html">系统篇 26</a><a class="pill" href="chapters/27.html">系统篇 27</a><a class="pill" href="chapters/28.html">系统篇 28 [tags]
+11155	R16 · 数学与实现补充<span class="module-count">6 项 [tags]
+11162	系统篇 01</a><a class="pill" href="chapters/28.html">系统篇 28 [tags]
+11163	索引的使用边界
+11164	本书系统介绍从语言模型到Agent工程所需的主要机制，配有先修知识、核心推导和相应边界。它不能代替线性代数、概率论、分布式系统等学科的完整专业教材，也不覆盖所有公开论文。对未实测或未公开的产品行为，避免作未经证明的断言。
+11165	← 知识主题索引</a><a href="sources.html">参考资料与适用范围 → [tags]
+# page: engineering/agent-evidence.html
+11166	Agent与工程机制：证据、知识关系与覆盖 · AI系统工程
+11167	工程深挖的依据与适用范围</span></a><a aria-current="page" class="rail-home active" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="agent-evidence.html"><span class="rail-name">Agent机制证据 [tags]
+11169	Agent与工程机制：已取得的证据、阅读范围与核验
+11170	正文仍按基础课程与系统机制阅读。本页用于追溯来源，不是另建一套课程。Codex固定提交：
+11171	资料确实取得了什么
+11172	上一轮42项来源的直接下载全部失败，却仍保留带源码口吻的推导。这不能算来源核验。本轮先通过GitHub连接器取得指定源码，通过官方网页文本接口取得工程文章，再修订对应教材。旧失败记录没有被覆盖成成功。
+11174	本轮取得及阅读
+11175	不作的声明
+11176	Codex 18个文件
+11177	4份完整源文件落盘并与Git blob哈希一致；其余按所列行范围阅读，保留可确认的摘录与研读笔记
+11178	不是完整仓库下载；未执行Rust工程测试
+11179	Anthropic 17篇工程文章
+11180	官方正文通过网页文本工具取得并阅读；保存中文笔记、日期与边界
+11181	不镜像整篇版权原文；配图、视频及外链不算全读
+11182	Claude Code 7份文档
+11183	与课程主张相关章节取得并核对
+11184	不是整个文档站或全部Hook事件逐项验证
+11185	容器直连下载仍因DNS失败；逐文件/官方文本读取则成功，二者在取得记录中分别保留。<a href="agent-practice/verified/manifest.json">机器可读来源清单 [tags]
+11186	取得方法与限制
+11187	上一轮失败记录
+11189	所有更新仍嵌入原来的课程位置。
+11190	带证据等级的知识关系
+11192	关系
+11193	终点
+11194	等级与依据
+11196	约束并提供任务
+11197	请求快照
+11198	绑定本次声明与分派
+11199	工具路由器
+11200	工具注册
+11203	执行授权
+11205	先记录
+11206	会话历史
+11207	校验后准入
+11209	可能改变
+11211	后置钩子
+11212	不能自动回滚
+11213	并行任务
+11214	执行与结果消费属于不同阶段
+11215	有序收集
+11216	取消请求
+11217	不证明从未发生
+11219	依赖版本
+11220	历史快照
+11221	摘要安装
+11222	需要保留或拒绝候选
+11223	实时后缀
+11224	授权代际
+11225	变化可使候选失效
+11226	记忆候选
+11227	经筛选进入
+11228	整合工作者
+11229	租约所有者
+11230	条件验证
+11233	子Agent消息提交
+11234	子任务完成
+11236	需要发现选择加载与执行
+11237	实际应用
+11238	文档块
+11239	需版本条件与覆盖核验
+11240	回答主张
+11241	工作树版本
+11242	决定验证对象
+11243	任务结果
+11244	依赖判分口径
+11245	评测指标
+11246	环境噪声
+11247	可能造成混淆
+11248	评测差异
+11249	失败与废弃工作
+11250	仍应计入
+11251	任务成本
+11252	定位关键路径
+11253	优化决策
+11254	快照访问器仍组合当前授权
+11255	实时授权
+11256	摘要安装接受
+11257	持久化成功
+11258	Claude后置block
+11259	仍可提供原结果并添加原因
+11260	原工具结果
+11261	后置结果替换
+11262	不自动改写先前记录
+11263	原始日志
+11264	技能正文保留
+11265	寿命不同
+11266	临时工具许可
+11267	整合工作者终态

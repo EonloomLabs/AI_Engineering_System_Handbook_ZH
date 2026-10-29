@@ -131,6 +131,13 @@ RESTORE = [
 ]
 
 
+def same_frame(actual, expected):
+    """Label capitalization is style; token glyphs and variable case are data."""
+    return actual == expected or (
+        expected.startswith(('position ', 'key ', 'query ', 'value '))
+        and actual == expected[0].upper() + expected[1:])
+
+
 def main():
     D = json.loads(TABLE.read_text(encoding='utf-8'))
     t = D['s']
@@ -147,7 +154,7 @@ def main():
             m = re.match(pat % ALT, s)
             if m:
                 want = tpl.format(*m.groups())
-                if en != want:
+                if not same_frame(en, want):
                     framed += 1
                     if FIX:
                         v[LANG] = want

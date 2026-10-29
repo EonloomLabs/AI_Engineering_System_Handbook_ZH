@@ -1,0 +1,336 @@
+6003	09｜Tracing the Codex source: from repository rules to history, loop and compaction — AI Systems Engineering
+22275	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#c09-h1">1. Evidence scope and versions</a><a href="#c09-h2">2. project_doc.rs: why rules may not enter the input</a><a href="#c09-h3">3. Initial context is a sequence of typed items</a><a href="#c09-h4">4. run_turn: one user turn can contain multiple model calls</a><a href="#c09-h5">5. compact.rs: a local summary path is not all Codex compaction</a><a href="#c09-h6">6. SSE conversion: separate display content from executable items</a><a href="#c09-h7">7. Turn source reading into your own diagnostic method</a><a class="sub ap-toc" href="#agent-study-snapshot">An immutable request and mutable authorization</a><a class="sub ap-toc" href="#agent-study-compaction">Checking the generation number when a candidate is installed
+23094	Goal: trace data through pinned commits and functions rather than treating product introductions as source-code facts. This chapter actually reads public source but does not compile or run Codex. Two source snapshots are identified separately, without calling either the "current complete implementation".
+28725	When reading a pinned source commit, locate input, tool routing, result feedback and compaction before following functions. The figure explains shared roles without replacing source facts.
+6049	1. Evidence scope and versions
+28962	Project rules, initial context, the loop and local compaction come from commit
+29455	; SSE event conversion comes from another commit
+10083	. These are traceable reading anchors, not determinations of the version installed on the user's machine. The official Agent Loop article supplies an overview; source code supplies behavioral evidence for particular snapshots.
+20084	Files and key locations:
+25960	handles project-rule discovery and concatenation;
+11431	contains
+24368	, which organize initial items and execution turns;
+24184	manages one local summary-compaction path;
+18838	converts service events into internal response events.
+22533	Distinguish "observed implementation", "documentation claims" and "author advice" when reading source. In particular, do not combine functions from different commits into a version that never existed, or infer all server-side system prompts and internal model state from a public client.
+6272	2. project_doc.rs: why rules may not enter the input
+15884	In the snapshot above,
+22166	searches upward from cwd for a repository marker and builds a search chain from the repository root to the current directory; without a repository, it uses the current directory. Each directory selects one rule file according to candidate-filename priority.
+12652	precedes
+29231	, followed by configured fallback names. Reading is limited by the total
+18436	budget; this is bytes, not tokens.
+21023	Rather than translate source line by line, this chapter uses an original diagnostic example: suppose root rules are long and the current directory also has specialist rules. In an implementation concatenating in path order under a total budget, earlier files may exhaust it. The model appears to "ignore specialist rules", but the rules may never have loaded; another "follow every rule" instruction cannot fix a byte budget.
+15508	If override and ordinary rules coexist in one directory, do not assume both are combined. Check candidate priority and whether only one file is selected per directory. Missing deeper rules may also reflect an unexpected starting cwd rather than model routing errors.
+11906	These mechanisms suggest regression cases: no rules, root rules, nested rules, override, fallback filenames, zero budget, truncation across byte boundaries and different cwd values. The source includes related tests; this book only reads them and does not claim to have run these Rust tests. New teaching experiments do not replace regression checks on the actual harness version.
+6419	3. Initial context is a sequence of typed items
+15992	constructs developer-level instructions from execution policies in this snapshot, adding optional developer instructions, user project rules and environment information. It returns a collection of
+28858	, not a final token array. The service may still apply invisible templates and system rules afterward.
+25954	Ask what role and stage each item enters. Client-side project rules are usually a kind of user-context item; a filename resembling "system rules" must not confer unlimited authority. Tool Schemas may also be stored in a different field from chat text. Judge visibility at the actual request boundary rather than from chat bubbles shown in the UI.
+27277	For skill systems, the key lesson is to give specialist instructions an explicit entry point and distinguish "metadata discovered → full content read → used in the result" observably. Text on disk does not mean model visibility, and visibility does not mean correct execution.
+6525	4. run_turn: one user turn can contain multiple model calls
+25769	The function first checks input and context usage, triggers compaction if needed, reads skill-related information, records user input and skill-injection items, then enters the model-call loop. The loop also handles user input appended during execution, builds the current prompt from history and decides whether further action requires continuation or termination.
+11862	In engineering terms, one user request to "fix the issue" is not one HTTP call. Tool outputs, new constraints added while running and compacted history may all change the next input. Performance statistics should use the complete user task at the top level rather than count only the first model call.
+19284	Apply this to diagnosis: if a skill loaded initially but later had no effect, inspect whether subsequent history retained it, was compacted, entered a sub-agent or was superseded by new evidence. An opening log cannot prove the complete skill content remained throughout a long task.
+6633	5. compact.rs: a local summary path is not all Codex compaction
+18549	One local path in the snapshot requests a summary, trims older items and retries when context exceeds the limit, then extracts the summary on success. It rebuilds history from the initial context and user messages fitting the budget and saves a compaction event. The code also explicitly warns that repeated compaction may affect accuracy.
+27392	Be careful: a separate official Compaction interface can return opaque compaction items; a readable local summary and opaque server state are different implementations. Old source does not establish that "Codex always turns history into plain text". Encrypted returned items also do not establish "completely lossless semantics". The internal representation is unpublished; continued tasks must verify business fidelity.
+22529	When comments and code behavior are in tension, describe actual operations first and preserve the question. For example, determine how deleting early history items affects prefix caching by recalculating the reusable prefix from actual requests, not by copying a "for caching" comment as a universal conclusion. Senior source reading includes checking comments, not treating them as algorithmic proofs.
+6707	6. SSE conversion: separate display content from executable items
+14939	In another pinned commit,
+13702	handles text deltas, completed output items, failures and completion events separately; its tests include an error for a stream closed before a completion event. This matches the boundaries of the Lesson 60 teaching parser, but this book's implementation is not a Rust port and does not cover every event type.
+16919	Real products must also handle cancellation, reconnection, model features and compatible versions. When reading source, diagram the type chain "network event → internal event → history → tool runner → next request", then check each conversion for lost IDs, state or errors. Text appearing in the UI alone cannot establish state-machine correctness.
+6780	7. Turn source reading into your own diagnostic method
+28356	For "the sub-agent has no skills / MCP", verify in order: harness version and product interface, configuration-discovery paths, actual loading, available tools, delegation input construction, execution permissions and returned evidence. Do not invent an inheritance system to fix an unestablished defect.
+22118	Graduation means finding equivalent boundaries in another commit and identifying effects on context, skills and error recovery, rather than memorizing function names. Change only layers your extension owns: if the harness already implements execution, permissions and caching, do not rebuild an entire harness in the skill repository.
+22525	How conclusions expire when function names stay the same but calling conditions change
+26511	Input and conditions.</strong> Read build_tool_call in a pinned commit, where it converts FunctionCall to ToolCall. Another commit may change the exposed tool set before this call.
+17663	Local fact
+13686	The function can still construct ToolCall
+11223	This does not prove every request can reach it.
+25941	Calling preconditions
+21543	Check callers and which response types enter
+25951	Callers and configuration are part of the conclusion.
+15804	Pin the source
+25541	Record commit, path, symbol and observation scope
+10710	Do more than copy the function name.
+26858	Migration verification
+20190	Compare exposure plans and call chains in the new version
+17668	Unchanged local source may still yield different overall behavior.
+19307	Report limits
+9429	"On this path in this commit"
+10698	Do not write "all Codex versions always do this".
+19152	Join the steps up.</strong> Bind source evidence to version, entry point and conditions so local truths do not mislead about the whole system.
+26741	Limits and counterexamples.</strong> This is a source-reading method; specific Codex facts depend on this book's retained snapshots and are not updated through guesses.
+9514	← 08｜Inside the harness: decision, execution, persistence and crash recovery</a><a href="10.html">10｜Claude Code and Copilot: public mechanisms, verifiable behavior and unknown internals
+22274	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#c09-h1">1. Evidence scope and versions</a><a href="#c09-h2">2. project_doc.rs: why rules may not enter the input</a><a href="#c09-h3">3. Initial context is a sequence of typed items</a><a href="#c09-h4">4. run_turn: one user turn can contain multiple model calls</a><a href="#c09-h5">5. compact.rs: a local summary path is not all Codex compaction</a><a href="#c09-h6">6. SSE conversion: separate display content from executable items</a><a href="#c09-h7">7. Turn source reading into your own diagnostic method
+6107	10｜Claude Code and Copilot: public mechanisms, verifiable behavior and unknown internals — AI Systems Engineering
+22277	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#c10-h1">1. Specify the objects being compared first</a><a href="#c10-h2">2. Context includes more than chat history</a><a href="#c10-h3">3. Do not broadly describe sub-agents as "inheriting everything" or "completely blank"</a><a href="#c10-h4">4. Low-cost, repeatable probes of harness behavior</a><a href="#c10-h5">5. Misunderstandings about permissions and checkpoints</a><a href="#c10-h6">6. Best choices for extension layers such as rd-skills</a><a href="#c10-h7">7. How to write comparative conclusions</a><a class="sub ap-toc" href="#agent-study-products">Product behavior against the facts of the code</a><a class="sub ap-toc" href="#agent-study-rules">Inheritance matrix
+11279	Topic studies</span><span>approx. 3.3 thousand characters</span><span>Figures, tables and item-by-item explanations
+23112	Goal: compare real products' context, delegation and permissions without conflating interfaces or versions. Evidence comes from official pages read on 2026-10-17 and does not imply unchanged future versions.
+13025	Record public capabilities, observed behavior and invisible internals in separate columns; do not guess implementations lacking public evidence.
+6047	1. Specify the objects being compared first
+7235	Claude Code CLI, IDE chat, Copilot CLI and GitHub-hosted coding agents are different execution environments. A tool, Skill, memory or MCP feature available in one interface does not automatically exist in another. Model-capability comparisons must control the actual model, tools, network, repository index, permissions and environment, or they measure whole-system differences.
+16881	Official documentation describes Claude Code's loop, context composition, automatic cleanup and compaction, sub-agents and memory; Copilot CLI custom-agent documentation describes profiles and tool configuration. Neither reveals every internal prompt or service implementation. Mark unpublished areas "not public / untested" rather than infer a fixed algorithm from one output.
+6277	2. Context includes more than chat history
+7237	Claude Code publicly describes context containing conversation, tool results, project instructions, memory and on-demand content, with old-tool-output cleanup and session compaction. Skills can load descriptions first and bodies when used. Tool-definition discovery may also vary by implementation; an old version's tool token cost is not a constant.
+17809	Distinguish four states: "file exists in the project", "tool has read it", "still in model context" and "saved in external memory". A large file previously read may survive compaction only as a summary; when exact code is needed later, reread the original location rather than demand reconstruction from a summary.
+17303	For multi-directory repositories, check rule-loading scope too. Automatic memory and manually maintained project instructions have different lifecycles; both containing "memory" in their names does not give them equal authority. Current source and explicit user requests should correct stale experience rather than remain overridden by historical summaries.
+6424	3. Do not broadly describe sub-agents as "inheriting everything" or "completely blank"
+7245	Claude Code documentation describes separate sub-contexts and ways to fork a current session; delegation modes yield different initial contexts. Verify returned content, whether tool calls remain in the sub-context and whether skills preload against the specific configuration.
+7302	A Copilot CLI custom profile includes a description, prompt, optional tool list and MCP configuration; documentation says a profile without tool restrictions can access the available tool set. "Available tools" still depend on harness configuration, connections and permissions; not every MCP service is automatically logged in and usable.
+11861	Distinguish three engineering layers: discovery determines visible tool names, agent configuration determines permitted requests, and execution permissions determine whether a specific call succeeds. Model tool selection is a fourth layer. Fixing one alone does not guarantee a call occurs.
+16732	For the full mechanism and a continuous example see <a href="../../chapters/12.html#agent-practice-rules">Rule-file loading and sub-agent inheritance: why is "inherited automatically" not enough to say?</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.
+6527	4. Low-cost, repeatable probes of harness behavior
+20839	This book has not run Codex, Claude or Copilot on the user's machine. The following is an experiment design for readers, not measured results: create a sample repository without secrets; put harmless, recognizable rules in root and subdirectories; start the same simple task from different cwd values; record versions, loading notices and outputs. Then explicitly invoke a read-only custom agent and compare visible tools and rules.
+19559	A probe should not merely ask the model to say "I loaded the skill". Require a verifiable result dependent on the rule, such as JSON with a prescribed key, without leaking that key directly into the user task. Even a correct result is only indirect evidence; combine it with more direct loading logs or context displays when supported.
+14203	For a compaction probe, set an explicit constraint early in a long task, add ordinary work records, trigger supported compaction, then continue a task depending on that constraint. Keep uncompacted controls, different positions and repeated trials. One successful recollection does not establish safety for every long task.
+6643	5. Misunderstandings about permissions and checkpoints
+10335	Some tools offer file-edit rollback or session recovery; this does not imply reversal of external email, remote deployment or database writes. File checkpoints, session history, execution logs and the remote world occupy different state spaces. Lesson 63's unknown state matters in real products too.
+28465	Check tool capabilities even with "read-only review" configuration. A reviewer able to execute arbitrary Shell commands may exceed the written permissions. Enforce restrictions through the executor rather than only saying "do not edit files". Ordinary file reads need not always require human approval; a clearly bounded sandbox reduces approval fatigue.
+6732	6. Best choices for extension layers such as rd-skills
+18630	Extensions should supply missing expertise and accurate routing rather than duplicate existing harness sessions, tools, persistence and permissions. Locate the failure in the skill description, loading boundary, specialist content, returned evidence or harness itself first. If the right skill is visible but generic, more router optimization will not fix expertise quality.
+10333	A high-value change: a skill loads on clearly unrelated tasks; add applicability boundaries and counterexamples and verify both irrelevant and mandatory-load tasks. A low-value change: fear of omissions leads to loading all specialist material by default and adding multiple routing agents to review it. That adds context, latency and conflicts and needs very clear measured gains to justify it.
+6787	7. How to write comparative conclusions
+11417	A rigorous conclusion reads: "With a particular CLI version, repository, permission and tool configuration, task set X showed Y; hosted versions and other models were untested." Avoid "Claude always does this; Copilot always does that". Product behavior changes; trustworthy engineering knowledge distinguishes stable principles from version-specific facts.
+21041	Chapter acceptance: give at least three competing explanations for a skill failing to take effect, and design the fewest extra calls to distinguish them. Prefer observable configuration and execution evidence over model self-reports or ever more rules.
+29110	Black-box product experiment: change only one instruction source
+26243	Input and conditions.</strong> Use the same repository and task; run A without repository instructions, then B with only a read-only rule file added, keeping tool permissions and model configuration unchanged.
+25590	Record input conditions
+22605	Version, interface, rule locations and discovery logs
+12460	Make differences explainable.
+18579	Run A/B
+25262	Observe rule reading and proposed writes
+10716	Inspect more than the politeness of the final answer.
+13977	Add an execution boundary
+17767	Tool permissions remain read-only
+28372	Avoid actual unauthorized side effects merely for testing.
+7137	B proposes fewer writes
+15062	This only shows a behavioral change under these conditions, not the full text of internal closed-source prompts.
+28491	Repeat
+23201	Compare repeated runs of the same task and adjacent tasks
+14063	Distinguish random sampling from stable effects.
+18972	Join the steps up.</strong> Public documentation and black-box experiments complement each other, but one behavior cannot reveal the entire internal implementation.
+26796	Limits and counterexamples.</strong> This is an experiment design, not an executed commercial-product test; no success rates are invented.
+9515	← 09｜Tracing the Codex source: from repository rules to history, loop and compaction</a><a href="11.html">11｜The context compiler: information selection, dependency closure and budget
+16731	For the full mechanism and a continuous example see <a href="../../chapters/12.html#agent-practice-products">How can the open-source Codex and the Claude engineering articles be read against each other without manufacturing a conflict?</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.
+22276	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#c10-h1">1. Specify the objects being compared first</a><a href="#c10-h2">2. Context includes more than chat history</a><a href="#c10-h3">3. Do not broadly describe sub-agents as "inheriting everything" or "completely blank"</a><a href="#c10-h4">4. Low-cost, repeatable probes of harness behavior</a><a href="#c10-h5">5. Misunderstandings about permissions and checkpoints</a><a href="#c10-h6">6. Best choices for extension layers such as rd-skills</a><a href="#c10-h7">7. How to write comparative conclusions
+6123	11｜The context compiler: information selection, dependency closure and budget — AI Systems Engineering
+22290	Follow this chapter through its objects and states</a><a href="#topic-2">Each turn's context is like a working file with a boundary</a><a href="#c11-h1">1. Every turn's input needs a clear purpose</a><a href="#c11-h2">2. Budget model and dependency closure</a><a href="#c11-h3">3. Small and complete matters more than many fragments</a><a href="#c11-h4">4. Authority, freshness and scope are not one score</a><a href="#c11-h5">5. Benefits and failure modes of JIT loading</a><a href="#c11-h6">6. Evaluate context without perturbing it</a><a href="#c11-h7">7. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-context">A compacted input with a lost dependency
+23098	Goal: turn Context Engineering from prompting techniques into an inspectable information-supply pipeline. Experiment:
+10240	. "Compiler" here is an engineering analogy, not a claim that natural language has deterministic semantics.
+28171	Context selection must respect dependencies as well as relevance: a tool result without its calling conditions can become an isolated fact.
+23164	Related step-by-step process: <a href="../../visual/F26.html">Each turn's context is like a working file with a boundary</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24539	Related mechanisms to continue with: <a href="../../visual/F28.html">Lesson 16 · Retrieval finds candidates first, then judges whether they can answer</a><a href="../../visual/F27.html">Lesson 22 · Compaction must keep the facts an action depends on</a><a href="../../visual/O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+6046	1. Every turn's input needs a clear purpose
+6962	An agent need not know the entire repository at once; it needs enough information to choose the next reliable action. A debugging turn may need only entry points, candidate branches, relevant tests and current constraints; implementation needs exact code ranges; verification needs the current diff and acceptance criteria. Information needs change with the stage.
+10573	The context pipeline can gather candidates, verify provenance and permissions, judge scope and freshness, deduplicate, select necessary dependencies, allocate budgets, serialize and record provenance. Do not assign every step to one "summarize this" prompt, or retrieval misses, selection losses and compaction errors become indistinguishable.
+14653	Keep original evidence separate from guidance too. "Ignore previous instructions" on a web page is external text and must not become a high-priority command after serialization. The harness must generate permission and source labels rather than trust a document's self-proclaimed "highest authority".
+6294	2. Budget model and dependency closure
+25632	Let candidate i have cost ci, estimated value vi and selection variable xi. The simplest selection resembles a knapsack problem: maximize
+29384	, subject to
+10024	. Real systems also have mandatory items and dependencies: if understanding a call site needs a type definition, then
+10160	. Without these constraints, ranking only by "semantic relevance / tokens" may leave incomprehensible fragments.
+12280	uses explicit dependency closure and a value-density heuristic without claiming global optimality. Mandatory items are retained first; if they alone exceed the budget, it reports an explicit error rather than silently dropping hard constraints. Cycles and missing dependencies also fail explicitly. These metadata checks admit deterministic tests, but vi is teaching input, not measured, calibrated real information value.
+28999	Budget is not just the maximum context window. Reserve room for tool results, model output and later steps, accounting for actual service computation. Approximate token counts need a margin and calibration against service usage; bytes, characters and tokens are not interchangeable.
+16733	For the full mechanism and a continuous example see <a href="../../chapters/13.html#agent-practice-context">Why can assembling context not just be "take the first N items"?</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.
+6426	3. Small and complete matters more than many fragments
+12330	Example: a call site shows
+29249	, the definition says path is relative to the repository root, and tests say a trailing slash marks a directory. All three define the behavior together. Keeping only the call site misleads string handling; test names without assertions also fail to establish the contract.
+9454	"Minimal sufficient evidence" is not a fixed line count but a closure sufficient for the current decision. Start code reading with definitions and key callers, then extend to exception handling and boundary tests, explaining what uncertainty each addition resolves. This avoids unconditional scanning without reducing complex tasks to one-sided fragments.
+28667	Truncated long files should report truncation, total range and where to continue. Returning 100 lines without revealing later logic creates false completeness. Precisely scoped continuation is more controllable than letting a model conclude from truncated results.
+6543	4. Authority, freshness and scope are not one score
+22937	Explicit user requests, current source, official API documentation, experience and model assumptions have different meanings. Do not assign confidence scores and average them. High-scoring experience cannot authorize edits to prohibited files; relevant old API examples cannot override actual current-version responses.
+19706	Record source type, version or read time, scope, state (observation / hypothesis / verified) and evidence location separately. Apply hard constraints first, then consider value and cost within the allowed set. A simple structured list can do this without a database for every task.
+12463	Preserve conflicts and conditions for resolving them. For contradictory documents, check versions and product interfaces first; unresolved claims must not merge into a seemingly certain summary. Preserve exactly what is uncertain rather than add a generic disclaimer.
+6627	5. Benefits and failure modes of JIT loading
+18682	Keep skill descriptions short and distinguishable, read specialist detail after confirming relevance, and expand resources as needed. This reduces default context, but narrow descriptions miss skills, broad ones load irrelevant skills, and late discovery of key constraints causes rework.
+15728	Evaluate JIT through necessary-capability recall, unnecessary loading, time to first effective action and final engineering results, not merely fewer loaded tokens. Skills need action-changing expertise such as language concurrency semantics, storage transaction boundaries or framework testing strategies; generic demands for "high quality and maintainability" cannot replace it.
+11956	Code injection also differs from tool permissions. Loading a Skill describing MCP does not automatically grant an MCP connection. Verify content routing and tool routing separately; mistaking a permission failure for a JIT failure leads to the wrong design.
+6729	6. Evaluate context without perturbing it
+17298	Compare default full loading, on-demand loading and on-demand loading with structured state on the same tasks. Fix models, tools and tests; record actual files read, first appearance of required evidence, repeated reads, compaction counts and final pass rates. Stratify by task type so averages do not hide regressions on complex tasks.
+27157	Also remove a reference and compare: unchanged results suggest limited marginal contribution on this task set, not irrelevance to every future task. Additions need explicit failure examples, and deletions need corresponding regression cases.
+28157	A high-scoring chunk loses its preceding negation
+26261	Input and conditions.</strong> The original says "Do not deploy to production; staging is allowed." Candidates are split into "deploy to production" and "staging is allowed".
+18570	Scoring error
+13906	The first fragment is highly relevant to deployment
+21566	Retrieval scores do not preserve logical negation.
+12355	Complete dependencies
+18445	Recover the full sentence and subject
+18324	Obtain the correct prohibition.
+29000	Budget conflict
+16718	The full sentence uses slightly more space
+12664	Preserve complete constraints before mechanically picking the most relevant short fragment.
+26556	Assemble input
+14080	Distinguish user restrictions from quoted material
+28764	Prevent mistaken instruction authority from being regained.
+21419	Verify
+15891	Check the candidate production action
+18070	Reject it; judge staging under the remaining conditions.
+18929	Join the steps up.</strong> Context selection needs semantic dependencies, not just optimized score-to-length ratios for isolated fragments.
+26650	Limits and counterexamples.</strong> This book's "context compiler" is an engineering analogy, not a claim of fully deterministic semantic checking for LLM input.
+10396	What if a valuable call example depends on a type file too long for the budget? Retrieve exact type definitions and necessary fields to reduce cost; if still too large, first understand the type and record traceable conclusions as a separate stage, without treating unread content as known. Handle mandatory-constraint conflicts explicitly.
+21035	The chapter's main outcome is not a huge context manager, but identifying what each turn needs, why it is trustworthy, where it comes from, when it expires and which specific error its absence would cause.
+9516	← 10｜Claude Code and Copilot: public mechanisms, verifiable behavior and unknown internals</a><a href="12.html">12｜The deeper problem with compaction: lossy state, evidence recovery and continued execution
+22289	Follow this chapter through its objects and states</a><a href="#topic-2">Each turn's context is like a working file with a boundary</a><a href="#c11-h1">1. Every turn's input needs a clear purpose</a><a href="#c11-h2">2. Budget model and dependency closure</a><a href="#c11-h3">3. Small and complete matters more than many fragments</a><a href="#c11-h4">4. Authority, freshness and scope are not one score</a><a href="#c11-h5">5. Benefits and failure modes of JIT loading</a><a href="#c11-h6">6. Evaluate context without perturbing it</a><a href="#c11-h7">7. Acceptance questions
+6143	12｜The deeper problem with compaction: lossy state, evidence recovery and continued execution — AI Systems Engineering
+22248	Follow this chapter through its objects and states</a><a href="#topic-2">Compaction must keep the facts an action depends on</a><a href="#c12-h1">1. Compaction is a lossy information transformation</a><a href="#c12-h2">2. The greatest danger is not losing a few background details</a><a href="#c12-h3">3. What recoverable state should store</a><a href="#c12-h4">4. How to offload and retrieve original evidence</a><a href="#c12-h5">5. Compaction breaks even on more than token savings</a><a href="#c12-h6">6. How to evaluate semantic fidelity</a><a href="#c12-h7">7. A practical strategy and counterexamples</a><a class="sub ap-toc" href="#agent-study-compaction">Checking the generation number when a candidate is installed
+23114	Goal: design and evaluate task continuity after compaction rather than summary fluency alone. Experiment:
+15092	checks only structure and versions; this book has not measured commercial models' semantic compaction of natural language.
+14211	The quality target is continued correctness, not fluent summaries; first inspect how state becomes wrong.
+23165	Related step-by-step process: <a href="../../visual/F27.html">Compaction must keep the facts an action depends on</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24535	Related mechanisms to continue with: <a href="../../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat</a><a href="../../visual/O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+6032	1. Compaction is a lossy information transformation
+14488	Original history H contains goals, tool feedback, attempts, assumptions and verified facts. A compaction function produces C(H), from which the model continues acting. The question is whether C(H) increases decision errors over future task distribution Q, not its literal similarity to the original. A short summary may preserve every currently important condition; a long one may lose the sole crucial negation.
+6996	Anthropic discusses compaction, notes and sub-agents in context engineering; OpenAI also documents opaque compaction state. These show forms beyond ordinary summaries, but form alone cannot establish lossless downstream tasks.
+20865	This book adopts an engineering objective: prioritize constraints, conclusion status, evidence entry points and unfinished work that affect later actions. This is not a universally optimal compaction algorithm, but a design testable through task recovery experiments.
+6285	2. The greatest danger is not losing a few background details
+14695	Original: "Suspect the Skill was not loaded, but logs are unchecked, so this is unconfirmed." Bad summary: "The unloaded Skill caused the failure." A hypothesis becomes fact, directing later edits toward a wrong root cause.
+14694	Original: "Change only description, without changing skill content or adding a router." Bad summary: "Optimize skill routing." Negative constraints disappear and scope may expand.
+14696	Original: "Tests passed on commit A; file B changed afterward." Bad summary: "All tests passed." Lost evidence freshness creates false completion.
+10528	These errors change epistemic status, expand scope and lose evidence versions respectively. Keyword-recall tests are insufficient because bad summaries still contain Skill, routing, tests and other original terms.
+6415	3. What recoverable state should store
+27219	Not every five-minute task needs ten files. Short tasks can stay in a session; external state is needed only across windows / sessions or for high-risk tasks. Fields should prevent specific recovery errors rather than complete a form.
+29088	checks whether confirmed facts cite existing evidence and whether evidence versions match the current artifact. This cannot judge whether the evidence text actually supports a conclusion; that requires original reading, specialist semantic judgment or human review. Confusing structural validity with semantic fidelity is a particularly easy misreading of older simulation experiments.
+6535	4. How to offload and retrieve original evidence
+16251	Keep large logs, full source and long documents externally, with locations and key excerpts in summaries. Locations must work: repository path + version + symbol is more stable than a temporary line number; expiring tool-result IDs need lifetimes or retained evidence. "Read some material earlier" cannot restore anything.
+18042	Not all originals deserve permanent retention. Cheaply reacquired material without decision impact can be omitted; mutable external sources, evidence underlying major decisions and costly-to-recover evidence merit retention more. Repeatedly archiving whole repositories for memory adds permission and maintenance burdens.
+28541	Rereading must respect permissions and versions. A formerly accessible tool result cannot remain usable merely because a cached copy survives revoked authorization. Compaction and memory do not remove data-governance duties.
+6636	5. Compaction breaks even on more than token savings
+25636	Let current compaction cost be Cc, remaining turns k, savings per compacted turn Si, prefix-cache loss Li and retrieval cost Ri. A rough calculation is:
+10213	. Include rework and quality losses from compaction errors rather than assume zero.
+12071	A model call for compaction near task completion may not pay back. With long history and many remaining steps, moderate compaction may substantially reduce continuing cost. Better triggers consider remaining work, information contamination, budget margin and recovery difficulty, not just a fixed occupancy percentage.
+24639	Lower cache-hit rates do not necessarily make compaction unhelpful: smaller context may still cost less over later turns. Do not keep stale errors to preserve caching. Compare total cost and quality per successful task.
+6718	6. How to evaluate semantic fidelity
+13661	Prepare long tasks with varied constraints and test three things before and after compaction: fact / constraint recovery, evidence location and continued execution. Include negations, withdrawn suggestions, version conflicts and unresolved side effects. Define questions before the experiment rather than select ones the resulting summary can answer.
+20687	Use uncompacted history as a control, recognizing it too may degrade through length; add "manually organized minimal sufficient state" as an upper-bound reference. Test repeated compaction separately because summaries of summaries may reinforce errors. Record error types rather than only an overall score.
+17272	Opaque commercial compaction items cannot be inspected directly; fork identical tasks and compare later factual answers and actual completion. This is black-box behavioral evaluation, not a claim to have read the internal compressed representation.
+17818	Engineering case · D04
+19930	Failure experiment: catch compaction overwriting new events with two database connections
+21706	Even an excellent model summary can fail at the commit protocol
+27625	Connection A reads history revision=10 and starts compaction; connection B writes a tool-success event and updates revision to 11; A writes back its old summary. An unconditional UPDATE overwrites the new event with old state. This book actually creates two SQLite connections to reproduce the sequence and rejects stale commits with a conditional UPDATE.
+8824	The SQL means "write only if current rev still equals the 10 I read"; 0 affected rows must be treated as a conflict rather than success just because no exception occurred. The final state retains [11, c7 succeeded]. This state evidence matters more than summary fluency.
+19808	Verify summary content and protocol windows
+20671	A server-side compaction interface may return a complete window with several item types; keep more than just the opaque item.
+5891	Keep model-compacted context separate from deterministic execution logs: the former supports understanding, the latter determines whether tools executed and retries are allowed.
+25058	When merging trailing events
+15113	The complete event tail after a snapshot can be retained, but check whether it overturns summary claims such as "unfinished / unauthorized". Appending one new tool result to an old summary may leave contradictory state. Regenerate the summary or use authoritative merge rules for structured control state. No single method is universal; acceptance requires the correct next step during recovery.
+15683	Regression cases
+27653	Cover late tool results, changed user goals, cancellation, permission changes and concurrent second compaction. Define permitted and forbidden next actions for each; shorter post-compaction text does not prove continuity.
+7343	D04: read the result rather than just "passed"
+12827	Compare completeness of returned items first, then whether a revision-10 summary can overwrite real events already at 11. changed_rows=0 protects new state; it does not mean the compaction request returned nothing.
+13089	Related questions: <a href="../../chapters/14.html#engineering-E27">E27: why can a compaction result not retain only the item that "looks most condensed"?
+7493	E28: a tool result arrives during compaction: how can replacing history lose real progress?
+6774	7. A practical strategy and counterexamples
+12660	Start with harness-provided compaction while retaining concise authoritative task state and original-evidence entry points in the project. Add targeted safeguards only after repeated observed fidelity failures. Do not default to an extra summarizer agent every few turns, which may add latency, break caching and create competing state.
+29073	Acceptance question: why is remembering every pending task but forgetting ruled-out causes still dangerous? The agent may repeat disproved paths or promote old hypotheses again. Save a "failed experience" if it changes later retrieval or avoids costly mistakes, not because every attempt needs permanent storage.
+10265	A compaction approach saves 90%, but count two error categories separately
+26292	Input and conditions.</strong> A benchmark has 10 key facts; the summary retains 8, with 1 changing unknown to success, and adds another unsupported conclusion.
+15098	Recall definition
+6104	Accurately retains 7 of 10
+13094	Accurate retention of key facts is 70%, not 80% merely because 8 text items remain.
+28364	Omission
+6356	2 items entirely absent
+15238	They may be recovered from the original.
+24189	Incorrect alteration
+22089	More likely than ordinary omissions to trigger wrong execution.
+20161	Addition
+6207	1 unsupported conclusion
+28882	Record it separately as fabrication rather than mix it into omission rate.
+10615	Downstream check
+17642	Try continuing the task from the summary
+25263	Observe skipped verification to assess actual risk.
+18960	Join the steps up.</strong> Fidelity is not a single compaction ratio; omissions, incorrect alterations and fabrications have different repair costs.
+26636	Limits and counterexamples.</strong> The 10 items are a manually labeled teaching benchmark, not an exhaustive account of every natural-language fact.
+9517	← 11｜The context compiler: information selection, dependency closure and budget</a><a href="13.html">13｜Inside a retrieval system: BM25, vectors, ANN, fusion and index freshness
+22247	Follow this chapter through its objects and states</a><a href="#topic-2">Compaction must keep the facts an action depends on</a><a href="#c12-h1">1. Compaction is a lossy information transformation</a><a href="#c12-h2">2. The greatest danger is not losing a few background details</a><a href="#c12-h3">3. What recoverable state should store</a><a href="#c12-h4">4. How to offload and retrieve original evidence</a><a href="#c12-h5">5. Compaction breaks even on more than token savings</a><a href="#c12-h6">6. How to evaluate semantic fidelity</a><a href="#c12-h7">7. A practical strategy and counterexamples
+6155	13｜Inside a retrieval system: BM25, vectors, ANN, fusion and index freshness — AI Systems Engineering
+22225	Follow this chapter through its objects and states</a><a href="#topic-2">From two candidate lists to usable evidence</a><a href="#c13-h1">1. Retrieval loses information stage by stage</a><a href="#c13-h2">2. BM25: term-frequency saturation and length normalization</a><a href="#c13-h3">3. Dense Retrieval and vector spaces</a><a href="#c13-h4">4. Why ANN is faster and why it may miss results</a><a href="#c13-h5">5. How hybrid retrieval fuses results</a><a href="#c13-h6">6. An index is a data product with a lifecycle</a><a href="#c13-h7">7. Acceptance and measurement</a><a class="sub ap-toc" href="#agent-study-retrieval">Fused ranking and independent evidence</a><a class="sub ap-toc" href="#agent-study-indexing">Switching index generations
+23106	Goal: design retrieval pipelines from corpus and query distributions and locate losses in retrieval, filtering, ranking or context selection. Experiment:
+29345	, providing real BM25 and RRF rather than calling string matching an embedding.
+15880	Compare rankings on fixed candidates to distinguish contributions from retrieval models, fusion algorithms and evidence filtering.
+23166	Related step-by-step process: <a href="../../visual/F29.html">From two candidate lists to usable evidence</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24540	Related mechanisms to continue with: <a href="../../visual/F28.html">Lesson 16 · Retrieval finds candidates first, then judges whether they can answer</a><a href="../../visual/F35.html">Lesson 05 · When reading a metric, first ask what its denominator is</a><a href="../../visual/F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+6043	1. Retrieval loses information stage by stage
+22958	A user question becomes a query; retrievers obtain corpus candidates; permission and version filters constrain visibility; ranking selects limited results; the context compiler trims again; finally the model uses evidence. If key material disappears at any stage, even a strong downstream model may answer wrongly.
+18525	RAG therefore needs more than a "vector database → LLM" diagram. Know chunking, index creation time, query encoding, result completeness and how evidence supports answers. Contextual Retrieval adds chunk context and combines retrieval signals, but gains must be remeasured on your own tasks.
+29041	Start with low-cost baselines: exact path / symbol retrieval and BM25. Add vectors, query rewriting or graphs only after real queries expose semantic gaps. Large frameworks are not prerequisites for retrieval quality.
+6263	2. BM25: term-frequency saturation and length normalization
+20866	This book uses a common nonnegative IDF form:
+25761	Rarer terms usually have larger idf; repeated occurrences within one document give saturating gains, not linear rewards for a hundred repetitions. Length normalization reduces advantages from mere verbosity. Implementations differ in IDF and query-frequency handling; fix the specific formula for comparisons.
+11940	The code splits snake_case and camelCase, then matches English alphanumeric words and individual Chinese characters. This transparent, testable teaching tokenizer is not a high-quality Chinese tokenizer. It often helps English code symbols but may lose Chinese phrase meaning. Measure recall on real queries rather than assume a BM25 implementation completes professional retrieval.
+6408	3. Dense Retrieval and vector spaces
+14791	Two-tower retrieval usually encodes queries and documents separately and scores relevance by dot product or cosine. Documents can be encoded offline and queries online; training positives, negatives and task instructions shape the similarity it supports. Similar descriptions need not mean identical facts; semantic approximation may hide opposite conditions, versions and exact identifiers.
+16324	Cosine commonly uses normalized dot products; if an inner-product index receives unexpectedly unnormalized vectors, norms affect ranking. Changing embedding models, dimensions, preprocessing or instruction templates usually requires rebuilding related indexes; do not mix different vector spaces in one collection.
+7313	A Cross-encoder jointly encodes queries and documents for finer relevance judgments, but candidate-pair counts directly increase cost. It suits reranking small retrieved sets and cannot recover missing candidates. ColBERT retains multi-token representations with late interaction between single-vector efficiency and finer matching, with more complex storage and indexes.
+6517	4. Why ANN is faster and why it may miss results
+24204	Exact vector search scans every vector, giving a straightforward correctness baseline. Approximate nearest-neighbor indexes trade controlled recall loss for speed or storage. HNSW navigates candidate neighbors through layered graphs; more search candidates usually improve recall at greater cost. IVF selects coarse-cluster buckets, then searches within them; too few probes miss results, too many approach scanning. PQ encodes vector blocks as codebook indexes, reducing storage while approximating distances.
+11157	Do not conflate ANN Recall@k with business-evidence recall. ANN metrics may only compare with exact vector rankings and show few neighbors lost; if the embedding never ranked the right document highly, even strong ANN recall cannot guarantee business success.
+12642	Metadata filters affect ANN behavior. Global top-k followed by permission filtering may leave only one or two items, withholding findable material from authorized users. Options include prefiltering, appropriate over-retrieval, partitioning or filter-aware indexes; measure recall and latency under strict ACLs and highly selective filters.
+6647	5. How hybrid retrieval fuses results
+7085	BM25 and cosine scores may differ in scale; direct sums risk domination by one signal. RRF uses only ranks:
+10090	. This simplifies cross-score calibration but discards score-gap information. c adjusts emphasis on top ranks; it is not a magic constant.
+16972	The experiment deduplicates each ranked list so repeated documents from one retriever cannot manufacture votes. Same-named documents at different versions need clear IDs rather than incorrect merging. Redundancy or coverage selection may follow fusion, but diversity must not remove a necessary second piece of evidence.
+21307	Query rewriting and HyDE broaden semantic retrieval by forming possible descriptions before searching. Hypothetical documents are query aids, not real evidence; generated false premises must not enter the final factual chain.
+16735	For the full mechanism and a continuous example see <a href="../../chapters/16.html#agent-practice-retrieval">Relevant is not the same as usable: from recall to evidence closure</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.
+6727	6. An index is a data product with a lifecycle
+12947	At ingestion, save source ID, content version, chunk position, embedding version, permissions and update time. Source edits or deletion should invalidate indexes and caches; document ACL changes need handling too. Incremental indexing includes replacing, deleting, merging and resolving conflicts, not just adding vectors.
+12785	first filters by tenant, principal and version, then computes BM25 on the visible set; cache keys include these fields, and replacing the document set clears the cache. This actually tests cross-user cache isolation and version switching, but linear scanning establishes no million-item performance and implements no vector index. Production caches also need permission-group changes, index generations and short-term authorization revocation handled.
+13861	Deleting sensitive content requires more than hiding results. Derived content retained in summaries, answer caches or long-term memory also needs governance. Retrieval security concerns the whole dataflow, not one filter before display.
+21153	Why permission filtering after retrieval can leave too few top-k results
+26372	Input and conditions.</strong> Query ranking is [private A,private B,public C,public D]; the user may see only C/D and wants 2 results.
+12646	Take top2 first
+14870	Take A/B
+28830	Permission filtering then yields an empty set.
+24461	Misread the result
+9466	"No relevant material"
+16915	C/D actually exist.
+19531	Retrieve within the authorized set
+12944	Restrict permissions first or expand filterable candidates
+15148	C/D can be returned.
+20575	Recheck before output
+12512	Permissions may change between candidate generation and output
+28760	Prevent use of a stale authorization snapshot.
+19394	Compare metrics
+15102	Recall must use the relevant set the user is authorized to access
+11104	Global labels must not force private material into results.
+19234	Join the steps up.</strong> Filtering affects security, recall and the meaning of "no results".
+26817	Limits and counterexamples.</strong> Pre-, post- and hybrid filtering depend on index capabilities; this example does not promise that any particular database supports arbitrary ACLs efficiently.
+26907	Why approximate graph search can miss the truly nearest point
+26371	Input and conditions.</strong> The query is at 0 on a number line. A=4,B=5,C=1, with only undirected edges A—B and B—C; start at A. C is clearly nearest, at distance 1.
+11416	Start strictly greedily
+7057	A is distance 4; its neighbor B is distance 5
+16331	Moving only toward nearer points stops at A.
+17662	Local is not global
+7045	A has no better one-hop neighbor
+12150	This does not mean no better point exists elsewhere in the graph.
+16229	Explore one step further
+20471	Temporarily keep worse B, then visit its neighbor C
+14844	Find C at distance 1 and replace the current best.
+24772	Connect to engineering parameters
+12515	Larger candidate queues and exploration budgets increase visits
+15215	They may improve recall, but this example does not guarantee finding the global nearest point under every budget.
+19237	Join the steps up.</strong> Approximate search is not "compute vectors and always find the right result". Distances may be completely correct while exploration misses candidates.
+26795	Limits and counterexamples.</strong> This is a graph-traversal counterexample, not the full HNSW algorithm or an exact parameter simulation; real implementations also contain layered graphs, construction strategies and queue rules.
+17819	Engineering case · D05
+21589	Retrieval diagnosis: representation space, authorized candidates, then fusion ranking
+11213	Do not let a generator hide upstream failures
+21586	When a retrieval system answers wrongly, temporarily supply correct evidence directly to the generator to test its use. This is a diagnostic experiment, not a deployment result. Restore the real index afterward, retain candidates by stage and locate the earliest error.
+20842	This book uses four independent, explicitly bounded experiments: mismatched old and new vector bases select wrong documents despite equal dimensions; global Top2 then tenant filtering yields nothing; duplicating one retrieval route changes RRF weights; version and tier mismatches prevent real citations supporting conclusions. Model cards, pgvector and Elastic documentation support the corresponding mechanisms separately.
+21979	Every stage needs its own oracle
+25179	Representation-contract checks cover model / prefix / pooling versions; ANN uses small-sample exact retrieval as reference; fusion checks candidate identity and windows; evidence checks proposition conditions. A plausible final answer cannot prove every preceding stage correct.
+29093	Verify permissions and freshness
+25576	Record authorization version, index generation and original-text fingerprint at query time. Distinguish "no permitted material exists" from "candidates were truncated" after filtering; bind final-answer caches to permissions and versions too. Answers from old summaries after revocation are a knowledge-supply-chain issue, not just a database-query issue.
+22800	Production measurement limits
+20968	This experiment runs no HNSW service or real embedding model, so it provides no ANN performance, real semantic recall or business Q&A success rates. It supplies falsifiable logical boundaries and a diagnostic order. Before release, add quality / latency / permission tests on your own data distribution.
+7345	D05: read the result rather than just "passed"
+15666	The four result groups concern representation space, candidate permissions, duplicate fusion sources and evidence conditions. They occupy different stages; do not replace every retrieval component at once and then guess what helped.
+13090	Related questions: <a href="../../chapters/15.html#engineering-E29">E29: why can equal-dimensional query and index vectors still occupy completely different spaces?
+7502	E30: why can a vector query with WHERE still return fewer than k items?
+7506	E31: RRF ignores raw scores, so why can duplicate sources still skew rankings?
+7511	E32: relevant, citable, sufficient for a conclusion: evidence must pass three different gates
+16734	For the full mechanism and a continuous example see <a href="../../chapters/15.html#agent-practice-indexing">Which metadata, once lost while the index is built, is hard to recover?</a>; this section keeps its own derivation and experiment, and the two accounts work at different levels rather than replacing each other.
+6793	7. Acceptance and measurement
+18111	Build queries covering exact symbols, synonymous descriptions, negations, cross-document combinations, old-version interference and no answers. Measure candidate-evidence Recall@k, ranking MRR/nDCG, final-answer support rate, latency and cost separately, and require zero unauthorized leakage. Keep the original chunks missed by retrieval rather than judge only whether the model guessed correctly.
+29080	Acceptance question: why might higher nDCG after a reranker upgrade accompany worse answers? Coverage may stay unchanged while evidence diversity falls, long-text trimming loses conditions, ranking favors fluent documents over current versions, or task scoring disagrees with retrieval labels. Diagnose stage by stage rather than add larger vector models.
+9518	← 12｜The deeper problem with compaction: lossy state, evidence recovery and continued execution</a><a href="14.html">14｜Inside code intelligence: AST, LSP, dependency graph and versioned evidence
+22224	Follow this chapter through its objects and states</a><a href="#topic-2">From two candidate lists to usable evidence</a><a href="#c13-h1">1. Retrieval loses information stage by stage</a><a href="#c13-h2">2. BM25: term-frequency saturation and length normalization</a><a href="#c13-h3">3. Dense Retrieval and vector spaces</a><a href="#c13-h4">4. Why ANN is faster and why it may miss results</a><a href="#c13-h5">5. How hybrid retrieval fuses results</a><a href="#c13-h6">6. An index is a data product with a lifecycle</a><a href="#c13-h7">7. Acceptance and measurement

@@ -1,0 +1,439 @@
+13944	Preface and reading guide — AI Systems Engineering
+10378	One textbook, two levels of depth
+7644	F numbers and Systems chapter numbers follow the course order; Q numbers locate specific questions and do not define a separate reading order. On your first pass, follow "Previous section / Next section" in the text; use question numbers to search when reviewing. The experiment area keeps only code and numbers, and does not form another model tutorial.
+12829	First complete the Foundations loop from data to the forward pass, from loss to parameter updates, and from saving to generation; then enter Systems to trace the implementation and error boundaries of the same computation in code. "Independent comparisons" within chapters explicitly reset the input rather than connecting results from different parameter stages or dimensions into one run. Numeric records and source code are verification tools, not a third model course.
+11816	Start from how one input is processed, and gradually understand model computation, agent execution and the engineering methods that support reliable applications.
+14039	Step-by-step figures: from input to incremental generation, then to agents and engineering
+22002	Every figure can be paused, stepped backward and forward, and enlarged. Read the fixed conditions first, then watch the numbers or states change; the full formulas and deeper content remain in the original lessons.
+22008	Each new mechanism first explains the objects it processes and where they come from, then expands the computation. Letters such as W, X and A in formulas are local names only; when different chapters reuse a letter, follow its current definition. For unfamiliar notation, see the <a href="concepts.html">guide to formulas and objects</a> for its full background rather than merely guessing an English abbreviation.
+25913	Readers and learning goals
+20869	This book is for developers and technical learners who want to understand and improve how they use AI tools. The starting point is addition, subtraction, multiplication, division, counting rows and columns, and ordinary computer use; prior study of linear algebra, calculus or machine learning is not required. Code experiments require basic Python reading skills; those skills are not a prerequisite for reading the theoretical text.
+16434	The learning goals go beyond remembering terms: explain what the inputs and outputs are, describe intermediate steps in order, calculate small examples, identify the conditions under which a mechanism holds, and choose suitable verification methods for real tasks.
+12951	Book structure
+16061	Foundations</strong> builds the concepts needed for numerical representations, model computation, training, protocols, state, retrieval and evaluation. Each lesson explains the objects first, demonstrates them with small examples, then provides an end-of-lesson self-check. <strong>Systems</strong> develops internal processes, formulas, implementation boundaries and successive follow-up questions around concrete problems. <strong>Integrated cases</strong> connect individual mechanisms into complete execution processes. <strong>Topic studies</strong> provide further code implementations, failure experiments and application designs; <strong>further reading</strong> organizes Chinese lecture notes by research topic.
+18128	Suggested reading order
+29050	On your first pass, begin with <a href="foundations/01.html">Lesson 35: text, numbers, models and programs</a> and follow "Next section" at the end of each chapter. After F06, read the integrated example "From two sentences to a three-dimensional representation", then continue with F07. After Foundations, move on to Systems; model generation, tool execution, knowledge flow and system diagnosis each have a complete case.
+17909	Readers with prior knowledge can choose a topic using <a href="contents.html">Contents and learning paths</a>, but should check its prerequisites first. F numbers identify Foundations lessons, and Q numbers identify Systems questions; these numbers support retrieval and cross-references, not proficiency levels.
+18398	How to understand a mechanism
+22071	After each passage, identify the objects it processes and its outputs, then recount the operations in order. For a shape, explain what each axis counts; for a formula, use a small set of numbers to calculate the intermediate results; for an execution flow, explain who saves state, who executes actions, and what allows work to continue after a failure. Finally, change one condition and check whether the original conclusion still holds.
+12324	For example, do more than remember that a cache "speeds things up": explain what it stores, which computations it reuses, when it expires, and how to compare its results with those from an uncached run. Likewise, go beyond "retry after failure" and distinguish three cases: the action has not yet executed, it has clearly failed, or its external result is unknown.
+21111	Terms, notation and reference answers
+21114	Foundations explains terms through actions and examples. Dotted links in the text lead to <a href="glossary.html">Terms and notation at a glance</a>, and each in-depth question links locally to its required groundwork. The quick reference aids recall and cannot replace a full derivation. Self-checks show only the questions by default. Think or calculate independently first, then click "View reference answer" to check the process; answers can be collapsed at any time.
+11624	Facts, teaching examples and experiment results
+25623	Papers and official documentation support public mechanisms within their stated scope; hand calculations, hypothetical repositories and task scenarios serve teaching; program results establish behavior only for the corresponding inputs and assertions. The three are labeled separately. Product behavior is constrained by version, configuration and runtime environment; undisclosed internals of closed-source implementations are not filled in with speculation.
+13682	Sources are listed in <a href="sources.html">References and scope of use</a>; reading the Chinese text does not depend on external web pages. This book is not a complete sentence-by-sentence translation of its sources, and does not claim to reproduce every paper's experiments, rank commercial models or complete a production security audit.
+23437	Offline reading and experiments
+25320	Unpack the materials and open index.html to read. Search runs in the local browser, while font sizes and read markers use local storage and do not automatically sync to other devices; if the browser blocks storage, the text still opens normally.
+11665	Interactive experiments</a> let you change numbers directly and inspect the results. <a href="checks.html">Foundations and execution-chain experiments</a> use the Python standard library; <a href="studies/experiments.html">topic experiments</a> separately state dependencies such as NumPy and PyTorch. Optional online examples and offline experiments are labeled separately; read their data and cost notes before running them.
+18138	Start reading Foundations</a><a class="button secondary" href="contents.html">View book contents
+19339	Sources and example conventions for the further reading — AI Systems Engineering
+21105	This part explains research topics and public engineering mechanisms in Chinese; it is not a sentence-by-sentence translation of the originals. Source entries provide bibliographic provenance; paper conclusions and product behavior are constrained by the listed versions and evidence scope.
+19968	Teaching data and cases
+18557	Hand calculations, hypothetical tasks and mechanism simulations are teaching examples. The file-filtering case describes rules specified by this book, not the behavior of any real project. The mechanism experiments do not call commercial models, and their results cannot be used to rank product performance.
+22608	Versions and scope of use
+14095	Interpret protocols, product descriptions and source code according to the version stated in each entry. CLI, IDE, cloud and API entry points cannot be assumed to share every behavior; a public description is not a complete private implementation either. See this part's references for the specific source scope.
+23429	Offline use
+21817	The text, search and experiment instructions are included in the package. Python experiment instructions state dependencies and how to run them; run output establishes only the listed inputs and assertions, not a cross-platform security audit.
+12949	Guide to using the book
+12957	A global view — AI Systems Engineering
+22283	Follow this chapter through its objects and states</a><a href="#topic-2">Text, bytes, tokens and IDs are four different things</a><a href="#llm-course">Build a complete system model first</a><a href="#c00-section-2">An engineering case running through the book</a><a href="#c00-section-3">One model call and one complete task</a><a href="#c00-section-4">Five easily confused kinds of "knowledge"</a><a href="#agent-design">Start with the smallest effective system</a><a href="#c00-section-6">Chapter self-check and answers</a><a href="#section-7">Item-by-item Chinese lecture notes</a><a class="sub ap-toc" href="#agent-reading-loop">Acceptance is tied to a version
+18115	Build a complete map of models, agents, context and engineering systems
+28766	Stage 0</span><span class="chip">5 expanded lecture notes</span><span class="chip">Main text fully expanded
+12749	Build a complete system model first
+18696	Using AI at work involves more than typing a sentence and waiting for an answer: it means building a system that can gather information, form judgments, execute actions and check results. First distinguish four objects: the <strong>model</strong> computes outputs from inputs; the <strong>harness (runtime framework)</strong> organizes calls and execution; the <strong>environment</strong> provides files, terminals, databases and business systems; the <strong>task goal</strong> determines what counts as complete. Course materials and agent-engineering sources explain these different layers separately.
+27290	This is a teaching diagram of responsibilities, not the full internal implementation of a product. A model being able to access code does not mean that code has entered this turn's input; a file being read does not mean every constraint inside it was used correctly. Track "accessible, actually read, correctly understood, verified" separately rather than treating one state as all of them.
+10326	An engineering case running through the book
+20725	This book uses a <strong>hypothetical task</strong>: add
+29217	to a build pipeline so that it skips specified directories while keeping the old behavior when the field is not configured. This case is not an audit of the user's real repository, or evidence that any product has completed these changes.
+12055	The task involves argument semantics, configuration entry points, path bases, filtering timing, compatibility and tests. If the model says "fixed", still check whether the patch was actually applied, which code version it belongs to, whether tests ran after the change, and whether they cover default behavior. Complete work evidence matters more than a fluent completion claim.
+20867	The engineering analysis method used in this book is to look for the first critical break when an error occurs. Not reading the right file is an evidence-supply problem; misinterpreting a condition after reading is a reasoning problem; an unapplied patch is an execution problem; incorrect code that escapes detection is a verification problem. The same final failure may require entirely different fixes.
+10430	One model call and one complete task
+10440	One call processes a limited input and produces output; a task may involve many model calls. Round 1 chooses a search, round 2 reads files, round 3 produces a change, and round 4 continues based on tests. The information differs in each round, so the user's initial prompt alone cannot explain the whole task. The publicly described Codex Agent Loop organizes this very alternation of model and tools.
+23012	Interfaces, CLIs and IDE extensions are interaction entry points; models, tools and state management are execution components. The same interface does not guarantee the same context, and different interfaces may share core execution logic. Whether they do share it should be established from product documentation or source code for a particular version, not inferred from appearance.
+11664	Five easily confused kinds of "knowledge"
+16426	What it stores
+18385	How it changes
+11097	What it cannot replace
+25476	Language and task patterns formed during training
+25439	Training, fine-tuning
+20568	Current external facts
+21074	This turn's context
+19360	Instructions, evidence, history and state
+26572	Input assembly
+26053	Persistence across sessions
+16188	External knowledge sources
+22524	Source code, documents, databases
+22534	Source-system updates
+21847	Correct retrieval and interpretation
+18611	Execution state
+17897	Actions taken, tests, pending approvals
+17725	Tool and harness updates
+16939	Verification in the actual environment
+15167	Reusable intermediate computation
+20678	Server-side policy
+24390	Experiential memory
+7737	In-Context Learning uses input examples to improve current performance without requiring model weights to be updated during that inference call. Thus, "it got it right after being given ten examples" does not mean permanent learning. KV cache and prompt cache likewise do not write business knowledge into parameters.
+11877	Start with the smallest effective system
+17917	Workflows with known steps can be combined with dynamic agents. Argument validation, test execution and patch application suit deterministic programs; the model can choose investigation directions for unknown bugs; high-risk side effects such as publishing and deletion still require explicit authorization. Do not replace all mature control flow with probabilistic judgments just to "look more like an agent".
+10266	One original question to ask is: what specific error would occur if this step were removed? If the answer is merely "it would be less professional", that is not enough to justify adding it; if omitting permission checks would leak credentials, there is a clear reason to keep it. This method judges engineering necessity; it is not a universal law proved by a paper.
+21039	Chapter self-check and answers
+28710	Question: if code is still changed incorrectly after the source was read, must retrieval be the problem?</strong> No. The reading scope may have been insufficient, or interpretation, execution or verification may have failed. Check the evidence, patch and tests.
+28709	Question: does writing the architecture in AGENTS.md count as fine-tuning?</strong> No. If it is read at runtime without training parameters, it supplies context; whether it loads depends on the harness.
+28707	Question: what is the standard for completing the learning?</strong> Being able to trace a task's information, actions, state and verification, and judge whether to change the model, prompt, retrieval, tools or workflow, rather than merely reciting technical names.
+5957	0.1 · LLM course: a panorama of concepts and tools
+7720	The Hugging Face course connects tokenizers, models, data and task interfaces. To understand a high-level pipeline, keep tracing how input becomes IDs, how the model produces tensors, and how postprocessing converts them back into results. A successful call does not mean the internal mechanism has been understood.
+8942	A token ID is only a vocabulary index; its numerical magnitude does not represent semantic distance. Model output may also be classification scores, hidden representations or generated tokens, and different task heads have different semantics. A classification model does not automatically run an agent loop just because it uses a Transformer.
+11874	Distinguish boundaries from text input to tool result
+26214	Input and conditions.</strong> The task asks for the timeout in config.txt. The file contains 3, with no unit provided.
+21786	Model input
+12716	Initially only the task and tool descriptions
+27148	The file's value is not known yet.
+23485	The program reads timeout=3
+20149	The new fact comes from the file.
+15706	Answer boundary
+15129	The value 3 can be reported
+11094	Do not add "seconds" without evidence.
+19137	Join the steps up.</strong> Asking "where did this information come from?" at every step distinguishes the model from the system.
+14438	Original exercise: express the same meaning in Chinese, English and code, and record each input's length, special symbols and expected output form. Do not use a fixed Chinese-character/token ratio; actual counting depends on the matching tokenizer. Then add tool-call results to the context and identify them as new input rather than a parameter update.
+16660	The completion standard is being able to separate a call into encoding, computation and interpretation, and explain which layer may fail. The course is a foundational entry point; you need not finish all training material before building a small agent, but a tool-library wrapper cannot replace knowledge of the underlying mechanisms.
+5958	0.2 · GPT-2 illustrated: an autoregressive model
+17492	Related material: The Illustrated GPT-2
+15852	The Illustrated GPT-2 explains autoregressive generation through a decoder-only architecture. The existing sequence enters the model, the current position produces a next-token distribution, and the selected token becomes later input. It bridges the understanding of chat generation, but does not imply that all modern models retain every GPT-2 component and parameter.
+28205	Token-by-token output does not mean the model uses only one token at a time. A prediction can depend on the whole visible prefix; caching makes some past computation reusable. Processing a long prompt at the first step is also scheduled differently from later generation.
+11334	Two output tokens are chosen in two separate steps
+26484	Input and conditions.</strong> Given input A/B, choose C first, then choose D based on A/B/C.
+23684	Call 1
+12341	Use the state at the final position of input A/B
+18305	Obtain C.
+23729	Call 2
+18701	Feed C into the next step and continue the cache
+18306	Obtain D.
+25046	If the generation limit is 2
+7402	D does not need another forward pass before being shown to the user.
+19232	Join the steps up.</strong> The output is not a complete sentence written in hidden space first and translated all at once afterward.
+14285	Original exercise: list several plausible continuations of "The file does not exist, so we need to...", then ask whether they establish the actual file state. They do not: a model can complete language patterns, while file existence needs a tool observation. Add new evidence that "the file actually exists" and analyze why the conditional distribution changes in the next round.
+16568	The completion standard is distinguishing conditional generation, evidence verification and tool execution. Do not interpret fluent continuation as the model having checked the disk, or describe a later evidence-based correction as model parameters being retrained within the session.
+5960	0.3 · Building effective agents
+17338	Related material: Building Effective Agents
+7122	Building Effective Agents distinguishes predefined workflows from dynamic agents and discusses patterns such as chaining, routing, parallelism, orchestrators and workers, and feedback. It emphasizes starting simply and adding complexity for task needs, rather than chaining every pattern into one fixed, lengthy flow.
+14239	Original examples: field extraction may need one model call plus validation; an unknown bug requires adjusting the search based on observations; independent materials can be researched in parallel. All three call an LLM, yet should not use the same orchestration.
+22064	Every pattern has counterexamples. Chains propagate earlier errors; routing misclassifies domains; parallelism adds integration work; an evaluation loop may introduce no new evidence and merely keep polishing the wording. Recognizing these costs is necessary to judge whether the extra steps are worthwhile.
+24348	The exercise is to draw the shortest viable flow for one of your tasks, then ask of each step, "What specific failure would removing this step cause?" If you cannot name an actual risk, do not add it yet. The completion standard is choosing a pattern based on uncertainty and verification cost, not on a popular architecture name.
+15794	Where fixed workflows and agents diverge
+26394	Input and conditions.</strong> A flow receives a test-failure log; possible actions include reading files, making a change and retesting.
+15793	Fixed workflow
+28974	Predefined read→patch→test
+14014	The program determines the action order.
+6972	Agent loop
+21742	The model sees the result, then chooses the next action
+15198	It may read the caller first to fill an evidence gap.
+13067	Shared boundary
+11403	Both must check write permissions and test results
+24807	Autonomous choice does not mean unlimited execution.
+18989	Join the steps up.</strong> The distinction is who determines the control flow, not whether an LLM is called.
+5961	0.4 · Unfolding the Codex agent loop
+7260	Codex Agent Loop shows the loop among model, tools and user: assemble input, receive an action or answer, execute tools, fill the results back in, and continue. An action proposed by the model and an action already executed in the environment are two states that must be kept separate.
+18723	Expanding "user input" to "the actual input at each round" explains why source code, logs and compaction state appear later. The first round does not inherently have the entire repository; tool returns supply incremental evidence. The model generating shell arguments also does not mean the command succeeded.
+22943	One user sentence becomes multiple rounds of requests
+26477	Input and conditions.</strong> After the request "fix the configuration", the model first requests a file read.
+26111	Round 1
+12072	Task＋tool definitions
+26629	Outputs read proposal c1.
+26112	Round 2
+13966	Add the file content returned for c1
+26593	Outputs change proposal c2.
+26113	Round 3
+13970	Add write and verification results
+18566	Only then can an evidence-based completion account be formed.
+19052	Join the steps up.</strong> Tool feedback changes the next round's input, so a task usually requires more than one inference call.
+14446	Original exercise: draw the message boundaries among search, read, change and test actions, and label the information added along each edge. Remove the test return and identify what basis the conclusion "verified" loses. Keeping only what the model said, without execution observations, cannot establish a reliable audit chain.
+20984	This item provides a global view; later product chapters discuss session primitives and context in more detail. It does not speculate about Codex's hidden system prompt or claim an audit of the current complete source commit.
+5962	0.5 · A map of knowledge for building language models from scratch
+7219	CS336 builds language models from scratch, connecting tokenizers, architecture, data, optimization, inference systems and evaluation. Its value is showing how components constrain one another, rather than having learners merely memorize attention formulas or parameter counts.
+25753	The vocabulary affects sequence length, sequences affect computation and caching, data affects capability, the budget determines feasible scale, and evaluation determines whether progress is real. A better local metric does not mean the entire system suits the business better.
+11909	A minimal acceptance sequence when implementing from scratch
+26242	Input and conditions.</strong> Prepare a teaching language model containing only A/B/C.
+12895	Represent first
+6884	A/B/C have stable IDs, and the shape can be checked
+11149	Do not start by tuning the learning rate.
+13595	Then compute
+13919	The forward pass gives valid probabilities, and loss can be computed
+23382	Establish the numerical chain.
+20541	Train last
+14798	Backpropagation changes parameters; check on independent samples
+25480	Falling training loss does not mean generalization has passed verification.
+19085	Join the steps up.</strong> Dividing the whole system into verifiable intermediate objects makes errors easier to locate.
+14343	Original exercise: with a limited compute budget, compare adding parameters, adding training data, improving cleaning and changing sequence length. First state whether the goal is training loss, a downstream task or total serving cost, then discuss trade-offs; do not invent score-improvement percentages.
+24056	On the first pass, understanding the dependencies is enough. Implement optimizations and system experiments when studying more deeply. The completion standard is explaining "why bigger is not necessarily more economical" and connecting training-system knowledge with cost, latency and capability boundaries in later agent work.
+21168	Source S005, a map of knowledge for building language models from scratch
+21644	Model internals →
+21643	Model internals — AI Systems Engineering
+22208	Follow this chapter through its objects and states</a><a href="#topic-2">Q/K/V: first compute where to read from, then how much to read in</a><a href="#transformer-intuition">From text to tokens and vectors</a><a href="#attention-math">The full attention computation</a><a href="#c01-section-3">A Transformer layer contains more than attention</a><a href="#generation">From hidden states to the next token</a><a href="#c01-section-5">MHA, MQA, GQA and MoE</a><a href="#c01-section-6">From mechanisms back to engineering</a><a href="#section-7">Item-by-item Chinese lecture notes
+8949	Tokens, vectors, attention, the Transformer and token-by-token generation
+28774	Stage 1</span><span class="chip">14 expanded lecture notes</span><span class="chip">Main text fully expanded
+11872	From text to tokens and vectors
+7819	An LLM first converts text into token IDs. A token may be a word, part of a word, punctuation, whitespace or a byte fragment; there is no fixed ratio between Chinese characters and tokens. The same text can have different lengths under different tokenizers; counting requires the implementation matched to the target model.
+17968	A common pipeline includes normalization, pretokenization, a subword model and postprocessing. BPE progressively merges frequent fragments; other methods use different objectives. Do not assume every tokenizer lowercases text, or arbitrarily remove code whitespace to reduce tokens. The magnitude of an ID does not express semantic distance.
+25062	With vocabulary size V and hidden dimension d, the embedding matrix has shape V×d. Looking up a row by ID gives an initial representation. It is not a fixed definition; later layers update the representation based on context. Static Word2Vec usually gives a word entry a fixed vector; contextual representations in a Transformer change with the sentence.
+22374	The full attention computation
+25641	Let the current representation X have n positions and d features. Projection gives Query, Key and Value:
+8470	Q matches other positions, K is what gets matched, and V supplies content to combine. M is the mask: causal generation blocks access to future tokens, usually by setting the corresponding scores to negative infinity. Attention is an internal weighted computation, not a database query or a search-engine call.
+14274	Original calculation:</strong> scores [0,1,2] give softmax probabilities of approximately [0.090,0.245,0.665]. If one Value dimension is [10,20,30], the output is approximately 25.75. This combines content and need not copy the position with the highest weight. The largest attention weight is not the complete reason for the decision either, because multiple heads, residuals and subsequent layers also contribute.
+16225	Multi-head attention computes in different projection spaces and concatenates the results. Giving each head a fixed name such as "syntax head" or "fact head" does not provide a complete explanation. The original paper proposed an encoder–decoder architecture; a GPT-style causal decoder is organized differently, and their diagrams must not be conflated.
+9005	A Transformer layer contains more than attention
+22354	Attention exchanges information across positions, the feed-forward network applies a nonlinear transformation at each position, residual connections help information and gradients propagate, and normalization controls internal scales. One teaching Pre-Norm block is:
+27224	This is not the full arrangement in the original 2017 paper. Modern models may also use different normalization, activations, positional encodings and MoE structures. After learning the components, still check the specific architecture of a real implementation.
+22163	Self-attention without an ordering signal struggles to distinguish permutations. The original method adds position representations to the input; RoPE rotates paired dimensions of Query/Key so that their dot products include relative position information. RoPE does not guarantee generalization to unlimited lengths; training and extension methods still constrain it.
+11908	From hidden states to the next token
+20538	The final hidden representation passes through an output projection to produce logits over the vocabulary, then a probability transformation and decoding select a token. Logits are not calibrated factual confidence. The autoregressive factorization is:
+28187	The newly selected token joins the subsequent prefix, and the loop continues until normal completion, a tool call, the budget limit or an external interruption. A high-probability sentence only fits the conditional distribution; it does not guarantee factual truth. A nonexistent API may also sound plausible.
+25493	During training, the target sequence is known, so losses at different positions can be computed in parallel, with a causal mask preventing a peek at the answers. In ordinary autoregressive inference, a later step depends on the token chosen at the previous one, creating a serial dependency. Thus, "Transformers can parallelize" does not mean "generate the entire answer unconditionally in one pass".
+7909	MHA, MQA, GQA and MoE
+7912	MHA usually provides separate KV for different query heads; MQA shares one KV group; GQA shares KV among groups of query heads. Fewer KV heads help cache size and bandwidth, but do not guarantee a proportional end-to-end speedup. MoE is sparsity at another level: a router chooses a few expert networks to process a token, rather than several chat agents holding a meeting. Total parameters and active parameters are also different quantities.
+7847	Llama3, DeepSeek-V3 and Qwen3 provide different system cases. When reading reports, distinguish architecture, data, training, post-training and serving optimizations. Do not attribute overall performance to one component or treat historical technical reports as a current leaderboard.
+11880	From mechanisms back to engineering
+23505	Window capacity does not guarantee that every constraint is used. A model may ignore negation, confuse versions or follow a strong prior. For "default behavior must be preserved", turn the requirement into regression tests rather than merely repeating it in a long prompt. This is advice for applying the mechanism to engineering and must be verified on actual tasks.
+24905	Self-check: does zero temperature eliminate hallucinations?</strong> No. It changes how output is selected, not the available evidence. <strong>Are GQA and multi-agent systems the same kind of thing?</strong> No. The former is inside the model, and the latter organizes execution outside it.
+6052	1.1 · The Transformer, illustrated
+17493	Related material: The Illustrated Transformer
+15853	The Illustrated Transformer explains encoders, decoders, attention and feed-forward networks through their structure. Track information sources and flows before the matrix details. The original architecture includes an encoder–decoder and cannot be treated directly as the complete diagram of every decoder-only product.
+7604	An embedding is only an initial representation, which later layers change based on context. Residuals preserve an information path, while feed-forward networks apply nonlinear transformations at each position. Attention is not the model's only computation, or database retrieval.
+10359	Processing one layer does not make positions disappear
+26486	Input and conditions.</strong> The input has 3 positions, with 2 numbers at each position.
+21993	Each position combines information from its visible positions
+11780	The output is still [3,2].
+21964	Residuals and feed-forward processing
+15919	Update the representation at the stated layer width
+11752	Still [3,2].
+26607	Output projection
+21987	Map each position to 6 vocabulary scores
+18465	This gives [3,6]; 6 is not the sequence length.
+18909	Join the steps up.</strong> The token-position axis and vocabulary-candidate axis do different jobs.
+14430	Original exercise: compare the English word bank in financial and riverbank contexts, then use a function with the same name in code. Context helps disambiguate, but code binding also requires language rules and symbol evidence. The model may guess correctly from common patterns, or misidentify the actual call target.
+16648	The completion standard is explaining each module's role from input to output, and distinguishing general ideas from a particular generation's implementation. Intuitive figures help you begin, but cannot replace checks of masks, dimensions and objective alignment.
+6058	1.2 · The tokenization pipeline
+17501	Related material: The Tokenization Pipeline
+13794	A tokenization pipeline may include normalization, pretokenization, subword learning and special-token postprocessing. BPE progressively merges common fragments; other algorithms use different objectives. Tokenization cannot be reduced to splitting on spaces, nor can every model be assumed to lowercase text.
+7731	An ID maps to an embedding, but IDs themselves have no semantic ordering. Code spaces, line breaks, rare identifiers and byte encoding may affect length. Special tokens may also express boundaries, and arbitrary edits or deletions change the model's interpretation.
+15318	Merge priority, not a longest-substring guess
+26447	Input and conditions.</strong> Given characters a,b,c, the merge table puts b+c before a+b.
+13828	Initial state
+10519	Three segments.
+18085	Apply the highest priority
+15316	Merge b+c
+25028	If there is no a+bc rule
+12609	Stop and look up IDs for a and bc.
+18888	Join the steps up.</strong> BPE follows merge ranks learned during training, rather than arbitrarily finding words that look longest.
+24550	Continue the step-by-step calculation: <a href="../chapters/01.html#worked-Q002">Q070 · BPE runs by merge priority; it does not splice at will whenever it meets a long word
+14439	Original exercise: use a small vocabulary to merge character pairs in "low, lower, lowest" and observe how frequent subfragments form. Then add rare strings and explain why they split into more parts. This exercise is a toy mechanism, not the tokenization of an actual commercial tokenizer.
+20537	Finally, compare the gains and costs of a larger vocabulary: some sequences become shorter, but vocabulary-related parameters grow and training coverage differs. The completion standard is explaining why token counts must be measured rather than mechanically converted from character counts.
+6059	1.3 · Attention and the original Transformer architecture
+17331	Related material: Attention Is All You Need
+14509	The original Transformer organizes sequence processing with attention and includes scaled dot products, multiple heads, positional encoding, feed-forward networks and residuals. The core computation produces weights using Q and K, then combines V. Causal generation must also prevent future information from flowing into the current position.
+19654	controls the scale of matching scores, and softmax normalizes over allowed positions. Multiple heads compute in different projection spaces, but each head cannot be permanently named after a human function. The original paper's task and today's coding agents operate at different levels.
+14573	Visibility relationships in the original encoder and decoder
+26400	Input and conditions.</strong> The source input has two positions S1/S2, and the target already contains T1/T2.
+24689	Encoder
+8779	S1 and S2 can relate in both directions
+18325	Obtain a representation of the source sequence.
+25341	Decoder self-attention
+8906	T1 cannot see the future T2
+28368	Respect target-side causality.
+23084	Target queries read source K/V
+10897	This does not combine source and target self-attention into one mask.
+18995	Join the steps up.</strong> The original encoder–decoder and common decoder-only models cannot be treated as the same architecture just because both are called Transformers.
+24552	Continue the step-by-step calculation: <a href="../chapters/03.html#worked-Q009">Q077 · Drawing the causal, padding and loss masks on one and the same sequence
+14292	Original exercise: assign two-dimensional Q, K and V to each of two positions and calculate scores and outputs by hand; then add a causal mask and compare the change. The key is understanding which information may be used, not merely memorizing the formula.
+13594	Then explain why the largest attention weight is not a complete causal explanation: other positions, other heads, residuals and subsequent networks also contribute to the output. The paper's results belong to its machine-translation setting and should not be extrapolated unconditionally to the performance of all modern models.
+6060	1.4 · The Transformer annotated with code
+17490	Related material: The Annotated Transformer
+17939	The Annotated Transformer presents model structure beside its implementation, making it useful for moving from concepts to tensor operations. A historical tutorial's dependency versions do not guarantee compatibility with the current environment; this book focuses on algorithms and shapes rather than copying potentially outdated installation steps.
+25853	When reading code, trace how batch, sequence, hidden and head dimensions change, how masks broadcast, and how dimensions are restored after concatenation. Many errors come from transposition or mask direction, not from unfamiliarity with the word attention.
+26110	The axes must be transposed before matrix multiplication matches
+26160	Input and conditions.</strong> Q and K both have shape [3,2].
+28622	Incorrect direct multiplication
+9110	[3,2] times [3,2]
+13544	The inner dimensions 2 and 3 differ, so ordinary matrix multiplication is invalid.
+26105	Transpose K
+14935	Becomes [2,3]
+13819	The columns now correspond to candidate positions.
+8439	Q times transposed K
+9109	[3,2] times [2,3]
+18314	Obtain a [3,3] table of scores for position pairs.
+19165	Join the steps up.</strong> Understanding axis meanings and inner dimensions matters more than merely remembering API names.
+24586	Continue the step-by-step calculation: <a href="../foundations/07.html#worked-F07">Lesson 42 · Telling dot product, matrix multiplication and element-wise multiplication apart in one table
+14318	Original exercise: write out how B×T×D splits into multiple heads, and explain the difference between padding and causal masks. The former masks padding and the latter prevents future access; neither can replace the other.
+28831	Then check whether training targets are shifted right and which positions the loss covers. The completion standard is identifying information leakage or dimension errors in a minimal implementation, rather than merely running the author's code and obtaining a number.
+6061	1.5 · Word vectors, illustrated
+17495	Related material: The Illustrated Word2Vec
+9053	The Word2Vec tutorial explains learning continuous word vectors through context prediction. Static word vectors usually assign one word entry a fixed representation, whereas a Transformer produces context-dependent representations. This is an important distinction in understanding the development of semantic encoding.
+15563	Vector similarity reflects training objectives and corpus statistics, not agreement with real-world facts. Some analogy phenomena cannot be generalized into all concepts following exact vector addition and subtraction; static representations may blend multiple senses of a word.
+9052	Word2Vec does not write integers in binary
+26473	Input and conditions.</strong> The word "cat" has ID 7 and input vector u=[1,0]; the context word "sleep" has vector v=[0.8,0.6].
+18569	Score
+13770	The score's magnitude has no relation to the ID 7.
+14938	Another context vector [0,1] scores 0
+21694	The model currently favors "sleep".
+25486	Training direction
+22907	Update vectors using actual context samples
+24676	The ID stays 7, while vector values change.
+19222	Join the steps up.</strong> Word vectors map identity to trainable representations; this example shows only local scoring, not a complete negative-sampling algorithm.
+24585	Continue the step-by-step calculation: <a href="../foundations/05.html#worked-F05">Lesson 39 · How a whole sentence has its embedding taken out position by position
+14459	Original exercise: consider "Apple the company" and "apple the fruit". How can one fixed vector carry both uses? How might adding context distinguish them? Then transfer the question to code symbols with the same name in different scopes.
+16617	The completion standard is understanding that an embedding is a representation tool, not a store of truth. Nearby vectors in retrieval can help recall, but version, negation and source checks remain necessary; similarity cannot directly establish an answer's correctness.
+6062	1.6 · Different forms of attention
+17333	Related material: Attention? Attention!
+22370	Attention has different scoring methods and visibility scopes. Self-attention usually computes among representations of the same sequence, while cross-attention connects representations from different sources; additive and dot-product attention also use different formulas.
+17667	Local or sparse scopes can change compute requirements and information paths, but restricted access may lose important relationships. Modern systems may combine different structures; one classic schematic is not the only implementation.
+13986	Additive and dot-product attention may use different scorers
+26271	Input and conditions.</strong> The same candidates have K1/K2, with output values V1/V2 fixed.
+22581	Dot-product version
+22839	Score using multiply-adds between q and k
+15161	This can be expressed as matrix multiplication.
+13988	Additive version
+12767	Project q/k, add them, then apply nonlinear scoring
+25387	The scorer differs.
+13057	Shared second half
+13772	Normalize scores, then weight V
+28411	Both require an explicit mask and visible set.
+19145	Join the steps up.</strong> Attention is a family of selection/mixing mechanisms with more than one scoring function.
+24588	Continue the step-by-step calculation: <a href="../foundations/11.html#worked-F11">Lesson 46 · From two pieces of content to one mixed vector, not to picking one sentence
+14347	Original exercise: mark cross-sequence relationships between source and target sentences in translation, and causal self-attention in code completion. Then discuss distant definitions that a local window may miss in a long document.
+16556	The completion standard is asking first where Q, K and V each come from and which positions they may see, then discussing performance. Do not assume every module called attention has the same capability, or use one head's heatmap to explain all of the model's decisions.
+21170	Source S011, different forms of attention
+6063	1.7 · Rotary position encoding, RoPE
+17477	Related material: RoFormer
+8753	RoPE encodes position through rotation so that dot products between Q and K include relative position relationships. It differs from adding position embeddings directly to input vectors; consult the model implementation for the precise application.
+11643	Two-dimensional rotation preserves length, but angular differences between positions affect their relative relationship. Higher dimensions can consist of multiple two-dimensional subspaces, with different frequencies expressing different scales. This mathematical mechanism is not perfect distance reasoning.
+13059	Shifting all positions together preserves relative rotation
+26408	Input and conditions.</strong> Use two-dimensional unit vectors, rotating position p by p×30°; compare p=1,q=3 with p=2,q=4.
+14225	Original position difference
+23221	The relative rotation is 60°.
+20069	Add 1 to all positions
+6567	4−2 is still 2
+23222	The relative rotation is still 60°.
+15416	The dot products for the same basis vector are both cos60°=0.5
+23215	The relative relationship is preserved.
+18975	Join the steps up.</strong> The orthogonality of a shared rotation explains the relative-position term; real RoPE contains dimension pairs at multiple frequencies.
+24553	Continue the step-by-step calculation: <a href="../chapters/03.html#worked-Q010">Q078 · Relative position preserved, and a cache misalignment: the same rotation computed twice
+14389	Original exercise: rotate vectors by 0 degrees and 90 degrees and calculate their dot products, then compare rotating two positions together with relative rotation. Understand how relative changes enter matching scores.
+20542	Finally, ask whether extremely long distances absent from training remain reliable. There is no guarantee. Position extrapolation involves the training distribution, frequency handling and the task; using RoPE is not sufficient for unlimited context, or a replacement for evaluating long tasks.
+6064	1.8 · Grouped-query attention
+17396	Related material: GQA
+7658	GQA shares KV among groups of query heads, between separate KV for each head and one KV group shared by every query. The paper also studies a training path for converting multi-head models. This is an internal model structure, not a grouping of agent tasks.
+7783	Fewer KV heads reduce cache size, but query heads and KV heads differ and cannot be interchanged in estimates. Actual speed also depends on feed-forward networks, kernels, bandwidth and scheduling; a cache ratio is not an overall speedup ratio.
+6569	4 Q heads share 2 KV heads
+26387	Input and conditions.</strong> Each position has 2 numbers per KV head, with a history length of 3.
+6568	4 K heads＋4 V heads
+13042	2×3×4×2=48 numbers in total.
+6347	2 K heads＋2 V heads
+6337	24 numbers.
+8464	Q still has 4 heads
+13757	Split into two groups that read shared KV
+26614	The number of output query heads does not become 2 as a result.
+18894	Join the steps up.</strong> GQA saves KV state rather than halving all attention computation.
+24554	Continue the step-by-step calculation: <a href="../chapters/03.html#worked-Q011">Q079 · Keeping 4 query heads while caching only 2 sets of Key/Value
+14330	Original exercise: keep 32 query heads fixed and use 32, 8 and 1 KV heads respectively to calculate the relative sizes in the standard cache formula. Then list allocation overhead and model-specific structures that the formula omits.
+16663	The completion standard is explaining why long-context serving must consider KV, not just weight size. Check actual architectures when comparing models; "GQA" is not a label guaranteeing equal quality and higher speed.
+6065	1.9 · Sparse experts and routing
+17489	Related material: Switch Transformers
+8902	Switch Transformers uses sparse expert routing so that each token passes through only some experts. Total parameters differ from active parameters, so total parameter count alone cannot compare the computation in one pass.
+11272	Experts are usually internal network modules, not agents with independent chat histories. Routing must also handle load, capacity, communication and training stability. Sparse computation may save arithmetic while adding system complexity.
+23450	Sparse expert routing does not assign every word permanently to one expert
+26270	Input and conditions.</strong> The same token can have different routing scores in two different contexts.
+10545	Context A
+26083	Expert 0 has the highest routing score
+28146	Choose expert 0.
+10546	Context B
+26581	The input hidden state changes
+15218	Expert 1 may be chosen instead.
+18296	Many tokens concentrate on expert 0
+11756	Capacity or communication bottlenecks can still result.
+19230	Join the steps up.</strong> Routing takes the current representation as input; it is not a simple vocabulary lookup of "which expert owns this word".
+14312	Original exercise: assume eight experts and one selected per token, then analyze total weight storage, computation per token and transfers across devices separately. "Choose one" does not imply that only one-eighth of the VRAM is needed, because the other weights must remain accessible.
+16590	The completion standard is separating routing inside the model from external multi-agent orchestration, and explaining why hardware and implementation affect actual gains. Do not treat MoE as several models voting, or construct capability comparisons from total parameter count alone.
+6053	1.10 · Few-shot and in-context learning
+17427	Related material: Language Models are Few-Shot Learners
+7635	Few-shot research demonstrates using a model's capability through task descriptions and a few examples, without needing to update parameters at inference time for every task. In-Context Learning changes the conditional input and is not permanent training.
+23417	Examples can supply output formats and mappings while also introducing bias. Check relevance, order and quality; conflicting examples may make the model choose an incorrect pattern. More examples do not necessarily improve success rate monotonically.
+11450	In-context learning of a temporary mapping
+26177	Input and conditions.</strong> The context examples are "cat→K, dog→G", followed by a question asking for the code for dog.
+19759	Provide examples
+20353	The mapping enters the current input
+14747	No parameter update is needed.
+20997	This answer
+19474	G can be selected from the examples
+20410	This is the current context's influence.
+20151	Remove the examples in a new session
+20697	No external memory is retrieved
+11016	There is no guarantee this set of codes is retained.
+18911	Join the steps up.</strong> Few-shot examples and updates from training data are different mechanisms.
+24584	Continue the step-by-step calculation: <a href="../chapters/28.html#worked-Q111">Q111 · The model answers by following the two examples, so have the weights changed
+14455	Original exercise: give two consistent field-classification examples and one conflicting example, then design an unseen test. Check whether the model understands the rule or merely imitates surface words. Do not test only inputs almost identical to the examples.
+16563	The completion standard is distinguishing "using examples temporarily" from "the parameters have learned it". Current private business facts still require retrieval or explicit input; few-shot prompting cannot replace all knowledge and verification.
+6054	1.11 · Llama3: a complete model-system case
+17497	Related material: The Llama 3 Herd of Models
+7848	The Llama3 report places architecture, data, training, post-training and evaluation in a complete system. Focus on how multiple choices jointly affect capability, rather than merely remembering the parameter counts or leaderboard of the time.
+20586	Final performance cannot be attributed to attention structure alone. Data mixtures, filtering, optimization stability, instruction training and serving configuration can all affect the result; settings for different variants in a model family must also be distinguished.
+25905	Draw an interface ledger before reading a model report
+26407	Input and conditions.</strong> Use a hypothetical configuration: L=2, hidden width 4, vocabulary size 6, and 2 Q heads.
+7605	After embedding: [1,3,4].
+17672	Inside the layer
+22027	Width 2 per head
+15320	Combining the heads returns to width 4.
+19295	Project to vocabulary size 6
+19253	Join the steps up.</strong> Check the architecture's axes with a small configuration; these are not actual Llama3 parameters and cannot replace the report's data.
+14372	Original exercise: build a "goal–design–cost" table and discuss long context, data quality, tool behavior and inference resources separately. Mark fields not disclosed in the original as unknown; do not fill them with industry conventions and present them as facts about this model.
+16668	The completion standard is explaining the difference between a system-level technical report and a paper on one component. A report presents its authors' approach; it does not prove that the same components yield the same gains in every model, much less that a current coding product necessarily uses them.
+6055	1.12 · DeepSeek-V3: sparse-model engineering
+17377	Related material: DeepSeek-V3 Technical Report
+7396	The DeepSeek-V3 report discusses designs such as MoE, MLA and training systems. MLA differs from conventional KV organization, reminding us that the standard cache formula is not universal across architectures. A multi-token prediction training objective also does not imply that multiple tokens can be output at deployment without verification.
+23449	Sparse experts separate total parameters from active computation, but communication and load still affect efficiency. Training cost, inference cost and model performance must be examined separately; the report's measurement bases cannot be mixed for a simple comparison.
+18410	Do not conflate total expert parameters with active parameters
+26227	Input and conditions.</strong> Assume 4 experts with 100 parameters each, 1 chosen per token, plus 200 shared parameters.
+18415	Total parameters
+20714	Active for this token
+16417	Storage
+13306	Other experts must still be stored or loaded
+11075	The model file cannot also be counted as 300 parameters.
+19171	Join the steps up.</strong> Sparse execution reduces active computation per step; it does not make inactive weights cease to exist.
+14397	Original exercise: divide design gains into model structure, training engineering and serving optimization, and explain the evidence each category needs. Then explain why knowing a public model's architecture cannot reveal the internal model structure used by a closed-source agent.
+16552	The completion standard is retaining the report's conditions of use without fabricating undisclosed data, costs or percentages. Understanding mechanisms matters more than memorizing slogans about being "cheaper and faster".
+6056	1.13 · Qwen3: reasoning and non-reasoning modes
+17465	Related material: Qwen3 Technical Report
+8457	The Qwen3 report discusses reasoning and non-reasoning modes and its model family. Mode selection changes reasoning behavior within a task; it is not a switch guaranteeing both the highest quality and the lowest cost.
+18060	Distinguish capability formed through training, inference configuration and the application workflow. A higher reasoning budget may help complex tasks, but cannot directly read private files that were not supplied or fix tool permission errors.
+19694	Different reasoning modes do not automatically add input facts
+26284	Input and conditions.</strong> The same question lacks the current configuration file; use a shorter and a longer reasoning budget respectively.
+13065	Shared gap
+11646	Neither has read the file
+10940	The latest value is unknown.
+16101	Add reasoning
+15115	More candidate causes can be analyzed
+10685	This does not conjure up facts from the current file.
+21860	The right addition
+19747	Provide a read-only tool to obtain evidence
+13585	Then compare whether different budgets yield additional gains.
+19097	Join the steps up.</strong> Reasoning mode adjusts computation and does not replace retrieval; this makes no claim about the closed-source internal behavior of Qwen or other models.
+14424	Original exercise: compare format conversion, bug analysis across modules and queries for unknown material. Propose different budgets and tool strategies, then evaluate them on independent tasks. Do not infer from aggregate results that every category of Chinese-language, code and tool tasks improves equally.
+16591	The completion standard is treating modes as measurable configurations, not capability promises. The report concerns specific model versions and test conditions, and should not be treated as an account of the default behavior of all current products.
+6057	1.14 · A panorama of LLM technology research
+17313	Related material: A Survey of Large Language Models
+7820	An LLM survey provides a knowledge map, collecting research on architecture, training, adaptation and evaluation. The cited works use different models, data and time periods; inclusion in a survey does not automatically give their conclusions one shared scope of use.
+28743	As you read, record each technique's layer, the problem it solves and the assumptions it needs. RAG changes evidence sources, RLHF changes training behavior, and KV cache changes computation reuse; these are not the same kind of prompt technique.
+18826	Place each technique back at the layer it changes
+26441	Input and conditions.</strong> The system does not know a new document, and model inference is also slow.
+23331	Knowledge problem
+24760	Consider retrieval and index updates
+19874	Change the available evidence.
+19688	Inference efficiency
+24755	Consider KV, quantization or serving scheduling
+19881	Change computation and resources.
+25117	Behavioral habits
+24758	Consider prompts, skills or training
+19872	Change how tasks are executed.
+19078	Join the steps up.</strong> A panorama of techniques helps locate the layer to intervene in; listing more names is not the goal.
+14393	Original exercise: place this book's techniques in four areas: architecture, training, inference and applications. They may span areas if you explain why. Return to original research for key conclusions; do not turn a survey's summaries into numbers it never states.
+16650	The completion standard is finding knowledge connections and gaps rather than continuing to accumulate terms. When a problem arises at work, use the map to choose the intervention layer and verify with real evidence, rather than adding something to the system because its name is popular.
+21171	Source S019, a panorama of LLM technology research
+9546	← A global view</a><a href="chapter-02.html">How capability forms →

@@ -1,0 +1,449 @@
+23539	Lesson 01｜An agent is not another neural network: the loop explained with one file read — AI Systems Engineering
+18729	Break one agent task into the turns that actually happen</a><a href="#foundations-22-s1">Start by treating it as an ordinary program</a><a href="#foundations-22-s2">A complete example with three model calls</a><a href="#foundations-22-s3">Why distinguish a model call, an interaction turn and a task</a><a href="#foundations-22-s4">Workflows versus autonomous agents</a><a href="#foundations-22-s5">What is a tool, and what is a side effect</a><a href="#foundations-22-s6">Why an agent needs a loop</a><a href="#foundations-22-s7">The limits of this book's teaching scripts</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-loop">Keep three kinds of information separate first: user requirements, model proposals and tool facts
+23761	Lesson 35 · Sort the objects out first</a><a class="pill" href="03.html">Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="18.html">Lesson 57 · From the last row of numbers to one token, and on to a whole answer
+12989	All the steps and explanations</a><a href="../visual/F15.html">Lesson 57 · How one input connects to prediction, all the way to the end</a><a href="../visual/F23.html">Lesson 07 · Complete characters, complete events and complete tool arguments are three separate gates</a><a href="../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat
+12927	Start by treating it as an ordinary program
+22792	Understand it as a system that organizes task execution around a model: the program prepares the input, calls the model and checks its output; if the output requests a tool, it runs the tool and feeds the result back in; if the completion conditions are met, it stops.
+12929	Start by treating it as an ordinary program: item by item
+22919	User task
+21803	Model: proposes the next step
+17233	Harness: actually calls the tool
+13097	Key difference:</strong> an agent is a software system that organizes models, tools, state and feedback.
+17047	Easy to misread:</strong> this does not introduce a new, independent kind of neural network.
+7707	Harness</strong> is a common name for this execution environment and control logic. The model generates candidate actions or answers; the harness actually runs them, saves state and controls the boundaries. Filesystem access permissions have not suddenly appeared inside the model.
+10254	A complete example with three model calls
+22959	The user asks, "What does the function in the file return?" The following teaching messages do not correspond to all the API fields of any one vendor.
+13232	Key difference:</strong> the model first expresses the intent to make a call; new evidence is available in the next turn only after the harness executes it.
+17164	Easy to misread:</strong> the model writing a tool name does not mean that the tool has run.
+24059	The first turn's input</strong> includes the user's question and the available tool's description: "read_file accepts a path and returns the file's text." The model outputs a tool request, for example
+10148	. At this point, the file has not yet been read as a result.
+17221	The harness executes</strong>: it checks that access to the path is allowed, performs an actual file read and gets
+29337	, binding the result to the identity of this call.
+24109	The second turn's input</strong> includes the original task, the previous turn's tool request and the actual tool result. The model can now answer "It returns 42" based on the source, or request further verification. Suppose it requests a test run; the harness runs the tests and returns their output.
+24076	The third turn's input</strong> includes this verification result, and the model composes the final answer. The harness should still judge completion according to the task type; a confident final sentence alone does not prove that every requirement has been met.
+10477	Why distinguish a model call, an interaction turn and a task
+20825	This book calls one model request and its output a <strong>model call</strong>. The interval from a user asking a question to receiving the reply can be called one turn of user interaction; it may contain many model calls and tool executions. Products may define Turn, Step and Thread differently. When reading source code, check that project's types and lifecycles.
+13131	Key difference:</strong> a task can span multiple model calls; each turn's input is affected by earlier tool results.
+17039	Easy to misread:</strong> one user question does not equal one model call.
+8941	A thread or session</strong> usually preserves the organizational relationships between related interactions; a <strong>task</strong> is the user goal to achieve. A long task may span multiple sessions, and one session may contain multiple tasks.
+17708	Workflows versus autonomous agents
+17706	A workflow</strong> can have its steps preset by the program, for example, "Check the cache, then query the database, then generate an answer"; a more autonomous agent leaves more choices about the next step to the model. The two can be combined; complete freedom of action is not the only sign of progress.
+17709	Workflows versus autonomous agents: item by item
+8935	Task: the whole goal
+9014	Turn: a user or agent phase
+8966	Tool call: one action
+13139	Key difference:</strong> the three levels of granularity must be recorded separately, or retries and recovery cannot locate the specific step.
+17042	Easy to misread:</strong> different products may name a Turn differently; interpret it according to the current system's definition.
+15805	A fixed process offers predictability, while free choice offers adaptability; adding an autonomous step also adds opportunities for error and extra cost. When a simple requirement already has a clear path, there is no need to mandate planning, then multi-agent research, then repeated review.
+11717	What is a tool, and what is a side effect
+17723	A tool</strong> is a callable capability that the harness offers to the model. Reading files, searching, querying databases and running tests are all forms of tools. A <strong>side effect</strong> is a change that a call makes to the external world, such as editing a file, sending an email or committing code.
+11718	What is a tool, and what is a side effect: item by item
+9056	Workflow: preset steps
+6990	Agent: steps chosen dynamically
+11395	The two can be combined
+13221	Key difference:</strong> a deterministic process is usually simpler for a well-defined task; for complex exploration, the model can choose the next step.
+17123	Easy to misread:</strong> giving an agent more freedom is not necessarily better.
+21730	The model generating a tool name does not mean a side effect has completed; losing the response after a side effect occurs does not mean it never happened. These are the unknown-outcome and idempotency problems covered in F33.
+11471	Why an agent needs a loop
+15885	Without knowing the file's contents, the model cannot reliably decide on the final patch; reading the file provides new information. The loop makes it possible for actions to yield observations, and for observations to change the next decision. Its purpose is not to make the model mechanically repeat its analysis.
+18331	The loop must also have stopping conditions, budgets and handling for a lack of progress. For example, if the same search repeatedly yields no new evidence, it should change strategy or report the gap instead of repeating forever.
+20827	The limits of this book's teaching scripts
+23434	An offline demo can have a fixed script return preset tool requests in sequence to show how messages move; this is a protocol or control-flow simulation, not a commercial model's actual autonomous capability. Discussing that model's success rate on the task requires connecting a real model and recording measurements.
+5803	· Lesson 01
+12772	Keep three kinds of information separate first: user requirements, model proposals and tool facts
+22953	The user says, "Read timeout from config.txt." The model first receives the task and the read_file description, while the file's contents are still on disk. Its output of call_id=c7 and a path is only a proposal; the harness checks the path, actually reads the file, and returns timeout=30 associated with c7. The next model call must include or correctly reference that result to answer 30. Without a read result, the model saying 30 is only a guess. This example involves no training, and the parameters usually do not change because of this read.
+17791	Once the tool-call JSON has been generated, has the file been edited?
+22141	No. The harness still has to parse it, authorize and execute the action, and verify the external state.
+10435	Can one user question involve multiple model calls?
+15106	Yes. After a tool returns new information, the harness often makes another model call to continue the task.
+5972	01｜What input really is: from the user's sentence to model tensors</a><br/><a href="../chapters/09.html">09｜One full agent task loop: who is thinking and who is executing</a><br/><a href="../chapters/10.html">10｜How model output becomes a real tool call: protocol and execution boundary</a><br/><a href="../chapters/12.html">12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain</a><br/><a href="../chapters/19.html">19｜Skills and routing: loading exactly the expertise needed
+18728	Break one agent task into the turns that actually happen</a><a href="#foundations-22-s1">Start by treating it as an ordinary program</a><a href="#foundations-22-s2">A complete example with three model calls</a><a href="#foundations-22-s3">Why distinguish a model call, an interaction turn and a task</a><a href="#foundations-22-s4">Workflows versus autonomous agents</a><a href="#foundations-22-s5">What is a tool, and what is a side effect</a><a href="#foundations-22-s6">Why an agent needs a loop</a><a href="#foundations-22-s7">The limits of this book's teaching scripts</a><a href="#self-check">End-of-lesson self-check
+23606	Lesson 07｜APIs and streaming protocols: how a request becomes executable data — AI Systems Engineering
+16405	Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#foundations-23-s1">An API is an agreement between programs, not intelligence itself</a><a href="#foundations-23-s2">What a schema checks</a><a href="#foundations-23-s3">Why one network read does not give a complete answer</a><a href="#foundations-23-s4">SSE event boundaries</a><a href="#foundations-23-s5">Why call_id matters more than the tool name</a><a href="#foundations-23-s6">Which layer a failure belongs to</a><a href="#foundations-23-s7">A stateless interface does not mean a system has no memory</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-stream">Follow the same call ID across four boundaries
+16055	Foundations</span><span>approx. 3,000 characters</span><span>1 controllable demo
+23793	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="22.html">Lesson 01 · An agent is not another neural network
+12994	All the steps and explanations</a><a href="../visual/F22.html">Lesson 01 · Break one agent task into the turns that actually happen</a><a href="../visual/F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened
+6918	An API is an agreement between programs, not intelligence itself
+6923	An API (application programming interface)</strong> specifies how one program requests a capability from another. The request supplies the operation and arguments; the response supplies the result or an error. Both calling a language-model API and calling a database API are interactions of this kind; the differences lie in their capabilities and returned content.
+6920	An API is an agreement between programs, not intelligence itself: item by item
+9020	UTF-8 byte boundaries
+8830	SSE event boundaries
+17733	Completeness of tool-argument JSON
+13141	Key difference:</strong> the three kinds of boundary may fall at different positions; receiving a network fragment does not mean a complete event has arrived.
+17056	Easy to misread:</strong> a tool cannot be executed immediately on half a JSON object.
+20366	is a text format for representing structured data. Braces denote objects, with a colon after each key introducing its value; brackets denote lists; content in quotation marks is a string. For example:
+27373	This is only data. <strong>Deserialization</strong> parses this text into a program object; <strong>serialization</strong> turns an object into a representation that can be stored or transmitted. Successful parsing does not make an action safe.
+8848	What a schema checks
+8853	A schema (structural constraint)</strong> can require path to be a string and to be present, and prohibit certain extra fields. It can detect structural errors such as "path supplied as an array", but does not prove that
+16424	exists, that the current user has permission to read it, or that this is the file that needs investigation.
+8849	What a schema checks: item by item
+6924	API: interface contract
+8854	Schema: structural requirements
+7016	Authorization: permission judgment
+13191	Key difference:</strong> valid fields only show that the structure meets the agreement; they do not prove that an action is authorized or appropriate for the business.
+17020	Easy to misread:</strong> successful JSON parsing does not mean the file exists on disk.
+15741	Distinguish valid syntax, valid structure, business suitability, permission and successful execution. Structured Outputs primarily improves conformity to structural requirements; it is neither a guarantee of facts nor a permissions system.
+11529	Why one network read does not give a complete answer
+14867	The sender may send in multiple parts, and the network and client may receive different fragments. A <strong>chunk (transport fragment)</strong> is the portion of bytes received this time; it is not guaranteed to correspond to one token, one Chinese sentence or one complete JSON object.
+13257	Key difference:</strong> a network read can stop at any byte; data must be buffered until the event boundary meets the protocol.
+17060	Easy to misread:</strong> the block returned by each read cannot be treated as a complete message.
+28233	Worked out cell by cell: streaming responses: a network chunk is not a complete event
+8832	SSE accumulates data across multiple read chunks until a blank line completes the event
+21898	Step 1</span><span>The first network read receives only the first half of the data field; it cannot yet be parsed as complete JSON.
+21916	Step 2</span><span>The next read receives the rest, but may still not reach the boundary that ends the SSE event.
+21932	Step 3</span><span>The event frame is complete only after the blank line that ends it arrives.
+21941	Step 4</span><span>Parse the structured arguments after the event is complete; judge byte boundaries, event boundaries and JSON boundaries separately.
+21849	The correct order is to decode and buffer the byte stream, then identify complete protocol events, then parse the structured arguments they contain.
+12292	For example, if the JSON contains the two Chinese characters 学习, the UTF-8 bytes may split in the middle of a character. Decoding each fragment directly as a complete string may cause an error or introduce replacement characters. This requires incremental decoding that preserves the state of an incomplete character.
+8834	SSE event boundaries
+20364	is a text protocol for a server to send events continuously to a client. Conceptually,
+25124	lines supply data, and a blank line ends an event. The actual standard has additional rules for multiline fields, line-ending differences and other cases.
+13115	Key difference:</strong> SSE organizes data into event frames; multiple network packets may make up one event, and one packet may contain multiple events.
+17170	Easy to misread:</strong> streaming output does not guarantee that one token corresponds to one network event.
+21836	Correct handling usually requires at least these layers: network bytes → incremental text → event boundaries → event data parsing → model output item reconstruction. <strong>The boundaries at these layers cannot stand in for one another.
+21732	The model's tool arguments may also be split across multiple deltas, or incremental fragments. On receiving
+20311	, execution is clearly not possible; even if the assembled text temporarily forms valid JSON, the corresponding call-completion signal and harness validation are still required, rather than guessing the final arguments in advance.
+22175	Follow the same call ID across four boundaries
+18804	Think of the bytes as pieces of a torn-up letter, but do not mistake "having one piece of paper" for "having the complete letter". The program restores the characters first, groups them by event boundary, then assembles arguments by call_id. When two calls interleave, each must go into its own container. Complete JSON only tells the program what the arguments are; it must still check the tool, permissions and completion event. Once the network disconnects, an action that has already run does not automatically disappear because the last few bytes never arrived.
+19271	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/10.html#agent-practice-stream">Streaming back: when can the arguments really be executed?</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+9146	Why call_id matters more than the tool name
+10431	One model output may initiate two read_file calls to read a.py and b.py. Their results may arrive in reverse order. The tool name cannot pair them; use the <strong>call identifier call_id</strong> or the output item identity specified by the protocol.
+13179	Key difference:</strong> the same tool can be called multiple times; the call ID is needed to identify which result belongs to which request.
+17099	Easy to misread:</strong> matching by tool name alone confuses the responses to concurrent calls.
+15627	Response completion, completion of one tool's arguments and completion of a tool execution are different events again. Canceling a request may also fail to undo external side effects that have already occurred.
+10279	Which layer a failure belongs to
+27632	A connection failure is a transport problem; broken JSON is a parsing problem; a missing field is a structural problem; a path outside the allowed scope is an authorization problem; a missing file is an environment or business problem; a file that exists but is misinterpreted by the model is a subsequent reasoning problem.
+17607	Turning every error into "Tool failed, try again" loses important distinctions. Errors that can be fixed by changing arguments are suitable feedback for the model; a permission denial should not be bypassed by quietly switching to a more powerful tool; a timed-out write requires checking whether it has already happened.
+19586	A stateless interface does not mean a system has no memory
+20238	An application can explicitly resend history for a stateless model call; a stateful interface may use a session ID or previous-response ID so the service can organize state. These differ only in where state is kept and how it is referenced; neither automatically guarantees that the full history always stays in context.
+5807	· Lesson 07
+18718	Why "学习.py" cannot be parsed immediately when split in the middle of a Chinese character
+26166	Input and conditions.</strong> The content of an event is
+29283	, followed by two line breaks. The network may split in the middle of the UTF-8 bytes for the first character of 学习.
+12795	Receive some bytes first
+15201	Only the first 1 or 2 bytes of a Chinese character may arrive
+16114	The incremental UTF-8 decoder keeps the remainder without producing replacement characters.
+19856	Complete the character
+15531	The subsequent bytes complete the first character of 学习
+25342	Decoding produces partial text, but the JSON and event may still be incomplete.
+25733	Identify the event boundary
+15030	Only a blank line completes this SSE event
+10830	Do not treat one network read as one event.
+25330	Parse the data
+11798	Assemble complete JSON from the data field
+18315	Obtain the path string "学习.py".
+24134	Wait for the call to complete
+14152	Even with complete argument JSON, check the output item's completion semantics
+18596	The executor must still check the allowed paths; it cannot execute merely because the text looks valid.
+19041	Join the steps up.</strong> Byte boundaries, character boundaries, JSON boundaries, event boundaries and tool-call completion boundaries are different layers.
+26812	Limits and counterexamples.</strong> The accompanying program tests a teaching subset of SSE with LF separators and every possible two-part byte split; it is not a full browser EventSource implementation.
+10448	Why can valid JSON still not be used directly to delete a file?
+15339	Validity only means the format can be parsed. The structure, target, authorization, user intent and confirmation for high-risk actions still need to be checked.
+11307	How should results from two tools with the same name be paired if they arrive out of order?
+19422	By the call identifier or output item identity supplied by the protocol, not by tool name or a guess based on arrival order.
+6002	09｜One full agent task loop: who is thinking and who is executing</a><br/><a href="../chapters/10.html">10｜How model output becomes a real tool call: protocol and execution boundary</a><br/><a href="../chapters/11.html">11｜Tool design and MCP: from connection to controlled execution</a><br/><a href="../chapters/12.html">12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain</a><br/><a href="../chapters/21.html">21｜Reliable execution: retries, idempotence, crashes and state recovery
+16404	Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#foundations-23-s1">An API is an agreement between programs, not intelligence itself</a><a href="#foundations-23-s2">What a schema checks</a><a href="#foundations-23-s3">Why one network read does not give a complete answer</a><a href="#foundations-23-s4">SSE event boundaries</a><a href="#foundations-23-s5">Why call_id matters more than the tool name</a><a href="#foundations-23-s6">Which layer a failure belongs to</a><a href="#foundations-23-s7">A stateless interface does not mean a system has no memory</a><a href="#self-check">End-of-lesson self-check
+23571	Lesson 02｜State, events and checkpoints: what the model knows versus what the system records — AI Systems Engineering
+12058	Task state is not a one-line summary in the chat</a><a href="#foundations-24-s1">"How far along" must refer to specific objects</a><a href="#foundations-24-s2">Start a state machine with a minimal table</a><a href="#foundations-24-s3">What events and snapshots each save</a><a href="#foundations-24-s4">Why version numbers matter</a><a href="#foundations-24-s5">A checkpoint saves the information needed for recovery</a><a href="#foundations-24-s6">What provenance and evidence identity mean</a><a href="#foundations-24-s7">How state and long-term memory divide the work</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-loop">A chat history is not a task ledger
+23527	Lesson 01 · An agent is not another neural network</a><a class="pill" href="23.html">Lesson 07 · APIs and streaming protocols
+13001	All the steps and explanations</a><a href="../visual/F27.html">Lesson 22 · Compaction must keep the facts an action depends on</a><a href="../visual/F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened
+9419	"How far along" must refer to specific objects
+10297	A file-editing task may have states such as "not started, read, awaiting edit, edit outcome unknown, edit confirmed, verified". <strong>State</strong> is these facts and progress that the system saves at a particular moment.
+9421	"How far along" must refer to specific objects: item by item
+21773	The model says "Done"
+19354	Persistent state records "Committed"
+22771	Environment verification: "The file really changed"
+13217	Key difference:</strong> a textual promise, saved progress and an actual external side effect are three kinds of evidence.
+17132	Easy to misread:</strong> recovery cannot rely only on the last chat summary.
+21789	The model's output "I have verified it" is a message; the exit code of an actual test process and the corresponding file version form a separate record. Saving the latter is more reliable than making the next turn recall it from the former.
+22650	Start a state machine with a minimal table
+22649	A state machine</strong> specifies which new state is allowed for a given current state and incoming event. For example:
+13156	Key difference:</strong> a task state machine specifies the allowed transitions so an exception cannot be arbitrarily treated as completion.
+17153	Easy to misread:</strong> an unknown state cannot simply be equated with failure.
+20147	New event
+10595	Next state
+18295	Awaiting read
+14862	Initiate edit
+15630	Response times out
+21422	Verify that the file is at the target version
+18243	Tests pass on the current version
+27220	This does not require every small script to build a complex database; it helps you distinguish "attempted", "completed" and "verified". A small task may need only a few fields; larger tasks call for more durable mechanisms.
+11604	What events and snapshots each save
+11602	An event</strong> records a change that happened, such as "Tool c1 returned success". A <strong>snapshot</strong> records the full current state at a moment, such as "Task version 7, file edited, tests not run".
+11605	What events and snapshots each save: item by item
+11617	Event: what happened
+18376	Snapshot: what is true now
+25688	Evidence: how to confirm it
+13150	Key difference:</strong> events support tracing what happened, snapshots support quick recovery, and the two can cross-check each other.
+17131	Easy to misread:</strong> a snapshot alone cannot prove that the external world has had no concurrent changes.
+11609	Events make it easy to trace what happened; snapshots make recovery quick. Saving only the final snapshot may hide where an error began; saving only all the events may require replaying a lot during recovery. How to combine them depends on scale and risk.
+28521	Replay</strong> may only reconstruct in-memory state; it should not indiscriminately send emails or make payments again. Such side effects need separate management.
+22615	Why version numbers matter
+11340	Two executors both read state at version=3, then each writes a result. If the later writer directly overwrites it, the earlier writer's update may be lost. A version can express "Accept my change only if the state is still 3". This is the idea of comparing before updating; F33 expands on CAS.
+13242	Key difference:</strong> version comparison prevents overwriting someone else's updates based on stale evidence.
+17084	Easy to misread:</strong> a separate check followed by a write can introduce a TOCTOU race.
+11172	Do not mistake the version number for the file content itself. A version reference must locate the correct source; the same path can point to different content in different commits or workspaces.
+21530	A checkpoint saves the information needed for recovery
+7228	A checkpoint</strong> is a saved state from which execution can resume after an interruption. For an agent, it may at least involve the goal, completed steps, current evidence versions, pending tools, verification state and the next step.
+13228	Key difference:</strong> a checkpoint should contain enough progress, input versions and unconfirmed actions for recovery.
+17079	Easy to misread:</strong> saving only a natural-language summary is usually insufficient.
+17569	A conversation summary can help the model understand the task again, but may not suffice to prevent repeated execution or overwriting new changes. The execution ledger should save verifiable facts needed by the program; the natural-language summary saves the semantic thread needed by the model. Do not force either to stand in for the other.
+11719	What provenance and evidence identity mean
+21180	Provenance</strong> specifies which document, version or tool result a conclusion rests on. An <strong>evidence reference</strong> should be enough to find the original content again, such as a repository commit plus a path, or a database record and a time range.
+27366	This does not require a cryptographic fingerprint for every piece of text. If an existing stable version identifier is sufficient, no additional mechanism is needed; if a file is mutable and the consequences are serious, use hashes or similar means to verify it. Storage costs must be proportionate to the risk and the benefits of reuse.
+22638	How state and long-term memory divide the work
+9469	"Test A has not yet run" is current task state; "This project uses a particular coding convention" may be knowledge shared across tasks; "An incorrect patch was once committed because the version was ignored" is past experience. They differ in retention periods, retrieval triggers and expiry rules.
+10603	The context the model receives next turn is only a selection from this state. The system saving information does not mean the model necessarily sees it this turn; context assembly decides whether to inject it.
+5804	· Lesson 02
+15397	How one task's event log reconstructs "how far along"
+26208	Input and conditions.</strong> Task T1 records four events: e1 receives the task, e2 approves the patch, e3 starts writing the file, and e4 records a timeout of the write request.
+22641	State becomes accepted
+23078	The goal exists; execution has not started.
+12382	Save the approved operation's identity op7
+18637	Approval does not mean the write succeeded.
+22642	State becomes running; record the expected version r7
+15267	Which operation is in progress can be traced.
+25845	The request times out with no definite acknowledgment
+22640	State becomes unknown, not automatically failed.
+18454	Read during recovery
+25858	The file is found to contain op7's expected result
+25569	Record a new verification event and transition to verified; do not skip verification based on a summary saying "Done".
+18939	Join the steps up.</strong> Events are facts about what happened; state is the current conclusion computed from those events. A summary supports reading and cannot replace execution records.
+26813	Limits and counterexamples.</strong> This uses a teaching state machine; actual event storage must also handle duplicates, persistence and consistency with external systems.
+24771	A chat history is not a task ledger
+24767	A chat may say "Tests passed", but a task ledger must record which test, which file, when it ran, and whether everything was skipped. Track three cells: the conversation's claim, the execution log and the facts in the environment. Completion can be declared only when all three correspond. A summary helps continue the reasoning; the ledger and evidence help confirm what has happened. Do not let a new summary overwrite the actual task state.
+12488	Why not directly set the state to unmodified when an edit call times out?
+15713	Because the remote system or filesystem may have completed the action and only the response was lost. Verify the actual state before deciding.
+11610	Are an event log and a conversation summary the same thing?
+10846	No. The log records execution events and their identities; the summary compacts the semantic context. They differ in recovery precision and purpose.
+6001	09｜One full agent task loop: who is thinking and who is executing</a><br/><a href="../chapters/10.html">10｜How model output becomes a real tool call: protocol and execution boundary</a><br/><a href="../chapters/11.html">11｜Tool design and MCP: from connection to controlled execution</a><br/><a href="../chapters/12.html">12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain</a><br/><a href="../chapters/13.html">13｜How each turn's prompt is assembled: context is a data pipeline
+12057	Task state is not a one-line summary in the chat</a><a href="#foundations-24-s1">"How far along" must refer to specific objects</a><a href="#foundations-24-s2">Start a state machine with a minimal table</a><a href="#foundations-24-s3">What events and snapshots each save</a><a href="#foundations-24-s4">Why version numbers matter</a><a href="#foundations-24-s5">A checkpoint saves the information needed for recovery</a><a href="#foundations-24-s6">What provenance and evidence identity mean</a><a href="#foundations-24-s7">How state and long-term memory divide the work</a><a href="#self-check">End-of-lesson self-check
+23614	Lesson 08｜Tools and MCP: connection, discovery, authorization and execution, taken apart — AI Systems Engineering
+7902	MCP connects interfaces; it does not hand over permissions on its own</a><a href="#foundations-25-s1">Do not think of MCP as "giving the model a new brain"</a><a href="#foundations-25-s2">The logical order from connection to tool result</a><a href="#foundations-25-s3">What Tools, Resources and Prompts each are</a><a href="#foundations-25-s4">A tool schema should not replace business judgment</a><a href="#foundations-25-s5">Start with the responsibilities of stdio, HTTP and JSON-RPC</a><a href="#foundations-25-s6">Identity, authentication and authorization</a><a href="#foundations-25-s7">Why a sub-agent may not inherit every tool</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-tools">Four gates lie between a tool name and a real capability
+23528	Lesson 01 · An agent is not another neural network</a><a class="pill" href="23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="24.html">Lesson 02 · State, events and checkpoints
+12995	All the steps and explanations</a><a href="../visual/F22.html">Lesson 01 · Break one agent task into the turns that actually happen</a><a href="../visual/F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+12689	Do not think of MCP as "giving the model a new brain"
+25285	specifies how AI applications communicate with external capabilities. It helps standardize the descriptions of and interactions with capabilities such as tools and resources; it does not train the model directly or automatically grant unlimited permissions.
+13110	Key difference:</strong> MCP provides the connection structure; the host still controls whether a tool can be called and executed.
+17198	Easy to misread:</strong> connecting to an MCP Server does not mean the model has every permission.
+20430	is the host application the user uses;
+20403	is a protocol participant inside the host that connects to a service;
+19752	provides tools or data capabilities. For example, the editor is the Host, and an MCP Client inside it interacts with a code-search Server.
+27355	Here a server does not have to be in a remote data center; it can be a local process. Who connects to whom, and over which transport, are deployment choices.
+10404	The logical order from connection to tool result
+12750	First establish the connection, initialize, and confirm a compatible protocol and capabilities; then request the tool list or descriptions of other capabilities; the host supplies the model with tool descriptions suitable for the task; the model proposes a call; the host checks authorization and sends it to the service; the service executes it and returns the result; the host then feeds it back to the model.
+10405	The logical order from connection to tool result: item by item
+13105	Key difference:</strong> the Host manages the overall application, the Client connects to the server, and the Server provides tools or resources.
+17041	Easy to misread:</strong> these are not three independent LLMs.
+27203	This is not a single step. A tool existing on the server does not mean it has been discovered; discovery does not mean it is exposed to the current model; exposure does not mean this user may execute it; a returned call does not mean the business goal is complete.
+11858	Four gates lie between a tool name and a real capability
+7891	MCP can provide discovery and call interfaces, but a successful connection does not mean all tools are loaded, still less that every action is authorized. Although the teaching tool deploy appears in the catalog, it cannot run without deployment approval. Although read_file is installed, the model may not know about it if it is absent from this turn's visible catalog. Distinguish "exists, discoverable, executable, permitted to execute" before locating the layer with the problem.
+19272	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/11.html#agent-practice-tools">The tool exists, the model sees it, it can be called, it is authorized: four layers of checking</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+8971	What Tools, Resources and Prompts each are
+20375	are executable operations, such as
+20374	are data or content available to read, such as a documentation file;
+20421	are reusable message templates provided by the service. They have different roles in the protocol and are not interchangeable simply because they can all influence context.
+8972	What Tools, Resources and Prompts each are: item by item
+8974	Tools: executable actions
+8740	Resources: readable data
+8067	Prompts: prompt templates
+13143	Key difference:</strong> the three kinds of capability serve different purposes; they should not all be treated as tools that can write.
+17190	Easy to misread:</strong> reading Resource content does not mean acquiring execution permission.
+28302	is usually an organizational unit for a task process and its related resources. A skill may teach an agent when to call a Tool, but the skill itself does not inherently gain operating-system permissions.
+17720	A tool schema should not replace business judgment
+17764	A tool description must make its input, output, prerequisites, errors and side effects clear. A broad, vague capability such as "Handle the project" can leave the model unsure what it can actually do; splitting every tiny action into dozens of tools also increases call and context costs.
+13116	Key difference:</strong> a schema constrains fields and types, but the actual business boundaries still need a second check.
+17096	Easy to misread:</strong> arguments having the right types does not mean they are safe.
+10327	An interface with a reasonable scope can return a file excerpt, its version and the next excerpt's position together, reducing the problem of finding something without knowing which version it belongs to. Whether the tool output is suitable for the model to read is part of interface design; meeting program types alone is insufficient.
+9328	Start with the responsibilities of stdio, HTTP and JSON-RPC
+19397	means communication through a process's standard input and output; if protocol messages use stdout, mixing ordinary debug logs into it can break parsing.
+20407	is a common network request protocol; MCP can use a suitable transport as specified by the particular version.
+9329	Start with the responsibilities of stdio, HTTP and JSON-RPC: item by item
+9331	stdio: process pipes
+7696	HTTP: network transport
+7753	JSON-RPC: call format
+13158	Key difference:</strong> the transport channel and message structure are two layers; changing transport need not change the business meaning of each tool.
+17066	Easy to misread:</strong> do not treat HTTP and JSON-RPC as belonging to the same layer.
+20365	is a calling convention that expresses remote methods, arguments, request identifiers and results/errors in JSON. It organizes messages; it does not automatically solve authentication or operation idempotency.
+24264	The Systems section describes the specific lifecycle according to the protocol version noted. Fields change in new versions, so distinguish stable responsibilities from version-specific details as you read.
+26089	Identity, authentication and authorization
+25406	Authentication</strong> determines "who you are"; <strong>authorization</strong> decides "what you may do". A successful connection does not mean permission to read every piece of data has been granted.
+15139	can be understood as a declaration of a class of granted access, but individual resources may still have their own restrictions. <strong>Least privilege</strong> means granting only the capabilities needed to complete the current task, rather than granting all permissions to avoid errors.
+17787	A tool calling itself read-only cannot replace independent security judgment. Both the server implementation and the host's boundaries may have errors and need verification according to the risk.
+16371	Why a sub-agent may not inherit every tool
+16375	A sub-agent may have its own context, a different tool allowlist or a different connection configuration. The main agent knowing an MCP service does not mean the sub-agent automatically receives its tool descriptions or permission to execute them.
+19543	Troubleshoot layer by layer: discovery, exposure, authorization, call and return. Repeatedly writing "You should be able to use tools" in the prompt cannot fix a capability that has not actually been configured.
+5808	· Lesson 08
+18732	Divide one MCP read request into four different gates
+26497	Input and conditions.</strong> Connect to a teaching MCP service that provides only
+5925	. The example uses the fixed 2025-06-18 protocol snapshot so it will not be mistaken as identical across all versions.
+27634	Connect and initialize
+16997	The client sends initialize; the server returns the protocol version and capabilities
+11389	The two sides first agree on how to communicate.
+23392	Confirm readiness
+16998	The client sends notifications/initialized
+27319	This is a notification with no request id.
+14838	Send tools/list
+26933	It returns read_note and its argument schema; discovery does not mean permission to read every note.
+12594	Check authorization
+17228	The host confirms that the user may read only project-A
+9242	A name from the model cannot bypass scope checks either.
+18604	Execute and associate the result
+14837	Send tools/call; receive the result with the corresponding request id
+18606	Pass the content to the model after successful execution.
+19247	Join the steps up.</strong> Connection, discovery, authorization and execution cannot replace one another. Seeing a tool in the list does not guarantee that it can be called, or that a sub-agent inherits the same permissions.
+26782	Limits and counterexamples.</strong> The request order follows a fixed official specification; the note tool is original, with no claim that any service actually provides this name.
+20672	If the server has a search tool, does the model necessarily know about it?
+10657	Not necessarily. It must also be discovered and the host must expose suitable descriptions to the model this turn, while checking authorization.
+25409	Does successful authentication allow every file to be read?
+10982	No. Authentication confirms identity; authorization still determines which resources and actions that identity may access.
+6124	11｜Tool design and MCP: from connection to controlled execution</a><br/><a href="../chapters/12.html">12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain</a><br/><a href="../chapters/13.html">13｜How each turn's prompt is assembled: context is a data pipeline</a><br/><a href="../chapters/19.html">19｜Skills and routing: loading exactly the expertise needed</a><br/><a href="../chapters/24.html">24｜Security: instruction boundaries, sandboxes, permissions and memory poisoning
+7901	MCP connects interfaces; it does not hand over permissions on its own</a><a href="#foundations-25-s1">Do not think of MCP as "giving the model a new brain"</a><a href="#foundations-25-s2">The logical order from connection to tool result</a><a href="#foundations-25-s3">What Tools, Resources and Prompts each are</a><a href="#foundations-25-s4">A tool schema should not replace business judgment</a><a href="#foundations-25-s5">Start with the responsibilities of stdio, HTTP and JSON-RPC</a><a href="#foundations-25-s6">Identity, authentication and authorization</a><a href="#foundations-25-s7">Why a sub-agent may not inherit every tool</a><a href="#self-check">End-of-lesson self-check
+23638	Lesson 11｜Assembling context: what exactly goes to the model each turn, and why — AI Systems Engineering
+22074	Each turn's context is like a working file with a boundary</a><a href="#foundations-26-s1">Context does not mean "the entire computer is in the model's head"</a><a href="#foundations-26-s2">Work out a simplified token budget first</a><a href="#foundations-26-s3">Choosing evidence: more is not always better</a><a href="#foundations-26-s4">Order, role and source are three different labels</a><a href="#foundations-26-s5">Why prompt cache needs a stable prefix</a><a href="#foundations-26-s6">How to observe why the model "did not follow instructions"</a><a href="#foundations-26-s7">How stable context and dynamic evidence divide the work</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-context">This turn's input is like packing a work bag, not moving the whole repository
+23792	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="22.html">Lesson 01 · An agent is not another neural network</a><a class="pill" href="24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="25.html">Lesson 08 · Tools and MCP
+13002	All the steps and explanations</a><a href="../visual/F27.html">Lesson 22 · Compaction must keep the facts an action depends on</a><a href="../visual/O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+10549	Context does not mean "the entire computer is in the model's head"
+10547	Context</strong> is the input content and associated state that the current model call can use. It may include role instructions, user questions, history, tool definitions, retrieved excerpts and compacted information. Material stored outside the system becomes part of this turn's conditions only after it is retrieved and supplied in a form the model can use.
+10551	Context does not mean "the entire computer is in the model's head": item by item
+24222	System and project rules
+17786	Tool evidence and history
+13100	Key difference:</strong> Context Assembly arranges which material is supplied each turn, with its priorities and sources.
+17157	Easy to misread:</strong> a file not supplied this turn cannot be counted as already read by the model.
+8066	Prompt assembly or context assembly</strong> is the process by which the harness selects and organizes this content. It involves what should be read as well as identity, order, budgets and whether evidence applies.
+12880	Work out a simplified token budget first
+12532	Suppose a teaching service has a total budget of 2000, reserves 500 for expected output and 100 for formatting and estimation error, leaving an input limit of 1400. Fixed rules take 200, tool descriptions 300 and the user task 100, leaving 800 for history and evidence.
+13189	Key difference:</strong> filling the entire window with input may leave insufficient budget to generate output or tool calls.
+17027	Easy to misread:</strong> a token budget is not simply a character count.
+28238	Worked out cell by cell: input budget: reserve output first, then allocate the remainder to evidence
+6312	2000 tokens divided into output 500, margin 100, rules 200, tools 300, task 100 and evidence 800
+21894	Step 1</span><span>The window budget is a teaching figure of 2000 tokens.
+21906	Step 2</span><span>Reserve output 500 and buffer 100 first, leaving an input budget of 1400.
+21926	Step 3</span><span>Fixed rules 200, tool descriptions 300 and user task 100 total 600.
+21943	Step 4</span><span>Only the remaining 1400−600=800 is available for this turn's history and evidence.
+28995	After reserving output 500 and an estimation margin of 100, at most 1400 remains for input; the fixed parts use 200+300+100, leaving 800 for history and evidence. This is only a teaching budget, not a commercial model configuration.
+27272	This is only a teaching budget, not a fixed allocation for any current product. How a real interface counts output, internal reasoning and compaction blocks must be checked against its version's specification. What matters is not mistaking "count only the user's text" for the full input cost.
+18400	Choosing evidence: more is not always better
+12568	Suppose you are fixing a directory-filtering bug. You need the relevant functions, calling conditions, configuration rules, failing tests and dependencies that may affect semantics. Ten irrelevant README files may add tokens without reducing the key uncertainty about the bug.
+13152	Key difference:</strong> starting with the most relevant material and expanding retrieval as gaps emerge is more economical than reading the whole repository first.
+17191	Easy to misread:</strong> reading more does not necessarily make the evidence sufficient.
+7747	JIT (just-in-time, on-demand) loading</strong> means reading content only when needed instead of putting it all in at the start. <strong>Dependency closure</strong> means finding the necessary related information on which the current conclusion depends; for example, reading a function body alone may be insufficient without knowing the path format passed by its caller.
+28689	Closure does not require expanding the whole repository unconditionally. Extend the boundary step by step by asking which basis the current judgment still lacks; stop when there is enough to make the next reliable decision.
+28965	Order, role and source are three different labels
+26121	Appearing earlier does not mean greater authority; a newer file is not necessarily more trustworthy; a command in an external document is not user authorization. The harness must preserve source and scope so the model can better distinguish rules, evidence and quoted text.
+28966	Order, role and source are three different labels: item by item
+19371	Instruction role
+25681	Evidence source path
+22607	Version and time
+13138	Key difference:</strong> the three labels answer "Who is asking?", "Where did the evidence come from?" and "Is it still valid?"; they cannot replace one another.
+17183	Easy to misread:</strong> a web page's body remains untrusted data even if it claims to be system.
+24987	If a product has an instruction hierarchy, follow the corresponding interface and specification; this is not a numerical priority in attention weights, still less permission to execute. System-level security restrictions still need enforcement in the executor.
+8061	Why prompt cache needs a stable prefix
+15925	In common causal models, the same prefix, model and relevant conditions provide a basis for reusing intermediate prefix computations.
+15116	Repeated prefixes can reduce some computation or billing; the specific service rules may change.
+13170	Key difference:</strong> prefix caching depends on a sufficiently consistent initial input segment; changing early content may reduce reuse.
+17179	Easy to misread:</strong> a cache hit does not mean the model has permanently memorized the rules.
+12152	But placing a timestamp or random field that changes every time at the very start may disrupt reuse of a long prefix. Conversely, keeping stale content forever for cache hits may hurt quality. Caching optimizes cost; it cannot replace correct information.
+16308	How to observe why the model "did not follow instructions"
+12821	First check whether the rule exists, then whether it was discovered, read, included in the request, trimmed later, and still applicable. Only after all these conditions are met should you investigate how the model uses the content.
+27242	This chain explains why a skill failing to take effect does not necessarily call for an immediate rewrite. The real problem may be that the file was not loaded or that the sub-agent never received the relevant context.
+23492	How stable context and dynamic evidence divide the work
+23500	The stable part suits concise core project conventions; the dynamic part carries task evidence, the current version and steps in progress. Low-value logs can stay outside and be retrieved when needed.
+27382	There is no single best order here. The teaching goal is to let you list each block's responsibility, token cost, source and consequences if missing, then compare on real tasks, instead of judging a prompt by whether it is "longer and more professional".
+5809	· Lesson 11
+24469	Budget one turn's context and see which evidence actually fits
+26334	Input and conditions.</strong> A teaching window has a limit of 1000 budget units, with 200 reserved for output and 50 for a safety margin. Fixed instructions take 120, tools 100, the task 80 and current state 100. The units here are tokens assumed to have been counted with the correct tokenizer.
+12881	Calculate the available input first
+18577	Subtract the fixed parts
+15806	Fixed costs total 400, leaving room for 350 evidence tokens.
+28464	Configuration 120, corresponding tests 180, old logs 300
+28468	The configuration and tests total 300 and fit together.
+28178	Check after selecting
+18433	Total input 400+300=700
+12213	50 remains; old logs should not crowd out necessary tests.
+10605	Recalculate next turn
+25026	If a new tool result of 240 enters context
+18368	Select again or summarize; do not keep using the first turn's budget forever.
+18919	Join the steps up.</strong> What "the model can see" depends on the input finally sent, not what the retriever once returned. Check the final request, not just the search log.
+26788	Limits and counterexamples.</strong> These numbers form a teaching ledger with known token costs; they are neither token guesses based on Chinese character counts nor any product's default window.
+21101	This turn's input is like packing a work bag, not moving the whole repository
+12550	Suppose the total space is 12000 tokens, fixed rules and tools take 2000, the current task takes 1000, and 3000 is reserved for later output, leaving about 6000 for current evidence. Select material by first including paths that must not be edited, current file versions and recent failures; keep only the relevant parts of long logs and retain access to the originals. Including conclusions from an old version may be more dangerous than reading a little less. A token budget is a capacity constraint, not a target that must be filled.
+19273	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/13.html#agent-practice-context">Why can assembling context not just be "take the first N items"?</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+28998	If the budget counts only 100 tokens for the user's question, can the tool schema be ignored?
+10970	No. Tool definitions and other context may also count toward the model input; the actual budget must account for the full interface.
+11469	Is it a good idea to keep last week's configuration in the prefix for cache hits?
+25233	First verify that the configuration still applies. Stale facts may cause errors, and cache savings cannot remove the need to update facts.
+6141	12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain</a><br/><a href="../chapters/13.html">13｜How each turn's prompt is assembled: context is a data pipeline</a><br/><a href="../chapters/14.html">14｜Context compaction: what is actually compacted, and how it is recovered once lost</a><br/><a href="../chapters/19.html">19｜Skills and routing: loading exactly the expertise needed</a><br/><a href="../chapters/28.html">28｜Deep research waters and whole-system judgment
+22073	Each turn's context is like a working file with a boundary</a><a href="#foundations-26-s1">Context does not mean "the entire computer is in the model's head"</a><a href="#foundations-26-s2">Work out a simplified token budget first</a><a href="#foundations-26-s3">Choosing evidence: more is not always better</a><a href="#foundations-26-s4">Order, role and source are three different labels</a><a href="#foundations-26-s5">Why prompt cache needs a stable prefix</a><a href="#foundations-26-s6">How to observe why the model "did not follow instructions"</a><a href="#foundations-26-s7">How stable context and dynamic evidence divide the work</a><a href="#self-check">End-of-lesson self-check
+23706	Lesson 22｜Compaction is not magic: how the summary, the original text and the execution state fit together — AI Systems Engineering
+14215	Compaction must keep the facts an action depends on</a><a href="#foundations-27-s1">Distinguish four actions first</a><a href="#foundations-27-s2">A state that cannot be shortened to "the task is nearly done"</a><a href="#foundations-27-s3">How a compaction should proceed</a><a href="#foundations-27-s4">How to find the original text again</a><a href="#foundations-27-s5">Why an opaque compaction block cannot be treated as an ordinary summary</a><a href="#foundations-27-s6">How to assess whether compaction lost key content</a><a href="#foundations-27-s7">Remembering a sentence differs from having state you can act on</a><a href="#self-check">End-of-lesson self-check</a><a class="sub ap-toc" href="#agent-foundation-compaction">Before compaction, distinguish what can be abbreviated
+23970	Lesson 58 · KV cache explained from scratch</a><a class="pill" href="24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="26.html">Lesson 11 · Assembling context
+12998	All the steps and explanations</a><a href="../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat</a><a href="../visual/O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+12703	Distinguish four actions first
+18521	Truncation</strong> directly deletes part of the history; <strong>summary-based compaction</strong> tries to preserve information needed later in a shorter representation; <strong>offloading to external storage</strong> puts content in files or databases; <strong>computation caching</strong> reuses computation under the same conditions. The four may work together, but are not equivalent.
+12705	Distinguish four actions first: item by item
+25229	Trimming: delete old content
+19825	Summary: write a shorter substitute
+21599	Retrieval: get it back later
+13276	Key difference:</strong> all these methods manage context, but they differ in information retention and recovery capabilities.
+17094	Easy to misread:</strong> compaction cannot always be reversed to recover lost facts.
+19821	Summaries are lossy: "Tests passed" may lose which tests, on which version, and whether any boundaries remain untested. Keeping every key detail may mean a lower compaction ratio; this is an information trade-off, not a naming problem.
+10257	A state that cannot be shortened to "the task is nearly done"
+14192	Before compaction there are many records; what really needs to be kept is:
+24993	Compacting this to "Fixed, awaiting commit" turns an unknown outcome into success, and old tests into new verification. Good writing cannot compensate for incorrect state.
+13172	Key difference:</strong> a major compaction risk is losing prohibitions, unfinished work or negative conditions, leading later actions in the opposite direction.
+17139	Easy to misread:</strong> summarizing "Must not edit" as "Edit the configuration" causes serious misinterpretation.
+10416	How a compaction should proceed
+12726	First obtain a consistent view of history and state at a suitable boundary; identify goals, constraints, facts, assumptions, pending actions and evidence references; generate a candidate summary; check the key items; then switch to the new context.
+13132	Key difference:</strong> reasonable compaction must record sources, versions and pending issues as well as reduce length.
+17105	Easy to misread:</strong> a fluent summary alone cannot prove compaction fidelity.
+25016	If a tool is still running and the summary and state read different points in time, the summary may say "Awaiting execution" when execution has actually succeeded. Whether locks, version checks or waiting are needed depends on the task's concurrency; complex transactions are not mandatory in every case.
+14671	How to find the original text again
+19817	A summary should provide references sufficient to locate the original evidence, such as task IDs, tool-call IDs, log positions, repository commits and paths. Later questions about details can be resolved by rereading the original, instead of having the model guess what the summary omitted.
+13187	Key difference:</strong> externally stored original evidence can restore detailed conditions that could not be kept in the summary.
+17095	Easy to misread:</strong> if the original file has changed, check the version instead of blindly reading the latest one.
+18158	References still need validity checks: a file path may have been overwritten, a tool record may have expired, or permissions may have changed. <strong>Retrievable</strong> and <strong>currently lawful to use</strong> are also different.
+11490	Why an opaque compaction block cannot be treated as an ordinary summary
+20607	Some services return model-specific or service-specific compaction state that is not guaranteed to be directly readable by people or usable by another model. If its internal encoding is unpublished, do not invent claims about "which neuronal memories it stores".
+11491	Why an opaque compaction block cannot be treated as an ordinary summary: item by item
+14571	Original messages
+20107	Text summary
+11232	Opaque compaction state
+13146	Key difference:</strong> different compaction interfaces may produce different types of object; opaque state cannot be treated as a summary that a person can check word by word.
+17051	Easy to misread:</strong> do not assume that every vendor's Compaction outputs readable text.
+24795	What can be observed and verified is the interface contract, subsequent task performance, retention of key constraints and recorded recovery behavior. A more mysterious form is no reason to assume it is lossless.
+18397	How to assess whether compaction lost key content
+10715	Do not just measure word overlap between a summary and the original; design specific questions: Can the goal still be restated accurately? Are the prohibitions still there? Can the evidence version be found? Are unknown actions still labeled unknown? Can the task continue to completion without repeating destructive operations?
+18808	Compare full history, truncation, summaries with references and other approaches on the same set of tasks. <strong>Recovery success rate, incorrect-state rate, time and cost</strong> are all important metrics. Do not report only the compaction ratio.
+25595	Remembering a sentence differs from having state you can act on
+24926	A natural-language summary helps the model understand; execution records help the harness decide whether it can retry, commit or roll back. Long tasks often need both, instead of making one summary carry all transactional semantics.
+25918	When reading the advanced compaction chapters, ask which state may be misrepresented, what recovery depends on and what specific consequences failure may cause. These questions take you from summary techniques into systems engineering.
+5814	· Lesson 22
+15498	Two equally short summaries: why one is safe and the other dangerous
+26259	Input and conditions.</strong> Original facts: the patch is written; tests passed only on r7; the current work tree is r8; deployment is prohibited; r8 regression tests are still missing.
+9418	"Fix complete, tests passed, ready to deliver"
+28365	Omits the test version and deployment prohibition, turning pending work into completed work.
+12456	Faithful summary
+9486	"Patch written; r7 tests passed; r8 awaiting regression tests; deployment prohibited"
+12426	Preserves the action, evidence version, pending work and restrictions.
+16170	External evidence
+12361	Record where
+5923	can be accessed
+19810	The summary serves only as an entry point and does not claim to contain the full logs.
+18443	Actions after recovery
+12742	Run the relevant tests on r8 first
+11099	The passing state of r7 cannot be carried over.
+29090	Verify the summary
+28260	Ask about the current version, prohibited actions and unfinished work item by item
+10871	Do not look only at lexical similarity to the original.
+19101	Join the steps up.</strong> A summary must preserve "who did what on which version, and what remains undone". The negation in "not complete" is part of the state too.
+26755	Limits and counterexamples.</strong> No real LLM generated these summaries; the two candidates are manually constructed positive and negative examples. Fidelity requires separate evaluation on real tasks.
+14189	Before compaction, distinguish what can be abbreviated
+14170	While a summary S is being generated from history e1, e2 and e3, tool result e4 arrives. Replacing the entire history with S loses e4. A form that can safely continue should combine a version-checked S with the new content. Prohibited actions, unfinished tests and evidence paths must be retained explicitly. Compacting "Tests have not yet run" into "Tests complete" does not merely shorten the wording; it makes the state wrong.
+19274	Once this page's concrete objects are clear, go on to the system mechanism: <a href="../chapters/14.html#agent-practice-compaction">A tool result arrives while the summary is being generated asynchronously — how is data kept from being lost?</a>. Knowing the full source first is not required; being able to retell from the state table what happened at each step is.
+11479	Why is the summary "Tests passed" insufficient?
+24720	It lacks test names, run scope, inputs and the code version. Only an old version may have passed; this does not prove the current patch has been verified.
+24786	Can every arbitrarily long history be guaranteed to fit losslessly into an extremely short summary?
+17279	No such guarantee can be made for arbitrary information. Specify the information needed for the task, the compaction representation and recovery channels, and assess the loss.
+6140	12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain</a><br/><a href="../chapters/13.html">13｜How each turn's prompt is assembled: context is a data pipeline</a><br/><a href="../chapters/14.html">14｜Context compaction: what is actually compacted, and how it is recovered once lost</a><br/><a href="../chapters/18.html">18｜Long-term memory: writing, retrieval, conflict, expiry and forgetting</a><br/><a href="../chapters/26.html">26｜Deep applications: composing components into a working system you can explain
+14214	Compaction must keep the facts an action depends on</a><a href="#foundations-27-s1">Distinguish four actions first</a><a href="#foundations-27-s2">A state that cannot be shortened to "the task is nearly done"</a><a href="#foundations-27-s3">How a compaction should proceed</a><a href="#foundations-27-s4">How to find the original text again</a><a href="#foundations-27-s5">Why an opaque compaction block cannot be treated as an ordinary summary</a><a href="#foundations-27-s6">How to assess whether compaction lost key content</a><a href="#foundations-27-s7">Remembering a sentence differs from having state you can act on</a><a href="#self-check">End-of-lesson self-check

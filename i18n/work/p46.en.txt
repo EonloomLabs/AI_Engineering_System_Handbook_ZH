@@ -1,0 +1,469 @@
+19667	Speculative decoding: the draft may be fast, but it must be verified correctly — AI Systems Engineering
+19668	Speculative decoding: the draft may be fast, but it must be verified correctly</a><a href="#topic-3">Step-by-step explanation and calculation record
+14025	Step-by-step figures · O07
+19582	Acceptance rate</strong> The probability of accepting a particular candidate, conditional on its having been proposed.
+25145	Compensation distribution</strong> The remaining probability mass used after rejection to recover the overall target distribution.
+26536	Input and conditions of use:</strong> an independent single-step probability example with three candidates. Actual multi-token speculation also needs accepted-prefix handling, cache rollback and batch verification. This figure does not equate it with greedy verification.
+19669	Speculative decoding: the draft may be fast, but it must be verified correctly: step-by-step run figure
+6017	1 / 5 · Draft and target distributions differ
+6253	1. Draft and target distributions differ
+6386	2. Their ratio determines acceptance probability
+6507	3. Total accepted mass is not enough
+6598	4. Sample from the remaining mass after rejection
+6700	5. Follow one specific rejection branch
+23871	Lesson 44 · Softmax does not simply divide the scores by their sum</a><a href="F15.html">Lesson 57 · How one input connects to prediction, all the way to the end</a><a href="F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read
+7939	MoE: each token takes part of the compute path — AI Systems Engineering
+7940	MoE: each token takes part of the compute path</a><a href="#topic-3">Step-by-step explanation and calculation record
+14026	Step-by-step figures · O08
+25962	Load imbalance</strong> Different experts receive different numbers of tokens.
+26080	Routing combination</strong> Combine the selected experts' outputs according to specified rules.
+26528	Input and conditions of use:</strong> a four-expert teaching Top-2 structure, not a reproduction of the Switch paper's Top-1 configuration. Single-token weights are [.1,.5,.3,.1], and two expert functions are explicitly given.
+7941	MoE: each token takes part of the compute path: step-by-step run figure
+6007	1 / 4 · Compute routing scores first
+6226	1. Compute routing scores first
+6403	2. Select Top-2 experts
+6489	3. Combine the actual expert outputs
+6608	4. Sparse activation still has costs
+23981	Lesson 61 · Fewer parameters, fewer bits and fewer activations are not the same optimization</a><a href="F32.html">Lesson 13 · A skill exists — so why can it still be of no use at all?
+6936	Activation checkpointing: store less, recompute on the backward pass — AI Systems Engineering
+6937	Activation checkpointing: store less, recompute on the backward pass</a><a href="#topic-3">Step-by-step explanation and calculation record
+14027	Step-by-step figures · O09
+22550	Activation</strong> An intermediate numeric value produced by a forward pass.
+14822	Backward recomputation</strong> Rerunning part of the forward pass to calculate gradients.
+29055	Resident and peak usage</strong> How much stays in memory differs from the maximum occupied at one moment.
+26529	Input and conditions of use:</strong> an independent schematic of a four-segment computation chain, counting only three intermediate activations of 100 units each. Actual peaks include other tensors and temporary recomputation and must be measured.
+6938	Activation checkpointing: store less, recompute on the backward pass: step-by-step run figure
+6015	1 / 5 · Ordinary storage
+6250	1. Ordinary storage
+6377	2. Retain only checkpoints
+6482	3. Recompute the later half first
+6584	4. Then recompute the earlier half
+6681	5. Why consistency is necessary
+23935	Lesson 52 · A gradient is like a slope; the learning rate is like step size</a><a href="F18.html">Lesson 53 · Training: give every position a "what comes next" question</a><a href="F21.html">Lesson 62 · Slow computation may mean things are being moved slowly
+14184	Compaction, retrieval and prompt cache: three different kinds of saving — AI Systems Engineering
+14185	Compaction, retrieval and prompt cache: three different kinds of saving</a><a href="#topic-3">Step-by-step explanation and calculation record
+14028	Step-by-step figures · O10
+26546	Input compaction</strong> Replacing or deleting logical content.
+21548	Retrieval</strong> Fetching candidate material externally for the current question.
+13932	Prefix computation reuse</strong> An identical, compatible prefix can reuse existing computation.
+26538	Input and conditions of use:</strong> an independent budget comparison: necessary input 65, old logs 40, reserved output 20 and total window 100. The 10-unit summary is a teaching assumption, not an actual Tokenizer measurement.
+14186	Compaction, retrieval and prompt cache: three different kinds of saving: step-by-step run figure
+6006	1 / 4 · Put everything in without distinguishing content
+6216	1. Put everything in without distinguishing content
+6368	2. Deleting logs alone may lose state
+6500	3. Extract recoverable state
+6615	4. Shorter input still needs checking
+23636	Lesson 11 · Each turn's context is like a working file with a boundary</a><a href="F27.html">Lesson 22 · Compaction must keep the facts an action depends on</a><a href="F29.html">Lesson 17 · From two candidate lists to usable evidence
+16203	Multi-agent: work that can run in parallel matters more than the number of agents — AI Systems Engineering
+16204	Multi-agent: work that can run in parallel matters more than the number of agents</a><a href="#topic-3">Step-by-step explanation and calculation record
+14029	Step-by-step figures · O11
+12347	Dependency</strong> A step must wait for another result before proceeding.
+11690	Handoff package</strong> Goal, scope, evidence, constraints, current state and delivery requirements.
+13627	Conflict</strong> Multiple executors compete for the same mutable state.
+26530	Input and conditions of use:</strong> fixed durations of 6 seconds for A, 8 seconds for B and 3 seconds for integration; the second/third frames change only handoff cost from 2→8 seconds. This is teaching arithmetic, not measurements of commercial multi-agent systems.
+16205	Multi-agent: work that can run in parallel matters more than the number of agents: step-by-step run figure
+6013	1 / 4 · Complete two independent subtasks sequentially
+6258	1. Complete two independent subtasks sequentially
+6384	2. Parallel work still needs handoffs
+6477	3. Excessive handoff cost makes it slower
+6585	4. Writing the same file is not independent work
+23641	Lesson 13 · A skill exists — so why can it still be of no use at all?</a><a href="F34.html">Lesson 04 · A test looks for counterexamples; it does not stamp code green</a><a href="F38.html">Lesson 33 · A trace should tell you causation, not just timestamps
+21783	Model routing: cheaper per call is not cheaper per successful task — AI Systems Engineering
+21784	Model routing: cheaper per call is not cheaper per successful task</a><a href="#topic-3">Step-by-step explanation and calculation record
+14030	Step-by-step figures · O12
+24333	Cascade</strong> Try a lower-cost approach first and escalate when conditions are met.
+18467	Cost per successful task</strong> Total investment divided by actual successes, not call count.
+22546	Missed error</strong> The verifier fails to detect an incorrect result, so fallback is not triggered.
+26527	Input and conditions of use:</strong> all data is constructed: 20 questions, small-model cost 1 per call and strong-model cost 5; the 19 successes for both cascade and all-strong-model approaches are explicit assumptions, not actual product prices or win rates.
+21785	Model routing: cheaper per call is not cheaper per successful task: step-by-step run figure
+6008	1 / 4 · Use the cheap model for all 20 questions first
+6227	1. Use the cheap model for all 20 questions first
+6378	2. Send only the 6 confirmed failures to the strong model
+6504	3. Use successful tasks as the denominator
+6604	4. Missed errors undermine this assumed gain
+23583	Lesson 05 · When reading a metric, first ask what its denominator is</a><a href="F36.html">Lesson 31 · It went up 10 percentage points — so why can we not conclude anything yet?</a><a href="F38.html">Lesson 33 · A trace should tell you causation, not just timestamps
+23508	Chapter-to-figure table — AI Systems Engineering
+14037	Step-by-step figures</span><span>approx. 7 thousand characters
+21068	This table records how figures suit each reading page. The main text, follow-up questions, 206 notes and original programs are retained; figures add objects, inputs, states, failure conditions and trade-offs. Reference indexes and code pages are not forced into animations.
+28746	Reading page
+15856	Figure entry point
+25618	Explanation approach
+6909	AI Systems Engineering: from the basics to the internals
+13979	Added local step-by-step figures, object definitions, fixed conditions, and reason / action / risk / check; replaced the mistakenly triggered image-patch definition with the meaning of field updates in this program
+28253	Page-by-page mapping does not claim reproduction of every result in every original paper; checks focus on this local textbook's reading chain and added teaching data.
+12109	Choosing an optimization: weigh the gain together with the cost — AI Systems Engineering
+14036	Step-by-step figures</span><span>approx. 1.6 thousand characters
+12759	Find the bottleneck before deciding which object to change. Storing less, computing less, waiting less and spending less are different things.
+18545	Every count and timing example declares its assumptions. Multipliers here are calculations under teaching conditions, not performance promises for any GPU, product or model.
+7971	O01 · GQA/MQA: what is reduced is the number of K/V groups
+7973	O02 · Quantization: saves storage, and introduces approximation
+7976	O03 · LoRA: freeze the large table, learn a small increment
+7978	O04 · FlashAttention: accumulate while reading, without materializing the whole table
+7981	O05 · PagedAttention: logically contiguous, physically chunked
+7983	O06 · Continuous batching: when a seat frees up, take the next one
+7985	O07 · Speculative decoding: the draft may be fast, but it must be verified correctly
+7987	O08 · MoE: each token takes part of the compute path
+7989	O09 · Activation checkpointing: store less, recompute on the backward pass
+7991	O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+7993	O11 · Multi-agent: work that can run in parallel matters more than the number of agents
+7995	O12 · Model routing: cheaper per call is not cheaper per successful task
+15860	Sources and limits of use for the figures — AI Systems Engineering
+8919	TOKEN · Tokenization and IDs</a><a href="#topic-2">PADDING · Batching, padding and truncation</a><a href="#topic-3">TENSOR · PyTorch Tensor and data representation</a><a href="#topic-4">EMBED · Embedding lookup</a><a href="#topic-5">LINEAR · Linear layer
+8797	SDPA · Scaled dot-product attention</a><a href="#topic-8">ATTN · The original Transformer paper</a><a href="#topic-9">ROPE · RoFormer and rotary position representations
+7648	GEN · Autoregressive generation strategies</a><a href="#topic-12">CACHE · How KV caching works</a><a href="#topic-13">AUTOGRAD · Autodiff</a><a href="#topic-14">CE · Cross-entropy loss</a><a href="#topic-15">DPO · Direct preference optimization
+7826	LORA · Low-rank adaptation with LoRA</a><a href="#topic-20">QLORA · Quantization and parameter-efficient fine-tuning
+7201	CHECKPOINT · Activation checkpointing</a><a href="#topic-23">SPEC · Speculative decoding
+8921	TOOLS · Tool design</a><a href="#topic-26">MCP · MCP architecture</a><a href="#topic-27">SSE · SSE event stream</a><a href="#topic-28">STATE · SQLite atomic commit</a><a href="#topic-29">CONTEXT · Context engineering
+7908	MEMORY · CoALA cognitive architecture</a><a href="#topic-34">SKILLS · Agent Skills specification</a><a href="#topic-35">MULTI · Engineering a multi-agent research system</a><a href="#topic-36">TEST · Code review standards</a><a href="#topic-37">EVAL · Agent evaluation</a><a href="#topic-38">SECURITY · Agent security and control
+14034	Step-by-step figures</span><span>approx. 1.5 thousand characters
+15858	The figures use original Chinese explanations, with teaching numbers and states from scenarios declared by this book. The primary sources below support mechanisms; they do not contain every hand-calculated number in this book or imply reproduction of commercial systems.
+21402	Checked on 2026-10-19. Product interfaces may change; confirm cache, stopping, permission and protocol requirements against the version of the particular model in use.
+8918	TOKEN · Tokenization and IDs
+8955	A token is a tokenizer fragment unit; characters, bytes and tokens do not correspond one to one. The Chinese vocabulary in the figures is a teaching convention.
+8010	PADDING · Batching, padding and truncation
+10762	Padding for different input lengths depends on the model interface; these figures explicitly use right padding, not a recommendation for every generation interface.
+8911	TENSOR · PyTorch Tensor and data representation
+18283	Shape, dtype and device jointly determine tensor usage. Byte counts are calculated independently using the type declared by this book.
+7593	EMBED · Embedding lookup
+24282	Indices select rows of a parameter table, adding embedding width as the final output axis. Vectors are not IDs converted to binary.
+7815	LINEAR · Linear layer
+12083	An affine transform changes final-axis features; compare shapes to reconcile PyTorch's weight-storage orientation with this book's row-vector convention.
+19452	Normalize along the specified axis to obtain nonnegative shares summing to 1. The hand calculations include stable shifting and sampling intervals.
+8796	SDPA · Scaled dot-product attention
+22375	Attention scaling, masks and weighted aggregation. Boolean-mask meanings depend on the interface and cannot be copied from another API's convention.
+6932	ATTN · The original Transformer paper
+16226	The original basis for multi-head attention and the Transformer structure. The teaching single-head model is not the paper's complete architecture.
+8715	ROPE · RoFormer and rotary position representations
+20216	Rotating a pair of Q/K components lets inner products express relative position. The fixed angles in the figures are only hand-calculable examples.
+19451	Normalize along the specified dimension and learn affine parameters; this does not normalize every position in the whole batch together.
+7647	GEN · Autoregressive generation strategies
+14077	Distinguish model scores, decoding selection rules and stopping conditions. The three generation turns in this book use teaching weights whose calculations can be reproduced.
+7191	CACHE · How KV caching works
+22030	Each layer saves past K/V and combines old and new positions as generation continues. Reusing a cache requires matching conditions such as model and prefix.
+6933	AUTOGRAD · Autodiff
+25389	Backpropagation through a computation graph is separate from an optimizer updating parameters; this book also checks gradient examples with finite differences.
+7198	CE · Cross-entropy loss
+23068	Targets, valid samples and reduction methods affect loss; ignoring PAD in the teaching examples changes both numerator and denominator.
+7371	DPO · Direct preference optimization
+12273	Uses preference data to construct a model-optimization objective. Preference does not automatically mean factual correctness.
+16239	Several query groups share fewer K/V heads to change caching and inference costs; arbitrary weights cannot simply be converted to equivalent GQA weights.
+13731	Tiling and online normalization reduce intermediate-data reads and writes; this book derives mathematical relationships without claiming measured GPU speedups.
+17596	Maps the KV cache to noncontiguous physical blocks to improve memory management. Slots and step times in the figures are teaching constructions.
+7825	LORA · Low-rank adaptation with LoRA
+13650	Freeze base weights and train a low-rank increment. Fewer trained parameters do not mean the base weights occupy no space.
+8440	QLORA · Quantization and parameter-efficient fine-tuning
+8444	QLoRA uses designs including quantized base weights; this book's uniform-scale example does not claim to implement NF4.
+23451	Sparse expert routing changes computation activated per token. The teaching top-2 example explains selection and mixing; it is not a reproduction of Switch top-1.
+7200	CHECKPOINT · Activation checkpointing
+12018	Trade recomputation for some saved storage, accounting for random state and implementation variants; saved storage is not actual peak VRAM.
+8820	SPEC · Speculative decoding
+28838	Acceptance probabilities and the corrected distribution after rejection in the stochastic version; unconditional draft acceptance cannot replace verification.
+21775	The model requests a tool; the harness executes it and feeds back the result. Uses only public mechanisms, without reverse-inferencing closed-source model internals.
+8920	TOOLS · Tool design
+17754	Tools should make task boundaries, inputs and results clear and usable. Teaching requests are not a particular product's full protocol.
+7884	MCP · MCP architecture
+14060	Distinguish Host, Client and Server; discovery alone does not grant business authorization. Uses the architecture description from the version dated here.
+8826	SSE · SSE event stream
+12138	Transport chunks, text decoding, SSE frames and business-completion events belong to different layers.
+8835	STATE · SQLite atomic commit
+20937	Local transactions maintain database state; they do not imply that remote side effects and local commits form one atomic cross-system transaction.
+7214	CONTEXT · Context engineering
+28169	Selection, on-demand retrieval and compaction each manage limited context; summaries are lossy, so evidence and task state must still be retained.
+16159	Reusing computation differs from deleting or summarizing context; check cache boundaries against the particular model and service interface.
+21569	Retrieval can combine sparse retrieval, dense retrieval and reranking; fixed ranks and scores here illustrate fusion, without extrapolating evaluation gains.
+25806	Language tooling supplies structural clues such as definitions and references; dynamic calls and version consistency still need verification.
+7907	MEMORY · CoALA cognitive architecture
+12016	Distinguishes agent components through memory, actions and decisions. Bi-temporal and expiry tables are this book's engineering examples, not fixed implementations for every framework.
+8811	SKILLS · Agent Skills specification
+12635	Metadata, bodies and resources have different loading roles. A skill file existing does not mean the current request loaded and applied it correctly.
+7919	MULTI · Engineering a multi-agent research system
+12035	Task parallelism, delegation and integration determine gains; figure durations are not product measurements.
+8912	TEST · Code review standards
+16992	Review design, functionality, complexity and tests. Narration cannot replace actual verification evidence for the current version.
+7598	EVAL · Agent evaluation
+24432	Evaluate outcomes, processes, stability and grading methods separately; teaching task counts do not represent commercial-model win rates.
+8799	SECURITY · Agent security and control
+22997	Constrain execution with isolation and permissions. Animations show threat paths only and do not establish a completed production security audit.
+17698	Traces reveal nested and parallel operations; summed span durations need not equal user waiting time.
+15835	One architecture for turning image patches into numerical representations; the small image's patching does not prescribe every multimodal product's visual-token algorithm.
+15859	The numbers and programs behind the figures — AI Systems Engineering
+14032	Step-by-step figures</span><span>approx. 1 thousand characters
+20926	Verification records for this package
+28825	The original figure programs shipped with the book provide 97 checks: 45 checks of numbers, state and counterexamples, and 52 data-structure checks. They verify calculations and record structure, not 97 figures or 97 actual model experiments. Teaching data retains 52 groups and 263 steps; currently 45 groups use controllable figures, while 7 use native explanation tables better suited to item-by-item checking.
+15840	Figures, step explanations and numeric records are linked to the same example. Controllable figures start paused; static figures do not play automatically. Key numeric figures have vertical phone layouts; other wide figures scroll in separate regions so values need not become too small to fit the screen.
+22467	Browser checks loaded local content; environment restrictions prevented direct file/localhost navigation, so that navigation method is not counted as tested. The textbook itself has no external script, font or image dependencies. See actual results and verification limits in the <a href="labs/validation_report.json">complete check record
+21109	Programs on this page use only the Python standard library. Numeric examples are actual calculations; teaching workflows are not commercial-model measurements. Figure generation and playback data share one definition.
+28251	The turn-by-turn generation model is an explicitly constructed small model: one layer, one head and width 4, with no rotary positions, normalization or dropout. Its output head is fitted to three specified prefixes solely to show caching and generation loops, not natural-language understanding.
+12964	Walkthrough A｜How one input becomes three output tokens — AI Systems Engineering
+24612	Worked cases</span><span>approx. 5.7 thousand characters</span><span>Figures and item-by-item explanations
+27643	Prerequisite for the walkthrough</span> The following case uses a separate vocabulary of 8 and fixed teaching parameters for a two-layer network. It and the introductory lookup page's vocabulary of 6 belong to different experiments; their IDs cannot be mixed.
+23756	Lesson 35 · Sort the objects out first</a><a class="pill" href="../foundations/02.html">Lesson 36 · A row of numbers, a table and a stack of tables</a><a class="pill" href="../foundations/03.html">Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/04.html">Lesson 38 · Batching and padding</a><a class="pill" href="../foundations/05.html">Lesson 39 · Embedding lookup</a><a class="pill" href="../foundations/06.html">Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/08.html">Lesson 43 · reshape, transpose, broadcast</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/10.html">Lesson 45 · The smallest neural network model</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/12.html">Lesson 47 · A mask is not a black box</a><a class="pill" href="../foundations/13.html">Lesson 48 · Position IDs and RoPE</a><a class="pill" href="../foundations/14.html">Lesson 49 · Fitting attention into one layer</a><a class="pill" href="../foundations/18.html">Lesson 57 · From the last row of numbers to one token, and on to a whole answer</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch
+27210	This does not simply redraw "
+9575	→Transformer→output". We track four lines together: how request objects change, how tensors change, what the cache holds, and what the program uses to decide the next step. Finally, the calculations are matched to runnable code in the package.
+16982	Experiment limits:</strong> the tiny decoder below has only two layers, width 4, one head and vocabulary 8. It uses fixed synthetic weights and absolute-position terms, is untrained and has no language-understanding ability. It verifies forward passes, positions, causal masks and caching. Product message templates, actual Tokenizers and
+13542	kernels are not implemented in this experiment. See model, cache and tool-interface sources for the conceptual basis.
+10446	One completed prediction means only that a new token has been selected. It has not yet passed through its own layers; only continued generation feeds it back as new input. The figure below shows actual intermediate results from the fixed small model and explicitly distinguishes EOS termination from maximum-length truncation.
+6873	A.1｜A sentence in the user interface is not the model's entire input
+12565	Suppose the user says "Explain function foo". The frontend also holds the selected function text; the harness loads repository rules and available tools to form message objects. These may be strings, structured content blocks, image references or tool definitions, not neural-network tensors yet.
+25927	Who retrieves the source? It may be a frontend attachment, automatic harness retrieval or a tool called by the model first. The final answer cannot establish that the model read the whole repository. Inspect actual request lists and tool traces to confirm.
+21808	Templates convert roles and content into a form the model learned to handle in training. Writing "system:" inside a string does not create an actual system role. Products may also use dedicated control
+18510	or structured channels. This experiment starts from three already encoded IDs
+18139	without inventing an actual correspondence to a Chinese phrase.
+6874	A.2｜After IDs, what is the first floating-point object
+25741	The token embedding matrix E has shape
+29162	; the three IDs select three rows, giving
+10068	. In the usual
+25617	notation, this is
+29393	; the program omits the batch axis, which is always 1.
+20972	This experiment adds a fixed position term at each position: for position p, add to feature j
+10226	. This is a teaching choice for checking position offsets, not
+29191	, nor a claim that modern LLMs all add sine terms directly to
+15738	The first tensor H therefore combines token identity and position. An ID is not a semantic floating-point vector; embedding parameters determine its computable representation. In inference this is a lookup, not a temporary call to a separate embedding retrieval service.
+21876	Three numbers must remain separate: vocabulary 8 means 8 kinds of token; sequence 3 means 3 positions this time; width 4 means 4 features per position. Confusing sequence length with hidden width directly breaks matrix multiplication.
+15037	Draw only A.2's declared vocabulary [8,4] and input [1,2,3], without switching to the 6-item Foundations vocabulary.
+15944	How to locate it in this example
+18327	Resulting size
+25745	Vocabulary table E
+6841	8 kinds of ID, each storing 4 features
+20995	Current IDs
+19502	Take E[1], E[2] and E[3] in order
+6463	3 positions
+10532	Three rows, still 4 numbers per row
+12192	Position term
+24015	Add 0.1sin((p+1)/(j+1)) at row p, column j
+18284	Shape stays the same; values change
+21289	Lookup reduces the selected row count; it does not permanently shrink the vocabulary from 8 to 3. The next input can still access the same 8-entry table.
+12193	The position term is added directly to the retrieved representation; this case uses it only to check position offsets, not as RoPE. Later caching must follow this case's same position rule.
+6875	A.3｜Enter layer 0: normalize, then generate Q/K/V
+20965	This experiment uses pre-LN. Compute mean and variance separately at each position, then normalize:
+27372	Learnable scale and shift are omitted here only for brevity; this does not imply a complete
+22161	lacks them. Normalization is across features, not all three tokens together; otherwise new tokens could change old-position values and invalidate the later cache proof's premise.
+18184	Each normalized row is multiplied separately by
+29165	, all three of which are
+10111	in this experiment. Q, K and V each have shape
+10084	. They share an input but use different weights, so they are not one vector with different names.
+8465	Q asks which direction the current query should match, K supplies matching directions, and V supplies aggregated content. This is a functional explanation, not a claim that dimensions inherently correspond to human-readable concepts. Training adjusts these projections together to improve the final prediction objective.
+6876	A.4｜How to keep position 1 from seeing position 3
+10488	The score matrix for the three positions is
+29321	, with shape
+10180	. Row i scores query i against every
+23035	. The causal mask is:
+25218	For forbidden positions,
+13943	takes negative-infinity inputs, giving zero probability; this does not apply softmax to every position and then arbitrarily zero some, which may leave the remaining mass unnormalized and still leak future information through other paths.
+25451	Training can compute all three positions together because inputs are already supplied and the mask restricts dependencies. Generation has no future tokens yet and must obtain them incrementally. <strong>Computing positions in parallel and permitting access to the future are different problems.
+9236	Besides the mask, there may also be
+28803	constraints. In a left-padded batch, logical positions and array indices need not match; array length alone cannot stand for position. This experiment has no padding, isolating causality and caching.
+6877	A.5｜What one attention row does: the full hand calculation
+11467	To see the numbers clearly, use a smaller local two-dimensional example, separate from the four-dimensional decoder:
+22579	Dot products are 1, 1 and 2; divided by √2, about 0.707107, 0.707107 and 1.414214. Subtract the same maximum for stability, making exponentials
+10108	. Normalizing gives:
+26623	The first output component is
+29498	; the second is
+10046	. The numeric program in the package gives complete floating-point results.
+27394	This output is a feature vector, not a token or a selection of the third word. Although the third weight is largest, the first two still contribute; the vector next passes through output projection and later layers. Attention intensity alone therefore cannot fully explain the final answer.
+11415	Uses A.5's independent two-dimensional example exactly: q=[1,1], K=[[1,0],[0,1],[1,1]], V=[[1,2],[3,4],[4,6]]. These are not the four-dimensional decoder's hidden states.
+19913	Enlarged figure: draw the contributions of A.5's three positions separately
+10486	Each share multiplies its own Value; the position with the largest share is not copied wholesale. Inspect contributions to each output coordinate, then add contributions for the same coordinate.
+24064	Position three has the largest share, but the first two still contribute. Explaining the final word also requires Wo, residuals, the feed-forward network and the vocabulary output head.
+6878	A.6｜What follows attention, and why text cannot be output directly
+15671	Back to the four-dimensional decoder: each position's aggregated vector multiplies Wo, giving width 4, then adds the layer's original input through a residual connection. A second normalization follows, then a
+23036	feed-forward network. This experiment uses
+10756	Different nonlinear activation functions. Example: ReLU(x)=max(0,x); the other two have smooth curves.
+29364	, followed by another residual addition. Actual models may use
+24129	and other structures.
+23680	Layer 1 receives H1 and runs the same structure with different weights. Layer 1 K/V does not copy layer 0 K/V; it comes from deeper contextual representations, so every layer needs its own cache.
+28207	operates at each position without directly mixing different tokens here, but transforms features already aggregated. Saying "Attention handles understanding and FFN is an irrelevant extra" is inaccurate. Final capability comes from joint training of the entire network.
+6879	A.7｜Where the first output token comes from
+11350	After two layers, the final normalized representation multiplies the language-model output matrix
+29327	, giving 8
+10004	at each position. The three input positions yield
+29230	, with the last row predicting the first output token immediately after the input.
+14045	The actual last row from the package run is approximately:
+28192	With greedy decoding, the maximum is at ID6, so the first output token is 6. No initial "empty decode" is needed to obtain it:
+17894	has already produced the final position's prediction distribution.
+28479	Sampling also transforms the distribution using temperature,
+24139	and other rules. Temperature changes the distribution, not the historical K/V already computed. If a token corresponds to a text-byte fragment, the display layer must handle multibyte characters and control tokens correctly, rather than treat every token as a complete Chinese character.
+21867	The cache length is still 3, not 4.</strong> The network has just processed input
+29451	; ID6 was selected from the output distribution and has not passed through the layers, so it has no K/V of its own yet.
+6880	A.8｜The second token: input only the newly selected ID6
+10599	Feed ID6 back next at logical position 3. Embedding lookup plus the position term gives
+10178	. Layer 0 computes new Q/K/V only for this position, appends new K/V after the existing 3 rows, and the cache becomes
+20137	New Q has shape
+29189	and multiplies transposed K from past and current positions, with shape
+29253	, giving scores
+29176	rather than regenerating the entire
+21303	query-score matrix. Then softmax, V aggregation, residuals and FFN lead into layer 1. Layer 1 repeats this with its own historical cache.
+16937	The actual new logits are approximately:
+25975	Greedy selection chooses ID7 as the second output. Cache length is now 4 and covers
+29172	, excluding the newly selected 7. To predict the third output, feed ID7 back at position 4, growing each layer's cache to 5. The experiment can continue directly; the point here is the timeline, not portraying these nonlinguistic IDs as an actual answer.
+6881	A.9｜The complete timeline: what a one-position mismatch between sequence, cache and output causes
+20312	Moment
+21085	Actual input this turn
+21093	Cache coverage at turn end
+21103	Output selected this turn
+25067	If the caller passes the entire
+15615	with the old cache to an interface accepting only new tokens, the prefix may be appended twice; resetting positions to 0 makes positional encoding wrong; blindly executing tools after generating
+15547	confuses language stopping with execution state.
+21460	Some frameworks automatically trim cached input, but that is an interface contract. An implementation must specify whether it accepts full input or an incremental suffix, rather than guess. Cache objects must also bind model/adapter identity; reusing old state after changing weights produces inconsistent results.
+20929	This figure uses only A.7–A.9's actual ID results; ID6 and ID7 are not forced to mean Chinese words.
+21777	Model call
+21082	Cache coverage after this turn's processing
+21076	Just selected this turn
+8058	Prefill input [1,2,3]
+9105	[1,2,3], length 3
+7389	Decode input [6]
+9104	[1,2,3,6], length 4
+7390	Decode input [7]
+9103	[1,2,3,6,7], length 5
+22333	Count cache entries down the second column: these tokens have passed through the model's layers. The third column is this turn's result and has no K/V of its own yet.
+16321	Passing the whole prefix with the old cache next turn to a suffix-only interface appends it twice. Full sequence versus incremental suffix must follow the particular interface contract.
+6870	A.10｜Why the mask is not a small ordinary triangle when processing two new tokens
+17906	There are P=3 cached positions and C=2 new tokens. Q is
+29143	, K is
+29252	, and scores are
+10144	. The correct mask is:
+23141	Directly generating
+14164	instead gives
+29351	, hiding most history and the new queries themselves. This bug need not trigger a shape error; it silently changes output, making a useful interview follow-up: why can runnable code still be wrong?
+21846	The correct condition is
+29238	, combined with padding or sliding-window constraints. Package tests compare full forward passes with single-token/two-token incremental passes and deliberately use wrong positions to produce differences. This shows they detect a specific error, not only that the program avoids crashing.
+11414	Uses A.10 exactly: 3 existing positions and 2 new positions. Shows visibility only, without inventing new Value numbers for the four-dimensional decoder.
+19901	Enlarged figure: how the two new queries should read the five keys
+8450	A Query numbered 0 in the current array is not necessarily at sequence position 0. Adding past_length=3 makes it position 3.
+21861	The correct rule is Key absolute position≤Query absolute position. Wrong visibility silently changes output even when matrix shapes are correct.
+6871	A.11｜How to prove a cache implementation correct beyond plausible generated sentences
+15803	Fix weights, disable random dropout and use the same token sequence. Run full and segmented cached forward passes, compare logits at matching positions, and set a reasonable floating-point tolerance. Also cover different segment lengths, position offsets and prefix edits.
+24977	For mismatches, check in order: repeated input, position offsets, mask alignment, each layer's cache, the stage where position transforms apply to K, and batch/padding confusion. Do not start with sampling temperature; the error occurs before distribution generation.
+20923	Package tests also check the analytic gradient of attention with respect to Q using finite differences. This verifies a local backward formula, not complete training correctness. State the scope clearly: forward consistency, gradient checks, training convergence and task generalization are four different kinds of evidence.
+6872	A.12｜What must be added when moving this example to an actual model
+23304	Actual systems need larger parameter sets, multiple heads or
+5952	/MLA, actual Tokenizers, trained weights, model-appropriate normalization and activations, correct positions, batching, precision and device kernels. Serving also manages request cancellation, paged KV, prefix sharing and resource limits.
+12158	The diagnostic method stays the same: define interface contracts and each step's objects, perform small controlled comparisons, then measure performance. Calling a technique
+17651	does not justify skipping numeric checks; a correct KV formula does not establish enough VRAM for all concurrency either.
+20916	The standard for this example is explaining, without the figure, messages to IDs, IDs to layer tensors, final logits to sampling, and new tokens to incremental caches, while stating every boundary between already computed and not yet computed.
+9535	← 28｜Deep research waters and whole-system judgment</a><a href="b.html">Walkthrough B｜Every turn of a repository fix: input, output, tools and recovery →
+12965	Walkthrough B｜Every turn of a repository fix: input, output, tools and recovery — AI Systems Engineering
+22322	Follow this chapter through its objects and states</a><a href="#topic-2">A timeout tells you nothing arrived, not that nothing happened</a><a href="#walkb-s1">B.1｜Before starting: four kinds of object held by the harness</a><a href="#walkb-s2">B.2｜Model call M1: why input needs tool schemas</a><a href="#walkb-s3">B.3｜Tool T1: output becomes evidence before the next turn</a><a href="#walkb-s4">B.4｜Model call M2: specify the missing evidence</a><a href="#walkb-s5">B.5｜Model call M3: from a candidate explanation to falsifiable checks</a><a href="#walkb-s6">B.6｜Model call M4: a patch describes changes, not results</a><a href="#walkb-s7">B.7｜The key failure window: the file changed but the success result was lost</a><a href="#walkb-s8">B.8｜Long sessions need compaction: what must not be lost</a><a href="#walkb-s9">B.9｜Compaction is a state transition, not deleting history in place</a><a href="#walkb-s10">B.10｜Model call M5: verify first without writing again</a><a href="#walkb-s11">B.11｜Model call M6: tests must bind to r43</a><a href="#walkb-s12">B.12｜Interview follow-up: is the full history resent each turn</a><a class="sub ap-toc" href="#agent-walkthrough-stream">Protocol boundaries and business boundaries</a><a class="sub ap-toc" href="#agent-walkthrough-hooks">Arguments rewritten after approval</a><a class="sub ap-toc" href="#agent-walkthrough-recovery">An actual crash window</a><a class="sub ap-toc" href="#agent-walkthrough-code">Test evidence becomes invalid
+24611	Worked cases</span><span>approx. 4.7 thousand characters</span><span>Figures and item-by-item explanations
+27646	Prerequisite for the walkthrough</span> This is a teaching construction that expands each call item by item, not a claim that a commercial LLM autonomously completed these steps.
+23522	Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality
+10625	The following is an <strong>author-designed protocol-level teaching trace</strong>, not an actual conversation exported from a commercial LLM. The tool structure is a simplified custom
+24830	format that need not match any vendor's
+16391	fields exactly. It answers: "When an
+16235	calls the model repeatedly, what exactly is supplied and returned each time, and how does the program use it?"
+12074	Task: repair path handling in exclude. Constraints: match patterns against project-root-relative paths; do not change inclusion rules; do not commit or deploy. Retaining the final two prevents a code fix from expanding into unauthorized delivery actions.
+7069	B.1｜Before starting: four kinds of object held by the harness
+27205	This is not the only format in which everything is fed directly to the model. Task objects, permission objects, workspace state and the tool registry can be stored separately. Model input is a selection rendered from those objects; the executor must retain actual permissions rather than accept the model saying an action is allowed.
+29053	The first turn has no source evidence yet. The main agent can retrieve before guessing a patch. If the frontend already attached relevant source, analysis could begin directly; this example takes the unattached path to show the full retrieval loop.
+7070	B.2｜Model call M1: why input needs tool schemas
+15592	tells the model which actions it may express and what the arguments are named. Actual systems may expose only some tools and discover others on demand. A tool's presence in the registry does not require its full definition in every turn's context.
+7877	M1's output is not the final answer, but:
+17229	The harness parses response items, checks tool existence, complete arguments and permitted call scope, then executes. Generating this JSON did not directly read the disk.
+16745	For the full mechanism and a continuing example, see <a href="../chapters/10.html#agent-practice-hooks">Why can a pre-check and a post-check not replace each other?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+7071	B.3｜Tool T1: output becomes evidence before the next turn
+27138	Returned excerpts locate code but do not establish the full control flow. Explicitly mark truncated results instead of treating the first few as everything. Recording r42 lets later steps judge whether evidence still matches the current workspace.
+17219	The harness pairs M1's tool call with T1's result by call_id and adds them to history. Worked model 2 must at least see the original task, constraints, c1 and its result; it may also see the current plan, without copying every internal tool log.
+22194	Retains task t7 and workspace r42: c1 is search_code, not read_file; tool identity has not changed here.
+19899	Enlarged figure: how c1 joins M1's action to T1's evidence
+22173	Follow calls and returns along the same c1; arrows show message direction, not proportional time.
+15361	The same c1 spans call and return; simultaneous tool returns must also be assigned by ID, not arrival order.
+19789	Search hits locate files without establishing that complete control flow was read. M2's c2/c3 reads are therefore a next step based on an identified evidence gap.
+7072	B.4｜Model call M2: specify the missing evidence
+7878	M2 issues two reads from the locations found:
+16452	They are independent read-only operations and may run in parallel, but every result must retain its own ID. c3 arriving first does not make it belong to c2. The harness must not match first arrival to first call.
+12572	Suppose the following teaching code is read:
+27395	An unused root is not yet proof of the sole error. Check whether files contains absolute or relative paths, the meaning of patterns and path-separator rules. An unused argument is a clue, not proof of the root cause.
+22189	Uses M2's two read-only calls and r42 without assuming which finishes first.
+25935	Call ID
+18066	File to read
+24446	Result-assignment rule
+9267	pipeline/filter.py, lines 1–70
+26930	The c2 return goes only into the implementation-evidence slot
+9348	tests/test_filter.py, lines 1–60
+26931	The c3 return goes only into the test-evidence slot
+14150	Even if c3 arrives first
+10802	It must not be treated as c2, the first call sent
+19405	Associate by call_id, not array position
+18035	Parallelism changes waiting, not each action's identity. Confusing source and test files can make the model judge an implementation that does not exist.
+11376	The two read-only operations are relatively independent, permitting parallelism; later patch writes still need version binding. Parallel reads do not make every later write parallel too.
+7073	B.5｜Model call M3: from a candidate explanation to falsifiable checks
+19289	Express hypotheses as checkable relationships:
+15946	In this teaching trace, run two independent assertions: relative path
+18061	should match
+29469	; the same file's absolute path
+10701	does not match this relative pattern. Also confirm that the requested product semantics really are root-relative paths. This supports H2 and weakens H1 and H3 with the corresponding evidence.
+7880	M3 outputs test call c4, not "I have verified it":
+24445	Results should include the command, return code, number of tests actually run and failing assertions. This teaching trace assumes the original failure was observed; its example text is not an actual repository test report. Runnable mechanism experiments are in further reading, and deterministic protocol tests in the calculation and execution-chain experiments. The two sets state their own inputs and result scopes.
+7074	B.6｜Model call M4: a patch describes changes, not results
+12504	The candidate fix should convert paths to root-relative form at the right boundary and specify handling of paths outside the root.
+15204	may fail; do not silently swallow exceptions just to avoid errors or redesign every path semantic without a requirement.
+18601	The executor checks versions and patch preconditions, then edits the file. Three states now differ: the model proposes p1, the executor starts c19, and the file actually becomes r43. They cannot collapse into "Fixed".
+16327	If another user changed the file to r42b, expected_revision does not match; reject or reread and coordinate. Overwriting from an old excerpt destroys user changes. A concurrency window remains between version check and write and must be addressed with the storage mechanism; reading a hash then writing in Python does not automatically remove the race.
+7075	B.7｜The key failure window: the file changed but the success result was lost
+12531	Suppose c19 finished replacing the file, but the runner crashed before recording success. Model and task state know only of the timeout; the external file is already r43.
+18714	Marking c19 failed and retrying directly may edit the file again; marking it succeeded may lie under a different failure window. The correct state is
+29449	: verification is needed.
+18444	The recovery process calls inspect_operation or reads the target version/patch effect. With external idempotency keys, query using c19 or a separate business key; for local files, check target content and whether the intended change was applied. Retry under appropriate conditions only when evidence shows it did not occur.
+27365	This cannot promise that a local table alone implements distributed
+9497	. If the state table and external side effect share no atomic transaction, a window remains. Engineering aims to establish outcomes, avoid dangerous repetition and provide controlled recovery when the result cannot be determined.
+22190	Uses the same p1, c19 and r42→r43 change; timeout has not been interpreted as no edit.
+20308	Moment/object
+16925	Actual change
+15176	Conclusion supported
+9333	t1: task ledger
+14008	Action registered
+9334	t2: disk
+9251	p1 applied; r42→r43
+16173	The external side effect has occurred
+9335	t3: process/network
+18476	Success acknowledgment lost
+11081	Does not negate the disk change
+9336	t4: recovery harness
+17599	Mark c19 unknown and verify
+14056	If r43 matches, move to tests without repeating the patch
+16267	A failure acknowledgment differs from a missing acknowledgment. The central object here is the disk fact, not the summary's wording.
+18442	After recovery, verify p1's effect before proceeding; neither repeat it directly nor guess success. Keep unknown if verification itself fails.
+7076	B.8｜Long sessions need compaction: what must not be lost
+13893	History may now contain many searches, whole-file reads and failed attempts. Later work most needs the goal, constraints, confirmed root cause, current file version, unconfirmed operations, test state and evidence locations.
+28611	Incorrect summary:
+17895	The exclude issue is fixed and ready to deliver.
+16468	It makes three mistakes: unknown execution becomes completion, original test results are applied to a new version, and "Do not commit or deploy" disappears. Brevity and fluency do not make it suitable recovery state.
+20477	A more reasonable teaching summary:
+19802	A summary does not replace original evidence.
+18364	must lead back to its source; if code changed, old evidence supports only historical judgments, not current facts directly.
+18662	Continues the same unconfirmed c19 window. A new summary is not new proof of execution; original action records still ground recovery.
+18354	Values/relationships that must be retained
+11297	Risk if lost
+14013	Action identity
+20226	Cannot identify which edit
+18588	Execution precondition
+18835	Apply an old patch to a new file
+18248	Current knowledge
+15687	Acknowledgment missing; execution outcome unknown
+25811	Incorrect failed status triggers repeated edits
+21420	Verification entry point
+23063	Target pipeline/filter.py and p1 record
+15053	Only a summary to guess completion from
+27389	The key is not a longer summary but preserving facts and pending states that determine the next action. Background chat may be omitted; unknown must not become failed.
+14520	Only original logs or external-state verification justify advancing task state to applied or unapplied; the summary cannot create that conclusion itself.
+7077	B.9｜Compaction is a state transition, not deleting history in place
+12714	First obtain history snapshot version H17, then generate candidate summary C18. Check key constraints, tool-call pairing, unknown state and evidence references. Rebuild stable system instructions, necessary tool definitions and the summary, then conditionally replace current context.
+25047	If a user adds an instruction during summarization, history becomes H18; a summary based on H17 must not blindly overwrite the new message. Append the message to the new context or reconcile the snapshot as the runner specifies. This is concurrent state updating, not something solved by asking the model to summarize more carefully.
+14197	After compaction, model request M5 should include original authorization scope, the recovery state above, verification tools and the latest observation. Old source blocks need not remain loaded permanently; the model can reread them by evidence ID when needed. Cache hits may change, affecting cost without justifying incorrect context retention.
+7066	B.10｜Model call M5: verify first without writing again
+7881	M5 sees c19 unknown and chooses:
+19989	Teaching return:
+17227	The harness can now mark c19 verified complete, but not the whole task. Whether the new code meets functionality and regression requirements belongs to the next verification stage.
+16356	"File exists" alone does not prove the patch was applied. A partial match with p1 requires identifying partial edits, external concurrency or insufficient verification, not forcing success. Result schemas need uncertainty rather than only true/false forcing a choice.
+7067	B.11｜Model call M6: tests must bind to r43
+7882	M6 calls test c21; results should identify which tests actually ran on r43. If they pass, check modification scope and user constraints for final delivery. Code changed during testing invalidates automatic proof of the new version and requires rechecking the affected scope.
+20578	A final answer can give root cause, modification scope, verification evidence and remaining limits. It must not claim a commit or deployment: the user forbade both and neither happened here. Completion means the required fix is confirmed, relevant verification is done, no important side effects await verification, and permissions were respected.
+27362	There is no fixed requirement for another independent review round. Low risk and sufficient evidence allow stopping; unresolved cross-module semantics or concurrency risks call for targeted verification. Review gains value from eliminating specific risks, not the process name.
+7068	B.12｜Interview follow-up: is the full history resent each turn
+10647	Not necessarily. Clients may send full logical history or reference service-stored responses/sessions; the service still builds context usable this turn. Continuous logical history, incremental network transmission and computation-cache hits are three independent dimensions.
+12272	With opaque compaction state, clients may not inspect retained internal content field by field, making external persistent constraints, operation results and evidence references more important. Do not rest every engineering guarantee on an uninspectable summary block.
+14940	Another follow-up asks whether sub-agents inherit these tools and state automatically. Do not assume so. Check product and configuration, explicitly handing over the minimum evidence and permissions needed. That the main agent has
+29169	does not mean every sub-agent can access it; a sub-agent saying "Done" does not establish that the final workspace has been integrated and tested.
+25890	After this example, explain when a fact first becomes known, who may change it, who records it, how it is recovered after compaction, and which evidence closes the task. That is understanding agent execution beyond reciting "think–act–observe".
+9547	← Walkthrough A｜How one input becomes three output tokens</a><a href="c.html">Walkthrough C｜From ingesting a document to retrieval, answering, memory update and forgetting →
+22321	Follow this chapter through its objects and states</a><a href="#topic-2">A timeout tells you nothing arrived, not that nothing happened</a><a href="#walkb-s1">B.1｜Before starting: four kinds of object held by the harness</a><a href="#walkb-s2">B.2｜Model call M1: why input needs tool schemas</a><a href="#walkb-s3">B.3｜Tool T1: output becomes evidence before the next turn</a><a href="#walkb-s4">B.4｜Model call M2: specify the missing evidence</a><a href="#walkb-s5">B.5｜Model call M3: from a candidate explanation to falsifiable checks</a><a href="#walkb-s6">B.6｜Model call M4: a patch describes changes, not results</a><a href="#walkb-s7">B.7｜The key failure window: the file changed but the success result was lost</a><a href="#walkb-s8">B.8｜Long sessions need compaction: what must not be lost</a><a href="#walkb-s9">B.9｜Compaction is a state transition, not deleting history in place</a><a href="#walkb-s10">B.10｜Model call M5: verify first without writing again</a><a href="#walkb-s11">B.11｜Model call M6: tests must bind to r43</a><a href="#walkb-s12">B.12｜Interview follow-up: is the full history resent each turn

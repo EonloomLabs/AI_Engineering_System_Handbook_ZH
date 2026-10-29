@@ -1,0 +1,380 @@
+5982	03｜Inside the training system: data, optimizer, memory and the cost of distribution — AI Systems Engineering
+23118	Goal: read the causal chain in a training report, estimate resources, and distinguish optimization failure, data leakage and an incorrectly designed objective. Experiment:
+29358	, an actual training experiment, but not a reproduction of large-model capabilities.
+20445	VRAM accounting must separate parameters, gradients, optimizer state, activations and temporary workspaces; the figure below first explains how training state is produced.
+6039	1. The data pipeline is part of model behavior
+29010	Pretraining does not feed raw web pages straight into a GPU. It requires decisions about sampling scope, cleaning and deduplication, encoding, sequence packing, length distribution, training/validation splits and traceable data versions. Every step changes the distribution the model actually sees. Excessively removing short lines may damage code; deduplicating by page URL may retain many mirrors; random paragraph-level training/test splits may put versions of the same document on both sides.
+20560	A minimal data manifest should answer: Which snapshot did each sample come from? Which filters were applied? Which Tokenizer encoded it? How are valid tokens counted? Was the validation set isolated before deduplication? Proving that a model can solve a problem requires ruling out the explanation that its answer or a highly similar solution leaked into training/retrieval data; final accuracy alone is insufficient.
+18259	When business data is used to fine-tune a model, permission and deletion responsibilities extend from the original data to training artifacts. Deleting a database record alone does not mean model parameters have forgotten it. This is also why sensitive, frequently changing business facts often belong in an external retrieval layer with access controls rather than entering the training set blindly.
+6276	2. The data flow of one training step
+6939	AdamW maintains the first and second moments of gradients and uses them after bias correction to normalize step sizes. Decoupled weight decay applies shrinkage directly in parameter updates; it should not simply be equated with applying L2 penalties uniformly to all parameters. Implementations specify which parameters decay, when accumulation occurs and how the learning rate is scheduled. Reproducing an experiment requires saving these configurations, not only a learning-rate number.
+21488	Gradient accumulation combines contributions from several microbatches into one optimizer update. Equivalence depends on loss normalization, stochastic operators and how schedule steps are counted. With different numbers of valid tokens in long and short sequences, a simple mean of microbatch means may differ from the mean over all valid tokens. State whether the objective weights samples or tokens equally before designing accumulation logic.
+6418	3. Why VRAM is not just parameter count times 2 bytes
+25461	Training may simultaneously hold model weights, gradients, optimizer moments, master-weight copies, intermediate activations, temporary operator buffers and communication buffers. Some common mixed-precision Adam configurations approach 16 bytes of model state per parameter, but this is not a universal constant: FP32 master weights, gradient dtype, sharding and quantized optimizers all change it.
+12142	Write the estimate by component:
+10019	. Judging trainability only from "7B×2 bytes=14GB" is wrong; at most, this estimates weight storage for a particular dtype. Longer sequences also increase activation costs even if model parameters stay unchanged.
+22560	Activation checkpointing saves VRAM by not storing some intermediate values and recomputing them during backpropagation. This checkpoint is an autodiff memory optimization, not an agent task checkpoint or persistent training state. The same English word has different meanings at three system layers; make the distinction explicit.
+6533	4. How distributed training divides work
+20043	Data parallelism lets devices process different samples, then synchronize gradients; tensor parallelism splits a layer's matrix computations and requires communication within that layer; pipeline parallelism splits layers, with microbatches flowing across stages and creating pipeline bubbles; expert parallelism assigns MoE experts to devices, with routing moving tokens between devices. They address different constraints and cannot be summarized as "More GPUs make training linearly faster".
+28179	Before choosing parallelism, determine whether the bottleneck is fitting on one GPU, matrix computation or the inter-device network. Splitting a large matrix too finely may increase the communication share; uneven pipeline stages let the slowest stage limit the whole; ignoring expert load distribution leaves popular experts queuing. Lesson 59 continues these trade-offs through roofline and bandwidth.
+13786	Sharding optimizer state, gradients and parameters reduces what one device holds but introduces collection and communication. Checkpoint recovery also needs optimizer state, random state, data position and schedule counters; otherwise resuming from the same weights need not reproduce the same training trajectory. Production recovery seeks explicit recovery semantics, without requiring bitwise identity on every kind of hardware.
+17816	Engineering case · D02
+23281	Reading a real fix: from the gradient-accumulation incident to a test that tells the wrong objective apart
+14517	Where the original engineering evidence is
+9002	Transformers PR #34191, titled "Fix Gradient Accumulation issue", was merged on 2024-10-17. This section pins loss_utils.py from the merge commit: when num_items_in_batch is present, fixed_cross_entropy selects sum reduction, then divides by the number supplied by the caller; ForCausalLMLoss first shifts predictions and labels, then flattens them.
+5940	This makes responsibility for normalization by the total valid-item count traceable across code boundaries, beyond a blog's conclusion.
+14735	Parameter names cannot replace counting definitions
+9245	Check the caller to determine whether num_items_in_batch means samples, labels or valid tokens across an accumulation group; this small function cannot prove the caller's denominator correct. In particular, boundary changes after shifting, ignore_index, differing rank counts and entirely empty batches may make the count differ from the items actually entering cross entropy.
+20809	This book performed two levels of verification
+24025	The first is a small squared-error example with gradients of −1 and 0, easy to calculate by hand. The second actually uses torch.cross_entropy: the gradient from one forward pass over the same 4 samples matches accumulation over groups of 1/3 items normalized by the same total; simply averaging each batch's mean differs. The original gradient matrices are available in the results below.
+16312	How to apply this to your Trainer
+12836	First test large-batch/accumulation equivalence on one device with fixed small data, no dropout and no random augmentation. Then enable AMP, DDP, clipping and the actual data loader, adding one kind of factor at a time. If the framework already handles the global denominator, do not multiply by world_size again. For objectives without equal token weights, such as equal weight per conversation, write the intended objective separately instead of copying this formula.
+14829	A follow-up by counterexample
+9402	"The loss falls, so everything is fine" does not hold: a wrong objective can fall too. "The gradients are roughly close" is insufficient as well: first ask whether the objective definition explains the difference, then discuss floating-point error. The historical PR supports the problem mechanism; it is not evidence that the current version still has the bug.
+7339	D02: how to read these results beyond "passed"
+28257	Compare the full objective, valid-token normalization, incorrect microbatch means and distributed reduction item by item. The question is whether the same training objective is preserved, not only whether loss decreases.
+13087	Related question: <a href="../../chapters/04.html#engineering-E09">E09: The hidden bias in gradient accumulation: is the average taken over batches, or over valid tokens?
+7439	E10: Mixed precision and recomputation: the wrong order makes the optimizer quietly take a wrong step
+6632	5. How to use scaling laws
+25482	Training loss has empirical relationships with parameter count, data volume and compute that can be fitted, but they depend on data, architecture, optimization and budget ranges. Chinchilla discusses allocating parameters and data under fixed training compute; ratios from its particular research setting are not eternal optima for every model, language or inference cost.
+27160	Also distinguish compute-optimal training from optimal total deployment cost. If a model will be called many times, training a smaller model on more tokens may reduce long-term inference costs. Conversely, a model project used for one exploration may not justify substantial extra training to save inference costs. The actual objective includes training, serving and quality gains, beyond one loss curve.
+25702	Reports must separate training loss, validation loss and business success rate. A small gain in validation cross entropy does not guarantee better judgments of tool-call permissions; a higher code pass rate may be concentrated in certain languages. Expanded capabilities need stratified evaluation, not inference from parameter scale.
+6723	6. How to read this book's actual training experiment
+14048	contains two causal Transformer layers and 18,320 parameters, trained on a CPU for 100 steps. The data is an author-constructed cyclic sequence of 16 symbols; the task is to learn "The next symbol is the current symbol plus one, modulo 16". This makes gradients, masks and updates verifiable without passing the experiment off as a general language model.
+28458	In the accompanying run record, training cross entropy falls from about 2.8468 to 0.00345, and training-token accuracy reaches 1.0. This proves the code can optimize its defined objective and memorize/fit this simple rule; it does not prove test generalization, multistep reasoning or actual coding capability. Changing future inputs leaves zero error in prefix logits, separately verifying the causal mask.
+27509	Further experiments should do more than add training steps: reverse validation sequences, change symbol mappings, introduce different rules and compare in-distribution with out-of-distribution results. Check whether failures come from model capacity, data coverage or an unidentifiable task. Retain training seeds and configuration and repeat at least a few seeds to judge whether a gain is just an initialization coincidence.
+6791	7. The conclusion standard for a senior engineer
+23259	When a report says "More data, stronger model", ask about valid training tokens, deduplication and contamination, compute budgets, deployment costs and task scope. For "Out of VRAM", break down usage rather than immediately reducing the batch. For "Loss is not decreasing", check labels, masks, gradients, learning rate and numerics before changing architecture. Every check must correspond to an observable variable; that is understanding the training system from within.
+15640	Why accumulating gradients over four microbatches does not necessarily equal four times the learning rate
+26354	Input and conditions.</strong> The effective batch has 4 equally sized microbatches, with loss averaged by sample; their mean gradients for one parameter are 1, 2, 3 and 4.
+23086	Target gradient
+16727	The mean over the full effective batch
+23145	Incorrect direct accumulation
+22052	Backpropagate each mean loss without dividing by 4
+21481	The gradient sum is 10, amplified 4 times.
+21858	Correct scaling
+22006	Divide each microbatch loss by 4 first
+24288	Accumulates to 2.5.
+20503	Update timing
+15652	Four backward calls, then one step
+10906	Not an update after every microbatch treated afterward as one large batch.
+24126	Limits of equivalence
+15585	With cross-sample BatchNorm, random layers or different optimizer step counts
+20002	Numerics and dynamics may differ; full equivalence cannot be claimed unconditionally.
+19180	Join the steps up.</strong> Gradient accumulation requires explicit loss-reduction denominators, microbatch sizes and optimizer update counts.
+26658	Limits and counterexamples.</strong> Unequal microbatches require weighting by sample or valid-token counts, not mechanically dividing by the number of microbatches.
+22831	Using 1000 parameters to work out exactly which state ZeRO shards
+26233	Input and conditions.</strong> Assume FP32 throughout: 1000 parameters P take 4000 bytes, gradients G take 4000 bytes, and Adam's first and second moments total 8000 bytes. Share evenly across two devices; count only these three kinds of state.
+20459	Ordinary data parallelism
+22045	Each device holds P, G and both moments
+22044	4000+4000+8000=16000 bytes per device.
+9097	ZeRO-1-style sharding
+11728	Only optimizer state is split evenly across the two devices
+22043	4000+4000+4000=12000 bytes per device.
+9098	ZeRO-2-style sharding
+21474	Gradients and optimizer state are split evenly; parameters are replicated
+22042	4000+2000+4000=10000 bytes per device.
+9099	ZeRO-3-style sharding
+14721	Parameters, gradients and optimizer state are all split evenly
+22041	2000+2000+4000=8000 bytes per device.
+25141	Add the limitations
+25394	Computing a layer still requires its parameters, adding communication and temporary materializations
+10590	The table is not actual peak VRAM and cannot establish that two GPUs will necessarily fit the model.
+18967	Join the steps up.</strong> Draw the three sets of data—parameters, gradients and optimizer state—before discussing sharding, or savings from different stages are easily mixed together.
+26709	Limits and counterexamples.</strong> Ignores activations, communication buffers, temporary aggregation, uneven sharding, extra master weights and framework overhead. This is state accounting, not device measurement.
+9508	← 02｜Into the decoder: tensor shapes, RoPE, GQA and KV cache correctness</a><a href="04.html">04｜Post-training and reasoning models: from preference objectives to verifiable capability
+5984	04｜Post-training and reasoning models: from preference objectives to verifiable capability — AI Systems Engineering
+23104	Goal: understand what SFT, RLHF, DPO and reasoning reinforcement learning each change, and judge from the objective function whether a "behavioral gain" means greater factual reliability. Experiment:
+12583	Preference training and inference-time search affect parameters and execution respectively; "Better at thinking" should not blur these two layers.
+6050	1. How pretrained capabilities become assistant behavior
+29011	Pretraining optimizes a text distribution; SFT uses demonstrations to reinforce answer forms and task strategies under particular conditions. High-quality traces of "request → answer → tool result → continued action" let the model learn these patterns, but learning the format does not make every call valid. Schema validation, permissions and completion checks remain in the execution layer.
+8806	SFT samples involve more than final text: task distributions, correct tool calls and recovery, and whether the model may see verification feedback all matter. Removing every failed trace may teach only the smooth path; indiscriminately adding failures may copy errors. Data design should specify which actions merit imitation and which content is only environment feedback.
+25494	Optimizing only the final answer may leave a dangerous intermediate call in a long trace unconstrained directly. Conversely, mechanically rewarding every step's form can encourage format compliance without task progress. Distinguish objective levels and observable feedback instead of simply seeking longer reasoning.
+6269	2. Rewards in RLHF are not factual truth
+13523	A typical preference process compares answers, trains a reward model, then optimizes the policy to increase reward while constraining deviation from a reference policy. Preferences may combine helpfulness, style, instruction following, safety and other dimensions; one scalar cannot be assumed to represent every business goal perfectly.
+21667	The model may exploit reward-model weaknesses, such as preferences for verbosity, a certain tone or superficial completeness. Seeing "More confident answers" should not imply "More correct facts". Engineering needs externally verifiable outcomes such as compilation, final database state or evidence support rates, not only another model's satisfaction.
+18174	Policy updates in reinforcement learning do not mean parameters update instantly during every user chat. Products may have separate data and training pipelines; correcting an answer in the current session changes context directly, while whether it enters later training is a separate question.
+6407	3. Why the DPO objective includes a reference model
+11808	Starting from an idealized optimization problem with a KL constraint:
+16340	If pairwise preference probabilities use the Bradley–Terry form
+29281	, for the same prompt,
+15966	cancels on subtraction, giving the DPO loss:
+27341	This explains why DPO can optimize directly from preference pairs, beyond reciting "DPO is simpler than RLHF". The reference model supplies a baseline for relative change, and β controls the scale in the objective. This derivation relies on particular reward regularization and preference-model assumptions; it does not claim that actual human preferences strictly follow this probability model.
+18048	A sequence log probability usually sums the log probabilities of included tokens, making length and masks important. Arbitrarily exchanging a sequence mean with a sum changes the preference-learning objective.
+21534	checks stable loss and analytic gradients for one preference pair; it is not a complete DPO trainer and does not prove preference data improves your coding-task success rate.
+6537	4. Verifiable rewards and reasoning reinforcement learning
+18268	When answers can be checked by mathematical results, unit tests or rules, training can obtain clearer feedback than style preferences alone. But verifier coverage determines reward quality: passing weak tests does not mean the implementation is correct. If tasks permit editing tests, a model may also earn reward by undermining verification.
+7395	DeepSeek-R1 reports provide public research cases of reinforcement learning producing reasoning behavior. Their methods, cold-start data, training stages and evaluations have specific experimental conditions; "RL produced reasoning patterns" cannot be expanded into "Any model learns reliable long-term agent behavior from reward alone".
+24366	One intuition for group-relative advantage is sampling several answers to the same question and comparing them against the group's mean reward/scale, reducing dependence on a separate value estimate. If all answers receive the same reward, the relative signal may be weak; if reward checks only the final result, the actual validity of steps remains unclear. "Thinking longer" at deployment allocates inference compute; optimizing a policy in training is a separate matter.
+6653	5. The boundaries of process supervision, outcome supervision and search
+24455	Outcome supervision is inexpensive and direct but struggles to identify the first error in long reasoning; process supervision is finer-grained but needs reliable step labels and may reward steps tailored to a grading format. Multipath sampling, self-consistency voting and tree search spend extra inference-time compute exploring candidates; they do not inherently add base-model knowledge.
+25010	If candidates share a false premise, voting only amplifies it. If a verifier prefers fluent language, search may more consistently find wrong but pleasing answers. Search gains therefore need two conditions together: candidates have useful diversity, and the evaluator can identify better outcomes. Test both with task-level ablations.
+17269	For coding tasks, having the model run a relevant test is often more verifiable than generating three long analyses without evidence. This is not a law that testing beats reasoning in every situation; it prioritizes buying information that rules out false hypotheses. Deeper analysis can still be highly valuable for risky cross-module changes.
+6711	6. From model selection to engineering decisions
+14061	Distinguish three failures: lacking relevant knowledge, being unable to reason under given conditions, and being unable to execute reliably. The first favors retrieval; the second may need a stronger model, different decomposition or better verification; the third favors repairing tools and state management. Assigning all three to fine-tuning wastes cost and hides execution-system defects.
+22093	When comparing reasoning intensities, hold tasks, available tools and grading fixed, and record total cost, total time, success rate and failure types. Do not compare only final output length. Internal reasoning is not necessarily exposed to clients, and a purported complete internal trace should not be demanded as proof of correctness; observable evidence chains and repeatable results matter more.
+8028	PPO clips positive advantage, but handles negative advantage differently
+26158	Input and conditions.</strong> In the PPO clipped surrogate, r=new policy probability/old policy probability, ε=0.2, and the objective takes min(rA,clip(r,0.8,1.2)A), which training usually maximizes.
+21809	Positive-advantage example
+14700	Original term 3, clipped term 2.4; take 2.4.
+24509	Increase r further
+9306	r goes from 1.5 to 1.6
+25225	The clipped branch stays at 2.4, no longer rewarding excessive increases in this direction.
+25956	Negative-advantage example
+14701	Original term −1, clipped term −1.6; take the smaller −1.6.
+23512	Meaning of the sign
+16023	Clipping also limits too large a decrease in a bad action's probability
+11060	Do not ignore A's sign and simply "clamp r".
+16765	Full training
+27173	Still needs advantage estimates, samples, value/entropy terms and other configuration
+10307	One scalar objective is not a complete RLHF pipeline.
+19197	Join the steps up.</strong> The clipped objective's min and the advantage's sign jointly affect optimization; this is not simply truncating policy probabilities to an interval.
+26750	Limits and counterexamples.</strong> This is a local example of the PPO objective, not a global hard KL constraint, and does not guarantee every update stays within a trust region.
+10463	A preference dataset always selects longer answers. After DPO training, answers are more complete but the functional pass rate is unchanged. Is that success? Possibly for the "Prefer long answers" objective, but there is no evidence of success for engineering quality. Adjust the data or evaluation dimensions, or abandon the change, instead of attaching an "Intelligence improved" label afterward.
+10294	A reasoning model occasionally wastes many turns on simple tasks. Must a complexity scorer be added? Not necessarily. Check prompts, stopping conditions, tool feedback and default reasoning configuration first; introduce model or intensity routing only when stable gains across task strata cover routing costs. Model capability is a condition for system design, not a reason to add framework layers indefinitely.
+9509	← 03｜Inside the training system: data, optimizer, memory and the cost of distribution</a><a href="05.html">05｜How the output is chosen: sampling, speculative decoding and stopping conditions
+5988	05｜How the output is chosen: sampling, speculative decoding and stopping conditions — AI Systems Engineering
+23109	Goal: distinguish probability distributions, decoding algorithms and product stopping semantics; derive speculative decoding's correctness instead of only knowing that it "uses a small model to accelerate generation". Experiment:
+28473	Sampling, greedy selection and speculative verification share model scores but not selection rules. The figure below separates each turn's selection from the next turn's input.
+23162	Related step-by-step process: <a href="../../visual/F15.html">How one input connects to prediction, all the way to the end</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24530	Related mechanisms to continue with: <a href="../../visual/F09.html">Lesson 44 · Softmax does not simply divide the scores by their sum</a><a href="../../visual/F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read</a><a href="../../visual/O07.html">O07 · Speculative decoding: the draft may be fast, but it must be verified correctly
+6044	1. The most probable next token is not the best complete answer
+25981	Greedy selection takes the most probable token at each step; it guarantees neither the most probable complete sequence nor the best business outcome. Language-model probabilities describe conditional continuation distributions, while task value may be determined by external tests. Beam Search maintains several partial sequences to explore high-probability paths, but length bias, repetition and mismatched objectives for open-ended text all need consideration. Suitability for translation does not make a method the default for interactive coding agents.
+22517	Temperature divides logits by τ: smaller τ concentrates the distribution, while larger τ flattens it. It is not an "error-rate knob" and cannot turn an unsupported answer into fact. Top-k retains a fixed number of candidates; Top-p selects the smallest candidate set reaching the cumulative-probability threshold, then renormalizes. If both apply, order and service implementation affect the distribution; check the particular interface.
+15977	For constrained output, a decoder may also mask tokens that violate syntax. This helps structural constraints, but keep three layers separate: whether bytes parse, whether structure meets the schema, and whether fields match business facts. Valid JSON can still contain a nonexistent file path.
+6284	2. Numerical stability and low-probability events
+9317	Subtracting the maximum in softmax prevents exponential overflow but does not solve every underflow or low-precision rounding issue. Near-zero probabilities require sequence probabilities to be calculated in log space rather than by direct multiplication. Operator fusion, dtype and parallel-reduction order may change the ranking of close logits, eventually amplified by autoregression into different text. This does not imply "Results cannot be reproduced, so parameters need not be recorded"; record the model/service version, seed support, sampling configuration and environment precisely because of this.
+25716	In repeated evaluation, ten answers to one question are not ten independent business scenarios. Preserve the correlation introduced by task difficulty; Lesson 14 uses task-paired statistical methods. One low-temperature success is especially insufficient evidence of long-term reliability.
+6429	3. Speculative decoding: acceptance and rejection compensation
+25649	Let target distribution p and draft distribution q share a token space. First sample candidate x from q and accept with probability
+19573	. If rejected, sample from the normalized
+21965	residual distribution. Accepted tokens contribute probability
+29482	; the rejection branch supplies exactly
+10014	. Adding both parts recovers p.
+27229	This one-token derivation is what the book's experiment verifies. Full multi-token speculation first produces a draft segment, then evaluates its positions in parallel with the target model, accepting in sequence until the first rejection and compensating. If all are accepted, an additional target token can be generated. Implementations must also correctly handle cache rollback, truncation, positions and batches; copying these few lines does not make a complete high-performance service.
+9415	Preserving the distribution is conditional: p and q must be normalized distributions under the actual decoding rules, with correct acceptance/residual calculations. If the target uses Top-p but verification uses untruncated softmax, it is no longer the same p. A poor draft causes many rejections, and added computation may exceed the savings. This improves compute scheduling efficiency; it does not make the target model smarter from nothing.
+6538	4. Reading the experiment and its limits of proof
+22911	Using a small vocabulary, fixed p/q and many samples, compare empirical frequencies with target probabilities. Statistical error means exact item-by-item equality should not be required; the code uses explicit tolerances and a fixed random seed for rechecking. Also test q=p, support boundaries and strongly mismatched distributions separately. Always accepting the draft should bias empirical frequencies toward q, providing a negative control.
+27326	This experiment has no GPU, no server-side batching and no commercial-model speedup measurement. It can establish only the teaching implementation of acceptance/rejection and its distributional consistency, not a claim of "Several times faster inference". Performance validation needs fixed models, hardware, sequence distributions and batches, end-to-end timing, and checks of output distribution/quality.
+6642	5. Text stopping, response completion and business completion
+22811	Generation may stop because of EOS, stop strings, output-token limits, cancellation, network disconnection, service errors or tool-call handoff. These are different kinds of completion. At the API layer, inspect response status, errors and output-item types; at the agent layer, check for pending tools or unfinished acceptance checks.
+12318	For example, if the model returns
+18508	or the corresponding status indicates stopping for length, a few final lines that look like a summary still do not mean task success. Tool arguments may be only half generated and cannot be executed. A closed network stream also does not prove the service finished, because the client may have received only a prefix. Lesson 60 provides actual parser tests for truncated SSE.
+10319	A robust stopping decision requires all of the following: no pending operations, acceptance results tied to the current artifact version, no incorrect exit forced by the budget, and a fulfilled user goal or explicitly reported limitations. The model saying "Done" is only a claim; a deterministic program should at least check the verifiable parts.
+6721	6. Best practices are not fixed sampling parameters
+13827	Creative ideation, precise configuration generation and long tool-execution chains need different candidate diversity and verification. Instead of one universal temperature, define success and failure costs first, then select on an actual task set. If a small model generates candidates and a larger model or tests select them, count the full candidate cost, not only the final answer.
+17306	For tool actions, especially distinguish generation diversity from side-effect diversity. Several plans may be generated and compared, but each must not run once against the production database. Explore candidates in environments without side effects where possible, and check authorization and state before actual submission.
+15434	The same probability table gives different candidate sets for nucleus sampling and greedy selection
+26380	Input and conditions.</strong> Descending probabilities are [0.5,0.3,0.15,0.05], with no other filtering.
+16363	Always select item 1
+21619	The probability table is not text yet; the token still needs looking up.
+12425	Keep the first two items
+18183	After renormalization: [0.625,0.375].
+24290	The cumulative probability reaches 0.95 only at item 3
+28289	Usually keep the first three and renormalize.
+21388	Probabilities within the nucleus
+28820	Divide by 0.95
+24324	Approximately [0.526316,0.315789,0.157895].
+25014	If the implementation applies top-k before top-p
+12516	Candidate sets and order differ; record the generation configuration.
+19256	Join the steps up.</strong> Sampling options change candidate sets or probabilities; they do not delete words after the model has already generated a sentence.
+26683	Limits and counterexamples.</strong> Retention exactly at the threshold and minimum candidate counts depend on implementation; this example explicitly retains the item that crosses the cumulative threshold.
+6795	7. Acceptance questions and reference answers
+11508	Why not resample directly from p after speculative decoding rejects? Because the acceptance branch has already contributed
+29243	, and adding the whole p again would allocate some mass twice; correct compensation uses the positive residual distribution. A proof must write the total probability contributed by both branches for each token, not answer "It looks similar".
+11472	Why verify tool arguments after JSON parses successfully? Parsing establishes only that characters form a valid object; syntax does not guarantee an in-scope path, an existing target, permission or a fresh request. Decoding and execution are different trust boundaries.
+9510	← 04｜Post-training and reasoning models: from preference objectives to verifiable capability</a><a href="06.html">06｜The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling
+5990	06｜The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling — AI Systems Engineering
+23093	Goal: derive serving costs from tensor sizes, identify whether an optimization reduces compute, memory transfers, fragmentation or queuing, and avoid passing a CPU identity-check experiment off as GPU performance.
+20660	Before choosing a serving optimization, identify the shares of data movement, repeated computation, fragmentation and scheduling.
+23172	Related step-by-step process: <a href="../../visual/O04.html">FlashAttention: accumulate while reading, without materializing the whole table</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24532	Related mechanisms to continue with: <a href="../../visual/F16.html">Lesson 58 · KV cache: keep what was computed, without skipping what must be read</a><a href="../../visual/O01.html">O01 · GQA/MQA: what is reduced is the number of K/V groups</a><a href="../../visual/O05.html">O05 · PagedAttention: logically contiguous, physically chunked
+6022	1. Resource profiles of prefill and decode
+8055	Prefill processes the entire input prefix, usually with more parallel matrix computation; decode adds only a few positions per step but must read model weights and a growing KV cache. The bottleneck depends on the batch, model, precision and hardware; prefill is not always compute-bound, nor decode always bandwidth-bound. These are common analysis directions, not conclusions requiring no measurement.
+12011	For attention, a full prefix of length T has a score matrix of size T², and standard full-attention computation grows with T². Cached decoding scores one new position against T historical keys, making this part of one step grow roughly with T; a long sequence still accumulates its costs. KV caching does not mean history need never be processed again: it avoids recomputing old K/V, not reading the data required for attention to history.
+6270	2. Roofline thinking: compute or data movement
+25629	Let an operation require F floating-point operations and M bytes moved, with device peak compute P and bandwidth W. A rough lower bound is
+29299	, with additional launch, synchronization, communication, scheduling and utilization losses in practice. Arithmetic intensity F/M helps identify optimization directions.
+12309	Reducing writes of intermediate matrices can improve memory-bound parts, potentially making them faster even with slightly more arithmetic. Conversely, extra recomputation may slow an already compute-saturated part. FLOPs or GPU utilization alone cannot identify a serving bottleneck; combine memory bandwidth, operator times, queues and request distributions.
+6409	3. Why FlashAttention need not store the full attention matrix
+20455	An ordinary implementation may write
+9951	and other T×T matrices, such as softmax probabilities, to high-bandwidth memory. A tiled algorithm processes blocks in closer on-chip storage and maintains normalization statistics so the result does not require the entire matrix to exist at once. FlashAttention organizes exact attention around this IO problem; it does not turn full attention into linear attention.
+17266	For one query row, the maximum processed score m, exponential sum l and unnormalized weighted sum a are:
+10171	. On seeing a new block S, V:
+11546	Why rescale the old statistics? When the new block has a larger maximum, old l and a were computed relative to old m and must be converted to the scale relative to m'. Updating m alone without rescaling gives blocks incorrect weights, making results depend on the tiling. This is an error worth injecting deliberately.
+16907	implements these identities and compares different block sizes with ordinary softmax attention. It has no CUDA kernel, shared-memory layout, backward operator or hardware performance measurement. During backpropagation, saved statistics can recompute some probabilities to save space by not storing the full matrix; production implementations must also handle masks, dropout, numeric types and batch layouts.
+6534	4. Paged KV caching addresses allocation and sharing
+28684	Long requests vary in length; reserving contiguous maximum KV space per request wastes capacity and fragments memory. PagedAttention maps logical token positions to fixed-size KV blocks that may be physically noncontiguous. Shared prefixes can reference shared blocks, with suitable sharing/copying rules when writes diverge.
+16034	Smaller blocks increase metadata, addressing and management costs; larger blocks increase internal fragmentation in the final block. Cache compression and quantization are separate techniques; paging alone does not automatically reduce K/V bytes per valid token. Sharing a physical prefix does not remove tenant isolation or cache-side-channel concerns.
+20683	Serving schedulers must know how much KV capacity can be allocated. Admitting too many long requests may cause preemption, swapping or failures; RPM limits alone cannot reflect this pressure. In-flight tokens, requests and output limits can be constrained separately, with service objectives considered in scheduling.
+6624	5. Continuous batching and fairness
+28910	Static batching waits for a group of requests to finish together, preventing timely admission of new requests; continuous batching adds or removes requests at iteration boundaries to improve device utilization. But a long prefill can block short requests already decoding and affect per-token latency. Chunking prefill, separating stages or designing fair scheduling each adds complexity and hardware conditions.
+19395	Keep metrics separate: TTFT measures first response, TPOT measures intervals between output tokens, and end-to-end time measures the user's task; multitenancy also needs tail latency. Raising batch size for throughput may hurt interaction, while running one request at a time for minimal latency may reduce utilization. An optimum exists only relative to the workload and SLO.
+7845	Little's law gives, in a stable system,
+10080	. It does not describe a particular queue's tail distribution, but helps check capacity-planning consistency. Latency rises nonlinearly near saturation; a low-load single-request benchmark cannot directly predict production peaks.
+6705	6. Prompt caching and KV caching are not one switch
+21645	A model's internal KV cache is inference state; a service prefix cache may reuse prefix computation across requests; the billing definition of a cache hit is a product contract again. Applications should keep reusable prefixes stable and avoid irrelevant timestamps at the start, without retaining incorrect or unauthorized content for cache hits. Security and correctness take priority over hit rates.
+16322	Deleting intermediate history for compaction may change later prefixes and reduce reuse. Compare the remaining task's total cost, not only how much this compaction shortened input. Lesson 15 gives a method for calculating compaction gains and losses.
+6772	7. What a credible performance experiment should include
+12663	Save the model version, precision, hardware, serving configuration, input/output length distributions, concurrency and warm-up method first. Measure with/without caching, short/long prefixes and single-request/production concurrency separately. Report p50/p95 latency, throughput, failure rate, peak VRAM and task quality; do not hide tail problems behind one best-case point.
+29071	Acceptance question: NumPy tiled attention differs little from ordinary attention. Is the FlashAttention optimization complete? No. This verifies only a mathematical subproblem; GPU layouts, synchronization, actual IO and backward correctness remain to be implemented. Separating a mechanism's correctness from a production system's performance gain is a minimum standard for senior engineering study.
+9303	Why a roofline estimate gives only a lower bound and cannot be treated as a measurement
+26230	Input and conditions.</strong> A hypothetical operator needs 1GFLOP and 100MB of data movement in decimal units; the device peaks at 100TFLOP/s and 1TB/s bandwidth.
+25376	Compute lower bound
+6094	10 microseconds.
+19796	Data-movement lower bound
+6089	100 microseconds.
+22787	Ideal overlap
+24935	At least max(10,100)
+6090	100 microseconds, not guaranteed measurements of 110 or 100.
+16933	Actual losses
+13880	Utilization, kernel launches, synchronization and cache hits may vary
+16926	Actual execution may be slower, and actual HBM traffic needs correct measurement too.
+12105	Optimization direction
+25051	If bandwidth is actually the bottleneck
+28801	Reducing reads or improving reuse may help more than increasing multiplication throughput alone.
+19069	Join the steps up.</strong> A performance model helps identify bottleneck directions; paper peak figures cannot replace runtime measurements.
+26688	Limits and counterexamples.</strong> Units use MB=10^6 and TB=10^12; these are not any actual GPU's specifications or a performance promise.
+9511	← 05｜How the output is chosen: sampling, speculative decoding and stopping conditions</a><a href="07.html">07｜Inside the model interface: messages, output items, SSE and the tool-call protocol
+5995	07｜Inside the model interface: messages, output items, SSE and the tool-call protocol — AI Systems Engineering
+22267	Follow this chapter through its objects and states</a><a href="#topic-2">Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#c07-h1">1. Treat the model service as a stateful protocol, not a string function</a><a href="#c07-h2">2. Streams do not arrive as complete characters or JSON objects</a><a href="#c07-h3">3. Output-item completion and whole-response completion</a><a href="#c07-h4">4. What schema validation can guarantee</a><a href="#c07-h5">5. How tool descriptions and returned content affect the model</a><a href="#c07-h6">6. Boundaries of the optional online adapter</a><a href="#c07-h7">7. Acceptance and failure localization</a><a class="sub ap-toc" href="#agent-study-stream">Protocol boundaries and business boundaries
+23103	Goal: build a model adapter that treats neither half a JSON object as an action nor a broken stream as completion. Experiment:
+29468	; optional online adapter:
+29368	, for which this book ran no paid calls.
+14100	Handle the protocol layer by layer—bytes, events, objects and completion semantics—without producing side effects from partial arguments.
+23163	Related step-by-step process: <a href="../../visual/F23.html">Complete characters, complete events and complete tool arguments are three separate gates</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24537	Related mechanisms to continue with: <a href="../../visual/F25.html">Lesson 08 · MCP connects interfaces; it does not hand over permissions on its own</a><a href="../../visual/F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened
+6037	1. Treat the model service as a stateful protocol, not a string function
+24159	A simple interface may be
+29213	, but a real agent needs to distinguish text messages, function calls, function results, reasoning or compaction state, and final response state. Some interfaces let the service save history; others require clients to return items. Privacy settings, model capabilities and product interfaces jointly determine what is available. The adapter should retain structured objects, not extract text and discard every other item.
+12305	A response may contain explanatory text and two tool calls together. If code ends whenever text is present, the tools never run; converting the whole response into a string in history loses the original types of call IDs, roles and state required by the service. Opaque state that a public interface requires must be saved unchanged or referenced as documented, not replaced by an invented summary.
+17795	A tool call is a model-proposed candidate action. Its name, arguments and ID enter a validator; the validator returns an executable internal command; the executor performs the actual action; the result is fed back with the matching call ID. Name existence, valid argument syntax, permission, state freshness and successful execution are five independent judgments.
+16729	For the full mechanism and a continuing example, see <a href="../../chapters/10.html#agent-practice-stream">Streaming back: when can the arguments really be executed?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+6289	2. Streams do not arrive as complete characters or JSON objects
+24733	A network byte stream can split a Chinese character, JSON escape sequence or SSE boundary. Parse in this order: incrementally decode UTF-8 bytes, assemble events by SSE line rules, complete an event at a blank line, join data fields, parse that event's JSON, then dispatch the event type.
+20819	This book's implementation supports chunked bytes, CRLF line endings and multiple data lines, reporting truncation for an unfinished final event. Tests feed Chinese content byte by byte to verify that multibyte splits do not corrupt it. Do not apply this directly to every network chunk:
+29457	; a chunk is a transport boundary, not a protocol boundary.
+15505	Similarly,
+15000	is only an argument increment and may not yet be closed. When the model first outputs
+20327	, do not read a directory prematurely; seeing a dangerous fragment midway through a string also does not justify "repairing" arguments with string replacement. Wait for the specified output item to finish, then parse and authorize the complete arguments.
+6436	3. Output-item completion and whole-response completion
+20829	This book's teaching adapter takes a conservative approach: collect complete call items and allow execution only after receiving a successful final response state. Failed or truncated responses prohibit executing uncommitted candidates. This is a reference-implementation choice, not a requirement that every commercial client wait for the same point. Some systems may schedule complete tool items as they arrive, while still handling later interruptions and idempotency.
+17574	instances associate increments and completion events by call ID. Reusing an ID for different content returns a conflict; if the response fails, collected but unexecuted calls will not run silently. The protocol layer must also distinguish unknown events, which may be ignored for forward compatibility, from critical missing information, which must fail. It must not return empty text for every exception and call that success.
+22798	Production integration also needs event-size limits, parsing timeouts, idle-connection timeouts, cancellation propagation and reconnection semantics. Reconnection does not mean blindly executing every tool again from the beginning, especially after external side effects in the previous turn.
+6524	4. What schema validation can guarantee
+7748	JSON Schema can constrain field types, enumerations, required fields and extra fields; it cannot determine whether an order belongs to the current user or prove that
+19377	points to the user's authorized repository. Structured output is a foundation of protocol reliability, not the endpoint of business trustworthiness.
+18069	Convert arguments to clearly typed internal objects, then validate semantics. A file-reading tool should at least constrain the root, allowed file types, maximum byte count, symlink policy and encoding-failure behavior. Update tools also need expected-version comparisons to avoid applying changes generated from old code to new code.
+18145	Exceptional results should have actionable meanings.
+15130	can guide a different way to locate the target;
+25173	means changing the spelling cannot bypass the restriction;
+25241	requires rereading;
+25818	means it is uncertain whether the external action occurred. Wrapping them all as "Tool failed, please retry" encourages incorrect recovery strategies.
+6640	5. How tool descriptions and returned content affect the model
+17747	Tool names and descriptions guide the model's action selection. State applicable situations, key arguments and return semantics without exposing every internal service detail. For easily confused read/write tools, emphasize side effects; for search tools, return hit locations, excerpts, versions and truncation status, which are easier to use than tens of thousands of unstructured text lines.
+12145	Returning less is not an absolute optimization. A hit line alone may omit prerequisites that determine a branch; a summary alone may lose evidence. Better interfaces support locating first, then reading contiguous ranges, with explicit completeness. Letting the model expand evidence gradually is more robust than tools permanently discarding key information themselves.
+18226	Current tool schemas also occupy context. With many tools, a discovery entry point can be supplied first and relevant definitions loaded later, but only if the harness supports this mechanism. "Automatic JIT" in a skill file does not mean the executor implements on-demand tool discovery.
+6715	6. Boundaries of the optional online adapter
+12276	uses the official Responses interface and requires an explicit
+9963	, a user-specified model and a key in an environment variable. Only read-only file tools are exposed, with no Shell, writing or deployment tools; network requests are not retried automatically to avoid unclear duplicate costs. Response output items retain their structure when returned.
+28456	The accompanying results contain no measurements of this online entry point, so service compatibility, model capability, actual billing and real-task outcomes are all marked unmeasured. Readers should use only manually prepared sample directories without secrets; file contents will be sent to the model service. The root-directory check is not a production sandbox for a malicious concurrent filesystem; do not directly expose an entire home directory or enterprise repository.
+17735	Whether a call-end signal is still needed after the tool arguments' syntax is complete
+26392	Input and conditions.</strong> The stream first contains argument fragment
+29285	, and later may still contain further deltas or an end event for the same output item.
+11448	Temporarily parsable
+23052	The current string happens to be valid JSON
+15075	Only proves this prefix parses.
+14099	Protocol completion
+24133	Wait for argument or output-item completion as defined by the interface
+23400	Confirm there are no later revisions or additions.
+24409	Structural/business checks
+9247	n must be a positive integer within the limit
+16767	Complete syntax does not mean usable arguments.
+25936	Call once
+12013	Register execution state under a stable call_id
+28393	Avoid duplicate triggers from reconnection events.
+20132	Recover after disconnection
+10938	It is unknown whether the complete end event arrived
+19423	Query or reconstruct according to the protocol, without guessing completion.
+19014	Join the steps up.</strong> A parsable prefix, complete arguments, call completion and whole-response completion need not occur at the same time.
+26654	Limits and counterexamples.</strong> APIs differ in event names and completion boundaries; the teaching code implements only its declared subset.
+6792	7. Acceptance and failure localization
+18366	Four counterexamples must pass: UTF-8 split within a character, argument JSON split within a string, a completed call item followed by response failure, and a network disconnection after text arrives. The first three test protocol state machines; the fourth checks whether a human-visible answer is wrongly treated as task completion.
+25033	If the model repeatedly calls nonexistent tools, compare this turn's actual tool schema with the returned name before adding prompt warnings. If a tool exists but permissions block it, inspect identity, harness configuration and call scope. The model should not have to guess hidden executor-configuration errors.
+9512	← 06｜The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling</a><a href="08.html">08｜Inside the harness: decision, execution, persistence and crash recovery
+22266	Follow this chapter through its objects and states</a><a href="#topic-2">Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#c07-h1">1. Treat the model service as a stateful protocol, not a string function</a><a href="#c07-h2">2. Streams do not arrive as complete characters or JSON objects</a><a href="#c07-h3">3. Output-item completion and whole-response completion</a><a href="#c07-h4">4. What schema validation can guarantee</a><a href="#c07-h5">5. How tool descriptions and returned content affect the model</a><a href="#c07-h6">6. Boundaries of the optional online adapter</a><a href="#c07-h7">7. Acceptance and failure localization
+5997	08｜Inside the harness: decision, execution, persistence and crash recovery — AI Systems Engineering
+22320	Follow this chapter through its objects and states</a><a href="#topic-2">A timeout tells you nothing arrived, not that nothing happened</a><a href="#c08-h1">1. A minimal agent loop actually has three kinds of state</a><a href="#c08-h2">2. Why unknown is necessary alongside success and failure</a><a href="#c08-h3">3. How this book implements its action journal</a><a href="#c08-h4">4. Why compare-and-swap is more reliable than applying model patches directly</a><a href="#c08-h5">5. Completion decisions should be tied to current artifacts</a><a href="#c08-h6">6. Boundaries between a single agent and deterministic control</a><a href="#c08-h7">7. Acceptance questions</a><a class="sub ap-toc" href="#agent-study-recovery">An actual crash window</a><a class="sub ap-toc" href="#agent-study-hooks">Arguments rewritten after approval
+23101	Goal: wrap probabilistic suggestions in an observable, recoverable execution system, and know when no framework is needed. Experiment:
+17693	Crash recovery must preserve the gap between external actions and local records; adding a summary cannot resolve it.
+23170	Related step-by-step process: <a href="../../visual/F33.html">A timeout tells you nothing arrived, not that nothing happened</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24534	Related mechanisms to continue with: <a href="../../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat</a><a href="../../visual/F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+6041	1. A minimal agent loop actually has three kinds of state
+17571	Conversation state describes what the model saw; task state describes goals, completed actions and pending issues; environment state describes actual file, database and service contents. They may disagree. The model remembering a test run does not mean it matches current code; a database record saying "Committing" does not mean the external commit has not occurred.
+20851	This book's minimal loop constructs context, gets model-proposed actions, validates, executes, records results, updates state, then decides whether to continue or stop. It need not introduce planning, review, memory and grading agents by default. Add a division of work only when a specific failure mode demonstrates its value.
+11461	For diagnosis, internal events can distinguish
+10223	. These are local states for side-effect operations; an ordinary file read does not require a complex state database. Task scale and action risk determine persistence granularity.
+6278	2. Why unknown is necessary alongside success and failure
+20322	Timeline: a write request reaches a remote service, which executes successfully, but the connection breaks before returning the result. The client sees a timeout and cannot determine execution from local information alone. Treating timeout as failure and resending may create duplicate orders or emails; treating it as success may falsely report completion.
+21843	Correct recovery depends on external capabilities: if idempotency keys are supported, query or retry with the same business-operation key; if final state is readable, reconcile it; if neither is available, keep the outcome unknown and seek human confirmation. Retry count is not the core issue; semantics is.
+20946	Local files have a similar window: the file was atomically replaced, but the process crashed before writing a completion log. The next execution must not inspect only log state
+17646	and edit again. Compare whether the current artifact already matches the intended result.
+6431	3. How this book implements its action journal
+12268	uses SQLite to record
+9964	, relative paths, before/after hashes and status. Before writing, it compares current content with expected. If an operation ID already exists with different arguments, reuse is rejected; if the file already equals the target content, recovery marks it reconciled rather than writing again.
+22410	The test does not simulate a crash by changing a boolean; it starts a subprocess and, after replacing the file, calls
+10163	. The parent process then recovers and checks file contents and the journal. This verifies recovery across an actual local crash window. It does not verify power loss, directory fsync, concurrent writers, cross-database transactions or remote Exactly-once.
+8822	A SQLite transaction constrains updates within its own database, but cannot automatically include external file replacement or remote APIs. Without a shared transaction, two systems need reconciliation, idempotency or compensation; writing
+17653	in a table does not grant atomicity.
+6520	4. Why compare-and-swap is more reliable than applying model patches directly
+21720	The model generates a patch from version A while the user changes it to B. An executor that writes without checking overwrites the user's changes. CAS requires current content to still equal the expected content read earlier; otherwise it returns stale and rereads. Versions may use commits, ETags or content fingerprints, depending on artifact boundaries.
+13535	Content hashes have meaningful semantics for this concurrency precondition. Hardcoding the full hash of every skill document in tests so mere wording changes cause failure is usually a brittle snapshot. The same technique has different value in different places; neither reject it categorically nor overuse it everywhere.
+20820	This book's implementation is a single-writer reference without TOCTOU defenses against malicious processes. The filesystem may change between path checks and opening; production isolation needs directory handles, safe-open flags, containers/sandboxes or permission limits. Do not package a teaching CAS as a security product.
+17817	Engineering case · D03
+19932	Fault injection: killing the execution process the moment after the side effect commits
+16970	Why the experiment must actually exit the process
+11734	Raising an exception inside a function may trigger finally blocks, buffer flushes or test-framework recovery; it does not represent a process abruptly disappearing. This book's worker calls os._exit(17) after the downstream SQLite commit, deliberately leaving the confirmation journal at pending. Data is written only in a temporary directory, with no external account or actual payment.
+11320	Two databases model different atomic boundaries: external.sqlite stores effects, and journal.sqlite stores execution state. Recovery without an idempotency key writes a second effect; the stable-key path uses a downstream unique constraint to retain one. The experiment demonstrates boundaries, not coverage of network latency, distributed replication or multi-region failures.
+25908	Look for commit order when reading the source
+12847	Locate CREATE/INSERT and commit first, then the crash point and recovery conditions. If the crash occurs before the side-effect commit, both paths may execute only once, so the test cannot distinguish the window that actually needs protection. The valuable point is a fault location that kills an incorrect implementation.
+17558	Adapting an existing agent
+11806	Start with one specific tool that has side effects: define a business-intent ID and record a normalized argument fingerprint; distinguish not occurred, occurred and unknown in return states; use downstream deduplication when available, otherwise add verification and human recovery. Do not build a universal transaction platform for one local read-only search tool; publishing, deletion and commits still need more than natural-language summaries for tracking.
+20705	Unresolved boundaries
+20963	This experiment does not verify power-loss durability, database replication, unique-key expiry or consistency across repeated server responses. Production interfaces must also define idempotency retention, same-key/different-argument handling and whether late requests remain valid. The textbook provides a runnable minimal proof, not whole-system exactly-once certification.
+7341	D03: how to read these results beyond "passed"
+18811	Separate remote effects before the crash from local logs after it. Side-effect counts here come from a temporary-database experiment; stable-key and no-stable-key paths are independent controls.
+13088	Related question: <a href="../../chapters/09.html#engineering-E18">E18: The model finishing, the tool finishing and the task completing: three kinds of "done" cannot share one boolean
+7539	E41: The external action succeeded but the log never got to confirm it: why can a local transaction not guarantee exactly-once execution?
+7543	E42: Three layers each retrying three times: why does the bottom one get hit 27 times?
+16728	For the full mechanism and a continuing example, see <a href="../../chapters/10.html#agent-practice-hooks">Why can a pre-check and a post-check not replace each other?</a>; this section retains its original derivations and experiments. The two explanations address different levels and do not replace one another.
+6639	5. Completion decisions should be tied to current artifacts
+25579	Record artifact versions at test start and end. If the file changes after tests pass, the green result is invalid, and
+19329	refuses to treat it as current evidence. Even edited comments invalidate this teaching hash; that is a conservative artifact-freshness choice. Large repositories can use dependency-aware strategies, but must prove the risk of omissions acceptable.
+15482	Test results also do not mean every user goal is met. A feature may pass tests but lack migration, documentation or deployment steps. Check necessary completion items against the task's original requirements, instead of demanding heavy deliverables for every project by default.
+28608	Recovery needs stopping conditions too. When the model hits the same tool failure twice with no new evidence or changed action, switch locating methods or explicitly report a block instead of looping until the budget is exhausted. Recoverable transient rate limits can use backoff; permission denials must not be bypassed by changing commands.
+6713	6. Boundaries between a single agent and deterministic control
+15632	What belongs to the model? Uncertain locating, candidate plans, evidence connections and trade-offs. What belongs to the program? Parsing, authorization, file-version comparisons, idempotency keys, timeouts and billing budgets. Not every business judgment can be made deterministic, but reliably verifiable parts should not depend only on telling the model to "Be careful".
+25278	Planning can be a short task-state record rather than a separate agent. Review can check the diff and tests in current context without rereading the whole repository every time. A database can be a local file rather than beginning with an event-bus design. The goal is fewer actual failures, not the maximum number of architectural components.
+16179	The crash window between writing an external file and committing the local database
+26393	Input and conditions.</strong> The process first writes v8 with os.replace, then marks database action c7 successful; it crashes between the two steps.
+17691	Before the crash
+20091	The file is already v8
+20053	The database still says running.
+28489	Restart
+25004	Repeating the write based only on the database
+15195	May duplicate side effects or overwrite a new version.
+21389	Check
+17545	Compare current file content, the expected artifact and action identity
+23388	Confirm whether c7's external result has occurred.
+12475	Repair state
+25666	Record success when evidence agrees
+10921	Do not execute blindly again.
+26064	Cross-system limitation
+25009	If the external action cannot be queried
+20936	A local transaction cannot magically include it; idempotent interfaces, compensation or human verification are needed.
+18937	Join the steps up.</strong> Two individually atomic operations do not automatically form one atomic transaction across resources.
+26791	Limits and counterexamples.</strong> This describes a common failure window; it cannot guarantee exactly-once execution for general external writes.
+16387	A subprocess crashes after writing a file; on recovery, the file matches neither before nor after. What should happen? Treat it as an external edit or state conflict, stop overwriting, preserve evidence and investigate again. Do not guess which version is "more reasonable".
+14911	A cancellation request was sent; can every side effect immediately be declared stopped? No. The executor's cancellation support and the operation's state when cancellation arrives must be known. Irreversible external actions still need reconciliation. A reliable agent is first a reliable execution system, then a high-quality language model.
+9513	← 07｜Inside the model interface: messages, output items, SSE and the tool-call protocol</a><a href="09.html">09｜Tracing the Codex source: from repository rules to history, loop and compaction
+22319	Follow this chapter through its objects and states</a><a href="#topic-2">A timeout tells you nothing arrived, not that nothing happened</a><a href="#c08-h1">1. A minimal agent loop actually has three kinds of state</a><a href="#c08-h2">2. Why unknown is necessary alongside success and failure</a><a href="#c08-h3">3. How this book implements its action journal</a><a href="#c08-h4">4. Why compare-and-swap is more reliable than applying model patches directly</a><a href="#c08-h5">5. Completion decisions should be tied to current artifacts</a><a href="#c08-h6">6. Boundaries between a single agent and deterministic control</a><a href="#c08-h7">7. Acceptance questions

@@ -8,13 +8,29 @@ so it is checked here against the file system rather than by reading the rule.
 
 Run: python3 i18n/links.py [--lang=en]
 """
-import re, sys
+import sys
 from collections import Counter
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LANG = next((a.split('=', 1)[1] for a in sys.argv[1:] if a.startswith('--lang=')), 'en')
-REF = re.compile(r'\b(?:src|href)="([^"]+)"')
+
+class References(HTMLParser):
+    """Actual element attributes, excluding escaped source examples and JS."""
+
+    def __init__(self, document):
+        super().__init__(convert_charrefs=True)
+        self.urls = []
+        self.feed(document)
+        self.close()
+
+    def handle_starttag(self, tag, attrs):
+        self.urls.extend(value for name, value in attrs
+                         if name in ('src', 'href') and value)
+
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
 
 
 def main():
@@ -30,7 +46,7 @@ def main():
     missing, pending, kinds, checked = [], Counter(), Counter(), 0
     for f in pages:
         doc = f.read_text(encoding='utf-8')
-        for u in REF.findall(doc):
+        for u in References(doc).urls:
             if u.startswith(('http://', 'https://', '//', 'mailto:', 'data:', '#')):
                 continue
             bare = u.split('#')[0].split('?')[0]
