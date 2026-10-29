@@ -1,0 +1,700 @@
+494	Basis and scope of the engineering deep dive</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="../../engineering/agent-evidence.html"><span class="rail-name">Evidence for agent mechanisms
+495	Object one
+496	Object three
+497	Object two
+498	Matching section
+499	Facts it supports
+500	Check date
+501	Version / date
+502	Limits of use
+503	Every explanation below is expanded and uses the same data as the player; it is not a second worked example with different input.
+504	See step 1 above
+505	See step 2 above
+506	See step 3 above
+507	See step 4 above
+508	Step-by-step explanation and calculation record
+509	AI Systems Engineering: from the basics to the internals<br/><a href="../../contents.html">Book contents
+510	Row 0
+511	Official source / pinned commit location
+512	A teaching algebra, data structure or run-contract simulation with explicit input; not an integration with the corresponding vendor's product, and not a performance measurement.
+513	Local Chinese reading notes
+514	Paper · source recorded on 2026-10-17
+515	. Unless noted otherwise, the numbers and settings in this section are original teaching examples; the source does not replace the explanation here.
+516	Start from concrete objects and small examples, to understand the computation and the conditions under which it applies.
+517	Step-by-step figures</span><span>approx. 1,000 characters</span><span>1 controllable demo
+518	Self-check 1
+519	Self-check 2
+520	End-of-lesson self-check
+521	Full runnable code
+522	Further reading: related system questions
+523	See the program result for this example
+524	Index, code or reference character kept; navigation and a book-wide entry added
+525	Reading as an index or code page kept
+526	Page contents
+527	Back to the step-by-step explanation
+528	Approach / object A
+529	Approach / object B
+530	Approach / object C
+531	Row 1
+532	Row 2
+533	Row 3
+535	A concrete process to help: <a href="../visual/F22.html">Break one agent task into the turns that actually happen</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+536	. The source is limited to commit 86e17e98c7f9 and the paths actually read; article experience, public documentation and original teaching experiments are labeled separately.<a href="../../engineering/agent-evidence.html#acquisition">See how it was obtained, what was read, and the limits
+537	Original basis (optional cross-check)
+538	Local check example: the input below follows the conditions listed for this example, and its intermediate values cannot be joined to the calculation record of the worked model.
+539	Step 1 of 4
+540	Each question in this chapter lists the groundwork it needs. You can take the matching Foundations lesson first, or use the self-check to confirm how well you have it.
+541	Prerequisites for this chapter
+542	A term with a dotted underline can be clicked for a quick reference. Read the definition of a letter in a formula first; do not let a guessed abbreviation stand in for the derivation.
+543	Core question
+544	Location in the text
+545	Step 1 of 5
+546	Schema and Structured Outputs
+547	Original paper</span> <span class="badge gray">Relevant original text checked
+548	A schema is a set of structural rules about fields, types and the like; a structured-output mechanism makes it easier for the model to return data that follows those rules. Valid fields still do not mean that the target file exists, that access has been granted, or that the request is right for the business.<span class="concept-micro">Independent example: path is required to be a string; {"path":3} does not match the type rule, and {"path":"missing.py"} follows the structure yet may still find no file.
+549	See step 5 above
+550	Full mechanism updated after verification
+551	The unit of fragment used by the model's tokenizer. Example: it may be a word, part of a word, punctuation or some bytes.
+552	The matching numeric record in run.json
+553	Facts and limits
+554	From a tiny local CPU experiment only; no conclusion about commercial capability or GPU performance follows from it.
+555	From the explanation on this page to an implementation you can inspect
+556	Uses the same saved weights and no PyTorch; it is for recomputing, not for training again.
+557	The actual numbers at initialization
+558	Forward pass, loss and update
+559	Causality, gradients, label shift and cache position each have a positive check and a counterexample.
+560	A fixed one-layer, four-dimensional teaching model; not a complete implementation of any commercial model.
+561	Actual run record
+562	Every parameter can be inspected; the initial values are not the parameters after training.
+563	Local basis
+564	An independent forward-pass implementation
+565	What to check
+566	Whether the error can be caught
+567	Σ: sum term by term over the subscript
+568	Gives 
+569	System mechanisms: check them closely with source, counterexamples and conditions
+570	Σ is shorthand for addition. The subscript says which term varies; a subscript that is not summed over stays fixed. It is not an extra parameter, and it does not mean concatenating arrays.<span class="concept-micro">Independent micro-example: Σᵢ xᵢyᵢ with x=[1,2] and y=[3,4] is just 1×3+2×4=11.
+571	θ has not changed yet; the training objective lies outside the forward pass
+572	and
+573	Fixed initial parameters θ₀; training input 0 is [BOS,我,爱,学习,！]
+575	Forward pass before the update
+576	Evidence
+577	Limits of use: the worked model only runs the structure in the configuration shipped with this book. What this section says about post-training or modern structures rests on <a href="../reference/model-sources.html">the corresponding original papers and official interface material</a>, and does not mean the local training has already implemented those extensions.
+578	An execution system that calls the model and tools according to the task and what it observes, and keeps the work moving. Example: not just one very long prompt.
+579	Connecting the ideas
+580	Column 4
+581	Reading guide and appendix
+582	checkpoint: you must look at the object that was saved
+583	and
+584	Back to the full explanation in Lesson 36 →
+585	A phone-friendly step-by-step version of the figure
+586	Official documentation · source recorded on 2026-10-17
+587	Range obtained:
+588	Unless marked otherwise, the numbers come from the teaching conditions this chapter sets out explicitly; the schematic expresses the structure of the algorithm and does not represent commercial model parameters or real GPU execution speed.
+589	(1-based requested range; to the actual last line when the file is shorter). <strong>Source Git blob:
+590	IDE, CLI, UI and DOM
+591	JSON: structured text, not an action being executed
+592	L=2.244673167946; optimizer.step has not happened yet
+594	The further-reading list keeps its numbering and its A/B/C priorities; each item includes a mechanism explanation, its limits and an original exercise.
+595	The same θ₀, the same full batch: average loss over 10 valid targets
+596	Backward pass before the update
+597	The in-depth chapters for every item in this module:
+598	Items and local notes
+599	A model checkpoint saves weights or training state; activation checkpointing saves a few intermediate nodes so they can be recomputed on the backward pass; an agent task checkpoint saves how far execution has got. The three share a name, but what they restore is entirely different.<span class="concept-micro">When you see "checkpoint", first ask whether it restores parameters, recomputes activations, or continues a task. An agent saving a summary does not update model weights.
+600	A concrete process to help: <a href="../visual/F40.html">Find which layer the error happens in before talking about changing models</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+601	Lesson 01
+602	Lesson 02
+603	Lesson 26
+604	This is not a hand-supplied upstream gradient; it comes from the analytic backward pass of the actual cross entropy. Each row corresponds to one input position of sample 0; the full derivation is in M14—M15.
+605	Item-by-item Chinese lecture notes
+606	IDE is the integrated development environment, CLI the command-line interface, UI the user interface, and DOM the tree of structural objects of a web document. The code, selection and page information that each entry point attaches automatically can differ.<span class="concept-micro">The model seeing the selected function in the IDE does not mean the same task in the CLI has received that function; check this turn's input objects first.
+607	JSON is a text format that expresses data as objects, arrays, strings, numbers and so on. A braced object maps field names to values; a bracketed array keeps the order of its items. Parsing JSON only yields data; it does not automatically run a tool name inside it.<span class="concept-micro">Independent example: {"path":"a.py","limit":3} has two fields; "3" is a string while 3 is a number, and a schema can require either one.
+608	Query, Key, Value: three intermediate numeric representations
+609	Topic studies</span><span>approx. 1,000 characters
+612	A concrete process to help: <a href="../visual/F29.html">From two candidate lists to usable evidence</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+613	Lesson 05
+614	approx. 
+615	q is one row of query representation for the position receiving information; k is one row of matching representation offered by a readable position; v is one row of content representation that position contributes to the mix. Capital Q/K/V collect several rows into tables. They are computed from the input and the parameters, and they carry the separate jobs of scoring and of supplying content.<span class="concept-micro">One q dotted with two k gives two scores; softmax turns them into two shares; those shares multiply the two rows of v, and the results are added. Nothing here generates a search term, and nothing here picks an answer directly.
+616	Recover
+617	Date / version:
+618	A concrete process to help: <a href="../visual/F20.html">Fewer parameters, fewer bits and fewer activations are not the same optimization</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+619	An interface on which programs agree about input, output and behavior. Example: not the buttons of a human interface themselves.
+620	Lesson 23
+621	Column 5
+622	Column 6
+623	Column 7
+624	01｜What input really is: from the user's sentence to model tensors
+625	Why
+626	Shape [2,5,4]; sample 0 is shown here, and the numbers come from before the first update. What the columns mean changes with the step: for score/A they are Key positions, for logits/probabilities they are the vocabulary, and otherwise they are features.
+627	Read this process through its objects and evidence
+628	Document
+629	Moment
+630	What this step means
+631	State / scope
+632	A concrete process to help: <a href="../visual/F11.html">Q/K/V: first compute where to read from, then how much to read in</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+633	Observation point
+635	OAuth, scope and authorization
+636	SQL, SQLite and the transaction object
+637	Top-k, Top-p and renormalization
+640	A concrete process to help: <a href="../visual/F34.html">A test looks for counterexamples; it does not stamp code green</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+641	A concrete process to help: <a href="../visual/F36.html">It went up ten points — so why can we not conclude anything yet?</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+642	Lesson 04
+643	Lesson 22
+644	Passed
+645	Stage
+646	Verification
+647	02｜One Transformer forward pass: tensor by tensor, operator by operator
+648	AI Systems Engineering: from the basics to the internals<br/><a href="contents.html">Book contents
+649	SQL is the language for working with relational data; SQLite is a database engine that embeds into an application. Writing operational state into a database is a persistence action by the host program; it does not modify the model's neural network parameters.<span class="concept-micro">One transaction can save the business row in this database together with a pending-send record, but that does not let you infer that the mail service committed atomically along with it.
+650	Top-k keeps the k items with the highest probability; Top-p sorts by descending probability and keeps the leading candidates until the cumulative probability reaches a threshold. When used for sampling, the kept candidates have to be renormalized over the remaining total mass.<span class="concept-micro">Here k is a number of candidates and p a cumulative-probability threshold; k is not the attention Key table K, nor the representation width d_k.
+651	Cost / error condition
+652	Vectors with the same number of dimensions need not belong in the same similarity space
+653	In an authorization setting, OAuth lets an application obtain access credentials according to what was granted; a scope declares one class of access range, and the resource service should still check the specific permission. In a memory or task setting, scope can instead mean only the range over which something applies, and must not be conflated with a login credential.<span class="concept-micro">Being granted "read the calendar" is not being granted the deletion of every event; a successful connection is no proof that an operation was approved.
+654	How to do it
+655	How to verify it
+656	The numerator of cost per successful task must include failures and rework
+657	None
+658	Time
+659	What actually changes at this step
+660	Source S008, attention and the original Transformer architecture
+661	See the measured results
+662	Step / object
+663	A concrete process to help: <a href="../visual/O06.html">Continuous batching: when a seat frees up, take the next one</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+664	A concrete process to help: <a href="../visual/O11.html">Multi-agent: work that can run in parallel matters more than the number of agents</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+665	Lesson 17
+666	Step 1 of 6
+667	Lesson 29
+668	Lesson 31
+669	Lesson 53
+670	Result
+672	DAG, dependencies and the critical path
+673	MHA, MQA, GQA: how heads are shared
+674	Mermaid source file</a>. The layout of the figure expresses the order of data and calls only; it does not represent computation time.
+675	Patch, image channels and the visual projection
+676	Event
+677	Code path:
+678	Handling
+679	A description of the constraints on the structure of data — fields, types and the like. Example: path being a string does not mean any path may be read.
+680	Work tree
+682	Approach
+683	Source
+684	Aggregate
+685	A concrete process to help: <a href="../visual/F27.html">Compaction must keep the facts an action depends on</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+686	A concrete process to help: <a href="../visual/F38.html">A trace should tell you causation, not just timestamps</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+687	Lesson 07
+688	Lesson 44
+689	These are identifiers for objects at different layers: a tool call, an output item, a request or a response. They match increments and results back to the right object; they are not the token IDs of the model input, and they are not business idempotency keys by nature.<span class="concept-micro">Two read_file calls can carry c1 and c2; when the results come back in the reverse order they are still paired by call identifier, not guessed by tool name.
+694	A DAG is a task dependency graph that is directed and has no cycles. The arrow A→B means B depends on A finishing; the critical path is the longest dependency chain, the one that fixes the earliest finishing time given the task durations and dependencies.<span class="concept-micro">Independent example: A takes 2 seconds, B and C depend on A, take 3 and 5 seconds and can run in parallel, so finishing both after A takes at least 7 seconds — not 2+3+5=10 read as wall-clock time.
+695	DPR, DPI and coordinate units
+696	LoRA, low rank and r
+697	Why can pass@k, pass^k and a single-attempt success rate not be used interchangeably?
+698	An attention head is one path that matches and then aggregates content. MHA usually gives every query head its own K/V head; MQA has several query heads share one group of K/V; GQA sits between them, sharing by group. These are structural choices, not a switch to be flipped at run time.<span class="concept-micro">Independent shape example: 8 query heads and 2 K/V heads, grouped evenly, means every 4 query heads share 1 group of K/V; the cache is accounted for by the number of K/V heads.
+699	Unchanged
+700	The results below are produced by the scripts shipped with this book. They are not LLM or product performance data.
+701	Save the Python script
+702	Candidate
+703	Back to the full explanation in Lesson 37 →
+704	A patch in an image is a small block cut out of it, and RGB is the 3 channels red, green and blue; a patch in software engineering is a code patch — the same word for both. An image block, once flattened, can become a vector through a learnable transformation; it is not a lookup in a text vocabulary.<span class="concept-micro">Independent image example: one 16×16×3 block holds 768 numbers, and after projection it can become d features. d is fixed by the model design.
+705	Full teaching code
+706	Official engineering article · source recorded on 2026-10-17
+707	Normalization
+708	How to observe and verify
+709	Authorization
+710	Step
+711	A concrete process to help: <a href="../visual/F31.html">Long-term memory is not a note that is always right</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+712	A concrete process to help: <a href="../visual/F37.html">Material can influence a model without thereby gaining permission</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+713	Lesson 18
+714	Lesson 33
+715	Lesson 46
+716	Row 4
+717	Row 5
+718	Row 6
+719	Row 7
+720	A green test has to be bound to "it really ran" and "the current version"
+721	Observation
+723	Command to run
+724	Run result
+725	Example of a run result
+726	This is only a teaching frequency for a two-dimensional rotation. Real RoPE uses different frequencies for the paired components of Q/K; it acts on the matching representation, and does not simply add the position ID to the token ID.
+727	03｜Attention, pressed further: position, masks, multiple heads and backpropagation
+728	BM25 and N, df, k₁, b
+729	DPR usually means the ratio of device pixels to CSS pixels; DPI means dots per inch. Screenshot pixels, the interface's logical coordinates and screen coordinates need not share a unit, and there may also be scaling, cropping and offsets.<span class="concept-micro">In an independent example where DPR=2 is stated and the other mappings agree, a CSS x-coordinate of 100 corresponds to 200 device pixels; this conditional relationship cannot be carried straight over to every screenshot.
+730	LoRA represents part of a weight increment as the product of two smaller matrices instead of retraining the whole large matrix. r is the inner dimension, and it bounds the maximum rank of that product. Where sources use a row-vector or a column-vector convention, the left-right order of A and B can differ.<span class="concept-micro">Micro-example in the right-multiplication convention: with W[4,6], the increment A[4,2]B[2,6] is still [4,6]; r=2. A here is not the table of attention shares.
+731	MoE, experts and the router
+732	q=clip(round(x/0.1),−8,7); x ≈ 0.1q
+733	∂, ∇: partial derivative and gradient
+734	First-hand textbook / official documentation · source recorded on 2026-10-17
+735	Two model calls in one task, and what each of them knows in addition
+736	Kept
+737	Original research paper</span> <span class="badge gray">Relevant original text checked
+738	Counterexample
+739	Discovery
+740	See step 6 above
+741	Written successfully but not confirmed: how a retry becomes a duplicated side effect
+742	The direction of data and calls is as drawn by the lines in the figure; parameters and activations, and training and inference, are labeled separately.
+743	Consolidate
+744	Relevant is not the same as usable: from recall to evidence closure
+745	Lesson 11
+746	Lesson 37
+747	Lesson 47
+748	Lesson 62
+749	Lesson 66
+750	The surrounding program that organizes the model's input, tools, state, permissions and feedback. Example: the model proposes reading a file; the harness runs it and fills the result back in.
+751	Yes
+752	Explanation
+753	Diagnosis
+754	The unnormalized score the output projection gives each vocabulary candidate. Example: it can be negative, and it is not yet a probability or a token ID.
+755	Selected source extract:</strong> not the complete file and not independently compilable; the full-text blob value only identifies the source, and makes no claim that a whole-file hash has been verified for the extract.
+756	Quantization
+757	12: both right
+758	1: regressed
+759	2: both wrong
+761	5: fixed
+762	BM25 compares term frequency and length inside the same denominator
+763	BM25 is a scoring formula for term-based retrieval. In the usual notation N is the total number of documents, df the number of documents containing the term, tf the term frequency in the current document, |D| the length of the current document and avgdl the average length; k₁ and b are the settings for term-frequency saturation and length correction.<span class="concept-micro">k₁ is not the Key vector k₁, and b is not a neural network bias. The score only orders candidates; 8.2 cannot be read as 82% accuracy.
+764	BOS / EOS: sequence boundary markers
+765	The merge order in BPE decides what can still be merged later
+766	CAS, version checks and TOCTOU
+767	The longest dependency path in a DAG decides the earliest that parallel tasks can finish
+768	FlashAttention: changing how intermediate data is stored and read
+769	GQA keeps several queries, and only has them share fewer K/V
+770	MoE is a model structure that contains several sub-networks; the router selects or weights a few experts for the current token's representation. An expert is usually a numeric sub-network, not a chat agent given a prompt such as "math teacher".<span class="concept-micro">Independent example: with 4 experts and 2 chosen per token, one pass activates only 2 of the expert paths; the parameters and routing state that the model design requires still have to be stored.
+771	MoE routing results have to be followed token by token
+772	Norm, LayerNorm, RMSNorm: not a probability normalization
+773	RRF: fusing by rank
+774	What RoPE keeps is the relative angle, not a position that starts over each turn
+775	SSE, chunk, delta: different layers of fragmentation
+776	A skill applied effectively is a chain of evidence, not one "loaded" log line
+777	Parallel spans in a trace cannot simply be added up into the user's waiting time
+778	d_k, d_v, Dh: the width of each row of representation
+779	Whether "I am 80% sure" is reliable has to be calibrated against a set of actual results
+780	∂L/∂w asks how the loss L changes when w changes a little while the other independent variables are held fixed. These rates of change across many parameters make up the gradient ∇L. They are derivative notation, not two ordinary numbers divided by each other.<span class="concept-micro">Independent micro-example: for L=w², the gradient at w=3 is 6. In the simplest update w←w−η×6, η is the learning rate.
+781	The execution trace of one task, and the operation spans inside it that have a start and an end. Example: the durations of parallel spans cannot all be added up into wall-clock time.
+782	One answer has finished — so why is the task still not done?
+783	A group of inputs organized for computation together. Example: an ordinary sample batch does not let different users read each other's content.
+784	In a context budget, subtract the space that must be kept before selecting material
+785	Attention structures that differ in how query heads and K/V heads are shared. Example: sharing more K/V can reduce the cache, but it does not guarantee identical quality.
+786	Why does code evidence need the work-tree version, and not just the commit?
+787	Task goal
+788	Position is not a contest of numeric size. The causal rule lets the current query read only itself and earlier keys; later positions cannot be read even when they are already in the training input array.
+790	Whatever is gained by trying the cheap model first has to have rework and missed checks subtracted from it
+791	Strategies that keep candidates by their number or by cumulative probability. Example: after the filtering, the result usually has to be renormalized.
+792	Paging changes physical placement, not the logical order of the tokens
+793	The token just selected has not yet entered the turn of computation that is its own
+794	While a compaction candidate is being produced, a new tool result must not be overwritten by the old snapshot
+795	The backward pass is not the forward arrows played in reverse; it distributes "influence" along the dependencies
+796	Paired results on the same 20 questions. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+797	Meaning
+798	Back to the full explanation in Lesson 40 →
+799	Back to the full explanation in Lesson 62 →
+800	Fixed experiment record
+801	Image-block vectors and text embeddings come from different inputs, yet can feed into the same computation chain
+802	Foundation lessons: read the step-by-step explanation and the shared worked example first
+803	Byte completeness, event completeness and argument completeness are handled by different buffers
+804	Full program and how to reproduce it →
+805	Official engineering article</span> <span class="badge gray">Relevant original text checked
+806	Take the exponential of each score, then divide by the sum of all the exponentials. Example: the scores [2,1,0] after Softmax are about [0.6652,0.2447,0.0900].
+807	Enough average throughput does not mean peak requests avoid the queue
+808	A tool result arrives while the summary is being generated asynchronously — how is data kept from being lost?
+809	Shape
+810	Total passes
+811	It is the compensation when a draft is rejected that keeps the target distribution from being skewed
+812	New version 17/20
+813	New version failed
+814	New version passed
+815	A state in which it cannot be confirmed whether an external action has completed. Example: a timeout can happen after a successful execution.
+816	Why old K/V can be reused: a new token cannot reach back and change the old prefix
+817	Old version 13/20
+818	Old version failed
+819	Old version passed
+820	Old version result
+821	is
+822	Source S003, building effective agents
+823	Model
+824	A concrete process to help: <a href="../visual/F23.html">Complete characters, complete events and complete tool arguments are three separate gates</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+825	Related step-by-step process: <a href="../visual/F22.html">Break one agent task into the turns that actually happen</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+826	Lesson 08
+827	Lesson 13
+828	Lesson 29</a>. Reading order: confirm the run contract first, then the counterexamples and the fix, and test the limits last.
+829	Lesson 57
+830	Lesson 61
+831	Worked cases
+832	A cached prefix reuses an identical leading segment, not "roughly the same meaning"
+833	What it proves
+834	Patch
+835	Training VRAM is not the single sum "parameter count times two bytes"
+836	Shifting the training labels one slot to the right means every position answers for the next item
+837	Why is writing memory a pipeline with leases and acceptance?
+838	Continuous batching gives a freed slot to a new request, but a scheduling step is not an equal length of time
+839	A feed-forward sub-network usually applied at every position. Example: it often widens first and then narrows back, with a nonlinearity or a gate.
+841	How does a long task avoid starting over each time, or finishing falsely?
+842	07｜Inside KV cache, FlashAttention and PagedAttention
+843	08｜Inference serving: scheduling, throughput, latency and parallelism
+845	Agent log
+846	BOS is usually the special token for the start of a sequence and EOS the one for the end; a particular model or message template may use different names, counts and end markers. They are symbols in the input/output protocol, not proof of semantic correctness.<span class="concept-micro">Meeting an EOS does not automatically cut attention between two training samples; isolating the reads still needs a mask, or a sample boundary the implementation supports.
+847	CAS is a controlled operation that updates only after comparing that the expected version or value still matches. TOCTOU is the race in which something changes between the check and the use: a separate "look at the version, then write" is not automatically equivalent to an atomic CAS.<span class="concept-micro">If a patch was produced from version 7 and the version is already 8 at commit time, overwriting directly should be refused and the work redone; a concurrent insert between the comparison and the write has to be prevented as well.
+848	ColBERT and MaxSim
+849	I: the identity matrix
+850	In a layer formula, Norm stands for a normalizing function. LayerNorm usually subtracts the mean over one token's features, divides by the standard deviation, then scales and shifts; RMSNorm usually does not subtract the mean and scales by the root mean square. Neither of them is softmax.<span class="concept-micro">Independent micro-example, ignoring the small positive ε that stabilises the denominator and the learnable scaling: LayerNorm([1,3])=[-1,1]; RMSNorm([1,3])=[1/√5,3/√5].
+851	Precision, Recall, MRR and nDCG
+852	RLHF, the reward model and the policy
+853	For a document's rank r on each recall path, RRF contributes 1/(c+r), and these are added. c is a smoothing constant and r usually starts at 1; a candidate that did not appear on a path does not receive that path's contribution out of nowhere.<span class="concept-micro">Independent example: with c=10 and a document ranked 1 and 3 on two paths, it gets 1/11+1/13, about 0.167832. This is not adding the raw BM25 and cosine scores together.
+854	RRF contributes by rank and does not add raw scores. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+855	SSE is the text protocol for server-sent events; a network chunk is the stretch of bytes received this time; a delta is the incremental content of one output item. Their boundaries are not guaranteed to coincide. One complete event does not necessarily mean complete tool arguments either.<span class="concept-micro">The arguments may arrive first as {"path":"a and then as .py"}; they have to be assembled and the protocol's completion condition awaited — seeing a fragment is no reason to execute.
+856	Skill, JIT and the trigger description
+857	SwiGLU, Wg/Wu/Wd: two transformation paths, then combined
+858	d_k is how many components one Query/Key vector has; d_v is how many components one Value vector has. Dh, or d_h, is the single-head width in some chapters. They are size integers, not the k-th Key or some Value number.<span class="concept-micro">Shape micro-example: with Q[2,3], K[5,3] and V[5,4], the scores are [2,5] and the output [2,4]. A pairing width of 3 for Q/K with a Value width of 4 is still legitimate.
+859	pass@k and pass^k
+860	Why can assembling context not just be "take the first N items"?
+861	Downstream commits K
+862	Downstream ledger
+863	Why does every model call need a consistent context snapshot?
+864	Still K=done
+865	What is shared is the K/V groups; query heads are not dropped, and an old model is not free to compute a few heads fewer. A structural change usually needs matching model training or a conversion scheme.
+866	Score
+867	Publish
+868	Send operation K
+869	Back to the full explanation in Lesson 07 →
+870	Back to the full explanation in Lesson 45 →
+871	Back to the full explanation in Lesson 49 →
+872	Back to the full explanation in Lesson 54 →
+873	Back to the full explanation in Lesson 57 →
+874	Back to the full explanation in Lesson 61 →
+875	Host
+876	No success confirmation yet
+877	The crash falls between two independent commits. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+878	Worker finishes
+879	Tool A
+880	Tool B
+881	Tool definition
+882	Tool call
+883	Verified
+884	The parameter table, and the operation on it, that takes out the learnable vector for an input ID. Example: E has shape [6,4], and ID 2 takes row 2 of E.
+885	Excluded
+886	No record
+887	Query / reuse K
+888	Crash at this point
+889	Streaming back: when can the arguments really be executed?
+890	Test
+891	Test result
+892	Work out the waiting, the usage and the cost of failure from one trace
+893	Lesson 16
+894	Lesson 64
+895	Bound object
+896	Scope:</strong> official documentation read on 2026-10-21
+897	Record the success afterwards, without repeating the side effect
+898	Rule
+899	Compute the matching shares between the query and the readable candidates, then combine the content by those weights. Example: compute the scores and the weights first, then mix V with the weights.
+900	Evidence and the limits of understanding:</strong> record the task, a single attempt, the execution trace and the environment's result separately; resource limits and state that was not reset both confound a comparison.
+901	Lexical rank / vector rank
+902	Output
+903	By means such as tiling and online normalization, it avoids keeping the full attention score/weight matrix in slower VRAM for long; the target is still the same attention computation, and floating-point rounding can vary with the order of operations.<span class="concept-micro">It does not compress tokens permanently, and it does not skip any Key. Keep "not writing the whole table to VRAM" apart from "not doing this arithmetic at all".
+904	Pairing
+905	04｜Training mechanics: loss, the full backward pass and parameter updates
+906	05｜Post-training and model customization: objectives, structure and parameter adaptation
+907	09｜One full agent task loop: who is thinking and who is executing
+909	10｜How model output becomes a real tool call: protocol and execution boundary
+910	11｜Tool design and MCP: from connection to controlled execution
+911	12｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain
+912	13｜How each turn's prompt is assembled: context is a data pipeline
+913	14｜Context compaction: what is actually compacted, and how it is recovered once lost
+914	15｜The offline retrieval chain: how a document becomes a queryable index
+915	16｜The online retrieval chain: recall, fusion, reranking and evidence sufficiency
+916	17｜Code intelligence: from text search to symbols, versions and run evidence
+917	18｜Long-term memory: writing, retrieval, conflict, expiry and forgetting
+918	19｜Skills and routing: loading exactly the expertise needed
+919	20｜Multi-agent: the gain from parallelism and the loss at handoff
+920	21｜Reliable execution: retries, idempotence, crashes and state recovery
+921	22｜Engineering quality: from requirements to tests, and on to code that can really be delivered
+922	23｜Evaluation: how to prove an optimization really pays off
+923	24｜Security: instruction boundaries, sandboxes, permissions and memory poisoning
+924	25｜Production operation: traces, cost, queues, canary releases and rollback
+925	26｜Deep applications: composing components into a working system you can explain
+926	27｜Factual reliability, multimodality and interpretability: where the limits of capability lie
+927	28｜Deep research waters and whole-system judgment
+929	AI Systems Engineering · offline course<br/>Teaching examples, run records and product facts are told apart by the note beside each; for the version basis, see the sources page.
+930	ColBERT-style methods keep several token vectors for the query and for the document, then interact them late. The usual MaxSim takes, for each query token, the highest similarity with any document token, and then aggregates.<span class="concept-micro">It is not dual-encoder retrieval where "the whole document has only one vector", and it is not the self-attention output of each layer of a generative model.
+931	Dropout: the rule that randomly zeroes values during training
+932	GraphRAG, RAPTOR and hierarchical organization
+933	HyDE: the hypothetical text is only used to find material
+934	In a matrix formula I is usually the identity matrix: 1 on the diagonal and 0 everywhere else. At a compatible size, multiplying a vector or a matrix by I leaves the numbers unchanged. Wq=Wk=I is a special case chosen deliberately; one cannot infer from it that the projections of a real model are all the same.<span class="concept-micro">Independent micro-example: I=[[1,0],[0,1]], and [3,-2]I=[3,-2]. I here is not the position subscript written as the letter i.
+935	The roles in MCP: the application host, the protocol client and the server that provides capabilities. Example: one host can connect to different servers through several clients.
+936	RLHF refers broadly to processes that train behavior using human feedback. A reward model scores behavior such as an answer; the policy is the probability model that actually produces actions. Their jobs differ, and a high reward is not automatically factual correctness.<span class="concept-micro">Independent example: if the reward model prefers long answers, the policy may learn to write at length without being more accurate; the reward criterion therefore needs to be validated.
+937	What RRF fuses is ranks; it does not force the BM25 and cosine scores into a sum
+938	SLI, SLO and the error budget
+939	S is based on the original prefix
+940	S is invalidated
+941	TTL, valid time and record time
+942	Wq / W_Q: the query projection parameters
+943	pass@k-style metrics usually care about at least one success in k attempts; pass^k-style metrics stress succeeding every time. The exact basis of an estimate depends on the benchmark, and stopping after one success must not be conflated with being reliable every time.<span class="concept-micro">Under an independent, equal-probability assumption of p=0.8, at least one success in 3 attempts is 0.992 and all 3 succeeding is 0.512. If real tasks are correlated or differ in difficulty, it has to be computed differently.
+944	The old r7 text
+945	semantic, episodic and procedural memory
+946	sigmoid: maps a single number into the range between 0 and 1
+947	"Output stopped" and "task succeeded" have to be drawn on different state lines
+948	⊙: element-wise multiplication, not matrix multiplication
+949	The stale candidate is not installed
+950	No
+951	Does not cover r8
+952	Serial
+953	Binomial, standard error and the Wilson interval
+954	Delivery claim
+955	Can only describe r7
+956	Only proves the content changed
+957	Lease still held, validation passed
+958	Still produces S
+959	Expert guidance, and the resources that go with it, for an agent to use when needed. Example: not the same as the model gaining a new set of weights.
+960	A fidelity check has to ask "what can still be done correctly", not just whether the summary looks right
+961	After the edit
+962	Candidate → artifact
+963	Candidate artifact
+964	Hypothesis
+965	Allowed
+966	A system pattern that retrieves external material first and then has the model generate from that material. Example: having citations, or having retrieval, does not automatically make an answer supported by evidence.
+967	Global lease and workspace
+968	Critical path
+969	Key threshold
+970	Action
+971	Atomic replacement prevents a half-written file and CAS prevents an overwrite; they are not the same thing
+972	Feedback
+973	becomes
+974	For one path, the commit, the work tree and the editor can hold three different contents
+975	Four kinds of completion do not substitute for one another. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+976	Back to the full explanation in Lesson 42 →
+977	Back to the full explanation in Lesson 46 →
+978	Back to the full explanation in Lesson 52 →
+979	Back to the full explanation in Lesson 53 →
+980	In a capability-loading setting, a Skill is a reusable set of guidance and resources; JIT means loading only when needed, and does not necessarily mean a compiler's just-in-time compilation. A trigger description helps the model judge whether something applies; it does not grant tool permissions by itself.<span class="concept-micro">First judge whether the task needs a given skill, then read the details; a loaded skill is not the same as its requirements having actually been carried out.
+981	Foundations</span><span>approx. 2,500 characters</span><span>1 controllable demo
+982	Processing the stretch of input prefix that is already known. Example: it yields the representations at each layer and reusable K/V.
+983	External content can become evidence; it cannot issue itself permission to execute
+984	Invalidation condition
+985	What a sub-agent inherits has to be checked field by field, rather than declared to be "all of it"
+986	A completion condition should include "what must not change", not just one successful example
+987	Official interface documentation</span> <span class="badge gray">Relevant original text checked
+988	Experiments and verification
+989	Host → model
+990	No final test result yet
+991	Work-tree hash + command
+992	The tool exists, the model sees it, it can be called, it is authorized: four layers of checking
+993	Already edited to r9
+994	Finished
+995	An idempotency key is bound to one business intent, not to each HTTP attempt
+996	How can the open-source Codex and the Claude engineering articles be read against each other without manufacturing a conflict?
+997	To be verified
+998	Snapshot
+999	How is a knowledge graph turned into engineering judgment rather than a compendium of concepts?
+1000	Episodic memory
+1001	Execution
+1002	Extract
+1003	What the summary worker sees
+1004	Merging the generated summary with the live suffix. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+1005	The file has already been changed to r8
+1006	Text generation has ended
+1007	Minimal fix
+1008	Effective artifact + watermark
+1009	Source S084, effective context engineering
+1010	Source S096, context-augmented hybrid retrieval
+1011	Source S143, a complete method for agent evaluation
+1012	Source and scope
+1013	See the matching local file
+1014	Labels, teacher forcing and shift
+1015	Verification passes
+1016	Retrieval
+1017	Model → host
+1018	Model response
+1019	State at this point
+1020	Active history
+1021	Edited after the test
+1022	Test running
+1023	How does a progressively loaded skill go from "a file" to actual capability?
+1024	Source event → candidate
+1025	Source file
+1026	The source and the version chain of evidence. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+1027	Environment + run input
+1028	A concrete process to help: <a href="../visual/F18.html">Training: give every position a "what comes next" question</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
+1029	The interface was read correctly — so why can the action still click the wrong thing?
+1030	Lesson 01｜An agent is not another neural network: the loop explained with one file read
+1031	Lesson 33</a>. Reading order: confirm the run contract first, then the counterexamples and the fix, and test the limits last.
+1032	Lesson 42
+1033	Lesson 49
+1034	Lesson 58
+1035	Precision looks at how many of the returned results are relevant; recall looks at how many of the relevant items that should have been found were found; MRR averages the reciprocal rank of the first correct item; nDCG takes the degree of relevance and the position in the order into account, and normalizes against the ideal ordering.<span class="concept-micro">Independent example: 5 documents should be found, 4 are returned and 3 of them are relevant, so precision is 3/4 and recall 3/5. Do not swap these two denominators.
+1036	Which metadata, once lost while the index is built, is hard to recover?
+1037	If a rollback happens
+1038	A text format that expresses structured data such as objects, arrays, strings and numbers. Example: valid JSON does not guarantee that the field contents are valid for the business.
+1039	Record
+1040	Memory retrieval passes the applicability gate first, and compares semantic similarity second
+1041	The publishing conditions of the memory pipeline. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+1042	Evidence and the limits of understanding:</strong> failure, cancellation and an unknown result cannot be merged into one state; safe retrying depends on downstream idempotence or verification, and the experiments in this book are not a product's exactly-once guarantee.
+1043	Evidence and the limits of understanding:</strong> a high rank does not mean the evidence covers the question. The small RRF worked example in this book is not an official production query; chunk context and the original evidence have to be kept apart.
+1044	Request
+1045	Reading an "instruction" — why does that not mean it has permission?
+1046	The place where a timeout appears is between "request" and "response"
+1047	Input and conditions.
+1048	Not yet a successful publish
+1049	This is a gated feed-forward structure. Wg produces the path that goes through SiLU, Wu produces the other content path, the two are multiplied element by element, and Wd maps the result back to the original width. These Ws are three sets of parameters, not three agents.<span class="concept-micro">To read (SiLU(XWg)⊙XWu)Wd, compute XWg and XWu first, then SiLU, then ⊙, and finally multiply by Wd. Every position uses the same set of parameters independently.
+1050	A paired comparison starts from which questions went from failing to passing, and which went the other way
+1051	Configuration and data change
+1052	Passed against r7
+1053	Reading tools
+1054	Needs acceptance evidence for r9
+1055	The affected checks must be re-run
+1056	Prerequisite: <a href="../foundations/24.html">Lesson 02
+1057	Acceptance evidence is bound to the final artifact. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+1058	: the complete local file.
+1059	 and 
+1060	06｜Inference mechanics: loading, decoding strategy and continuous generation
+1061	12 passed @r8 + boundary counterexample
+1062	20 paired tasks; not 40 independent tasks
+1063	7. Acceptance questions
+1064	ANN and HNSW: approximate retrieval structures
+1065	DP, TP, PP, ZeRO and FSDP
+1066	FLOPs and FLOP/s: a count and a rate
+1067	GraphRAG-style methods use organizational information such as entity relationships and communities; RAPTOR uses hierarchical clustering and summaries to support retrieval. They introduce extra derived information, and with it problems of updating, provenance and error propagation.<span class="concept-micro">When the source document changes, an old summary or a relationship in the graph may be out of date. Changing the original text is no proof that every derived index has been updated with it.
+1068	JSON-RPC, stdio and HTTP
+1069	LoRA, quantization, MoE: which part does each of them actually save?
+1070	MLA: a learned low-dimensional K/V representation
+1071	PagedAttention: managing K/V storage in pages
+1072	SAE, activations and interpretable features
+1073	An SLI is a service level indicator that is actually measured; an SLO is the target for that indicator; the error budget is the room for failure that target allows. They are objects of service operation, not model parameters.<span class="concept-micro">"The API returned 200" may not be success for the user; some businesses should define the indicator as the proportion of tasks completed correctly within a bounded time.
+1074	SiLU: the input times a gating coefficient
+1075	TTFT, TPOT, p95 and throughput
+1076	A TTL is an expiry setting on storage or a cache; valid time is when a fact applies; record time is when the system came to know it. An expiry policy cannot stand in for verifying the fact and its source.<span class="concept-micro">A rule that takes effect on October 1 is only read on October 10: the business valid time counts from the 1st, while the time the system knew about it counts from the 10th.
+1077	Thread, turn, session: the levels of a run
+1078	WAL, fsync and atomic replacement
+1079	Wk / W_K: the key projection parameters
+1080	Wout, LM head: the vocabulary scoring parameters
+1081	Wv / W_V: the value projection parameters
+1082	Why does [2,3] become [2,3,4]?
+1083	bi-encoder, cross-encoder and reranking
+1084	c7 buffer
+1085	c8 buffer
+1086	What does each of grep, AST, LSP and the call graph see?
+1087	Why are reshape, transpose and broadcast not interchangeable?
+1088	γ, β, ε: keep the parameters and the stabilizing constant apart
+1089	π, π_ref and β: the symbols of a preference objective
+1090	σ: tell the function symbol from the statistic
+1091	What is the difference between "the model knows it did it" and "the system can recover"?
+1092	How many steps still lie between "relevant" and "enough to answer"?
+1093	Why are "fitting in memory" and "computing fast" not the same thing?
+1094	. The conditions of the worked example are given in this section; the teaching result does not represent a commercial model or production performance.
+1095	The number in one output cell: which input cells does it actually come from?
+1096	How does one experiment tell a real improvement from chance variation?
+1097	How does a row of floating-point numbers stand in for one token ID?
+1098	Previous section and next section
+1099	Cannot be concatenated with each other
+1100	No quietly switching to R4 to interpret the old proposal
+1101	Cannot be extrapolated to r8 automatically
+1102	Do not conflate:</strong> "the tests found no problem" cannot be rewritten as "there is no problem at all", least of all when both coverage and environment are limited.
+1103	In parallel with A
+1104	In parallel with B
+1105	Topic studies</span><span>about 3.0k characters</span><span>Figures and item-by-item notes
+1106	Serial or parallel
+1107	Will PAD, added to make things tidy, be mistaken by the model for content?
+1108	Why does "gradient descent" sometimes make a parameter larger?
+1109	Why can "the model was talked out of it" not be the only line of defense?
+1110	Why can "all the tests pass" still mean the wrong thing is delivered?
+1111	Why does "reading more" sometimes make misreading more likely?
+1112	Why does a GPU with more compute not necessarily make a task proportionally faster?
+1113	Why can "one Chinese character" not be taken as "one generation step"?
+1114	Why is a nonlinear function still put between the layers?
+1115	Why can the next token still see the history when so many steps were skipped?
+1116	Why must you never execute on half a JSON?
+1117	Why can a screenshot be understood and the wrong button still be clicked?
+1118	Why does high precision not mean all the evidence has been found?
+1119	Why does an automatic retry sometimes do the same work twice?
+1120	Why does training see the whole sentence while generation can only move forward?
+1121	Why does optimizing the most conspicuous step leave the whole no faster?
+1122	Later changed to r8
+1123	The binomial model is commonly used for a fixed number of independent success/failure trials; the standard error describes the scale on which an estimator fluctuates; Wilson is one way of constructing an interval for a proportion. McNemar looks at disagreement in both directions among paired classification results.<span class="concept-micro">Dependent samples, a mixture of task difficulties or hand-picked questions change how far the result can be read; a statistical formula is not evidence that "the improvement must come from this change".
+1124	When should the prompt, retrieval, memory or the model be changed?
+1125	Still shows the old green light
+1126	From "the skill is installed" to "better code was written": what happens in between?
+1127	Locating a regression from the four-cell table
+1128	Code, model, template, tool/retrieval settings
+1129	Task
+1130	The set of tasks and how it is split, not just the number of tasks
+1131	Optimization locates the bottleneck first; it is not about chasing fewer tokens
+1132	Only optimizing the critical path changes the wall clock. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+1133	Optimizers, Adam and AdamW
+1134	Position 0
+1135	Position 1
+1137	Scope of the assignment
+1138	Basis and scope:
+1139	What does an inverted index help with, and what does a vector index help with?
+1140	Test environment allowed
+1141	First check whether anything actually ran, then check which version was tested, and last check whether the cases can hit the target defect. All three gates are needed.
+1142	Key boundary:</strong> repeating the same question is not an independent task; sampling and changes of environment have to be recorded.
+1143	Key boundary:</strong> the experiment touches only temporary local data; it cannot prove that a third-party service offers the same deduplication protocol.
+1144	The function rule is sigmoid(x)=1/(1+exp(-x)). It computes number by number and does not require one row of results to sum to 1, so it cannot stand in directly for a softmax over several candidates.<span class="concept-micro">Independent micro-example: sigmoid(0)=0.5; computing two zeros separately gives [0.5,0.5], which is only a coincidence — for the input [1,1] the two terms already sum to more than 1.
+1145	Validated separately, then admitted
+1146	Why can a pre-check and a post-check not replace each other?
+1147	Loading
+1148	Step-by-step figures</span><span>about 1k characters</span><span>Figures and item-by-item notes
+1149	Original evaluation paper</span> <span class="badge gray">Relevant original text checked
+1150	Argument deltas are assembled by call ID. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+1151	Trade-off
+1152	Mutation testing can deliberately put a wrong implementation back in; if everything is still green, the tests have no discriminating power.
+1153	Covers only r7
+1154	Counts a1/a2/a3 only; makes no claim about the overall peak reduction ratio
+1155	Controllable conditions; state what is unsupported or untested
+1156	Why does the same token in a different position still need extra treatment?
+1157	Why can one user task call the model more than once?
+1158	One request binds the objects it is interpreted against, and authorization is still checked at execution time. The numbers and states are a teaching example explicitly set out in this section; they are not production performance or a measurement of a commercial model.
+1159	No
+1160	The command finished successfully
+1161	Back to the full explanation in Lesson 13 →
+1162	Back to the full explanation in Lesson 16 →
+1163	Back to the full explanation in Lesson 17 →
+1164	Back to the full explanation in Lesson 26 →
+1165	Back to the full explanation in Lesson 35 →
+1166	Back to the full explanation in Lesson 44 →
+1167	Exit the child process after the write to the temporary SQLite has finished but before the host log confirms it. On recovery, retry once with the same operation key and once with a new one, and compare how many times the side effect occurs.
+1168	Baseline wall clock 16 s; tool work 11 s
+1169	Foundations</span><span>about 2.7k characters</span><span>1 controllable demo
+1170	Wall clock
+1171	Delta 1
+1172	Delta 2
+1173	Delta 3
+1174	How do several agents run in parallel, and how is loss at handoff avoided?
+1175	Item completed
+1176	What it actually proves
+1177	The number of tests that actually ran rather than being skipped.
+1178	The scope of what actually ran
+1179	Experiments and sources
+1180	A protocol by which a host interacts with an external tool or resource server. Example: it is not a blanket term for all communication between agents.
+1181	Matches the current artifact
+1182	Artifact identity
+1183	Working memory
+1184	Engineering deep dive
+1185	The full implementation with line numbers
+1186	The common inverted dropout zeroes elements at random during training with drop probability p, and divides the kept ones by 1-p so that the expected scale is preserved. Evaluation mode usually turns this random operation off; the underlying function may require the caller to pass p=0 explicitly.<span class="concept-micro">Independent example: with p=0.5, a value of 2 comes out as 4 if it is kept in a given mask and as 0 if it is dropped. This is not training permanently deleting the corresponding model parameter.
+1187	Application
+1188	The versions of the pending and the delivered artifacts
+1189	How do you get from the same three scores all the way to sampling, without skipping a step?
+1190	How do you keep it from reading the future, or from reading PAD as content?
+1191	Success, failure, unknown, not run, and the matching original records
+1192	Number executed
+1193	What is most easily lost when a hundred turns of history are compacted into a few sentences?
+1194	Once the model, the host and the tools are drawn as separate swim lanes, the question "who actually changed the file" has a definite answer. Follow every returned message, then decide whether the model has to be called again, a tool has to run, or it is over; do not take the model saying it is done as the environment being done.
+1195	Report
+1196	A tool that converts between text and token IDs under the rules that go with a model. Example: you cannot swap in another tokenizer at will and keep incompatible model parameters.
+1197	Take over the model
+1198	Number collected
+1199	Text search
+1200	When a new fact appears, how is old memory updated without destroying the history?
+1201	Since the model will go on to the next token anyway, why are SFT and preference training still needed?
+1202	Both old and new correct on 12, fixed 5, regressed 1, both wrong on 2; compute 13/20 for the old and 17/20 for the new, then explain each of the 6 disagreeing tasks.
+1203	Duration (teaching seconds)
+1204	An ordinary vocabulary entry
+1205	Minimum handoff field
+1206	There are valid tests
+1207	Expected
+1208	Content in this example
+1209	Conditions for this example:</strong> independent record: the test command exited 0, but 0 items were collected; another run had 12 passing, but it ran on r7 while the final code has since changed to r8.
+1210	Local code and records
+1211	The mechanism test results for this round
+1212	Source S004, Input assembly and the execution loop in Codex
+1213	Source S039, Prompt prefix cache
+1214	Source S068, Claude Code's working mechanism
+1215	Source S071, Subagent isolation and permissions

@@ -1,0 +1,310 @@
+23572	Lesson 03｜One full agent task loop: who is thinking and who is executing — AI Systems Engineering
+22269	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#Q033">Q001｜After the user types one sentence, how does the agent finish the task across several model calls?</a><a href="#Q034">Q002｜What states does an agent have? Why can a conversation summary not replace the task database?</a><a href="#Q035">Q003｜How do a stateless API and a stateful session each build the next turn's input? Is a session ID long-term memory?</a><a href="#Q036">Q004｜When should an agent stop? Why does "continue until done" so easily turn into an infinite loop?</a><a class="sub ap-toc" href="#agent-practice-loop">One answer has finished — so why is the task still not done?</a><a class="sub ap-toc" href="#agent-practice-snapshot">Why does every model call need a consistent context snapshot?
+6976	An agent is a series of model calls driven by a surrounding program. The request, the response, the tool result and the task state each have their own life cycle; "the model says it is done" and "the environment really reached the goal" have to be verified separately.
+23759	Lesson 35 · Sort the objects out first</a><a class="pill" href="../foundations/18.html">Lesson 57 · From the last row of numbers to a token, and on to an answer</a><a class="pill" href="../foundations/22.html">Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints
+27541	A short check before the deep read:</strong> draw the loop "request a file read → validate the call → read → return the file → call the model again" once, and mark which arrow is executed by the program and which judgment comes out of the model.
+11988	What follows uses an original teaching task, "fix exclude not taking effect in the repository". It does not stand for any change made to a user's real repository. While reading this chapter, always keep apart the model's proposal,
+18593	's execution and the real state of the environment.
+8096	Q001｜After the user types one sentence, how does the agent finish the task across several model calls?
+27471	What to know first for this question</span>The model is responsible for proposing the next step; the host is what actually calls the tool and fills the result back in. A workflow fixes the route, while an agent loop allows the next step to change according to a new observation.
+23520	Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints
+18858	assembles the goal, the rules, the tool definitions and the current evidence into the model's input; the model returns ordinary text or a tool call; the harness checks and executes the call and makes the result part of the new context; the model then goes on to decide the next step from the observation. The loop ends on a condition such as verifiable completion, a decision needed from the user, failure or an exhausted budget. ReAct describes the combination of reasoning–action–observation, and a product harness is what turns it into a real execution system.
+26025	Walk all six turns, instead of just drawing one loop arrow
+21724	What the model sees at this point
+7705	What happens in the harness/environment
+22944	The user goal, the repository rules, the search tool description
+19785	Search for the exclude entry point
+19793	The search returns paths and line numbers
+13945	The previous content + the search result
+25875	Read the implementation and the test
+27133	Returns a code snippet with its version
+21162	The conditional branch and the failing case
+26897	Run the target test
+27613	The process exits 1 and reports an assertion failure
+16927	The actual failure and the related code
+18082	Apply a local patch
+21373	Checks the old content, then edits the file
+25138	The patch result and the new version
+26883	Run the regression test
+25556	Records the command, the version and the exit code
+18207	The current diff and the test evidence
+16702	A completion note
+7708	The harness ends this task
+22078	Each turn's input may contain the history, or may be joined up through a reference to server-side state, but logically the model has to be told the results that bear on the current decision. A tool call is not the model "imagining it has already read the file"; it must really be executed and a real output brought back. The model saying in turn 3 that "the test should fail" is no substitute for the run result.
+21660	The model can request several mutually independent tools at once, and the harness may also run preset checks deterministically, so a real flow need not have exactly one action per turn. What matters is that input–decision–execution–feedback correspond clearly. The versions behind reading a file, editing a file and the test result must join up, or old evidence ends up applied to a new state.
+27760	Follow-up: why not read every file at once and have the model hand over the patch directly?
+17613	For a small repository that sometimes works, but for a large one it is expensive and brings in much irrelevant information. More importantly, the evidence the next step needs is usually decided by what the previous step found. Only once the entry point is found do you know which call chain to look at; only once the test is run do you know the real failure. Reading on demand uses feedback from the environment to reduce guessing; it is not there to inflate the number of call turns.
+27672	Follow-up: must an agent always have the LLM decide every step freely?
+10859	No. A preset
+15121	can fix key steps such as retrieval, verification and approval, while the LLM judges the uncertain parts. A dynamic agent lets the model choose the path, which is flexible but makes cost and behavior harder to predict. Real systems often mix the two: control should be allocated according to the uncertainty of the task, rather than turning deterministic programs into prompts as well.
+27899	Follow-up: how do you tell whether a failure is a model problem or a harness problem?
+12662	First save this turn's visible input, the callable tools and the actual results. If the right file was not returned, it is a retrieval or tool-chain problem; if it was returned but then trimmed away, it is a context problem; if the model produced a valid call and the executor cannot find the tool, it is a registration or routing problem; only when all the necessary evidence was visible and the inference was still wrong does it come close to a model reasoning problem. The final error text by itself cannot locate the layer at fault.
+12848	Start with a task that reports completion falsely
+22949	The user asks to "fix the directory exclusion rule without modifying the production configuration". The model emits a patch and then says "done". All that can be confirmed at this point is that <strong>the model produced text</strong>. Whether the file changed, whether the test ran, whether the test was aimed at the last change, and whether the original constraint is satisfied are four different facts. Do not compress the four facts into one
+15949	In this section's teaching host, four fields are recorded:
+5932	means this model response has ended at the protocol level;
+5931	means this tool call has a terminal state;
+5930	means the external state has been verified;
+5929	means the task's acceptance conditions are satisfied. The first does not entail the fourth. A user cancellation can also end a call while the goal is still not reached.
+22176	Read one loop through the pinned source
+7274	Codex's
+5889	does not simply implement "the model returned text, so exit". It first takes in the input and the hook feedback, prepares this turn's context and tools, and then requests the model. Completed tool-call items go to the execution system; the result returns to the history, and only then does the next turn have new evidence. The sampled
+5936	must also be combined with the pending input; when it looks finished, the Stop hook may still give feedback that needs further work. What is described here is the path in the pinned commit; one product's stopping policy is not taken as the definition for every agent.
+9428	"Response finished", "tool result available" and "task finished" should each keep their own timestamp. Suppose the response finished at 10:00:02 and the test process exited at 10:00:08: then 10:00:02 cannot declare the test passed. If another file edit happens at 10:00:09, the result from 10:00:08 only proves the old version and does not cover the new one.
+10381	A teaching trace you can check item by item
+17214	The host and environment side
+15177	What can be concluded
+19845	Receives the task and the tool descriptions
+17638	No file read yet
+15028	Only the goal, no root-cause evidence
+19760	Proposes
+21375	Validates the path, then reads
+15155	Analysis can be based on r7
+19763	Proposes a patch
+18472	Writes r8 successfully
+11941	The code changed, which is not the same as correct
+19762	Proposes a test
+22409	Tests r8 and returns a failure
+18055	Should continue from the failure rather than ignore it
+12492	Corrects the patch
+13609	Writes r9 and reruns the test
+9287	A pass or a failure on r8 is no substitute for verifying r9
+22817	Produces the final note
+21425	Verifies the constraints, r9 and the test result
+18561	Only now is there evidence that the task is complete
+27207	This does not force every task through six turns. A simple question may finish in one; a high-risk action may need human approval. Expand according to the actual unknowns and the risk, rather than treating a fixed number of turns as a quality standard.
+17012	Stopping conditions that are easy to miss
+14824	Calling the same search over and over with no added evidence is stalling, not steady progress. An unrecoverable tool failure should be recorded explicitly and isolated; endless retries should not block the rest of the work. A completion condition needs externally checkable evidence; the stopping conditions should also cover an exhausted budget, a user cancellation, missing authorization and a decision needed from the user. <strong>Stopping is not the same as success, and continuing is not the same as being effective.
+17914	The verified stopping branches: not a single done bit
+15808	In the pinned source, start with
+5872	and the pending input. Once the Stop check is entered, valid continuation feedback is written into the history and opens the following steps; a bare "block the ending" with no feedback content raises a warning instead of looping out of nothing. The internal path for memory consolidation fails separately when it meets a Stop rejection, so the rejection is not fed again and again into an unattended loop.
+18806	When you use this in your own program, distinguish at least "no new work", "acceptance still to be added", "canceled" and "budget exhausted". These are teaching state names, not a copy of Codex's enum. A verifiable counterexample: if the stop check finds one test missing, it should return the test as the goal; if it only ever returns "keep trying", the host should exhaust a finite budget and report the task unfinished rather than recurse forever.
+8098	Q002｜What states does an agent have? Why can a conversation summary not replace the task database?
+27421	What to know first for this question</span>The task goal, the call progress, the external facts and the message history are different states; one summary cannot automatically replace every state record.
+23559	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions
+24940	At least three kinds: the cognitive context the model can see, the harness's control state, and the actual state of the external environment. They can be inconsistent for a while. A summary expresses "what is believed to have happened", the task record expresses "what the system tracked", and files, databases and remote services are where the side effects actually happen.
+11984	Take one commit as the example and separate the states
+21772	The model says "I am about to modify filter.py": that is a plan. The harness creates call c17 and records it as pending: that is control state. The tool completes the write to disk and the file content changes: that is environment state. Then the process crashes before the success is written back to the task database: the environment succeeded, the control state is still pending, and the model has not yet seen the result.
+18449	If recovery reads only the conversation summary "the edit did not finish", it will write again; if it reads only pending and treats that as failure, it may also repeat the side effect. Check the action identity, the expected old version, the content after the write, or the remote idempotent result, and restore the state to succeeded or to still unknown. The model must not decide this by tone.
+19947	For teaching purposes the work can be divided among the following objects:
+27218	This does not require every project to add six tables. A simple local agent can do it with logs and files; the point is not to blend these meanings into a single "done".
+20892	Conditions for this example:</strong> an independent editing task: the goal is to change the timeout from 3 to 10. The model has already emitted a patch, but the executor has not applied it yet; the initial file version is r7.
+17570	Conversation state
+21793	The record of what the model saw and said this time.
+23484	The stage and action results that the program records.
+22768	Environment state
+23292	The current content of the real files and database.
+18223	Current value
+24788	Can it prove completion
+21708	The model's text
+9436	"Fixed to 10"
+11136	No: it may only describe a proposed change
+14011	Action log
+9248	op9=proposed, not executed
+11137	No: there is no commit record yet
+23413	Disk content
+20344	Clearly has not reached the goal
+18088	After the patch is applied
+11785	The corresponding behavior still has to be verified
+22450	Test record
+15074	Only proves that this set of tests corresponds to r8
+18745	Once the three states are split into three rows, the contradiction is plain. A conversation summary can only sum up words; it cannot replace reading the disk or querying the action log.
+19736	Committing and verifying are two further steps. The file really becoming 10 does not mean every requirement and regression passed.
+16532	A completion report should cite the current artifact version and the verification record, rather than storing the one line "done" back into a memory loop to prove itself.
+11186	Do not conflate:</strong> writing the task state as succeeded and then editing the file opens a window in which the log runs ahead of the real world; the commit order and the recovery strategy have to be stated.
+17573	The conversation says "it is written", but the disk and the task state both disagree
+26274	Input and conditions.</strong>Three things exist at the same moment: the assistant text "updated"; the execution log
+29493	; and the disk version is still v7.
+13816	List the objects
+24924	Natural language, the call record, the external file
+16448	They are not three reliable copies of one and the same state.
+25885	Reading the disk still gives timeout=3
+11064	The assistant's wording must not be taken as evidence of a write.
+25581	Record the state
+17788	The tool request may not have finished
+12669	Write unknown or pending first; one sentence is no ground for forcing it to succeeded.
+21531	Checkpoint content
+23067	The goal, the current version, the call ID, the state, the next check
+18455	A recovering process continues from this.
+20152	A new-session counterexample
+14982	Handing the successor agent only the summary "updated"
+16466	It may skip the actual write and verification.
+19075	Join the steps up.</strong> The execution state is settled by system evidence; the conversation supplies plans and explanations, but cannot replace an external result.
+26649	Limits and counterexamples.</strong> How an unknown is handled next depends on whether the tool can be queried and whether it has side effects. What is described here is only a diagnosable state model.
+27691	Follow-up: which kind does an LLM's KV cache belong to?
+16482	It is computation state inside the inference service, supporting the model's continuous generation; it is not business completion state. Losing the KV may require a fresh
+29212	, but the file edit is still there; and losing the database does not automatically recover a reliable operation log out of the KV. These two failures need different means of recovery.
+27704	Follow-up: what does a Plan file, a checkpoint and long-term memory each store?
+8043	A Plan stores the steps you hope to finish, a checkpoint stores a recoverable execution position and state, and long-term memory stores facts or experience that can be reused later. Planning a "test" does not prove a test ran; one pass recorded in a checkpoint does not mean it passes forever across versions; and the long-term lesson "this kind of interface has to be idempotent" is no substitute for the state of the current call.
+27799	Follow-up: why can persisting every state be over-engineering?
+10886	Not every intermediate guess is worth putting in a database. A read-only search that can be redone, and temporary reasoning, can be handled lightly; irreversible operations, recovery points for long tasks and key evidence are worth more persistence. Let the consequence of losing something decide how strongly it is stored, rather than covering every
+12593	with a complex audit.
+8101	Q003｜How do a stateless API and a stateful session each build the next turn's input? Is a session ID long-term memory?
+27465	What to know first for this question</span>A service keeping a session ID does not mean unlimited history for free on every call. Check what is actually retained, what is passed on, the budget, and how tool calls are paired up.
+23592	Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context
+20240	A stateless call usually has the client pass in the history it needs; a stateful interface can reference a session or a response state the server already holds, which reduces what the client has to carry. Both have to obey the rules for the model's context and for product state. Having a session ID does not mean it is available forever, does not amount to knowledge governance across tasks, and does not guarantee a compute cache hit.
+11364	Two chains with the same goal and different implementations
+15939	In the stateless style the second turn's input might be
+10183	. The third turn then appends the new call and its result. If the client leaves out the tool call and sends only the tool result, the protocol may not pair them correctly; and if the tool result is merely pasted in as user text, the provenance and the trust boundary can be lost as well.
+20644	The stateful style might send
+29367	, and the server restores the necessary context. What that lowers is the burden of explicit transmission and state management; it does not mean all the old history enters the model without limit. The service may still truncate, compact or require particular state items to be passed, depending on the interface.
+26054	Memory across sessions also requires choosing what to keep, identity isolation, versions, updates and expiry. An ID that can pick up a response from ten minutes ago has done none of that governance for you. Conversely, even if every model call is stateless, good long-term capability can still be achieved with your own knowledge base and task checkpoints.
+15363	The same session_id does not mean the same model input
+26436	Input and conditions.</strong>In turn 1 the user says "the variable a=7"; in turn 2 they ask "what is a". The two API styles are compared.
+20239	A stateless call
+23737	Turn 2 sends only the question
+21725	The model never received a=7; when session_id is just an application field, it does not fill the history in by itself.
+20446	Explicit history
+23736	Turn 2 sends both user messages and the intermediate replies that are needed
+21871	Now a=7 enters this call's context.
+20670	A server-side session
+22889	Use a supported conversation or previous-response mechanism
+20674	The server restores the relevant items as the interface agreement specifies, still subject to context, permission and life-cycle limits.
+17225	The host checks
+25561	Record the messages in the actual request, or the reference to server-side history
+11000	The local interface showing the old messages is no ground for deciding the model saw them.
+16261	An expiry counterexample
+20677	The server-side state has been deleted, but the same string is still used locally
+12127	The session key no longer corresponds to anything recoverable.
+19155	Join the steps up.</strong> The owner of the state may be the application, the API service or the file system; who is responsible for keeping it and supplying it again has to be stated.
+26700	Limits and counterexamples.</strong> The field names are only conceptual examples; the actual behavior across requests should be verified against the documentation of the API in use, and no uniform guarantee is made for every SDK.
+28077	Follow-up: can a compressed block from one vendor be copied over to another model?
+10786	Do not assume it can. A compressed block may be opaque state specific to that service, with a format and an interpretation that depend on the model or the interface. A handoff across models usually needs readable facts, constraints and evidence references, or a protocol both sides explicitly support. Encrypted state is not a general-purpose Markdown summary.
+28113	Follow-up: does retrying the same model request give the same tool-call ID?
+11096	Not as a general assumption. Reconnecting the transport, retrying the request and regenerating are different operations. Regeneration may produce new call items, and application-level deduplication cannot rely on an ID the model happens to produce. The executor should maintain its own stable action identity, together with whatever idempotence or response-recovery mechanism the interface offers.
+27775	Follow-up: why can a long task degrade after the model is switched?
+10752	Different models support tool formats, context, reasoning state and instructions differently; the capabilities, the
+15610	and the compressed representation can change too. A safe switch requires rebuilding a compatible context and keeping the key facts and the unfinished side effects; you cannot just change the model name and go on pushing the original state through.
+17839	Engineering deep dive · E17 · continues Q035
+12119	Session association and the per-turn control fields are two different layers
+15948	In the OpenAI Responses migration guide checked here,
+22862	links an existing response context and <strong>does not inherit the previous turn's top-level instructions</strong>. Stable instructions that are needed should be resent every turn. This conclusion belongs to that interface's contract; not every service with "a session ID" behaves the same way.
+28606	A wrong implementation often carries "do not publish" in the first turn, sends only the tool result and previous_response_id in the second, and then assumes the prohibition is still in force in the same way. Diagnosis has to look at the actual second request, not at the first turn's log or the chat bubbles the user can see.
+18555	The most dangerous trim in a manual history: keeping only the text
+8742	The output of Responses contains typed items, which may include message, function_call, reasoning and others;
+20372	is a convenient text view, not a complete replayable state. A function result must be paired with the call_id of the original call.
+20835	This book constructs two items:
+10056	. Filtering for message alone gives an empty list; the text summary "the file has been read" does not carry the same protocol relationship. Even if the model can later guess the progress of the work, that does not mean the tool protocol is still valid.
+16906	Implement a request-assembly contract
+22077	When assembling each turn, keep three kinds of information clearly apart: the stable rules and tool specifications; the historical protocol items or the server-side association; and the input newly added this turn. Do not indiscriminately splice all the old output back in and reference previous_response_id at the same time, or you may end up with duplicated context. Whether to use a reference, a manual history or a persistent Conversation, pick one clear main path according to the service contract.
+20133	The assertions should check that "no call result is orphaned", that "the same call_id is not bound by mistake to different arguments", that "the rule version is included in this turn", and that "retrying the same request did not append the result twice". What is stored must meet privacy and retention requirements; unrelated sensitive data must not be kept for the sake of a complete replay.
+28031	Follow-up: if the model says 'I remember that publishing is not allowed', can that count as evidence the rule was inherited?
+10967	No. It may have inferred that from ordinary history text, or simply produced a compliant-sounding phrase. What you verify is the request finally sent and the interface state; the real permission to publish should also be restricted by the executor. Probabilistic compliance and deterministic authorization cannot stand in for each other.
+27745	Follow-up: do opaque reasoning or compressed items need to be decoded by hand?
+11246	No, and their internal structure should not be invented either. Keep and pass on the items that are allowed to be sent back, as the official documentation requires; the application reads only the public fields and the execution state. Replacing them with a summary of your own for the sake of being "readable" may break continuity. Whatever cannot be observed should be written down as unknown in the troubleshooting record.
+7460	E17: how to read this result instead of only looking at "pass"
+12124	Which items the session reference keeps, and which rules are supplied again this turn, are two separate lists. Check the actual request boundary; one session ID is no ground for inferring that every instruction is inherited forever.
+24861	Self-check:</strong> is saving only the SDK's output_text enough to restore a session that contains tool calls?
+10772	No. The tool calls, the call results, the call_id and possibly non-text state are not all part of output_text. Save the typed items as the interface agreement specifies, or use the server-side session association correctly, and resend the control fields that are needed.
+11813	Start from an "input inventory"
+21780	A model call needs more than one sentence from the user: it also needs the rules, the history, the tool declarations, information about the environment, and evidence. Call this list request snapshot S7: the model choice, rule version R3, tool catalog T8, environment E2, and the evidence
+10112	. A snapshot does not freeze the whole system; it makes the objects this decision rests on line up with one another.
+12559	Suppose that in S7 the model saw the tool
+29210	, but after it had emitted the arguments the host moved to S8, where a tool of the same name is interpreted as a different interface. If the executor only looks up "the latest tool" by name, an old decision can land on new semantics. This problem is called a change between check and use; do not memorize the acronym yet, just remember that "what was seen when the decision was made" and "what is used when it is actually executed" may not be the same thing.
+7271	Which objects Codex binds together
+15810	The pinned source's
+5858	holds the per-request settings, the environment snapshot, the MCP bindings, the tool router and a snapshot of the loaded rules. The tools published by the sampling request and the dispatch of the calls that follow both use this context, which reduces mismatches inside one request.
+5875	can capture the context again on a later sampling, so the next call can see the change instead of never refreshing once the session has begun.
+27225	This does not mean authorization is frozen forever. The environment access in that structure also combines the information currently granted. Revoked permissions, approval before execution and a tool's own argument limits still have to be checked before a side effect actually happens. <strong>A consistent snapshot guarantees a consistent interpretation; it does not grant permission to act.
+19370	An instruction cache needs expiry conditions too
+17288	serializes refreshes; when discovering rules requires reading a provider, it does not hold the state mutex across that external read. When trust or permissions are tightened, the old cache must expire: a failed new read is no reason to go on using the more permissive old result. A sub-agent inherits certain already-applied snapshots; whether the providers are shared still depends on explicit configuration.
+11510	Why an empty tool list in the log does not necessarily mean there were no tools
+15915	In one incremental tool-protocol path in the pinned Codex code, the standalone request fields may not resend the tools and the base instructions, because that information has already been passed on through the history or an incremental declaration. When reviewing, read the protocol in use and the final sequence; seeing one
+5886	is no ground for asserting that the model received no tools at all.
+19987	A teaching debug table records at least: the request ID, the model version, the rule hash, the tool declaration version, the environment identifier, the evidence version and the authorization result at execution time. Do not record secrets, and do not keep all user content unconditionally. Attribution is reasonably safe only when a single thing changed; once the model, the prompt and the tools are all swapped at once, there is no way to know which caused the regression.
+18375	What in the snapshot is fixed, and what is still live?
+18548	How the implementation that was read handles it
+11090	What cannot be concluded
+21631	The model, the tool routing, the MCP bindings, the loaded rules
+23007	Carried by one and the same StepContext
+10888	Not that every future turn stays unchanged forever
+22769	The environment choice
+25839	Kept consistent at the moment the request is captured
+10677	Not that the files in the environment never change
+16936	The actual file access permission
+25664	The accessor combines the live session with this turn's authorization
+11023	Must not be written as "permissions are frozen exactly like the model"
+13659	A new snapshot being prepared
+12731	Preparation finishes first, and only then is it chosen as the execution context
+11105	A request must not be sent with a half-prepared tool catalog
+12333	Example: at t0 read_file is declared, at t1 the user adds an authorization, and at t2 the read is executed. Check "which environment/handler t0 selected" and "how the accessor at t2 merged the authorizations", rather than inferring every execution permission from the configuration at t0. Conversely, a newly added authorization does not give the model a tool that was never exposed or bound. This example serves to explain the two kinds of state; it is not a log from a real product.
+8103	Q004｜When should an agent stop? Why does "continue until done" so easily turn into an infinite loop?
+27491	What to know first for this question</span>Ending has to be checked against observable acceptance conditions; no more tool calls, an exhausted budget, or the model saying it is done — none of these alone proves the goal was reached.
+23561	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+12608	Stopping needs the model's judgment together with verifiable conditions. The model can propose that it is done, blocked or in need of clarification, and the harness still has to check the result evidence, the outstanding actions and the budget. With no clear definition of completion, the loop may search again and again, rewrite the plan, or run the same failing operation.
+22906	Use a completion predicate instead of a gut feeling
+19953	A teaching task can define: the target test passes; the new boundary test passes; the current diff contains only what was authorized; the verification matches the current code version; and there is no
+13619	write operation. Meeting these does not prove the software is absolutely free of defects, but it does define clearly what this task's delivery rests on.
+18333	The loop should also distinguish "no new evidence" from "the task is still making progress". Reading the same file for three turns in a row with no new hypothesis, the same arguments failing again and again, a patch flipping back and forth between two ways of writing it — all of these are signs that progress has stalled. You can reduce the freedom of action and require the next operation to state what it expects to test, or to output the reason it is blocked.
+29006	A budget covers at least wall-clock time, the number of calls, tokens, tool costs and risk. Reaching the budget should not be dressed up as completion; what is finished and what is not should be saved, with accurate evidence. In a long task, delivering what is partly finished and separating the remaining problems clearly is more dependable than an endless "let me review it once more".
+20898	Conditions for this example:</strong> an independent search task: three queries in a row return the same file list, with no new evidence. The total budget is 5 turns; the budget is only illustrative, not a recommended uniform ceiling.
+27610	Progress
+22646	The state or the evidence really changed in a useful way.
+20246	No-progress count
+27652	The number of consecutive repetitions of the same kind of result.
+28794	Blocked
+24719	A necessary condition is missing that the current tools cannot obtain.
+25097	New evidence obtained
+10600	The next-step choice
+6260	1: search exclude
+18651	filter.py is found
+25909	Read the related implementation
+6405	2: search the same word again
+16524	Exactly the same list
+24759	Consider changing the query or reading the file
+6515	3: search again unchanged
+11767	Still no new information
+12607	Stop the repeating strategy and record why
+29005	Budget ends
+28703	The problem is still unsolved
+19303	Report it unfinished with the evidence known, and do not mark it a success
+25365	A counter does not understand the task, so "it ran three turns" alone cannot decide that enough was done. What matters is whether the range of causes was narrowed or a hypothesis was tested.
+15259	A fingerprint for repeated evidence can be set as a hint, but purposeful repetition must be allowed — checking whether external state has changed, for instance.
+12597	Stopping is not always failure: needing the user's authorization, an unreachable dependency and an exhausted budget each call for different handling afterwards.
+11187	Do not conflate:</strong> writing only "continue until it succeeds" turns an unknown error into endless tool calls; a limit on the number of turns alone may cut off a task that was making progress.
+15426	The same search redone five times: when should it stop?
+26218	Input and conditions.</strong>The task is to find the function foo, and the tool returns not_found every time. For the first 5 queries the query string, the search directory and the repository version are exactly the same.
+21354	Mark progress
+16886	Define added information as "a new path, new evidence or a new state"
+28492	A repeated not_found does not count as progress.
+23730	The second failure
+21504	Check the case, the directory, and whether the symbol may have been renamed
+12623	Changing the search strategy once, with a reason, is allowed.
+23817	The third identical result
+25736	Recognize that the query fingerprint is the same and there is no new evidence
+12605	Stop repeating blindly and move to locating by directory or by caller.
+24376	Termination condition
+29004	The budget is used up and key evidence is still missing
+19305	Report the gap; do not turn "not found" into the unconditional conclusion that "the function does not exist".
+17896	Fixed, verified on the current version, and the original goal met
+26852	Once that is reached, do not open another pointless loop just because more reflection is possible.
+18961	Join the steps up.</strong> A stopping rule needs the budget, the progress and the acceptance conditions together; a maximum number of turns alone either stops too early or idles for a long time.
+26714	Limits and counterexamples.</strong> A simple tuple will do as a fingerprint; no hashing scheme has to be introduced for all text. The number of turns in the example is not a threshold recommended for a product.
+27836	Follow-up: do stopping conditions have to be written as many hard rules?
+10809	No. A simple task can end on a direct check of its result. Only steps that are high-risk, long-running or have failed repeatedly are worth adding explicit conditions to. A rule is there to block a specific failure mode, not to replace every judgment the model makes.
+28035	Follow-up: when the model says information is missing, should the user be asked straight away?
+12851	First see whether the available tools can settle it. File paths, test commands and the existing configuration can be read from the repository, and a question you could look up yourself should not be handed to the user. Only where business intent, the choice of an irreversible operation or a permission boundary is really at stake is the user's decision irreplaceable.
+27768	Follow-up: why can "all tests are green" not be the only completion condition?
+22419	A test may not cover the goal, may never have run, may have been skipped, may have run against an old version, or may even have been deleted by the agent. The run list, the exit status, the version, the validity of the test and the scope of the change all have to be checked as well. The full verification chain is laid out in lesson 06.
+17840	Engineering deep dive · E18 · continues Q036
+28982	Prerequisites: <a href="../foundations/22.html">Lesson 01
+12735	First define the three endpoints
+10429	One model response finishing only says that this generation reached some terminal state; a tool returning success only proves that an action or a check within its contract succeeded; completing the task further requires the user's goal and the acceptance conditions to be met. A tool call may be the request for the next step inside a model response, not the final delivery.
+23127	and writing it straight as
+29204	 mistakes "proposing to run the test" for "the test passed". Treating HTTP success as business success is just as dangerous: a service can report a business failure in a perfectly normal protocol response.
+18149	Asynchrony lets an old result contaminate a new task
+19976	A teaching state: the user originally asked for a.py to be fixed and the agent had already started a slow test; the user then switched to b.py, and the task epoch went from 1 to 2. The old test arrives late and returns
+10198	. If the host updates the current task on "the most recently arrived test succeeded" alone, it will mark b.py done.
+9173	The epoch is a task revision count designed by this book, not a field required by any vendor. When a result arrives, check task_id, epoch, the target version, call_id and the expected operation; an old result can be kept as historical evidence, but it must not change the completion state of the new goal. This book's state experiment verifies that a mismatched epoch is refused for merging.
+12604	A stopping condition should state the reason
+18122	Record them separately: the goal is met, the budget is exhausted, the user canceled, waiting for an external result, blocked on permission, the model response is incomplete, the tool failed, or the result is unknown. Each points the user to a different next step. The budget includes cumulative calls, tokens, time and the number of side effects; retrying endlessly after one tool error should not be taken for "persisting until the task is done".
+20698	Unknown is not the same as failure.</strong> A timeout can happen after the external action has already succeeded; before retrying, verify, or use idempotence downstream. An AWS engineering article discusses the problem of timeouts and retry intent specifically.
+28055	Follow-up: after the user cancels, can you report "nothing was changed" right away?
+10718	No. Canceling the control flow does not roll back external side effects by itself. First cancel the in-flight actions that can be canceled, query the operations already committed, and report to the user which parts are finished, which await verification and which never ran. If automatic compensation is riskier in itself, wait for authorization rather than treating "undo" as always safe.
+28034	Follow-up: when the model says there are no more tool calls, can you end right there?
+27269	That is only a candidate ending signal. Check the acceptance predicates: whether the test records for the final working-tree version are complete, whether any pending or unknown actions remain, whether the deliverable actually exists. Different tasks accept at different strengths; a simple question and answer should not be forced through a release transaction, but a write operation cannot rely on the model vouching for itself.
+7463	E18: how to read this result instead of only looking at "pass"
+17806	A tool item, a model response and the business task each have their own completion conditions. Some done=true only proves that the object it belongs to has finished; it cannot be promoted across layers into task success.
+24882	Self-check:</strong> if a test from an old epoch arrives late and passes, can it make the task in the current new epoch complete?
+10978	No. The result only proves the test on its original task and its original target version. Keep the history but refuse to update the current state, unless it is explicitly shown that the evidence still applies to the new goal.
+22268	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#Q033">Q001｜After the user types one sentence, how does the agent finish the task across several model calls?</a><a href="#Q034">Q002｜What states does an agent have? Why can a conversation summary not replace the task database?</a><a href="#Q035">Q003｜How do a stateless API and a stateful session each build the next turn's input? Is a session ID long-term memory?</a><a href="#Q036">Q004｜When should an agent stop? Why does "continue until done" so easily turn into an infinite loop?

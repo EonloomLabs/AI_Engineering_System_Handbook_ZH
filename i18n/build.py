@@ -15,6 +15,29 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = json.loads((ROOT / 'i18n/source.json').read_text(encoding='utf-8'))
 KEYS = list(SRC['keys'])
 META = SRC['_meta']
+
+
+def editions():
+    """Languages the whole book exists in, so the switcher can navigate to them.
+
+    A partial edition must not be listed: the switcher would send a reader to a
+    page that is not there. Completeness is measured against the canonical page
+    list, so a language appears only once every page has a translated twin.
+    """
+    import json as _json
+    units = ROOT / 'i18n/units'
+    if not units.is_dir():
+        return ['zh-CN']
+    pages = [_json.loads(f.read_text(encoding='utf-8'))['page']
+             for f in sorted(units.glob('*.json'))]
+    out = ['zh-CN']
+    for code in META['locales']:
+        if code == 'zh-CN':
+            continue
+        d = ROOT / code
+        if d.is_dir() and all((d / rel).exists() for rel in pages):
+            out.append(code)
+    return out
 # Endonyms: each language named in itself, which is what a reader scans for.
 NAMES = {
  'zh-CN': '简体中文', 'zh-TW': '繁體中文（台灣）', 'en': 'English', 'es': 'Español',
@@ -59,6 +82,7 @@ def main() -> int:
            'window.I18N_META=%s;\n'
            'window.I18N_STRINGS=%s;\n' % (
             json.dumps({'locales': META['locales'], 'rtl': META['rtl'],
+                        'editions': editions(),
                         'names': {c: NAMES[c] for c in META['locales'] if c in NAMES}},
                        ensure_ascii=False, separators=(',', ':')),
             json.dumps(tables, ensure_ascii=False, separators=(',', ':'))))

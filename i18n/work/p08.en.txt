@@ -1,0 +1,312 @@
+# p08 — 311 strings — en
+23633	Lesson 10｜Tool design and MCP: from connection to controlled execution — AI Systems Engineering
+22204	Follow this chapter through its objects and states</a><a href="#topic-2">MCP connects interfaces; it does not hand over permissions on its own</a><a href="#Q041">Q013｜When designing tools for an agent, should they be split into many small tools or made into one all-purpose tool?</a><a href="#Q042">Q014｜Which messages does MCP go through from connection to calling a tool? Who are the Host, the Client and the Server?</a><a href="#Q043">Q015｜What are MCP Tools, Resources, Prompts and Skills?</a><a href="#Q044">Q016｜How should MCP errors be layered? Where are the identity and network boundaries?</a><a class="sub ap-toc" href="#agent-practice-tools">The tool exists, the model sees it, it can be called, it is authorized: four layers of checking
+27639	Connecting to the server, discovering the tool, being cleared to use it and actually executing it are four separate gates. Knowing that a tool exists does not mean the current model sees it, still less that the current identity holds every permission for it.
+23591	Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+27537	A quick check before reading deeper:</strong> use "the calendar can be connected, but only read and not written" to explain the different responsibilities of transport, tool schema, authorization and execution.
+21020	This chapter's
+22478	messages use the explicitly pinned 2025-11-25 specification to explain the basic life cycle; it is not claimed to be the only current version. Documentation and extensions in 2026 may add capabilities; while studying, keep the stable principles separate from the version field.
+7897	MCP handles connection and capability description; it does not decide authorization on the business's behalf. Draw "the tool exists", "it is visible to the model this turn" and "the current user may execute it" as three checkpoints first, then look at the schema and the protocol details, and you will not mistake successful discovery for having permission.
+23175	Related step-by-step process: <a href="../visual/F25.html">MCP connects interfaces; it does not hand over permissions on its own</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24543	Related mechanisms to continue with: <a href="../visual/F22.html">Lesson 01 · Break one agent task into the turns that actually happen</a><a href="../visual/F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+8130	Q013｜When designing tools for an agent, should they be split into many small tools or made into one all-purpose tool?
+27405	What to know first for this question</span>MCP is a set of conventions for a host interacting with an external server; it is not model parameters or long-term memory. Host, Client and Server are a division of labor, not three models.
+17777	Tool granularity should match the decisions the model really makes and the boundaries the system can verify. Too fine adds turns and assembly work; too coarse hides side effects and the reasons for errors. A good tool offers clear input, controlled output, distinguishable failures and suitable idempotency/version conditions, not just a name that sounds good.
+22091	Comparing three repository interfaces
+28919	is extremely flexible, but its parameter space is huge, its output easily runs long, and its security boundary depends on the execution environment.
+26871	is too fine: reading one stretch of context takes dozens of calls.
+28304	usually makes it easier for the model to fetch exactly one block of evidence, and it can return the position of the next stretch, the file version and a truncation marker.
+13617	Write tools involve trade-offs just the same.
+24154	is simple but easily overwrites someone else's changes;
+15241	can express a local change, but may match the wrong place when the old fragment is not unique; an editing interface that carries
+15616	and explicit positioning makes conflicts easier to detect, but then versions have to be managed. There is no need to impose a complex protocol on a one-off temporary file, but writes to a shared repository deserve stronger conditions.
+26604	Output should be designed for the task that follows. A search tool returns files, line numbers, fragments and stable references, not the whole repository text; a test tool returns the command, the working directory, the version, the exit code, the pass/fail/skip counts and the location of the log, not just "success". Some flows can combine a common, well-determined sequence of steps into one tool, but it must not hide a write action that needs the user's authorization.
+20902	Conditions for this example:</strong> an independent order-lookup task: look up order O7 and return its status. Three tool boundaries are compared — "SQL over the whole database", "a business query" and "extremely fine field-by-field reads"; this is not any real database.
+24196	Granularity
+10441	How much of a business action one call carries.
+20564	Minimal result
+26045	Enough to support the judgement at hand, not all the data.
+13957	Side-effect boundary
+20388	Whether external state is changed.
+17782	Tool design
+21759	What the model has to decide
+11577	Main risk
+12075	Any SQL statement at all
+24784	Too broad a capability; hard to limit reads, writes and scope
+28190	Choosing the order ID
+26823	Clear boundary; returns the status and the version
+22013	Every detail takes another decision
+26114	More turns, more state to pass along, more misuse
+11293	A business query packages the known fixed steps into the program, so the model guesses less about details that do not matter.
+12151	But writing every business action as one all-purpose tool(mode,payload) hides the boundaries again and makes it hard for the schema to express the different parameter combinations.
+20520	The best granularity has to be tested on real tasks: look at the missing-field rate, the number of call turns, failure recovery and permission scope together, rather than only counting tools.
+11182	Do not conflate:</strong> "fewer tools" is not the goal; only cutting down hard-to-understand choices and unnecessary handoffs can raise the success rate.
+18720	Changing "run any SQL" into "query tickets": what is lost and what is gained
+26513	Input and conditions.</strong> The requirement is only to see the 10 most recent tickets belonging to user u7. run_sql(sql) is compared with list_tickets(user_id,limit).
+28316	General-purpose interface
+21754	The model assembles the query and the permission conditions itself
+25209	Highly expressive, and also more likely to forget the user_id filter or produce a write.
+12046	Task-specific interface
+17217	The host fixes the read-only query, the permission filter and the upper bound on limit
+21659	The model only fills in u7 and 10.
+27142	Return design
+24482	Gives the ticket ID, the status, the update time and a truncation notice
+10931	There is no need to stuff every field of the whole table into the context.
+26820	Boundary failure
+21680	The model fills in limit=100000
+23375	A deterministic cap stops it, rather than relying on a reminder to "be economical".
+28176	Choosing the trade-off
+23361	When a researcher needs complex exploratory queries
+14924	Controlled read-only SQL may suit better than building a new tool for every kind of query.
+19054	Join the steps up.</strong> Tool granularity should fit the common unit of work, putting the stable constraints in the program while avoiding a fragmented interface.
+26800	Limits and counterexamples.</strong> This is an interface-design example; it does not claim that a purpose-built tool is better on every task. That needs an evaluation on representative tasks.
+27924	Follow-up: does a more detailed tool description always mean the model uses it better?
+28142	A moderate number of examples and boundaries helps; large amounts of repeated explanation add context and may create conflicts. Explain first what is easy to get wrong: units, paths, inclusive/exclusive boundaries, pagination and side effects. Improving the description from failed samples works better than writing an encyclopedia entry.
+27921	Follow-up: why does renaming a tool affect quality?
+15515	The name takes part in how the model understands and chooses, and it may also be depended on by past state,
+18511	or automation. A change is not only an
+24698	compile problem; it may also change the probability of selection. Functional compatibility, an updated description and a routing regression test are all needed, not just a check that the function still exists.
+28091	Follow-up: why does letting the model run code to call tools in bulk save tokens?
+21662	The model can generate a program that filters, loops and aggregates inside the execution environment, returning only the necessary result to the context and keeping a great deal of intermediate data from traveling back and forth. But the execution environment has gained stronger capability, so it must have resource and permission boundaries; running code also introduces program errors. It suits data processing that can be programmed, and does not mean every tool call should be rewritten as a script.
+15381	Why the same tool is "installed but unusable"
+12775	Lay the four layers out first: the registry holds an implementation; the tool description enters this turn's visible catalog; the model can find it, either by calling it directly or along a discovery path; and at execution time the action is authorized. The four are a graded series of checks, not four synonyms.
+15755	In the pinned Codex,
+13755	keeps the registry and the model-visible specs separately. Direct exposure, deferred discovery, reachable in code mode and hidden are different states. Counting registrations alone does not prove the model can discover a tool; a deferred tool also needs a working search entry point and discoverable information.
+5914	The name and arguments the model generates are converted by
+26103	into different internal payloads, and the call types a host supports are not limited to one kind of function JSON.
+22963	Locating it layer by layer with a teaching tool table
+17915	Registered
+21079	Visible/discoverable this turn
+21005	Authorized this time
+21863	Correct diagnosis
+28813	Limited to repository paths
+15149	Can proceed to execution after validation
+18101	Deferred discovery, but the search entry point is closed
+17636	Not yet requested
+12089	Check the exposure configuration first, rather than changing the prompt
+21751	The model can propose it; the executor should refuse
+20276	Still mentioned in old context
+22503	Clear out the stale declaration; do not guess a mapping from the old name
+16300	What a good schema solves, and what it does not
+8847	A schema can constrain
+20399	to be a string and
+11560	to be a positive integer. It does not prove that the file exists, that the path has not escaped its boundary, or that the user agreed to an overwrite.
+15984	can be structurally valid and still needs normalization and an authorization check. Name collisions also have to be handled at registration time; an external tool must not silently take over the identity of a protected internal tool. The pinned registry normalizes names and handles reserved ones, and an external name must not be treated as a trusted identity.
+17784	Tool design affects the reasoning load
+6998	Anthropic's article on tool engineering stresses meaningful names, clear boundaries and return content that is useful and restrained. Do not simply wrap an existing API as it stands into dozens of tools with similar names. In the teaching example, making "read a file and return the path, the version, the requested lines and a truncation marker" into one stable tool is usually easier to verify than returning arbitrary JSON for the whole repository.
+11944	Code execution can let a large amount of data be filtered inside the execution environment before it is returned to the model, which cuts down the context being hauled around; but that does not automatically reduce permission risk. Running the code, reaching downstream, redacting results and capping resources remain the host's responsibility. What tool discovery saves is the cost of descriptions by default; it does not mean tools can be added without limit at no retrieval or security cost.
+15643	The four checks are not a straight line that has to be walked in order
+23132	Direct tools, deferred tool search and Code Mode are different exposure surfaces.
+5852	checks several paths;
+5867	distinguishes an ordinary function, a custom call and a tool search executed by the client; some hosted calls do not reach the same local handler. The number of registrations is therefore neither the number visible to the model this turn nor the number of authorized actions.
+22845	Check it against a counterexample: tool T is registered in the catalog, but policy keeps it hidden, and successful registration is no reason to report that "the model can use T". Conversely, T may not be in the initial array of direct tools and still be found through a legitimate deferred search. A diagnosis has to follow the exposure surface that tool actually takes, rather than only printing one global list.
+8132	Q014｜Which messages does MCP go through from connection to calling a tool? Who are the Host, the Client and the Server?
+27449	What to know first for this question</span>A tool is a callable action, a resource is readable content, and a prompt template is reusable input material; discovering a capability and exposing it each turn are not the same step.
+23610	Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent
+20414	is the application that carries the
+15621	and the user interaction; MCP
+20354	is the component inside the Host that communicates with one particular
+28277	; the Server exposes capabilities such as tools and resources. After connecting, the protocol version and the capabilities are negotiated first, and only then does normal operation begin; discovering tools does not mean they are all fed to the model automatically.
+19424	Walking one read-only query through in protocol order
+11987	What follows is a reduced set of teaching messages; the names and versions are an example configuration.
+8866	The Server answers with the same id, returning the protocol version it supports, serverInfo and, for example, the
+24778	capability. The Client checks whether that is compatible, then sends the id-less
+29413	, which says that initialization is complete. A request has an id so the response can be matched to it; a notification expects no corresponding response.
+19594	Next the Client sends
+29147	, and the Server returns the tool names, description, inputSchema and possibly a nextCursor. If there is pagination, requests continue until the needed discovery is complete. The Host converts the selected tool definitions into a form the model interface supports; this step is Host policy, not the Server directly controlling the model's prompt.
+21698	After the model proposes
+15550	, the Host checks authorization and parameters, and the Client sends:
+8868	The Server returns a result or a protocol error. The Host then converts the content into a model tool result, tied to the call_id on the model side. MCP's
+5951	-RPC id and the call_id on the model side belong to different protocol layers; an application may map between them, but must not assume the two are naturally the same.
+20885	Conditions for this example:</strong> a schematic of the pinned MCP 2025-06-18 protocol. The Host is the application, and the Client communicates with one Server on its behalf; the figure below is not the model sending HTTP to the server directly.
+14094	Negotiates the protocol version and the capabilities.
+17003	The notification by which the client confirms initialization is complete.
+14851	Discovers the tool descriptions; may need pagination.
+19898	Enlarged figure: MCP negotiates capabilities first, then discovers tools, and only then attempts a call
+14689	Original worked-example data: Q014
+14863	Sender→receiver
+14102	Protocol method
+21014	What is known after this step
+25833	Requests negotiation
+20666	The service declares support for tools
+27518	Enters the normal operating phase
+19347	Gets the tool names and inputSchema
+7715	Host→model
+28186	Selects which tool descriptions to expose
+21695	Only then does the model get a chance to choose
+18607	Executes the specified authorized tool
+13841	A successful initialization only shows that the protocol can hold a conversation, and a successful tools/list only shows the discovery capability; which tools the model can see is still filtered by the Host.
+7898	An MCP request ID ties to a protocol response and the model's call_id ties to a model output item; the host may have to maintain a mapping between the two, and the two IDs must not be assumed to be the same.
+8867	The Server having a tool does not mean the current identity has permission to execute it; authentication and user authorization still have to be checked separately.
+11203	Do not conflate:</strong> skipping initialization and calling straight away, or reading only the first page of tools/list, can both leave a server "installed" while "the model cannot find the tool".
+10398	What happens, in order, in the messages of one MCP connection
+26321	Input and conditions.</strong> A schematic following the MCP 2025-06-18 specification. The host's MCP client connects to a read-only file service using JSON-RPC messages.
+13836	Initialization
+16999	The client sends initialize and declares the protocol and the capabilities
+20663	The server returns the negotiated result; this is not a model tool call.
+17652	Ready notification
+17000	The client sends notifications/initialized
+18113	Establishes the normal interaction phase that follows.
+14866	Sends tools/list
+20664	The server returns the tool names, descriptions and input schema.
+21208	Constructing the model request
+17215	The host decides which tool descriptions are visible to the model
+14850	Not every discovered tool is necessarily authorized for the model.
+18616	Executing the call
+21705	After the model proposes it, the client sends tools/call
+7752	The JSON-RPC request id ties to the protocol response; the mapping of the model's call_id is managed by the host.
+18899	Join the steps up.</strong> MCP solves part of the problem of connection and message interoperability; the host is still responsible for the model input, the authorization and the organization of task execution.
+26695	Limits and counterexamples.</strong> A schematic flow at a pinned specification version; it does not mean that every MCP tool is exposed directly, nor that the protocol id and the model's call_id may be used interchangeably.
+27732	Follow-up: in stdio mode, why can logs not just be written to stdout?
+9332	stdout is used to carry the protocol messages, and ordinary logs mixed into it break parsing. Logs should go through the agreed logging mechanism or to stderr.
+17954	A network protocol commonly used for request and response between a client and a server. Example: receiving an HTTP response is not on its own proof that the business action succeeded.
+12139	transport, on the other hand, has its own set of connection, identity and session requirements. A different transport does not change the tool
+25795	semantics, but it does change the deployment and the failure modes.
+27851	Follow-up: when the protocol versions are incompatible, can a call still be attempted?
+11021	Compatibility must not be assumed. Initialization exists precisely to establish a common interpretation. The client needs to check whether the version the server returns is supported; otherwise it should exit or follow an explicit compatibility policy. Treating every difference as an ordinary parameter error and letting the model guess turns a protocol problem into pointless
+22479	consumption.
+27804	Follow-up: why is a capability declaration not the same as security authorization?
+9149	capabilities states which protocol features each side supports; it does not prove that the current user can read every resource or execute every tool. The Server still has to authenticate and authorize, and the Host still has to control which capabilities go to the model and when a side effect is approved. When tool annotations come from an untrusted Server, they cannot be taken as security fact.
+17843	Engineering deep dive · E21 · continues from Q042
+23613	Lesson 08</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+27636	A successful connection only reaches the transport layer
+19463	Under the MCP2025-11-25 protocol pinned for this section, the client first negotiates the version and the capabilities, completes the initialization life cycle, and only then uses the corresponding business capabilities. TCP or stdio being connected does not mean that the two sides already agree on the protocol version, the tool capabilities and the notification conventions.
+25548	Record the transport type, the negotiated version, both sides' capabilities and the initialized state. The protocol version is a fact about the run; it must not be inferred from "the package name looks new".
+9352	tools/list must not be assumed to have only one page
+17768	Tool enumeration may carry a nextCursor. The teaching service returns only read plus a pointer to the next page on the first page, and write on the second. Taking only the first page leads to the wrong conclusion that "the system has no write tool"; at that point, going on to improve the tool descriptions is pointless. The local simulation verifies that a complete traversal gives read and write. Changes to the tool list also have to be handled through capability negotiation, with notifications such as listChanged; the first snapshot cannot be used forever.
+10525	Three kinds of failure should stay in different layers
+12140	A transport failure</strong> means the request or the response may not have arrived; <strong>a JSON-RPC protocol error</strong> points to a problem with the request format, the method or protocol handling; <strong>isError in a tool result</strong> says the tool's business execution went wrong. Turning the last of these into plain natural language, "seems to have succeeded", loses the structured state; treating the first as business not executed can make a retry dangerous.
+17741	A tool can quite normally return a result that carries an error status, so HTTP success and successful JSON parsing do not entail tool success. Which particular error may be retried depends on whether the action happened, whether it is idempotent and whether it is still within the authorized scope.
+9330	stdio carries an engineering constraint that is easy to overlook
+18197	When stdout carries the protocol message stream, debug logs cannot be written into that same stream, breaking its frames. Put diagnostic output on the agreed log channel, and have the protocol parser report the source clearly when it meets an invalid frame. Do not lump every error of this kind together as "the tool will not connect"; keeping the event boundary before and after initialization makes them easier to locate.
+27922	Follow-up: if a tool annotation says read-only, can the host skip review?
+11057	A remote declaration cannot be trusted as a matter of course. An annotation can help orchestration, but it is not proof of authorization; the host should still limit side effects through its capability implementation and its permission boundaries. The tool description of a third-party service may also be untrusted input.
+27850	Follow-up: can upgrading the protocol fix a missing-tools problem by itself?
+20692	Not necessarily. A missed page, a cache that was not invalidated, a tool-name filter and a permission exclusion can all produce the same symptom. Judge from the logs which layer it was lost in first, then decide whether to upgrade. A version migration needs a compatibility matrix; not every anomaly should be treated as a bug in the old version.
+7472	E21: how to read this result, instead of only looking at "pass"
+22110	Compare the first page of tools with the complete set of tools. A successful initialization does not show that the pagination has been read to the end; when a tool cannot be found, locate the discovery chain first rather than blaming the model for choosing wrong.
+24849	Self-check:</strong> the first page of tools/list has no write tool. Can it be concluded straight away that the service does not support write?
+10959	No. Check nextCursor first and traverse the list completely, then verify the capability negotiation, the tool-list version and the permission filter. When the enumeration is incomplete, changing the prompt will not add a tool that is not in the model's input.
+8134	Q015｜What are MCP Tools, Resources, Prompts and Skills?
+27434	What to know first for this question</span>Initialization negotiates capabilities, discovery lists the interfaces, and only a call executes an action. The process, the network connection and authentication each fail in their own way, and an error has to be matched to the right layer.
+23596	Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions
+8973	Tools provide callable actions; Resources provide readable data objects; Prompts provide parameterizable prompt templates; Skills organize reusable task knowledge, instructions and resources. MCP solves the interconnection of interfaces and Skills solve the discovery and loading of a professional working method; the two can work together but do not replace each other.
+17550	Compared against one case of "investigating a live error"
+28613	An error log can be a resource, or it can be returned by a query tool; searching the run log is a tool; an "incident post-mortem template" can be a prompt; "how to locate concurrent duplicate writes, and which evidence to check" can be a skill. A skill may require a particular MCP tool, but that does not automatically install the Server, grant credentials or guarantee that a sub-agent inherits it.
+22508	Progressive loading usually lets the model see compact metadata first, reads the detailed instructions once relevance is confirmed, and only reads the attached material when execution reaches a particular step. This reduces the default context, but the discovery path has to be kept. If the name is too general and the description has no trigger condition, the model may never read the content that would really help.
+26019	A resource link is only a reference. Whether the link can be read, whose identity it is read under, and whether a separate capability is needed are all for an actual tool to settle. Putting a URI into the model's input does not give the model the bytes of the file. When a resource version changes, a summary already saved may also be out of date.
+20891	Conditions for this example:</strong> an independent repository-review example: read the design notes, adopt the review template, run the tests, consult the project skill. Similar names do not mean they are all executable functions.
+15244	A data resource that can be read.
+15168	A reusable interaction template.
+20641	An action interface with explicit input and output.
+28928	Instructions and related resources organized around a task.
+20385	Whether an action has been executed
+25872	Once read, provides evidence
+19420	Organizes the review questions by function/risk/test
+19757	Provides a template; does not run tests by itself
+17231	Runs only once the host calls it
+12212	When to check the exclude boundary, and the script for it
+13997	Loads a method; does not acquire permission by itself
+15400	One and the same Skill can teach the model to call a Tool, read a Resource or organize a Prompt, but the four have different life cycles in the system.
+18867	Writing a script path into a Skill does not make the script run by itself, and does not grant network or file-write permission.
+12875	Confirm first whether the task at hand needs data, a method or an action, then choose the right carrier, and avoid stuffing long instructions into every tool description.
+11202	Do not conflate:</strong> the existence of the format only proves that it can be discovered; it does not prove that loading, understanding and actual application all happened.
+15375	What differs when the same repository material is a Resource, a Tool or a Skill
+26199	Input and conditions.</strong> The repository has
+29233	, whose content is the build steps; there is also a test tool that can actually run the tests.
+28334	Provides the content of build.md through the agreed resource interface
+19748	Provides readable data; that does not mean automatic execution.
+20662	The server provides a parameterizable prompt template
+17232	Once the host adopts it, it enters the model's input; that is not an instruction with the highest privilege.
+9349	test returns an exit code and a log once it has run
+14860	Real computation or an external operation takes place.
+24367	Organizes when build.md is read, how the result is interpreted and what is checked afterwards
+17688	This is the organization of a professional procedure, not a piece of general execution magic in MCP.
+28412	Working together
+8890	The Skill chooses to read the material and call the tool
+22039	Each layer's responsibility still stays separate.
+19020	Join the steps up.</strong> Extension mechanisms with similar names can cooperate, but material, template, action and procedure are not the same layer of abstraction.
+26646	Limits and counterexamples.</strong> The description of Skill here follows the concepts of an open specification; it does not claim that the MCP specification itself defines the Skill life cycle of every product.
+27758	Follow-up: why is "once MCP is installed the model should know everything" the wrong expectation?
+27627	Connection, discovery, exposure and selection are different stages. The Host may load only some of the tools, miss a page, or hit a name collision; the model may also have no intention of making the call. Check the logs stage by stage, rather than putting a call that never happened down to the model not being clever enough.
+27695	Follow-up: can MCP let different agents share a complete memory?
+16461	It can expose a read/write interface for memory, but it does not automatically define memory semantics, conflict handling, visibility scope or a compaction policy. Two agents may access different namespaces even on the same Server; shared storage also brings contention and contamination. Being connected by a protocol is not the same as agreeing on what is known.
+27819	Follow-up: when is plain REST enough?
+17753	When there are few tools, the application is a single one and a stable SDK already exists, wrapping REST directly may be the simplest thing. When discovery has to be reused across several Hosts, and the resource and tool interfaces standardized, MCP is worth more. Judge the technical choice by what the integration gains; there is no need to deploy a full protocol service for one local function.
+8136	Q016｜How should MCP errors be layered? Where are the identity and network boundaries?
+27407	What to know first for this question</span>An OAuth scope constrains the actions that were granted, and the server should also check what the object belongs to. Combining tools programmatically can cut down interaction, but the wider the execution surface, the more constraint it needs.
+14062	Distinguish transport, protocol, tool execution, business and authorization problems. They differ in retry, in what is exposed to the model and in how they recover. A remote Server usually has its own permissions and environment; a local shell sandbox cannot be assumed to constrain remote MCP operations.
+11811	Working back from one timeout to where it may have happened
+27635	If the connection failed to establish, the request may not have been sent; if the Server received the request but a downstream call timed out, the side effect may already have happened; if the Server finished executing but the response was lost, the client sees only a wait that timed out. All three can show up as "timeout", but they differ in whether a retry is safe.
+7750	An unknown method or a format error at the JSON-RPC layer is not the same as a tool result with
+10731	. The latter can indicate a query syntax error, a business condition not met and so on, letting the model correct exactly what is wrong. HTTP401/403, certificate problems and a process exit should be handled by the connection and permission layers, and must not be papered over by the model changing business parameters.
+26095	The identity chain has to be traced as well: who the user is, whose credentials the Host uses, who the Server acts for when it reaches downstream, and whether the tool result contains another tenant's data. If a shared service account has too much permission, the model only has to construct a different resource_id to cross the boundary; schema validation will not stop that access.
+20886	Conditions for this example:</strong> a pinned MCP tool-request setting; no vendor products are compared. Connection failure, protocol error, tool business error and unknown execution result are recorded separately.
+14106	Protocol error
+20229	Communication-layer problems such as not being able to locate the method or parse the request.
+17770	A marker by which a tool normally returns an error result.
+20950	No result arrived locally, so whether the side effect happened cannot be judged.
+28596	Error signal
+20522	Most likely layer
+15340	A reasonable next step
+27629	Cannot connect
+24724	Network/transport
+19542	Check the address, the network, the process
+20211	The method does not exist
+14104	Protocol capability/version
+21407	Verify the version and method support
+17722	Tool result.isError=true
+17728	The tool's business execution
+25916	Read the error content; fix the parameters if needed
+25408	Authentication failed
+26088	Identity/authorization
+13896	Refresh the credentials or authorize again
+13621	A timeout after a write
+27621	The remote result is uncertain
+22857	Verify with a business key before deciding
+10891	Not every error should go back to the model as "try again". With no network connection, rewriting natural-language parameters will not fix it.
+11296	Returning a business error to the model can help it correct the request, but the content of an external error is still low-trust data, and an error message must not be a way to obtain higher permission.
+17289	For a call with side effects, whether it has already executed is the core question for recovery; simply classing it as failed leads to unsafe retries.
+11193	Do not conflate:</strong> successfully establishing an MCP connection does not mean any downstream resource can be accessed; connection, identity, authorization and business validation cannot be merged into one boolean.
+28405	All called "tool failure", yet errors in four layers take four different fixes
+26479	Input and conditions.</strong> The read tool did not succeed. Only one failure condition is changed at a time, with the rest held fixed.
+24734	Network layer
+27640	The connection times out
+21503	Check whether the address, the network and the service are reachable; changing the prompt usually does nothing.
+25937	A JSON-RPC method that does not exist is called
+21506	Check the protocol support on the client and the server; it should not be misreported as a missing file.
+19528	Authorization layer
+20665	The server returns that there is no permission to read that directory
+20490	Obtain proper authorization or narrow the target; a retry is no way around it.
+17727	Tool business layer
+17904	Authorized and the protocol is fine, but the file does not exist
+19893	Change the path, or go back to locating it in the directory.
+17755	The tool returned successfully, but the output was truncated
+25156	Read the given range as well; do not conclude that the second half of the file has no target symbol.
+18966	Join the steps up.</strong> Only by first sorting failures by the layer they happen in can an error be fed back as a next step a model or an engineer can take.
+26815	Limits and counterexamples.</strong> The error names are an explanatory classification and the actual error codes depend on the implementation; retrying applies only to failures that are genuinely transient.
+28007	Follow-up: the server says the tool is read-only. Can that be trusted as it stands?
+15021	Only a trusted service and a reviewed implementation can support that kind of security judgement. An annotation or a description is metadata, not a sandbox. A query can also trigger a side effect through malicious input, or send sensitive data onto the network. Real control is needed over the implementation, the target address and resource permissions.
+27958	Follow-up: should every tool failure be returned to the model?
+15182	Actionable business feedback should be returned; sensitive stack traces, credentials and attack payloads should not be exposed as they are. An unrecoverable infrastructure failure can simply end the task or degrade it, instead of letting the model guess again and again. Return a concise error category and the known execution state, and keep the original log for those with permission to diagnose.
+27770	Follow-up: why can it not fall back automatically to a tool with more permission?
+15712	Because the failure may be exactly the authorization boundary. Switching to a full-permission shell to reach the database after a restricted query is refused, for instance, goes around the user's authorization. A fallback should stay within equal or smaller permission; widening permission is a new decision, not ordinary fault tolerance.
+17844	Engineering deep dive · E22 · continues from Q044
+12740	Define identity, audience and permission scope first
+26093	Identity answers "who is calling", audience answers "which service the token is to be used by", and scope answers "which operations are allowed". A session_id is usually only used to correlate a session and cannot automatically prove any of the three. The MCP security guidance discusses risks such as token passthrough, the confused deputy and session hijacking explicitly.
+27385	The confused deputy here can be read as "a deputy that has permission is led into exceeding its authority on someone else's behalf". Even if the user grants the deputy only read permission, a deputy that uses its own high-permission token to carry out whatever the model proposes may still cross the user's authorization boundary.
+10316	How a token that looks legitimate comes to be wrongly accepted
+12547	Suppose the claims, whose signature a trusted library has already verified, are
+9995	. If service-B accepts it just because it sees read, it has ignored that the token was not issued to it. Conversely, a correct aud with a scope that does not include write still cannot write. <strong>The local test only checks the policy logic over already-verified claims; it does not implement JWT signature verification, and is no proof that production OAuth is secure.
+10616	A downstream call needs a legitimate token for the downstream resource, or an explicitly permitted exchange mechanism; passing the upstream token through unchanged must not be treated as general authorization. The origin, the target resource and the user's intent should all be traceable.
+11212	Do not let the model decide what is authorized
+21666	The model may suggest tools and resources, but trusted code has to normalize the target, check the tenant and the user, and limit the network range that can be reached. URL redirects, changes in DNS resolution and access to internal addresses can all break a plain string allowlist; the actual protection comes from the network and runtime implementation, and cannot be replaced by telling the model "do not access the internal network".
+28003	Follow-up: is a user confirmation dialog enough on its own?
+23394	A confirmation must be bound to the specific action and its parameters. If the user confirms reading file a and the executor then accepts the model changing it to writing file b, confirmation and execution have come apart. The approval evidence should be bound to a normalized intent fingerprint, the target version and a validity period; see the concrete test in E48.
+28006	Follow-up: if the servers are all on the internal network, is scope still worth distinguishing?
+28873	Yes. A position on the internal network is not a user identity, and does not mean every service may act for every user. Least privilege and resource-level validation serve to limit the impact of one component being compromised or of the model acting wrongly; they are not only a defense against attacks from the public internet.
+7475	E22: how to read this result, instead of only looking at "pass"
+11974	The audience a token states must match the target resource. A session ID is for correlating a session; it is not an authorization token that allows access to any resource.
+24872	Self-check:</strong> a token whose signature is verified has read permission, but its aud is another service. Why should it still be refused?
+24150	The signature proves where the token came from and that its content is intact; it does not prove that the token was issued for the current resource. The audience, the scope, the user/tenant and the specific target all have to match; nor can a session ID stand in for these checks.
+22203	Follow this chapter through its objects and states</a><a href="#topic-2">MCP connects interfaces; it does not hand over permissions on its own</a><a href="#Q041">Q013｜When designing tools for an agent, should they be split into many small tools or made into one all-purpose tool?</a><a href="#Q042">Q014｜Which messages does MCP go through from connection to calling a tool? Who are the Host, the Client and the Server?</a><a href="#Q043">Q015｜What are MCP Tools, Resources, Prompts and Skills?</a><a href="#Q044">Q016｜How should MCP errors be layered? Where are the identity and network boundaries?

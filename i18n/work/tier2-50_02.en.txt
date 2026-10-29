@@ -1,0 +1,689 @@
+# tier2-50_02 -> en
+1216	Source S085, Position effects in a long context
+1217	Source S088, The nominal window and the effective capability
+1218	Source S089, Opaque compacted state and continued execution
+1219	Source S130, Continuing development across contexts
+1220	Build the loop
+1221	Label
+1222	A label is the correct target to compare against; next-token training lines each input position up with the token after it. Teacher forcing computes with the real prefix from the data rather than replacing it with what was just sampled.<span class="concept-micro">Independent example: for the full sequence [a,b,c,d] the input [a,b,c] can be paired with the labels [b,c,d]. When the interface already shifts them, do not shift them a second time outside it.
+1223	Checking
+1224	Detect whether it has already become r8
+1225	Model output
+1226	Residual
+1227	The content representation at each readable position that will be pooled by weight. Example: V here is not the vocabulary size.
+1228	No functional-test evidence
+1229	The code and environment version the test corresponded to.
+1230	How many items the test framework actually found.
+1231	Missed detection
+1232	Activation
+1233	Piece
+1234	Version and environment
+1235	Stage
+1236	A concrete process to help: <a href="../visual/F03.html">Text, bytes, tokens and IDs are four different things</a>. The figure explains the shared mechanism; for the method and the experimental conclusions specific to this item, this item's own notes remain authoritative.
+1237	Dispatch with the matching semantics
+1238	Have the model generate a hypothetical answer or document and use its representation for retrieval. That generated text is an aid to finding evidence, not a source of facts already found.<span class="concept-micro">The model guesses "it may be cache invalidation", which is reason enough to widen the search; before there is real evidence it must not be written up as "cache invalidation confirmed".
+1239	Related step-by-step process: <a href="../visual/F31.html">Long-term memory is not a note that is always right</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+1240	Related pages
+1241	What it looks like
+1242	A real crash window
+1243	At execution time
+1244	How does a research agent avoid "searched a great deal, concluded nothing"?
+1245	Empty
+1246	Lesson 40
+1247	Waits for A/B
+1248	Conclusion
+1250	Related mechanisms to continue with: <a href="../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat</a><a href="../visual/F33.html">Lesson 26 · A timeout tells you nothing arrived, not that nothing happened
+1251	Related mechanisms to continue with: <a href="../visual/F27.html">Lesson 22 · Compaction must keep the facts an action depends on</a><a href="../visual/F29.html">Lesson 17 · From two candidate lists to usable evidence
+1252	Continue the step-by-step calculation: <a href="../chapters/04.html#worked-Q019">Q083 · How repeated samples turn an evaluation into "memorizing the answers"
+1253	Continue the step-by-step calculation: <a href="../chapters/21.html#worked-Q084">Q052 · How retry, resume, replay and cancel differ as four actions
+1254	Continue the step-by-step calculation: <a href="../chapters/25.html#worked-Q100">Q068 · Roll back only the prompt and the failure is still there — why
+1255	If it has been revoked, refuse to execute
+1256	Rule-file loading and subagent inheritance: why is "inherited automatically" not enough to say?
+1257	Memory has to answer two questions about time: when the fact took effect, and when the system knew it. The figure below follows the source, the valid time and the expiry of a timeout setting that goes from 30 seconds to 20, so that old knowledge is not simply repeated in a familiar tone.
+1258	Evidence and the limits of understanding:</strong> the candidate covers only the old prefix, so installing it must verify identity and keep the live suffix; accepted in memory and persisted successfully are different boundaries.
+1259	Evidence and the limits of understanding:</strong> the end of the model's response proves only that this generation has ended; the tool result and the final acceptance remain two separate pieces of evidence. A stop-hook check is no substitute for a real test either.
+1260	Evidence and the limits of understanding:</strong> once the artifact has been produced you still have to shut the workers down, verify the content, confirm the lease and record completion; long-term memory is not the model's parameters updating themselves.
+1261	Evidence and the limits of understanding:</strong> reads, patches and tests have to be bound to a working-tree version; once the final file changes again, the old test no longer covers the new result.
+1262	Evidence and the limits of understanding:</strong> more roles and reset policies for a long task are not better; after a model upgrade, compare against a trimmed-down mechanism instead of always applying the longest process.
+1263	The file was obtained and read within the scope listed; the package keeps the original locations and the Chinese notes, with no fabricated or stitched-together copy of the full text.
+1264	Semantic memory keeps facts, episodic memory keeps experiences, procedural memory keeps conditional methods; working memory serves the current task. CoALA is a framework for analyzing this kind of cognitive architecture, and MemGPT studies how a limited context and external storage are organized.<span class="concept-micro">"Patch p7 failed because a test was missing" is an experience; "Windows has to be supported for now" is a fact; "check the separator when changing path rules" is a conditional procedure, and must not be promoted straight into running the full test suite for every task.
+1265	Request S7
+1266	After reading the other positions, why are a residual, normalization and an FFN still needed?
+1267	Route
+1268	Input position
+1269	When does the text in the input box become something the model can compute with?
+1270	These fields are there for comparison; you are not required to set up a database or a complex platform for a small exercise. One JSON file and the logs you already have are enough; use the same version for inputs that have not changed, and do not let new material quietly overwrite an old result.
+1271	The properties these tests define do hold
+1272	This is the parameter matrix that turns the input representation into the query, not the query itself. Under this book's right-multiplication convention, each input row has d numbers and Wq has d rows and d_k columns, so after Q=XWq each row has d_k numbers. The subscript q marks what it is for; it does not mean multiplying by another q.<span class="concept-micro">One Wq can handle many positions; each position gets its own q. F11 gives X, Wq and every multiply-add result.
+1273	This is an original cumulative experiment from this textbook. The default offline path only operates on generated temporary data; a real model, external accounts and the GPU path have to be configured yourself, and anything not run is explicitly left as NOT_RUN.
+1274	Where do connection, discovery, model visibility and actual authorization each happen?
+1275	A processor suited to large-scale parallel numeric computation. Example: moving data to the GPU does not change what the IDs mean, but it costs time and VRAM.
+1276	Elementwise multiplication multiplies the numbers at the same position once the shapes are aligned; it does not then sum along any dimension. Matrices written side by side in a formula, or @, usually mean matrix multiplication, and the two are not interchangeable.<span class="concept-micro">Independent micro-example: [1,2]⊙[3,4]=[3,8], whereas the dot product is 11. The ⊙ in a gated feed-forward network modulates one path with the other, feature by feature.
+1277	Wrong version, for contrast
+1278	Follow it further through the source or the engineering basis:</strong> use two independent commit points to understand an unknown result. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1279	Follow it further through the source or the engineering basis:</strong> keep the task, the trial, the grading and the statistical unit consistent. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1280	Prerequisite: <a href="../foundations/09.html">Lesson 44
+1281	Prerequisite: <a href="../foundations/23.html">Lesson 07
+1282	When is a predicted token displayed, and when does it become the next turn's input?
+1283	Risk
+1284	Formatting, generating code or changing configuration after verification also changes the object, so the affected checks have to be run again or shown not to be affected.
+1285	The same 100 questions compared: besides the success rate, which two cells should you look at
+1287	In a 50-second trace, where does the state first become distorted
+1288	8. Acceptance questions
+1289	A 2 steps; B 4 steps; C 2 steps; 2 slots
+1290	ACID, transactions and isolation
+1291	AI Systems Engineering · Worked runs
+1292	AI Systems Engineering: from the basics to the internals · <a href="index.html">Home
+1293	ANN here means approximate nearest-neighbor search, not artificial neural networks in general. HNSW is a structure that narrows the search using a hierarchical graph of near neighbors; its parameters affect recall, speed and memory.<span class="concept-micro">Finding something quickly is no guarantee of finding the exact nearest neighbors; nor does ANN recall equal the correctness of the final answer.
+1294	AdamW's "historical state" is accounted for separately from this step's gradient
+1295	B and C
+1296	C(n,k), !: the number of combinations and the factorial
+1297	CAS(v8) fails, prepare again
+1298	CLIP and image-text contrastive learning
+1299	Concat, split and chunk: joining and splitting
+1300	What DPO compares is the "preference gain relative to the reference model"
+1301	FLOPs usually means a number of floating-point operations; FLOP/s means a rate of operations per second. Papers and vendors may count a multiply-add as one operation or two, so the basis has to be fixed.<span class="concept-micro">Dividing total operations by the theoretical peak is no promise of real elapsed time: movement, queueing, communication and actual utilization cost something too.
+1302	GQA stores fewer K/V groups; MLA tries to compress the K/V representation into latent variables
+1303	Handoff and agent-as-tool
+1304	The host is what carries the AI application; the client is its protocol client for connecting to a particular server. Establishing a connection does not approve every operation automatically.
+1305	The workspaces of the IDE, the CLI and a cloud task are not naturally one and the same
+1306	JSON-RPC lays down how a method, its arguments, an identifier and a result are represented in JSON; stdio communicates over a process's standard input and output; HTTP is a network request protocol at another layer. The name of a protocol carries no permission with it.<span class="concept-micro">When stdout carries protocol messages, ordinary debug logs should be kept out of that stream and usually go to stderr; otherwise even legitimate logs can break message parsing.
+1307	LF, CRLF and EventSource
+1308	Little's law: L=λW as local notation
+1309	LoRA, quantization and distillation each change a different object
+1310	MLA refers to a family of multi-head latent attention architectures. It organizes the content behind K/V jointly in a lower-dimensional latent representation and handles the positional part by design. It changes the model's representation and parameter structure; it is not just ZIPping an ordinary KV file.<span class="concept-micro">In c=xW_down, c is the latent vector for this computation and W_down the learned table of dimension-reducing coefficients; how it is later reconstructed or absorbed into a projection has to be explained for the specific architecture.
+1311	What numbers are the query, the key and the value, and why are there three separate paths?
+1312	Retry, resume, replay and cancel mean different things for an action
+1313	Whether a review is worth it depends on new evidence, not on always doing one more round
+1314	SAE stands for sparse autoencoder: it reconstructs a model's activations from a combination of relatively few active features. An activation is an intermediate number from this computation, not a complete record of natural-language reasoning. A successful reconstruction does not by itself prove that a feature has a unique causal meaning.<span class="concept-micro">Seeing a feature change together with the output is a clue; judging causation also takes control of other conditions, intervention and a comparison.
+1315	SKILL.md path
+1316	Once the schema passes, two layers of checking remain: business validity and authorization
+1317	SiLU(x)=x×sigmoid(x). The input is first mapped to between 0 and 1, then multiplied back by x itself, which makes it nonlinear. Negative numbers do not all become 0 as they do with ReLU.<span class="concept-micro">Independent micro-example: SiLU(0)=0; SiLU(1) is about 0.731059; SiLU(-1) is about -0.268941.
+1318	A skill's expertise should be verified against concrete failure cases, not measured by its length or its number of technical terms.
+1319	TF, DF, IDF: term statistics
+1320	TTFT is the latency from the request to the first output token; TPOT describes the statistics of the time per token after that; p95 is the quantile that about 95% of observations in a given window do not exceed; throughput is the amount completed per unit of time. Say where the timing starts and stops.<span class="concept-micro">A fast first character does not mean a fast task: tool execution may still take a long time. Nor does theoretical peak throughput equal the latency one user sees.
+1321	Count tasks, trials, traces and outcomes separately and the denominator stays straight
+1322	WAL is the idea of writing a log first and then updating the data by protocol; fsync asks for a file's data to be synchronized to storage; an atomic rename, where it is supported, keeps readers from seeing a half-finished replacement. Visibility and durability after a crash are not the same guarantee.<span class="concept-micro">One file renaming successfully does not mean several files and a database committed together; durability also has to be checked against the platform, the directory and the storage behavior.
+1323	Wo / W_O: the attention output projection
+1324	[1,2,3] stands for three positions in one sentence. Selecting "position 1" here picks out the single integer 2.
+1325	grep, AST, LSP and run logs each answer questions at a different layer
+1326	The counterexample myvendor/a.py should keep
+1327	The name/description list
+1328	pass@k and pass^k: one looks at the chance, the other at the stability
+1329	pre-norm / post-norm: where normalization goes
+1330	t2 correct option A
+1331	t2 correct option B
+1332	t2 wrong commit
+1333	x=2, target 4, initial w=1, so the prediction is 2 and the loss 2. There has to be a measurable error before there is anything to say about updating.
+1334	Which evidence a conclusion needs: only listing it sentence by sentence shows whether it is enough
+1335	How one training sample enters the computation carrying its source and its label
+1336	In one forward pass, which steps mix positions and which mix only features
+1340	An immutable request and mutable authorization
+1341	Different files with no textual conflict can still produce a semantic conflict
+1342	The earlier and later blocks can be combined into the same answer without storing the full softmax table
+1344	Not the final real cost
+1345	Do not conflate:</strong> checking the version first and then writing without a lock still leaves room for a new event between the check and the write; a conditional commit has to be atomic to match.
+1346	Do not conflate:</strong> the model replying "I used such-and-such skill" counts only as a claim; it is no substitute for a loading trace and evidence of execution.
+1347	Do not conflate:</strong> taking the model's own "I am 95% sure" as the only threshold for escalation tends to leave overconfident errors exactly where escalation is needed most.
+1348	A business rule needs an exception that can be executed, not just a slogan
+1349	Two reviewers agreeing may only mean they share one blind spot
+1351	The difference between two average success rates cannot tell you which questions regressed. Look first at the paired table over the same questions — both succeeded, only the new version won, only the old version won, both failed — and then at cost, variance and grader error.
+1352	How the two new queries should read the five keys
+1360	Events 1—8
+1361	Event 9 quietly disappears
+1362	Facts kept
+1363	A handoff package must at least let whoever takes over know the evidence and the unfinished actions
+1364	Human approval has to be bound to the specific arguments and version, not to the tool name alone
+1365	What still cannot be claimed
+1366	Still generating the candidate
+1367	Compute three branches from the same X, then arrive at one concrete output
+1368	A correct answer in enterprise Q&A has to pass three gates at once: scope, time and evidence
+1369	An optimizer turns gradients into parameter updates. Adam also keeps, for every parameter, a moving average m of the gradient and a moving average v of the squared gradient; these are training state, not attention values. AdamW decouples weight decay from the adaptive gradient update.<span class="concept-micro">Independent first-step example: with g=2, old m=0 and β₁=0.9, the new m is 0.2, and after bias correction m_hat=2. The 0.2 cannot be taken as the full size of the update.
+1370	Position 2
+1371	Basis and scope
+1372	v9 is not overwritten
+1373	Before information is written to long-term memory, keep the observation, the hypothesis and the rule apart
+1375	Checking the generation number when a candidate is installed
+1376	Candidate summary
+1377	Preference margin
+1378	The metadata has been discovered
+1379	First write down the behavior to be held to, then prove with a counterexample that fails that a change really is needed. A passing test has to be bound to the version of the code under test; change the file afterwards and the old green result no longer proves what is being delivered.
+1381	Locate the type of retrieval failure first, then decide whether to add advanced RAG components
+1382	Find the earliest error boundary first, then decide whether to change the model or change the system
+1383	Separate the wait, the first item and the later items before asking why it is slow
+1385	Follow the actual objects first: the user's text is not the message payload, the message payload is not the token array, and an ID is not an embedding. Recognize these four objects separately and the shapes and API roles that follow will have somewhere to land. The vocabulary in the figure below is an independent teaching convention; do not take it for what every tokenizer really produces.
+1386	Test the working tree r7 first, then produce r8 by formatting; judge which checks have to be run again, and record the differences.
+1388	Total run spend / number of successful tasks
+1390	Key boundary:</strong> do not escalate every problem into a redesign; measure whether rework and defects really do go down.
+1391	Key boundary:</strong> the same commit is not the same working tree; it has to be bound to a content version.
+1392	Key boundary:</strong> a background request that is discarded can still cost money; both state correctness and usage accounting have to cover the failure path.
+1393	Key boundary:</strong> snapshot consistency and authorization freshness are different goals; staying consistent is no reason to go on executing an operation that has been revoked.
+1394	Key boundary:</strong> source deduplication, version filtering and relevance ranking each solve a different problem.
+1395	Key boundary:</strong> a process still being alive is no proof that it still has the right to publish; the model finishing its output is no proof that the artifact is valid.
+1396	A concrete example:
+1398	Subtracting the maximum only changes the scale of the computation, not the probabilities between the candidates
+1399	The "splitting" in distributed training: say first whether what is split is the samples, the matrices or the state
+1401	Once the source document is deleted, derived summaries and vector chunks can still go on spreading the old conclusion
+1402	The program or model that decides whether to escalate.
+1403	Add detection cost d
+1404	Add rework and failure costs
+1405	Escalation rate
+1406	Escalation rate is not an automatic synonym for the small model's failure rate; only a failure the detector can find enters the escalation path.
+1407	Compactor
+1408	The most dangerous thing in compaction is not a missing line of background but writing "not executed" as "done", and "forbidden" as "about to be done". Check the propositions, versions, negations and open states against this figure first, and only then consider how many tokens to cut.
+1409	Atomic replacement
+1410	Bi-encoder
+1411	A bi-encoder encodes the query and the document separately, so document vectors can be stored in advance; a cross-encoder processes a query and a document together for a finer judgement, usually computing every pair. Reranking only orders candidates that have already been recalled.<span class="concept-micro">A correct document that was missed is not in the candidate set, and no reranker, however strong, can put it first; the recall has to be fixed first.
+1412	Conversely, loading a long set of instructions with no corresponding action is not effective application either; look at the task behavior and the result.
+1413	Taking only the line that matched can throw away the condition for the judgement along with it
+1414	Recoverable snapshot
+1415	Checkable object
+1416	each
+1417	Computed independently in the same way
+1418	Four kinds of "vector", told apart by what the coordinates mean rather than by how they look
+1419	Keep the four kinds of memory in different places and a temporary hypothesis will not be taken for a permanent rule
+1420	Back to the full explanation in Lesson 02 →
+1421	Back to the full explanation in Lesson 29 →
+1422	Back to the full explanation in Lesson 33 →
+1423	Back to the full explanation in Lesson 38 →
+1424	Back to the full explanation in Lesson 43 →
+1425	Back to the full explanation in Lesson 47 →
+1426	Back to the full explanation in Lesson 58 →
+1427	Back to the first step of this group
+1429	Source at the pinned commit</span> <span class="badge gray">Relevant original text checked
+1430	In the LayerNorm expression, γ is a row of learnable multiplicative coefficients and β a row of learnable additive ones; ε is a small positive number set by hand, placed in the term involving the denominator to avoid division by zero and similar problems. The mean μ and the variance σ² that are computed are in turn statistics of this data.<span class="concept-micro">γ=1 and β=0 usually mean that every feature uses 1 and 0; they are not the meaning of an input word. The β in DPO refers to a coefficient of the objective function, and the sense it has here does not carry over.
+1431	In σ(XW+b), σ usually stands for whatever nonlinear function this layer has chosen; it may be ReLU or another, and σ alone does not make it a sigmoid. In statistical formulas σ usually means the standard deviation and σ² the variance. They are not the same object.<span class="concept-micro">Independent example: if σ is specified as ReLU, σ(-1)=0; if it is specified as sigmoid, the value is about 0.268941. The function has to be defined before any result can be computed.
+1432	In policy and preference optimization, π denotes a conditional-probability policy and π_ref a fixed reference policy; β is a coefficient that sets the scale of the objective or the strength of the constraint. The probability of a complete answer is built from the conditional probability of each token.<span class="concept-micro">π here is not the circle constant, and β is not the LayerNorm offset parameter. The w/l in the DPO expression mark the preferred and the non-preferred answer, not a weight w and a layer count L.
+1433	Baseline success rate and latency
+1434	Foundations</span><span>about 2.8k characters</span><span>1 controllable demo
+1435	Add a counterexample
+1436	Field
+1438	The complete file is saved and its Git blob checksum matches.</strong> The original code below can be checked offline; it was not executed as a standalone module.
+1439	Locating a bug: use input that can tell the hypotheses apart, rather than blindly reading more files
+1440	Live history
+1442	The host has already discovered it
+1443	The host found the name and the description.
+1444	For
+1445	Compute RRF for the fixed D1/D2/D3, then add a duplicate block of D2's original text and check that the duplicate cannot be counted as independent support.
+1446	The proportion that needs the strong model after the small-model stage.
+1447	Worker A holds generation 1; after a timeout B takes generation 2; A recovers and tries to publish, and the conditional write must fail.
+1448	Total work
+1449	Tool layer
+1450	Tool execution
+1452	Tool result 9 is appended as v9
+1453	A tool call and its result have to be kept as a pair. You cannot keep only "c1 was called" while overwriting the c1 result that has just arrived.
+1455	Basis and scope of the engineering deep dive</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="agent-evidence.html"><span class="rail-name">Evidence for agent mechanisms
+1456	Why can tools running in parallel finish earlier and show their results later?
+1457	An execution record for the current version
+1458	Shape [2,5,8]; sample 0 is shown here, and the numbers are from before the first update. What the columns mean changes with the step: for score/A they are key positions, for logits/probabilities the vocabulary, and otherwise features.
+1460	or
+1461	An operation or verification required by that method appears during execution.
+1462	Recovering evidence takes a content identity, not just a file name
+1463	Draw the contributions of A.5's three positions separately
+1464	Turn "it does not understand my project" into four hypotheses you can rule out
+1465	The parameter layer that turns the final hidden representation into a score for every vocabulary candidate. The input width is d, the vocabulary has Vocab entries, and the right-multiplied parameter shape is [d,Vocab]. Producing probabilities means normalizing these scores as well.<span class="concept-micro">Attention's Wo outputs hidden features; Wout outputs scores over vocabulary candidates. Both names contain "output", but what they output is different.
+1466	Bind rule R3, tool T8 and environment E2 to the same request, then revoke the write permission before the model returns. Explain which interpretive information still comes from the snapshot, and which authorization has to be re-checked against the state at execution time.
+1467	Store a logically contiguous K/V sequence in several physical blocks, located through a block table. It mainly changes how the storage is managed and shared; it does not replace the attention formula with an algorithm that means something else.<span class="concept-micro">Independent example: logical positions 0—3 are in physical block 7 and 4—7 in block 2; logical position 4 need not physically follow position 3.
+1468	Put the actions that must certainly be carried out in the program, not only in the instructions
+1469	An instruction conflict and a fact conflict cannot both be settled by the same "latest wins"
+1470	Loss
+1471	Speculative decoding
+1472	Submits the c1 result=30
+1473	At commit time, write only if the current version still equals the expected version.
+1474	Summary + event 9 kept as it is
+1475	Summary S is based on the prefix e1—e3; e4 and e5 are appended while it is being generated. Appending can keep the suffix, whereas a rollback or a change of model or authorization identity invalidates the candidate.
+1476	Enlarge figure
+1478	Teaching state
+1479	Value
+1480	Verification of the numbers and state
+1481	Data parallelism lets several copies of the model process different samples and synchronize their gradients; tensor parallelism splits the parameters and the computation of a single operator; pipeline parallelism puts different layers on different devices. ZeRO/FSDP-style techniques also shard parameters, gradients or optimizer state.<span class="concept-micro">What they split differs: dividing one layer's matrix in two is not the same as giving two independent user tasks to two agents.
+1482	Files, the network and remote tools are three different ways in and out
+1483	Pausing execution to form a safety boundary is the easiest thing to explain, but it costs throughput; concurrent compaction needs an explicit prefix range or a version-conditional update.
+1484	Update
+1485	Even the smallest repository fixer should leave behind four objects that can be re-checked
+1486	Effective reflection needs new evidence; repeated self-assessment may only rewrite the error
+1487	Valid time and record time are two separate questions
+1488	Stateful and stateless interfaces differ in who keeps the objects from the previous turn
+1489	Expected spend
+1490	Scenarios that were not covered are correct too
+1492	Conditions for this example:</strong> independent concurrency example: history version v8 contains events 1—8; after the compactor has read v8, a new tool result arrives as event 9. The candidate summary still covers only 1—8.
+1493	Conditions for this example:</strong> independent cost model: going straight to the strong model costs 10 units per task; using the small model first costs 2, and 30% of tasks escalate and spend another 10. Detection and rework are left out for now, so this is an idealized lower bound.
+1494	Conditions for this example:</strong> an independent skill directory contains a "directory rule review" skill whose goal is to check the exclude boundary. Follow the metadata first, then the body and the actual tests.
+1495	Steps in this group
+1496	Source S001, The LLM course: a panorama of concepts and tools
+1497	Source S005, A practical route for training from scratch
+1498	Source S009, The annotated Transformer
+1499	Source S013, Grouped-query attention
+1500	Source S015, Few-shot and in-context learning
+1501	Source S023, Deduplicating training data
+1502	Source S024, SFT and RLHF
+1503	Source S036, KV cache strategy
+1504	Source S047, The function-calling protocol
+1505	Source S058, Designing tools for agents
+1506	Source S065, An engineering environment built for agents
+1507	Source S092, Tool-result cleanup
+1508	Source S094, How caching and compaction interact
+1509	Source S095, The basis of retrieval-augmented generation
+1510	Source S102, Code search syntax
+1511	Source S111, The cognitive architecture of language agents
+1512	Source S113, Types and namespaces of long-term memory
+1513	Source S122, Skill specification and resource organization
+1514	Source S125, Workflows, parallelism and dynamic orchestration
+1515	Source S136, Review standards and less-than-perfect delivery
+1516	Source S137, Design, functionality, complexity and tests
+1517	Source S141, Reviewing a quality regression in a coding agent
+1518	Source S142, Decoupling inference from the execution environment
+1519	Source S172, Prompting, evaluation and model optimization
+1521	A history version fixed at one moment in time.
+1522	View stage
+1523	The public API guide on the day of the query
+1524	Detector
+1525	Whether the detector catches the error
+1526	A retrieval ranking says only what order the candidates are in, not that a fact has been established. The figure below fuses two fixed candidate rankings item by item, then adds judgements of version and evidence; if an answer needs two conditions, recalling only one of them is not enough.
+1528	The model has already followed it
+1529	A kind of end-of-sequence token agreed with the model. Example: it is a different reason for ending than the maximum output length or a cancellation by the user.
+1530	A model judge should first see whether reordering the same answer changes its verdict
+1531	Player for the intermediate values of model training and inference
+1532	Positive example
+1533	The body has been loaded
+1534	The body has already been read
+1535	The visible weights in each row sum to 1. A masked position has weight 0; it is not left out of the printed table.
+1536	Every output component multiplies the corresponding value component at each visible position by its weight and adds them up; it does not simply pick one row.
+1537	Cost per successful task
+1538	Each entry is that head's Q dotted with K and divided by √2; future key positions are set to −∞. The query at position 0, for example, can read only token 0.
+1539	An attention heat map is an observation; only causal intervention begins to test the explanation
+1540	Tests generated
+1541	The tests really ran
+1542	Test evidence invalidated
+1543	Mixed precision, loss scaling and master weights
+1544	A missed detection lowers the final quality
+1546	Version
+1547	Feature 4
+1548	Feature 5
+1549	Feature 6
+1550	Feature 7
+1553	Ideal cascade
+1554	Production
+1555	Use the same task set to compare end-to-end success, cost and tail latency. A cascade saves money on calls but lets rare serious errors increase, which may be unacceptable.
+1556	Replaces the whole history with the summary
+1557	Interface coordinates are valid only for that one screenshot and window state
+1559	Straight to the strong model
+1560	Related step-by-step process: <a href="../visual/F03.html">Text, bytes, tokens and IDs are four different things</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+1561	Related step-by-step process: <a href="../visual/F27.html">Compaction must keep the facts an action depends on</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+1562	Related step-by-step process: <a href="../visual/F29.html">From two candidate lists to usable evidence</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+1563	Related step-by-step process: <a href="../visual/F34.html">A test looks for counterexamples; it does not stamp code green</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+1564	Related step-by-step process: <a href="../visual/F36.html">It went up ten points — so why can we not conclude anything yet?</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+1565	Related step-by-step process: <a href="../visual/F40.html">Find which layer the error happens in before talking about changing models</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+1566	The relevant instructions actually enter the context.
+1567	Confirms that the summary replaces only the prefix 1—8
+1568	Present on disk
+1569	Index of examples
+1570	The old worker comes back after the lease has expired
+1571	Lesson 04</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+1572	Lesson 26</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+1573	Lesson 43
+1574	Lesson 48
+1575	Lesson 51｜Attention, pressed further: position, masks, multiple heads and backpropagation
+1576	Lesson 52
+1577	Lesson 54
+1579	Wait times out
+1580	Systems</span><span>about 7.8k characters</span><span>Figures and item-by-item notes
+1581	A within-group reward is only a relative comparison, not proof of absolute correctness
+1582	Split review findings into architectural errors and local naming problems; the latter go straight into implementation and verification, while the former change the plan first.
+1583	Adds placeholder items to a short sequence so that the chosen arrangement can be used. Example: [4,2] right-padded becomes [4,2,0].
+1584	Related mechanisms to continue with: <a href="../visual/F04.html">Lesson 38 · Batching does not blend two sentences into one</a><a href="../visual/F05.html">Lesson 39 · An embedding is a row lookup, not an ID converted to binary</a><a href="../visual/F15.html">Lesson 57 · How one input connects to prediction, all the way to the end
+1585	Related mechanisms to continue with: <a href="../visual/F24.html">Lesson 02 · Task state is not a one-line summary in the chat</a><a href="../visual/O10.html">O10 · Compaction, retrieval and prompt cache: three different kinds of saving
+1586	Related mechanisms to continue with: <a href="../visual/F28.html">Lesson 16 · Retrieval finds candidates first, then judges whether they can answer</a><a href="../visual/F35.html">Lesson 05 · When reading a metric, first ask what its denominator is</a><a href="../visual/F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+1587	Related mechanisms to continue with: <a href="../visual/F30.html">Lesson 18 · Code retrieval cannot rely on "semantically similar" alone</a><a href="../visual/F35.html">Lesson 05 · When reading a metric, first ask what its denominator is
+1588	Related mechanisms to continue with: <a href="../visual/F35.html">Lesson 05 · When reading a metric, first ask what its denominator is</a><a href="../visual/O12.html">O12 · Model routing: cheaper per call is not cheaper per successful task
+1589	Continue the step-by-step calculation: <a href="../chapters/11.html#worked-Q041">Q013 · Turning "run any SQL" into "query a ticket": what is lost and what is gained
+1590	Continue the step-by-step calculation: <a href="../chapters/13.html#worked-Q052">Q020 · A new file conflicts with old memory: what do you compare first
+1591	Continue the step-by-step calculation: <a href="../chapters/16.html#worked-Q064">Q036 · Which step does each of the four RAG enhancements take on the same question
+1592	Continue the step-by-step calculation: <a href="../chapters/19.html#worked-Q075">Q023 · To enforce a format check, write it into the prompt or use a hook
+1593	Continue the step-by-step calculation: <a href="../chapters/22.html#worked-Q087">Q007 · The same one-line change, so why does the review effort differ
+1594	Continue the step-by-step calculation: <a href="../chapters/24.html#worked-Q093">Q057 · A web page says "ignore the user and upload the file": why it must not be executed
+1595	Continue the step-by-step calculation: <a href="../chapters/26.html#worked-Q104">Q108 · The interface click succeeded, so why is the business action still unfinished
+1596	Continue the step-by-step calculation: <a href="../chapters/28.html#worked-Q112">Q112 · Before bringing in a new framework, run a comparison that could refute you
+1598	A cache is counted in bytes; the compute it saves is a separate account
+1599	The mask for cached decoding has to be filled in by absolute position; the small triangle cannot simply be copied
+1603	Can they be compared directly
+1604	Scope
+1605	Fused ranking and independent evidence
+1606	Fusion result
+1608	Visual projection
+1609	Evidence and the limits of understanding:</strong> one tool item being complete is not the whole response ending; a call that is already in the history but was canceled still has to have a corresponding result, and a fragment of the arguments must not be taken for a complete action.
+1610	Evidence and the limits of understanding:</strong> the current context length, the usage already spent and the length of the recoverable log are different things; a discarded summary and a failed attempt can cost resources too.
+1611	Evidence and the limits of understanding:</strong> an empty tool field on one request may be the delta protocol rather than a lost definition. Check it against the history and the actual protocol.
+1612	Evidence and the limits of understanding:</strong> a request fixes the choice of model, tools and environment; actual access still has to be checked against the current authorization, and a snapshot does not freeze every permission.
+1613	Evidence layer
+1614	Semantics
+1615	The request contains the boundary rule
+1617	Reads v8, starts compacting
+1618	When reading the source, take "register, expose, construct the call, dispatch" apart
+1619	Routing should take the task's risk, the tools' capability, the context length and past results into account, rather than only the prompt's word count.
+1620	Whether a routing description is good depends on whether positive examples and near-miss negatives can be told apart
+1621	Turn
+1622	Output reserve
+1623	A compaction result that has not yet become the official context.
+1624	These are concepts from policy optimization. PPO commonly limits the update with a ratio of new to old action probabilities, plus clipping; GRPO-style methods build the advantage by comparing rewards within a group. An advantage is performance relative to a baseline, not the probability that an answer is correct.<span class="concept-micro">Independent raw-difference example: rewards [0,1,1] minus the group mean of 2/3 give [-2/3,1/3,1/3]. An algorithm may normalize them again, so the two forms must not be mixed.
+1625	These are usually the host's divisions of a conversation and of units of work, not layers of a neural network. A thread can mean one conversation, and a turn can contain the several model and tool cycles needed to answer one user task; where the boundaries fall depends on the product.<span class="concept-micro">"This turn is done" cannot be equated with "every external tool has finished"; that takes looking at the actual events and results.
+1626	This is the model parameter table that produces the value content vectors from the input. After V=XWv, attention mixes the rows of V by the share in which each is read. The value width d_v may differ from the query/key width d_k; it is not the final answer over the vocabulary.<span class="concept-micro">In F11 the same x₁=[1,-1] times Wv gives v₁=[0,20], which then takes part in the weighted sum.
+1627	This is the model parameter table that produces the key representation. The X in K=XWk comes from the current attention input, and K is the result computed this time; Wk is not a table that stores document keywords or secret keys. Q and K have to have the same row width for a dot product to be possible.<span class="concept-micro">In F11, x₁=[1,-1] times Wk gives k₁=[0,1]. The original token IDs are not taken as keys.
+1628	The objects and numbers of the current worked case are carried over here; there is no switch to an independent worked example from another chapter.
+1629	Go to lecture note 1.3 →
+1630	Go to lecture note 8.16 →
+1631	Go to lecture note 9.1 →
+1632	Continuous numeric case: <a href="../worked-model.html">Take the same two sentences all the way from embedding to output probabilities, then verify the KV cache</a>. Best read after finishing lessons 35—58.
+1633	Backoff, jitter and cancellation
+1635	Locating it layer by layer avoids the empty optimization of "the skill file is expertly written but never reached the model".
+1636	A method that introduces positional information by rotating pairs of coordinates according to position. Example: a 90-degree rotation in two dimensions turns [2,3] into [-3,2].
+1639	A wrong answer is taken for a success and never escalated.
+1643	The problem is not that the summary is badly written but that it comes from an old version and yet replaced an object that had been updated. Content can be correct and still lose data because of the order of commits.
+1644	Needs separate checking
+1645	Fix non-blocking problems directly
+1646	In sequence
+1647	Follow it further through the source or the engineering basis:</strong> tell the source events, the extracted candidates, the integrated artifact and verification at the point of use apart. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1648	Follow it further through the source or the engineering basis:</strong> a verified merge is needed between the compaction candidate and the live history. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1649	Follow it further through the source or the engineering basis:</strong> eliminate mismatches between the rules, the tool list and the actual execution environment. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1650	Follow it further through the source or the engineering basis:</strong> the source, the diagnosis, the patch and the test must all point at the same object. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1651	Follow it further through the source or the engineering basis:</strong> connect the work with recoverable state, functional acceptance and minimal checkpoints. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1652	Follow it further through the source or the engineering basis:</strong> after fusing the rankings you still have to check version, permission, coverage and contradiction. Do not check only the path that goes well; check the behavior on cancellation, on a version change, and when the result is unknown.
+1653	Prerequisite: <a href="../foundations/25.html">Lesson 08
+1654	Prerequisite: <a href="../foundations/30.html">Lesson 18
+1655	Acceptance
+1656	Verification passed
+1657	Above the group average
+1658	Paused by default; playback stops automatically at the last step. The figure shows rounded values, while the records keep full precision. On a narrow screen the figure can scroll within its own area; every number is also given in a full accessible table.
+1659	/ Figures in the text
+1661	20 questions is few, and a difference alone cannot be declared a stable improvement. You can report the paired difference and an uncertainty interval, and re-check on more representative tasks.
+1662	AI Systems Engineering: from the basics to the internals · <a href="index.html">Engineering deep dive contents
+1663	On that basis an agent can report which items passed and which lack evidence, instead of only saying "the feature is implemented".
+1664	A's action
+1665	BM25 may be in the tens while a cosine may be less than 1, so adding them directly hides an arbitrary weighting of the two scales. RRF uses only relative rank first, which avoids the mismatch of scales.
+1666	BatchNorm: statistics across samples, unlike LayerNorm
+1667	B does not win by having the highest absolute score on one path, but by having the better combined rank across both. The larger k is, the smaller the difference in contribution between adjacent ranks usually becomes.
+1668	B writes r8
+1669	B is 30% cheaper per call
+1670	B is near the top on both paths
+1671	CLI test
+1673	Concat joins several arrays along a chosen axis; it does not add their elements. split or chunk groups them at specified boundaries. Every axis that is not being joined has to be compatible. chunk here means a block of an array, whereas a chunk in networking is a slice of bytes.<span class="concept-micro">Independent example: two heads of [2,3] each, joined along the feature axis, give [2,6]; joined along the position axis they would give [4,3], which already means something different.
+1676	An embedding is a row lookup, not an ID converted to binary: fetch row 1 for 我
+1677	E, Π, ∼, ∝: common notation in probability expressions
+1678	G, dQ, dW: the intermediate gradients in backpropagation
+1679	HBM, SRAM and bandwidth
+1680	HEAD, working tree, ETag and content fingerprint
+1681	A handoff gives control to another agent; agent-as-tool treats a subagent as a callable component whose result returns to the current controller. An orchestrator is the coordinating program or agent responsible for distributing and integrating the work.<span class="concept-micro">Delegation needs the task, the boundaries, the evidence and the completion conditions; it does not require copying the whole history of the main session across.
+1683	IDE diagnostics
+1684	The JSON is complete and the answer correct
+1685	Jacobian: the table of derivatives for several outputs
+1686	KV cache: keep what was computed, without skipping what must be read: the two layers store history separately
+1687	KV cache
+1688	LF is the line-feed character, and CRLF is a carriage return followed by a line feed. SSE lays down how event lines and blank lines are interpreted; EventSource is the browser's interface for receiving SSE. Teaching code that parses only one kind of separator is not a complete protocol implementation.<span class="concept-micro">Real network fragments may happen to deliver CR and LF separately, so a parser should assemble them by the protocol rules it implements and must not take every network fragment for one event.
+1690	MCP negotiates capabilities first, then discovers tools, and only then attempts a call
+1691	A mask is a visibility table, not extra meaning: handling absolute position 0
+1692	The PyTorch SDPA interface
+1693	Softmax does not simply divide the scores by their sum: a score is not a share
+1694	Softmax and cumulative sampling intervals
+1695	TF counts how often a term occurs in the current document; DF counts how many documents contain it; IDF uses whole-corpus statistics to lower the contribution of common words and raise that of rarer, more discriminating ones. All three are statistics, not the model's learning rate.<span class="concept-micro">If only 2 of 10 documents contain a word, DF=2; if the word occurs 3 times in one of them, TF=3 for that document. The two numbers are not interchangeable.
+1697	A trace should tell you causation, not just timestamps: start with one complete task
+1698	blocked / not executed
+1699	blocked / result rejected
+1700	buffer: conditional return
+1701	How c1 joins M1's action to T1's evidence
+1702	d rotates to [-0.1,0.9]
+1703	n! means the integers from 1 to n multiplied together, with 0!=1; C(n,k)=n!/(k!(n-k)!) is the number of ways to choose k of n distinct objects without replacement and without regard to order. It is not a model confidence C.<span class="concept-micro">Independent example: C(4,2)=6. With n=10, c=3 and k=2, 1−C(7,2)/C(10,2)=24/45, about 0.533333.
+1704	pre-norm normalizes first and then enters the sub-layer, with the residual added straight from the original input; post-norm adds the sub-layer result to the original input and normalizes after that. This describes the order of operations, not two phases before and after training.<span class="concept-micro">Independent structural comparison: x+F(Norm(x)) and Norm(x+F(x)) are not generally equal. F stands for the sub-layer function being wrapped here.
+1705	t2 correct conditional commit
+1706	t2 wrong path
+1708	"30% cheaper" describes the unit price of a call, not the result. Failures have cost money too, so the 35 units from the 50 successful runs cannot be the only numerator.
+1709	"Exactly once" can usually only be spoken of within clear transaction and deduplication boundaries; it cannot be extrapolated from one local SQLite table to any external system.
+1714	A Transformer layer is not attention alone: entering this layer
+1717	One write being "complete" can still mean the content is wrong. Atomicity only deals with a visible half-write; it is no proof that you were working from the latest version.
+1815	Scope and source kept
+1821	Candidate logits
+1822	Candidate probabilities
+1903	Generation after loading
+2109	Sum=1.503215; p=[0.665241, 0.244728, 0.090031]
+2220	New m
+2221	New v
+2222	New w
+2232	Old w
+2779	A finishes at 8 seconds, but B does not finish until 13. If the next turn needs both results, it is B that decides how long the wait is.
+2780	Once A finishes at step 2, step 3 puts C into the freed slot and it continues alongside B. In this idealized small example the total number of steps drops from 6 to 4.
+2788	B still takes 4 steps; what changes is the use of the idle slot. Really admitting a new request also involves prefill and queueing, so the ratio in this figure must not be taken for a general speed-up.
+2835	The FFN processes each position nonlinearly using that position's own features. Sharing parameters does not mean every position gets the same result.
+2841	GQA/MQA change the model's structure and the relationship between its parameters. They must not be lumped together with FlashAttention, which keeps the attention mathematics the same; quality has to be verified again for the model's task.
+2864	The number of Key/Value groups.
+2918	RRF turns each appearance's rank into 1/(60+rank) and adds them up. Candidate A's two ranks are [1, 3], for a fused score of about 0.03226646.
+2919	RRF turns each appearance's rank into 1/(60+rank) and adds them up. Candidate B's two ranks are [2, 1], for a fused score of about 0.03252247.
+2920	RRF turns each appearance's rank into 1/(60+rank) and adds them up. Candidate C's two ranks are [3, 2], for a fused score of about 0.03200205.
+2929	The schema describes the shape of the input. A tool the server has undertaken to handle may still refuse a particular call on business grounds.
+2946	The three intermediate representations after X has been computed through the three tables.
+2950	a3 goes into the remaining slot of physical block 1; the earlier a0/a1 need not be moved.
+2966	loss=−ln p(true target)
+2969	max(compute lower bound, movement lower bound) gives only an ideal limit; queueing, synchronization, scheduling and whatever does not overlap add to the real time.
+2975	operation_id=op1; the change to the environment is not yet confirmed
+2998	t3 enters every layer and is computed with its own new Q against that layer's past K/V plus the new K/V. Layer by layer the cache grows to four positions.
+3005	"Do not change the public API" is a constraint on future actions; even though it takes only a few words, it matters more than hundreds of lines of old log.
+3007	"你爱" has only two real positions, so PAD takes one cell for now. There are now two rows with three IDs each, hence [2,3].
+3010	"学习" is one item in this example. The result is shown here; no claim is made that it comes from some commercial tokenizer.
+3015	"Attention is highest here" is no direct proof of the causal reason for the model's final answer; with only one visible key, softmax is always 1, which cannot be used to show competition.
+3040	A low unit price for one call says only that this call is cheap. The total cost also includes retries, escalation, verification, human repair and the loss from failures. Whether a cascade pays off depends above all on whether the small model is up to a class of tasks that can be identified, and on whether failures can be detected reliably.
+3057	The maximum, 2, is subtracted from all three. The relative differences are unchanged; this step is for numerical stability, not a change of temperature.
+3058	All three are divided by the exponential sum just computed, which is what makes them probabilities summing to 1. The candidate order here is always A, B, C.
+3059	Context
+3206	The dot product of two rotated vectors depends on the difference of their angles. Rotating both by the same further angle does not change the dot product. This property is what lets relative position information enter the matching.
+3239	Multiplying back by the scale 0.1 gives [0.3,−0.1,0.4,0.7]. The last entry is −0.21 away from the original 0.91, which shows the risk of going outside the representable range.
+3261	Handoff overhead=2 s; ideal total parallel time=13 s
+3271	Only the compute speed is doubled; the lower bound on compute time becomes 0.0005 s while movement stays at 0.008 s, so the bottleneck has not changed.
+3285	Recompute a3 from the saved a2, then run the backward pass for the second half. At this point a2, the recomputed a3 and the rest occupy memory together for a while.
+3344	Scope
+3349	Check with a stable operation ID, or retry idempotently
+3357	The order of 1 to 6 is kept, with every two numbers forming a row. The result is [[1,2],[3,4],[5,6]].
+3360	Keep the user's actual goal and constraints; a single keyword is not enough to leave behind.
+3371	Candidate A contains the deployment instructions and C the instructions for building the image. Read the matching original text and version for the real question; a title that looks relevant is no substitute for evidence.
+3379	It is like keeping several selectable processing units in one layer, with a router choosing some of them for each token. Sparse refers to the paths activated this time, not to the model being left with only a few experts' parameters. What an expert learns is decided by training; you cannot infer from a name that one of them must specialize in mathematics or sentiment.
+3380	It is like swapping a fine scale for a coarser one: fewer bits of storage are needed, but some original values can only land on a neighboring graduation and others fall outside the representable range. The scales, the grouping information, unquantized layers, activations and caches still take space, so counting the bits of the integer weights is not the total memory of a run.
+3385	Project each row separately first, then score across positions, mask, softmax and mix V.
+3388	Fetch "我" first, then "爱", and "学习" last, which makes a three-row representation. "你爱" is handled the same way; the PAD row is set to all zeros for teaching purposes here only, and still has to be masked later.
+3404	Run all 20 questions on the cheap model first
+3405	Read C first: score 0, V=[5,5]. The maximum is 0, the exponential sum 1 and the weighted sum [5,5].
+3407	Divide by √2 first, then take the softmax of [0.707107,0], which gives a share of about 0.669762 from "我" and about 0.330238 from "爱". The algorithm is the same as in F09, but the objects and the input are different.
+3445	Restore the original matrix again, add 10 to the whole first row and 20 to the whole second, and the result is [[11,12,13],[24,25,26]]. This is not a rearrangement but a numeric operation.
+3609	The parameter update happens at step, not merely when the gradients are computed. The step-2 gradient comes from recomputing after all the parameters have been updated.
+3616	Backpropagation carries the error's influence back to the parameters, and the optimizer then uses the gradients to update them. Whether the next round zeroes the gradients or accumulates them should follow an explicit training strategy; old gradients must not be mixed in unintentionally.
+3619	Look the same vocabulary up in reverse and join the pieces in order. For "你爱", PAD cannot be turned back into ordinary visible text.
+3625	Discovery answers "which interfaces are there"; it does not answer "whether this task should use one".
+3636	Take a separate case with three target positions, the third of which is an invalid PAD; the losses of the first two are 0.4 and 0.8. The total loss of 1.2 should be divided by the 2 valid positions, giving 0.6, not by the array length 3.
+3642	Only the second cell, which is negative, is set to 0. The first cell stays 3.
+3643	Send only the 6 confirmed failures to the strong model
+3656	Returning only the single most confident item may raise precision while missing a great deal of necessary evidence; returning everything can raise recall while filling the context with irrelevant material.
+3657	Only the two expert paths with the highest scores are selected.
+3702	A second model call happens within the same user task. What has been added is actual evidence, so there is no need to go back to pretending and guessing.
+3703	The same output head computes a distribution from the current last representation, with a highest probability of about 0.7700. By the greedy rule, "学习" is selected. Selecting it did not run the embedding again, so it has not yet entered its own K/V cache.
+3704	The same output head computes a distribution from the current last representation, with a highest probability of about 0.7700. By the greedy rule, "！" is selected. Selecting it did not run the embedding again, so it has not yet entered its own K/V cache.
+3707	The same parameter cell
+3717	For the same task, changing only the handoff overhead to 8 s gives 8+8+3=19 s in total, which is slower than 17 s rather than faster.
+3729	Throughput
+3748	Regression
+3758	Fix x=[1,0,0,0] with a scaling factor of 1. xW=[1,0,0,0]; xAB=[0.1,−0.1,0.05,0]; adding them gives [1.1,−0.1,0.05,0].
+3760	A fixed batch is like a carload of people who all have to leave the station together; continuous batching lets a new request fill in as soon as someone finishes. That cuts idle time and gives a chance of higher throughput. But the critical steps of the requests already running are not necessarily shortened, and the preprocessing, queueing and contention of new requests can add latency in places.
+3761	With the ranks fixed, the result is B, A, C. Applicability still has to be judged from the original evidence, the version and the permissions. Coming first means only the priority this fusion rule gave it.
+3806	The increment ΔW=A×B has rank at most 1. It expresses only the directions of change that are allowed; it is no promise that any complete 4×4 update can be represented this way.
+3808	The incremental decoder completes the character; the character is now whole, but the protocol's event boundaries still have to be respected — a closing brace in sight is no reason to run the tool.
+3819	Several receivers can share one set of provider representations, while the queries still compare in different ways. Reducing the number of K/V groups means less history to store per position, but the model's structure has changed as well, so an existing model cannot be expected to produce exactly the same output without adaptation.
+3820	Several layers carry this processing on, and only at the end does the vocabulary output head score the candidate tokens.
+3844	If the small model says "done" but is actually wrong and the verifier does not notice, no escalation is triggered. The money saved then may come at the price of a wrong delivery.
+3846	If a forbidden score is set to 0, then exp(0)=1 and it still gets a share. An additive mask expresses a forbidden entry as negative infinity, which makes its exponential contribution 0.
+3857	Byte
+3863	With a learning rate of 0.2, the new w=1−0.2×(−4)=1.8. A fresh forward pass gives a prediction of 3.6 and a loss of 0.08. The original loss figure is not just written down smaller.
+3868	A safety prompt helps, but it is not a permission system that cannot be bypassed.
+3869	Security is not stopping all work; it is going on to finish the goal within what has been authorized.
+3915	Actual training configuration lr=.03, β1=.9, β2=.999, ε=1e-8, decay=.01
+3918	The client timed out; failure cannot be inferred from that
+3941	For each term, record which documents it appears in. "Docker" points to A and C, "pytest" to B; there is no need to read every document from the start on each query.
+3943	For the first cell: 0.669762×10+0.330238×0; for the second: 0.669762×0+0.330238×20. The result is [6.697615,6.604769], still one row of numbers.
+3948	The small example verifies that the online normalization is correct; real FlashAttention also runs the matrix multiplications and the forward and backward passes in hardware-sized blocks. It is an algorithmic and kernel-level optimization; it does not mean every attention computation becomes linear.
+3969	The tool existing, the connection succeeding, the model being able to see it and it actually being authorized are four separate questions.
+3970	A tool definition tells the model what it may propose; it grants no unlimited access.
+3971	The tool work totals 3+8=11 s, while the wall clock for the tool stage is 8 s. The task's wall clock is 2+3+8+2+1=16 s.
+3986	Positions 0, 1 and 2 are already there; this round adds positions 3 and 4. The two new rows of queries should be able to read the first 4 and the first 5 entries respectively, not use one small triangle starting from 0.
+3989	The three projection parameter tables already given.
+3994	Bandwidth
+4006	The parallel critical path is max(6,8)=8 s; with 2 s of handoff and 3 s of integration that is 13 s in total. Starting both at once does not make it 8 s.
+4010	Parallelism can shorten the critical path of independent subtasks, but it adds the cost of delegation, of gathering the same evidence twice, of integrating results and of shared state. A subagent having its own context also introduces loss at the handoff. Find the work that really can be separated first, then design an explicit handoff; a simple, self-contained task is often easier to do well with a single agent.
+4048	Shape [2,5,5]; sample 0 is shown here, and the numbers are from before the first update. What the columns mean changes with the step: for score/A they are key positions, for logits/probabilities the vocabulary, and otherwise features.
+4055	This yields the object {"text":"爱"}. It is a text event, not a tool call. Only an explicit, complete tool-call object that passes validation can be executed.
+4070	A large total parameter count with few activations per token does not mean the load is even across devices; routing, capacity and cross-device transfer all have to be counted.
+4071	Total allocated=95
+4076	Restore the initial w=1 and change only the learning rate, to 0.6. The new w is 3.4, the prediction 6.8 and the loss 3.92, which is larger than the original 2; the direction being right is no guarantee that a bigger step is better.
+4077	Restore the original matrix, then turn the old columns into the new rows. The result is [[1,4],[2,5],[3,6]]: the shape is still [3,2], but the content is arranged differently.
+4078	Restore the original compute and halve the data movement alone. The two lower bounds are then 0.001 and 0.004 s, which does change which limit dominates.
+4079	Restore the first layer's [3,−1] and compute 3×2−1×1=5 without going through ReLU, which shows that the nonlinearity really does change the function.
+4080	Imagine weighing in batches and totaling as you go: as each batch arrives you update "the largest graduation, the total weight, the weighted sum of the contents", without writing every intermediate slip to VRAM again. When the largest graduation changes, the old running totals have to be rescaled with it. This online normalization is what explains how saving reads and writes is compatible with the same mathematical result.
+4083	No success receipt arrived; all the host knows is that the result is uncertain
+4094	The maximum score up to the current block.
+4100	Check before execution
+4122	Divide 0 to 1 into three intervals. The given random number 0.70 falls in B's interval, so B is sampled this time; taking the maximum greedily would have chosen A. There is no contradiction in that.
+4123	Change the 24 features to 2 bytes per number and their storage becomes 48 bytes; the IDs still use the original 48 bytes.
+4124	Replacing 40 units of old log with 10 units of sourced state notes brings the total to 95; the original text can be read again from the reference.
+4125	Shortening B may shorten the task; but more concurrency can also increase queueing and contention for resources in the system. It has to be measured again under a real load.
+4127	Hand [3,0] to the second layer and compute 3×2+0×1=6.
+4129	Replacing t1 with something else affects the state of every layer at that position and after it. At minimum the affected suffix has to be invalidated and recomputed; the old cache cannot be carried on with as though this were only an append.
+4132	Take "学习", just selected in the previous step, as the new input and append its K/V; the K/V of the 2 earlier positions is reused directly. This is not a matter of looking only at the new token and forgetting the history.
+4133	Take "！", just selected in the previous step, as the new input and append its K/V; the K/V of the 3 earlier positions is reused directly. This is not a matter of looking only at the new token and forgetting the history.
+4141	Think of the base weights as a recipe you already have. LoRA does not throw the recipe away; it describes the amount of change with two small tables. Training mainly changes the small tables, which reduces the trainable parameters and the optimizer state that goes with them; but running it still needs the base model, and the capacity of the increment is limited by the rank.
+4145	Deleting the old log entirely leaves only 85, but if "integration not tested" was buried in that log, the task loses critical state. Getting shorter is not the only goal.
+4148	Count the schemas of the tools this turn needs against the budget; the tools it does not need do not all have to be piled in.
+4186	The exponential turns every entry into a positive number. These numbers are not probabilities yet, because they sum to about 1.503215.
+4193	The sum of the exponentials after scaling by the current maximum.
+4195	Check against the operation ID and the file content, and confirm that v8 is already there
+4204	Loss
+4206	The gradient of the loss with respect to w is −4: increase w slightly and the loss here goes down. Backpropagation computes that rate of change, but it does not update the parameters on the optimizer's behalf.
+4209	Retrying with a new operation ID may create a second record
+4252	Summary compaction changes what the model sees and can lose information; retrieval decides which external evidence is fetched this time and can miss something in recall; a prompt cache reuses computation that already exists where the conditions are met, and the logical input length does not shrink because of it. To judge the risk, first see whether what is being changed is the content, the selection or the reuse of computation.
+4253	A summary and a handover also have to keep the sources; quoted content must not be promoted to the instruction layer.
+4264	Keeping only a2 instead makes the resident amount among those three items 100 before the backward pass begins. What is meant is what is reserved in advance, not that the peak during the run is only 100.
+4274	Put in evidence sufficient to support the next decision, keeping the source, the conditions and the version.
+4300	The teaching 4-bit signed integer ranges from −8 to 7. 9 is out of range and can only be clipped to 7; the error on large values can be far greater than ordinary rounding error.
+4302	By the teaching convention, IDs are int64 at 8 bytes per number and features float32 at 4 bytes per number. That is 48 and 96 bytes respectively.
+4304	The numbers are recorded by the real optimizer
+4329	Text fragment
+4334	When a new context continues from a snapshot, the file version and the actual state still have to be checked. A summary keeps a way in for verification, but it cannot replace the original text once that has changed.
+4337	Physical block 0 is newly allocated to hold a4; the logical order a0…a4 is still unchanged.
+4343	A newly added summary is not necessarily correct. Check the constraints, what is done and not done, and the source versions, and test that the next action is unchanged.
+4345	New-version successes = 10 questions both versions passed + 4 only the new version passed, giving 14/20=70%. The net gain is 2 questions, that is 10 percentage points.
+4346	The new version improves 4 questions and also regresses on 2. Do not show only the improvements; one result on a small sample is not enough to claim a stable gain.
+4350	The stage that processes a new request's complete known input.
+4351	The new configuration changes it to 20 seconds, but the system has not synchronized yet
+4352	The prefill of a new long request can interfere with requests that are decoding; limits, chunked scheduling and fairness are conditions still to be tested.
+4366	Old-version successes = 10 questions both versions passed + 2 only the old version passed, giving 12/20=60%.
+4382	Displays the new text while preparing the next turn's input
+4399	Read B last: the maximum is still 2, and exp(1−2) and the corresponding V contribution are added in. Finally the running weighted sum is divided by the running exponential sum, which gives the same mathematical result as the full softmax.
+4406	Least privilege
+4414	The final message ends this demonstration task; whether the output is complete and whether other tasks with side effects succeeded have to be judged separately.
+4432	Valid time differs from record time
+4444	A risky side effect still needs explicit approval and verification; "the model judged it safe" cannot stand in for every control.
+4457	The scale in this example is 0.1: divide by 0.1 first, then round to the nearest integer, which gives [3,−1,4,9]. There is already rounding error at this step.
+4529	In this example a blank line ends one SSE event. Assemble the event data first, then parse the JSON inside it; a real stream may carry several event types.
+4530	This example selects E1 and E2 and does not compute the outputs of E0/E3; those experts' parameters are still present in the system.
+4531	This example presupposes that the file really does contain timeout=30. The returned result can be used to answer, but a successful read does not mean the file was modified.
+4533	What this figure takes apart is the representation relationship. A real chat may also carry special tokens such as role markers, so the total token count should not be estimated from the number of Chinese characters.
+4536	The local file has been replaced with the new content v8
+4540	This frame deliberately shows a wrong summary. Two sentences that look close permit completely different next actions, which shows that compaction can lose critical state.
+4543	The text appended for display this time is "学习！". EOS is the stop marker for this teaching sequence; reaching the length limit or being canceled are different reasons for stopping, and not every one of them can be claimed as task completion.
+4546	The numeric representation entering attention this time; it is not the token IDs.
+4549	This part reads information from the permitted positions. Normalization changes the scale of the numbers; it does not replace the mask or the position mechanism.
+4692	Look the row number up in the corresponding table; 4 for "你" being larger than 1 for "我" does not mean its meaning is stronger.
+4701	The number of query heads.
+4715	Check the six rows of projections, the two scores, the shares and the output; changing Wv should not directly change the shares computed from Q/K in this layer.
+4722	Gradient g
+4728	Check whether the two regressed questions involve a change of permission, task type, context or test environment, then run controlled repeats and compare costs.
+4748	The model uses the result to carry the task on; the protocol itself does not create persistent memory or improve the model's parameters by itself.
+4751	The model's parameters, the temporary activations and the KV cache all take space of their own. Do not let this 96-byte feature table stand for the whole model's memory account.
+4778	The positive difference p−q is [0.2,0,0]. After normalization the compensation can only choose A, adding back a total mass of 0.2; the final distribution is restored to [0.6,0.3,0.1].
+4785	This teaching cascade costs 50/19≈2.63; separately, suppose the strong model alone also succeeds on 19 questions, for a total cost of 100 and a cost of 100/19≈5.26.
+4792	Each patch unfolds into four numbers. There happen to be four patches here, not 16 text tokens. The order and position of the patches still have to be stated.
+4800	Each sentence becomes one table: three rows for the three positions and four columns for the four features. Two sentences are two such tables, which is written [2,3,4].
+4803	cache_len=3 per layer
+4804	cache_len=4 per layer
+4808	Each escalation costs 5, for 30 added in all. Suppose 5 of the 6 questions are fixed successfully: the total cost is 50 and the total number of successes 19.
+4820	Sandbox
+4861	A test result has to carry the test type and the version. "Unit tests passed, integration not run" cannot be compressed into "tested".
+4881	A missed detection breaks this assumption of a gain
+4917	The expert functions are independently specified as E1(x)=2x and E2(x)=x+3. An input of 2 gives 4 and 5, which are combined with the normalized 0.625/0.375.
+4921	An independent small scoring example: the predicted probability of the true target "学习" is 0.5, so the cross entropy is −ln0.5≈0.693147; at a probability of 0.25 it is about 1.386294 — the less confidence a wrong answer leaves for the right one, the heavier the penalty.
+4925	Only now can t3's final representation be used to predict t4. The past K/V was not recomputed, but t3 still has to read it; a cache does not turn attention into something that ignores the history.
+4935	Mark a real token with 1 and PAD with 0. This table helps later computation exclude the padded positions.
+4937	Take the dot product of the q of "爱" with the k of "我" and of "爱", which gives 1 and 0. The current position is 1, so the causal rule allows reading position 0 and itself.
+4943	Use successful tasks as the denominator
+4960	The interface can display "学习" right away, but the model has not processed this new token yet. Only in the next turn is it fed to the model to predict the candidates that follow it.
+4961	The interface can display "！" right away, but the model has not processed this new token yet. Only in the next turn is it fed to the model to predict the candidates that follow it.
+4969	The targets are already present in the training sample, but the mask still forbids the current position from reading later input. The loss at all four positions can be computed in parallel; at inference the future tokens are unknown, so this parallel condition cannot simply be carried over.
+4970	The target model's distribution.
+5002	Addition requires the corresponding shapes to match. The addition here keeps a direct path open; it does not join two vectors into a longer one.
+5009	Seeing a button at coordinates x,y does not mean it is still there a moment later. After the screenshot the page may scroll, open a dialog or change its layout; a fresh observation after the click is what confirms the actual state.
+5012	The real parameter update
+5019	10 items were really needed and 6 were found; recall is 6/10=60%. It answers "how much of what was needed was missed".
+5023	The short sentence has only two IDs for now; padding is a batching choice at the next step and is not part of the sentence itself.
+5024	PAD, ID 0, is placed at the end of the short sentence to hold the place without adding real content.
+5045	The window cannot be filled entirely with input. In this example the input is 65 and 20 is reserved for output, leaving 15; a real service may bill, keep hidden state and define its limits differently.
+5086	The first column gives 3; the second is 1 at first and becomes −1 once the bias of −2 is added.
+5094	After the third forward pass the end token EOS is selected. The host stops once it sees this end marker; it does not process EOS in order to predict another token. EOS is not displayed as visible text.
+5097	The second residual is likewise added cell by cell. The output is still one row of numbers per position.
+5109	Policy
+5117	It is like putting a book's volumes in different drawers, with a catalog recording which volume is where; the reading order is still decided by the catalog. Paging cuts the KV storage into blocks and maintains a mapping, which reduces the waste of reserving a contiguous region for a sequence that keeps growing. It does not truncate the context, nor does it automatically reduce the history that has to be read.
+5122	The system stores "timeout 30 seconds, effective from January 1"
+5133	The system reads the new configuration and stores both the valid time and the time it learned of it
+5135	The system selected 8 items, 6 of them correct; precision is 6/8=75%. It answers "how much of what came back is usable".
+5136	Index
+5151	End
+5160	The result has to carry back the correlation information for this call; errors, timeouts and business refusals have to be told apart.
+5240	ID 2 locates row 2 of the embedding table, giving [-0.3, 0.8, 0.1, 0.5]. This row represents the token "爱" in this example, and does not switch to another row just because the batch contains other sentences.
+5241	ID 3 locates row 3 of the embedding table, giving [0.6, 0.2, -0.4, 0.9]. This row represents the token "学习" in this example, and does not switch to another row just because the batch contains other sentences.
+5242	ID 4 locates row 4 of the embedding table, giving [0.1, -0.5, 0.9, 0.3]. This row represents the token "你" in this example, and does not switch to another row just because the batch contains other sentences.
+5272	If A and B both modify the same path, overwriting has to be avoided, the conflict handled and the integration verified again; the earlier assumption of independence no longer holds.
+5276	Cutting only A from 3 s to 1 s still leaves B taking 8 s and the whole thing at about 16 s. In this simplified figure, optimizing A does not shorten the critical path.
+5285	The draft probabilities times the acceptance rates give [0.4,0.3,0.1], summing to 0.8. The remaining 0.2 has to be allocated from the compensation distribution used after a rejection.
+5286	The draft model proposes candidates first and the target model verifies them. To preserve the target's sampling distribution, acceptance and the compensation after a rejection both have to be correct; a draft must not be kept merely because it "looks reasonable". Drafting and verifying cost something extra as well, so when the draft hit rate is low or the task is very short it may not pay off.
+5287	The draft model's distribution.
+5288	When the draft picks A/B/C, they are accepted at 1, 0.75 and 0.5 respectively. An item the draft is more likely to over-propose needs a lower acceptance rate.
+5321	A vision encoder, a projection or another interface hands the image information to the language model. Architectures differ, so the number of vision tokens cannot be fitted to one formula from a 4×4 image size alone.
+5332	Compute=1 ms; movement=4 ms
+5333	Compute XWq, XWk and XWv. The "爱" row gives q=[1,0], k=[0,1] and v=[0,20] in turn. The parameters of the three paths are fixed, but the results change with the input.
+5338	When the new representation of a position is computed, that position is the receiver; every visible position is a potential provider of information. The query and the key decide each provider's share of the reading, and the value supplies the numbers that are actually mixed. "Ask — match — fetch the content" is a way to remember the division of labor, but Q is not a natural-language question, K is not a database primary key and V is not the correct answer.
+5343	It lets the matching features and the content being passed along be learned separately, which gives the model different powers of transformation.
+5349	The backward pass in training needs some of the forward pass's intermediate results. Keeping them all is convenient and fast but takes space; checkpointing saves a few nodes and recomputes the stretches in between when they are needed. A KV cache, by contrast, stores more history during inference in order to do less repeated work. Both are called caching or checkpointing mechanisms, yet their trade-offs run in different directions.
+5361	The record really was created, and the side effect has happened
+5362	Record the success; do not blindly write again
+5375	Suppose the draft proposes B with an acceptance threshold of 0.75; the given random number 0.9 rejects it, and A is chosen from the compensation distribution. It is neither always a fresh draw from the target distribution nor an unconditional keeping of B.
+5408	Semantic retrieval represents the query and the documents as vectors and compares their relationship. It may find wording that differs literally, but similarity is no guarantee of being usable, correct or current.
+5422	After reading A the maximum rises from 0 to 2. The old running totals are first multiplied by exp(0−2), and A is added in as exp(2−2)=1; failing to rescale the old totals gives the wrong answer.
+5430	Read succeeded
+5447	Call identifier
+5450	Greedy selection
+5468	Once the path, permission and argument checks have passed, the program performs the file read; the model does not open the disk itself.
+5474	Identity, permission and input checks belong at an enforceable boundary; a prompt saying "please be careful" is not enough.
+5476	Transpose
+5539	Output=[5.000000,5.000000]
+5540	Output=[7.102562,5.344722]
+5541	Output=[9.403985,0.596015]
+5574	Return the original result, or confirm it was not executed before retrying
+5586	This 6 is not a token probability; what it means depends on the task that follows. Nor is a hidden state hidden text of thought.
+5590	This answer rests on the tool result in this example, not merely on general knowledge in the model's parameters.
+5591	This is only a request; it cannot yet be claimed that the file has been read. The call identifier matches the later result to this request.
+5626	Merging the increment where appropriate avoids an extra inference branch, but the merge itself, the precision and switching between several adapters all have to be considered. LoRA mainly optimizes fine-tuning resources; it is no guarantee that every end-to-end task gets faster.
+5631	Select "爱" in the second input, which gives ID 2, and then fetch row 2 of the embedding table. What was one cell is now represented by four feature cells.
+5632	The new token t3 has been selected, but it has not been through the layers yet. The cache still holds three positions, and t3 sits on its own, waiting to be processed.
+5633	Take row 0 of X and column 1 of W, pair them up one by one along the three features, multiply, then add. Every other output cell is computed on its own and must not borrow another row.
+5634	Take row 1 of X and column 0 of W, pair them up one by one along the three features, multiply, then add. Every other output cell is computed on its own and must not borrow another row.
+5635	Take row 1 of X and column 1 of W, pair them up one by one along the three features, multiply, then add. Every other output cell is computed on its own and must not borrow another row.
+5659	Free the blocks that belong to B; A's token order must not change just because the physical numbering is out of order.
+5668	A recomputation has to correspond to the same forward pass. Dropout's random state, the timing of a parameter update and operations with side effects can all break that equivalence.
+5677	The wrong way
+5703	Ask about now: 20 seconds; ask about the January history: 30 seconds
+5718	Restrict the path, the network, the tools and the identity; different tools may be constrained differently.
+5723	Hidden state
+5733	To predict the next item for "你爱", take the result from the position of "爱", not from the PAD position on the right.
+5735	When the gradient for the first half is needed, a1 is recomputed from the retained input. Extra forward computation is traded for fewer activations resident over the long run.
+5770	The first forward pass processes the two known tokens and the cache length goes from 0 to 2. By the end of it, the last valid position can already give the scores for the next item.

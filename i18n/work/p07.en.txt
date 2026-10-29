@@ -1,0 +1,313 @@
+23615	Lesson 09｜How model output becomes a real tool call: protocol and execution boundary — AI Systems Engineering
+22264	Follow this chapter through its objects and states</a><a href="#topic-2">Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#Q037">Q009｜With Function Calling, who actually calls the function? How does the model know the tool's arguments?</a><a href="#Q038">Q010｜Why can streaming output not be executed as soon as half a JSON arrives? How exactly is SSE parsed?</a><a href="#Q039">Q011｜When parallel tool results return out of order, how are they paired? Which errors can be left to the model to fix?</a><a href="#Q040">Q012｜How do Structured Outputs constrain generation? Why does conforming to the Schema still not mean it can be executed?</a><a class="sub ap-toc" href="#agent-practice-stream">Streaming back: when can the arguments really be executed?</a><a class="sub ap-toc" href="#agent-practice-hooks">Pre-execution checks and post-execution checks: why can they not replace each other?
+24726	The network does not deliver a complete answer in one go. Bytes, text fragments, structured events and the tool-call object are different boundaries; seeing one closing brace is not the same as one valid tool call having been completed.
+23786	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/22.html">Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions
+27530	A quick check before the deep reading:</strong> cut a message containing both Chinese and JSON into incomplete byte fragments, and work out where it should be buffered, where it should be parsed, and where execution may finally be allowed.
+21037	The
+20433	in this chapter is a simplified teaching object; for a product
+23033	, the specific fields are as its own documentation states. What matters is the different completion semantics from bytes, to events, to the call item, to the business side effect.
+8119	Q009｜With Function Calling, who actually calls the function? How does the model know the tool's arguments?
+27448	What to know first for this question</span>A tool schema describes the shape of the arguments, the call ID is used to match up the receipt, and the executor also checks permissions and business meaning. Valid JSON is only the first gate.
+17751	A tool definition exposes the name, the description of what it does and the structure of its arguments to the model; the model generates the intent to call and the arguments, and only the application, or the execution environment entrusted with it, actually calls the tool. The model does not hold a pointer to your Python function. Only when the tool result enters the context again does the information feedback close.
+28215	Converting one read_file layer by layer
+18129	A developer registers
+29188	, noting that path accepts only repository-relative paths and that the line numbers are one-based with inclusive endpoints.
+18828	sends the supported
+15614	and the description to the model; the model may then return:
+18597	The executor first confirms that the call item is complete, then parses the arguments string; it validates field types, ranges and the existence of the tool; it resolves the actual path and checks authorization; it calls the file-reading implementation; and it wraps the result as a tool output tied to c7. The return must at least let the model tell apart "the content of lines 40—80", "the file does not exist", "the path was refused" and "the result was truncated".
+17746	A tool's name and description affect which tool is chosen, but what a tool can do is decided by its implementation. A description that says "can read any file" must not widen the process's permissions; conversely, runtime authorization for one directory does not mean the model naturally knows which tool is available. Discovery, selection and execution are three separate links.
+20900	Conditions for this example:</strong> an independent local function read_file(path). The model returns call_id=c7, name=read_file, arguments={"path":"config.txt"}; the tool result is then filled back in under that same c7.
+14734	Structural rules such as argument names and types.
+22385	Dispatch
+21452	Choosing the real function implementation by the approved name.
+25950	Call result
+18592	The value or the error after execution, not the model's own report.
+14714	Party
+16135	The specific object it handles
+25099	Resulting outcome
+22806	Generates name and arguments
+9138	The c7 call item
+25329	Parser
+7754	JSON string→dictionary
+21372	Validator
+21535	Checks types, paths and permissions
+25094	Dispatch only after approval
+18594	Executor
+16961	The actual read produces the content
+10601	The next turn gets the associated result
+26619	The arguments in the output are often an encoded JSON string and have to be parsed first. The function name exists in the model's text; it does not make the language runtime execute anything by itself.
+18595	An executor must not eval arbitrary code supplied by the model in place of whitelisted dispatch; what the model can choose and what the executor really exposes have to correspond.
+27144	When returning an error, state whether the action happened, so that the model fixes the arguments instead of blindly resending a side effect.
+11194	Do not conflate:</strong> treating a name that is not on the whitelist as an ordinary retryable network error hides a problem with the capability boundary.
+10263	One ordering is enough to change the security conclusion
+19960	The teaching action: write one record into a temporary table. With the pre-execution hook refusing first, the record count stays 0; with execution first and the post-execution hook refusing afterwards, the record count is already 1. Both paths can show the model "blocked", yet the external facts differ.
+15950	In the
+5935	path of the Codex source pinned for this round, a pre-execution hook can block the call before the handler; rewriting the input additionally requires the matching tool to support rebuilding the call object. The post-execution hook runs only when the handler has succeeded and supplies post-execution metadata; a post-execution block refuses the result, and the feedback path can change the text the model sees. This must not be stretched into every tool supporting arbitrary replacement of results.
+15541	A post-execution hook is not an automatic transaction rollback.</strong> If the downstream does not support undo, no amount of strictness in reviewing the result can make an earlier action disappear.
+14744	Once the arguments are rewritten, is the earlier approval still valid
+12564	Suppose the user approves "change the test environment timeout to 30", and the hook then changes the environment field to production. If the approval is bound only to the tool name and not to the complete normalized arguments, the system has transferred one approval to a different action. A correct design binds the authorization to the object finally executed, or re-authorizes once a sensitive argument has been rewritten.
+27291	This is an engineering requirement; it does not claim that every product naturally implements the same authorization fingerprint. When reading the code, keep tracking where the rewrite happens, whether validation sits before or after the rewrite, at which layer the approval result is used, and whether a retry may change the arguments.
+10527	What each of the three kinds of hook is good for
+12159	Position
+28137	Work it suits
+11061	What it cannot promise
+28810	Restricting paths, normalizing arguments, resource admission, required approval
+20236	Cannot prove that a future operation will succeed
+18591	After execution
+24458	Redacting the result, recording evidence, spotting anomalies, deciding whether to let the model continue
+11051	Cannot deny a side effect that has already happened outside
+12047	Task wrap-up
+21546	Checking the acceptance conditions, unhandled errors, output requirements
+11006	Cannot stand in for tests or for downstream verification
+20254	Logs also need two separate views
+21740	The feedback the model sees may already have been redacted, summarized or replaced; the audit log may keep real execution information of a different scope. Do not treat replaced text as the original tool output, and do not persist secrets unconditionally for the sake of "traceability". Record at least the call ID, a digest of the final arguments, the execution status, the post-execution feedback, the scope of authorization and the version of the actual object.
+20941	A local experiment should assert the side-effect count and the state visible to the model separately. Asserting only that "the model received blocked" misses the error that matters most.
+7266	Codex and Claude Code have events of the same name, and they cannot simply be copied across
+12160	Position / event
+7273	The Codex path read this round
+7240	The official Claude Code documentation read
+13935	Pre-execution modification
+17805	The tool has to support rebuilding the call from updated input
+9361	updatedInput supplies a replacement input object; do not assume a field-by-field merge
+8046	PostToolUse block
+19327	Refuses the result of a tool that has already run; the action is not rolled back
+9132	block adds the reason for the model; the original tool result can still be supplied
+21741	The replacement the model sees
+25257	A path that wraps the feedback text was observed; do not generalize it to all typed output
+9362	updatedToolOutput is a separate replacement mechanism, constrained by tool type and structure
+19938	Sensitive data
+18365	You have to track whether the logging happens before or after the hook
+20127	The documentation states that the original output may be logged before the post-execution modification
+23008	From this follows an engineering requirement: <strong>redaction on the model side and redaction on the log side have to be designed separately</strong>. The teaching example sets the original output to "email address plus order number" and replaces it with "order number" on the model side; when the log still contains the email address, you cannot declare that the system no longer holds any personal information. What this counterexample verifies is the data path; it is not a recommendation to keep sensitive original text.
+21790	The model outputs a function name, so who actually executed it
+26304	Input and conditions.</strong>The tool description is
+10141	. The model's response contains the function name read_file, the arguments
+5871	and call_id=c1.
+19591	Receive the output
+17220	The host gets one structured call item
+7756	JSON by itself does not open a file.
+21370	Validate
+21507	Checks that the tool is registered, that the argument is a path string, and that the path is within the permitted range
+12019	If any one of them fails, nothing is executed.
+17218	The host looks the read_file implementation up in the registry
+23320	It really calls the operating system to read the file.
+27141	Return the observation
+21200	Builds the result that corresponds to call_id=c1
+12458	This guarantees that the model can later attribute the result to the original request.
+24528	Continue generating
+18812	Puts the tool result into the input for the new turn
+21650	The model then answers from the content; a tool's execution result does not automatically become the model's conclusion.
+19129	Join the steps up.</strong> The model is responsible for proposing the action, and the host for carrying it out, for permissions and for feedback; between them there has to be a boundary that can be checked.
+26707	Limits and counterexamples.</strong> The fields and the roles of a tool call vary by API, and c1 is a teaching ID. Do not take the illustrative JSON for the complete request body of every product.
+27787	Follow-up: why does the tool schema itself also consume context?
+21760	The model has to understand the names, the fields and the descriptions, and they must enter the request in some representation the model can use. Many tools with long descriptions add to the input burden and make the choice harder. Discovery on demand can shrink the default tool set, but it introduces discovery failures; test recall of the tools actually required and the loading of unnecessary ones, instead of unconditionally stuffing every tool in.
+27923	Follow-up: is returning a single string as the tool result enough?
+24157	For simple cases it is, but the boundaries have to be clear. Writing both errors and successes as free text makes it easy for the model to misread them; structured fields can express status, path, version, truncated, next_range and so on, alongside readable content. More structure is not better in itself — the fields should serve the decisions that actually follow.
+27722	Follow-up: what is the relation between training research such as Toolformer and API Function Calling?
+13942	The former studies how a model learns abilities such as using tools while processing text; the latter is an engineering interface on which the model and the application exchange the intent to call. Supporting the interface does not mean a given model was trained with the method of a particular paper, nor does it guarantee that it chooses accurately among your set of tools. When the training sources are not public, a training recipe cannot be inferred backwards from the interface.
+8123	Q010｜Why can streaming output not be executed as soon as half a JSON arrives? How exactly is SSE parsed?
+27495	What to know first for this question</span>A network fragment may cut in the middle of a Chinese character, or deliver only half a JSON field. Restore the bytes to text first, then assemble events according to the protocol, and only then execute.
+23787	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols
+24725	A network chunk, a
+16396	character, an
+28320	A protocol form that sends server messages piece by piece over an event stream. Example: the boundary of a transport fragment is not guaranteed to equal one complete event.
+11603	event, a JSON object and the model's call item have different boundaries. Parse incrementally, layer by layer; accumulate the arguments of one and the same call; and execute only once an explicit completion status has arrived and validation has passed. The end of the connection does not necessarily mean that generation completed normally.
+10449	How one stretch of Chinese tool arguments gets split up
+12540	Suppose the arguments contain
+10015	. A Chinese character is made of several UTF-8 bytes, and the network may cut a chunk in the middle of a character. If every chunk is decoded on its own, it may raise an error or insert a replacement character. Use an incremental UTF-8 decoder that keeps the unfinished bytes.
+16415	Once the bytes have become text, the lines still have to be accumulated according to the SSE rules. Several
+25125	lines make up the data of one and the same event, and only a blank line dispatches the event; a comment heartbeat is not business data. The JSON inside an event may describe "a new fragment for some call's arguments" rather than a complete call. Attach each delta to the right buffer by item identity, call index or the interface's own convention; fragments from several concurrent tools must not be mixed together.
+12535	Suppose the events arrive in this order:
+23122	Only once the arguments are complete is there an object that can be validated.
+9974	, the completion of the output item and the completion of the whole response are different events; whether a complete tool item may be executed early depends on the product's protocol and on the execution policy. The most conservative teaching implementation waits for that call and for the necessary response status to complete, and produces no side effect from a JSON guessed into completeness.
+11427	A Chinese character is split into three network fragments, so why can it not be decoded fragment by fragment
+26297	Input and conditions.</strong>The UTF-8 bytes of the character "我" are E6 88 91. The network receives E6 first, then 88, and finally 91; only after that does the blank line at the end of the SSE event arrive.
+22062	Decoding each fragment on its own as UTF-8
+14108	A single E6 is not a complete character; it raises an error or inserts a replacement character.
+25340	The decoder buffers the incomplete bytes
+24073	Once the third fragment arrives it outputs "我".
+11614	Event buffering
+18816	Keeps accumulating the decoded text up to the blank line
+24731	The end of a network fragment is not the end of an SSE event.
+14753	Argument buffering
+10286	One tool-argument object may be split across several deltas
+16725	Only once it has been received in full and validated may it be handed to the executor.
+13303	Counterexample at close
+27638	When the connection drops, the arguments are still
+10997	You must not guess a file name to complete it just to "execute as soon as possible".
+19040	Join the steps up.</strong> A byte stream, a text line, an SSE event, a JSON object and a tool call are completion boundaries at different levels.
+26816	Limits and counterexamples.</strong> The parser that ships with this book covers only the declared LF teaching subset; a complete EventSource also has to handle CRLF, the field rules, reconnection and so on.
+27912	Follow-up: what if the complete JSON has already appeared but the rest has not finished?
+25796	Being closed syntactically is not the same as being semantically final. The model or the protocol may go on to send other fields, a cancellation or a failure notice, or several calls may not all be there yet. The moment of execution has to follow the event contract, not a guess from counting brackets. For read-only prefetching an undoable optimization can be designed, but a write must not be executed speculatively.
+27984	Follow-up: after a disconnection, can splicing on a newly generated result restore it?
+10652	Not necessarily. Real event resumption needs protocol support such as a stable response identity and a cursor or sequence number; starting generation again may produce different arguments. The old half JSON and the new answer cannot simply be spliced together. Decide explicitly whether you are recovering the old response, resending an idempotent request or starting a new generation, and handle execution deduplication for each case separately.
+27936	Follow-up: how do you test that a stream parser works on more than well-behaved chunks?
+18788	Split the same byte stream at every possible position, especially inside UTF-8, an escape character, a line break and a JSON boundary; inject heartbeats, duplicate events, interleaved tool items, truncation and an error ending; check that the final object is the same and that an unfinished call is never executed. What the test aims at is the invariants of the protocol, not a few fixed sample strings.
+17841	Engineering deep dive · E19 · continues Q038
+23570	Lesson 02</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+11214	Do not let network fragmentation decide the boundary of a business action
+10311	One Chinese character may fall across two byte chunks; one SSE event may span several network chunks; and one tool-argument object may arrive through several delta events. These are three different levels. The correct pipeline is incremental byte decoding, protocol event assembly, accumulating arguments per call item, recognizing the completion status the protocol defines, and then validating and executing.
+10246	An error one ASCII test cannot cover
+23026	has a different number of UTF-8 bytes than it has string characters. This book feeds it byte by byte to Python's incremental UTF-8 decoder and recovers the JSON correctly in the end; decoding each chunk independently may throw an error in the middle of a Chinese character or lose characters. Tests must include multi-byte content, CRLF boundaries, blank-line boundaries and escape characters, not only short English JSON.
+16241	The arguments of several calls cannot share one global buffer
+15775	Fixed interleaved events: A receives
+29135	, A receives
+10121	. Accumulating them separately by A and B gives two valid objects; splicing them into one string in arrival order is wrong. A real interface may carry item_id, output_index and call_id at the same time; they serve different purposes, and the display order must not be taken for business identity.
+25800	Syntax can be complete early, but execution still needs the protocol and the policy to allow it
+21225	Some prefix can already be parsed by json.loads, and that does not mean no further field will be added or that the state will not change. Wait for <strong>the argument-completion event that the interface in question defines</strong> and handle the refused, incomplete, cancelled and failed paths. A synchronous conservative implementation may execute only after it has confirmed that the whole response is acceptable; a protocol that supports asynchronous tools may allow a completed call to be executed while the model is still producing output, so not every interface can be required to wait for the end of the turn.
+20954	The local test takes an explicitly conservative policy: even when the argument JSON is valid and carries a done marker, it does not execute if the response as a whole is incomplete. This test proves that local policy; it does not pass itself off as the event semantics of every API.
+28106	Follow-up: a reconnection delivers the events again, so how do you avoid executing twice?
+12702	Start by separating the identity of the transport event from the intent of the business operation. Deduplicating by item status cannot replace idempotence downstream: if the confirmation is lost after the first execution succeeded, the regenerated call_id may be different. You need a stable business-level identifier of intent to control the side effect, and an argument fingerprint kept to verify "same key, same intent".
+28044	Follow-up: can the streaming display and tool execution share one string?
+10779	Better not. The display layer may show partial text; the execution layer has to handle structure, status, authorization and logging. Letting the UI's incremental concatenator take on the executor's duties turns truncation, escaping and unknown fields into real side effects.
+7466	E19: how to read this result, rather than just looking at "pass"
+16407	The character buffer, the event buffer and the argument object each close on their own. Seeing arguments that can be parsed, you still have to check the call and response status and the permissions; half a network fragment is even less reason to trigger a write.
+24839	Self-check:</strong> when the deltas of tools A and B arrive interleaved, why can they not be spliced into one JSON in arrival order?
+14731	The arguments belong to different call items. They should be accumulated separately by the identity of the protocol item, and the results then bound by call_id; the order of arrival on the network does not stand for the order of the fields in one object.
+15648	The four boundaries cannot be merged
+24740	What the network returns is byte fragments. The UTF-8 bytes of one Chinese character may fall into two fragments; one SSE event may span several; and one tool-argument JSON may be split into several incremental events. Finally, the completion of one tool call item is not the completion of the whole model response either.
+25658	Let the call be numbered c7, with the tool arguments split into
+10181	. The first fragment is not bad JSON; it is simply not complete yet. Do not parse each fragment as JSON and treat the failure as an error by the model, and still less execute because one closing brace was found. A string can contain braces; and later events may still supply extra fields, a refusal or an incomplete ending.
+21855	Organizing the objects correctly
+17670	Layer
+12396	The object it keeps
+17637	Bytes that do not yet make up a complete character
+24132	Wait for the bytes that follow; they must not be discarded
+11615	Event parsing
+11613	Event type, event body, terminating boundary
+14073	Tell text deltas, argument deltas, completion and errors apart
+25949	Call assembly
+19488	Keeps an argument buffer per output item / call ID
+11069	The arguments of two concurrent calls must not be joined together
+18587	Execution admission
+16700	The completed tool item, the arguments, the permissions, the context snapshot
+28332	Enter execution only after validation has passed
+25840	Request wrap-up
+15628	Response completed, or an incomplete error
+24465	Settle usage; wait for or handle tools already started
+15807	One important ordering in the pinned source
+7278	Codex's handling of a completed output item first records the tool call in the session history, and then enters either the immediate-dispatch or the deferred-dispatch path. So even if it is cancelled later, a call that already exists in the history still needs an associated result or an explanation that it was cancelled; no dangling call may be left without a matching output.
+20616	When there is a synchronous post-model hook, tool calls can be accumulated first and executed only once the hook has decided. So "a complete call item has been received" and "the call has already started" are not the same event either. If the stream breaks off early with no explicit response-completed event, it should be treated as incomplete; protocol success cannot be inferred from the last stretch of text already seen.
+11360	Two abnormal paths
+24037	The first: c7's arguments are complete, but the cancellation happens before admission. The file is unchanged, and it can be recorded as not executed. The second: c7 has already written the file, and the network then drops. Here it must not simply be marked as not executed and retried; the file, or the status of the downstream request, should be verified first. One error code is not enough to express two different facts.
+24347	In the exercise, split the events into different byte fragments and let c7 and c8 arrive interleaved; then verify that each set of arguments is correct, that any one call enters execution at most once, and that an early EOF produces no conclusion of success. What is tested here is the assembly and state logic, not a simulation of a real model's language ability.
+16724	A complete tool item and a complete response are not the same completion event
+8829	An assembled SSE event, assembled tool arguments and the end of the response stream are three layers of boundary. The Codex path that was read records the call once the completed tool item arrives, and then chooses immediate or deferred execution; it does not require every call to wait for the whole response stream to close. If a cancellation comes before deferred dispatch, an abort output corresponding to the call_id may still be needed, or replaying the history will show a call with no result.
+19993	Teaching acceptance: when the argument fragments of c1 and c2 arrive interleaved, they must be assembled separately; c1's arguments being valid does not make c2's valid. One successful JSON parse still needs checks on fields, target, permissions and business rules. Which boundary is replayed on a network reconnection has to be defined at the protocol layer; a reconnection must not be taken as permission to perform the external action again.
+8125	Q011｜When parallel tool results return out of order, how are they paired? Which errors can be left to the model to fix?
+27450	What to know first for this question</span>Parallel calls may return in a different order, so they have to be paired by ID and not by position in the array; duplicate receipts and timeouts also bring in deduplication and the unknown state.
+25938	Calls and results should be paired by a stable call identity, not by the order of return or by the tool's name. A recoverable argument or business error should come with precise feedback; a permission refusal, an unknown side effect and a damaged protocol cannot simply be left to the model to retry without limit.
+23249	Looking at two calls of the same tool name
+21675	The model simultaneously calls
+29142	, with the IDs c1 and c2. b.py returns first. On the rule "the first result corresponds to the first call", the model takes file B for file A, and a later patch may change the wrong thing. The correct way is to keep
+29340	, and to assemble the output according to the protocol; one and the same tool name cannot uniquely identify a call.
+22643	Status can distinguish created, validated, running, succeeded, failed and
+9997	. unknown means the client cannot confirm whether the side effect happened; it is not another name for failure. If creating a ticket remotely times out, for instance, you must not immediately create another one with a new ID. A query or an idempotent recovery is needed.
+28631	An error return should preserve the action that can be taken:
+15278	means the path can be relocated,
+15261	means the range can be adjusted,
+25238	calls for changing the authorization or choosing a permitted path,
+28906	means the new version has to be read again. Wrapping every error as "try again" leaves the model searching the error space blindly.
+20897	Conditions for this example:</strong> an independent read-only parallel example: cA reads a.txt and takes 80ms, cB reads b.txt and takes 20ms. Going by return order alone, B arrives first.
+28351	The correlation key of a logical call.
+13891	Arrival order
+24737	The order that the network or the speed of execution decides.
+28502	Duplicate result
+15449	The same call may appear again because of a replay; it must not be taken as a new action.
+23293	Real time
+13890	Result arriving
+21856	Correct binding
+14839	cA and cB are issued
+16079	Fills cB, not slot 0 of the list
+16078	Fills cA; both calls are now complete
+28504	cB delivered again
+15362	The same cB result
+14710	Deduplicate or confirm it is the same; do not create a new call
+18874	Treating a call result as "the nth one" is fragile; build a map by ID, and the display order and the logical order come apart.
+13085	A correlation key only guarantees the correspondence; it does not guarantee that the tools are safe to run in parallel. Two calls writing the same file still have to be checked for dependency.
+28597	The layering of errors also has to be preserved: a JSON argument error can be left to the model to change, an expired credential should go through authorization recovery, and a business result that is unknown needs verification rather than a blind retry.
+11206	Do not conflate:</strong> if the service's retry produced a new call_id, locally you still have to judge by business intent whether the side effect is a duplicate; a call ID is not automatically an idempotency key across systems.
+11313	Two tools finish in parallel, so where does the later result belong
+26283	Input and conditions.</strong>In the same turn, c1=read A and c2=read B are issued. B takes 20ms, A takes 100ms.
+23020	Register
+12362	Keeps c1→A and c2→B
+11150	Do not guess the correspondence from array position alone.
+12691	B arrives first
+24451	The result is labeled call_id=c2
+14155	Even though it returned first, it belongs to B.
+15521	A arrives later
+24450	The result is labeled call_id=c1
+15325	The order may be adjusted when merging; the identity may not be wrong.
+17665	Partial failure
+7056	A times out, B succeeds
+13720	Record their statuses separately; do not mark the whole batch successful or discard it all.
+12350	Dependency counterexample
+24080	The second tool must use the version the first has just written
+27214	This is not independent parallelism; the dependency should be waited for first.
+19064	Join the steps up.</strong> Parallelism saves wall-clock time only if the operations are independent; results are associated by identity, not by the order in which they finish.
+26637	Limits and counterexamples.</strong> 20/100ms are constructed values. A cancellation or a timeout does not necessarily mean the external action did not happen; where there is a side effect it still has to be checked.
+27890	Follow-up: are several tool calls naturally parallelizable?
+10634	No. Reading two independent files usually is; creating a branch and then switching to it, or writing a file and then testing it, have dependencies; and two writes may contend for the same resource. Whether a tool is read-only is only part of the information — the specific arguments and the shared state decide the conflict. A harness needs a concurrency policy; the model emitting several calls in one output is no proof of safety.
+27861	Follow-up: the tool returns success after a cancellation, so which one should you believe?
+14910	A cancellation request only asks for a stop; the tool may already have finished, or may not be interruptible. Go by the actual side effect and the protocol status, recording cancel_requested and the final result instead of merging the two into one boolean. A remote release or payment especially cannot be treated as rolled back just because the local wait stopped.
+27873	Follow-up: is a full stack trace returned to the model better the more detail it gives?
+10646	Not necessarily. A full stack trace may leak keys or internal paths, or drown the error that matters. Keep the error class, the relevant context, whether it can be retried, and a reference to the evidence; land the raw log safely and fetch it back by scope when needed. Trimming should keep the error and the closing summary, not only the first few hundred characters of the log.
+8128	Q012｜How do Structured Outputs constrain generation? Why does conforming to the Schema still not mean it can be executed?
+27492	What to know first for this question</span>Structured output restricts the form; it does not prove the numbers are right. A refusal by the model, a truncated output and a failed business check should each have their own handling path.
+23881	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP
+24419	A structured-output mechanism restricts generation to the format and types of a supported schema, often by means such as constrained decoding. It reduces parse failures, but it does not prove that a field is factually true, that the business conditions hold, or that execution has been authorized. Refusals, truncation, incompleteness and the interface's range of support still have to be handled.
+18791	Taking the four layers of validation apart
+24028	The first layer is syntax: can the JSON be parsed. The second is structure: are the required fields present, and do the types and enums match the schema. The third is business: is the amount reasonable, does the date satisfy the rules, is the file version consistent. The fourth is authorization: is the current identity allowed to perform this action on this particular resource.
+16525	fully conforms to
+29209	, yet it may still exceed its permissions. Even if the schema allows only "a repository-relative path",
+9968	, symbolic links and a path that changes at execution time still require validation of the real path. In the model's output,
+11011	cannot be used as the basis for approval.
+14926	The intuition behind constrained decoding is this: given the current output prefix and the grammar state, mask the disallowed next
+29239	, then choose from the allowed set. Which schemas are really supported, how they are compiled and how errors behave are decided by the implementation; do not invent a claim that every vendor uses the same grammar engine internally. As for the relation between a number and reality, the grammar state alone cannot query a database to verify it.
+7757	The JSON format is perfectly correct, so why can it still not be executed
+26492	Input and conditions.</strong>The output conforms to the schema:
+29187	, the two field types being string and integer.
+24423	Structure layer
+16390	The fields exist and the types are correct
+24427	The structural constraint passes.
+9350	timeout requires 1—60
+5950	-1 is outside the business domain and cannot be accepted.
+25296	The normalized path goes outside the permitted directory
+14154	Even though the field is a string, it cannot be read.
+22617	Version layer
+19838	The operation targets v7, but it is already v8
+28905	It has to be read again, or the stale change refused.
+14834	Feedback layer
+27130	Returns a specific, fixable error
+25428	Let the model change its proposal, instead of explaining the risk only after execution.
+19184	Join the steps up.</strong> Correct structure, correct business rules, correct authorization and correct version are four independent requirements.
+26718	Limits and counterexamples.</strong> A schema that supports minimum/maximum can catch a numeric range early, but permission for an arbitrary path, the current version and external facts are still for the host to judge.
+27754	Follow-up: why are JSON Mode and a schema constraint not guarantees at the same level?
+9473	"Generate valid JSON" limits only the syntax; a schema can also limit the fields, types, enums and so on. A valid JSON array may not be the required object at all. Even with a schema, an application should handle compatible versions and unsupported constraints explicitly, rather than assume that every JSON Schema keyword is supported.
+27867	Follow-up: can the application-level validation be deleted to save code?
+10787	The permission and business validation should not be deleted. The model service is one source of input, and errors, version changes or a bypassed call can all happen. A deterministic boundary can usually stay simple — one type parse, a path-range check, a version condition and an authorization check — and there is no need to build a complicated framework for it.
+28066	Follow-up: why is a structured answer sometimes more prone to "filling in every field"?
+24969	If the schema makes every field required and there is no unknown, null or insufficient-evidence state, the model may be forced to fill in a value. A design should allow something missing to be stated honestly, and should say which fields may be empty and what kind of source is needed. Completeness of form and completeness of knowledge must not be run together.
+17842	Engineering deep dive · E20 · continues Q040
+8846	How far the schema's guarantee reaches
+8852	A schema constrains fields, types and part of the value structure; it does not guarantee that the file exists, that the amount is right, that the user is authorized, or that the record version is still valid. Strict output may also come with refusals and incomplete responses, which have to be handled explicitly.
+5917	Substituting "the structure conforms" for "the business can execute it" merges the interface layer with the authorization layer.
+24714	Missing, null and an empty string should be different states
+16393	field is required to be present but allowed to be null.
+24717	is missing the field, and is not the same structure as
+10875	; an empty string may in turn mean that the user explicitly cleared it. If an adapter fills every missing field with null automatically, it may disguise an omission by the model as a valid decision. In database PATCH semantics, "do not change the field" and "change it to an empty value" are especially dangerous.
+20943	The local experiment verified this distinction, and showed that the structurally valid
+11779	is still refused by the local permission set. What is tested is the structural rules and the business boundary; it is not claimed that the remote Structured Outputs API was used.
+11289	A business write goes through at least three different checks
+24061	The first is the schema and parsing; the second is business validity after normalization, for instance the path, the record ID, numeric units and the relations between arguments; the third is the current identity, the permissions, the target version and the risk of the operation. If the target changes between the checks passing and the actual write, a conditional write or transaction protection is needed as well.
+11171	Do not take the
+18201	supplied by the model as evidence of authorization. Authorization is decided by a trusted executor for a real user and a real resource; the MCP security guidance likewise stresses the trust boundaries of tokens, resources and proxies.
+27729	Follow-up: the enum constraint already limits it to read/write, so why is it still dangerous?
+20417	is a class of operation; it does not say which tenant, which version, which fields or how much data is written. One and the same operation name covers a great many different risks. Tool design should make the most common safe operations explicit and the necessary permissions checkable, and avoid offering one unrestricted do-anything function and then constraining it by prompt.
+28124	Follow-up: should a failed validation automatically let the model fix the JSON?
+24335	A purely structural error can have the precise error returned and be retried within a limited budget; an authorization refusal cannot be talked around by rewording. Distinguish a retryable format error, data that needs refreshing, a permission that needs the user's confirmation, and something permanently unsupported. Unifying every error into "please try again" manufactures retry loops and the risk of exceeding permissions.
+7469	E20: how to read this result, rather than just looking at "pass"
+24716	A missing field, a field that is null and an unauthorized path are three different judgements. A schema can constrain structure and type; the business authorization is still verified by the executor.
+24851	Self-check:</strong> an object conforms to the schema and contains is_authorized=true, so does that prove it can be executed?
+10988	No. That field is still data supplied by the model. A trusted host has to check the real identity, resource, permissions and current version independently; correct structure is only one of the checks.
+22263	Follow this chapter through its objects and states</a><a href="#topic-2">Complete characters, complete events and complete tool arguments are three separate gates</a><a href="#Q037">Q009｜With Function Calling, who actually calls the function? How does the model know the tool's arguments?</a><a href="#Q038">Q010｜Why can streaming output not be executed as soon as half a JSON arrives? How exactly is SSE parsed?</a><a href="#Q039">Q011｜When parallel tool results return out of order, how are they paired? Which errors can be left to the model to fix?</a><a href="#Q040">Q012｜How do Structured Outputs constrain generation? Why does conforming to the Schema still not mean it can be executed?

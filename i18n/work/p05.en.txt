@@ -1,0 +1,340 @@
+24000	Lesson 63｜Inference serving: scheduling, throughput, latency and parallelism — AI Systems Engineering
+20667	Serving performance is not only how many tokens are generated per second; it also covers queuing, the first character, tools and recovery time. Parallelism may save wall-clock time and it may also add communication; higher throughput is no guarantee that any one person's response comes back faster.
+23827	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/20.html">Lesson 61 · Low rank, quantization, experts</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/38.html">Lesson 33 · Reading a production run
+27532	A quick check before the deep reading:</strong> change the serial task 2+3+4+1 into 2+max(3,4)+1, then add a coordination overhead of 4, and see for yourself how parallelism turns from an advantage into a disadvantage.
+21657	The model's forward pass is only one part of serving. How long a request waits in the queue, which other requests it runs with, whether its KV gets preempted, and when the output comes back all decide the speed the user feels.
+8394	Q097｜What is the difference between continuous batching and an ordinary batch? Why does prefill interfere with decode?
+27435	What to know first for this question</span> Dynamic batching adjusts the set of active requests between generation steps; waiting to fill a batch and hardware utilization are a trade-off, and a fixed batch is not always the fastest.
+23801	Lesson 38 · Batching and padding</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/38.html">Lesson 33 · Reading a production run
+20466	An ordinary static
+17959	usually waits for a whole group of requests to finish before switching to the next; continuous batching dynamically removes completed requests and admits new ones between generation iterations, raising device utilization. A long
+25378	computation competes with short decode iterations for the device, so the scheduling policy has to weigh the latency of the first
+18098	, the interval between later tokens and overall throughput.
+26048	Tracking four requests
+7063	A needs to generate 100 tokens, B only 5. In a static batch B finishes quickly, but it may go on holding its fixed batch slot while A has not finished. Iteration-level scheduling lets C in once B finishes; C completes its prefill first and then joins the later decode steps. If D suddenly arrives with an extremely long prompt, doing its prefill in one go may occupy a fairly long amount of
+20324	time, stalling the token output of A and C.
+7232	Chunked prefill processes D's input in chunks, so the scheduler can fit decode steps for existing requests between the chunks. This reduces some blocking, but D needs more scheduling rounds to build its complete prefix, and scheduling and cache management become more complex. How a particular engine blends prefill with decode, and how large the token budget per round is, are version and configuration behavior, not one algorithm shared by every service.
+25930	A scheduler is usually constrained at the same time by the maximum batch token count, KV capacity, queue priority and request length. Limiting by the number of requests alone is not enough: a 100-token request and a 100k-token request cost very different resources. It also has to keep short tasks from jumping the queue forever and starving the long ones.
+25831	After request B finishes, how the free slot is handed to C in the next round
+26335	Input and conditions.</strong> The teaching scheduler holds at most 2 requests at a time. A still has 3 tokens to generate, B has 1 left, and C is in the queue. In each decode round every active request generates at most 1 token.
+16124	Process A and B
+7030	A has 2 left; B finishes generating and exits.
+26115	Scheduling between rounds
+28481	Release B's request slot and the cache that is no longer needed
+7317	C can enter without waiting for A to finish.
+23733	Round 2
+16123	Process A, and C whose prefill is done
+7029	A has 1 left; C gets its own 1st output.
+28685	Long-input counterexample
+24963	If C's prefill occupies the device for a long time in one go
+7048	A's next output may have to wait, which is prefill interfering with decode.
+13810	The chunking option
+18700	Split C's prefill into segments and schedule at suitable boundaries
+15181	The waiting can be controlled, but it brings in a scheduling and throughput trade-off.
+19248	Join the steps up.</strong> What continuous batching updates is the set of active requests between rounds; it must not mix the past context of different requests together.
+26784	Limits and counterexamples.</strong> The round-by-round example leaves out hardware timing and the prefill implementation, so real throughput cannot be computed from it directly. Chunking and priority are not an unconditional gain.
+27875	Follow-up: does high throughput mean an individual user is served faster?
+10650	Not necessarily. A larger batch may raise total tokens/s, but it adds queuing and waiting at every step. Interactive online use usually cares about the tail quantiles of
+15602	and of the token interval; offline batch processing cares more about unit cost and total throughput. The serving goal has to be fixed first, and only then the scheduling parameters chosen.
+28075	Follow-up: could every request be prefilled first and only then decoded?
+27323	That might reduce some scheduling complexity, but it would leave requests that are already ready waiting for later long inputs. Conversely, giving decode absolute priority would leave new requests without a first token for a long time. Scheduling allocates waiting under limited compute and KV capacity; there is no single fixed rule that is optimal for every load.
+27786	Follow-up: why can client retries make a service slower?
+25068	If a timed-out request is still running on the server, a client retry may create a duplicate task, add to the queue and the KV load, and so cause still more timeouts. Request identity, cancellation semantics and the server's ability to deduplicate have to be made explicit, together with backoff and an overall deadline. A retry is not a free fault-tolerance button.
+17837	Engineering deep dive · E15 · continues Q029
+25842	The number of requests is not a sufficient measure of cache capacity
+15484	The same 3 requests with lengths [4,4,3] occupy 11 slots; appending one token to each at the next step makes 14. If capacity is only 12, "it fits" now does not mean it will still fit at the next step. Real capacity is also multiplied by the number of layers, the number of K/V heads, the width per head and the dtype, and is affected by paging, prefix sharing and other VRAM use.
+9366	The official vLLM tuning documentation discusses preemption and recomputation when KV runs short explicitly; they can keep the system moving forward, but they add end-to-end latency.
+5939	This is the concrete mechanism to look at when inspecting a service; not every instance of high latency should be put down to "the model is slow at inference".
+23261	Follow the causal chain that matches the symptom you see
+25064	If there is no first token for a long time after a request arrives, start by separating queuing, prefill and the first output; if output has started but keeps stalling, look at decode scheduling, the preemption count, the currently active tokens and recomputation. If GPU utilization is high but useful output is low, repeated prefill may be eating the work. Looking only at total tokens/s can also hide the cost of recomputation.
+13725	Chunked prefill is not costless magic
+28638	A long prompt occupies the device in one go and holds back streaming requests that are already running. Splitting prefill into chunks lets it interleave with decode, and the current vLLM design describes the priority policy involved.
+5854	But chunks that are too small add scheduling overhead, and leaning too far toward decode makes TTFT worse for new long requests. Look at TTFT, inter-token latency, completed-request throughput and tail waiting at the same time, at the very least; one average cannot optimize every experience.
+19839	Order of operations and verification
+12724	First fix the input-length/output-length distribution, the arrival rate and the cancellation rate in the load, and record capacity and preemption; only then change one budget or concurrency parameter. Raising GPU memory utilization, reducing concurrency, adjusting the token budget and widening parallelism each carry risk, and should not all be changed at once followed by "it got faster". Keep OOMs, timeouts and failed requests in the denominator.
+28059	Follow-up: does simply raising max_num_seqs make things faster?
+16476	It raises the ceiling on concurrency; it does not create KV capacity or bandwidth out of nothing, and set too high it triggers preemption instead. If the device was idle before, throughput may improve; if it was already cache-limited, things may get worse. Judge by the actual active tokens and capacity, not by the apparent growth in the request count.
+27847	Follow-up: does a prefix-cache hit reduce the history read at every decode step?
+16457	It reduces the work of rebuilding the prefix K/V; a new query usually still has to read the relevant past K/V. A cache does not turn long-context attention into constant time. The longer the history, the more storage and reading remain the critical resources.
+7454	E15: how to read this result, rather than only looking at "pass"
+18873	Compare the total slot requirement after the requests are appended to with the capacity. The preemption and recomputation that follow once it no longer fits consume compute, so a busy GPU does not mean all the work is advancing useful output.
+24838	Self-check:</strong> three requests currently total 11 in length against a capacity of 12, and each grows by 1 — why can safety not be judged from "there are only 3 requests"?
+20696	The future total becomes 14 slots, beyond capacity. Memory depends on the active tokens and the KV size per token, on sharing, paging and so on, not on the number of requests alone. The growth from generation and the scheduling budget have to be taken into account.
+15650	Separate the four accounts first
+14739	Parameter storage, temporary activations, gradient/optimizer state and the KV cache are different objects. Training often saves activations for the backward pass and maintains gradients and Adam state; generative inference usually needs no optimizer state, but a long context may take up a great deal of KV.
+17277	For the worked model, the 236 float64 parameters are 1888 bytes of raw values; gradients of the same size add another 1888 bytes, and one copy each of Adam m/v adds a further 3776 bytes. This is array bookkeeping only: it excludes activations, framework objects, the allocator and temporary memory, and it is certainly not a measured process RSS.
+7772	KV cache: trading memory for repeated computation of the history
+16456	It keeps the past K/V that has already been computed, on the condition that the corresponding prefix and parameters are still valid. As the cache grows with a long context, VRAM use and the amount read grow with it. Do not look only at the 1 new token fed in at each step and assume the reading work is independent of history length too.
+7643	FlashAttention: the same objective, different intermediate storage access
+17975	A straightforward conceptual implementation forms the whole T×T table of scores and weights explicitly; the blocked algorithm handles local blocks in a more suitable level of storage, maintains online softmax statistics, and avoids writing large intermediate tables back to VRAM over and over. It is not Top-k sparse attention, and it is not "looking at only a few positions".
+22708	An independent online-statistics formula: there is already a maximum m, an exponential sum l and a weighted sum of values o; with a new block maximum m_b, take m'=max(m,m_b), multiply the old statistics by exp(m−m') first, and accumulate the new block's contribution as exp(s−m'). At the end o/l corresponds to the result of the full softmax weighting. Concatenating each block's local probabilities directly, without reconciling the normalization constant again, gives the wrong answer.
+8037	PagedAttention and continuous batching: managing storage and scheduling
+13804	Paged management cuts logically contiguous KV into physical blocks, reducing the waste caused by reserving contiguous space for different growth lengths; it does not change the mathematical definition of attention. Continuous batching can let a new request join as soon as one completes, raising device utilization; it also brings in trade-offs between scheduling, prefill/decode interference and tail latency.
+28579	Quantization: an approximation needs a measurable error
+22685	Independent example: scale=0.1, x=0.26, rounds to q=3, restores to 0.3, error 0.04. A value outside the representable range also has to be clipped, and the error is then no longer as small as rounding alone. Quantizing weights, activations and KV each affects a different object; one cannot infer from "a 4bit model" that all of its runtime memory is 4bit.
+28567	Quantization is no guarantee of more speed: low-precision kernels, dequantization, matrix sizes and hardware support decide the actual gain. Quality should also be evaluated on the target task, not judged by watching the error of a single tiny dot product.
+22561	Activation checkpointing: exactly the opposite direction from the KV cache
+25492	Training saves fewer of the forward activations and recomputes them when the backward pass needs them, which trades compute for memory; the KV cache instead trades memory for repeated inference computation. Recomputation has to match the random state and the side-effect semantics of the original forward pass: the recompute function must not casually write an external file one more time or update state twice.
+19670	Speculative decoding: the draft has to be verified for the target distribution to be preserved
+22739	An independent probability comparison: the draft distribution q proposes a candidate, and the target distribution p decides the acceptance ratio min(1,p/q). On a rejection, the extra sample is drawn from the normalized positive part
+25158	, and only in combination with the correct procedure does this preserve the target distribution. Accepting several draft tokens outright carries no such guarantee.
+29089	The verification overhead, the draft speed and the acceptance rate decide the gain; adding one small model does not by itself make things faster. A complete algorithm also has to specify the accepted prefix, the cache rollback after the rejection point, and how an extra target token is handled.
+12094	Optimization
+11575	What it mainly saves
+15220	Possible added cost
+12752	How to verify it first
+14180	Repeated computation of the history representation
+24630	Cache memory, staleness and position errors
+24620	Cached and full logits agree
+16247	Reads and writes of a large intermediate table
+13543	Kernel limits, floating-point ordering differences
+23212	Tolerance comparison on the same input + timing on the target hardware
+13797	Paging / batching
+23410	Fragmentation and idle slots
+25929	Scheduling and tail latency
+28661	Memory and latency metrics under a length distribution
+16418	Storage, possibly bandwidth
+26918	Approximation error, clipping, dequantization
+23072	Target-task quality + actual kernel performance
+15258	Trainable parameter state
+28141	Adapter capacity limits, merging for deployment
+15466	Compare quality and VRAM on the same data
+22557	Activation checkpointing
+25507	Storage of training activations
+28551	Recomputation and randomness consistency
+21472	Gradients agree + training VRAM/time
+23090	The target model's step-by-step serial cost
+25087	Draft cost, low acceptance rate
+13749	Distribution and sequence boundaries correct + measured throughput
+20838	Which performance conclusions this book does not draw
+25996	The worked model runs on the CPU only; its time is too short and its scale too small to represent GPU deployment performance. The shapes and byte counts in the figures serve to explain the formulas; "how many seconds can be saved" has to rest on a measurement with the corresponding hardware and load. This package verifies some numeric equivalences and state boundaries; it does not pass them off as conclusions about production speed.
+8396	Q098｜How are TTFT, TPOT and end-to-end latency taken apart? How is Roofline used to locate the bottleneck?
+27489	What to know first for this question</span> Arithmetic intensity compares the amount of computation with the amount of data moved, and the bandwidth ceiling is not the compute ceiling. Latency to the first character and the latency of each later token have to be diagnosed separately.
+23825	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/38.html">Lesson 33 · Reading a production run
+8929	TTFT is the time from the request to the first output token, including queuing, prefill and so on; TPOT describes the average or a quantile of the latency for generating later tokens; the total time for a task also includes retrieval, tools and multi-turn calls. Roofline uses the amount of computation and the amount of data moved to estimate whether something is compute-bound or bandwidth-bound, but it is only an upper-bound model and does not replace measurement.
+13615	Write out the time account for one request
+15901	For a single generation one can write roughly
+29211	, but the real time per decode step varies with length and batch, and preemption may be mixed in. The first token may come from the prefill's final
+29173	, so a whole extra decode step should not be counted on top of it. Streaming improves the perceived wait, but it does not automatically reduce the total computation.
+8755	A simplified Roofline estimate: given F floating-point operations, R bytes of memory transfer, an effective device compute rate C and a bandwidth B, the time is not less than
+10078	. If the arithmetic intensity
+17612	is smaller than the hardware's C/B, bandwidth is the more likely constraint. The large matrix multiplications of prefill usually make better use of the compute; low-batch decode often involves a great deal of weight/KV reading and may be more affected by bandwidth. In practice communication, scheduling, kernel launches and cache hits have an effect as well.
+19957	A teaching example: one step needs to read 20GB of data at an effective bandwidth of 1TB/s, so the data-movement lower bound alone is about 20ms; even doubling the theoretical compute rate would not necessarily improve that term. This example is a unit calculation, not a measurement of any product.
+20908	Conditions for this example:</strong> an independent timing example: 0.2 s of queuing, 0.3 s from prefill to the first token, then 4 more tokens at 0.05 s each. Network and display overhead are ignored.
+11902	The time from the start of the request to the first token.
+15528	The basis used for the interval between later tokens; it has to state whether the network is included.
+11869	The total time from submission to the final result.
+19902	Enlarge figure: separate the wait, the first item and the later items before asking why it is slow
+14692	Original example data: Q098
+14085	Segment
+18133	Start→end
+25965	Contribution
+19546	Queuing
+6572	4 decode steps
+19388	Metric
+8924	TTFT=0.50 s; total=0.70 s
+11063	TPOT must not be taken for the whole request latency
+25049	If a user complains that the first character takes a long time, look at the first two segments; optimizing only the later decode steps may do nothing for that experience.
+24172	The compute and bandwidth lower bounds also have to be kept apart: computation/compute-rate and bytes-moved/bandwidth can only give a rough constraint; peak FLOPS does not convert directly into real elapsed time.
+8986	A trace should include queuing, or the inside of the model call will look fast while the slowness at the user's end goes unexplained.
+11183	Do not conflate:</strong> one log's timeline explains only that one request; capacity planning also needs the concurrency distribution, the length distribution and tail latency.
+29049	A slow first character, fast later ones and a slow task overall can all happen at once
+26231	Input and conditions.</strong> Assume one request queues for 40ms and prefills for 60ms, the 1st token then needs another 20ms, each later token comes 20ms after the previous one, and 4 tokens are output in all.
+29039	The moment of the first token
+12972	Everything finished
+18426	Total generation latency 180ms.
+22061	The interval per step
+15040	Look only at the 3 later intervals
+8922	TPOT=20ms, which is not 180/4.
+17732	A tool joins in
+22825	After generation ends, another 800ms is spent waiting on the database
+22920	The user's task latency is at least 980ms, so improving decode is not necessarily the most effective change.
+16891	A counterexample for locating the problem
+8927	TTFT goes from 120 to 500 while the later intervals stay at 20
+12087	Check queuing and prefill separately first, rather than attributing all the latency to the model's output speed.
+18968	Join the steps up.</strong> Fix where the measurement starts and ends before comparing latencies; service time, queuing time and tool time cannot stand in for one another.
+26724	Limits and counterexamples.</strong> The numbers are a fixed teaching timeline, not a hardware benchmark. On different platforms the start of TTFT timing may include different network segments.
+27843	Follow-up: does cutting input tokens always save more time than cutting output tokens?
+10656	Not necessarily. Input can be processed in parallel during prefill, while output has an autoregressive dependency; shortening the output saves many decode steps and is often very effective. But the prefill and the later KV reading that an extremely long input brings can also dominate. Cache hits matter too: editing a prefix may force a recomputation of content that could have been reused. Optimization should be checked against the actual
+29407	, rather than by counting total tokens alone.
+27788	Follow-up: why do users still complain when average latency has fallen?
+15192	Possibly
+5953	/P99 has got worse, long tasks are being preempted, or tools occasionally time out. An average hides the tail and the differences between request types. Slice by context length, output length, tool type, cache hit, tenant/region and so on, while watching the sample size and privacy.
+27876	Follow-up: which optimizations only move the work somewhere else?
+23439	Offline precomputation, cache warming, an extra compression model and parallel retrieval can all reduce the interactive wait, but they add background computation, storage or load on other requests. The total cost and resource use per successful task should be counted, rather than only watching some local
+14937	get shorter.
+8400	Q099｜Why can speculative decoding be faster and still preserve the target distribution?
+27497	What to know first for this question</span> The draft proposes candidates first and the target model verifies them. Preserving the target distribution needs the right acceptance probability and a correction after a rejection; it is not just a matter of whether the two models agree.
+23880	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/18.html">Lesson 57 · From the last row of numbers to one token, and on to a whole answer</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+12842	A cheap draft model first proposes several candidate tokens, and the target model then verifies those positions in one pass; when enough of the draft is accepted, the serial calls to the target model are reduced. Standard stochastic speculative decoding uses an acceptance probability and residual sampling after a rejection, so that the final distribution matches the target sampling distribution instead of blindly adopting the draft.
+11841	Deriving correctness from the single-step distribution
+23075	With a target distribution p and a draft distribution q, first sample
+29199	, and accept it with probability
+19572	. The probability that the accepted path lands on x is therefore
+10044	. The remaining target mass is
+29483	; on a rejection, sampling from this residual distribution once normalized puts the target's shortfall back.
+12331	Example:
+29163	, so the acceptance rates of the three candidates are
+29343	, the accepted mass is
+29329	, the total rejection probability is 0.2; the residual sits entirely on the first candidate, so the final result is still
+10135	. The calculation script in this package checks this identity.
+16207	With several tokens, the draft proposes K tokens from the prefix it has generated itself, and the target model computes the distributions at those conditioned positions in parallel. They are checked in order, and after the first rejection the rest of the draft cannot be kept, because the conditioning prefix has changed. The corresponding cache has to be rolled back and generation continued from the corrected position. When everything is accepted, an extra token can also be taken from the target distribution; the exact protocol depends on the implementation.
+25091	A wrong draft can still preserve the target distribution: three kinds of token reconciled one by one
+26426	Input and conditions.</strong> Target distribution p=[0.6,0.3,0.1], draft distribution q=[0.2,0.5,0.3]. Only one draft position is studied here; a whole block of parallel verification is not abbreviated into the same formula.
+19589	Acceptance probability
+13716	Compute min(1,p/q) for each
+18312	Gives [1,0.6,1/3].
+23137	Mass accepted directly
+9282	q times each acceptance probability
+18309	Gives [0.2,0.3,0.1], 0.6 in all.
+19328	Total rejected mass
+19326	Resampling after a rejection
+19407	Normalize max(p−q,0)
+15029	Only the 1st entry has 0.4, so the resampling distribution is [1,0,0].
+20588	Final mass
+23138	The mass accepted directly plus 0.4 times the resampling distribution
+18310	Gives [0.6,0.3,0.1], recovering p exactly.
+19325	Sampling straight from p after a rejection
+24435	The result is [0.44,0.42,0.14], which ends up not equal to p.
+18984	Join the steps up.</strong> Preservation of the distribution comes from the "acceptance rule + residual distribution" holding together; it does not hold of itself just because a large model does the verifying.
+26794	Limits and counterexamples.</strong> This is an exact single-position calculation; it leaves out the cost of generating the draft, the scheduling of whole-block acceptance and any speed-up gain. Components where q is 0 need the support set handled correctly.
+27805	Follow-up: why is a longer draft not necessarily faster?
+25090	Generating the draft itself has a cost, and later tokens are the more likely to be discarded once an earlier one is rejected; verifying a long block also consumes compute and KV. The best length depends on the acceptance rate, the draft/target speeds and the hardware. A shift in the task distribution can cost a draft model that was effective before its advantage.
+28050	Follow-up: on which distribution should temperature and Top-p be handled?
+19575	The acceptance and residual formulas have to correspond to the target distribution one actually wants to sample from, and to the actual draft distribution. If the target has already had
+12155	applied but the ratio still uses the original
+29302	, distribution consistency may be broken. Greedy speculation has its own simpler matching rule, and the stochastic sampling formula and greedy verification must not be mixed at will.
+27830	Follow-up: why does preserving the distribution not guarantee the same token-by-token output as ordinary generation?
+23202	The same distribution does not mean the same path from the same random seed. The order in which random numbers are consumed, the floating-point arithmetic and the implementation may all differ. The correct promise is equivalence of distribution under the algorithm's conditions, not a bit-for-bit identical string under arbitrary settings, and certainly not that the answer is factually correct.
+17838	Engineering deep dive · E16 · continues Q031
+13750	Preserving the distribution is an algorithmic constraint; a high draft accuracy is not enough
+25650	Let the target model's distribution be p and the draft distribution be q; once the draft proposes x, it is accepted with probability
+19574	. On a rejection, resampling has to follow a residual distribution proportional to
+18498	; the support set and the total also have to be handled correctly. What is discussed here is stochastic speculative sampling, not token-by-token greedy verification. The original research describes an exact sampling method that preserves the target distribution.
+15034	Two candidates are enough to expose the error
+15767	Fix p=[0.8,0.2] and q=[0.2,0.8]. Draft A has probability 0.2 and is always accepted; draft B has probability 0.8 but is accepted with only 0.25, an accepted mass of 0.2. The accepted part is therefore [A:0.2,B:0.2], leaving a rejection probability of 0.6.
+21848	The correct residual is [0.6,0] normalized, that is, all of it goes to A, so the final result is [0.8,0.2]. If a rejection is followed by drawing straight from p, the final A is 0.2+0.6×0.8=0.68 and B is 0.2+0.6×0.2=0.32. That is still a legitimate distribution, but it is no longer the target model. The program enumerates the probability mass to verify these two results, so it does not depend on random sampling error.
+16208	A multi-token draft also brings state rollback with it
+25056	If the draft proposes k tokens and only the first r are accepted, both the target KV and the draft KV have to be trimmed to the correct prefix before the replacement token is handled. The K/V of the draft after the rejection must not be left in the visible cache. If a multi-token batch is used for verification, check which successor token each position predicts, to avoid an off-by-one.
+14003	Where the speed-up comes from, and when it disappears
+23087	The target model can verify several known draft positions in parallel, reducing expensive serial rounds. But generating the draft costs something too, and there may be no gain when the acceptance rate is low, the target verification is expensive or the batch scheduling does not suit it. A correctness proof concerns only the distribution; it does not automatically prove the latency got better. Real throughput and latency have to be compared under the same target distribution and task constraints.
+27866	Follow-up: is comparing the final sentences for a match enough to accept it?
+17579	Not for stochastic sampling: two draws from the same distribution can perfectly well give different sentences. Use a finite vocabulary for an exact probability-mass check first, then measure the empirical distribution, and check the cache trimming and the stopping separately. Greedy mode has its own dedicated equivalence condition, and the verification rules must not be mixed.
+27730	Follow-up: what about p/q when q(x)=0?
+25085	The draft cannot propose that x under q, so the acceptance ratio only has to be computed at the proposal points that actually lie in the draft's support set; the target mass the draft cannot cover is corrected through the residual and the like. An implementation should still check explicitly for floating-point underflow and invalid probabilities, rather than passing a division-by-zero nan further down.
+7457	E16: how to read this result, rather than only looking at "pass"
+13712	Look at the target distribution, the draft distribution and the compensating mass after a rejection separately. The input here belongs to E16 alone and does not carry over from the other small speculative-decoding examples; the compensating distribution has to put back exactly the missing mass, not draw from the target distribution unconditionally a second time.
+24846	Self-check:</strong> with p=[0.8,0.2] and q=[0.2,0.8], if a rejection is wrongly followed by redrawing from p, what is the final probability of A?
+19570	The accepted mass for A is 0.2 and the total rejected mass is 0.6; the wrong redraw contributes 0.6×0.8=0.48, giving 0.68 in all rather than 0.8. The correct residual gives all of the rejected mass to A.
+8404	Q100｜What do DP, TP, PP, ZeRO and prefill/decode separation each split?
+27463	What to know first for this question</span> Data parallelism replicates the model to handle different samples; tensor parallelism splits the operations; pipelining splits the layers; sharding the state reduces duplicated storage. Communication is a cost too.
+23824	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+7385	Data Parallel replicates the model to handle different data;
+5796	Parallel splits the tensor computation inside a layer; Pipeline Parallel segments it by layer;
+24193	-style techniques split redundant training state; prefill/decode separation lets different resources take on the two inference phases. They act on different objects with different communication patterns, so one should not simply memorize "spread the model across several cards".
+22853	Explaining TP and PP with one forward pass
+10278	A large linear layer
+15132	can be split across several devices by the output columns of W, with each card computing part of the output; if a later layer needs the complete Y, that takes communication or a matching sharded layout. Splitting along the input dimension instead produces several partial sums, which have to be reduced.
+16281	heads and the
+11439	intermediate dimension: how these are split decides when all-reduce/all-gather happens, and not every layer can simply concatenate the results.
+8031	PP puts the first few layers on device A and the later ones on B. A micro-batch goes through A first, and its activations are then sent to B; several micro-batches can form a pipeline, but there are bubbles at the start and the end. Unbalanced computation across the stages makes the fast device wait for the slow one; and inference on a single autoregressive sequence still has to pass through every stage again at each token.
+7384	DP suits parallel processing when there are several requests or samples; if a single model does not fit on one card, plain DP does not solve that. In training each replica has to synchronize gradients; in inference independent replicas can usually serve requests independently. ZeRO/FSDP shard the optimizer, the gradients and even the parameters, reducing duplication across training replicas, but they have to communicate to fetch the relevant part when the computation needs it.
+8050	With prefill/decode separation, the prefill device finishes computing and then sends the KV and other necessary state to the decode device. The resources can be optimized separately for throughput and for bandwidth, but the KV transfer can be large: the example in lesson 60 gives 4GiB for a single 32k sequence. If the network is slow, the context short or the request volume small, the gain from separation may be offset by the transfer and the queuing.
+15487	With the same two devices, what do DP, TP and PP each split
+26170	Input and conditions.</strong> A schematic network has 4 layers, each layer's weights taking 100MB; activations, gradients and the optimizer are not counted. Two inputs A and B, and two devices.
+11355	Both devices hold all 4 layers
+21130	400MB of weights each; one handles A and the other B, and in training the gradients also have to be synchronized.
+22038	Each layer's matrix computation is divided between the two devices
+22785	With an ideal even split that is 200MB of weights each, but intermediate results have to be exchanged or reduced inside the layer.
+22398	Pipeline parallelism PP
+25637	Device 0 holds layers 1—2, device 1 holds layers 3—4
+21129	200MB of weights each, with activations passed between the stages; a poor micro-batch arrangement leaves idle bubbles.
+9100	How ZeRO differs
+13807	Shard the copies of the optimizer, the gradients or the parameters
+10949	Not the same as simply cutting the 4 layers in two; the communication differs from stage to stage.
+19698	Decoupling inference
+9272	Prefill and decode are placed on different execution resources
+27161	The correct KV state also has to be transferred or shared; handing over a request number alone is not enough.
+19061	Join the steps up.</strong> Behind the names of the parallelisms lie splitting the data, splitting the matrix, splitting the layers or splitting the state; only by drawing what each device actually holds can the gain be estimated.
+26744	Limits and counterexamples.</strong> The even split of the weights is only a bookkeeping example; a real model has modules that cannot be split evenly, a communication topology, replication and extra caches.
+27997	Follow-up: why can more GPUs be slower instead?
+14131	Each card computes less, but synchronization, transfer and scheduling all increase; with a small model or a small batch, communication may dominate. Interconnect bandwidth differs greatly between nodes and within one machine. Compare the speed-up on a real task and the cost per successful task, rather than using the number of GPUs as a measure of capability.
+27721	Follow-up: why can a change in the TP degree affect reproducibility?
+13785	Sharding and reduction change the order of floating-point additions, and a tiny change in a logit can change which token wins at the margin. Different kernels may also be used. A correctness test should keep the three levels of numeric tolerance, generation distribution and task result apart, rather than demanding that every parallel topology agree character for character.
+27929	Follow-up: do application engineers need to implement these kernels?
+10662	Not necessarily, but they do need to know which bottleneck a setting affects. For example, when
+18103	latency is dominated by a remote tool, studying TP will not fix it; when a local deployment runs out of KV, look at the context, the concurrency and state management. The point of going deeper into the principles is to be able to locate the boundary correctly, not to rewrite every layer yourself.
+21030	Further basis for the distributed-training and parallelism part of this chapter: the PyTorch tensor-parallel documentation and the original ZeRO paper.
+12942	First ask which boundary the error happens at
+9464	"The model's output is wrong" is not enough on its own to tell whether the learning rate, attention or sampling is at fault. Confirm the identity of the input and the weights first, then check the shared forward pass, and then decide whether it is a training-only step or a generation-only step. Changing ten places at once makes even a correct fix hard to attribute.
+23006	Narrowing the problem down layer by layer from verifiable facts
+26539	Input and configuration
+24675	Do the IDs match the vocabulary? Are the labels shifted exactly once? Are padding and position defined clearly?
+13071	The shared forward pass
+22029	Are each layer's shape, mask, softmax axis and finite values correct? Is the prefix causally unchanged?
+25531	The training chain
+9228	What is the denominator of the loss? Do the analytic and the numeric gradient agree? The parameters do not change after backward — do they change after step?
+12366	Saving and loading
+28563	Does the fingerprint of the reloaded parameters match? Are the configuration and the vocabulary the same version?
+19700	The inference chain
+14913	Is it the last valid position that is taken? Do the cached and the full computation agree? Are the selection and stopping rules the same?
+27243	This order relies on measurable objects, not on the model's own claim that "I have already checked".
+17969	Common symptoms and minimal counterexamples
+23018	Symptom
+12088	Suspect first
+12666	Which small check to run first
+9227	The loss does not go down
+21342	Labels / denominator / gradients / a missing step
+15771	Fix one batch of data and confirm the loss definition, that the gradients are not empty, and that the weights change after step
+9229	The loss is unusually low but generation is poor
+12610	Peeking at the future / target leakage
+19876	Change a future token and compare the prefix logits; check the shift and the mask
+14140	Correct one at a time, wrong in a batch
+26058	Mixing across samples / PAD / the last position
+14139	Compare the logits of the same sample one at a time and in a batch
+24657	The cache is worse than the full computation
+12191	Position reset / a stale cache / a non-square mask
+28252	Record the input position, the cache length and the largest logit difference round by round
+13914	The forward pass matches but training is poor
+21479	Gradient branches / accumulation over shared parameters
+15785	Do an analytic backward pass and a finite difference at a fixed parameter point
+9176	Still random after eval
+7401	The dropout function's arguments / sampling / the kernel
+12725	Fix greedy decoding first, disable dropout, and record the same input with the same weights
+20500	Reloading after an update is inconsistent
+28592	Wrong file / configuration / transpose / vocabulary
+17553	Compare the parameter fingerprint and the full configuration, not just the file name
+28664	An end from length is taken for a complete answer
+12599	The stop reason was lost
+12364	Save stop_reason; do not infer that a task is complete from fluent text
+11478	Why "the gradient is not 0" is nowhere near enough
+28598	A wrong denominator, a missing residual path or a wrong mask can all produce non-zero gradients and make some losses go down. A test should check specific values, relations and an independent comparison, not merely whether there is a .grad.
+20925	The gradient comparison in this package is done parameter by parameter at the same initial values and on the same batch; the hand-written backward pass uses the mathematical rules, autograd uses the framework's record, and the finite difference estimates from the difference between real forward passes. The three complement each other, but they can also agree if all of them use the same wrong training objective, so the input and the meaning of the objective still need human interpretation.
+11545	Why negative controls are needed
+21838	An implementation that passes one test may simply have assertions that are too weak. After deliberately turning the causal mask off, using the wrong cache position, applying softmax twice or mixing in stale KV, the test should observe a difference. That shows the test can at least identify these specific faults.
+20847	The bad implementations in this book are used only for temporary local comparison; they are not saved as the default model and are not mixed into the official weights. The report states clearly which path is the deliberately wrong one, so that readers do not take a wrong formula for a recommended method.
+20014	How to choose a numeric tolerance
+9180	float64 on the CPU helps with comparison, but not every value has to agree to the last bit. A change in the order of softmax, normalization and matrix accumulation can cause small rounding differences; float16/bfloat16 or a fused kernel can differ more. Look at the absolute error, the relative error, the magnitude of the values and the task result together, and keep non-smooth places such as the ReLU kink in mind.
+23424	Replacing every NaN with 0 and then declaring the test passed is forbidden. Confirm the cause first: a fully masked row, overflow, division by zero, contaminated data and so on. Asserting finiteness is where locating the problem starts, not a complete fix.
+16313	How to read the results shipped with this book
+20362	is the full-chain record of one actual run;
+20377	are the reloadable parameters;
+11262	and the log record this round of tests;
+21195	comes from an independent forward pass in the standard library. Showing six decimal places on the page is a choice made for reading; the programs go on using the full precision.
+27877	Follow-up: which changes can claim to preserve the same computational objective?
+15953	When the conditions are met, a causal KV cache, correct blocked exact attention and storage paging can preserve the same objective, allowing the floating-point differences the implementation causes; quantization introduces an approximation; Top-k and temperature change the decoding distribution; replacing GQA or the FFN changes the architecture; LoRA training changes the parameters. Identify the type first, and only then is it clear whether consistency, task quality or system performance is what should be evaluated.
+16771	Full acceptance questions
+20444	When VRAM runs short, are using no_grad and using activation checkpointing the same thing?
+10850	No. Training has to keep or rebuild the chain for differentiation; no_grad turns off the recording that is needed and so breaks training. Activation checkpointing restores the necessary intermediate values by recomputing them before the backward pass, and the goal is still a correct gradient.
+22417	A test finds a very small difference between the cache and the full computation — can it simply be ignored?
+12863	Start with the magnitude of the error, the precision, the kernel and the gap between the candidate scores. If two candidates are almost level, a small error can change the greedy result; if a position or a mask is misaligned, the source has to be explained however small the difference. A tolerance needs its conditions; it cannot all be waved away as "floating-point error".
+29056	Acceptance 1: using this book's specific vocabulary, turn "我爱学习！" into training input and labels, and say where peeking at the future is prevented.
+16706	The complete sequence is [6,1,2,3,5,7]; the input is [6,1,2,3,5] and the target [1,2,3,5,7]. Attention in row t allows only s≤t, and the label does not enter that row's forward pass; the per-position norm and the FFN do not mix across the future.
+29057	Acceptance 2: write out the dependency from the loss down to Wq[0,0]; "autograd" on its own is not an acceptable answer.
+7874	L→Gz=(p−onehot)/10→U back to the final F→RMSNorm to H→the residual/FFN merging into R→Wo to mix→G_A→softmax to G_S→the scaled dot product to G_Q→Σ_b,t N1[b,t,0]G_Q[b,t,0]. The K/V and residual paths for earlier inputs have to be merged in as well; at these initial values G_Wq[0,0] is about −0.002217527833.
+29058	Acceptance 3: after 学习 is selected for the first time, why is the cache length 3 while the sequence length is 4?
+24039	The first forward pass handles only the three positions BOS, 我 and 爱. 学习 is no more than an ID selected from the output distribution; it has not yet gone through E/P and the layer computation as an input. Its K/V is appended only when the next round processes it.
+29059	Acceptance 4: the loss after these 400 steps is about 0.13948 — why should it not be forced down to 0 the moment it is seen to be non-zero?
+7103	The same BOS prefix is followed with equal frequency by 我/你, so the irreducible ambiguity gives a lower bound of ln2/5≈0.138629 averaged over the ten questions. The data and the objective have to be understood; not every non-zero loss comes from an implementation error.
+29060	Acceptance 5: the model is 30% faster on the GPU and the small CPU model's forward pass is unchanged — does that prove the deployment has no regression?
+10993	No. The numeric behavior on the target hardware, the actual batch and length distributions, the cache and the mode, quality and tail latency all have to be checked. Consistency in the CPU teaching setup verifies only the mechanism concerned; it is not a guarantee of production quality or speed.
