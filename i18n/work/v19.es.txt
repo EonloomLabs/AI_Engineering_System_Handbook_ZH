@@ -1,0 +1,543 @@
+1134	Q074｜¿Por qué separar Q, K y V en tres partes? ¿Qué calcula exactamente Attention?
+11883	Q075 · Un cálculo estable de softmax con un contraejemplo totalmente enmascarado
+18249	Q075 · Restar el máximo cambia la escala de cálculo, no las probabilidades entre candidatos</a><small>chapters/02.html · Subsección correspondiente del texto principal
+18370	Q075 · Restar el máximo cambia la escala de cálculo, no las probabilidades entre candidatos</a><small>studies/chapters/05.html · Subsección correspondiente del texto principal
+1265	Q075｜¿Por qué dividir por √d? ¿Por qué softmax? ¿Por qué la estabilidad numérica exige restar el máximo?
+18250	Q076 · Conexión residual, normalización y FFN no son otra ejecución de Attention</a><small>chapters/02.html · Subsección correspondiente del texto principal
+1371	Q076｜¿Por qué una capa necesita conexiones residuales, Norm y FFN además de Attention?
+18251	Q077 · La máscara de decodificación con caché debe seguir posiciones absolutas, sin copiar el pequeño triángulo</a><small>chapters/03.html · Subsección correspondiente del texto principal
+18360	Q077 · La máscara de decodificación con caché debe seguir posiciones absolutas, sin copiar el pequeño triángulo</a><small>studies/chapters/02.html · Subsección correspondiente del texto principal
+1528	Q077｜¿Cómo construir exactamente causal mask, padding mask y máscaras de decodificación por bloques?
+18252	Q078 · RoPE conserva ángulos relativos, no posiciones que se reinician en cada turno</a><small>chapters/03.html · Subsección correspondiente del texto principal
+18361	Q078 · RoPE conserva ángulos relativos, no posiciones que se reinician en cada turno</a><small>studies/chapters/02.html · Subsección correspondiente del texto principal
+1647	Q078｜¿Cómo incorpora RoPE la posición a la atención? ¿Por qué las posiciones de caché no deben comenzar de cero en cada turno?
+18253	Q079 · GQA conserva varias Query y solo les hace compartir menos K/V</a><small>chapters/03.html · Subsección correspondiente del texto principal
+18363	Q079 · GQA conserva varias Query y solo les hace compartir menos K/V</a><small>studies/chapters/02.html · Subsección correspondiente del texto principal
+1736	Q079｜¿Qué reducen realmente MHA, MQA y GQA? ¿Se eliminan las múltiples cabezas?
+18259	Q080 · Desplazar una posición a la derecha las etiquetas de entrenamiento significa que cada posición responde al elemento siguiente</a><small>chapters/05.html · Subsección correspondiente del texto principal
+18357	Q080 · Desplazar una posición a la derecha las etiquetas de entrenamiento significa que cada posición responde al elemento siguiente</a><small>studies/chapters/01.html · Subsección correspondiente del texto principal
+1898	Q080｜¿Qué predice exactamente el entrenamiento Next-token? ¿Cómo se desplazan las etiquetas y para qué posiciones se calcula la pérdida?
+18254	Q081 · Propagar hacia atrás no invierte las flechas del cálculo: reparte la «influencia» según las dependencias</a><small>chapters/03.html · Subsección correspondiente del texto principal
+18455	Q081 · Propagar hacia atrás no invierte las flechas del cálculo: reparte la «influencia» según las dependencias</a><small>studies/chapters/31.html · Subsección correspondiente del texto principal
+11884	Q081 · Calcular a mano el gradiente de Attention para una consulta y comprobarlo mediante perturbaciones
+1825	Q081｜¿Cómo se propaga Attention hacia atrás? ¿Por qué una diferenciación automática correcta no implica una implementación correcta del modelo?
+18260	Q082 · Contabilizar por separado el «estado histórico» de AdamW y el gradiente actual</a><small>chapters/05.html · Subsección correspondiente del texto principal
+18364	Q082 · Contabilizar por separado el «estado histórico» de AdamW y el gradiente actual</a><small>studies/chapters/03.html · Subsección correspondiente del texto principal
+11886	Q082 · Primer paso de AdamW: calcular el momento, la corrección del sesgo y el decaimiento
+1986	Q082｜¿Cómo se actualizan los parámetros después de calcular Loss? ¿Por qué AdamW hace más que multiplicar el gradiente por la tasa de aprendizaje?
+18261	Q083 · Cómo entra en el cálculo una muestra de entrenamiento con su origen y etiqueta</a><small>chapters/05.html · Subsección correspondiente del texto principal
+18430	Q083 · Cómo entra en el cálculo una muestra de entrenamiento con su origen y etiqueta</a><small>studies/chapters/23.html · Subsección correspondiente del texto principal
+2153	Q083｜¿Qué pasos recorren los datos de preentrenamiento antes de entrar al modelo? ¿Por qué la calidad de datos se convierte en un problema del sistema?
+18262	Q084 · La memoria de GPU de entrenamiento no se reduce a «parámetros por dos bytes»</a><small>chapters/05.html · Subsección correspondiente del texto principal
+18365	Q084 · La memoria de GPU de entrenamiento no se reduce a «parámetros por dos bytes»</a><small>studies/chapters/03.html · Subsección correspondiente del texto principal
+2218	Q084｜¿Por qué entrenar consume más memoria de GPU que inferir? ¿Qué ahorran la acumulación de gradientes, Checkpoint y la fragmentación?
+18263	Q085 · DPO compara «la mejora de preferencia respecto al modelo de referencia»</a><small>chapters/06.html · Subsección correspondiente del texto principal
+18367	Q085 · DPO compara «la mejora de preferencia respecto al modelo de referencia»</a><small>studies/chapters/04.html · Subsección correspondiente del texto principal
+11887	Q085 · Las mismas dos respuestas aportan señales de entrenamiento distintas para SFT y DPO
+2339	Q085｜¿Cómo cambian el modelo SFT, RLHF y DPO? ¿Qué compara la fórmula DPO?
+18264	Q086 · Las recompensas del grupo son comparaciones relativas, no pruebas de corrección absoluta</a><small>chapters/06.html · Subsección correspondiente del texto principal
+18368	Q086 · Las recompensas del grupo son comparaciones relativas, no pruebas de corrección absoluta</a><small>studies/chapters/04.html · Subsección correspondiente del texto principal
+2424	Q086｜¿Por qué los modelos de razonamiento suelen usar aprendizaje por refuerzo? ¿En qué difieren PPO, GRPO y la supervisión de procesos?
+18265	Q087 · Examinar los resultados del enrutamiento MoE token por token</a><small>chapters/06.html · Subsección correspondiente del texto principal
+18438	Q087 · Examinar los resultados del enrutamiento MoE token por token</a><small>studies/chapters/26.html · Subsección correspondiente del texto principal
+2486	Q087｜¿Por qué MoE tiene muchos parámetros totales pero solo activa una parte? ¿Qué hace realmente el Router?
+18266	Q088 · LoRA, cuantización y destilación cambian objetos distintos</a><small>chapters/06.html · Subsección correspondiente del texto principal
+18428	Q088 · LoRA, cuantización y destilación cambian objetos distintos</a><small>studies/chapters/23.html · Subsección correspondiente del texto principal
+2551	Q088｜¿Cómo elegir entre LoRA, QLoRA, cuantización y destilación? ¿Qué cambian exactamente?
+18255	Q089 · El token recién seleccionado todavía no ha entrado en su propio paso de cálculo</a><small>chapters/04.html · Subsección correspondiente del texto principal
+18543	Q089 · El token recién seleccionado todavía no ha entrado en su propio paso de cálculo</a><small>reading-notes/guide-03.html · Subsección correspondiente del texto principal
+2661	Q089｜¿En qué difieren Prefill y Decode? ¿Cuándo se produce el primer token de salida?
+18256	Q090 · Las mismas puntuaciones producen candidatos distintos con otro orden de procesamiento del muestreo</a><small>chapters/04.html · Subsección correspondiente del texto principal
+11885	Q090 · Cómo se redistribuyen unos mismos logits tras temperatura, Top-k y Top-p
+2758	Q090｜¿Cómo cambian la salida Temperature, Top-k y Top-p? ¿Por qué una temperatura de 0 tampoco implica reproducibilidad del cien por cien?
+18257	Q091 · Representar «salida detenida» y «tarea exitosa» en líneas de estado distintas</a><small>chapters/04.html · Subsección correspondiente del texto principal
+18372	Q091 · Representar «salida detenida» y «tarea exitosa» en líneas de estado distintas</a><small>studies/chapters/05.html · Subsección correspondiente del texto principal
+18377	Q091 · Representar «salida detenida» y «tarea exitosa» en líneas de estado distintas</a><small>studies/chapters/07.html · Subsección correspondiente del texto principal
+2872	Q091｜¿Cómo sabe el modelo que termina una respuesta? ¿En qué difieren EOS, las cadenas de parada, los límites de longitud y el final de una llamada a herramienta?
+18258	Q092 · El presupuesto interno de razonamiento, la búsqueda externa y múltiples agentes pertenecen a capas distintas</a><small>chapters/04.html · Subsección correspondiente del texto principal
+2939	Q092｜¿Qué ocurre cuando un modelo de razonamiento «piensa un poco más»? ¿Qué relación tiene con múltiples agentes y CoT?
+18267	Q093 · Por qué se reutilizan K/V antiguas: un token nuevo no puede cambiar hacia atrás el prefijo anterior</a><small>chapters/07.html · Subsección correspondiente del texto principal
+18362	Q093 · Por qué se reutilizan K/V antiguas: un token nuevo no puede cambiar hacia atrás el prefijo anterior</a><small>studies/chapters/02.html · Subsección correspondiente del texto principal
+3030	Q093｜¿Por qué se pueden almacenar K/V históricas en caché mientras Q normalmente no se guarda? Explícalo capa por capa.
+11888	Q094 · Calcular los bytes K/V de un contexto largo partiendo de las unidades
+18268	Q094 · La caché se cuenta en bytes; el ahorro de cálculo se contabiliza aparte</a><small>chapters/07.html · Subsección correspondiente del texto principal
+3179	Q094｜¿Cuánto cálculo ahorra la caché KV y cuánta memoria de GPU ocupa?
+18269	Q095 · Sin almacenar la tabla softmax completa, los bloques sucesivos también se combinan en el mismo resultado</a><small>chapters/07.html · Subsección correspondiente del texto principal
+18373	Q095 · Sin almacenar la tabla softmax completa, los bloques sucesivos también se combinan en el mismo resultado</a><small>studies/chapters/06.html · Subsección correspondiente del texto principal
+11889	Q095 · Cómo obtener el mismo resultado con dos bloques de puntuaciones sin guardar toda la tabla de probabilidades
+3246	Q095｜¿Por qué FlashAttention ahorra memoria? ¿Cómo calcula softmax sin guardar toda la matriz de atención?
+18270	Q096 · Paginar cambia el almacenamiento físico, no el orden lógico de los tokens</a><small>chapters/07.html · Subsección correspondiente del texto principal
+18374	Q096 · Paginar cambia el almacenamiento físico, no el orden lógico de los tokens</a><small>studies/chapters/06.html · Subsección correspondiente del texto principal
+3323	Q096｜¿Qué pagina exactamente PagedAttention? ¿Por qué permite más concurrencia?
+18271	Q097 · El procesamiento continuo por lotes asigna huecos libres a solicitudes nuevas, pero los pasos de planificación no duran todos lo mismo</a><small>chapters/08.html · Subsección correspondiente del texto principal
+18375	Q097 · El procesamiento continuo por lotes asigna huecos libres a solicitudes nuevas, pero los pasos de planificación no duran todos lo mismo</a><small>studies/chapters/06.html · Subsección correspondiente del texto principal
+3395	Q097｜¿En qué difieren Continuous Batching y un Batch convencional? ¿Por qué Prefill interfiere con Decode?
+18272	Q098 · Separar espera, primer elemento y elementos siguientes antes de preguntar por la lentitud</a><small>chapters/08.html · Subsección correspondiente del texto principal
+3532	Q098｜¿Cómo descomponer TTFT, TPOT y latencia de extremo a extremo? ¿Cómo localizar el cuello de botella con Roofline?
+18273	Q099 · La compensación al rechazar borradores garantiza que no se sesgue la distribución objetivo</a><small>chapters/08.html · Subsección correspondiente del texto principal
+18371	Q099 · La compensación al rechazar borradores garantiza que no se sesgue la distribución objetivo</a><small>studies/chapters/05.html · Subsección correspondiente del texto principal
+11890	Q099 · Conservar la distribución objetivo aunque el borrador falle: cotejar tres tokens uno por uno
+3592	Q099｜¿Por qué Speculative Decoding acelera sin cambiar la distribución objetivo?
+1804	Q0=[1,0], Q1=[0,1], una misma clave K0=[2,3]
+18274	Q100 · Antes de «dividir» para distribuir, aclarar si se dividen muestras, matrices o estados</a><small>chapters/08.html · Subsección correspondiente del texto principal
+18366	Q100 · Antes de «dividir» para distribuir, aclarar si se dividen muestras, matrices o estados</a><small>studies/chapters/03.html · Subsección correspondiente del texto principal
+3674	Q100｜¿Qué dividen DP, TP, PP, ZeRO y la separación Prefill/Decode?
+18347	Q101 · Calibrar «tengo un 80% de confianza» con un conjunto de resultados reales para saber si es fiable</a><small>chapters/27.html · Subsección correspondiente del texto principal
+18434	Q101 · Calibrar «tengo un 80% de confianza» con un conjunto de resultados reales para saber si es fiable</a><small>studies/chapters/25.html · Subsección correspondiente del texto principal
+11896	Q101 · Cuatro predicciones con confianza del 80%, pero solo dos aciertos: cómo calcularlo
+9783	Q101｜¿Por qué un LLM puede «equivocarse con confianza»? ¿Cómo distinguir confianza, calibración y respuesta selectiva?
+18348	Q102 · La reflexión efectiva necesita evidencia nueva; repetir la autoevaluación puede limitarse a reescribir el error</a><small>chapters/27.html · Subsección correspondiente del texto principal
+18437	Q102 · La reflexión efectiva necesita evidencia nueva; repetir la autoevaluación puede limitarse a reescribir el error</a><small>studies/chapters/25.html · Subsección correspondiente del texto principal
+9860	Q102｜¿Por qué Self-reflection a veces empeora cuanto más se revisa? ¿Cómo diseñar retroalimentación efectiva?
+18349	Q103 · Los vectores de bloques de imagen y el Embedding de texto tienen orígenes distintos, pero pueden entrar en la misma cadena de cálculo</a><small>chapters/27.html · Subsección correspondiente del texto principal
+18431	Q103 · Los vectores de bloques de imagen y el Embedding de texto tienen orígenes distintos, pero pueden entrar en la misma cadena de cálculo</a><small>studies/chapters/24.html · Subsección correspondiente del texto principal
+9921	Q103｜¿Cómo conectan imágenes a un modelo de lenguaje los modelos multimodales? ¿Qué etapas añade un GUI Agent?
+18350	Q104 · El mapa de atención es una observación; la intervención causal empieza a poner a prueba la explicación</a><small>chapters/27.html · Subsección correspondiente del texto principal
+18436	Q104 · El mapa de atención es una observación; la intervención causal empieza a poner a prueba la explicación</a><small>studies/chapters/25.html · Subsección correspondiente del texto principal
+9990	Q104｜¿Puede la investigación en interpretabilidad decir realmente «por qué respondió así»?
+18343	Q105 · Una respuesta empresarial correcta debe superar controles de alcance, tiempo y evidencia</a><small>chapters/26.html · Subsección correspondiente del texto principal
+18444	Q105 · Una respuesta empresarial correcta debe superar controles de alcance, tiempo y evidencia</a><small>studies/chapters/28.html · Subsección correspondiente del texto principal
+9478	Q105｜¿Cómo conseguir que las preguntas y respuestas de conocimiento empresarial, además de responder, demuestren que la respuesta es aplicable y no ha caducado?
+18344	Q106 · Hasta un reparador mínimo de repositorios debe dejar cuatro objetos verificables</a><small>chapters/26.html · Subsección correspondiente del texto principal
+18445	Q106 · Hasta un reparador mínimo de repositorios debe dejar cuatro objetos verificables</a><small>studies/chapters/28.html · Subsección correspondiente del texto principal
+9552	Q106｜¿Qué objetos internos mínimos necesita un agente reparador de repositorios desde recibir el encargo hasta entregarlo?
+18345	Q107 · Ante fuentes contradictorias, alinear tiempos y criterios antes de decidir cuál tiene razón</a><small>chapters/26.html · Subsección correspondiente del texto principal
+9614	Q107｜¿Cómo trata un agente investigador «fuentes contradictorias» sin producir solo un collage fluido?
+18346	Q108 · Las coordenadas de interfaz solo son válidas para esa captura y ese estado de ventana</a><small>chapters/26.html · Subsección correspondiente del texto principal
+18432	Q108 · Las coordenadas de interfaz solo son válidas para esa captura y ese estado de ventana</a><small>studies/chapters/24.html · Subsección correspondiente del texto principal
+9680	Q108｜¿Por qué las tareas largas y el manejo del ordenador necesitan «observar, actuar y verificar», en lugar de reproducir secuencialmente un script?
+18351	Q109 · Las leyes de escala son ajustes bajo condiciones, no recetas eternas</a><small>chapters/28.html · Subsección correspondiente del texto principal
+10079	Q109｜¿Qué muestran realmente Scaling Laws y Chinchilla? ¿Por qué no memorizar una proporción tokens/parámetros?
+18352	Q110 · GQA guarda menos grupos KV; MLA intenta comprimir la representación KV en variables latentes</a><small>chapters/28.html · Subsección correspondiente del texto principal
+18439	Q110 · GQA guarda menos grupos KV; MLA intenta comprimir la representación KV en variables latentes</a><small>studies/chapters/26.html · Subsección correspondiente del texto principal
+10164	Q110｜¿En qué difieren esencialmente MLA y GQA? ¿Por qué una KV de rango bajo puede reducir la caché?
+18353	Q111 · In-Context Learning cambia las condiciones actuales, no el archivo de pesos</a><small>chapters/28.html · Subsección correspondiente del texto principal
+10234	Q111｜¿Es In-Context Learning realmente «aprendizaje»? ¿Por qué cambiar unos ejemplos modifica el comportamiento?
+18354	Q112 · Localizar el primer límite donde aparece el error antes de decidir entre cambiar el modelo o el sistema</a><small>chapters/28.html · Subsección correspondiente del texto principal
+18454	Q112 · Localizar el primer límite donde aparece el error antes de decidir entre cambiar el modelo o el sistema</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+10292	Q112｜Ante un marco nuevo, un artículo nuevo o un fallo del agente, ¿cómo decidir qué capa cambiar?
+19169	Transposición de QK
+27866	QLORA · Cuantización y ajuste fino eficiente en parámetros
+26044	QLoRA combina una base congelada de pocos bits con adaptadores entrenables y usa en su investigación representaciones de cuantización y métodos de gestión de memoria concretos. La clave es almacenar los parámetros base con pocos bits, descuantizar o usar más precisión según necesite cada operador al calcular y aplicar principalmente a los adaptadores las actualizaciones de gradiente.
+22853	QLoRA combina un modelo base cuantizado y adaptación de rango bajo para reducir la memoria necesaria en el ajuste fino. La cuantización, la precisión de cálculo y los parámetros de adaptación pertenecen a niveles distintos.
+22805	QLoRA combina un modelo base cuantizado con adaptación de rango bajo; AWQ utiliza información de activaciones para orientar la cuantización de pesos con pocos bits. Cuantizar los pesos no significa que todo el cálculo use los mismos pocos bits: la velocidad sigue dependiendo de kernels y hardware. La destilación entrena al alumno con señales del profesor, sin garantizar que copie todas sus capacidades. PEFT ofrece implementaciones, pero no sustituye la gobernanza de datos.
+27867	QLoRA utiliza diseños como pesos base cuantizados; el ejemplo de escala uniforme de este libro no se presenta como formato NF4.
+12417	Q[b,t,j] es un valor concreto de una celda
+17490	Quantization / cuantización
+13489	Qué hace cada una: Query, Key y Value
+24422	Agrupación de Query y uso compartido de KV; el ejemplo de caché es un cálculo independiente de este libro.
+13626	Query puede cambiar, y las proporciones y el resultado de mezcla también
+28054	Query tiene índice 0 en este array, lo que no significa que sea la posición 0 de la secuencia completa. Al sumar past_length=3, corresponde a la posición 3.
+28885	Proyección de Query Wq
+1081	Salida de Query j=0
+1082	Salida de Query j=1
+1083	Salida de Query j=2
+1084	Salida de Query j=3
+13494	Query, vector de consulta q
+19314	El informe de Qwen3 aborda los modos de razonamiento y sin razonamiento y la familia de modelos. Elegir un modo cambia el comportamiento de razonamiento en la tarea, pero no garantiza simultáneamente máxima calidad y mínimo coste.
+26506	Si Q, K y V proceden de una misma X mediante proyecciones distintas, el gradiente de X suma las contribuciones de tres rutas; el gradiente de pesos de cada proyección se obtiene multiplicando la entrada transpuesta por el gradiente de salida correspondiente. La rama residual debe añadir directamente el gradiente anterior. Una implementación multicabeza solo añade cambios de forma y cálculos por cabeza; la unión final también necesita la transformación inversa correcta.
+13699	¿Deben tener las filas de Q y K la misma anchura que las de V?
+1137	Q y K determinan conjuntamente «cómo obtiene una posición información de las posiciones visibles»; V determina «qué contenido se obtiene». Proceden de proyecciones aprendibles y no tienen semánticas de «pregunta, palabras clave y respuesta» fijadas manualmente. La salida de Attention es una mezcla ponderada de Value, no generación directa de palabras ni consulta exacta de una base de datos.
+13660	Producto escalar de Q y K, escalado y suma de M
+13689	¿Qué produce el producto escalar de Q y K y de qué se encarga V?
+2130	El escalado de Q y K pasa por 1/2 una sola vez en cada ruta correspondiente: no debe omitirse ni dividirse otra vez antes y después de SDPA.
+19240	Q conserva 4 cabezas
+27961	Q responde «qué dirección quiere comparar la consulta actual»; K aporta la dirección con la que se compara y V, el contenido agregado. Es una explicación funcional; no implica que las dimensiones correspondan por naturaleza a conceptos legibles para humanos. El entrenamiento ajusta conjuntamente estas proyecciones para mejorar el objetivo final de predicción.
+1655	Si Q está en la posición p y K en t, el producto escalar es
+1790	Las cabezas Q 0, 1 leen el grupo KV 0; las Q 2, 3 leen el grupo KV 1
+1796	La proyección Q sigue teniendo 8 dimensiones; la anchura residual final no se reduce automáticamente a la mitad con los grupos KV.
+10477	Q es la etiqueta de uso de esta W
+19074	Q sirve para comparar con otras posiciones; K, para ser comparada; V aporta el contenido que se combina. M es una máscara: en generación causal prohíbe acceder a tokens futuros y suele fijar sus puntuaciones en infinito negativo. La atención es una operación ponderada interna del modelo, no una consulta a base de datos ni una llamada a un buscador.
+31087	Q: representación de correspondencia del receptor
+19801	R/T coinciden
+10922	R00 · Visión general<span class="module-count">5 elementos
+10921	R00 Visión general</a><a href="#module-01">R01 Interior del modelo</a><a href="#module-02">R02 Formación de capacidades</a><a href="#module-03">R03 Inferencia y servicio</a><a href="#module-04">R04 Interfaces de entrada y salida</a><a href="#module-05">R05 Fundamentos de agentes</a><a href="#module-06">R06 Agentes reales de programación</a><a href="#module-07">R07 Ingeniería de contexto</a><a href="#module-08">R08 Recuperación e inteligencia de código</a><a href="#module-09">R09 Memoria a largo plazo</a><a href="#module-10">R10 Skills y múltiples agentes</a><a href="#module-11">R11 Ingeniería de software con IA</a><a href="#module-12">R12 Métodos de evaluación</a><a href="#module-13">R13 Seguridad y permisos</a><a href="#module-14">R14 Operación y rendimiento</a><a href="#module-15">R15 Temas avanzados</a><a href="#module-16">R16 Complementos de matemáticas e implementación
+18554	R00-01 · Distinguir los límites desde el texto de entrada hasta el resultado de herramientas</a><small>reading-notes/chapter-00.html · Subsección correspondiente del texto principal
+18555	R00-02 · Dos tokens de salida se deciden en dos pasos</a><small>reading-notes/chapter-00.html · Subsección correspondiente del texto principal
+18556	R00-03 · Dónde se separan un flujo fijo y un agente</a><small>reading-notes/chapter-00.html · Subsección correspondiente del texto principal
+18557	R00-04 · Una frase del usuario se convierte en varias solicitudes</a><small>reading-notes/chapter-00.html · Subsección correspondiente del texto principal
+18558	R00-05 · Orden mínimo de aceptación al implementar desde cero</a><small>reading-notes/chapter-00.html · Subsección correspondiente del texto principal
+10931	R01 · Interior del modelo<span class="module-count">14 elementos
+18559	R01-01 · El número de posiciones no se reduce por arte de magia al atravesar una capa</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18560	R01-02 · Prioridades de fusión, sin adivinar la subcadena más larga</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18561	R01-03 · Relaciones de visibilidad entre el codificador y el decodificador originales</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18562	R01-04 · La multiplicación matricial encaja tras cambiar los ejes</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18563	R01-05 · Word2Vec no escribe enteros en binario</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18564	R01-06 · Las atenciones aditiva y de producto escalar pueden usar evaluadores distintos</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18565	R01-07 · Desplazar todas las posiciones por igual no cambia la rotación relativa</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18566	R01-08 · 4 cabezas Q comparten 2 cabezas KV</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18567	R01-09 · El enrutamiento de expertos dispersos no asigna permanentemente cada palabra a un experto</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18568	R01-10 · Aprendizaje en contexto de una correspondencia temporal</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18569	R01-11 · Dibujar primero un balance de interfaces al leer informes de modelos</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18570	R01-12 · No mezclar el recuento de parámetros totales de expertos con el de parámetros activados</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18571	R01-13 · Distintos modos de razonamiento no aumentan automáticamente los hechos de entrada</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+18572	R01-14 · Situar cada nombre técnico en la capa que modifica</a><small>reading-notes/chapter-01.html · Subsección correspondiente del texto principal
+10947	R02 · Formación de capacidades<span class="module-count">15 elementos
+18573	R02-01 · Una mejora en escala logarítmica no implica necesariamente un aumento proporcional de la exactitud</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18574	R02-02 · Intercambio entre parámetros y datos con cómputo fijo</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18575	R02-03 · 100 fuentes no equivalen a 100 informaciones independientes</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18576	R02-04 · Los duplicados aproximados entre entrenamiento y validación contaminan la evaluación</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18577	R02-05 · Baja la pérdida de entrenamiento, pero sube la de validación</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18578	R02-06 · Las muestras de instrucciones y de preferencias tienen supervisiones distintas</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18579	R02-07 · DPO compara el cambio respecto al modelo de referencia</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18580	R02-08 · Cómo restringe la revisión la retroalimentación de principios sin sustituir la comprobación factual</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18581	R02-09 · Un cálculo del recorte PPO con ventaja positiva</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18582	R02-10 · El texto externo no puede autoproclamarse mensaje de sistema</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18583	R02-11 · El razonamiento de varios pasos puede revelar dónde se calculó mal</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18584	R02-12 · Cómo puntúan los candidatos las recompensas verificables</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18585	R02-13 · Mismo resultado, pero unos pasos intermedios contienen un error y los otros son correctos</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18586	R02-14 · En la autoconsistencia, la mayoría de votos también puede estar equivocada</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+18587	R02-15 · Ramas y poda de la búsqueda en árbol</a><small>reading-notes/chapter-02.html · Subsección correspondiente del texto principal
+10964	R03 · Inferencia y servicio<span class="module-count">12 elementos
+18588	R03-01 · La selección voraz y el muestreo parten de las mismas probabilidades</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18589	R03-02 · Por qué el muestreo de núcleo conserva el elemento que supera el umbral</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18590	R03-03 · La caché dinámica y la preasignada ocupan espacios distintos</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18591	R03-04 · También hay que reservar el presupuesto de razonamiento en la capacidad de solicitud</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18592	R03-05 · Una consulta simple de valores no necesita sustituir herramientas por razonamiento en árbol</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18593	R03-06 · prefill procesa tres posiciones; decode, una nueva</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18594	R03-07 · Prefijo idéntico y finales distintos</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18595	R03-08 · Bloques lógicos y físicos</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18596	R03-09 · Reajuste de escala de softmax en línea</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18597	R03-10 · La distribución tras el rechazo no puede elegirse arbitrariamente</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18598	R03-11 · Cómo cambia el conjunto activo entre rondas</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+18599	R03-12 · Acortar la salida a veces ahorra más tiempo que acortar la entrada</a><small>reading-notes/chapter-03.html · Subsección correspondiente del texto principal
+10977	R04 · Interfaces de entrada y salida<span class="module-count">8 elementos
+18600	R04-01 · Separar con claridad restricciones, datos y requisitos de salida</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+18601	R04-02 · Vincular los cambios de versión de prompts con la evaluación</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+18602	R04-03 · Instrucciones reales del usuario y peticiones contrarias dentro de documentos</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+18603	R04-04 · call_id conecta llamadas y resultados</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+18604	R04-05 · Superar la salida estructurada no exime de comprobar hechos</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+18605	R04-06 · Fragmentos de red y límites de eventos</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+18606	R04-07 · Usar contraejemplos para aclarar que «breve» no significa sin evidencia</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+18607	R04-08 · El estado de razonamiento no es texto ordinario que pueda concatenarse libremente</a><small>reading-notes/chapter-04.html · Subsección correspondiente del texto principal
+10987	R05 · Fundamentos de agentes<span class="module-count">12 elementos
+18608	R05-01 · Las observaciones de ReAct cambian el paso siguiente</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18609	R05-02 · Definir primero una tarea mínima entregable</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18610	R05-03 · Un nodo de planificación no es un nodo de ejecución</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18611	R05-04 · Qué conservan Runner y Session en una misma tarea</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18612	R05-05 · Cuándo entra el resultado externo en la muestra al entrenar el uso de herramientas</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18613	R05-06 · La reflexión debe conservar las causas concretas del fallo</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18614	R05-07 · Devolver 10000 líneas o 10 resultados con origen</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18615	R05-08 · Instalar un servidor MCP no significa que el modelo ya pueda usarlo</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18616	R05-09 · Qué mensajes gestionan respectivamente Host, Client y Server</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18617	R05-10 · Combinar tres consultas con código: qué datos no necesitan entrar al modelo</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18618	R05-11 · También hay que recuperar los eventos añadidos después del punto de control</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+18619	R05-12 · Recibir un resultado de otro agente no implica que sea ejecutable</a><small>reading-notes/chapter-05.html · Subsección correspondiente del texto principal
+11001	R06 · Agentes reales de programación<span class="module-count">21 elementos
+18620	R06-01 · Si una herramienta no es visible en la entrada, no puede culparse al modelo por no elegirla</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18621	R06-02 · Diferencias de ciclo de vida entre Thread y Turn</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18622	R06-03 · Cómo reduce búsquedas repetidas la legibilidad del repositorio</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18623	R06-04 · Fijar el commit antes de seguir una cadena de llamadas</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18624	R06-05 · El entorno de ejecución gestionado no decide la autorización de negocio por la aplicación</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18625	R06-06 · El bucle al estilo de Claude Code observa antes de continuar</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18626	R06-07 · El contexto contiene más que el chat actual</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18627	R06-08 · Conflictos entre reglas del proyecto y preferencias personales</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18628	R06-09 · El traspaso a un subagente no copia automáticamente todo el historial</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18629	R06-10 · Que aparezca el nombre de la habilidad no significa que se haya leído su contenido</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18630	R06-11 · Qué versión comprueba el Hook al interceptar la confirmación</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18631	R06-12 · Permitir el nombre de un comando no hace seguros todos sus argumentos</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18632	R06-13 · Separar la ejecución directa de correcciones pequeñas del diseño complejo</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18633	R06-14 · El directorio actual del CLI cambia el proyecto visible</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18634	R06-15 · Responsabilidades demasiado amplias de un agente personalizado duplican trabajo</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18635	R06-16 · Iniciar tareas programáticamente también exige comprobar el estado de salida</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18636	R06-17 · Cinco extensiones resuelven necesidades distintas</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18637	R06-18 · La selección de habilidades debe incluir contraejemplos cercanos</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18638	R06-19 · Conflictos entre la memoria del repositorio y el código actual</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18639	R06-20 · Los plugins incluyen herramientas, pero instalarlos no las autoriza automáticamente</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+18640	R06-21 · Los scripts de automatización deben registrar entradas reproducibles</a><small>reading-notes/chapter-06.html · Subsección correspondiente del texto principal
+11024	R07 · Ingeniería de contexto<span class="module-count">11 elementos
+18641	R07-01 · Más información pertinente no siempre es mejor</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18642	R07-02 · El experimento del efecto de posición solo desplaza la evidencia objetivo</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18643	R07-03 · Que quepa en la ventana no implica poder usarlo con exactitud</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18644	R07-04 · Evaluar tareas distintas de contexto largo requiere más que encontrar una frase</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18645	R07-05 · Cómo probar la ventana efectiva cuando aumentan los distractores</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18646	R07-06 · Los elementos opacos de compactación deben continuarse tal cual</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18647	R07-07 · El resumen debe conservar las negaciones y lo pendiente</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18648	R07-08 · Mantener la coherencia es más fácil compactando al terminar una fase que durante escrituras</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18649	R07-09 · Conservar una ubicación recuperable antes de eliminar registros grandes</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18650	R07-10 · El umbral de compactación debe activarse antes de llenar la ventana</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+18651	R07-11 · La compactación reduce tokens, pero cambia el prefijo de caché</a><small>reading-notes/chapter-07.html · Subsección correspondiente del texto principal
+11037	R08 · Recuperación e inteligencia de código<span class="module-count">16 elementos
+18652	R08-01 · Recuperar no es «extraer» una respuesta del interior del modelo</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18653	R08-02 · Añadir contexto al fragmento evita que «ello» pierda su referente</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18654	R08-03 · Fusionar puestos por su orden, no por las unidades de puntuación</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18655	R08-04 · La recuperación de doble torre codifica consulta y documento por separado</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18656	R08-05 · Cada token de consulta busca su mejor posición del documento</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18657	R08-06 · El documento hipotético de HyDE no es evidencia de una fuente</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18658	R08-07 · Los resúmenes superiores de RAPTOR localizan; los niveles inferiores conservan los detalles</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18659	R08-08 · Restringir rutas precisa la búsqueda de símbolos con el mismo nombre</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18660	R08-09 · No concluir inmediatamente que algo no existe si grep no lo encuentra</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18661	R08-10 · Qué actualiza el árbol sintáctico incremental al modificar una línea</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18662	R08-11 · Variables con el mismo nombre tienen enlaces distintos</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18663	R08-12 · El fallo de la primera generación sirve para mejorar la recuperación</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18664	R08-13 · La evaluación de autocompletado de repositorios debe evitar la filtración de respuestas cercanas</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18665	R08-14 · Buscar código con lenguaje natural no siempre se resuelve por coincidencia de palabras</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18666	R08-15 · Ajustar bien para un tipo de documento no garantiza buenos resultados en otro</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+18667	R08-16 · Recuperar dos elementos puede dar distinta calidad de ordenación</a><small>reading-notes/chapter-08.html · Subsección correspondiente del texto principal
+11055	R09 · Memoria a largo plazo<span class="module-count">10 elementos
+18668	R09-01 · Cómo participa la memoria en decisiones sin sustituir directamente al entorno</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18669	R09-02 · Se descarga el contenido, pero la tarea actual conserva un índice</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18670	R09-03 · Los espacios de nombres evitan mezclar recuerdos de usuarios distintos</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18671	R09-04 · Los puntos de control de sesión y el Store a largo plazo conservan ciclos de vida distintos</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18672	R09-05 · Evitar generalizar en exceso al convertir eventos en experiencias mediante reflexión</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18673	R09-06 · Responder con el valor nuevo después de actualizar una preferencia antigua</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18674	R09-07 · Probar conversaciones extremadamente largas requiere más que copiar una frase</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18675	R09-08 · Los enlaces automáticos también pueden conectar recuerdos equivocados</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18676	R09-09 · Revisar paso a paso el pipeline de actualización de memoria</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+18677	R09-10 · La recuperación en grafos responde sobre relaciones entre documentos</a><small>reading-notes/chapter-09.html · Subsección correspondiente del texto principal
+11067	R10 · Skills y múltiples agentes<span class="module-count">12 elementos
+18678	R10-01 · Qué ahorra cargar solo las habilidades pertinentes</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18679	R10-02 · El contenido de un Skill cita un script inexistente</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18680	R10-03 · Las habilidades explícitas también deben comprobar las restricciones de la tarea actual</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18681	R10-04 · Que una plataforma admita Skill no implica iguales reglas de carga en todas sus superficies</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18682	R10-05 · Localizar problemas de habilidades de Codex siguiendo la cadena de datos</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18683	R10-06 · Separar reglas permanentes y materiales especializados bajo demanda</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18684	R10-07 · Dar a los investigadores paralelos alcances de evidencia distintos</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18685	R10-08 · Las aristas del DAG determinan qué puede ejecutarse simultáneamente</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18686	R10-09 · handoff difiere de una llamada que devuelve un resultado</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18687	R10-10 · Lo que devuelve Agent-as-tool sigue siendo un resultado pendiente de verificación</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18688	R10-11 · Construir primero una línea base sencilla y sólida</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+18689	R10-12 · Los agentes pueden entrar en ciclos de acuerdo mutuo al conversar</a><small>reading-notes/chapter-10.html · Subsección correspondiente del texto principal
+11081	R11 · Ingeniería de software con IA<span class="module-count">13 elementos
+18690	R11-01 · Cómo continúa una reparación un contexto nuevo sin rehacer el trabajo</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18691	R11-02 · Avanzar en el desarrollo prolongado de aplicaciones por funciones verificables</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18692	R11-03 · Cómo ayudan los números de línea de las herramientas a localizar parches con precisión</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18693	R11-04 · Cómo evitar volver al diseño cuando la revisión detecta un pequeño problema de nombres</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18694	R11-05 · Las interfaces de módulos deben ser coherentes al escribir un compilador en paralelo</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18695	R11-06 · La revisión de un agente debe hacer más que repetir el diff</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18696	R11-07 · Distinguir mejoras imperfectas del código de defectos bloqueantes</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18697	R11-08 · Juzgar conjuntamente diseño, complejidad y pruebas</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18698	R11-09 · Qué errores detecta cada una de las tres capas de pruebas</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18699	R11-10 · Las pruebas de integración continua deben evaluar el resultado integrado</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18700	R11-11 · El registro de decisiones arquitectónicas debe incluir condiciones de abandono</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18701	R11-12 · Ante regresiones de calidad del producto, separar primero modelo y harness de ejecución</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+18702	R11-13 · La tarea externa puede seguir ejecutándose aunque se interrumpa el proceso del modelo</a><small>reading-notes/chapter-11.html · Subsección correspondiente del texto principal
+11096	R12 · Métodos de evaluación<span class="module-count">13 elementos
+18703	R12-01 · Definir el éxito real antes de calcular puntuaciones</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18704	R12-02 · Superar un paso del flujo no implica superar el flujo completo</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18705	R12-03 · La evaluación de trayectorias detecta excesos de permisos detrás de la respuesta</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18706	R12-04 · Convertir fallos reales en muestras continuas de regresión</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18707	R12-05 · La rúbrica debe distinguir falta de información y conjeturas arbitrarias</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18708	R12-06 · Intercambiar el orden de respuestas para comprobar sesgos del evaluador</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18709	R12-07 · La evaluación con Issue reales debe verificar el comportamiento del parche</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18710	R12-08 · Entornos de prueba distintos pueden dar resultados distintos para un mismo parche</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18711	R12-09 · El ruido de recursos no debe contarse como error del modelo</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18712	R12-10 · Separar los resultados de entornos distintos</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18713	R12-11 · El éxito repetido mide la estabilidad de ejecución</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18714	R12-12 · Que una pregunta nueva sea posterior al corte de entrenamiento no garantiza contaminación cero</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+18715	R12-13 · Las tareas de asistentes generales requieren leer, calcular y comprobar conjuntamente</a><small>reading-notes/chapter-12.html · Subsección correspondiente del texto principal
+11111	R13 · Seguridad y permisos<span class="module-count">10 elementos
+18716	R13-01 · Las filtraciones pueden proceder de entradas y de registros</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18717	R13-02 · Los riesgos de los agentes incluyen efectos secundarios reales</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18718	R13-03 · Un fragmento no confiable no puede elevar su propio rol</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18719	R13-04 · Cómo detectar una inyección que cambia el objetivo de la tarea</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18720	R13-05 · Una inyección indirecta puede ocultarse en resúmenes de resultados de búsqueda</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18721	R13-06 · Bloquear solo la red aún permite filtraciones a registros en archivos</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18722	R13-07 · Contar por separado bloqueos incorrectos y omisiones de la aprobación automática</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18723	R13-08 · No asumir que los límites de una superficie de ejecución se aplican a otra</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18724	R13-09 · El modelo de amenazas debe aclarar primero qué protege</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+18725	R13-10 · Leer archivos y desplegar no deben tener el mismo nivel de confirmación</a><small>reading-notes/chapter-13.html · Subsección correspondiente del texto principal
+11123	R14 · Operación y rendimiento<span class="module-count">11 elementos
+18726	R14-01 · Cómo conecta una trace al modelo con las herramientas</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18727	R14-02 · Unificar campos permite comparar distintos backends</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18728	R14-03 · El span padre incluye esperas; la suma de hijos no equivale al padre</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18729	R14-04 · Más cola también es una alerta aunque la tasa de éxito sea normal</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18730	R14-05 · Qué presupuesto de errores permite un objetivo del 99%</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18731	R14-06 · Ejecutar un fallo recuperable antes de pasar a producción</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18732	R14-07 · Aunque RPM no supere el límite, TPM aún puede provocar limitación de tasa</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18733	R14-08 · Reducir operaciones fuera de la ruta crítica no cambia la duración total</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18734	R14-09 · Recuperar el estado de ejecución con el ID de tarea tras agotarse el tiempo del modelo</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18735	R14-10 · Cambiar una sola variable interpretable cada vez</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+18736	R14-11 · Componer herramientas permite transferir menos datos sin reducir verificaciones</a><small>reading-notes/chapter-14.html · Subsección correspondiente del texto principal
+11136	R15 · Temas avanzados<span class="module-count">17 elementos
+18737	R15-01 · Qué forma tiene exactamente un incremento LoRA de rango 1</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18738	R15-02 · Separar los pesos base cuantizados de los parámetros entrenables de adaptación</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18739	R15-03 · Las activaciones amplifican el error de cuantización de pesos</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18740	R15-04 · Qué información adicional aporta la distribución blanda del profesor frente a una sola etiqueta</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18741	R15-05 · Alinear varios adaptadores con la versión base</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18742	R15-06 · El modelo también puede repetir errores populares</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18743	R15-07 · Cotejar una probabilidad del 80% con resultados del mismo tipo</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18744	R15-08 · Recuperar bajo demanda no es buscar automáticamente por cada frase</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18745	R15-09 · Volver a buscar si falla la recuperación, sin forzar respuestas con material erróneo</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18746	R15-10 · Volver a leer el resultado al operar el ordenador</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18747	R15-11 · Escalar una captura cambia las coordenadas</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18748	R15-12 · El éxito de una tarea de escritorio no se mide por el número de clics</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18749	R15-13 · Dos botones con el mismo texto requieren localización contextual</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18750	R15-14 · La localización por DOM y las coordenadas visuales tienen límites propios</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18751	R15-15 · Qué significa que una neurona responda a dos conceptos a la vez</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18752	R15-16 · Los dos objetivos de un autoencoder disperso pueden entrar en conflicto</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+18753	R15-17 · Diferencia entre observar correlaciones e intervenir causalmente</a><small>reading-notes/chapter-15.html · Subsección correspondiente del texto principal
+11155	R16 · Complementos de matemáticas e implementación<span class="module-count">6 elementos
+18754	R16-01 · Qué propaga la diferenciación automática por el grafo de cálculo</a><small>reading-notes/chapter-16.html · Subsección correspondiente del texto principal
+18755	R16-02 · Hasta un GPT mínimo debe desplazar correctamente las etiquetas al entrenar</a><small>reading-notes/chapter-16.html · Subsección correspondiente del texto principal
+18756	R16-03 · Orden de comprobación de un sistema de entrenamiento ejecutable</a><small>reading-notes/chapter-16.html · Subsección correspondiente del texto principal
+18757	R16-04 · El tokenizer y los pesos del modelo deben corresponderse</a><small>reading-notes/chapter-16.html · Subsección correspondiente del texto principal
+18758	R16-05 · Hay que declarar la base de exponenciales y logaritmos</a><small>reading-notes/chapter-16.html · Subsección correspondiente del texto principal
+18759	R16-06 · Los gradientes se acumulan por defecto: por qué ponerlos a cero</a><small>reading-notes/chapter-16.html · Subsección correspondiente del texto principal
+26301	R8 solo cubre v8
+10754	RAG y evidencia para la generación
+22799	RAG aporta evidencia externa, Memory conserva información entre tareas, Skills organiza métodos, el harness de ejecución gestiona la ejecución y Fine-tuning cambia el comportamiento mediante parámetros. Ante código reciente desconocido, priorizar la recuperación; ante errores de permisos, corregir el ejecutor; solo los sesgos de comportamiento estables podrían requerir entrenamiento.
+21015	RAG conecta recuperación externa y generación. Los diseños de entrenamiento e inferencia del artículo original no equivalen a todas las prácticas actuales que, en sentido amplio, «buscan y añaden al prompt». Un sistema de ingeniería también incluye incorporación, división, indexación, consulta, recuperación de candidatos, reordenamiento y ensamblaje. Un error en cualquier capa puede distorsionar la respuesta.
+16009	RAG (generación aumentada por recuperación)</strong> no es un nuevo tipo de modelo base, sino una forma de sistema que obtiene primero evidencia y permite después que el modelo generativo la use. Puede comprobarse así:
+17089	RAG: obtener hechos externos
+21166	Los resúmenes superiores de RAPTOR localizan; los niveles inferiores conservan los detalles
+26223	RAPTOR construye representaciones jerárquicas mediante agrupación y resúmenes recursivos y sirve para tareas que requieren comprender varios fragmentos; GraphRAG usa entidades, relaciones y resúmenes de comunidades para apoyar algunas preguntas globales. Añaden costes de resumen y extracción de grafos y deben tratar errores de extracción, trazabilidad de fuentes e invalidación tras actualizaciones.
+21164	RAPTOR organiza una jerarquía con resúmenes recursivos y facilita recuperar información que abarca fragmentos y es más global. Las hojas y los resúmenes superiores aportan evidencia con distintas granularidades.
+16969	Los tres canales RGB son completamente distintos de los ID de tokens de texto; la proyección visual es una transformación numérica, no una consulta al vocabulario chino por cada píxel.
+14603	Por qué RLHF y DPO no pueden intercambiarse solo por el nombre
+10648	RLHF designa de forma general procesos que entrenan comportamientos con retroalimentación humana. El modelo de recompensa puntúa comportamientos como las respuestas; la política es el modelo probabilístico que genera realmente acciones. Tienen responsabilidades distintas y una recompensa alta no equivale automáticamente a corrección factual.
+31235	Ruta de RLHF
+24356	Mecanismo original de RMSNorm; este libro aporta de forma independiente la derivación y los parámetros locales.
+24652	RMSNorm calcula la raíz de la media de cuadrados en la última dimensión:
+12917	RMSNorm calcula a lo largo de 4 características; la entrada no se trata directamente como Q.
+14064	Raíz de la media de cuadrados de RMSNorm
+26526	RMSNorm define
+13424	Cálculo de RMSNorm celda por celda
+24318	Estadísticas RMS y parámetros por característica; este ejemplo declara explícitamente ε=1e-5 y no adopta implícitamente el valor predeterminado.
+27848	ROPE · RoFormer y representación rotatoria de posiciones
+22717	Aunque RPM no supere el límite, TPM aún puede provocar limitación de tasa
+23827	RRF y métricas de recuperación — Ingeniería de sistemas de IA
+21028	RRF combina distintos órdenes según
+10743	RRF aporta 1/(c+r) para el puesto r de un documento en cada ruta de recuperación y después suma las contribuciones. c es una constante de suavizado y r suele empezar en 1; un candidato que no entra en una ruta no recibe su contribución de la nada.
+6368	RRF trata los resultados de cada ruta de recuperación según
+21098	RRF fusiona los puestos de distintos resultados de recuperación; una forma habitual suma para cada lista
+11768	RRF fusiona los puestos de los candidatos, no sus puntuaciones originales de relevancia; el truncamiento de la ventana determina qué candidatos pueden participar.
+23722	RRF fusiona varias listas por puestos, sin sumar directamente puntuaciones diferentes. El reordenamiento juzga con más detalle la relevancia de los candidatos, pero no recupera la evidencia que todos los recuperadores omitieron.
+20884	RULER estudia la diferencia entre longitud nominal de contexto y capacidad efectiva probando modelos con distintas tareas y longitudes. Recuerda que aceptar la entrada en la interfaz es solo el inicio de la evaluación de capacidades.
+20127	Las observaciones de ReAct cambian el paso siguiente
+20125	ReAct alterna razonamiento y acción: las acciones obtienen información nueva y las observaciones corrigen los juicios posteriores. Difiere de seguir generando respuestas indefinidamente con una entrada fija.
+13457	ReLU convierte los valores negativos en 0, por lo que h=0.
+10596	ReLU es una función con regla max(0,x): pone a 0 los valores negativos y conserva los no negativos. En una fila numérica actúa celda por celda. No es una tabla de parámetros ni necesita obtener información de otros tokens.
+2091	La rama negativa de ReLU vale aquí 0; la convención de derivada en cero depende del framework y esta implementación usa la de PyTorch. En diferencias finitas deben evitarse coordenadas que crucen exactamente por cero; la falta de suavidad dificultaría interpretar la comparación.
+14014	ReLU se aplica celda por celda 
+10595	ReLU: conservar los positivos celda por celda
+16581	Recall: cuánto se recupera de lo que realmente debía encontrarse
+20210	Reflexion utiliza retroalimentación de la tarea para generar reflexiones textuales e influir en intentos posteriores. Las experiencias externas pueden cambiar el comportamiento sin actualizar parámetros, pero el propio texto reflexivo puede ser erróneo.
+21278	RepoBench evalúa el autocompletado de código y el uso de contexto a escala de repositorio y ayuda a distinguir capacidades de recuperación y generación. El diseño de datos, los archivos visibles y la definición de tareas afectan a la interpretación de resultados.
+21261	RepoCoder estudia recuperación y generación iterativas para autocompletado a escala de repositorio. Los resultados intermedios generados ayudan a la siguiente búsqueda, pero también pueden introducir una dirección equivocada que debe corregirse con contexto real.
+21047	RepoCoder estudia recuperación y generación iterativas; RepoBench y CodeSearchNet evalúan tareas distintas de contexto de repositorio. Autocompletar, buscar y reparar Issue no son la misma capacidad y sus métricas no se convierten directamente entre sí.
+16034	¿Puede un Reranker introducir en el orden un documento correcto que no está en el conjunto recuperado?
+17599	Reranking / reordenamiento
+17382	Residual / conexión residual
+15615	Resources: datos legibles
+20453	Cómo se convierte un ResponseItem en ToolCall
+4112	El output de Responses contiene elementos tipados, como message, function_call o reasoning;
+8151	Retry vuelve a intentar una operación; Resume continúa la tarea desde un estado conocido; Replay reproduce registros para reconstruir o diagnosticar; Cancel solicita detener el trabajo posterior. No son intercambiables, especialmente porque reproducir registros no debe convertirse automáticamente en ejecutar de nuevo efectos secundarios.
+21847	La Review no persigue una perfección ilimitada
+8395	La Review debe detectar problemas importantes que puedan escapar a quien implementa o a las pruebas automáticas y elegir la profundidad según el riesgo y la evidencia. Los problemas locales pequeños pueden corregirse y verificarse directamente; solo refutar un diseño clave o ampliar el alcance de impacto requiere volver al análisis. El objetivo es mejorar la salud del código, no perfeccionar cada detalle.
+16506	Cómo hace la Review para ayudar a modificar, sin impedir todos los cambios
+8305	Cómo evita la Review desperdiciar trabajo en ciclos
+10627	RoPE, codificación rotatoria de posiciones
+13864	RoPE divide una fila de características en pares y aplica frecuencias distintas a los grupos; cuanto más avanzada sea la posición, distinto será el ángulo de rotación según su frecuencia. Por ejemplo, un grupo usa el ángulo mθ en la posición m y nθ en la posición n.
+26525	Para una posición fija, RoPE es una transformación lineal ortogonal; al propagar hacia atrás usa la matriz de rotación transpuesta, es decir, gira el gradiente anterior en el ángulo contrario. Si las frecuencias de posición son fijas, no necesitan optimizarse; si una arquitectura aprende parámetros relacionados, el grafo de cálculo cambia y no se debe generalizar.
+13863	Cómo cambia RoPE la correspondencia mediante la posición
+24670	Ampliar RoPE no significa que «aumentar el parámetro de posición máxima dé contexto largo fiable». La interpolación de posiciones, los cambios de frecuencia, la longitud de entrenamiento y los datos afectan al comportamiento. Para un modelo concreto hay que usar sus configuraciones admitidas y probar tareas que combinen información distante, además de comprobar si acepta entradas largas.
+19215	RoPE codifica posiciones mediante rotaciones y hace que el producto escalar entre Q y K incluya relaciones de posición relativa. Difiere de sumar directamente un Embedding de posición al vector de entrada; la aplicación concreta depende de la implementación del modelo.
+1472	RoPE: por qué rotar Q/K permite representar posiciones relativas
+3542	Estimación simplificada de Roofline: con F operaciones de punto flotante, R bytes transferidos desde memoria, cómputo efectivo C y ancho de banda B del dispositivo, el tiempo no es inferior a
+17628	Routing / enrutamiento
+1474	R conserva la longitud; tras aplicar rotaciones coordinadas a Q y K, la correspondencia depende de la diferencia de posiciones. En cambio, el modelo transversal suma P[pos] antes de entrar en la red; no deben mezclarse ambos mecanismos de posición como un mismo paso.
+2103	R recibe dos contribuciones
+9601	R registra v8, el comando, el código de salida y las aserciones de límites
+18766	S01 · «爱» aparece dos veces: cómo se acumula el gradiente de su fila de Embedding</a><small>studies/chapters/01.html · Subsección correspondiente del texto principal
+18767	S02 · Con longitudes reales distintas en el lote, las posiciones de caché no dependen solo de la longitud rellenada</a><small>studies/chapters/02.html · Subsección correspondiente del texto principal
+18768	S03 · Por qué acumular gradientes de cuatro microlotes no siempre equivale a cuadruplicar la tasa de aprendizaje</a><small>studies/chapters/03.html · Subsección correspondiente del texto principal
+18770	S04 · En PPO se recorta la ventaja positiva; la negativa no sigue la misma selección</a><small>studies/chapters/04.html · Subsección correspondiente del texto principal
+18771	S05 · Misma tabla de probabilidades, distintos candidatos para muestreo de núcleo y selección voraz</a><small>studies/chapters/05.html · Subsección correspondiente del texto principal
+18772	S06 · Por qué roofline solo estima un límite inferior y no es una medición real</a><small>studies/chapters/06.html · Subsección correspondiente del texto principal
+18773	S07 · Tras completarse la sintaxis de los argumentos, ¿hay que esperar también la señal de fin de llamada?</a><small>studies/chapters/07.html · Subsección correspondiente del texto principal
+18774	S08 · Ventana de fallo entre escribir un archivo externo y confirmar en la base de datos local</a><small>studies/chapters/08.html · Subsección correspondiente del texto principal
+18775	S09 · Mismo nombre de función en el código: cómo cambia la validez de la conclusión al cambiar las condiciones de llamada</a><small>studies/chapters/09.html · Subsección correspondiente del texto principal
+18776	S10 · Experimento de producto de caja negra: cambiar solo una fuente de instrucciones</a><small>studies/chapters/10.html · Subsección correspondiente del texto principal
+18777	S11 · Seleccionar un fragmento de puntuación alta y omitir la negación de su primera mitad</a><small>studies/chapters/11.html · Subsección correspondiente del texto principal
+18778	S12 · Una compactación ahorra el 90%, pero hay que contar dos tipos de errores por separado</a><small>studies/chapters/12.html · Subsección correspondiente del texto principal
+18779	S13 · Por qué top-k puede quedar incompleto al filtrar permisos después de recuperar candidatos</a><small>studies/chapters/13.html · Subsección correspondiente del texto principal
+18781	S14 · Qué evidencia actualizar al analizar incrementalmente el cambio de nombre de una función</a><small>studies/chapters/14.html · Subsección correspondiente del texto principal
+18782	S15 · Un recuerdo similar no se aplica al entorno actual</a><small>studies/chapters/15.html · Subsección correspondiente del texto principal
+18783	S16 · Mayor exhaustividad de habilidades y más cargas erróneas: ¿es una optimización?</a><small>studies/chapters/16.html · Subsección correspondiente del texto principal
+18784	S17 · Con errores correlacionados, no multiplicar las probabilidades de tres agentes como si fueran independientes</a><small>studies/chapters/17.html · Subsección correspondiente del texto principal
+18785	S18 · Las pruebas de propiedades detectan un error de prefijos con una familia de entradas</a><small>studies/chapters/18.html · Subsección correspondiente del texto principal
+18786	S19 · Estratificar por dificultad de tarea puede invertir la tasa global de victorias</a><small>studies/chapters/19.html · Subsección correspondiente del texto principal
+19145	S1 y S2 pueden relacionarse en ambos sentidos
+9122	Resumen S1
+18787	S20 · Cómo evita una herramienta de recuperación con permisos delegar la autorización a conjeturas del modelo</a><small>studies/chapters/20.html · Subsección correspondiente del texto principal
+18788	S21 · Cómo amplifica un fallo temporal una tormenta de reintentos</a><small>studies/chapters/21.html · Subsección correspondiente del texto principal
+18789	S22 · Con una diferencia de 1 punto porcentual de éxito, los fallos críticos importan más que el precio medio</a><small>studies/chapters/22.html · Subsección correspondiente del texto principal
+18790	S23 · Igual error de pesos, pero activaciones distintas producen errores de salida distintos</a><small>studies/chapters/23.html · Subsección correspondiente del texto principal
+18791	S24 · La página se desplazó 200 píxeles: por qué fallan las coordenadas antiguas</a><small>studies/chapters/24.html · Subsección correspondiente del texto principal
+18792	S25 · Suben el rechazo a responder y la exactitud: ¿es realmente mejor?</a><small>studies/chapters/25.html · Subsección correspondiente del texto principal
+18793	S26 · Antes de buscar en árbol para investigación profunda, comprobar si se puede juzgar la calidad de los candidatos</a><small>studies/chapters/26.html · Subsección correspondiente del texto principal
+18794	S27 · Por qué añadir un registro después de un parche satisfactorio exige volver a verificar</a><small>studies/chapters/27.html · Subsección correspondiente del texto principal
+18795	S28 · Qué capa añadir al convertir una conclusión de investigación en acción automática</a><small>studies/chapters/28.html · Subsección correspondiente del texto principal
+18796	S29 · Contenido igual pero más lento: alinear trayectorias antes de conjeturar</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+18797	S30 · Evidencia de aceptación del proyecto final, además de una demostración de «puede chatear»</a><small>studies/chapters/30.html · Subsección correspondiente del texto principal
+11897	S31 · Comprobar con una derivada direccional que la propagación matricial hacia atrás esté bien conectada
+18798	S31 · Comprobar con una derivada direccional que la propagación matricial hacia atrás esté bien conectada</a><small>studies/chapters/31.html · Subsección correspondiente del texto principal
+17706	SAE / interpretabilidad
+10804	SAE es un autoencoder disperso que reconstruye activaciones del modelo combinando pocas características activas. Una activación es un valor intermedio de este cálculo, no un registro completo de razonamiento en lenguaje natural. Reconstruir con éxito no demuestra automáticamente que una característica tenga un significado causal único.
+27844	SDPA · Atención de producto escalar escalado
+27822	SDPA · Atención de producto escalar escalado</a><a href="#topic-8">ATTN · Artículo original de Transformer</a><a href="#topic-9">ROPE · RoFormer y representación rotatoria de posiciones
+14502	SDPA es una interfaz de función cuyo dropout_p proporciona el llamador. Incluso si el módulo externo está en eval, hay que pasar correctamente 0 para desactivarlo; no debe suponerse que la función lea automáticamente el estado externo.
+27897	SECURITY · Seguridad y control de agentes
+19368	SFT, RLHF y optimización de preferencias
+24427	Flujos básicos de SFT, modelos de recompensa y optimización de preferencias.
+14583	Cómo trata exactamente SFT las preguntas y respuestas
+24580	SFT suele calcular la pérdida solo en las posiciones de respuesta del asistente. Aquí,
+2332	SFT aporta respuestas objetivo; el entrenamiento de preferencias compara respuestas; el aprendizaje por refuerzo mejora la política con recompensas. El rango bajo, la cuantización y las estructuras de expertos describen cómo organizar y calcular parámetros, no cómo añadir una base de conocimiento al contexto.
+2379	Muestra SFT
+24821	Lo clave de las muestras SFT va más allá del texto final: incluye la distribución de tareas, llamadas a herramientas y procesos de recuperación correctos y si el modelo puede ver la retroalimentación de verificación. Eliminar todas las trayectorias fallidas puede enseñarle solo caminos sin errores; incluirlas indiscriminadamente puede copiar errores. El diseño de datos debe indicar qué acciones merece la pena imitar y qué contenido es solo retroalimentación del entorno.
+1962	Si SFT solo entrena la respuesta del asistente
+19369	SFT entrena el comportamiento de tareas con muestras de entrada y salida objetivo. Puede orientar el formato, el seguimiento de instrucciones y las llamadas a herramientas, pero también aprender demostraciones erróneas. El enmascaramiento de posiciones no objetivo depende de la implementación concreta del entrenamiento.
+10645	SFT: ajuste fino supervisado
+24358	SHIFT · Transformers 4.32.0 · Convención de labels de GPT2LMHeadModel
+27889	SKILLS · Especificación Agent Skills
+11849	SKILLS · Especificación abierta Agent Skills
+11802	SKILLS · Especificación abierta Agent Skills</a><a href="#topic-32">EVALS · Anthropic: evaluación de agentes
+16893	Qué son SLI y SLO
+10793	SLI es un indicador de nivel de servicio medido realmente; SLO es su objetivo; y el presupuesto de errores es el margen de fallos permitido por ese objetivo. Son objetos de gestión operativa del servicio, no parámetros del modelo.
+22599	SLO y degradación
+25950	Los SLO deben centrarse en el valor para el usuario, como la proporción de tareas legítimas completadas con recursos y tiempo establecidos, o cero acciones de alto riesgo ejecutadas sin autorización. Disponibilidad, corrección, latencia y seguridad son dimensiones distintas y no siempre se pueden combinar en una cifra. Las prácticas de SLO de Google SRE ofrecen métodos para definir indicadores perceptibles por el usuario y presupuestos de errores.
+22683	Un SLO define un objetivo de servicio como un acuerdo medible; el presupuesto de errores ayuda a comprender el margen de fallo permitido y el riesgo de cambios. El indicador debe declarar el alcance, la ventana temporal y las condiciones de éxito.
+22600	Un SLO debe declarar el alcance de tareas, la definición de éxito, la ventana temporal y el presupuesto. Las preguntas y respuestas de solo lectura y las modificaciones automáticas necesitan objetivos distintos. Si una dependencia no está disponible, se puede degradar a evidencia y recomendaciones sin afirmar haber ejecutado; si faltan permisos, se detiene la acción correspondiente y se pueden completar las partes independientes.
+27871	SPEC · Decodificación especulativa
+11722	Las transacciones SQLite no revierten efectos secundarios en archivos externos ni en red; los experimentos de fallo del libro usan solo directorios temporales locales.
+25064	Las transacciones SQLite controlan las actualizaciones de su propia base de datos, pero no cubren automáticamente la sustitución de archivos externos o las API remotas. Si dos sistemas no comparten transacción, hacen falta conciliación, idempotencia o compensación, en lugar de escribir en una tabla un
+10844	SQL es un lenguaje para operar con datos relacionales; SQLite es un motor de base de datos integrable en aplicaciones. Guardar el estado de operaciones en la base de datos es una acción de persistencia de la aplicación anfitriona y no cambia los parámetros de la red neuronal del modelo.
+25340	La semántica SQL es «escribir solo si el rev actual sigue siendo el 10 que leí»; si se afectan 0 filas, debe tratarse como conflicto, sin considerar exitosa una llamada solo porque no lanzó una excepción. El estado final es [11, c7 succeeded]. Esta evidencia de estado importa más que comprobar la fluidez del resumen.
+22665	La monitorización SRE selecciona señales según el comportamiento del servicio y el impacto en usuarios. Registros, métricas y alertas tienen usos propios; recoger más no siempre facilita detectar problemas.
+27878	SSE · Flujo de eventos SSE
+26730	SSE y estado de argumentos de herramientas<br/><span class="meta">Capítulo 07 · Biblioteca estándar
+26614	SSE y estado de argumentos de herramientas. Corresponde a la Lección 60. Dependencias: biblioteca estándar.
+4523	Un evento SSE ensamblado, unos argumentos de herramienta ensamblados y el fin del flujo de respuesta son tres límites distintos. La ruta leída de Codex registra la llamada al llegar el elemento de herramienta completado y después elige ejecución inmediata o diferida; no exige que todas las llamadas esperen al cierre de todo el flujo. Si se cancela antes del despacho diferido, puede seguir haciendo falta una salida de interrupción asociada al call_id; de lo contrario, reproducir el historial mostraría una llamada sin resultado.
+15398	Límites de eventos SSE
+26695	Fragmentación del protocolo SSE
+10702	SSE es un protocolo textual de eventos enviados por el servidor; un chunk de red es el tramo de bytes recibido en esta ocasión; y delta es el contenido incremental de un elemento de salida. Sus límites no tienen por qué coincidir. Un evento completo tampoco implica necesariamente unos argumentos de herramienta completos.
+15426	Límites de los eventos SSE
+27880	STATE · Confirmación atómica de SQLite
+13953	Fuente de la figura SVG</a> · Datos de la implementación TinyLM de este paquete y de run.json.
+21899	SWE-agent estudia cómo las interfaces de interacción con el ordenador para agentes afectan a la ingeniería de software automática. El diseño de herramientas de búsqueda, lectura, edición y pruebas influye en la capacidad del modelo para actuar eficazmente.
+22242	SWE-bench evalúa la reparación con problemas y pruebas de repositorios reales. Sus tareas requieren comprender código y producir parches, a diferencia de completar solo una función corta.
+26230	SWE-bench aborda la reparación de Issue reales; AgentBench, τ-bench y GAIA cubren capacidades de agentes en distintos entornos; LiveCodeBench evalúa código y cambios temporales; OSWorld se centra en entornos informáticos. Sus puntuaciones no son directamente comparables porque cambian tareas, herramientas, presupuestos y aceptación.
+22115	SWE-bench prueba reparaciones de Issue reales, indicando el subconjunto concreto; LiveCodeBench se centra en actualización continua y contaminación; AgentBench y GAIA cubren entornos y tareas distintos. Autocompletado, código algorítmico, operaciones de negocio con herramientas y reparación de repositorios no son la misma capacidad.
+22259	SWE-bench tiene distintos subconjuntos de datos y configuraciones de evaluación. Para comparar resultados hay que indicar la versión concreta, el conjunto de tareas, el entorno de ejecución y el presupuesto permitido.
+17405	Sampling / muestreo
+17684	Sandbox / entorno aislado
+15121	Por qué Scaling Laws no es una tabla de proporciones eternas
+10082	Scaling laws estudia cómo afectan a la pérdida la escala del modelo, los datos y el presupuesto de cómputo; el cómputo óptimo trata cómo repartir parámetros y entrenamiento bajo un presupuesto y unos supuestos dados
+4652	Hasta qué capa garantiza Schema
+4776	Schema puede restringir 
+15404	Qué comprueba un Schema
+15407	Qué comprueba un Schema: distinguir elemento por elemento
+10700	Un Schema es un conjunto de reglas estructurales de campos, tipos y otros aspectos; los mecanismos de salida estructurada facilitan al modelo devolver datos conformes. Que los campos sean válidos no implica que el archivo exista, que haya autorización o que el negocio sea correcto.
+11666	Las restricciones de Schema no garantizan hechos y permisos correctos; los rechazos y las respuestas incompletas necesitan ramas de tratamiento.
+4653	Schema restringe campos, tipos y parte de la estructura de valores, sin garantizar que el archivo exista, que el importe sea correcto, que el usuario tenga autorización o que la versión del registro siga vigente. Las salidas estrictas también pueden contener rechazos o respuestas incompletas y hay que tratarlos explícitamente.
+15405	Schema (restricciones estructurales)</strong> puede exigir que path sea una cadena obligatoria y prohibir ciertos campos adicionales. Detecta errores de forma como «path es un array», pero no demuestra
+15409	Schema: requisitos estructurales
+23041	SeeClick aborda GUI Grounding, que vincula objetivos lingüísticos con posiciones de la interfaz. Localizar es una parte del manejo del ordenador; no equivale a planificar la tarea completa y comprender el negocio.
+22824	SeeClick estudia la localización en interfaces y OSWorld evalúa tareas reales de escritorio. Acertar el botón «Guardar» no significa guardar con éxito: puede fallar por campos obligatorios vacíos. El ejecutor integrado debe verificar el estado real, además de coordenadas o declaraciones del modelo.
+13553	Qué significa self en Self-Attention
+19622	Self-Consistency muestrea varias rutas de razonamiento y agrega sus respuestas finales. Aumenta el cómputo de inferencia, pero no es una verificación cruzada entre varias fuentes factuales independientes.
+6566	La investigación original de Self-RAG incluye entrenamiento y marcadores de reflexión, entre otros mecanismos; no equivale a añadir «compruébalo» a cualquier modelo. Corrective RAG también necesita un componente de evaluación de calidad; si este no es fiable, puede provocar búsquedas web inútiles o descartar evidencia válida por error.
+6602	Selección al estilo de Self-RAG
+26224	Self-RAG incorpora comportamientos de recuperación y reflexión en el aprendizaje y la generación; añadir «reflexiona por ti mismo» a un modelo ordinario no reproduce el método. Los métodos del tipo RAG correctivo intentan evaluar la calidad de evidencia y decidir si ampliarla mediante recuperación, pero el evaluador también puede equivocarse.
+22815	Self-RAG estudia cómo aprender cuándo recuperar y evaluar la generación, más allá de añadir «autocomprobación» a un prompt ordinario; CRAG estudia cómo corregir evidencia insuficiente. Ni los documentos puente para recuperar ni la autoevaluación constituyen hechos demostrados.

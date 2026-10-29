@@ -60,6 +60,16 @@ def auxiliary_counts(root):
     import data_strings
 
     counts = data_strings.source_counts(root)
+    # The config owns category source labels only. Their translations share
+    # the same permanent table identities as HTML and runtime occurrences.
+    catalogue = 'i18n/catalog-kinds.json'
+    kinds = json.loads((root / catalogue).read_text(encoding='utf-8'))
+    for text in kinds:
+        if text.startswith('_'):
+            continue
+        row = counts.setdefault(text, {'n': 0, 'pages': set()})
+        row['n'] += 1
+        row['pages'].add(catalogue)
     for name, registry in [('runtime_strings', 'runtime-registry.json'),
                            ('figure_strings', 'figure-registry.json'),
                            ('complete_strings', 'complete-registry.json')]:

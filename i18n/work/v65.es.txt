@@ -1,0 +1,445 @@
+25831	Pregunta de aceptación: la nueva versión supera 2 tareas más de un total de 20. ¿Se puede anunciar una mejora del 10%? Se puede describir un aumento de 10 puntos porcentuales en la tasa de éxito de esta muestra, pero no extrapolarlo directamente al conjunto de la actividad; aún hay que examinar los resultados emparejados, la representatividad de la muestra, la variación entre repeticiones y los intervalos. También hay que distinguir porcentajes y puntos porcentuales.
+25654	Pregunta de aceptación: mejora la exactitud del enrutamiento, pero empeora la calidad del código generado. ¿Se integra la nueva versión? El indicador de enrutamiento por sí solo no basta. Quizá se seleccionó la habilidad correcta pero su contenido está desactualizado, o el coste de cargarla desplazó las pruebas del código fuente. El objetivo final es la tarea de ingeniería, no el propio clasificador de enrutamiento.
+25753	Pregunta de aceptación: el parche del modelo supera todas las pruebas existentes, pero no satisface el nuevo requisito del usuario. ¿Dónde está la responsabilidad? Las pruebas no cubren el nuevo contrato; las pruebas antiguas no sustituyen la aceptación de requisitos. Hay que añadir pruebas del nuevo comportamiento y comprobar que se conserva el anterior. La calidad de la ingeniería de IA sigue dependiendo, ante todo, de la calidad de la ingeniería de software.
+24721	Pregunta de aceptación: si difieren las salidas del procesamiento completo y de la caché, ¿qué se revisa primero? Primero, que dropout esté desactivado, los parámetros coincidan y los desplazamientos de posición y las máscaras estén alineados; después, dtype y las tolerancias numéricas. No se deben ocultar errores lógicos ampliando las tolerancias. Si el error aumenta bruscamente con la longitud, revisa también el límite de posición, el truncamiento de cache, padding y las reglas de ventana deslizante. Los resultados didácticos de alta precisión son solo una referencia; los kernels de baja precisión requieren límites propios de error aceptable y de degradación de la tarea final.
+25463	Pregunta de aceptación: tras actualizar el modelo de reordenación, aumenta nDCG pero empeoran las respuestas. ¿Por qué? Quizá la cobertura de candidatos sea igual pero haya menos diversidad de pruebas, el recorte de documentos largos elimine condiciones, la reordenación prefiera documentos fluidos a la versión actual, o la puntuación de la tarea no coincida con las etiquetas de recuperación. Hay que localizar el problema etapa por etapa en la cadena, en vez de seguir añadiendo modelos vectoriales más grandes.
+21775	Comprueba si X lo admite.
+14477	loss de validación
+8496	Verificar que nadie haya alterado simultáneamente los artefactos descargados ni los archivos de referencia
+14518	Qué validar para saber que el modelo no ha visto información que no debía
+9561	La validación ejecuta primero las pruebas relacionadas con la causa raíz y amplía la regresión según el alcance del impacto. La entrega final queda vinculada a la versión actual del espacio de trabajo: qué cambió, por qué es correcto, qué ejecutaron realmente las pruebas y qué no se verificó. El modelo puede explicar estas pruebas, pero su explicación no sustituye los resultados de ejecución. La autorización determina si se puede hacer commit, push o desplegar; decir «tarea completada» no amplía los permisos automáticamente.
+17129	Validar otros casos
+22014	Valida el comportamiento completo, con un coste mayor.
+31501	Validar el artefacto r8
+25322	Verifica que los hechos confirmados citen pruebas existentes y que la versión de las pruebas coincida con el artefacto actual. No puede determinar si «el texto de las pruebas respalda realmente la conclusión»; eso requiere leer el material original, una evaluación semántica específica o revisión humana. Confundir la validación estructural con la fidelidad semántica es uno de los malentendidos más frecuentes de los antiguos experimentos simulados.
+3500	El coste de verificación, la velocidad del borrador y la tasa de aceptación determinan la ganancia; añadir un modelo pequeño no garantiza mayor velocidad. El algoritmo completo también debe definir el prefijo aceptado, la reversión de la caché tras un rechazo y el tratamiento del token adicional del modelo objetivo.
+15836	Validar el resumen
+2987	Ganancia de la validación
+1444	Método de validación
+25450	Validar permisos y vigencia
+14481	Prefijo real de la muestra de validación
+30795	Estado de validación
+11487	La validación no busca que «el programa se ejecute», sino que la implementación correcta cumpla los invariantes y que se pueda distinguir de una implementación alterada deliberadamente.
+26713	Alcance y límites de la validación
+19470	Validar la tendencia
+11861	Límites de la validación:</strong> 401 ejemplos didácticos no equivalen a 401 experimentos sobre la capacidad de un modelo. Las 108 pruebas añadidas verifican fórmulas numéricas, dimensiones, causalidad, gradientes, fragmentación del protocolo y comportamientos de estados simplificados; los demás escenarios deducen resultados explícitos a partir de premisas dadas. No demuestran la eficacia de agentes comerciales, la velocidad de GPU, el funcionamiento interno de sistemas cerrados ni la seguridad en producción.
+31464	Etapa de validación
+31198	Conjunto de validación
+14521	Conjunto de validación, sobreajuste y límites de este experimento
+22470	La validación requiere
+11620	La MHA de alto nivel incluye proyecciones; el nombre de un parámetro de una interfaz de alto nivel no demuestra que el tensor ya esté proyectado.
+6231	Las capas superiores del grafo son más dispersas. Desde el nodo de entrada se comparan las distancias a los vecinos y se avanza de forma voraz hacia la consulta; se desciende capa por capa y en la inferior se explora un conjunto de candidatos más amplio.
+22552	Gran impacto y efectos secundarios
+10029	La posición con mayor peso aporta muy poco.
+22794	Temas avanzados — Ingeniería de sistemas de IA
+10853	Interfaces de alto nivel y operadores de bajo nivel
+10526	Una interfaz de alto nivel también puede llamar a los datos anteriores a la proyección
+17097	Nivel avanzado: saber leer detalles de implementación
+18090	Las comparaciones de caja negra deben conservar los intentos fallidos
+25224	Experimento con un producto de caja negra: cambiar solo una fuente de instrucciones
+1218	De forma predeterminada, SDPA utiliza internamente para el producto escalar
+12261	Se presupone que sabes sumar, restar, multiplicar y dividir, y leer pasos de un programa corriente; no se presuponen conocimientos de álgebra lineal, cálculo, probabilidad ni aprendizaje profundo. Las lecciones previas presentan lo necesario antes de utilizarlo. El código ofrece una segunda expresión para comprobar el proceso; se puede leer todo el texto sin ejecutarlo.
+11657	Los valores predeterminados cambian entre versiones; este libro no ofrece configuraciones universales ni porcentajes de aceleración sin pruebas de carga.
+11640	La inicialización de referencia predeterminada utiliza Kaiming-uniform para A y B a cero, de modo que el incremento inicial sea cero.
+18132	Por defecto solo se aceptan endpoints localhost. El modo remoto requiere HTTPS y confirmación explícita. No incluyas tokens en URL ni los subas al repositorio. La API key del servicio quizá no cubra todas las rutas; los endpoints de monitorización, administración y otras interfaces compatibles requieren además una pasarela o un cortafuegos. Escuchar en 0.0.0.0 y establecer una key no equivale a un control de acceso completo. TLS, autenticación y autorización de herramientas para la tarea son capas distintas.
+26634	Por defecto, los experimentos no envían solicitudes de red. NumPy se utiliza para los cálculos numéricos y la retropropagación; PyTorch, solo para entrenar el modelo pequeño. Las pruebas de mecanismos basadas en la biblioteca estándar no requieren ninguna de las dos. Sin NumPy, las pruebas correspondientes se omiten explícitamente; «omitida» no significa «superada». Instalar dependencias puede requerir conexión y no forma parte de la ejecución del libro sin conexión.
+18100	Por defecto se usa un script fijo, que no comete errores por diferencias de comprensión del lenguaje; la tarea solo cambia el nombre del directorio. Superar todas las muestras de un conjunto limitado solo respalda lo observado con esos datos de prueba. Aún hay que medir la distribución, la aleatoriedad, los contextos largos y las tareas excepcionales de modelos reales.
+20753	El modelo predeterminado y la rama remota pueden actualizarse
+23101	Favorecer que haya pocas características activas
+23098	Favorecer la reconstrucción de las activaciones originales
+31154	！ Caché: 3 → 4
+12783	(de las 6 posiciones, solo la número 2 vale 1)
+12836	(«爱»).
+14225	(sin multiplicar por 0.5), con tasa de aprendizaje 0.1.
+13180	(intercambiar varios ejes); cada paso tiene su propia función.
+14943	([1,1,4] al añadir la dimensión de lote). Debe permitir leer los cuatro elementos de las posiciones 0—3.
+441	(si el entorno lo permite)
+12786	(fila 2 de la tabla de parámetros del modelo)
+12780	(guardar el entero 2 en 8 bits)
+18135	(si el motor lo ofrece), correlacionados mediante el ID de solicitud. No se deben mezclar un microbenchmark de QPS estático y los intervalos entre herramientas de un agente real.
+24406	) permite abrir el mismo índice desde cualquier página, con resultados iguales a los de esta página; aquí se conserva además la vista completa de resultados y las dos tablas comparativas anteriores.
+11791	); no se presenta 3.17 como el protocolo más reciente.
+978	, con 8 números en cada una de las 4 posiciones. Atención: una posición es un token, no necesariamente una palabra.
+7802	, el agente B sigue
+2629	, la forma de A
+4469	, A recibe
+6375	, A lleva ventaja.
+2630	, la forma de B
+6374	, B obtiene
+6392	, D2 obtiene
+6393	, D3 obtiene
+820	, el token con ID 100 toma
+4531	, con ID c1 y c2, respectivamente. b.py devuelve primero su resultado. Si se supone que «el primer resultado corresponde a la primera llamada», el modelo confundirá el archivo B con A y un parche posterior podría modificar el archivo equivocado. Lo correcto es conservar
+28043	, K es
+26037	, LoRA congela W base y aprende
+1863	, O es aproximadamente
+14188	, R y D tienen cada uno una derivada directa de 1 respecto de H, por lo que G_H se propaga por ambas rutas. Si R también es entrada de D, R acaba recibiendo dos contribuciones, una «directa por la ruta principal» y otra «a través de la rama D», que deben sumarse.
+4802	, Server devuelve el nombre de la herramienta, description, inputSchema y, posiblemente, nextCursor. Si hay paginación, se continúa solicitando hasta completar el descubrimiento necesario. Host convierte las definiciones de las herramientas elegidas al formato admitido por la interfaz del modelo; es una política de Host, no un control directo de Server sobre el Prompt del modelo.
+24609	, el ID de token realiza una consulta de tabla y obtiene
+1210	, la forma de W es
+3189	, attention es aproximadamente
+6697	, antes de b hay 2 puntos de código Unicode, 3 code unit UTF-16 y 5 bytes UTF-8. Por eso len de cadenas normales en Python, la longitud habitual de cadenas en JavaScript, Content-Length del transporte del protocolo y las posiciones LSP pueden dar números distintos. Superar pruebas en chino e inglés no demuestra que se gestionen correctamente las posiciones Unicode.
+10173	, la dimensión d_c de c es menor que la dimensión de todas las cabezas K/V desplegadas. El contenido
+13419	, d=4, ε=0.00001 y la escala inicial g1 consta solo de 1.
+14339	, m=max(z). Esto conserva la invariancia ante traslaciones de softmax y evita los problemas numéricos de calcular primero probabilidades diminutas y después aplicar log.
+6423	, las palabras de query pueden interactuar con distintas posiciones del documento, lo que facilita comprobar «versión antigua/prohibición/excepción», pero no resulta adecuado para procesar directamente millones de documentos uno por uno.
+2494	, router calcula
+1350	, softmax devolverá
+1281	, softmax concentra casi toda la masa en el primer elemento. La derivada de softmax contiene
+14140	, para x=3 el resultado es 9. Al cambiar x a 3.01, el resultado es 9.0601; el resultado aumenta 0.0601 y la entrada 0.01, con una razón aproximada de 6.01.
+14374	, η es la tasa de aprendizaje y g el gradiente del parámetro actual. Un g negativo aumenta w; uno positivo lo reduce. «Descender» significa intentar reducir loss, no que todos los parámetros deban hacerse menores.
+13093	, obteniendo tres puntuaciones de comparación a la vez. En F11 se introducirán estas representaciones del receptor y de los candidatos como Query y Key, y se explicará por completo el origen de sus parámetros.
+27929	, los tres ID extraen tres filas y se obtiene
+3603	, las tasas de aceptación de los tres candidatos son, respectivamente,
+22102	, tres éxitos de tres son
+27958	, en este experimento los tres son
+2083	, el gradiente anterior es G_y. Anota primero
+5913	, y prepara el siguiente despliegue, aunque el árbol de trabajo actual es v9.
+7353	, no significa que la tarea de revisión ya la haya utilizado. Debe descubrirse en el directorio; su descripción debe ajustarse a la tarea; deben leerse las instrucciones completas; los scripts o referencias deben obtenerse según se necesiten; y la acción final debe respetarlas y lograr un resultado correcto. Los primeros cuatro pasos son condiciones; solo el quinto se acerca a una aplicación eficaz.
+28192	, no significa que cada subagente tenga acceso; que un subagente diga «completado» tampoco demuestra que el espacio de trabajo final esté integrado y haya superado las pruebas.
+13431	, sin cambiar a otro conjunto de números. La media μ=2, las desviaciones son [-1,1], sus cuadrados [1,1] y la varianza poblacional es su media, 1; sin añadir ε, la desviación estándar es 1.
+12487	, deja de ser una fila de números.
+28017	, sin incluir el 7 recién seleccionado. Para predecir la tercera salida, se introduce el ID7 en la posición 4 y la caché de cada capa crece hasta 5. El experimento permite continuar directamente con ese paso; aquí se destaca la cronología, sin presentar estos ID carentes de significado lingüístico como respuestas reales.
+3539	, sin contar de nuevo un Decode completo. La transmisión en flujo reduce la espera percibida, pero no reduce automáticamente el cálculo total.
+7546	, no 1. Aún no se incluyen enrutamiento, validación, recuperación repetida, retrabajo ni pérdidas por fallos. Los números son supuestos didácticos, no precios actuales de modelos. El programa local ha comprobado esta relación algebraica.
+865	, no el propio h.
+28013	, en lugar de volver a generar todo
+12848	, no que se hayan generado otros 4096 tokens.
+5883	, no solo
+14590	, no es softmax entre varios candidatos.
+5761	, sin sustituirlo a ciegas.
+13160	, no se puede organizar sin quitar ni añadir elementos como
+18029	, no consideres el pseudocódigo un servicio completo listo para desplegar.
+25551	, sin elegir una al azar.
+13895	, el producto escalar con K histórico pasa a 1, en lugar de 0.
+2846	, conforme a la convención de la lección básica sobre softmax.
+2529	, el experto 1 produce
+4624	, cuyos tipos son cadena y entero, respectivamente.
+4274	, indicando que path solo acepta rutas relativas dentro del repositorio y que las líneas se numeran desde uno, incluidos ambos extremos.
+28011	, multiplicado por la transpuesta de K histórico y actual
+1397	, las compuertas multiplicativas controlan qué características pasan. Se usa el mismo conjunto de pesos para cada posición, sin leer directamente otras posiciones; la información de estas llega primero mediante Attention a la representación de la posición y después la procesa FFN.
+27935	, ni afirma que todos los LLM modernos sumen directamente senos a
+13052	, también puede escribirse como
+12213	, y el segundo es, al resolver problemas complejos, el proceso de varios pasos de
+14454	, ambos valores son próximos. Las demás posiciones están prácticamente ajustadas; en BOS todavía deben conservarse dos posibilidades.
+13058	, se sigue calculando por las posiciones correspondientes:
+12882	, siguen siendo necesarios límites para las posiciones válidas.
+7089	, si el directorio se eliminó al cambiar la versión del repositorio, hay que invalidar la entrada o volver a confirmarla, en vez de retocar la explicación para mantener válido el recuerdo antiguo. Cuando el usuario retira un hecho, borrar el registro original no basta: también hay que localizar las dependencias de origen de sus resúmenes, vectores y reglas de experiencia e invalidarlos.
+10088	, al sustituir se obtiene:
+3598	, con
+1984	, así como
+3193	, y la attention de Q nuevo sobre T elementos K/V cuesta aproximadamente
+9686	, conviene preferirla porque facilita gestionar idempotencia, errores y estados. Si es necesario operar la GUI, las observaciones proceden de capturas, DOM o el árbol de accesibilidad y tienen un momento de captura; la página puede haber cambiado antes del clic. Las coordenadas señalan la posición visual de entonces, no un objeto permanente de la aplicación.
+19358	, y el optimizador actualiza los parámetros mediante gradientes. La presión predictiva puede favorecer que el modelo aprenda gramática, estructura y patrones transferibles, pero el objetivo de entrenamiento por sí solo no garantiza que todo su conocimiento del mundo sea verdadero o actual.
+4238	, confundiría «proponer ejecutar pruebas» con «pruebas superadas». También es peligroso equiparar el éxito HTTP con el éxito de negocio: un servicio puede informar de un fallo de negocio mediante una respuesta normal del protocolo.
+9183	, pero
+14825	, pero el ID4 aún no ha pasado por la propagación hacia delante y KV sigue teniendo longitud 3.
+1405	, pero «Attention siempre tiene más parámetros/coste de cálculo» no es una regla general.
+8302	, pero sin excluir por error
+4593	, pero aún puede exceder los permisos. Aunque schema solo permita «rutas relativas al repositorio»,
+4142	, pero tras emitir los argumentos, el harness ya ha cambiado a S8 e interpreta la herramienta del mismo nombre como otra interfaz. Si el ejecutor busca «la herramienta más reciente» solo por nombre, una decisión antigua puede aplicarse a una semántica nueva. Este problema consiste en un cambio entre la comprobación y el uso; antes de memorizar siglas, recuerda que «lo visto al decidir» puede diferir de «lo utilizado al ejecutar».
+3538	, pero el tiempo real de cada paso de decode varía con la longitud y batch y puede incluir interrupciones por desalojo. El primer token puede proceder del último
+4036	, pero los cambios en archivos persisten; perder la base de datos tampoco restaura automáticamente un registro fiable de operaciones desde KV. Estos dos fallos requieren métodos de recuperación distintos.
+24984	, pero un agente real debe distinguir mensajes de texto, llamadas a funciones, resultados de funciones, estados de razonamiento o compactación y estados finales de respuesta. Algunas interfaces permiten que el servicio conserve el historial; otras exigen que el cliente reenvíe los elementos. La configuración de privacidad, las capacidades del modelo y la interfaz del producto determinan conjuntamente las opciones disponibles. La capa de adaptación debe conservar los objetos estructurados, sin limitarse a extraer texto y descartar todo lo demás.
+14770	, posición
+1654	, la posición p y la frecuencia θ corresponden a:
+24665	, la posición p corresponde al ángulo de rotación pθ:
+18914	, para que omita el directorio indicado sin cambiar el comportamiento anterior cuando ese campo no esté configurado. El caso no es una auditoría del repositorio real del usuario ni demuestra que algún producto haya realizado ya estos cambios.
+1128	, multiplicando por la derecha por
+13307	, conservando la diferencia relativa.
+14818	, los candidatos son 4, 5 y EOS, establecidos para este ejemplo didáctico.
+13209	, las posiciones correspondientes de los elementos sí se intercambian.
+8607	, el éxito en todos los casos es
+22310	, el éxito en todos los casos es
+528	, con 1,048,576 números en total. <strong>4096 no es el tamaño del vocabulario, ni la cantidad de tokens, ni el total de parámetros.</strong> Aquí «dimensión oculta» se refiere a la anchura de la representación interna de cada posición.
+24649	, dos capas en total. Estos números pequeños permiten imprimir cada forma; no sirven para evaluar la capacidad de modelos grandes.
+2082	, donde
+10086	, donde N es la cantidad de parámetros y D la cantidad de tokens de entrenamiento. Supón además que el cálculo de entrenamiento
+13993	, donde sigmoid(x)=1/(1+exp(-x)).
+28996	, donde ε es un número positivo muy pequeño; compáralo con el gradiente de la retropropagación. Esto se llama <strong>comprobación por diferencias finitas
+27999	, cuya última fila predice el primer token de salida que sigue inmediatamente a la entrada.
+25146	, seguido del nombre alternativo configurado. La lectura está sujeta a
+13158	, pero cambia la posición del contenido. La primera operación reagrupa; la segunda intercambia las identidades de «fila original» y «columna original». De aquí proceden muchos errores de implementación de Attention.
+4909	, cuyo contenido son pasos de construcción; además existe una herramienta test que sí puede ejecutar pruebas.
+3047	, el kernel puede usar otra disposición de memoria, pero no se deben confundir los ejes semánticos.
+13635	, donde se multiplica internamente por W; otras interfaces de bajo nivel reciben Q/K/V ya proyectados. <strong>Tener el mismo nombre no significa estar en la misma etapa del cálculo.</strong> Antes de leer el código fuente, comprueba si la interfaz realiza la proyección, para evitar multiplicar por W y que la biblioteca vuelva a hacerlo. La capa lineal de PyTorch también almacena los parámetros como
+2226	, y después se multiplica por la cantidad de parámetros.
+13166	, y después se intercambian el eje T y el de cabezas, dando
+28050	, y después se combinan las restricciones de padding o ventana deslizante. Las pruebas del paquete comparan la propagación completa con la incremental de uno y dos tokens, e introducen posiciones erróneas para provocar diferencias. Así demuestran que detectan errores específicos, no solo que el programa no falla.
+4597	, y después se elige dentro del conjunto permitido. La implementación determina el soporte real de schema, la compilación y el comportamiento ante errores; no se debe inventar que todos los proveedores usan el mismo motor gramatical interno. El estado gramatical por sí solo no puede consultar una base de datos para verificar números y relaciones con la realidad.
+14343	, y después al derivar la suma de exponenciales se obtiene
+2087	, y después se suman los efectos de todas las celdas de salida sobre ese denominador. Escribir solo el primer término equivale a tratar r erróneamente como constante; los valores y la dirección del aprendizaje pueden diferir considerablemente.
+1359	, y después se separan según la semántica de la tarea.</strong> Tras introducir valores seguros de sustitución para calcular las filas inválidas, también hay que excluir sus resultados de los resultados de negocio. Usar solo
+24918	, y reponer según toda la distribución p asignaría parte de la masa dos veces; la compensación correcta es la distribución residual positiva. La demostración debe expresar la probabilidad total de cada token en ambas ramas, en vez de responder que «parecen similares».
+26269	, y después comprueba la lista de reglas. Al descartar el directorio, deja de coincidir con rutas exactas anidadas y también excluye por error archivos del mismo nombre en otros directorios. Probar solo el nivel superior
+15084	, y después usar
+15982	, y después sumarlos.
+1721	, y tras girar otros 90° se convierte en
+6323	, reduciendo la dependencia de la escala de las puntuaciones originales. Es un método de fusión de rankings, no de calibración de probabilidades.
+25267	, la definición de la función explica que path es relativo a la raíz del repositorio y las pruebas indican que la barra final denota un directorio. Los tres fragmentos definen conjuntamente el comportamiento. Conservar solo el punto de llamada lleva a interpretar mal el tratamiento de cadenas; conservar nombres de pruebas sin sus aserciones tampoco permite conocer el contrato.
+3329	, que apuntan a los bloques físicos 7, 2 y 19, respectivamente. La posición lógica 5 está en el bloque lógico 1, desplazamiento interno 1, por lo que accede al desplazamiento 1 del bloque físico 2. Al añadir los tokens 11 y 12, A llena el bloque 19; solo el token 13 requiere otro bloque.
+14288	, repartido entre diez preguntas es
+28044	, las puntuaciones
+28012	, la puntuación es
+13998	, el denominador r2=
+10087	, entonces
+13668	, las puntuaciones y proporciones son
+9259	, el coste del modelo es, para cada llamada,
+26528	, el gradiente de entrada es
+13433	, con gamma=1 y beta=0 iniciales es aproximadamente [-0.999995,0.999995]. RMSNorm no resta la media; la media de los cuadrados es 5 y el resultado aproximado es [0.447213,1.341639]. Esto explica por qué después de RMSNorm todos los valores pueden seguir siendo positivos; no promete media cero.
+14465	, que contiene la configuración del modelo y las matrices de parámetros. Se elige JSON para inspeccionar cada número y permitir su carga en la inferencia con la biblioteca estándar; no se recomienda que los modelos a gran escala sustituyan formatos eficientes de pesos por JSON.
+9258	, con precio unitario
+21839	, las pruebas unitarias verifican la normalización; las de integración, la configuración y la lista de archivos; las de extremo a extremo, los artefactos. También hay que comprobar archivos que no deben excluirse, para impedir que «filtrar todo» supere aserciones parciales. Las pruebas se vinculan a la versión del código: añadir B después de que el parche A supere las pruebas no hace que esos resultados cubran automáticamente la nueva versión.
+12840	, es decir, <strong>4 números utilizables para calcular</strong>. La primera frase sigue teniendo 3 posiciones y siguen siendo 2 frases; cambia <strong>lo que almacena cada posición</strong>, por lo que se añade la dirección de índice «qué número dentro de la posición»:
+13773	, es decir, «no es un valor numérico válido». La implementación debe tratar o evitar explícitamente estas filas, sin dejar que NaN se propague inadvertidamente.
+1220	, y después utiliza SDPA predeterminado, reduce todas las puntuaciones a esta fracción de su valor original:
+13568	, en cambio, seguirá recibiendo una proporción.
+703	, se convierte en
+16949	, otros modelos utilizan
+3195	, además hay
+2806	, aplicando solo Top-k=2: conservar los dos primeros y descartar el tercero
+15138	, tomando solo los primeros 2
+13205	, cambiando solo la agrupación.
+1140	, considerando una sola cabeza y omitiendo por ahora la normalización y la rotación de posición. Sea
+1125	, se pueden combinar en una sola operación; al añadir ReLU y poner los valores negativos a 0, ya no existe una única matriz fija que sustituya equivalentemente la salida para todas las entradas. La sección básica correspondiente muestra cómo las celdas positivas y negativas cambian el resultado de la red de avance.
+13577	, se puede cancelar; así se evita el desbordamiento al exponenciar puntuaciones positivas muy grandes. Esto no hace que las puntuaciones originales sean «más fiables».
+14945	, quizá solo permita el primer elemento: el cálculo se ejecuta, pero el resultado es incorrecto.
+6638	, puede encontrar definiciones de funciones, comentarios, cadenas y datos de prueba. grep es rápido y general, pero no sabe qué apariciones corresponden al mismo símbolo. El AST reconoce declaraciones de funciones y expresiones de llamada, eliminando parte de la interferencia de comentarios y cadenas; aun así, el árbol sintáctico puede no resolver alias de importación, genéricos o despacho en tiempo de ejecución.
+5510	, quizá se envíe la solicitud actual pero se desborde la ventana justo al devolver el resultado de la herramienta. La interfaz de compactación también tiene límites de entrada; no se puede confiar en «compactar indefinidamente» una vez superados.
+23560	, las Key visibles son
+2305	, la suma de las pérdidas locales de cada rank debe seguir
+24830	, bajo el mismo prompt,
+25983	, informando por separado del consumo de las tareas fallidas. Calcular solo con los éxitos produciría una evaluación demasiado optimista de sistemas inestables.
+15451	, seguido de dos saltos de línea. La red puede dividir los bytes UTF-8 de «学».
+18026	, el backend devuelve un mensaje assistant. Este puede incluir varias llamadas a funciones o terminar la generación. El harness verifica primero la estructura y los ID de toda la lista de llamadas, ejecuta después cada herramienta permitida y organiza los resultados según
+25019	, después aún pueden llegar más delta o eventos de cierre del mismo elemento de salida.
+1627	, pasando a SDPA
+16016	, la recuperación vectorial devuelve
+1867	, cuya suma es 0.
+13314	, cuya suma es 1.
+3308	, porque se contaban según la referencia anterior.
+15985	, por lo que B queda ligeramente por delante. Este valor no es una probabilidad de acierto. Si un candidato aparece solo en una ruta, la otra no le suma puntos inexistentes.
+6394	, por lo que D2 queda primero. RRF fusiona contribuciones de posiciones, no suma directamente puntuaciones léxicas y similitud coseno. La constante 60 es una elección del ejemplo, no un valor obligatorio para todos los sistemas.
+6807	, conservando la «etiqueta HEAD» mientras cambia el hash del contenido del archivo. Este experimento no falsifica commits de Git; demuestra la lógica mediante cambios reales en archivos: la identidad del commit por sí sola no abarca el estado del árbol de trabajo.
+2559	, se añade
+25476	, pueden ser funciones integradas, métodos o alias de importación; una búsqueda de texto completo no los desambigua.
+1579	, controla la puntuación, no controla attention automáticamente.
+13646	, cuyo exponencial tiende a 0. A las posiciones permitidas se suma 0. Llama M a esta <strong>tabla de máscara aditiva</strong>:
+18126	, el resultado completo es
+24932	, en realidad también hay pérdidas por arranque, sincronización, comunicación, planificación y utilización. La intensidad aritmética F/M ayuda a elegir la dirección de optimización.
+23561	, los Value correspondientes son
+13113	, aún sin sumar, por lo que no sustituye al producto escalar 13.
+3650	, puede romper la igualdad de distribuciones. La especulación voraz tiene reglas de coincidencia más sencillas; no deben mezclarse arbitrariamente las fórmulas de muestreo aleatorio y la verificación voraz.
+5454	, puede seleccionar fragmentos aparentemente pertinentes que no forman una cadena de pruebas utilizable.
+14051	, mostrando la no linealidad en cada posición.
+14224	, se desea y=6, con w=1 inicial. Se define explícitamente la pérdida como
+13840	, la numeración de posiciones habitual es
+24572	, los fragmentos frecuentes pueden comprimirse en menos símbolos. Eso no garantiza que cualquier identificador nuevo consuma pocos tokens. Un carácter chino puede abarcar varios bytes; la reversibilidad a nivel de bytes garantiza reconstruir los bytes originales, no que cada token sea un carácter completo visualizable. El flujo de salida también puede cortarse en mitad de un carácter UTF-8, por lo que la decodificación incremental de red debe mantener su propio estado de bytes; véase la Lección 60.
+672	, no sumando códigos de caracteres.
+6373	, empatados. Si se vuelve a añadir por error la ruta uno, A obtiene
+691	, distinguiendo «mismo significado textual» de «bytes idénticos».
+5137	, distinguiendo verificación de archivos completos, lectura de rangos de líneas concretos, explicaciones de artículos/documentos oficiales y deducciones didácticas originales. Los demás capítulos antiguos conservan sus commits históricos; no se pueden combinar ambas cosas como si fueran una versión única. Leer código no es un benchmark integral del producto, y un stub de prueba no es una medición de un modelo comercial. Cada conclusión solo vale para el alcance registrado; lo no publicado sigue siendo desconocido, sin rellenarlo con conjeturas en nombre de una supuesta exhaustividad.
+1612	, ajustando también posiciones y alcance de loss. Si se permite contexto entre documentos, caben otras políticas; lo esencial es definir el objetivo de entrenamiento, sin equiparar «aparece un separador» con aislamiento determinista.
+13272	, sin cambiar a otro conjunto de datos.</strong> El cálculo paso a paso es el siguiente. El ordenador suele restar primero el máximo para evitar exponenciales excesivas; la siguiente sección demuestra por qué.
+896	, y se verifica que las 6 filas originales no cambien. Esto demuestra que se ha corregido la capacidad, <strong>no que las nuevas filas hayan adquirido significado</strong>. Las filas nuevas aún requieren inicialización y aprendizaje adecuados.
+9560	, comprobando el contenido anterior o su versión al aplicarlo; si el usuario modificó simultáneamente el archivo, hay que releerlo y coordinar los cambios, sin sobrescribirlos.
+13263	, con base e aproximadamente igual a 2.71828. La exponencial transforma cualquier real en un número positivo: exp(0)=1, exp(1) es aproximadamente 2.718 y exp(-1) aproximadamente 0.368.
+13548	, al introducir varias cabezas se dividirá explícitamente en
+23543	, tras normalizar, los pesos son aproximadamente
+1282	, cuando p es extremo, muchos gradientes se hacen muy pequeños. Una distribución demasiado aguda al inicio del entrenamiento dificulta aprender. El escalado ayuda a estabilizar el entrenamiento, pero no sustituye la normalización, la inicialización, la tasa de aprendizaje ni otros factores.
+26039	, reduciendo mucho los parámetros entrenables cuando r es pequeño.
+27964	, de forma
+12805	, con forma
+14158	, se obtiene
+2495	, obteniendo puntuaciones para E expertos. Se eligen los índices Top-2 a y b, y se normalizan las puntuaciones elegidas como pesos w_a y w_b; se calcula por separado la FFN de cada experto
+13999	, obteniendo N2=
+1353	, obteniendo NaN. Ambas expresiones fallan de forma distinta; «no hay NaN» no demuestra corrección.
+27997	, obteniendo para cada posición 8
+13285	, con suma aproximada
+3605	, con probabilidad total de rechazo 0.2; todo el residuo está en el primer candidato, así que el resultado final sigue siendo
+2566	, recuperando un valor aproximado
+9262	, por lo que los costes son 1.25 y 1.5, respectivamente. B cuesta menos por llamada, pero más por éxito. En la práctica suele fallar la independencia: repetir ejecuciones con la misma falta de pruebas puede producir fallos continuos, por lo que esta fórmula no predice a ciegas la factura de producción.
+12811	, por lo que al calcular se escribe
+9311	, aunque las duraciones de todos los Span hijos suman 10 segundos. Las relaciones padre-hijo y de paralelismo del Trace sirven para explicar el tiempo, no para sumar indiscriminadamente cada tramo.
+1352	, restar manualmente el máximo produce
+3043	, añadiendo K/V nuevos a la caché de esa capa y ejecutando
+13631	, convirtiendo la mezcla a la anchura que necesita la red principal. Wo es la proyección de salida de atención, no la cabeza final del modelo de lenguaje que puntúa candidatos del vocabulario.
+15310	, vinculando el resultado a la identidad de esta llamada.
+1603	, utilizándolo para predecir
+2769	, según
+4532	, ensamblando la salida según el protocolo; el nombre de herramienta no identifica de forma única una llamada.
+26491	, aplicando softmax por filas para obtener P, con salida
+1919	, la pérdida es
+3604	, la masa aceptada es
+5103	, con fecha de commit 2026-10-21 02:02:49Z, archivo
+25378	, ofreciendo BM25 y RRF reales, sin llamar Embedding a la coincidencia de cadenas.
+26487	, ofreciendo retropropagación analítica y diferencias finitas.
+8034	, omitiendo deliberadamente la confirmación y reiniciando después para recuperar. La ruta sin clave de idempotencia produce 2 efectos secundarios; la ruta cuyo sistema descendente impone unicidad a la clave estable de intención solo produce 1.
+13842	, las columnas del array son 0, 1 y 2, mientras que las posiciones lógicas de los dos tokens reales pueden ser 0 y 1. La implementación define qué poner en PAD; las columnas sin procesar no sustituyen toda la lógica de posiciones.
+3254	, el máximo de puntuaciones del bloque nuevo es m_b. Sea
+14177	, la nueva pérdida es 0.08. Este ejemplo solo explica la regla de la cadena; no sustituye el entrenamiento de M con AdamW.
+28048	, las consultas nuevas no ven gran parte del historial ni su propia posición. Este Bug no siempre produce un error de dimensiones: cambia la salida silenciosamente, por lo que es adecuado para preguntar en una entrevista «si el código se ejecuta, ¿por qué es incorrecto?».
+8748	, el nuevo resultado es
+13167	, facilitando el cálculo independiente de cada cabeza.
+2740	, tomar siempre la última columna da
+5531	, sin caché, aproximadamente
+26151	, penalizando los errores y teniendo en cuenta la confianza. ECE agrupa muestras por intervalos de confianza, compara la confianza media y la exactitud de cada grupo y pondera los resultados; depende de los intervalos, el tamaño de muestra y la distribución de tareas, por lo que no es por sí solo un indicador completo de calidad.
+20368	, aclarar si las rutas son relativas a la raíz del repositorio o al directorio de configuración es más útil que repetir «eres un ingeniero profesional».
+24727	, es entrenamiento real, pero no una reproducción de la capacidad de un modelo grande.
+12843	, es el número 1 del vector inicial del token «爱» en la primera frase, «我爱学习»;
+11978	, es el primer número de la representación inicial de «爱», el segundo token de la primera frase. <strong>Lo que se añade es un eje de características numéricas dentro de cada posición, no palabras ni bits adicionales.
+975	, usando provisionalmente
+2804	, más disperso.
+6422	, finalmente un producto escalar. Precalcular documentos cuesta poco, pero muchos detalles quedan comprimidos en un solo vector. Cross-encoder:
+27991	, añadiendo al final la conexión residual. El modelo real puede utilizar
+2739	, los últimos índices válidos deben ser 1 y 2. Tras construir las puntuaciones de candidatos, la selección correcta obtiene la clase
+1334	, cuyo máximo también es
+4050	, y el servidor restaura el contexto necesario. Esto reduce la carga de transmisión explícita y gestión de estado; no significa introducir indefinidamente todo el historial en el modelo. El servicio puede truncar, compactar o exigir elementos de estado concretos, según la interfaz.
+24978	, este libro no ejecutó llamadas de pago.
+13935	, el resultado de esta transformación
+13105	, la matriz de pesos
+13190	, algunas máscaras pueden tener un eje de cabezas de longitud 1 para difusión, expresando «todas las cabezas comparten esta restricción». Que una forma admita difusión no garantiza la semántica: hay que verificar la identidad de los ejes.
+1836	, para una fila de probabilidades a y el gradiente anterior g:
+527	, tras consultar la tabla es
+12018	, el resultado de consultar la tabla es
+894	, consultar ID6 sí provoca un error de índice fuera de rango; al ampliar a
+1277	, con desviación estándar
+16950	, el orden cambia, pero debe interpretarse coherentemente.
+9927	, cada patch se convierte en un vector, el Transformer visual genera características y luego las proyecta a la dimensión utilizable por el modelo de lenguaje. La resolución, el recorte y la distribución de patches determinan qué detalles se conservan; si el texto es demasiado pequeño o un control esencial queda fuera, ningún razonamiento posterior puede aprovechar información inexistente.
+13117	, con los mismos pesos en cada posición.
+12491	, cada eje responde a una pregunta distinta.
+1336	, no existe una distribución normalizada válida. La implementación correcta debe evitar estas consultas de antemano o definir que se produzcan ceros y se omita
+19387	, las pruebas aportan resultados de comportamiento, y revisar las convenciones de rutas y compatibilidad aporta pruebas del proceso. Se pueden combinar según el riesgo: un cambio sencillo no necesita análisis reiterado, mientras que la lógica entre módulos requiere más pruebas. Es una recomendación de ingeniería, no una garantía universal del artículo.
+26278	, el harness didáctico crea el archivo de prueba y fija su ejecución.
+25259	, satisfaciendo
+14203	, estimando la derivada al dividir por 2δ; sirve para verificar modelos pequeños, no para entrenar mil millones de parámetros.
+14175	, con objetivo 4, la pérdida
+14344	, su producto es exactamente pⱼ.
+1335	, la resta produce
+13936	, la suma da
+2617	, eliminando la rama adicional; matemáticamente equivale al mismo incremento lineal, aunque la coma flotante y la recuantización pueden introducir diferencias. Sumar directamente varios adaptadores tampoco garantiza que no entren en conflicto en la tarea. Al cambiar adaptadores dinámicamente, incluye su identidad en la caché y la gestión de versiones.
+2631	, omitiendo la constante de escala. La inicialización de referencia de PEFT deja un lado aleatorio y otro a cero para no alterar inicialmente la salida base; las implementaciones con vectores columna suelen escribir el producto como BA. Al comparar código, identifique la forma y el lado inicializado a cero, sin adivinarlos por el orden de las letras.
+14236	, que sí es menor que 16.
+27932	, el programa omite el eje batch, que siempre vale 1.
+659	, la secuencia 2
+13383	, la matriz W1 y el sesgo b1 de la primera capa son:
+1540	, la primera fila solo ve old0 y la segunda old0 y old1, ocultando por error gran parte del historial. Sigue siendo una matriz 2×5 válida, por lo que la comprobación de shape no revela el problema.
+11924	, la segunda frase pasa a ser
+13453	, la segunda capa
+1131	, lo calculado es
+13388	, el resultado
+14055	, el resultado es
+14157	, con x=2, objetivo y=4 y w=1 inicial. La predicción es 2. Se define la pérdida
+12017	, la tabla de identificadores es
+2297	, en lugar de
+5292	, en vez de depender de repetir «debe» en la descripción. El mecanismo obligatorio también debe ser proporcional al riesgo.
+1133	, en lugar de copiarlo tal cual. Con matrices cuadradas, ambas formas son válidas pero los valores difieren, por lo que «no hubo error de shape» no demuestra equivalencia.
+3585	, en vez de contar solo el total de tokens.
+1822	, en vez de mirar únicamente si el comentario dice «compartido».
+13225	, y no el de la fila 3 de la tabla anterior:
+25547	, que permite distinguir información tardía. Los intervalos de validez son cerrados por la izquierda y abiertos por la derecha, para evitar que dos versiones entren en vigor en el mismo instante límite.
+25989	, si llamar directamente al modelo grande cuesta Cl, la cascada resulta ventajosa cuando
+13201	, el orden por filas es
+4800	, que indica que terminó la inicialización. request lleva id para correlacionar la respuesta; notification no espera una respuesta correspondiente.
+13485	, observando «爱» en la posición 2. Esa fila solo puede leer las posiciones 0, 1 y 2; «学习» y «！」 están en el tensor, pero esta posición no puede verlas antes de tiempo. Todos los valores proceden de los mismos pesos iniciales, sin mezclarlos con la demostración bidimensional ni los pesos entrenados.
+1833	, sea el gradiente anterior
+12776	, el vocabulario tiene 6 elementos en total.
+14690	, con solo 6 elementos de vocabulario, se usa una matriz didáctica de pesos de 2 filas y 6 columnas:
+23545	, la salida en esa dimensión es aproximadamente 25.75.
+616	, también se fusionan los pares adyacentes correspondientes del corpus. Después se vuelve a contar y puede continuarse fusionando
+1918	, pasando a probabilidades
+1628	, las salidas coinciden; sin invertirlo, difieren. Esta prueba aísla específicamente «el significado de la máscara» y no debe confundirse con la prueba anterior de matrices asimétricas para verificar la transposición de proyecciones.
+2496	, devuelve
+25483	, aún no demuestra que se haya llamado, y menos que lo devuelto entrase en la entrada del modelo. La traza de ejecución y la cadena de código fuente establecen conjuntamente las pruebas.
+2162	, también hay que distinguir contaminación del entrenamiento, filtración desde el índice de recuperación y exposición de la propia prueba: son tres vías distintas.
+12593	, todavía no se ha consultado Embedding.
+13054	, esto se llama <strong>media ponderada</strong>. Si los pesos no son negativos y suman 1, expresa «qué proporción corresponde a cada uno».
+13213	, este es el cálculo numérico tras la difusión.
+821	, se consulta una fila, sin usar 100 para calcular significado. El mismo token en frases distintas puede tener el mismo vector inicial de tabla, pero el tratamiento de posición y la atención posterior diferenciarán sus representaciones.
+7172	, así el instante límite no pertenece a la vez a las dos versiones. Corrección, cambio normal y retirada deben distinguirse: una corrección puede indicar que el registro anterior ya era erróneo; un cambio normal no niega que el valor anterior fuera válido.
+18042	, verificando una a una estas rutas: JSON inválido, call_id duplicado, herramienta desconocida, tipo de argumento incorrecto, hash obsoleto, final prematuro y presupuesto agotado. Si el caso puede expresarse como error de herramienta, hay que devolver el resultado; los errores del backend o del protocolo deben dejar un motivo de parada claro. No se deben absorber todas las excepciones solo para «terminar».
+26660	, provocando una interrupción mediante la salida real de un subproceso. Tras recuperar, si el archivo ya tiene el contenido objetivo, se registra reconciled sin volver a escribir; se rechaza si no coincide el contenido previo esperado o si el mismo ID lleva otros argumentos.
+8691	, remuestreando ID de tareas y calculando diferencias para obtener un intervalo; los resultados binarios emparejados pueden analizarse con el enfoque de McNemar para comprobar la dirección de los pares discordantes. Con varios trial, la tarea debe ser la principal unidad de agrupación, sin tratar repeticiones del mismo problema como muestras totalmente independientes.
+14694	, reconstruyendo la misma estructura y copiando los parámetros. Se usa θ*, no el valor inicial θ₀ de la sección básica correspondiente, y no se repiten las 400 actualizaciones en cada turno de chat.
+11786	, centrándose en las líneas 80—240 y 245—410, incluidas las comprobaciones de exposición, el mapeo de salidas tipadas y el despacho. Sirve para explicar las capas del código fuente; no afirma haber compilado ni ejecutado ese cliente Rust.
+24578	, la regla de la cadena da:
+14293	, con mayor error.
+2669	, con longitud P=4. Queremos generar
+13856	, sin cambiar la longitud.
+2829	, el umbral 0.6 obliga a conservar A y B.
+1144	, dividido por
+1470	: Q0/Q1 leen el mismo grupo KV 0 y Q2/Q3 el grupo 1. Query sigue teniendo cuatro cabezas, pero la caché solo almacena dos grupos KV; idealmente, el almacenamiento bruto KV se reduce a la mitad frente a Hkv=4.
+13078	: cada celda de Y se calcula con el producto escalar de una fila de X y una columna de W.
+1396	: primero aumentar la dimensión, después aplicar no linealidad y finalmente volver a d. La forma SwiGLU puede escribirse como
+17965	: propone herramientas mediante reglas conocidas de la tarea, no es un LLM. Permite practicar la observación de eventos, pero no evaluar inteligencia, generalización ni rendimiento de modelos comerciales. Los archivos solo se modifican en un directorio temporal nuevo; el registro de salida conserva la configuración final y su hash, y después se limpia el espacio temporal.
+16883	: número medio de tareas en el sistema = tasa media de llegada × tiempo medio de permanencia. Ayuda a contrastar cola y latencia, pero no es una predicción exacta aplicable incondicionalmente a cualquier fluctuación instantánea.
+12847	: hay 2 entradas de 128 posiciones cada una; cada identificador de posición se sustituye por 4096 números y se obtienen 2 tablas de 128 filas y 4096 columnas. La forma es
+14015	: los positivos no cambian y los negativos pasan a cero. En este ejemplo no se eligen celdas aleatoriamente ni se aprende un parámetro ReLU.
+14184	: al cambiar U[j,v] solo cambia este término, con tasa F_j; al cambiar F_j pueden variar los ocho candidatos y hay que sumar sus efectos sobre la pérdida. Por tanto:
+28129	: requiere verificación.
+2849	; C recibe el resto. u=0.70 cae en B. Elegir B no indica un error: la distribución permite precisamente elegir elementos que no sean el máximo.
+28006	; ID6 se eligió a partir de la distribución de salida, pero aún no ha pasado por las capas y no tiene K/V propios.
+12925	; One-hot es
+1211	; PyTorch Linear almacena sus parámetros como
+13671	; son las longitudes de Query y Key las que deben coincidir para el producto escalar.
+25133	; la conversión de eventos SSE procede de otro commit
+16113	; b.py comenta «build puede fallar»; c.py escribe
+24992	; chunk solo es un límite de transporte, no del protocolo.
+25786	; «éxito en los k intentos» es
+1970	; un
+12878	; las tres filas de números representan juntas los tres tokens iniciales de la frase.
+14047	; sin sobrescribir x original.
+12596	; «爱» tiene el mismo identificador en ambas frases.
+12810	; para formar un lote con la primera frase, se añade al final un
+11955	; pero el Embedding realmente consultado en este ejemplo es
+13891	; la diferencia de posiciones cambió la coincidencia.
+25669	; al añadir coordinación, comunicación, repetición e integración, la velocidad real es menor. Es una aplicación de una deducción al estilo de Amdahl, no el resultado de un experimento con modelos.
+12735	; existen otras implementaciones de lotes de longitud variable, sin necesidad de rellenarlos todos como un rectángulo.
+24977	; adaptador en línea opcional:
+28117	; ruta absoluta del mismo archivo
+676	; el mismo texto puede tener distintas cantidades de tokens.
+12831	; la red posterior actualizará cada representación según la posición y el contexto.
+520	; en el vocabulario de 6 elementos puede escribirse conceptualmente como One-hot
+2621	; con mucho contexto irrelevante hay que cambiar la selección. Afinar sin localizar la causa raíz puede grabar conocimientos caducos en los parámetros, sin resolver permisos de herramientas o datos.
+11953	; si solo se explica cómo guardarlo en el ordenador con 8 bits, puede escribirse como
+11954	; si se usa un identificador one-hot de longitud 6, puede escribirse como
+15134	; LoRA real también tiene convenciones de escalado.
+12687	; con relleno a la izquierda se escribe como
+14505	; al promediar las dos medias,
+10527	; el parámetro del mismo nombre en la interfaz de bajo nivel puede contener datos ya proyectados. Importa más comprobar «si la interfaz ya transforma mediante W» que mirar solo el nombre. Fórmula y programa pueden multiplicar pesos por la derecha y almacenarlos transpuestos, respectivamente; hay que alinear primero la disposición y después comparar valores.
+12544	; segmentar «你爱» en «你、爱» da
+1107	; incluyendo el lote es
+24885	; la reposición tras el rechazo cubre exactamente
+3601	; muestrear de esta distribución residual normalizada tras rechazar repone la masa que falta al objetivo.
+13017	; mover datos no añade significado automáticamente.
+15984	; el documento B ocupa las posiciones 2 y 1, respectivamente, y obtiene
+12885	; el último eje elige qué característica de un token se toma.
+28368	; alguien propone duplicar el contexto. ¿Qué conviene hacer primero?
+12926	; el Embedding de este ejemplo es
+12587	; este ejemplo trata explícitamente «学习» como un token. No representa la tokenización real de ningún modelo comercial.
+14976	; la propagación independiente con la biblioteca estándar y PyTorch también coinciden dentro de la tolerancia de coma flotante. No es un benchmark de GPU. La aceleración depende de longitud de secuencia, kernels, planificación y hardware; leer la caché también puede limitar el ancho de banda.
+11962	; ahora esta posición corresponde a una fila de
+22311	; los intentos reales suelen estar correlacionados, por lo que la fórmula no se aplica sin condiciones.
+4016	; la versión en disco sigue siendo v7.
+1351	; el programa no produce NaN, pero promedia contenido prohibido. Si se rellena con
+15143	; el experto 3 no se calcula esta vez, aunque sus parámetros siguen existiendo.
+1152	; la segunda posición solo ve las dos primeras. Este ejemplo también muestra que la máscara causal y la pertinencia del contenido son mecanismos distintos: un token futuro debe seguir oculto aunque sea muy pertinente.
+12718	; la segunda frase, «你爱», es
+27977	; la segunda dimensión es
+15131	; la segunda fila es 2 veces la primera, de modo que el rango es 1.
+971	; tras la proyección de salida, se suma la conexión residual; después se aplican normalización y red de avance y se suma la segunda conexión residual. Tras repetir las capas se realiza la normalización final y la proyección al vocabulario; la última posición
+25776	; todos los ejemplos estadísticos son construcciones del autor, no resultados de agentes comerciales.
+521	; el Embedding inicial que realmente entra en las capas posteriores del modelo es
+17258	; si E tiene forma [6,4], multiplicar este One-hot por E equivale matemáticamente a tomar E[2], aunque en ejecución normalmente se consulta la tabla directamente.
+14608	; el entrenamiento solo actualiza los parámetros A/B seleccionados y otros similares; W participa en la propagación hacia delante, pero no se calcula o aplica su actualización.
+28307	; esa respuesta no verificó la situación actual en línea ni realizó cambios.
+12443	; la transposición da
+13220	; también hay que conservar la correspondencia entre los ejes de posición y de cabezas.
+12657	; esto no demuestra que ambas frases originales tengan 128 tokens.
+13111	; esto es
+5272	; la rama remota conserva la versión antigua. El usuario ejecuta la misma pregunta por separado en IDE, CLI local y tarea en la nube.
+3034	; añadir un token no cambia esos estados anteriores. Por tanto, K/V proyectados para posiciones anteriores tampoco cambian en ninguna capa. La posición nueva solo necesita su propio Q para consultar K/V históricos de esa capa; las salidas antiguas producidas por Q anteriores ya están calculadas y normalmente no se reutilizan.
+13286	; al dividir elemento por elemento sigue siendo aproximadamente
+1567	; con relleno a la derecha, las posiciones reales de tokens son 0 y 1.
+15128	; para cuantizar se toma x=0.26 y escala s=0.1; el enrutamiento de expertos tiene tres candidatos.
+1214	; transponer otra vez por error da

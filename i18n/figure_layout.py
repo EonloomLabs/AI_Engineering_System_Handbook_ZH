@@ -1,12 +1,12 @@
 """Layout the current published SVG nodes without running a model/generator.
 
 The horizontal coordinate system is immutable: matrix cells, axes and
-proportional bars retain their original x values. English is wrapped at word
+proportional bars retain their original x values. Text is wrapped at language
 boundaries at the original font size. Extra line height is inserted into a
 monotone vertical map; boxes, lanes, paths and arrow endpoints consume that
 same map. This preserves the published frame's actual colors and identity.
 
-Measurement reads the installed Arial advance tables using only the stdlib.
+Measurement reads installed Arial/Hiragino advance tables using only the stdlib.
 The conservative portable fallback does not require a font package.
 """
 from __future__ import annotations
@@ -14,6 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import bisect
 import copy
+from functools import partial
 import html
 import math
 import re
@@ -181,14 +182,16 @@ _FONTS = {}
 
 
 class FontMetrics:
-    """Read cmap/hmtx from the installed Arial face using only the stdlib."""
+    """Read cmap/hmtx from an installed TTF/TTC face using only the stdlib."""
     def __init__(self, path):
         self.data = Path(path).read_bytes()
         u16 = lambda offset: struct.unpack_from('>H', self.data, offset)[0]
         u32 = lambda offset: struct.unpack_from('>I', self.data, offset)[0]
+        # TTC table offsets are absolute; its first face owns this metric set.
+        face = u32(12) if self.data[:4] == b'ttcf' else 0
         tables = {}
-        for i in range(u16(4)):
-            offset = 12 + i * 16
+        for i in range(u16(face + 4)):
+            offset = face + 12 + i * 16
             name = self.data[offset:offset+4].decode('ascii')
             tables[name] = u32(offset + 8)
         self.units = u16(tables['head'] + 18)
@@ -203,7 +206,7 @@ class FontMetrics:
                 chosen = (kind, offset)
         self.mapping = {}
         if chosen is None:
-            raise LayoutError('Arial font has no usable Unicode cmap')
+            raise LayoutError('font has no usable Unicode cmap')
         kind, offset = chosen
         if kind == 12:
             for i in range(u32(offset + 12)):
@@ -236,12 +239,32 @@ class FontMetrics:
         return total * size / self.units * 1.025
 
 
-def width(value, size=16, bold=False):
-    """Arial advance metrics with 2.5% padding; missing glyphs use a safe em."""
-    name = '/System/Library/Fonts/Supplemental/Arial%s.ttf' % (' Bold' if bold else '')
+def width(value, size=16, bold=False, *, lang='en'):
+    """Installed face advances with padding; no downloaded/runtime dependency."""
+    if lang not in ('en', 'ja', 'es', 'vi'):
+        raise LayoutError('unsupported layout language: %s' % lang)
+    if lang == 'ja':
+        name = unicodedata.normalize('NFD', '/System/Library/Fonts/ヒラギノ角ゴシック W%s.ttc' % ('6' if bold else '3'))
+    else:
+        name = '/System/Library/Fonts/Supplemental/Arial%s.ttf' % (' Bold' if bold else '')
     if name not in _FONTS:
         _FONTS[name] = FontMetrics(name) if Path(name).is_file() else None
     font = _FONTS[name]
+    if lang == 'ja':
+        # Arial owns ASCII in the emitted font stack, including matrix values.
+        # Hiragino owns Japanese; measuring a fullwidth Japanese face for the
+        # numbers would falsely overflow their unchanged source matrix slots.
+        width('', size, bold)  # Initialize the same primary face as the SVG.
+        arial_name = '/System/Library/Fonts/Supplemental/Arial%s.ttf' % (' Bold' if bold else '')
+        arial = _FONTS[arial_name]
+        return sum(width(part, size, bold) if part.isascii() else
+                   sum(width(c, size, bold) if arial is not None and arial.mapping.get(ord(c)) else
+                       font.width(c, size) if font is not None else
+                       size * (1.05 if unicodedata.east_asian_width(c) in 'WF' else 1)
+                       for c in part) for part in re.findall(r'[ -~]+|[^ -~]+', str(value)))
+    if lang in ('es', 'vi'):
+        # Measurement only: source/translation graphemes keep their exact bytes.
+        value = unicodedata.normalize('NFC', str(value))
     if font is not None:
         return font.width(str(value), size)
     return sum(size * (1.05 if unicodedata.east_asian_width(c) in 'WF'
@@ -250,12 +273,16 @@ def width(value, size=16, bold=False):
                for c in str(value)) * (1.04 if bold else 1)
 
 
-def wrap(value, limit, size=16, bold=False):
-    """Wrap at whitespace; a long code/URL gets its own measured-width line.
+def wrap(value, limit, size=16, bold=False, *, lang='en'):
+    """Wrap at language boundaries; code/URLs stay measured-width units.
 
     A technical identifier is never sliced into fragments. Its required width
     is returned to the slot planner, which may use the remaining full row.
     """
+    if lang == 'ja':
+        return _wrap_japanese(value, limit, size, bold)
+    if lang not in ('en', 'es', 'vi'):
+        raise LayoutError('unsupported layout language: %s' % lang)
     if limit < size:
         raise LayoutError('text slot narrower than one readable glyph')
     result = []
@@ -269,11 +296,60 @@ def wrap(value, limit, size=16, bold=False):
             for index, word in enumerate(pieces):
                 separator = ' ' if index == 0 else ''
                 test = (line + separator + word) if line else word
-                if line and width(test, size, bold) > limit:
+                if line and width(test, size, bold, lang=lang) > limit:
                     result.append(line)
                     line = word
                 else:
                     line = test
+        result.append(line)
+    return result or ['']
+
+
+# Keep closing punctuation, small kana and combining marks with their prior
+# glyph; keep opening brackets with the following glyph. ASCII code/path runs
+# are indivisible, including punctuation such as API(), W_q and run.json.
+JA_NO_START = frozenset('、。，．・：；？！!?,.:;)]}）］｝〉》」』】〕〗〙〛’”ぁぃぅぇぉっゃゅょゎゕゖァィゥェォッャュョヮヵヶー々ゝゞヽヾｧｨｩｪｫｯｬｭｮｰﾞﾟ')
+JA_NO_END = frozenset('([{（［｛〈《「『【〔〖〘〚‘“')
+JA_FAMILY = 'Arial, "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif'
+
+
+def japanese_units(value):
+    """Measured legal break units; concatenation preserves the original text."""
+    units = []
+    for unit in re.findall(r'学习|[!-~]+|[^\x21-\x7e]', str(value)):
+        if units and (unit[0] in JA_NO_START or unicodedata.category(unit[0]).startswith('M')
+                      or units[-1][-1] in JA_NO_END):
+            units[-1] += unit
+        else:
+            units.append(unit)
+    return units
+
+
+def break_units(value, *, lang='en'):
+    if lang == 'ja':
+        return [unit for unit in japanese_units(value) if unit.strip()] or ['']
+    if lang not in ('en', 'es', 'vi'):
+        raise LayoutError('unsupported layout language: %s' % lang)
+    return re.findall(r'\S+', value) or ['']
+
+
+def _wrap_japanese(value, limit, size, bold):
+    if limit < size:
+        raise LayoutError('text slot narrower than one readable glyph')
+    result = []
+    for paragraph in str(value).split('\n'):
+        line, space = '', ''
+        for unit in japanese_units(paragraph):
+            if not unit.strip():
+                space += unit
+                continue
+            test = line + space + unit if line else unit
+            if line and width(test, size, bold, lang='ja') > limit:
+                result.append(line)
+                line = unit
+            else:
+                line = test
+            space = ''
         result.append(line)
     return result or ['']
 
@@ -444,7 +520,10 @@ def geometry_identity(root):
             for e in root.iter() if tag(e) in GEOMETRY_TAGS and e.get('data-i18n-annotation') != 'true']
 
 
-def reflow(source, translations, translate, report=None):
+def reflow(source, translations, translate, report=None, *, lang='en'):
+    measure = partial(width, lang=lang)
+    wrap_text = partial(wrap, lang=lang)
+    units = partial(break_units, lang=lang)
     root = parse(source)
     original = copy.deepcopy(root)
     view = root.get('viewBox', '').split()
@@ -458,7 +537,7 @@ def reflow(source, translations, translate, report=None):
 
     def translated(group):
         if group.source_parts:
-            return ' '.join(translate(part) if translatable(part) else part
+            return ('' if lang == 'ja' else ' ').join(translate(part) if translatable(part) else part
                             for part in group.source_parts)
         return translate(group.source) if translatable(group.source) else group.source
     # A very narrow proportional segment keeps its width. Put its category
@@ -470,7 +549,7 @@ def reflow(source, translations, translate, report=None):
         value = translated(group)
         left, right = _interval(group, groups, rects, canvas_width)
         bold = num(group.nodes[0].get('font-weight'), 400) >= 600
-        if max(width(word, group.size, bold) for word in re.findall(r'\S+', value)) <= right-left:
+        if max(measure(word, group.size, bold) for word in units(value)) <= right-left:
             continue
         cells = [r for r in rects if r[1] < group.x < r[1]+r[3]
                  and r[2] <= group.y-group.size*.25 <= r[2]+r[4]]
@@ -481,6 +560,30 @@ def reflow(source, translations, translate, report=None):
         # type adjustment. Only genuinely narrow segments need a callout row.
         if cell[3] < group.size * 5:
             callout_rows.setdefault(round(group.y, 3), (cell[2], []))
+    # Spanish matrix column headings can be outside their cells. Recognize
+    # only a repeated header row aligned to the next matrix row; use a band
+    # above all cells, so a wide legend cannot cover a neighboring matrix.
+    if lang == 'es':
+        headers = {}
+        for group in groups:
+            if group.anchor != 'middle' or not translatable(group.source):
+                continue
+            if any(r[1] < group.x < r[1]+r[3] and
+                   r[2] <= group.y-group.size*.25 <= r[2]+r[4] for r in rects):
+                continue
+            below = [r for r in rects if abs(r[1]+r[3]/2-group.x)<.01
+                     and 0 < r[2]-group.y <= group.size*2]
+            if below:
+                cell = min(below, key=lambda r:r[2])
+                headers.setdefault((round(group.y,3),cell[2]),[]).append(group)
+        for (baseline, _), row in headers.items():
+            if len(row)<2:
+                continue
+            if any(max(measure(word,g.size,num(g.nodes[0].get('font-weight'),400)>=600)
+                       for word in units(translated(g))) >
+                   _interval(g,groups,rects,canvas_width)[1]-_interval(g,groups,rects,canvas_width)[0]
+                   for g in row):
+                callout_rows[baseline] = (min(r[2] for r in rects), [])
     for baseline, (top, _) in list(callout_rows.items()):
         row = [g for g in groups if abs(g.y-baseline)<.01 and g.anchor == 'middle'
                and translatable(g.source)]
@@ -492,19 +595,21 @@ def reflow(source, translations, translate, report=None):
         height = 0
         for index, group in enumerate(row):
             value = translated(group)
-            lines = wrap(value, slot-14, group.size,
+            lines = wrap_text(value, slot-14, group.size,
                          num(group.nodes[0].get('font-weight'),400)>=600)
-            if any(width(line,group.size)>slot-14 for line in lines):
+            if any(measure(line,group.size)>slot-14 for line in lines):
                 raise LayoutError('unbreakable annotation exceeds its label band: %r'%value)
             height=max(height,len(lines)*group.size*1.5+24)
             callouts[id(group)] = (20+(index+.5)*slot, top-1, lines, slot-14)
         insertions.append((top-1, height, 1.0))
     # A mobile matrix can have a 50px Chinese row-heading rail. If a complete
-    # English word cannot fit, place that rail's headings above their same
+    # translated word cannot fit, place that rail's headings above their same
     # numeric rows. Matrix x coordinates and the probability bars stay fixed.
     row_headings = []
     for group in groups:
-        if group.anchor != 'start' or id(group) in callouts:
+        if (group.anchor not in ('start','end') if lang == 'es' else group.anchor != 'start') or id(group) in callouts:
+            continue
+        if lang == 'es' and not translatable(group.source):
             continue
         cells = [r for r in rects if r[1] > group.x + 2
                  and r[2] <= group.y <= r[2]+r[4]]
@@ -512,17 +617,21 @@ def reflow(source, translations, translate, report=None):
                             r[2] <= group.y <= r[2]+r[4] for r in rects):
             continue
         first = min(cells, key=lambda r:r[1])
-        if max(r[1]+r[3] for r in cells)-first[1] < canvas_width*.6:
+        # Spanish also has end-anchored matrix rails and labels beside a
+        # single quantitative time bar. Its width must remain untouched.
+        if lang != 'es' and max(r[1]+r[3] for r in cells)-first[1] < canvas_width*.6:
             continue
         row_headings.append((group, first[2]))
-    if any(max(width(word,g.size) for word in re.findall(r'\S+',translated(g))) >
-           _interval(g,groups,rects,canvas_width)[1]-g.x
+    if any(max(measure(word,g.size) for word in units(translated(g))) >
+           _interval(g,groups,rects,canvas_width)[1]-(
+               _interval(g,groups,rects,canvas_width)[0] if g.anchor=='end' else g.x)
            for g,_ in row_headings):
         for group,top in row_headings:
-            limit=canvas_width-group.x-18
-            lines=wrap(translated(group),limit,group.size,
+            x = max(18,_interval(group,groups,rects,canvas_width)[0]) if group.anchor=='end' else group.x
+            limit=canvas_width-x-18
+            lines=wrap_text(translated(group),limit,group.size,
                        num(group.nodes[0].get('font-weight'),400)>=600)
-            callouts[id(group)]=(group.x,top-1,lines,limit,'row-heading')
+            callouts[id(group)]=(x,top-1,lines,limit,'row-heading')
             insertions.append((top-1,len(lines)*group.size*1.5+14,1.0))
     for group in groups:
         value = translated(group)
@@ -533,9 +642,11 @@ def reflow(source, translations, translate, report=None):
         annotation = callouts.get(id(group))
         if annotation:
             x, _, lines, limit = annotation[:4]
+            if len(annotation)==5:
+                anchor='start'
         else:
-            lines = wrap(value, limit, size, bold)
-        widest = max(width(line, size, bold) for line in lines)
+            lines = wrap_text(value, limit, size, bold)
+        widest = max(measure(line, size, bold) for line in lines)
         if widest > limit + .01 and not annotation:
             # Move a label within its existing row before changing type. This
             # commonly gives a right-edge warning its unused left padding.
@@ -548,20 +659,20 @@ def reflow(source, translations, translate, report=None):
                     if other is group or abs(other.y-group.y)>size*.75 or other.x>=x:
                         continue
                     ob=num(other.nodes[0].get('font-weight'),400)>=600
-                    ow=width(translated(other),other.size,ob)
+                    ow=measure(translated(other),other.size,ob)
                     end=other.x if other.anchor=='end' else other.x+ow/2 if other.anchor=='middle' else other.x+ow
                     min_x=max(min_x,end+10)
                 new_x=max(min_x,right-widest)
                 if new_x<x:
-                    x=new_x;limit=right-x;lines=wrap(value,limit,size,bold)
-                    widest=max(width(line,size,bold) for line in lines)
+                    x=new_x;limit=right-x;lines=wrap_text(value,limit,size,bold)
+                    widest=max(measure(line,size,bold) for line in lines)
             # At most 15%, never below 14px, solely for an indivisible word.
             if widest>limit+.01 and size>14:
                 minimum=max(14.0,group.size*.85)
                 candidate=max(minimum,size*limit/widest)
                 if candidate<size:
-                    size=candidate;lines=wrap(value,limit,size,bold)
-                    widest=max(width(line,size,bold) for line in lines)
+                    size=candidate;lines=wrap_text(value,limit,size,bold)
+                    widest=max(measure(line,size,bold) for line in lines)
         if widest > limit + .01:
             raise LayoutError('unbreakable identifier exceeds its source slot (%s/%s): %r' %
                               (fmt(widest), fmt(limit), value))
@@ -590,7 +701,7 @@ def reflow(source, translations, translate, report=None):
             lo,hi=min(ys),max(ys)
             scale=(vertical(hi)-vertical(lo))/(hi-lo)
             if any(abs(vertical(y)-(vertical(lo)+(y-lo)*scale))>.0001 for y in ys):
-                raise LayoutError('English annotation would distort a numerical y axis; give it an external band')
+                raise LayoutError('translated annotation would distort a numerical y axis; give it an external band')
     # All geometry consumes one map. Horizontal attributes remain untouched.
     for element in root.iter():
         kind = tag(element)
@@ -626,6 +737,8 @@ def reflow(source, translations, translate, report=None):
         baseline = vertical(annotation[1]) + size + 7 if annotation else vertical(group.y)
         element.set('x', fmt(x));element.set('y', fmt(baseline))
         element.set('font-size', fmt(size))
+        if anchor != group.anchor:
+            element.set('text-anchor',anchor)
         if annotation and len(annotation) == 4:
             ET.SubElement(root, '{%s}line' % SVG_NS, {
                 'x1':fmt(x), 'y1':fmt(baseline+(len(lines)-1)*line_height+5),
@@ -648,10 +761,10 @@ def reflow(source, translations, translate, report=None):
             element.set('aria-label', translate(element.get('aria-label')))
     for element in root.iter():
         if tag(element) in ('text', 'tspan'):
-            element.set('font-family', 'Arial, \"PingFang SC\", sans-serif')
+            element.set('font-family', JA_FAMILY if lang == 'ja' else 'Arial, \"PingFang SC\", sans-serif')
     style = root.get('style', '')
     style = re.sub(r'font-family\s*:[^;]+;?', '', style)
-    root.set('style', style + ';font-family:Arial,\"PingFang SC\",sans-serif')
+    root.set('style', style + (';font-family:' + JA_FAMILY if lang == 'ja' else ';font-family:Arial,\"PingFang SC\",sans-serif'))
     new_height = vertical(canvas_height)
     root.set('viewBox', '0 0 %s %s' % (fmt(canvas_width), fmt(new_height)))
     if root.get('height'):
@@ -677,8 +790,11 @@ def reflow(source, translations, translate, report=None):
     return ET.tostring(root, encoding='unicode')
 
 
-def redraw_table(source, rows, translate, report=None):
+def redraw_table(source, rows, translate, report=None, *, lang='en'):
     """AP diagrams are literal table correspondences; consume the translated table."""
+    measure = partial(width, lang=lang)
+    wrap_text = partial(wrap, lang=lang)
+    units = partial(break_units, lang=lang)
     root = parse(source)
     if not rows or not rows[0] or any(len(row) != len(rows[0]) for row in rows):
         raise LayoutError('AP table must be nonempty and rectangular')
@@ -693,11 +809,11 @@ def redraw_table(source, rows, translate, report=None):
             root.remove(child)
     count = len(rows[0]);size = 15.0;head_size = 16.0
     # Long prose gains more width than a short status or identifier column.
-    weights = [max(100, min(390, max(width(row[j], size) for row in rows)))
+    weights = [max(100, min(390, max(measure(row[j], size) for row in rows)))
                for j in range(count)]
     total = sum(weights)
-    minimums = [max(110,max(width(word,16 if i==0 else 15,i==0)
-                for i,row in enumerate(rows) for word in re.findall(r'\S+',row[j]))+30)
+    minimums = [max(110,max(measure(word,16 if i==0 else 15,i==0)
+                for i,row in enumerate(rows) for word in units(row[j]))+30)
                 for j in range(count)]
     if sum(minimums)>840:
         raise LayoutError('AP identifiers exceed the fixed readable table width')
@@ -709,13 +825,13 @@ def redraw_table(source, rows, translate, report=None):
     cells, y, fit = [], 12.0, []
     for i, row in enumerate(rows):
         fs = head_size if i == 0 else size
-        lines = [wrap(value, widths[j] - 30, fs, i == 0) for j, value in enumerate(row)]
+        lines = [wrap_text(value, widths[j] - 30, fs, i == 0) for j, value in enumerate(row)]
         for j, ls in enumerate(lines):
-            if any(width(line, fs, i == 0) > widths[j] - 30 + .01 for line in ls):
+            if any(measure(line, fs, i == 0) > widths[j] - 30 + .01 for line in ls):
                 raise LayoutError('unbreakable AP table cell: %r' % row[j])
         h = max(len(ls) for ls in lines) * fs * 1.5 + 24
         cells.append((y, h, fs, lines));y += h + 4
-        fit.extend({'source': row[j], 'width': round(max(width(line, fs, i == 0) for line in ls), 3),
+        fit.extend({'source': row[j], 'width': round(max(measure(line, fs, i == 0) for line in ls), 3),
                     'limit': round(widths[j] - 30, 3), 'lines': len(ls), 'font_size': fs}
                    for j, ls in enumerate(lines))
     height = y + 18
@@ -730,7 +846,7 @@ def redraw_table(source, rows, translate, report=None):
         for j, ls in enumerate(lines):
             xx = x_positions[j] + 15
             element = ET.SubElement(root, ns + 'text', {'x': fmt(xx), 'y': fmt(yy + fs + 9),
-                'fill': '#233747', 'font-family': 'Arial, \"PingFang SC\", sans-serif', 'font-size': fmt(fs),
+                'fill': '#233747', 'font-family': JA_FAMILY if lang == 'ja' else 'Arial, \"PingFang SC\", sans-serif', 'font-size': fmt(fs),
                 'font-weight': '650' if i == 0 else '400'})
             for k, line in enumerate(ls):
                 ET.SubElement(element, ns + 'tspan', {'x': fmt(xx),

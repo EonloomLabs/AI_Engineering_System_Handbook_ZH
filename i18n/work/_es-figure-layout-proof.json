@@ -1,0 +1,515 @@
+{
+  "version": 1,
+  "status": "independently_reviewed_passed",
+  "owner": "i18n/figure_layout.py:reflow",
+  "consumer": "i18n/figure_strings.py:prepare",
+  "scope": {
+    "language": "es",
+    "behavior": "External annotation bands for unboxed matrix row and column headings and quantitative time-bar captions. Existing original horizontal geometry, data labels and annotation font sizes are retained.",
+    "other_languages": [
+      "en",
+      "ja",
+      "vi"
+    ],
+    "writes": "Only tooling and test sources were changed by the implementer; no table, Chinese source, original generator, or published output was written."
+  },
+  "files": {
+    "figure_layout.py": "2ddf5925b48c88f7105dc64cfb59a448967f7ade4bb975813c301c02067f4b07",
+    "test_figure_layout_es.py": "1a2ac0db0b0add2e465443ab10f8b50ed3f36ba373b7c76550fa5662e448541b",
+    "test_batch_literals.py": "86069b9eaf3a977234de9e2b453b4c7b0f40b17ea52ffd970264cd84042d6e25"
+  },
+  "before_files": {
+    "figure_layout.py": "3beac7d3af3cf5d2e756ea9f091af21ca71243eb173031b0d08041b4e80c8c25",
+    "test_batch_literals.py": "f6ecd6b49b79e44b4eb8effa71688f00b98080af1d08bb0115cf4388ef7f057a"
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s i18n -p 'test_*.py'",
+    "passed": 71,
+    "previous_suite": 66,
+    "new_spanish_layout_tests": 5,
+    "independently_repeated_current_run": true
+  },
+  "behavioral_red": {
+    "baseline_source_sha256": "3beac7d3af3cf5d2e756ea9f091af21ca71243eb173031b0d08041b4e80c8c25",
+    "command": "Load the snapshotted figure_layout module and run the five new test methods against it.",
+    "tests": 5,
+    "errors": 5,
+    "failures": 1,
+    "actual_source_errors": [
+      {
+        "file": "chapters/04.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "error": "unbreakable identifier exceeds its source slot (50.26/43): 'Entrada'"
+      },
+      {
+        "file": "chapters/04.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "error": "unbreakable identifier exceeds its source slot (50.26/43): 'Entrada'"
+      },
+      {
+        "file": "chapters/08.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "error": "unbreakable identifier exceeds its source slot (47.0649/43): 'Ranura 0'"
+      },
+      {
+        "file": "chapters/08.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "error": "unbreakable identifier exceeds its source slot (47.0649/43): 'Ranura 0'"
+      },
+      {
+        "file": "foundations/05.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "error": "unbreakable identifier exceeds its source slot (82.1947/59): 'Característica 0'"
+      },
+      {
+        "file": "studies/chapters/01.html",
+        "locator": {
+          "kind": "html",
+          "index": 7
+        },
+        "error": "unbreakable identifier exceeds its source slot (50.26/43): 'Entrada'"
+      },
+      {
+        "file": "studies/chapters/01.html",
+        "locator": {
+          "kind": "html",
+          "index": 8
+        },
+        "error": "unbreakable identifier exceeds its source slot (50.26/43): 'Entrada'"
+      },
+      {
+        "file": "studies/chapters/06.html",
+        "locator": {
+          "kind": "html",
+          "index": 7
+        },
+        "error": "unbreakable identifier exceeds its source slot (47.0649/43): 'Ranura 0'"
+      },
+      {
+        "file": "studies/chapters/06.html",
+        "locator": {
+          "kind": "html",
+          "index": 8
+        },
+        "error": "unbreakable identifier exceeds its source slot (47.0649/43): 'Ranura 0'"
+      },
+      {
+        "file": "walkthroughs/d.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "error": "unbreakable identifier exceeds its source slot (88.5454/74): 'Recuperación'"
+      },
+      {
+        "file": "walkthroughs/d.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "error": "unbreakable identifier exceeds its source slot (88.5454/74): 'Recuperación'"
+      },
+      {
+        "file": "diagrams/rendered/Q017-ccbec0e32656.svg",
+        "locator": {
+          "kind": "download"
+        },
+        "error": "unbreakable identifier exceeds its source slot (50.26/43): 'Entrada'"
+      },
+      {
+        "file": "diagrams/rendered/Q029-c6cdde06764d.svg",
+        "locator": {
+          "kind": "download"
+        },
+        "error": "unbreakable identifier exceeds its source slot (47.0649/43): 'Ranura 0'"
+      },
+      {
+        "file": "diagrams/rendered/foundation-fboard-05-02-71d4c86400c0.svg",
+        "locator": {
+          "kind": "download"
+        },
+        "error": "unbreakable identifier exceeds its source slot (82.1947/59): 'Característica 0'"
+      }
+    ],
+    "synthetic_error": "The synthetic end-anchored Spanish row heading also raised the original source-slot LayoutError.",
+    "negative_control_failure": "The too-long identifier remained rejected; the baseline emitted the source-slot error instead of the new annotation-band error expected by the negative control. This is not counted as an additional layout defect.",
+    "not_setup_or_import_failures": true
+  },
+  "non_ap_reflow": {
+    "before_other_languages": {
+      "en": {
+        "count": 702,
+        "sha256": "93fbaed11569e7c0586dcd32e6eaf95e19a843d2316ec0fb511987174415fe7e"
+      },
+      "ja": {
+        "count": 702,
+        "sha256": "85af62e41c996e9cad24a2a90ce6a54c0b820bfa6abce10fc152d31a73e614a0"
+      },
+      "vi": {
+        "count": 702,
+        "sha256": "f43dc572a28f0564832b9e2cedb75fe76a08086fca7295a7bc57c2db7a72faf9"
+      }
+    },
+    "after": {
+      "es": {
+        "count": 702,
+        "sha256": "f33f2c4769140a029391a3c3086a2e118adc090e6b12656f539911aa4ec7f164"
+      },
+      "en": {
+        "count": 702,
+        "sha256": "93fbaed11569e7c0586dcd32e6eaf95e19a843d2316ec0fb511987174415fe7e",
+        "unchanged": true
+      },
+      "ja": {
+        "count": 702,
+        "sha256": "85af62e41c996e9cad24a2a90ce6a54c0b820bfa6abce10fc152d31a73e614a0",
+        "unchanged": true
+      },
+      "vi": {
+        "count": 702,
+        "sha256": "f43dc572a28f0564832b9e2cedb75fe76a08086fca7295a7bc57c2db7a72faf9",
+        "unchanged": true
+      }
+    },
+    "failures": [],
+    "es_figures_with_annotations": [
+      {
+        "file": "chapters/02.html",
+        "locator": {
+          "kind": "html",
+          "index": 8
+        },
+        "annotations": 4
+      },
+      {
+        "file": "chapters/04.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "annotations": 2
+      },
+      {
+        "file": "chapters/04.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 2
+      },
+      {
+        "file": "chapters/08.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "annotations": 2
+      },
+      {
+        "file": "chapters/08.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 2
+      },
+      {
+        "file": "foundations/05.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 4
+      },
+      {
+        "file": "foundations/09.html",
+        "locator": {
+          "kind": "html",
+          "index": 7
+        },
+        "annotations": 4
+      },
+      {
+        "file": "foundations/21.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "annotations": 2
+      },
+      {
+        "file": "foundations/26.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 6
+      },
+      {
+        "file": "foundations/38.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 5
+      },
+      {
+        "file": "foundations/39.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 1
+      },
+      {
+        "file": "studies/chapters/01.html",
+        "locator": {
+          "kind": "html",
+          "index": 7
+        },
+        "annotations": 2
+      },
+      {
+        "file": "studies/chapters/01.html",
+        "locator": {
+          "kind": "html",
+          "index": 8
+        },
+        "annotations": 2
+      },
+      {
+        "file": "studies/chapters/05.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 4
+      },
+      {
+        "file": "studies/chapters/06.html",
+        "locator": {
+          "kind": "html",
+          "index": 7
+        },
+        "annotations": 2
+      },
+      {
+        "file": "studies/chapters/06.html",
+        "locator": {
+          "kind": "html",
+          "index": 8
+        },
+        "annotations": 2
+      },
+      {
+        "file": "visual-guides.html",
+        "locator": {
+          "kind": "html",
+          "index": 10
+        },
+        "annotations": 2
+      },
+      {
+        "file": "visual-guides.html",
+        "locator": {
+          "kind": "html",
+          "index": 25
+        },
+        "annotations": 2
+      },
+      {
+        "file": "visual/F21.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "annotations": 2
+      },
+      {
+        "file": "walkthroughs/d.html",
+        "locator": {
+          "kind": "html",
+          "index": 5
+        },
+        "annotations": 3
+      },
+      {
+        "file": "walkthroughs/d.html",
+        "locator": {
+          "kind": "html",
+          "index": 6
+        },
+        "annotations": 3
+      },
+      {
+        "file": "assets/visual-data.js",
+        "locator": {
+          "kind": "js",
+          "path": [
+            "F21",
+            "frames",
+            0,
+            "svg"
+          ]
+        },
+        "annotations": 2
+      },
+      {
+        "file": "assets/visual-data.js",
+        "locator": {
+          "kind": "js",
+          "path": [
+            "F21",
+            "frames",
+            1,
+            "svg"
+          ]
+        },
+        "annotations": 2
+      },
+      {
+        "file": "assets/visual-data.js",
+        "locator": {
+          "kind": "js",
+          "path": [
+            "F21",
+            "frames",
+            2,
+            "svg"
+          ]
+        },
+        "annotations": 2
+      },
+      {
+        "file": "assets/visual-data.js",
+        "locator": {
+          "kind": "js",
+          "path": [
+            "F21",
+            "frames",
+            3,
+            "svg"
+          ]
+        },
+        "annotations": 2
+      },
+      {
+        "file": "diagrams/rendered/Q017-ccbec0e32656.svg",
+        "locator": {
+          "kind": "download"
+        },
+        "annotations": 2
+      },
+      {
+        "file": "diagrams/rendered/Q029-c6cdde06764d.svg",
+        "locator": {
+          "kind": "download"
+        },
+        "annotations": 2
+      },
+      {
+        "file": "diagrams/rendered/foundation-fboard-05-02-71d4c86400c0.svg",
+        "locator": {
+          "kind": "download"
+        },
+        "annotations": 4
+      }
+    ],
+    "hash_contract": "SHA-256 over UTF-8 reflowed SVG strings in registry order, joined by one NUL; AP figures excluded from this per-language renderer compatibility comparison."
+  },
+  "prepare_es": {
+    "figures": 777,
+    "downloads": 49,
+    "outputs": 207,
+    "payload_sha256": "100d13ea91ce28db61189c56af248bb87c8b283624139c59fdebf3fb855294d8",
+    "all_text_fit": true,
+    "invocation": "figure_strings.prepare('es')",
+    "publication": "Prepared in memory only; no write/_publish call."
+  },
+  "legacy_data_literal_status": {
+    "all_editions_proof": "_all-editions-data-literal-proof.json",
+    "records_per_language": 6,
+    "languages": {
+      "en": {
+        "records": 6,
+        "passed": true
+      },
+      "ja": {
+        "records": 6,
+        "passed": true
+      },
+      "es": {
+        "records": 6,
+        "passed": true
+      },
+      "vi": {
+        "records": 6,
+        "passed": true
+      }
+    },
+    "status": "Controlled English repairs are complete; current EN/JA targets pass and fixed historical programming values remain negative test fixtures.",
+    "guard_source_unchanged_by_this_increment": true
+  },
+  "independent_review": {
+    "status": "passed",
+    "scope": [
+      "figure_layout.py",
+      "test_figure_layout_es.py",
+      "test_batch_literals.py"
+    ],
+    "prior_suite_review_passed": 66,
+    "agent": "/root/es_vi_review",
+    "blocking_findings": 0,
+    "independently_repeated_passed": 71,
+    "reviewed_files": {
+      "figure_layout.py": "2ddf5925b48c88f7105dc64cfb59a448967f7ade4bb975813c301c02067f4b07",
+      "test_figure_layout_es.py": "1a2ac0db0b0add2e465443ab10f8b50ed3f36ba373b7c76550fa5662e448541b",
+      "test_batch_literals.py": "86069b9eaf3a977234de9e2b453b4c7b0f40b17ea52ffd970264cd84042d6e25"
+    },
+    "actual_checks": {
+      "non_ap_renderer_bytes": {
+        "en": {
+          "figures": 702,
+          "identical": true
+        },
+        "ja": {
+          "figures": 702,
+          "identical": true
+        },
+        "vi": {
+          "figures": 702,
+          "identical": true
+        }
+      },
+      "es_original_failures": 14,
+      "es_remaining_failures": 0,
+      "annotation_font_sizes_preserved": true,
+      "numeric_labels_preserved": true,
+      "horizontal_geometry_preserved": true,
+      "row_column_association_preserved": true,
+      "unowned_text_and_too_long_identifiers_rejected": true,
+      "reviewed_hashes_match_implementation": true
+    }
+  },
+  "limits": [
+    "No service or browser was started.",
+    "The fit and geometry checks do not establish complete linguistic review or manual visual acceptance.",
+    "The renderer compatibility comparison uses the same current translation table for before/after; controlled English data repairs are separate from the layout change.",
+    "This evidence does not assert ES/VI publication is complete."
+  ]
+}

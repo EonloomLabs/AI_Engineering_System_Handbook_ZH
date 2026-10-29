@@ -117,15 +117,37 @@ VOCAB = vocab()
 # Literal UTF-8 test data, not prose: studies/labs/sse_protocol.py:46 splits
 # this file name across streamed argument fragments. Keep its exact bytes.
 PRESERVED_FILES = ('中文.py',)
+# foundations/23.html's SSE worked example splits the UTF-8 bytes of 学.
+# These two exact extracted sources (IDs 15456/15451) describe that byte data;
+# 学 is not a generally permitted untranslated prose character.
+SOURCE_LITERALS = {
+    '后续字节完成“学”': ('学',),
+    '，后接两个换行。网络可能在“学”的UTF-8字节中间切开。': ('学',),
+    # chapters/04.html:32,36 teacher-forcing target/prefix data (IDs 1914/1915).
+    # This independent example does not expand labs/model's shared VOCAB.
+    '编程': ('编程',),
+    'BOS,我,爱,编程': ('编程',),
+    # chapters/15.html:73 Q058's given-token BM25 inputs (ID 6121), checked
+    # against example-verification.html's runnable example. Keep complete
+    # array syntax, not generic exemptions for these ordinary Chinese words.
+    '输入与条件。</strong>文档A=[排除,路径]，B=[排除,排除,路径,缓存]，C=[日志,输出]。N=3，平均长度8/3，k1=1.2，b=0.75；用非负IDF形式ln(1+(N−df+0.5)/(df+0.5))。': (
+        'A=[排除,路径]', 'B=[排除,排除,路径,缓存]', 'C=[日志,输出]'),
+    # studies/chapters/20.html:32 S20's raw request payload (ID 25885).
+    # Native-language explanations may appear outside this exact call.
+    '输入与条件。</strong>用户u7仅有项目P1的读取权限，模型请求query(project="P2",text="部署密钥")。': (
+        'query(project="P2",text="部署密钥")',),
+}
 
 
 def residual(s, source=''):
-    """What is left after removing the model's own vocabulary items."""
+    """Remove model vocabulary and data literals bound to their source text."""
     for v in VOCAB:
         s = s.replace(v, '')
     for name in PRESERVED_FILES:
         if name in source:
             s = s.replace(name, '')
+    for literal in SOURCE_LITERALS.get(source, ()):
+        s = s.replace(literal, '')
     return s
 
 
@@ -358,6 +380,9 @@ def check(pairs, p, how, t, dry):
                 errs.append('第%d行 无假名，疑未翻译' % (i + 1))
         elif CJK.search(residual(v, zh)):
             errs.append('第%d行 仍含中文' % (i + 1))
+        for literal in SOURCE_LITERALS.get(zh, ()):
+            if zh.count(literal) != v.count(literal):
+                errs.append('第%d行 来源数据字面量未原样保留: %s' % (i + 1, literal))
         for name in PRESERVED_FILES:
             if name in zh and zh.count(name) != v.count(name):
                 errs.append('第%d行 文件名未原样保留: %s' % (i + 1, name))

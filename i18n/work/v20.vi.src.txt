@@ -1,0 +1,557 @@
+# Remaining vi part 20 — 550 strings — target language: vi
+# Translate every line into vi. Keep the leading "N<TAB>" exactly; N is a table key, not a count.
+# [tags] lines carry inline HTML: keep every tag and its attributes unchanged.
+#        You may move tags to suit the target language's word order.
+# Keep numbers, code, file names and anchors exactly as they are.
+# Terminology: i18n/glossary.json is the book's own bilingual glossary - follow it.
+
+22957	Self-RAG研究学习何时检索以及如何评价相关生成，涉及专门训练机制。它不等于给任意聊天模型加一句“请自我反思”。
+17362	Self-attention / 自注意力
+2485	Self-consistency在推理时采样多条路径，再按答案一致性聚合；参数通常不变。它能降低某些随机推理错误，但若样本共享同一错误前提，多数票仍会错误。增加票数增加成本，也不能把模型之间的相关错误变成独立证据。
+4798	Server回应相同id，返回它支持的协议版本、serverInfo和例如
+4829	Server有工具不等于当前身份有执行权限；鉴权与用户授权仍需单独检查。
+30784	Server服务端
+4805	Server返回result或协议error。Host再把内容转换为模型工具结果，关联模型侧call_id。MCP的
+30787	Server返回工具描述和输入结构
+16397	Shell文件修改在事务外
+14068	SiLU(1)≈0.731059，SiLU(3)≈2.857722；它不是“把负数全部删掉”。
+10600	SiLU(x)=x×sigmoid(x)。先把x映射到0与1之间，再乘回x本身，形成非线性。负数不会像ReLU那样一律变为0。
+23653	Skills与Hooks不是同一种执行方式
+21567	Skills与多Agent — AI系统工程
+20551	Skills把任务相关指导与资源组织成可按需使用的工作包。技能被发现、被加载、被正确执行是三个阶段，不能因为安装了文件就认为本次任务已经应用。
+21571	Skills是按需展开的专业工作包
+21572	Skills通过名称、描述、正文和资源组织能力。先发现元数据，再加载相关正文，必要时读取脚本或参考材料，是渐进披露思想。它不新增模型参数，也不保证每一步都会像程序一样执行。
+16294	Skill与子Agent不是两种同义的外挂
+17078	Skill及合适工具
+27413	Skill存在，为什么仍可能完全没用？ — AI系统工程
+16341	Skill存在，为什么仍可能完全没用？</a><a href="#foundations-32-s1">五种扩展能力不要混成一个大Prompt</a><a href="#foundations-32-s2">路由是在作选择</a><a href="#foundations-32-s3">漏加载与过度加载为何都不好</a><a href="#foundations-32-s4">子Agent不是主Agent的一份完全复制</a><a href="#foundations-32-s5">用一个DAG算并行是否值得</a><a href="#foundations-32-s6">独立Reviewer为什么也可能错</a><a href="#foundations-32-s7">模型路由怎样不只按价格选</a><a href="#self-check">课后自检 [tags]
+16240	Skill存在，为什么仍可能完全没用？</a><a href="#foundations-32-s1">五种扩展能力不要混成一个大Prompt</a><a href="#foundations-32-s2">路由是在作选择</a><a href="#foundations-32-s3">漏加载与过度加载为何都不好</a><a href="#foundations-32-s4">子Agent不是主Agent的一份完全复制</a><a href="#foundations-32-s5">用一个DAG算并行是否值得</a><a href="#foundations-32-s6">独立Reviewer为什么也可能错</a><a href="#foundations-32-s7">模型路由怎样不只按价格选</a><a href="#self-check">课后自检</a><a class="sub ap-toc" href="#agent-foundation-skills">Skill与子Agent不是两种同义的外挂 [tags]
+27414	Skill存在，为什么仍可能完全没用？</a><a href="#topic-3">逐步说明与计算记录 [tags]
+16336	Skill已在磁盘上，为什么仍可能没被应用？
+16295	Skill提供一套方法和资源；子Agent是另一条任务执行上下文。主Agent加载了Skill，不保证子Agent也读到了它；子Agent收到父任务摘要，不保证继承工具连接。交接时具体写目标、证据、允许动作、输出与验收。简单修改不必拆给多个Agent；先证明拆分减少了时间或错误，而不是只增加仪式。
+7261	Skill是可复用任务指导，路由决定是否提供，工具负责真实操作。说明文字可以帮助模型判断，但无法代替权限和验证；专业不等于每次读全部技能。
+21629	Skill正文引用不存在的脚本
+23654	Skill组织专业方法和资源，是否被选中与正文是否有效需要分别评价。Hook在生命周期节点执行程序化逻辑，适合确定性检查，但也可能耗时或失败。
+7321	Skill被读过不是任务完成证明。
+4919	Skill选择读资料并调用工具
+16275	Skill：可复用做法
+27104	Softmax不是直接把分数除以它们的和 — AI系统工程
+27105	Softmax不是直接把分数除以它们的和</a><a href="#topic-3">逐步说明与计算记录 [tags]
+18830	Span记录操作及因果关联；示例耗时为本书设定，不代表平台实测。
+17546	State / 状态
+11289	StepContext绑定发出本次请求所用的模型设置、MCP、环境和工具路由；文件系统访问器仍结合实时会话/本轮授权。快照一致性不等于所有权限永久冻结。
+17314	Stride / 步幅
+17394	SwiGLU / 门控
+24655	SwiGLU前馈结构在本实验写为
+26530	SwiGLU由乘法门控组成，两个分支都应接收另一分支值乘以上游的梯度。SiLU还需要自身导数。实现时先验证单算子，再组合整层，通常比只看最终训练loss更容易定位。
+1476	SwiGLU：不是给FFN换一个激活名称
+19249	Switch Transformers采用稀疏专家路由，让每个Token只经过部分专家。总参数和激活参数不同，因此不能仅凭总参数比较单次计算量。
+13647	S是<strong>分数表</strong>，A是<strong>读取份额表</strong>，O是<strong>混合后的输出表</strong>。它们都是本次计算结果，不是另外加载的模型参数。第0行只有一个合法位置，份额是1，输出自然就是自己的Value。 [tags]
+943	S由Q/K比较，A由softmax，O由A混合V；M由读取规则构造。
+5485	S的步骤要求R与P
+19148	T1不可看未来T2
+8586	T1并不稳定
+7911	T1：客户端记录准备创建，业务动作ID为a17。T2：请求发到服务端。T3：服务端把工单写入数据库。T4：成功响应在网络中丢失。T5：客户端超时。
+11983	T=128：每条输入补齐或安排到128个位置。
+12465	T=每条输入位置数
+27837	TENSOR · PyTorch Tensor 与数据表示
+27893	TEST · 代码审查标准
+15888	TF、IDF与BM25先认识职责
+15890	TF、IDF与BM25先认识职责：逐项辨别
+10739	TF计某词在当前文档出现次数；DF计包含它的文档数；IDF根据全库统计降低常见词、提高较罕见词的区分贡献。三者是统计量，不是模型的学习率。
+15889	TF（词频）</strong>描述某个词在一篇文档出现多少次。<strong>DF（文档频率）</strong>描述多少篇文档含这个词；<strong>IDF（逆文档频率）</strong>通常让罕见、区分度更高的词占更大权重。 [tags]
+15891	TF：词出现多少
+27833	TOKEN · 分词与编号
+27821	TOKEN · 分词与编号</a><a href="#topic-2">PADDING · 组批、补齐与截断</a><a href="#topic-3">TENSOR · PyTorch Tensor 与数据表示</a><a href="#topic-4">EMBED · Embedding 查表</a><a href="#topic-5">LINEAR · 线性层 [tags]
+27874	TOOLS · 工具设计
+27826	TOOLS · 工具设计</a><a href="#topic-26">MCP · MCP 架构</a><a href="#topic-27">SSE · SSE 事件流</a><a href="#topic-28">STATE · SQLite 原子提交</a><a href="#topic-29">CONTEXT · 上下文工程 [tags]
+3573	TPOT=20ms，不等于180/4。
+16876	TPOT：每输出Token耗时
+3560	TTFT=0.50 s；总计=0.70 s
+10565	TTFT、TPOT、p95与吞吐</a> <a href="#concept-slo">SLI、SLO与错误预算</a> <a href="#concept-little">Little定律：L=λW的局部记号</a> <a href="#concept-security">Prompt Injection、沙箱与权限</a> <a href="#concept-patch">Patch、图像通道与视觉投影</a> <a href="#concept-clip">CLIP与图文对比学习</a> <a href="#concept-sae">SAE、激活与可解释特征</a> <a href="#concept-calibration">校准、置信度与弃答</a> <a href="#concept-sigma">σ：看清函数符号与统计量</a><a href="#concept-upstream">G、dQ、dW：反传里的中间梯度</a><a href="#concept-concat">Concat、split与chunk：拼接与拆分</a><a href="#concept-dropout">Dropout：训练中的随机置零规则</a><a href="#concept-logsumexp">logsumexp：先求指数和，再取对数</a><a href="#concept-batchnorm">BatchNorm：跨样本统计不同于LayerNorm</a><a href="#concept-combination">C(n,k)、!：组合数量与阶乘</a><a href="#concept-big-o">O(·)：随规模增长的数量级</a><a href="#concept-probability-symbols">E、Π、∼、∝：概率式的常用记号</a><a href="#concept-bos-eos">BOS / EOS：序列边界标记</a><a href="#concept-json">JSON：结构化文本，不是执行动作</a><a href="#concept-linebreak">LF、CRLF与EventSource [tags]
+16866	TTFT、TPOT与端到端延迟
+3578	TTFT从120变500，后续间隔仍20
+10791	TTFT是请求到首个输出Token的延迟；TPOT描述后续每Token时间的统计；p95是某窗口里约95%观测不超过的分位数；吞吐是单位时间完成量。要说明计时起止。
+3535	TTFT是请求到首个输出Token的时间，包含排队和Prefill等；TPOT描述后续Token生成平均或分位延迟；任务总耗时还包含检索、工具和多轮调用。Roofline用计算量与数据搬运量估计计算受限还是带宽受限，但只是上界模型，不代替实测。
+22576	TTFT是首Token等待，生成吞吐是输出速度，工具延迟是外部依赖，总耗时才反映完整任务。平均值与高分位都重要。很快说“开始处理”不代表很快完成。SRE强调从用户可见行为定义监控和目标。
+16875	TTFT：首Token延迟
+17622	TTL / 失效
+10764	TTL是存储或缓存的到期设置；有效时间指事实何时适用；记录时间指系统何时知道。到期策略不能代替事实和来源核验。
+8545	Task是要完成的问题与初始环境；Trial是一次具体运行；
+15321	Task：整个目标
+14283	Teacher forcing到底“喂”了什么
+17408	Temperature / 温度
+13297	Temperature（温度）</strong>是在softmax前把分数除以正数τ。τ较小常使分布更集中，较大更分散。τ=0不能真的执行除零；接口若用0表示贪心，是另外的处理约定。 [tags]
+19427	The Pile展示多来源文本数据集的组织。语料不是同质“互联网文字”，文档、代码、论坛、论文具有不同结构、质量、重复和领域分布，会影响模型学到的模式。
+20414	Thread与Turn的生命周期差异
+15317	Thread或会话</strong>通常保存相关交互的组织关系；<strong>任务task</strong>是要实现的用户目标。一个长任务可能跨多次会话，一个会话也可能包含多个任务。 [tags]
+18959	Token ID只是词表索引，数值大小不代表语义距离。模型输出也可能是分类分数、隐藏表示或生成Token，不同任务头的语义不同。一个分类模型不会因为使用了Transformer就自动运行Agent循环。
+12961	Token ID用于找表中哪一行，通常采用框架支持的整数类型；Embedding权重和输出常用浮点类型。<strong>浮点数</strong>是一种用有限位数近似表示含小数数值的方式，它不是任意精度的实数。 [tags]
+13834	Token ID：是哪一项
+23215	Tokenizer与模型权重必须匹配
+14803	Tokenizer解码为文字字节
+23572	Tokenizer负责离散编码；模型参数决定运算；任务头决定输出形式；生成策略决定怎样选择后续Token。分类、Embedding提取与文本生成不是同一任务，即使它们使用相似的Transformer底座。
+440	Token、Attention、Cache、RAG、Compaction、Agent Loop 与工程示例
+19063	Token、向量、注意力、Transformer与逐Token生成
+18150	Token变快但任务没变快
+872	Token向量、隐藏状态、logits、句向量
+12902	Token地址
+23157	Token张量常为B×T，Embedding后B×T×D，注意力在序列位置间计算，输出每个位置对词表的分数。因果Mask和目标右移防止偷看答案。nanoGPT提供简洁实现入口，本书未声称训练或复现其成绩。
+22722	Token数
+27834	Token是分词器的片段单位，字符、字节和Token并不一一对应。图中的中文词表是教学约定。
+13831	Token是谁，和它出现在第几位，是两个问题
+12065	Token是谁，和它出现在第几位，是两个问题</a><a href="foundations/13.html#fdiag-13-02">为什么不能只靠查Embedding</a><a href="foundations/13.html#fdiag-13-03">只用平面上的点认识sin与cos</a><a href="foundations/13.html#fdiag-13-04">RoPE怎样用位置改变匹配</a><a href="foundations/13.html#fdiag-13-05">为什么缓存位置不能每次从0开始 [tags]
+13833	Token是谁，和它出现在第几位，是两个问题：逐项辨别
+5573	Token更少，但原历史前缀不再完全相同。
+12531	Token编号
+12768	Token编号2
+12622	Token编号5和编号1的距离是4，能说明语义距离吗？
+14802	Token输出编号
+12540	Token：模型分词单位
+17541	Tool call / 工具调用
+15323	Tool call：一次动作
+20456	ToolInvocation怎样到dispatch
+26220	Toolformer探索模型学习何时使用工具；运行时的Function Calling协议则处理调用如何编码与执行。训练研究与接口工程不能混为一谈。第55课讲学习目标，第07—08章讲协议与执行。
+20111	Toolformer研究在训练中学习工具使用；Reflexion利用语言反馈影响后续尝试。一次会话总结不等于参数训练，模型自我批评也不保证正确。
+20192	Toolformer研究让语言模型通过训练学习何时以及如何使用外部工具。它属于能力训练路线，不等于给普通模型列几个工具就复现同样机制。
+15609	Tools、Resources、Prompts各是什么
+15613	Tools、Resources、Prompts各是什么：逐项辨别
+4884	Tools提供可调用动作；Resources提供可读取的数据对象；Prompts提供可参数化的提示模板；Skills组织可复用的任务知识、说明和资源。MCP解决接口互联，Skills解决专业工作方法的发现与加载，二者可以配合但不相互替代。
+15614	Tools：可执行动作
+20683	Tool做检查，Hook控制何时必须运行
+2854	Top-k与Top-p不是同一个筛选
+2855	Top-k保留分数最高的k个候选，再在这些候选中归一化。k=2时基准A/B保留，概率变为约[0.731058579,0.268941421,0]。
+10689	Top-k保留概率最高的k项；Top-p按概率降序保留累计概率达到阈值的候选前缀。用于抽样时，被保留的候选需按剩余总质量重新归一化。
+2776	Top-k先保留概率最大的k项，再归一化。Top-p先按概率排序，取累计概率达到阈值的最小前缀集合，再归一化。例如概率
+2788	Top-p=0.8保留哪些
+2856	Top-p先按概率由大到小排序，选择累计达到阈值的最小候选集，再归一化。阈值0.8时，A不足0.8，加B后超过，因此保留A/B。阈值0.6则只保留A。阈值不是“只保留单项概率大于p的词”。
+22829	Towards Monosemanticity探索从激活中分解更易解释的特征，提示单个神经元未必是最佳单位。稀疏自编码器平衡重建与稀疏性，后续研究评价规模与特征质量。关联激活不等于完整因果解释，需要干预、消融和行为验证。
+23076	Towards Monosemanticity研究把模型激活分解为更易解释的特征，指出单个神经元未必是最佳语义分析单位。本书依据研究团队可访问的官方介绍说明核心思想，不冒称覆盖全部实验附录。
+22170	Trace Grading评价执行过程中的决策、工具与证据使用。它能帮助定位错误发生在哪里，但不应奖励机械模仿某条固定样例路径。
+10789	Trace串起一个任务的相关操作，Span记录其中一次操作的时间和属性，Log记录事件细节，Metric汇总许多运行。它们记录可观察执行，不等于模型真实内部思维。
+3564	Trace应包含排队，不然模型调用内部看似很快，却无法解释用户端慢。
+9245	Trace既要能串起来，也要避免泄密
+8550	Trace有助于定位失败：没有找到文件、读错版本、错误补丁、测试没跑。Outcome则检查实际产物。两者都重要：只看最终答案会被口头承诺骗；只看过程是否像人类步骤会惩罚不同但正确的方案。
+11775	Trace由相关Span组成，Span包含运行时间与上下文关系；跨并行路径不能把持续时间直接视为总等待。
+27475	Trace要告诉你因果，不只是时间戳 — AI系统工程
+16927	Trace要告诉你因果，不只是时间戳</a><a href="#foundations-38-s1">一次任务到底慢在哪里</a><a href="#foundations-38-s2">用一条教学轨迹分账</a><a href="#foundations-38-s3">TTFT、TPOT与端到端延迟</a><a href="#foundations-38-s4">吞吐与延迟不是一对同义词</a><a href="#foundations-38-s5">成本应算整个任务</a><a href="#foundations-38-s6">SLI、SLO是什么</a><a href="#foundations-38-s7">灰度、回滚和版本组合</a><a href="#self-check">课后自检 [tags]
+16826	Trace要告诉你因果，不只是时间戳</a><a href="#foundations-38-s1">一次任务到底慢在哪里</a><a href="#foundations-38-s2">用一条教学轨迹分账</a><a href="#foundations-38-s3">TTFT、TPOT与端到端延迟</a><a href="#foundations-38-s4">吞吐与延迟不是一对同义词</a><a href="#foundations-38-s5">成本应算整个任务</a><a href="#foundations-38-s6">SLI、SLO是什么</a><a href="#foundations-38-s7">灰度、回滚和版本组合</a><a href="#self-check">课后自检</a><a class="sub ap-toc" href="#agent-foundation-production">先画出等待时间，再谈加速 [tags]
+27476	Trace要告诉你因果，不只是时间戳</a><a href="#topic-3">逐步说明与计算记录 [tags]
+22570	Trace连接一次任务中的模型、工具、检索、交接与验证；Span代表一段操作；事件记录时点；指标汇总分布。Agents SDK和OpenTelemetry提供追踪入口，但规范字段与稳定性需按版本确认。
+9206	Trace里三个span加起来10秒，任务为什么只用了7秒
+16853	Trace（调用轨迹）</strong>把同一任务的相关步骤关联； [tags]
+16848	Trace：请求链路
+22608	Tracing把模型调用、工具执行、交接和其他步骤连接为任务轨迹。它帮助解释过程，但记录存在不代表内容完整或结论正确。
+17644	Transaction / 事务
+22832	Transformer Circuits是研究体系入口，不是一套已完全解释任意商业模型的结论。自然语言解释也不同于机制研究证据。
+23111	Transformer Circuits汇集机制可解释性的研究路线，关注模型内部计算如何实现具体行为。它是持续研究领域，不是一套已经穷尽所有模型机制的说明书。
+24750	Transformers PR #34191标题为“Fix Gradient Accumulation issue”，已于2024-10-17合并。本节固定查看合并提交中的loss_utils.py：有num_items_in_batch时，fixed_cross_entropy选择sum reduction，再除以调用方给定的数；ForCausalLMLoss先移动预测与标签，再展平。
+11787	Transformers历史修复PR #34191于2024-10-17合并，固定合并提交 
+24413	Transformer原始架构与注意力；现代Decoder变体另作说明。
+19078	Transformer层不只有Attention
+17801	Transformer：从表示到网络层
+19640	Tree of Thoughts将中间思路表示为搜索状态，通过评价、分支与回溯选择路径。它增加探索能力，也引入状态表示和评价错误。
+21226	Tree-sitter提供增量解析与语法树能力，使工具可以按代码结构而非纯文本处理内容。AST描述语法，不自动包含全部类型、依赖与运行时行为。
+25477	Tree-sitter查询可以按节点结构和字段定位语法片段；它还暴露错误或缺失节点，适合编辑中不完整代码。LSP定义客户端与语言服务之间的请求，包括定义、类型定义、引用与诊断；具体语言服务器是否支持、精度如何，需要查询能力和实现。
+17248	Truncation / 截断
+12710	Truncation：丢一段内容
+22811	TruthfulQA研究模仿常见错误观念的问题；模型自知研究观察某些条件下的自评能力，不支持把任意口述置信度当准确概率。生成概率、事实正确率和校准是不同概念。
+22921	TruthfulQA研究模型重复人类常见错误观念的现象，强调语言模仿能力与事实正确性之间的差别。流畅和常见不等于真实。
+15322	Turn：用户或代理的阶段
+15265	T从100增到200
+22615	U7结束后M2收到观察
+22613	U7记录c7与T1
+9632	UTC滚动24小时；含游客
+6710	UTF-16是3个code unit：a占1，emoji占2；UTF-8是5字节：a占1，emoji占4。Unicode码点位置为2，三者不可混用。
+15397	UTF-8字节边界
+24420	Unigram子词模型与分词方案；不声称所有Tokenizer使用同一算法。
+17556	Unknown / 未知结果
+30475	V · 提供内容
+16180	Valid time与Recorded time为什么不同
+16182	Valid time与Recorded time为什么不同：逐项辨别
+28889	Value投影 Wv
+1191	Value改内容，Q/K改读取分配
+13729	Value是被混入的内容
+10501	Value表；一些论文用V表示词表大小
+13502	Value，值向量v
+31089	V：提供被混合的数
+14002	W1有4行8列，N2右乘它，得到8种特征组合。宽度8不代表新增了8个Token，而是同一位置的内部工作宽度变大了。之后经非线性再用W2[8,4]回到主路的4维。
+14003	W1：[4,8]，生成8个中间特征
+14008	W2：[8,4]，将激活后8维映射回4维
+18459	WA02 · 沿用本案例：8项词表、3个位置、4个特征分别在哪里</a><small>walkthroughs/a.html · 正文对应小节 [tags]
+18460	WA05 · 把A.5的三个位置贡献分别画出来</a><small>walkthroughs/a.html · 正文对应小节 [tags]
+18461	WA09 · 同一条ID序列：选中与已经处理相差一步</a><small>walkthroughs/a.html · 正文对应小节 [tags]
+18462	WA10 · 两个新增Query应当怎样读取五个Key</a><small>walkthroughs/a.html · 正文对应小节 [tags]
+10733	WAL是先记录日志再按协议更新数据的思路；fsync请求同步文件相关数据到存储；原子重命名在支持条件下使读者不见半截替换。可见性与崩溃后的持久性不是同一保证。
+18463	WB03 · c1如何把M1的动作与T1的证据接在一起</a><small>walkthroughs/b.html · 正文对应小节 [tags]
+18464	WB04 · c2和c3可以并行，但结果不能按到达顺序串号</a><small>walkthroughs/b.html · 正文对应小节 [tags]
+18465	WB07 · c19响应丢失时，三个地方的状态并不相同</a><small>walkthroughs/b.html · 正文对应小节 [tags]
+18466	WB08 · 压缩时保留哪几个字段，才能继续核验c19</a><small>walkthroughs/b.html · 正文对应小节 [tags]
+18467	WC01 · 同样出现“90天”，为什么不能取第一条就回答</a><small>walkthroughs/c.html · 正文对应小节 [tags]
+18468	WC05 · 沿用四个候选，手算一次融合排名</a><small>walkthroughs/c.html · 正文对应小节 [tags]
+18469	WC07 · 7天的结论依赖哪条证据，未证明哪件事</a><small>walkthroughs/c.html · 正文对应小节 [tags]
+18470	WC09 · 10月19日规则与系统当时知道的规则，可能不同</a><small>walkthroughs/c.html · 正文对应小节 [tags]
+18471	WD02 · 50秒的轨迹中，第一处状态失真在哪里</a><small>walkthroughs/d.html · 正文对应小节 [tags]
+18472	WD03 · 三个状态并排后，错误不再是一句“模型变笨了”</a><small>walkthroughs/d.html · 正文对应小节 [tags]
+18473	WD08 · 100道同题对照：成功率之外还应看哪两格</a><small>walkthroughs/d.html · 正文对应小节 [tags]
+18474	WD09 · 回滚代码之前，先检查旧代码是否认识新状态</a><small>walkthroughs/d.html · 正文对应小节 [tags]
+1754	Wk/Wv各自输出宽度
+13529	Wk：Key参数
+19180	Word2Vec不是把整数写成二进制
+19178	Word2Vec教程解释通过上下文预测学习连续词向量。静态词向量通常给一个词条固定表示，而Transformer会产生依赖语境的表示。这是理解语义编码发展的重要区别。
+17527	Workflow / 工作流
+20094	Workflow与Agent如何组合
+15330	Workflow：预设步骤
+13941	Wo为什么还要再乘一次
+2131	Wq[0,0]：十个使用点的实际梯度贡献
+1492	Wq、Wk、Wv的形状都为[4,4]，是不是可以只保存一份？
+12418	Wq、Wk等W开头
+13693	Wq与Q到底哪个存的是模型参数？
+14116	Wq和U都可能生成四列以上的数，如何判断哪一个是最终候选分数？
+13694	Wq存乘法系数。Q是把本次X乘Wq得到的中间表示。普通推理更换输入会改变Q，但不会因此执行Wq的训练更新。
+1115	Wq有4列，每列是一组4个系数。
+1753	Wq输出宽度
+13524	Wq：Query参数
+13530	Wv：Value参数
+29299	W、偏置等控制运算的固定系数。
+9964	W把第1、3项相加为一维，第2、4项相加为另一维
+10217	W确实等于AB
+30441	W（参数）
+11898	X01 · 沿用“我爱学习／你爱”，把一层模型真正算到底
+18800	X01 · 沿用“我爱学习／你爱”，把一层模型真正算到底</a><small>worked-model.html · 正文对应小节 [tags]
+11899	X02 · 同样的[1,3]，LayerNorm、RMSNorm和SwiGLU分别做什么
+11900	X03 · 贪心第一步最好，不等于两步序列概率最大
+11901	X04 · KL散度：同两组概率，调换方向会得到不同值
+11902	X05 · 用1000个参数算清ZeRO究竟分摊哪份状态
+18769	X05 · 用1000个参数算清ZeRO究竟分摊哪份状态</a><small>studies/chapters/03.html · 正文对应小节 [tags]
+11903	X06 · 4个Q头共享2个KV头，究竟怎样配对
+11904	X07 · 同一张“允许访问表”，不同接口的布尔值为什么相反
+11905	X08 · 让检索向量学习：查询向量真的往哪个方向移动
+18799	X08 · 让检索向量学习：查询向量真的往哪个方向移动</a><small>studies/chapters/31.html · 正文对应小节 [tags]
+11906	X09 · 近似图搜索为什么会漏掉真正最近的点
+18780	X09 · 近似图搜索为什么会漏掉真正最近的点</a><small>studies/chapters/13.html · 正文对应小节 [tags]
+11907	X10 · 量化不只是舍入，还可能把超范围的数截断
+11908	X11 · BPE合并时，为什么不是总选左边那一对
+11909	X12 · padding位置不计损失，分母也必须一起变
+2134	X=E[ids]+P[pos]。输入编号是离散地址，本书不对整数ID求连续导数；对选中参数行的影响可以求导。同一个“爱”编号2在两条样本中出现两次，所以：
+10474	X=[两行]；x₁是第1号位置那一排数
+12915	X[0,2]=[-0.2,0.8,0,0.45]；没有改变Token数量。
+12415	X、H、Q等大写
+13229	X为[2,3]，给每行分别加10和20，应把偏置组织成什么？
+13656	X分别乘对应的W
+937	X是当前层输入；U/R/Y是相应等式算出后给结果起的名字，不是额外参数。U在不同段落可能被重新定义。
+12908	X经过第一处RMSNorm，才送入Wq/Wk/Wv。
+30440	X（输入）
+30442	Y（输出）
+11820	ZERO · ZeRO：分摊模型训练状态
+17516	ZeRO / 分片
+24797	ZeRO-1式分摊
+24800	ZeRO-2式分摊
+24803	ZeRO-3式分摊
+3721	ZeRO区别
+15242	ZeRO类分片
+23169	Zero to Hero从基础神经网络与自动求导逐步连接到语言模型，适合通过实现理解计算图、训练与生成。课程内容不等于使用Agent前必须完成的全部前置条件。
+28038	[1,2,3,6,7]，长度5
+28036	[1,2,3,6]，长度4
+30746	[1,2,3] 与 [4,2]
+28034	[1,2,3]，长度3
+13435	[1,3] → 减均值2 → [-1,1] → 除sqrt(1+ε) → 再乘gamma、加beta。
+13436	[1,3] → 计算sqrt((1²+3²)/2+ε) → 用原值去除 → 再乘g。
+31063	[2,1]偏置
+31065	[2,1]沿列扩展；不需要真的复制成大表才理解它。
+13230	[2,1]，即[[10],[20]]，让每行的一个数沿列轴广播。
+30753	[3,0]是临时表示，不是参数
+19170	[3,2]乘[2,3]
+19164	[3,2]乘[3,2]
+24434	[CODEX-SRC] Codex固定源码：工具路由与压缩
+24525	[F-CALC] 动手学深度学习：Calculus
+24521	[F-LINALG] 动手学深度学习：Linear Algebra
+24523	[F-PROB] 动手学深度学习：Probability and Statistics
+30595	\n（空行）
+25505	a.py定义节点更新
+31652	a2已用完
+31653	a3已用完
+6854	ab/y被误判排除。
+20215	ab不属于a目录却被排除
+3147	attention mask控制可读Key；loss mask控制训练哪些目标被评分。position_ids控制位置编码，cache槽位是存储排列，二者在有左PAD、滑动窗口或分页时不一定是同一个数字。
+26579	attention_gradients.py — AI系统工程
+2736	attention_mask限制Key侧读取；
+11815	attn_mask布尔True表示不允许访问。以该版本文档为范围。
+6862	a→排除，a/x→排除，ab/y→保留
+25757	a、a/x排除，ab保留。
+14280	a所在位置根据a预测b，b所在位置根据ab预测c，c所在位置根据abc预测d。<strong>标签label</strong>是本次要比较的正确答案； [tags]
+16519	a本身、a/nested/x.py、空排除列表
+10585	b / bias：加法偏置
+16118	b.py没有执行build的调用。
+25508	b.py的绑定与调用需更新
+12404	b=0为第一句，b=1为第二句
+12429	b=0：BOS／我／爱／学习／！
+29402	backward ≠ 参数已更新
+4349	block向模型加入原因，原工具结果仍可提供
+5080	build_tool_call把它转换成内部ToolCall。
+25511	c.py字符串未被静态重命名覆盖
+28461	c19可能已经产生副作用
+28409	c19超时，unknown
+31312	c1结果：timeout=30
+5982	c7未知被改成完成
+4291	c7调用项
+25759	cache/tmp排除，cached保留。
+29351	cache_len=2；新输入=[1, 2]
+29356	cache_len=3；新输入=[3]
+29360	cache_len=4；新输入=[5]
+30530	cache仍=3
+30535	cache仍=4
+30532	cache才=4
+29778	cache：0 → 3；选出的新Token尚未处理。下一轮把新Token送入。
+29782	cache：3 → 4；选出的新Token尚未处理。下一轮把新Token送入。
+29786	cache：4 → 5；选出的新Token尚未处理。遇到EOS停止。
+15438	call_id为什么比工具名称重要
+19996	call_id把调用与结果连起来
+23066	canvas需截图识别位置
+4859	capabilities表示双方支持哪些协议功能，不证明当前用户能读取所有资源或执行所有工具。Server仍需认证授权，Host也需控制哪些能力给模型、何时批准副作用。工具注解来自不可信Server时不能作为安全事实。
+26585	capstone.py — AI系统工程
+11511	checkpoint重算调用为真实PyTorch；AMP顺序示例是数值代数，不是GPU混合精度训练。
+11698	commit d571eaf1f61d0d93a797506335a99a9950ffe37b；提交2026-10-21 02:02:49Z；blob 3c01ab98187227561c3a4220ed8277b7317f21ce
+6803	commit只标识提交，不标识当前全部事实
+6712	commit相同，文件也可能不同
+16090	commit（提交）</strong>固定一份历史快照；<strong>分支branch</strong>是指向某条提交演进的引用；<strong>工作树working tree</strong>是当前检出的文件及未提交修改；编辑器里未保存的文本又可能还没进入磁盘。 [tags]
+586	config@r7：timeout=3秒；log@r7：耗时5秒
+26589	context_memory.py — AI系统工程
+2117	c是当前行的一个加权平均标量。被掩码位置A=0，因此这条路径梯度为0。它不是对每个格子独立乘 
+11984	d=4096：每个位置查表后用4096个数表示。
+12466	d=每位置特征数
+26521	dK有两行，因为有两个Key位置；Q只有一行，因此dQ也只有一行。梯度的形状必须与被求导的对象一致，但形状正确仍不能证明缩放与转置正确。
+1869	dQ约 
+10623	d_k表示一个Query/Key向量有多少个分量；d_v表示一个Value向量有多少个分量。Dh或d_h在一些章节中是单头宽度。它们是尺寸整数，不是第k个Key或某个Value数值。
+31321	data: {"text":"爱"}
+14391	decay扣除
+6124	df=2，不是出现总次数3。
+16098	diff或patch</strong>描述修改前后哪些内容改变。补丁能应用，只说明某种文本或结构匹配成功，不证明业务语义正确。 [tags]
+21955	diff说明
+26569	dq=(p正−1)a+p负b
+17266	dtype / 数据类型
+30724	d由视觉模型设计决定
+13410	d表示每个位置的隐藏宽度；L常表示层数；参数总量与所有矩阵的尺寸和共享方式有关。d=4096不代表只有4096个参数。仅一个
+29747	embedding · 查E[input_ids]
+12435	embedding[0,2,1]=0.8。第三个下标说明选该排的哪一个数。
+4242	epoch是本书设计的任务修订计数，不是某厂商强制字段。接收结果时核对task_id、epoch、目标版本、call_id和预期操作；旧结果可留作历史证据，却不能改变新目标的完成状态。本书状态实验验证epoch不匹配时拒绝合并。
+14496	eval()不等于关闭梯度
+14704	eval切换模块模式；inference_mode关闭求导记录。
+3770	eval后仍随机
+26260	exclude看起来只是字符串匹配，却包含路径契约、目录边界、平台分隔符、用户输入与回归。这使任务足够小，可以完整展示，又足以暴露“只看起来写好了”的问题。生产实现若支持glob、gitignore、大小写或符号链接，需要另行定义；本例不暗中扩展范围。
+6850	exclude误删ab目录：从失败输入一步步到根因
+20289	failed计数分别2、3、1
+3786	float64 CPU有利于对照，但不是所有值都要逐位相同。softmax、归一化和矩阵累加的次序改变可能造成小舍入差；float16/bfloat16或融合内核差异可能更大。应同时看绝对误差、相对误差、数值量级和任务结果，并考虑ReLU折点等不光滑位置。
+14718	float64，右乘W，无偏置
+23116	f与正确同时出现
+21209	grep不到时不要立刻断定不存在
+21249	grep不能区分绑定。
+6631	grep寻找文本模式；
+8488	h1≠h2，测试红。
+13460	h=1，输出y=5。
+21752	handoff与返回结果的调用不同
+8468	hash快照
+11303	history_version记录重写；reset_version用于破坏性重置；user_message_revision独立。模型历史、保留事实和审查上下文还分别存在。不能把消息条数或一个版本号当作全部状态身份。
+18817	initialize、版本/能力协商、notifications/initialized之后进入常规通信。本图刻意固定规范版本，不称它为最新版本。
+11835	initialize、能力协商和initialized；示例遵循固定协议版，兼容性以实际双方声明为准。
+12903	input_ids[0,2]=2 → 取E的第2行。
+12963	input_ids：整数编号
+12672	input_ids：送入前向计算的编号
+12408	j=0是每排中的第一个数
+22751	job9、目标与允许动作
+26593	journal.py — AI系统工程
+1701	k2误成[1,0]，与位置0的比较从−1变1。
+8009	k7却改成加20
+1096	k=0乘积
+1097	k=1乘积
+1098	k=2乘积
+2863	k=2时保留A/B，C设为不允许；重新归一化。
+1099	k=3乘积
+14960	key位置0
+14961	key位置1
+14962	key位置2
+14963	key位置3
+14964	key位置4
+10742	k₁不是Key向量k₁，b也不是神经网络偏置。分数只用于给候选排序，不能把8.2解释为82%正确率。
+13541	k：用于接受匹配
+11655	latest动态文档
+11651	latest动态文档，描述v1
+26597	live_readonly.py — AI系统工程
+14648	ln2，约0.693147。
+14702	load_state_dict：键名、形状和数值必须匹配。
+18114	localhost上的脚本化Chat接口，真实HTTP传输
+1909	logits位置
+14350	logits平移与梯度行和有什么关系
+10818	logsumexp(z)=ln(Σexp(zᵢ))。稳定实现先减最大值m，再算m+ln(Σexp(zᵢ-m))。它是一项标量，可用于计算log-softmax和交叉熵，不是再一次随机抽样。
+10817	logsumexp：先求指数和，再取对数
+19505	log比差ln2。
+1578	loss mask是 
+14372	loss.backward计算梯度；optimizer.step应用更新。它们通常是两个调用。若只是算了梯度却没step，生成行为不会因为“模型看过答案”就自动变化。
+10636	loss、交叉熵、负对数似然
+3755	loss不下降
+3745	loss分母是什么？解析/数值梯度能对上吗？backward后参数未变，step后是否改变？
+3758	loss异常很低但生成差
+14862	loss＋独立验证＋任务指标
+24324	m/v、偏差修正、解耦weight decay和状态。
+14384	m/v起始为0，早期平均偏向0，偏差修正分母用于抵消这个初始化影响。ε防止分母为0。decoupled weight decay独立缩小参数，不是先把λw加进梯度后再算m/v；那会成为不同算法。
+6744	main上的
+11602	main动态文档；核对日期2026-10-21；不将main等同于某个已发布安装版本
+1244	masked softmax沿Key轴
+27970	mask之外还可能有
+2753	mask控制读取关系，但最终从哪个位置取logits是另一步。索引记录指出每条样本最后一个真实位置，不能统一取被PAD占据的数组末尾。
+11707	master动态文档；迭代索引扫描条目标示0.8.0起
+2266	m与v各4MB
+10822	n!表示1到n整数连乘，0!=1；C(n,k)=n!/(k!(n-k)!)表示从n个不同对象中无放回选k个且不计顺序的数量。它不是模型置信度C。
+8612	n=10、c=3、k=2，结果
+15657	name来自模型也不能绕过范围检查。
+23182	nanoGPT以较简洁实现连接数据、GPT模型、训练与采样。它适合源码学习，但本书没有声称下载、训练或复现其性能。
+18083	null不是零价格；需实际价格版本及所有调用账
+24753	num_items_in_batch究竟表示样本数、标签数还是跨累积组有效Token数，必须在调用者查清；该小函数不会替调用方证明分母正确。尤其是shift后首尾变化、ignore_index、不同rank数量和全空批次，可能让计数与真正进入交叉熵的项不一致。
+26601	numerics.py — AI系统工程
+25027	n必须为正整数且在上限内
+4002	op9=proposed，未执行
+10776	oracle、断言与变异测试
+28406	p1已应用，r43
+28141	p1已应用；r42→r43
+11776	p95和成本例为本书数学例；不声称在生产部署了OpenTelemetry。
+9313	p95的平均不是总体p95
+14426	padding位置不计损失，分母也必须一起变
+16603	pass@1、pass@k、pass^k的区别
+16606	pass@1、pass@k、pass^k的区别：逐项辨别
+22099	pass@1关注一次正常尝试，pass@k关注允许k次时至少一次成功，pass^k强调多次全部成功的可靠性。τ-bench使用重复执行考察稳定性。
+8601	pass@1看一次尝试成功；
+16607	pass@1：单次成功
+8629	pass@3与连续三次都成功，数字为何差很多
+23787	pass@k可以体现多次尝试与选择的收益，却不等于用户正常一次运行成功率。报告必须说明预算、重试和筛选方式。
+10782	pass@k类指标通常关心k次尝试至少一次成功；pass^k类指标强调多次全成功。具体估计口径看基准，不能把一次成功后停止与每次都可靠混为一谈。
+16608	pass@k：至少一次成功
+16609	pass^k：多次都成功
+10534	path必须是字符串
+17308	permute / 转轴
+28104	pipeline/filter.py，1—70行
+29751	position · 查P[position_ids]
+12905	position_ids[0,2]=2 → 取P的第2行。两者这次同为2只是巧合。
+1480	pre-norm和post-norm改变残差前后的位置；LayerNorm和RMSNorm统计不同；Embedding与输出头权重共享时，E同时收到查表路径和输出头路径的梯度；Dropout使训练前向具有随机性；MoE引入路由与专家组合、负载和通信问题。
+10615	pre-norm是先规范化再进入子层，残差从原输入直接相加；post-norm是子层结果与原输入相加之后再规范化。这描述运算顺序，不是训练前后两个阶段。
+3725	prefill和decode放在不同执行资源
+19781	prefill处理三位置，decode处理一个新位置
+11660	previous_response_id不携带上轮顶层instructions；手动管理上下文需处理有类型的output项，不能只保留output_text。
+29759	probabilities · softmax沿词表轴
+8377	pytest官方文档区分退出码：没有收集到测试通常为5。
+19855	p−已接收
+14348	p：八项预测概率
+1694	q1与k1
+14965	query绝对位置3
+14966	query绝对位置4
+3632	q乘各自接收概率
+10577	q是接收信息的一行查询表示；k是可读位置提供的一行匹配表示；v是该位置供混合的一行内容表示。大写Q/K/V把多行收集成表。它们由输入与参数计算得到，分别承担打分与提供内容的职责。
+29311	q爱=[1,0]；k我=[1,0]；k爱=[0,1]
+13540	q：用于发起匹配
+17118	r2文件确实存在且可访问
+3963	r8的通过或失败均不能替代r9验证
+14609	r=1时新增8个数，不是把W的16个数从系统里删除。节省的是所选更新参数及其相关梯度/优化器状态；基础权重和激活仍需要。初始若B=0，A的初次梯度可能为0，B仍可先获得梯度；不能因此立即判为实现错误。
+20147	read/search/test只读或受控
+20590	read_file本身可用
+564	read_file结果：第18行使用 endswith
+17919	reference_inference.py · 完整源码
+5075	registry中存在x
+1486	reshape/transpose、头映射、KV大小与缩放维度
+13227	reshape[2,3]到[3,2]与转置一定一样吗？
+13199	reshape与转置：同样四个数为何会形成不同排列
+13159	reshape前后元素数必须一致。12个数可以排成
+13152	reshape是重新分组，不是交换行列
+13169	reshape重新分组
+29286	reshape：只重新分组
+26605	retrieval.py — AI系统工程
+21207	ripgrep提供高效的文本和正则搜索，文件过滤与范围控制对代码调查尤其重要。精确搜索通常成本低，适合已知错误码、字段或函数名。
+24956	roofline估算为什么只能给下界，不能直接当实测
+2609	round后为3，恢复0.3；省表示成本但引入误差。
+26609	run_all.py — AI系统工程
+24851	r从1.5到1.6
+13428	r是本次输入算出的中间值；ε是为数值稳定设置的常数；g1是参与训练的参数。三者来源不同。下一次换输入，r会重新算；普通推理不会因为r变化就更新g1。
+13570	s=1 · 我
+13571	s=2 · 爱
+13572	s=3 · 学习
+767	secrets/key 未读取
+784	secrets不在允许范围，拒绝执行。
+2816	seed控制随机采样的一部分。模型版本、请求模板、工具内容、并行kernel、浮点归约次序及服务配置变化，仍可能改变logits。靠近并列的候选可能因微小数值差异换位；一旦某个Token变了，后续前缀也变，差异会放大。应先固定可控制条件，再讨论可复现程度。
+13609	self并不是“只看自己”
+13025	shape[2,3,4]的float32数据本体多少字节？
+13270	softmax一步不跳地算
+24879	softmax中的减最大值避免指数溢出，却不会解决所有下溢或低精度舍入。若概率接近零，需要在对数域计算序列概率，避免直接连乘。不同算子融合、dtype和并行归约顺序可能让接近的logits排序变化，最终自回归放大成不同文本。这里不能推导出“结果不可复现，所以无需记录参数”；恰恰应记录模型/服务版本、种子支持情况、采样配置与环境。
+6188	softmax减目标[1,0]
+2802	softmax原分数
+13439	softmax在候选轴上产生非负份额，和为1；RMSNorm允许负数，也不要求和为1。Attention行softmax按可见Key分配读取份额；输出softmax按词表候选分配预测概率。它们都可能叫“归一化”，目标和轴却完全不同。
+14107	softmax应不应该先交给CrossEntropyLoss
+1245	softmax沿词表轴
+1454	softmax轴错可能没有异常但输出失真；残差误用覆盖会改变网络；FFN维度转置可能直接报
+561	src/filter.py@r7：尚未读取
+26613	sse_protocol.py — AI系统工程
+9066	staging改production
+26617	statistics_lab.py — AI系统工程
+15625	stdio、HTTP与JSON-RPC先只懂职责
+15628	stdio、HTTP与JSON-RPC先只懂职责：逐项辨别
+4871	stdio有一个容易忽略的工程约束
+15629	stdio：进程管道
+4851	stdout被用来承载协议消息，普通日志混入会破坏解析。日志应走约定的日志机制或stderr。
+28138	t1：任务账本
+28140	t2：磁盘
+28143	t3：进程/网络
+28146	t4：恢复宿主
+14323	t=1 · 你
+12431	t=2：input_ids[0,2]=2，编号2对应“爱”。
+13601	t=2：每个来源位置对四个输出特征的贡献
+16910	t=5到7
+14331	targets==-100的项不参与和，也不参与分母。
+13749	targets[0,2]=3（学习）。它只在损失阶段用来选中一个候选概率。
+12676	targets：各输入位置需要预测的下一项
+8679	task是问题；trial是一次尝试；trace是执行记录；outcome是最终环境状态。一个Agent说“已预订”不能代替数据库里存在有效订单。最终结果正确时，普通工具路径可以有多种；但“不得越权”“写前必须批准”等过程约束需要单独判分。
+10686	temperature / τ：生成分布的温度
+17920	test_model.py · 完整源码
+26621	test_suite.py — AI系统工程
+28106	tests/test_filter.py，1—60行
+4914	test执行后返回退出码和日志
+4629	timeout要求1—60
+17917	tiny_model.py · 完整源码
+4866	tools/list不能默认只有一页
+20255	tools/list取得工具定义
+11694	tools字段省略、通配符与空数组有不同语义；文档说明不识别的工具名会被忽略。
+26625	train_tiny_lm.py — AI系统工程
+13170	transpose交换行列
+25890	u7不含P2授权
+19699	u=0.7落在第2项区间[0.5,0.8)。
+10723	unknown / reconcile：缺少确认时先核验
+10724	unknown表示观察者尚不能确认效果，不代表现实中动作半成功。Reconcile是根据目标系统的实际状态、操作标识等进行核验，使记录重新与事实一致。
+4346	updatedInput提供替代输入对象，不应假设按字段合并
+4352	updatedToolOutput是单独的替换机制，受工具类型/结构约束
+5924	v8已不存在且v9权限不足
+22028	v9可能有交互冲突
+26304	v9引入新运行路径
+3465	vLLM官方调优文档明确讨论KV不足时的抢占和重算，它可保持系统推进，但增加端到端延迟。
+19865	vLLM文档提供推理服务的实际组织，包括缓存、批处理、调度与部署能力。支持项随版本变化，不能把某篇论文的全部实现等同于当前默认配置。
+554	vendor/a.py 没被排除
+13542	v：供后续混合的内容
+7805	worktree解决的是一部分隔离
+10493	w←w−ηg是一次更新
+2035	w先乘(1−lr×wd)
+14233	w变2.6。
+30508	w新=1−0.2×(−4)=1.8
+2608	x=0.26，步长0.1
+30506	x=2 → 预测2，目标4
+13465	x=2时希望y接近4
+30752	x=[1,2]；W1与偏置保持固定
+10826	x∼p表示按分布p抽样，E表示依指定分布求期望，Π表示把指定项连乘，∝表示相差一个公共比例因子而非已经相等。这里E不是Embedding参数表。
+1437	y=[0.5,0.25]；形状仍是[2]，不会自动报维度错。
+31324	{"text":"爱"}
+31593	ΔW=A×B：由8个可训练数构成
+17207	Σ / 求和
+10588	Σ是加法的简写。下标指出哪项在变化；没有被求和的下标保持不变。它不是一个额外参数，也不表示把数组拼在一起。
+14651	β×(A变化−B变化)
+14368	β是0到1之间的平滑系数，不是模型学到的词义。因为初值常为0，开始时平均偏小，所以会做<strong>偏差修正</strong>。例如首步g=2、β1=0.9：m=0.2，除以1−0.9得到修正后的2。 [tags]
+10614	γ=1、β=0常表示每个特征都用1和0，不是一份输入词义。DPO里的β另指目标函数系数，不能套用这里的意思。
+13983	ε是很小的正数，防止除以0等问题；γ、β是可学习的缩放与偏移参数。先忽略很小ε并设γ=1、β=0，上例
+26534	ε过大，截断误差明显；过小，浮点舍入放大。使用float64、适中数值和明确容差更容易发现逻辑错误。配套测试比较非方形mask下的三类梯度，并验证仅首行输出参与损失时未来K/V梯度为零。
+13861	θ=0时cos=1、sin=0，所以不变；θ=π/2时cos=0、sin=1，所以变成
+30471	θ₀ · 位置2「爱」
+12414	θ包含E、P、Wq等，不是单个数
+14639	π是当前模型对完整答案的概率，πref是参考模型，β为设置系数。若当前对w、l给0.2、0.1，参考分别给0.1、0.1，β=1，那么s=ln2，sigmoid(s)=2/3，损失约0.4055。

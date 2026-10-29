@@ -3,8 +3,8 @@
 The source scripts are read-only. ``collect`` records the bounded extraction in
 runtime-registry.json; it never edits table.json. table.py may merge
 source_counts(ROOT), then ``export`` prints the missing rows in batch.py's
-id<TAB>text protocol. ``write --lang=en`` requires that exact current registry
-and complete, validated table rows before touching en/assets/.
+id<TAB>text protocol. ``write --lang=en|ja|es|vi`` requires that exact current registry
+and complete, validated table rows before touching the selected locale's assets.
 
 Template expressions, comments, executable code, model-token literals and HTML
 machine fields are immutable. Template text is split at each ${...}, so a
@@ -63,10 +63,25 @@ CODE_NAME_CONTEXT = re.compile(
 BUNDLE_ASSIGNMENT = re.compile(r'window\.I18N_STRINGS\s*=\s*')
 WINDOW_ASSIGNMENT = re.compile(r'\bwindow\.[A-Za-z_$][\w$]*\s*=\s*(?=[{\[])')
 HINT_KEY = 'search.pageHint'
+# assets/atelier.js:48 consumes this existing table source for empty queries.
+# The root dictionary describes the Chinese edition; only ES/VI derived bundles
+# receive their canonical native-edition translation.
+HINT_TIP_KEY = 'search.hintTip'
+HINT_TIP_SOURCE = '可以搜索中文、英文、课号或概念。'
+HINT_EXAMPLES = {'en': ('tensor', 'Lesson 39', 'Q001'),
+                 'ja': ('テンソル', '第39課', 'Q001'),
+                 'es': ('tensor', 'Lección 39', 'Q001'),
+                 'vi': ('tensor', 'Bài 39', 'Q001')}
+LANGUAGE_NAMES = {'en': 'English', 'ja': 'Japanese', 'es': 'Spanish', 'vi': 'Vietnamese'}
 
 
 class RuntimeStringError(ValueError):
     """A failed extraction or protection check; no output should be published."""
+
+
+def _language(lang):
+    if lang not in HINT_EXAMPLES:
+        raise RuntimeStringError('this bounded runtime adaptation supports --lang=en, --lang=ja, --lang=es or --lang=vi')
 
 
 @dataclass(frozen=True)
@@ -331,7 +346,7 @@ def scan_js(source, rel='<inline>'):
     return extract_script(source, rel, skip_window_data=True)
 
 
-def localize_js(source, translations, rel='<inline>'):
+def localize_js(source, translations, rel='<inline>', *, lang='en'):
     """Pure inline-JS API; translations is a {source: target-string} mapping.
 
     Missing or invalid rows raise RuntimeStringError. Callers retain ownership
@@ -340,11 +355,12 @@ def localize_js(source, translations, rel='<inline>'):
     Recognized model/edition controllers also receive their bounded runtime
     adaptations, for parity with the separate asset outputs.
     """
+    _language(lang)
     items = scan_js(source, rel)
     missing = [item['zh'] for item in items if not translations.get(item['zh'])]
     if missing:
         raise RuntimeStringError('missing inline-JS translation: %s' % missing[0][:70])
-    return adapt_edition_notice(adapt_model_player(render_script(source, items, translations)))
+    return adapt_edition_notice(adapt_model_player(render_script(source, items, translations, lang=lang), lang=lang))
 
 
 def _bundle(source):
@@ -455,8 +471,7 @@ def _table(root):
 
 def export(lang='en', root=None):
     """Print a batch source file; redirect stdout to a new runtime-*.src.txt."""
-    if lang != 'en':
-        raise RuntimeStringError('this bounded runtime adaptation supports --lang=en')
+    _language(lang)
     root = _root(root)
     document, table = _current_registry(root), _table(root)
     seen, groups = set(), []
@@ -469,10 +484,11 @@ def export(lang='en', root=None):
             raise RuntimeStringError('source missing a permanent table id; run table.py build')
         seen.add(source)
         groups.append((item, row['id']))
-    print('# Runtime visible strings — target language: en')
+    print('# Runtime visible strings — target language: %s' % lang)
     print('# Keep numeric values, technical identifiers, symbols and literal \\n escapes unchanged and in order.')
     print('# Template expressions are absent: fragments stay on their original side of every substitution.')
-    print('# The page-search hint must use English-index examples: tensor, Lesson 39, Q001.')
+    print('# The page-search hint must use %s-index examples: %s.' %
+          (LANGUAGE_NAMES[lang], ', '.join(HINT_EXAMPLES[lang])))
     print('# Source edge spaces are literal. Use ␣ in a translation only to add/change an edge space.')
     for item, identity in groups:
         print('# source: %s:%d (%s)' % (item['file'], item['line'], item['kind']))
@@ -499,24 +515,25 @@ def _prose_concept(match, text):
     return True
 
 
-def validate_translation(source, value):
+def validate_translation(source, value, *, lang='en'):
     """Reject changed numbers/code/control escapes before JS or HTML encoding."""
+    _language(lang)
     if not isinstance(value, str) or not value.strip():
         raise RuntimeStringError('empty or non-string translation: %s' % source[:70])
     if any(c in value for c in '\r\n\u2028\u2029'):
         raise RuntimeStringError('translation introduces a physical newline: %s' % source[:70])
     if any(ord(c) < 32 or 0xd800 <= ord(c) <= 0xdfff for c in value):
         raise RuntimeStringError('translation introduces a raw control or surrogate: %s' % source[:70])
-    if CJK.search(value):
+    if lang != 'ja' and CJK.search(value):
         raise RuntimeStringError('untranslated Chinese in runtime text: %s' % source[:70])
-    if MIXED_PUNCT.search(value):
+    if lang != 'ja' and MIXED_PUNCT.search(value):
         raise RuntimeStringError('untranslated full-width punctuation: %s' % source[:70])
     if _escapes(source) != _escapes(value):
         raise RuntimeStringError('changed JavaScript control escapes: %s' % source[:70])
     unescaped_source = ESCAPE.sub('', source)
     protected = [match.group() for match in TECH.finditer(unescaped_source)
                  if not _prose_concept(match, unescaped_source)]
-    # Only source tokens are protected; English prose introduces other words.
+    # Only source tokens are protected; translated prose introduces other words.
     # Count/order must still match, including short variables such as a or W.
     tokens = TECH.findall(ESCAPE.sub('', value))
     source_set = set(protected)
@@ -563,23 +580,29 @@ def code_signature(source):
     return ''.join(parts)
 
 
-def render_script(source, items, translations):
+def render_script(source, items, translations, *, lang='en'):
     """Prepare one script and prove its executable/template skeleton unchanged."""
+    _language(lang)
     parts, last = [], 0
     for item in sorted(items, key=lambda it: it['start']):
         start, end = item['start'], item['end']
         if start < last or source[start:end] != item['zh']:
             raise RuntimeStringError('overlapping or stale runtime text offsets')
-        value = validate_translation(item['zh'], translations[item['zh']])
+        value = validate_translation(item['zh'], translations[item['zh']], lang=lang)
         # Chinese labels need no separator before/after an interpolation;
         # English labels do. This is spacing, as with apply.py's HTML seams,
         # rather than a second translation of shared terms such as Feature.
-        if item['kind'] == 'template-text':
+        if lang != 'ja' and item['kind'] == 'template-text':
+            start_word = (bool(re.match(r'[A-Za-z0-9]', value)) if lang == 'en'
+                          else bool(value) and value[0].isalnum())
+            end_word = (bool(re.search(r'[A-Za-z0-9]$', value)) if lang == 'en'
+                        else bool(value) and (value[-1].isalnum()
+                             or '\u0300' <= value[-1] <= '\u036f'))
             if (source[start - 1:start] == '}' and CJK.match(item['zh'])
-                    and re.match(r'[A-Za-z0-9]', value)):
+                    and start_word):
                 value = ' ' + value
             if (source[end:end + 2] == '${' and CJK.search(item['zh'][-1:])
-                    and re.search(r'[A-Za-z0-9]$', value)):
+                    and end_word):
                 value += ' '
         parts.extend((source[last:start], _encode(value, item)))
         last = end
@@ -590,8 +613,8 @@ def render_script(source, items, translations):
     return output
 
 
-def adapt_model_player(source):
-    """Adapt the recognized viewer's group keys and English row-label gutter.
+def adapt_model_player(source, *, lang='en'):
+    """Adapt the recognized viewer's group keys and selected-language geometry.
 
     HTML data-allowed-groups keeps the original Chinese keys. Translated frame
     groups must also match each same-group frame's immutable sourceGroup; the
@@ -607,9 +630,16 @@ def adapt_model_player(source):
     existing 88px cells, so neither column spacing nor cell width changes.
     No dataset, numerical calculation, event handler or original file changes.
 
+    The partial Spanish translation probe measured Candidate probabilities at
+    201.729px (row) and Característica N at 100.485px (column) in Arial. Spanish
+    therefore uses a 240px row gutter and 112px cells at 118px pitch. EN/JA/VI
+    retain their established geometry. Full translated-label measurements are
+    still required before publication, including yet-untranslated frame labels.
+
     Exact replacements are idempotent and reject a changed selector/layout.
     Non-model inline scripts pass through unchanged.
     """
+    _language(lang)
     if 'const frames=window.MODEL_FRAMES||[];' not in source:
         return source
     if "host.querySelector('.mc-frame-figure')" not in source:
@@ -622,11 +652,35 @@ def adapt_model_player(source):
     changes = (
         (selector, source_selector, 1,
          'model-player group selector changed; update the sourceGroup adapter before writing'),
-        ('Math.max(660,155+rows[0].length*94)', 'Math.max(660,195+rows[0].length*94)', 1,
-         'model-player layout changed; remeasure labels before writing'),
-        ('x:150+j*94', 'x:190+j*94', 3,
-         'model-player layout changed; remeasure labels before writing'),
     )
+    error = 'model-player layout changed; remeasure labels before writing'
+    if lang == 'es':
+        # Accept only the untouched source, the previous derived gutter, or
+        # this complete ES layout. Mixed/partially edited layouts are refused.
+        def geometry(total, x, pitch, cell, column_center, value_center):
+            base = 'x:%d+j*%d' % (x, pitch)
+            return ((('Math.max(660,%d+rows[0].length*%d)' % (total, pitch)), 1),
+                    (base + '+%d,y:28' % column_center, 1),
+                    (base + ',y:42+t*46,width:%d,height:35' % cell, 1),
+                    (base + '+%d,y:66+t*46' % value_center, 1),
+                    (base, 3))
+        profiles = (geometry(155, 150, 94, 88, 43, 44),
+                    geometry(195, 190, 94, 88, 43, 44),
+                    geometry(255, 250, 118, 112, 55, 56))
+        matches = [profile for profile in profiles
+                   if all(source.count(text) == count for text, count in profile)]
+        if len(matches) != 1:
+            raise RuntimeStringError(error)
+        if matches[0] != profiles[-1]:
+            # The final base marker is a count guard, not another replacement:
+            # the preceding exact coordinate replacements cover all three uses.
+            changes += tuple((old, new, count, error)
+                             for (old, count), (new, _) in zip(matches[0][:-1], profiles[-1][:-1]))
+    else:
+        changes += (
+            ('Math.max(660,155+rows[0].length*94)', 'Math.max(660,195+rows[0].length*94)', 1, error),
+            ('x:150+j*94', 'x:190+j*94', 3, error),
+        )
     for old, new, count, error in changes:
         if source.count(old) == 0 and source.count(new) == count:
             continue  # Also supports upgrading an output with only the old gutter adapter.
@@ -688,13 +742,27 @@ def adapt_edition_notice(source, *, require_owner=False):
     return source.replace(old, new, 1) if selected == old else source
 
 
-def render_bundle(source, translated_hint):
-    """Replace one en JSON string; every other bundle byte remains untouched."""
+def render_bundle(source, translated_hint, *, lang='en', hint_tip=None):
+    """Replace selected-locale hints; retain every other bundle byte."""
+    _language(lang)
     document, begin, end = _bundle(source)
     original = document['zh-CN'][HINT_KEY]
-    validate_translation(original, translated_hint)
-    if not all(example in translated_hint for example in ('tensor', 'Lesson 39', 'Q001')):
-        raise RuntimeStringError('English page-search hint needs tensor, Lesson 39 and Q001')
+    validate_translation(original, translated_hint, lang=lang)
+    if not all(example in translated_hint for example in HINT_EXAMPLES[lang]):
+        raise RuntimeStringError('%s page-search hint needs %s' %
+                                 (LANGUAGE_NAMES[lang],
+                                  ', '.join(HINT_EXAMPLES[lang])))
+    replacements = {HINT_KEY: translated_hint}
+    if hint_tip is not None:
+        try:
+            original_tip = document['zh-CN'][HINT_TIP_KEY]
+            selected_tip = document[lang][HINT_TIP_KEY]
+        except (KeyError, TypeError) as exc:
+            raise RuntimeStringError('quick-search hint missing from interface bundle') from exc
+        if original_tip != HINT_TIP_SOURCE or not isinstance(selected_tip, str):
+            raise RuntimeStringError('quick-search hint source or selected value changed')
+        validate_translation(original_tip, hint_tip, lang=lang)
+        replacements[HINT_TIP_KEY] = hint_tip
     # Locate the selected object's JSON tokens using a recursive decoder. This
     # retains zh-CN, all other locales and I18N_META byte-for-byte.
     decoder = json.JSONDecoder()
@@ -720,8 +788,8 @@ def render_bundle(source, translated_hint):
                 position += 1
             value_start = position
             value, size = decoder.raw_decode(source[position:])
-            if path + (key,) == ('en', HINT_KEY):
-                objects.append((value_start, value_start + size))
+            if path == (lang,) and key in replacements:
+                objects.append((value_start, value_start + size, key))
             if isinstance(value, dict):
                 object_spans(position, path + (key,))
             position += size
@@ -733,40 +801,46 @@ def render_bundle(source, translated_hint):
                 raise RuntimeStringError('invalid interface object delimiter')
             position += 1
 
-    if object_spans(begin) != end or len(objects) != 1:
+    if (object_spans(begin) != end or len(objects) != len(replacements)
+            or {key for _, _, key in objects} != set(replacements)):
         raise RuntimeStringError('page-search hint JSON location is ambiguous')
-    start, finish = objects[0]
-    output = source[:start] + json.dumps(translated_hint, ensure_ascii=False) + source[finish:]
+    output = source
+    for start, finish, key in reversed(objects):
+        output = output[:start] + json.dumps(replacements[key], ensure_ascii=False) + output[finish:]
     actual, _, _ = _bundle(output)
     expected = document.copy()
-    expected['en'] = dict(document['en'], **{HINT_KEY: translated_hint})
+    expected[lang] = dict(document[lang], **replacements)
     if actual != expected:
-        raise RuntimeStringError('interface bundle changed outside the English hint')
+        raise RuntimeStringError('interface bundle changed outside the selected locale hint')
     return output
 
 
 def prepare(lang='en', root=None):
     """Validate every row and return outputs in memory; no filesystem writes."""
-    if lang != 'en':
-        raise RuntimeStringError('this bounded runtime adaptation supports --lang=en')
+    _language(lang)
     root = _root(root)
     document, table = _current_registry(root), _table(root)
-    missing = [source for source in dict.fromkeys(it['zh'] for it in document['items'])
+    sources = list(dict.fromkeys(it['zh'] for it in document['items']))
+    if lang in ('es', 'vi') and HINT_TIP_SOURCE not in sources:
+        sources.append(HINT_TIP_SOURCE)
+    missing = [source for source in sources
                if not isinstance(table.get(source), dict) or not table[source].get(lang)]
     if missing:
         raise RuntimeStringError('缺运行时译文 %d 条，例: %s' % (len(missing), missing[0][:70]))
-    translations = {item['zh']: table[item['zh']][lang] for item in document['items']}
+    translations = {source: table[source][lang] for source in sources}
     prepared = {}
     for rel in FILES:
         own = [item for item in document['items'] if item['file'] == rel]
-        output = render_script(_read(root, rel), own, translations)
+        output = render_script(_read(root, rel), own, translations, lang=lang)
         if rel == 'assets/model-player.js':
-            output = adapt_model_player(output)
+            output = adapt_model_player(output, lang=lang)
         elif rel == 'assets/i18n.js':
             output = adapt_edition_notice(output, require_owner=True)
         prepared[lang + '/' + rel] = output
     hint = next(item for item in document['items'] if item['kind'] == 'edition-hint')
-    prepared[lang + '/' + BUNDLE] = render_bundle(_read(root, BUNDLE), translations[hint['zh']])
+    prepared[lang + '/' + BUNDLE] = render_bundle(
+        _read(root, BUNDLE), translations[hint['zh']], lang=lang,
+        hint_tip=translations[HINT_TIP_SOURCE] if lang in ('es', 'vi') else None)
     return prepared
 
 

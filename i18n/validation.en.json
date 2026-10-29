@@ -1,11 +1,11 @@
 {
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "english_table": {
-    "translated": 31629,
-    "total": 31629,
-    "unique_ids": true,
-    "next_id": 31683,
-    "max_id": 31682
+    "translated": 31633,
+    "total": 31633,
+    "unique_ids": 31633,
+    "next_id": 31687,
+    "max_id": 31686
   },
   "roundtrip": {
     "pages": 262,
@@ -52,13 +52,13 @@
     "broken_search_targets": 0,
     "quiz_answers": 178,
     "open_quiz_answers": 0,
-    "bytes": 30145871,
-    "sha256": "82c63d0ce93a8bb3b2b2f069d907ebefa4d040016b32548f344df4a3d6f2ebce",
+    "bytes": 30146036,
+    "sha256": "234e46af3d0cded80adf72fa42e4b7f1f589e1b895f81698a949ba3c290cdb9f",
     "resources": 175
   },
   "continuous_verification": {
     "inline_script_syntax": {
-      "engine": "Node 24.16.0",
+      "engine": "Node 24.19.0",
       "scripts": 14,
       "errors": 0
     },
@@ -108,10 +108,10 @@
     "actual_en_complete_matches_temporary": true,
     "original_complete_unchanged": true,
     "reproducibility": {
-      "check_command": "python3 i18n/build_complete.py --lang=en --output /tmp/complete-preview/en/complete.html --check",
+      "check_command": "python3 i18n/build_complete.py --lang=en --output /tmp/ja-publication-check/en/complete.html --check",
       "passed": true,
       "actual_en_complete_matches_temporary": true,
-      "sha256": "82c63d0ce93a8bb3b2b2f069d907ebefa4d040016b32548f344df4a3d6f2ebce"
+      "sha256": "3f8cfd8ad50d9d08dc6ff73c7dd92e68dbf1b7828a769ddc0d1af94cf1b6a87b"
     }
   },
   "node_asset_syntax": {
@@ -122,7 +122,8 @@
     "source_files": 14,
     "findings": 0,
     "code_ast_comparisons": 1533,
-    "notice_and_scope_patch": "passed; source drift, idempotence, 20 controller cases, 10 output syntax checks"
+    "notice_and_scope_patch": "passed; source drift, idempotence, 20 controller cases, 10 output syntax checks",
+    "japanese_tooling_extension": "i18n/validation.ja-tooling.json"
   },
   "original_protection": {
     "checked_files": 1371,
@@ -146,5 +147,47 @@
     "unique_source_strings": 104,
     "notice_controller_cases_independent": 20,
     "findings": 0
+  },
+  "updated_at": "2026-10-29T21:49:44.265821+00:00",
+  "japanese_publication_metadata_update": {
+    "evidence": "i18n/work/_ja-edition-publication.json",
+    "english_derived_updates": [
+      {
+        "file": "en/complete.html",
+        "before_sha256": "82c63d0ce93a8bb3b2b2f069d907ebefa4d040016b32548f344df4a3d6f2ebce",
+        "after_sha256": "3f8cfd8ad50d9d08dc6ff73c7dd92e68dbf1b7828a769ddc0d1af94cf1b6a87b",
+        "normalized_old_hash_matches": true,
+        "change": "Only append ja to I18N_META.editions (5 bytes). All book text, values and scripts otherwise unchanged."
+      },
+      {
+        "file": "en/assets/i18n-data.js",
+        "before_sha256": "a675ab7c2b02141ca97b65ed6ebae00800ca47a55734733ac64ddce3ecbd223c",
+        "after_sha256": "dd105c357cd3a5c94ca691abf5d4b3a1ab377623d04f2992bee0c86d4928c7b8",
+        "normalized_old_hash_matches": true,
+        "change": "Only append ja to I18N_META.editions (5 bytes). All book text, values and scripts otherwise unchanged."
+      }
+    ],
+    "all_other_english_bytes_unchanged": true,
+    "catalogue_labels_added_to_canonical_table": 4
+  },
+  "current_multilingual_publication": {
+    "evidence": "work/_es-vi-edition-publication.json",
+    "current_complete_sha256": "234e46af3d0cded80adf72fa42e4b7f1f589e1b895f81698a949ba3c290cdb9f",
+    "metadata_only": false,
+    "controlled_translation_repair_ids": [
+      819,
+      1914,
+      1915,
+      6121,
+      25885
+    ],
+    "current_static_evidence": "validation.en-static.json",
+    "link_check": {
+      "html_pages": 263,
+      "local_references": 88058,
+      "failed": 0,
+      "pending_targets": 0
+    },
+    "native_data_literal_gate": "work/_all-editions-data-literal-proof.json"
   }
 }

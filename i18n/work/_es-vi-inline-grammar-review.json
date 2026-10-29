@@ -1,0 +1,208 @@
+{
+  "status": "reviewed_exact_overrides_applied_by_parent",
+  "scope": {
+    "languages": [
+      "es",
+      "vi"
+    ],
+    "pages": [
+      "chapters/02.html",
+      "foundations/13.html",
+      "foundations/07.html",
+      "foundations/20.html",
+      "studies/chapters/23.html"
+    ],
+    "requested_source_keys": [
+      "变为",
+      " 变为 ",
+      "把 ",
+      " 旋转0°",
+      " 也放进来"
+    ],
+    "additional_same_row_key_reviewed": " 旋转90°"
+  },
+  "method": "Read exact original HTML contexts and current table plus existing page overrides; reconstruct only the bounded p/td contexts for linguistic review. No browser, services, generated output, shared table or source edits.",
+  "conclusion": "Both editions have genuine split-node grammar errors: from-X-to-Y fragments receive an extra finite verb; rotation and add-second-input rows combine disconnected verbs. Exact per-page overrides below repair the composition. The bare-subject 变为 with surrounding spaces in foundations/13 is already grammatical and should retain its current table translation.",
+  "proposed_overrides": {
+    "chapters/02.html": {
+      "注意力份额不变，输出从约 ": {
+        "vi": "Tỷ phần chú ý không đổi, đầu ra chuyển từ khoảng ",
+        "why": "This prefix begins a from-X-to-Y construction; retain a predicate before the first inline vector.",
+        "table_id": 1180
+      },
+      " 变为 ": {
+        "es": " a ",
+        "vi": " sang ",
+        "why": "The preceding fragment already supplies pasa de / chuyển từ; the second vector requires a destination connector, not another finite verb.",
+        "table_id": 1181
+      }
+    },
+    "foundations/13.html": {
+      "把 ": {
+        "es": "Rotar ",
+        "vi": "Xoay ",
+        "why": "The worked-example cell is a rotation instruction, not an addition or a bare take instruction.",
+        "table_id": 13115
+      },
+      " 旋转0°": {
+        "es": " 0°",
+        "vi": " một góc 0°",
+        "why": "Complete the rotation predicate placed before the inline vector without duplicating a second verb.",
+        "table_id": 13883
+      },
+      " 旋转90°": {
+        "es": " para girar 90°",
+        "vi": " để xoay 90°",
+        "why": "The neighboring row reads Usar / Dùng followed by a transformation rule; a purpose connector makes the two infinitives grammatically connected.",
+        "table_id": 13886
+      }
+    },
+    "foundations/07.html": {
+      "把 ": {
+        "es": "Incluir ",
+        "vi": "Đưa cả ",
+        "why": "This row adds the second input to the same calculation; pair the prefix with the following also/include suffix.",
+        "table_id": 13115
+      },
+      " 也放进来": {
+        "es": " también",
+        "vi": " vào",
+        "why": "Avoid two disconnected verbs and the repeated Vietnamese đưa in a single instruction.",
+        "table_id": 13116
+      }
+    },
+    "foundations/20.html": {
+      "这里r远小于原尺寸时，需要训练的参数由": {
+        "es": "Si r es mucho menor que la dimensión original, los parámetros entrenables pasan de ",
+        "vi": "Khi r nhỏ hơn nhiều kích thước gốc, số tham số cần huấn luyện chuyển từ ",
+        "why": "Keep the from-X-to-Y predicate and add the word boundary before the inline formula.",
+        "table_id": 15088
+      },
+      "变为": {
+        "es": " a ",
+        "vi": " sang ",
+        "why": "This occurrence follows pasan de / chuyển từ and requires a destination connector between inline formulas.",
+        "table_id": 15089
+      }
+    },
+    "studies/chapters/23.html": {
+      "。参数从": {
+        "es": ". El número de parámetros pasa de ",
+        "vi": ". Số tham số chuyển từ ",
+        "why": "The subject is the parameter count; provide a complete from-X prefix and a word boundary before the formula.",
+        "table_id": 26038
+      },
+      "变为": {
+        "es": " a ",
+        "vi": " sang ",
+        "why": "This occurrence follows a from-X prefix and requires a destination connector between inline formulas.",
+        "table_id": 15089
+      }
+    }
+  },
+  "contexts": [
+    {
+      "page": "chapters/02.html",
+      "line": 119,
+      "source_html": "<td>注意力份额不变，输出从约 <code>[6.697615,6.604769]</code> 变为 <code>[13.395231,13.209538]</code>。</td>",
+      "current": {
+        "es": "<td>Las proporciones de atención no cambian y la salida pasa de aproximadamente <code>[6.697615,6.604769]</code> se convierte en <code>[13.395231,13.209538]</code>.</td>",
+        "vi": "<td>Tỷ phần chú ý không đổi, đầu ra từ khoảng <code>[6.697615,6.604769]</code> trở thành <code>[13.395231,13.209538]</code>.</td>"
+      },
+      "proposed": {
+        "es": "<td>Las proporciones de atención no cambian y la salida pasa de aproximadamente <code>[6.697615,6.604769]</code> a <code>[13.395231,13.209538]</code>.</td>",
+        "vi": "<td>Tỷ phần chú ý không đổi, đầu ra chuyển từ khoảng <code>[6.697615,6.604769]</code> sang <code>[13.395231,13.209538]</code>.</td>"
+      }
+    },
+    {
+      "page": "foundations/13.html",
+      "line": 37,
+      "source_html": "<td>把 <code>[1,0]</code> 旋转0°</td>",
+      "current": {
+        "es": "<td>Tomar <code>[1,0]</code> girar 0°</td>",
+        "vi": "<td>Đưa <code>[1,0]</code> xoay 0°</td>"
+      },
+      "proposed": {
+        "es": "<td>Rotar <code>[1,0]</code> 0°</td>",
+        "vi": "<td>Xoay <code>[1,0]</code> một góc 0°</td>"
+      }
+    },
+    {
+      "page": "foundations/13.html",
+      "line": 37,
+      "source_html": "<td>用 <code>(x,y)→(−y,x)</code> 旋转90°</td>",
+      "current": {
+        "es": "<td>Usar <code>(x,y)→(−y,x)</code> girar 90°</td>",
+        "vi": "<td>Dùng <code>(x,y)→(−y,x)</code> xoay 90°</td>"
+      },
+      "proposed": {
+        "es": "<td>Usar <code>(x,y)→(−y,x)</code> para girar 90°</td>",
+        "vi": "<td>Dùng <code>(x,y)→(−y,x)</code> để xoay 90°</td>"
+      }
+    },
+    {
+      "page": "foundations/13.html",
+      "line": 37,
+      "source_html": "<td><code>[1,0]</code> 变为 <code>[0,1]</code>。</td>",
+      "current": {
+        "es": "<td><code>[1,0]</code> se convierte en <code>[0,1]</code>.</td>",
+        "vi": "<td><code>[1,0]</code> trở thành <code>[0,1]</code>.</td>"
+      },
+      "proposed": {
+        "es": "<td><code>[1,0]</code> se convierte en <code>[0,1]</code>.</td>",
+        "vi": "<td><code>[1,0]</code> trở thành <code>[0,1]</code>.</td>"
+      }
+    },
+    {
+      "page": "foundations/07.html",
+      "line": 51,
+      "source_html": "<td>把 <code>x2=[0,1]</code> 也放进来</td>",
+      "current": {
+        "es": "<td>Tomar <code>x2=[0,1]</code> incluirlo también</td>",
+        "vi": "<td>Đưa <code>x2=[0,1]</code> cũng đưa vào</td>"
+      },
+      "proposed": {
+        "es": "<td>Incluir <code>x2=[0,1]</code> también</td>",
+        "vi": "<td>Đưa cả <code>x2=[0,1]</code> vào</td>"
+      }
+    },
+    {
+      "page": "foundations/20.html",
+      "line": 12,
+      "source_html": "<p>这里r远小于原尺寸时，需要训练的参数由<code>d_in×d_out</code>变为<code>d_in×r+r×d_out</code>。例如8×8矩阵64个数，r=2时增量32个数。不同文献采用列向量约定时可能写成BA，理解形状比只背字母顺序重要。</p>",
+      "current": {
+        "es": "<p>Si r es mucho menor que la dimensión original, los parámetros entrenables pasan de<code>d_in×d_out</code>Se convierte en<code>d_in×r+r×d_out</code>. Por ejemplo, una matriz 8×8 tiene 64 números y el incremento con r=2 tiene 32. Los textos que usan vectores columna pueden escribir BA; comprender las formas importa más que memorizar el orden de letras.</p>",
+        "vi": "<p>Khi r nhỏ hơn nhiều kích thước gốc, số tham số cần huấn luyện chuyển từ<code>d_in×d_out</code>Trở thành<code>d_in×r+r×d_out</code>. Ví dụ ma trận 8×8 có 64 số, khi r=2 phần thay đổi có 32 số. Tài liệu dùng quy ước vectơ cột có thể viết BA; hiểu hình dạng quan trọng hơn chỉ nhớ thứ tự chữ.</p>"
+      },
+      "proposed": {
+        "es": "<p>Si r es mucho menor que la dimensión original, los parámetros entrenables pasan de <code>d_in×d_out</code> a <code>d_in×r+r×d_out</code>. Por ejemplo, una matriz 8×8 tiene 64 números y el incremento con r=2 tiene 32. Los textos que usan vectores columna pueden escribir BA; comprender las formas importa más que memorizar el orden de letras.</p>",
+        "vi": "<p>Khi r nhỏ hơn nhiều kích thước gốc, số tham số cần huấn luyện chuyển từ <code>d_in×d_out</code> sang <code>d_in×r+r×d_out</code>. Ví dụ ma trận 8×8 có 64 số, khi r=2 phần thay đổi có 32 số. Tài liệu dùng quy ước vectơ cột có thể viết BA; hiểu hình dạng quan trọng hơn chỉ nhớ thứ tự chữ.</p>"
+      }
+    },
+    {
+      "page": "studies/chapters/23.html",
+      "line": 11,
+      "source_html": "<p>对权重矩阵<code>W∈R^(dout×din)</code>，LoRA冻结基础W，学习<code>ΔW=(α/r)BA</code>，其中<code>A∈R^(r×din)</code>、<code>B∈R^(dout×r)</code>。参数从<code>dout×din</code>变为<code>r(din+dout)</code>，当r较小时显著减少可训练参数。<a class=\"cite\" href=\"../sources.html#N38\" title=\"本地来源与核查范围\">[N38]</a></p>",
+      "current": {
+        "es": "<p>Respecto a la matriz de pesos<code>W∈R^(dout×din)</code>, LoRA congela W base y aprende<code>ΔW=(α/r)BA</code>, donde<code>A∈R^(r×din)</code>,<code>B∈R^(dout×r)</code>. Los parámetros pasan de<code>dout×din</code>Se convierte en<code>r(din+dout)</code>, reduciendo mucho los parámetros entrenables cuando r es pequeño.<a class=\"cite\" href=\"../sources.html#N38\" title=\"本地来源与核查范围\">[N38]</a></p>",
+        "vi": "<p>Với ma trận trọng số<code>W∈R^(dout×din)</code>, LoRA đóng băng W cơ sở và học<code>ΔW=(α/r)BA</code>, trong đó<code>A∈R^(r×din)</code>,<code>B∈R^(dout×r)</code>. Tham số từ<code>dout×din</code>Trở thành<code>r(din+dout)</code>, giảm đáng kể số tham số huấn luyện khi r nhỏ.<a class=\"cite\" href=\"../sources.html#N38\" title=\"本地来源与核查范围\">[N38]</a></p>"
+      },
+      "proposed": {
+        "es": "<p>Respecto a la matriz de pesos<code>W∈R^(dout×din)</code>, LoRA congela W base y aprende<code>ΔW=(α/r)BA</code>, donde<code>A∈R^(r×din)</code>,<code>B∈R^(dout×r)</code>. El número de parámetros pasa de <code>dout×din</code> a <code>r(din+dout)</code>, reduciendo mucho los parámetros entrenables cuando r es pequeño.<a class=\"cite\" href=\"../sources.html#N38\" title=\"本地来源与核查范围\">[N38]</a></p>",
+        "vi": "<p>Với ma trận trọng số<code>W∈R^(dout×din)</code>, LoRA đóng băng W cơ sở và học<code>ΔW=(α/r)BA</code>, trong đó<code>A∈R^(r×din)</code>,<code>B∈R^(dout×r)</code>. Số tham số chuyển từ <code>dout×din</code> sang <code>r(din+dout)</code>, giảm đáng kể số tham số huấn luyện khi r nhỏ.<a class=\"cite\" href=\"../sources.html#N38\" title=\"本地来源与核查范围\">[N38]</a></p>"
+      }
+    }
+  ],
+  "validation": {
+    "all_override_source_keys_exist_in_table": true,
+    "all_override_source_keys_are_exact_text_nodes_on_named_pages": true,
+    "inline_html_tag_sequences_unchanged": true,
+    "inline_code_literals_unchanged": true,
+    "proposals_applied": true
+  },
+  "notes": [
+    "Whitespace-bearing and bare Chinese keys are distinct. The existing foundations/13 override for bare 变为 has English only and does not match the actual spaced  变为  text node. This report changes neither English nor Japanese.",
+    "foundations/13 rotation row currently reads Tomar [1,0] girar 0° / Đưa [1,0] xoay 0°; its next row also benefits from explicit para / để after Usar / Dùng.",
+    "No Chinese-source issue was found; these are translation composition defects."
+  ]
+}

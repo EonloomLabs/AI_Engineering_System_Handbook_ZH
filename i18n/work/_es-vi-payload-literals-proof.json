@@ -1,0 +1,54 @@
+{
+  "snapshot": "/var/folders/1p/r4w4zv6d63d0gcvd2_0cq2mm0000gn/T/payload-literals-before-zgbj425f",
+  "tests": 66,
+  "changed_files": {
+    "i18n/batch.py": "c6723291c2d6905a39045ae6acb8d3c7beda46df73b8f9f92d9674ddfb24736d",
+    "i18n/test_batch_literals.py": "f6ecd6b49b79e44b4eb8effa71688f00b98080af1d08bb0115cf4388ef7f057a"
+  },
+  "legacy_rows": [
+    {
+      "id": 6121,
+      "source": "输入与条件。</strong>文档A=[排除,路径]，B=[排除,排除,路径,缓存]，C=[日志,输出]。N=3，平均长度8/3，k1=1.2，b=0.75；用非负IDF形式ln(1+(N−df+0.5)/(df+0.5))。",
+      "spans": [
+        "A=[排除,路径]",
+        "B=[排除,排除,路径,缓存]",
+        "C=[日志,输出]"
+      ],
+      "translations": {
+        "en": {
+          "value": "Input and conditions.</strong>Document A=[exclude,path], B=[exclude,exclude,path,cache], C=[log,output]. N=3, the average length is 8/3, k1=1.2, b=0.75; the non-negative IDF form ln(1+(N−df+0.5)/(df+0.5)) is used.",
+          "passes_new_guard": false,
+          "diagnostic": "legacy.en.txt                      拒收 (3): 第1行 来源数据字面量未原样保留: A=[排除,路径]; 第1行 来源数据字面量未原样保留: B=[排除,排除,路径,缓存]; 第1行 来源数据字面量未原样保留: C=[日志,输出]"
+        },
+        "ja": {
+          "value": "入力と条件。</strong>文書A=[排除,路径]、B=[排除,排除,路径,缓存]、C=[日志,输出]です。N=3、平均長8/3、k1=1.2、b=0.75とし、非負のIDFの式ln(1+(N−df+0.5)/(df+0.5))を使います。",
+          "passes_new_guard": true,
+          "diagnostic": "legacy.ja.txt                          1 条通过校验（read-only proof）"
+        }
+      }
+    },
+    {
+      "id": 25885,
+      "source": "输入与条件。</strong>用户u7仅有项目P1的读取权限，模型请求query(project=\"P2\",text=\"部署密钥\")。",
+      "spans": [
+        "query(project=\"P2\",text=\"部署密钥\")"
+      ],
+      "translations": {
+        "en": {
+          "value": "Input and conditions.</strong> User u7 has read access only to project P1, but the model requests query(project=\"P2\",text=\"deployment keys\").",
+          "passes_new_guard": false,
+          "diagnostic": "legacy.en.txt                      拒收 (1): 第1行 来源数据字面量未原样保留: query(project=\"P2\",text=\"部署密钥\")"
+        },
+        "ja": {
+          "value": "入力と条件。</strong>ユーザーu7はプロジェクトP1の読み取り権限だけを持ち、モデルはquery(project=\"P2\",text=\"部署密钥\")を要求します。",
+          "passes_new_guard": true,
+          "diagnostic": "legacy.ja.txt                          1 条通过校验（read-only proof）"
+        }
+      }
+    }
+  ],
+  "en_ja_fields_unchanged": {
+    "en": "12ebc6944b79d1431d6fdb7a1a7a52cd0c61e3e1b195591c19cdcfc073e6d605",
+    "ja": "8533623ead9cff211c56740477cbb129ba79132fff59f771cda6468c302bc826"
+  }
+}

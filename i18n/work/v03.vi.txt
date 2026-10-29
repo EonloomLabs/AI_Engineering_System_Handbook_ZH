@@ -1,0 +1,550 @@
+4254	10｜Đầu ra mô hình trở thành lời gọi công cụ thực tế như thế nào: giao thức và ranh giới thực thi
+4674	11｜Thiết kế công cụ và MCP: từ kết nối đến thực thi có kiểm soát
+5012	12｜Codex, Claude Code, Copilot: từ sự kiện công khai đến chuỗi vận hành có thể chẩn đoán
+5354	13｜Prompt được lắp ghép mỗi lượt như thế nào: ngữ cảnh là một đường ống dữ liệu
+5664	14｜Cô đọng ngữ cảnh: thực sự loại bỏ những gì và khôi phục ra sao khi bị mất
+5998	15｜Chuỗi truy hồi ngoại tuyến: tài liệu trở thành chỉ mục có thể truy vấn như thế nào
+6305	16｜Chuỗi truy hồi trực tuyến: truy hồi ứng viên, hợp nhất, xếp hạng lại và mức đầy đủ của bằng chứng
+6616	17｜Phân tích mã thông minh: từ tìm kiếm văn bản đến ký hiệu, phiên bản và bằng chứng chạy
+6933	18｜Bộ nhớ dài hạn: ghi, truy hồi, xung đột, hết hiệu lực và quên
+7256	19｜Skills và định tuyến: cách nạp đúng năng lực chuyên môn cần thiết
+7561	20｜Nhiều Agent: lợi ích của song song và tổn thất khi bàn giao
+7895	21｜Thực thi tin cậy: thử lại, tính lũy đẳng, sự cố và khôi phục trạng thái
+8224	22｜Chất lượng kỹ thuật: từ yêu cầu đến kiểm thử, rồi đến mã thực sự có thể bàn giao
+8530	23｜Evaluation: chứng minh một tối ưu thực sự mang lại lợi ích như thế nào
+8843	24｜An toàn: ranh giới chỉ dẫn, môi trường cách ly, quyền hạn và ô nhiễm bộ nhớ
+9159	25｜Vận hành sản xuất: Trace, chi phí, hàng đợi, triển khai từng phần và hoàn tác
+9466	26｜Ứng dụng chuyên sâu: ghép các thành phần thành hệ thống làm việc có thể giải thích
+9758	27｜Độ tin cậy sự kiện, đa phương thức và khả năng diễn giải: ranh giới năng lực nằm ở đâu
+10068	28｜Nghiên cứu chuyên sâu và phán đoán hệ thống tổng hợp
+30417	Bảng tham số E có 6 hàng, 4 cột
+8052	Nhật ký Agent
+30367	A tổng chi phí 100/thành công 80=1.25; B tổng chi phí 70/thành công 50=1.40. Chi phí của các lần chạy thất bại không bị loại khỏi tử số.
+30365	A: trên mỗi nhiệm vụ thành công
+1608	BOS thường biểu thị bắt đầu chuỗi, EOS là Token đặc biệt biểu thị kết thúc; mô hình cụ thể và mẫu thông điệp có thể dùng tên, số lượng và dấu kết thúc khác nhau. Chúng là ký hiệu trong giao thức đầu vào/đầu ra, không phải bằng chứng đúng ngữ nghĩa. <span class="concept-micro">Gặp EOS không tự động cắt chú ý giữa hai mẫu huấn luyện; để cách ly việc đọc còn cần mask hoặc ranh giới mẫu được triển khai hỗ trợ.
+30366	B: trên mỗi nhiệm vụ thành công
+8092	CAS là thao tác có kiểm soát, chỉ cập nhật sau khi so sánh thấy phiên bản/giá trị kỳ vọng vẫn khớp. TOCTOU là tình trạng tranh chấp do thay đổi xảy ra giữa kiểm tra và sử dụng: tách riêng “xem phiên bản trước rồi ghi” không tự động tương đương CAS nguyên tử. <span class="concept-micro">Đọc phiên bản 7 rồi tạo bản vá, khi commit đã là 8 thì phải từ chối ghi đè trực tiếp và xử lý lại; cũng cần ngăn thao tác đồng thời chen vào giữa so sánh và ghi.
+6415	ColBERT và MaxSim
+2251	Trọng số chính FP32
+5535	I: ma trận đơn vị
+4809	MCP thương lượng năng lực trước, khám phá công cụ sau, rồi mới thử gọi
+951	Norm trong công thức lớp biểu thị hàm chuẩn hóa. LayerNorm thường trừ trung bình các đặc trưng của một Token, chia cho độ lệch chuẩn, rồi co giãn và tịnh tiến; RMSNorm thường không trừ trung bình mà co giãn theo căn trung bình bình phương. Chúng không tương đương softmax. <span class="concept-micro">Ví dụ nhỏ độc lập, bỏ qua số dương nhỏ ε dùng ổn định mẫu số và hệ số co giãn học được: LayerNorm([1,3])=[-1,1]; RMSNorm([1,3])=[1/√5,3/√5].
+10779	Precision, Recall, MRR và nDCG
+1901	RLHF, mô hình phần thưởng và chính sách
+6312	RRF cho một tài liệu đóng góp 1/(c+r) theo thứ hạng r trên mỗi đường truy hồi, rồi cộng lại. c là hằng số làm mượt, r thường bắt đầu từ 1; ứng viên không xuất hiện trên một đường không tự nhiên nhận đóng góp từ đường đó. <span class="concept-micro">Ví dụ độc lập: c=10, một tài liệu xếp hạng 1, 3 trên hai đường, được 1/11+1/13 xấp xỉ 0.167832. Không phải cộng điểm thô của BM25 và cosin.
+30308	RRF tính đóng góp theo thứ hạng, không cộng điểm thô
+6397	RRF tính đóng góp theo thứ hạng, không cộng điểm thô. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+4388	SSE là giao thức văn bản cho sự kiện do máy chủ gửi; chunk mạng là đoạn byte nhận được lần này; delta là nội dung tăng thêm của một mục đầu ra. Ranh giới của ba loại không bảo đảm trùng nhau. Một sự kiện đầy đủ cũng chưa chắc có nghĩa là tham số công cụ đầy đủ. <span class="concept-micro">Tham số có thể nhận {"path":"a trước, rồi .py"} sau; phải lắp ghép và chờ điều kiện hoàn thành do giao thức quy định, không thể thấy một đoạn là thực thi ngay.
+5448	Skill, JIT và mô tả kích hoạt
+26954	Skill đã tồn tại, vì sao vẫn có thể hoàn toàn không có tác dụng?: có Skill trên đĩa
+948	SwiGLU, Wg/Wu/Wd: hai đường biến đổi rồi kết hợp
+1744	d_k biểu thị số thành phần trong một vectơ Query/Key; d_v biểu thị số thành phần trong một vectơ Value. Dh hoặc d_h trong một số chương là độ rộng một đầu. Chúng là số nguyên kích thước, không phải Key thứ k hay một giá trị Value. <span class="concept-micro">Ví dụ nhỏ về hình dạng: Q[2,3], K[5,3], V[5,4], khi đó điểm số [2,5], đầu ra [2,4]. Độ rộng ghép Q/K là 3, độ rộng Value là 4 vẫn hợp lệ.
+8599	pass@k và pass^k
+26909	Một câu đi qua những đối tượng khác nhau nào: văn bản người dùng
+5423	Vì sao lắp ghép ngữ cảnh không thể chỉ “lấy N mục đầu”?
+3875	Lượt tiếp theo bổ sung sự kiện về tệp
+8055	Phía hạ nguồn commit K
+8051	Sổ ghi phía hạ nguồn
+4127	Vì sao mỗi lần gọi mô hình đều cần ảnh chụp ngữ cảnh nhất quán?
+30302	Chỉ vectơ tài liệu được quay, truy vấn không thay đổi đồng bộ. Công thức khoảng cách vẫn chạy được, nhưng sự liên quan ban đầu không còn được cặp này bảo đảm.
+8057	Vẫn K=done
+30110	Đã sao chép mã
+30111	Đã chọn mã, vui lòng sao chép thủ công
+26951	Truy hồi mã không thể chỉ dựa vào “ngữ nghĩa gần nhau”: tìm kiếm văn bản
+3880	Nhiệm vụ hoàn thành; không xảy ra sửa đổi tệp
+3863	Đã biết nhiệm vụ, chưa biết nội dung
+2249	Trọng số độ chính xác thấp
+26966	Trước hết xác định lỗi xảy ra ở lớp nào, rồi mới bàn chuyện đổi mô hình: hiện tượng
+27513	Được chia sẻ là nhóm K/V, không phải bỏ đầu truy vấn hay tùy tiện tính ít đầu hơn cho mô hình cũ. Thay đổi cấu trúc thường cần phương án huấn luyện hoặc chuyển đổi mô hình phù hợp.
+30153	Điểm số gốc
+30502	Tham số w
+7075	Công bố
+8053	Gửi thao tác K
+30420	Bốn đặc trưng được lấy ra
+3868	Mới có đề xuất, chưa thu thập bằng chứng
+30486	Cùng một vectơ, quay hướng
+30299	Cùng hai chiều, ý nghĩa tọa độ có thể khác nhau
+26932	Hậu huấn luyện thay đổi hành vi; phần thưởng không phải trọng tài phán định sự thật: cùng câu hỏi, hai câu trả lời
+17532	Trở lại giải thích đầy đủ của Bài 07 →
+17332	Trở lại giải thích đầy đủ của Bài 45 →
+17385	Trở lại giải thích đầy đủ của Bài 49 →
+17466	Trở lại giải thích đầy đủ của Bài 54 →
+17401	Trở lại giải thích đầy đủ của Bài 57 →
+17485	Trở lại giải thích đầy đủ của Bài 61 →
+4405	Bộ đệm byte
+8058	Chưa có xác nhận thành công
+30340	Sự cố xảy ra giữa hai lần commit độc lập
+8062	Sự cố xảy ra giữa hai lần commit độc lập. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+7072	Worker hoàn thành
+3925	Lời gọi công cụ
+2683	Đã xử lý
+30590	Đã nhận
+8290	Đã kiểm chứng
+505	Bảng tham số và thao tác lấy vectơ học được tương ứng theo mã đầu vào. Ví dụ: E có hình dạng [6,4], mã 2 lấy hàng 2 của E.
+30503	Hàm mất mát L
+30301	Đổi mô hình d
+6840	Loại trừ
+30591	Tiếp theo / Giải thích
+30589	Trạng thái bộ đệm phía nhận
+30665	Bảng đếm giảng dạy
+8054	Không có bản ghi
+30670	Chưa tính
+30667	Không được chọn
+30406	Bảng dữ liệu bước này
+8060	Truy vấn/tái sử dụng K
+3418	Ô 0
+3419	Ô 1
+3866	Mô hình có mô tả năng lực khả dụng
+30569	Đơn vị trục ngang: mili giây; đây là cận dưới giảng dạy, không phải phép đo GPU thực tế.
+8056	Sự cố lúc này
+4482	Trả về theo luồng: khi nào tham số thực sự có thể thực thi?
+26957	Kiểm thử là tìm phản ví dụ, không phải đóng dấu xanh cho mã: yêu cầu rõ ràng
+8293	Kết quả kiểm thử
+9229	Dùng một Trace tính rõ thời gian chờ, mức sử dụng và chi phí thất bại
+30419	Dùng mã chọn một hàng, không trải mã thành dạng nhị phân.
+3617	Khối lượng xác suất chấp nhận trực tiếp
+26934	Giảm tham số, giảm số bit và giảm phần kích hoạt không phải cùng một kiểu tối ưu: trọng số lớn ban đầu
+30669	Thực tế không cần
+30668	Thực tế cần
+10867	Bài 01｜Agent không phải một mạng nơ-ron khác: làm rõ vòng lặp bằng một lần đọc tệp
+26892	Bài 16
+26893	Bài 64
+3877	Đầu ra mô hình lượt thứ hai đã kết thúc
+30437	Bảng hệ số W
+6714	Đối tượng gắn kết
+30364	Mẫu số thống nhất: hoàn thành một nhiệm vụ thành công
+18808	Phạm vi:</strong> Tài liệu chính thức được đọc ngày 2026-10-21
+30306	Điểm hợp nhất
+8061	Ghi nhận bổ sung thành công, không lặp tác dụng phụ
+30666	Được chọn
+737	Tính tỷ phần khớp giữa truy vấn và ứng viên có thể đọc, rồi kết hợp nội dung có trọng số. Ví dụ: tính điểm và trọng số trước, rồi dùng trọng số trộn V.
+16616	Bằng chứng và ranh giới hiểu biết:</strong> Ghi riêng nhiệm vụ, một lần thử, vết thực thi và kết quả môi trường; giới hạn tài nguyên và trạng thái chưa đặt lại đều có thể làm nhiễu so sánh.
+3873	Đã thu thập bằng chứng
+6395	Thứ hạng từ vựng / Thứ hạng vectơ
+3871	Đọc r7 trên đĩa
+30436	Đầu vào X
+30438	Đầu ra Y
+3020	Thông qua chia khối và chuẩn hóa trực tuyến, tránh ghi toàn bộ ma trận điểm số/trọng số chú ý lâu dài vào bộ nhớ GPU chậm hơn; mục tiêu vẫn là cùng phép chú ý, việc làm tròn dấu phẩy động có thể thay đổi theo thứ tự tính. <span class="concept-micro">Nó không cô đọng Token vĩnh viễn, cũng không bỏ qua mọi Key. Phân biệt “không ghi toàn bộ bảng vào bộ nhớ GPU” với “không thực hiện những phép tính toán học này”.
+30300	d đồng bộ
+6164	Ghép cặp
+29369	Tính lại
+2649	06｜Cơ chế suy luận: nạp, chiến lược giải mã và sinh liên tục
+30879	3 giây / Kiểm chứng phiên bản hiện tại
+30876	6 giây / Bằng chứng và kết quả
+30878	8 giây / Bằng chứng và kết quả
+18017	Kỹ thuật hệ thống AI · Khóa học tiếng Trung ngoại tuyến<br/>Ví dụ giảng dạy, bản ghi chạy và sự kiện sản phẩm được phân biệt theo ghi chú liền kề; căn cứ phiên bản xem tại trang tài liệu.
+6416	Các phương pháp kiểu ColBERT giữ nhiều vectơ Token cho truy vấn và tài liệu, rồi tương tác muộn. MaxSim thường lấy độ tương đồng lớn nhất của từng Token truy vấn với các Token tài liệu rồi tổng hợp. <span class="concept-micro">Nó không phải truy hồi hai bộ mã hóa “cả tài liệu chỉ có một vectơ”, cũng không phải đầu ra tự chú ý ở mỗi lớp của mô hình sinh.
+1614	Dropout: quy tắc đặt ngẫu nhiên về không khi huấn luyện
+6552	GraphRAG, RAPTOR và phân cấp tổ chức
+6550	HyDE: văn bản giả định chỉ dùng để tìm tài liệu
+5536	I trong công thức ma trận thường là ma trận đơn vị: đường chéo bằng 1, các vị trí còn lại bằng 0. Khi kích thước phù hợp, nhân vectơ hoặc ma trận với I giữ nguyên các giá trị số. Wq=Wk=I là trường hợp đặc biệt được chọn thủ công, không thể suy ra phép chiếu của mô hình thực tế đều giống nhau. <span class="concept-micro">Ví dụ nhỏ độc lập: I=[[1,0],[0,1]], [3,-2]I=[3,-2]. I ở đây không phải chữ i biểu thị chỉ số vị trí.
+4791	Các vai trò ứng dụng chủ, máy khách giao thức và máy chủ cung cấp năng lực trong MCP. Ví dụ: một ứng dụng chủ có thể kết nối nhiều máy chủ khác nhau thông qua nhiều máy khách.
+1902	RLHF gọi chung quy trình huấn luyện hành vi bằng phản hồi của con người. Mô hình phần thưởng là mô hình chấm điểm hành vi như câu trả lời; chính sách là mô hình xác suất thực sự sinh hành động. Hai vai trò khác nhau, phần thưởng cao không tự động có nghĩa là đúng sự thật. <span class="concept-micro">Ví dụ độc lập: bộ chấm thưởng thích câu trả lời dài, chính sách có thể học viết dài mà không chính xác hơn; vì vậy tiêu chí thưởng cần được kiểm chứng.
+6328	RRF hợp nhất thứ hạng, không cộng gượng điểm BM25 với điểm cosin
+9329	SLI, SLO và ngân sách lỗi
+5766	S dựa trên tiền tố gốc
+5768	S mất hiệu lực
+7009	TTL, thời gian hiệu lực và thời gian ghi nhận
+1746	Wq / W_Q: tham số phép chiếu truy vấn
+8600	Chỉ số kiểu pass@k thường quan tâm ít nhất một lần thành công trong k lần thử; chỉ số kiểu pass^k nhấn mạnh nhiều lần đều thành công. Cách ước tính cụ thể tùy chuẩn đánh giá; không được lẫn việc dừng sau một lần thành công với độ tin cậy ở mọi lần. <span class="concept-micro">Theo giả định độc lập cùng xác suất p=0.8, ít nhất một lần thành công trong 3 lần=0.992, cả 3 lần thành công=0.512. Nhiệm vụ thực tế có tương quan hoặc độ khó khác nhau thì cần tính riêng.
+6717	Văn bản cũ r7
+10766	Bộ nhớ semantic, episodic, procedural
+2353	sigmoid: ánh xạ một số đơn lẻ vào khoảng giữa 0 và 1
+2885	“Đầu ra dừng” và “nhiệm vụ thành công” phải được vẽ trên các luồng trạng thái khác nhau
+1389	⊙: nhân từng phần tử, không phải nhân ma trận
+5769	Không cài đặt bản ứng viên cũ
+7202	Không thể
+8295	Không ghi đè r8
+30862	Chuyên gia E0
+30864	Chuyên gia E1
+30866	Chuyên gia E2
+30868	Chuyên gia E3
+7691	Tuần tự
+30873	Nhiệm vụ chính
+8644	Nhị thức, sai số chuẩn và khoảng Wilson
+8296	Tuyên bố bàn giao
+8297	Chỉ có thể mô tả r7
+3930	Chỉ chứng minh nội dung đã thay đổi
+7077	Vẫn giữ hợp đồng thuê, kiểm chứng thành công
+5764	Vẫn tạo S
+30287	Phần còn lại
+4746	Hướng dẫn chuyên môn và tài nguyên liên quan để Agent dùng theo nhu cầu. Ví dụ: khác với việc mô hình có thêm một bộ trọng số.
+5950	Kiểm tra độ trung thực phải hỏi “còn làm đúng được gì”, không chỉ xem bản tóm tắt có giống hay không
+8291	Sau sửa đổi
+7070	Ứng viên→sản phẩm tạo ra
+7073	Sản phẩm ứng viên
+4656	Giả thuyết
+5938	Mẫu hệ thống truy hồi tài liệu bên ngoài trước, rồi để mô hình sinh dựa trên tài liệu. Ví dụ: có trích dẫn hoặc có truy hồi không tự động bảo đảm câu trả lời được bằng chứng hỗ trợ.
+7071	Hợp đồng thuê toàn cục và không gian làm việc
+30874	Mục tiêu và ràng buộc chung
+7670	Đường găng
+7065	Ngưỡng quan trọng
+8103	Thay thế nguyên tử ngăn ghi dở, CAS ngăn ghi đè; chúng không phải một việc
+9870	Phản hồi
+826	Trở thành
+6750	Cùng một đường dẫn, commit, cây làm việc và trình soạn thảo có thể có ba nội dung khác nhau
+30271	Bốn loại hoàn thành không thay thế lẫn nhau
+3934	Bốn loại hoàn thành không thay thế lẫn nhau. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+17290	Trở lại giải thích đầy đủ của Bài 42 →
+17353	Trở lại giải thích đầy đủ của Bài 46 →
+17431	Trở lại giải thích đầy đủ của Bài 52 →
+17450	Trở lại giải thích đầy đủ của Bài 53 →
+30853	Lô cố định: 6 bước
+27704	Trong chuỗi giản lược này, lan truyền ngược giữ thêm các kích hoạt trung gian a1, a2, a3, mỗi mục 100 đơn vị, tổng lưu trú 300. Đầu vào và đầu ra cuối không được tính trong sổ này.
+5449	Trong bối cảnh nạp năng lực, Skill là tập hướng dẫn và tài nguyên tái sử dụng; JIT nghĩa là nạp khi cần, không nhất thiết chỉ biên dịch tức thời của trình biên dịch. Mô tả kích hoạt giúp mô hình đánh giá mức phù hợp, không tự động cấp quyền công cụ. <span class="concept-micro">Cần đánh giá nhiệm vụ có cần kỹ năng đó không trước, rồi đọc nội dung chi tiết; kỹ năng đã nạp không có nghĩa là yêu cầu của nó đã thực sự được thực hiện.
+13327	Phần cơ sở</span><span>Khoảng 2.5 nghìn chữ</span><span>1 nhóm trình diễn có thể điều khiển
+2664	Xử lý một đoạn tiền tố đầu vào hiện đã biết. Ví dụ: thu được biểu diễn các lớp và K/V có thể tái sử dụng.
+8865	Nội dung bên ngoài có thể thành bằng chứng, không thể tự cấp quyền thực thi
+6715	Điều kiện mất hiệu lực
+5149	Agent con kế thừa gì cần được kiểm tra từng trường, không thể chỉ nói “kế thừa toàn bộ”
+30875	Nhiệm vụ con A
+30877	Nhiệm vụ con B
+8244	Điều kiện hoàn thành cần bao gồm “không được thay đổi gì”, không chỉ một ví dụ thành công
+26768	Tài liệu giao diện chính thức</span> <span class="badge gray">Đối chiếu nguyên văn liên quan
+17902	Thí nghiệm và nguồn
+17950	Thí nghiệm và kiểm chứng
+3864	Khung thực thi→mô hình
+3927	Chưa có kết quả kiểm thử cuối cùng
+6720	Hàm băm cây làm việc+lệnh
+4751	Công cụ tồn tại, mô hình nhìn thấy, gọi được, được cấp quyền: bốn lớp kiểm tra
+11168	Phân tích kỹ thuật chuyên sâu
+3929	Đã sửa thành r9
+3923	Đã kết thúc
+7976	Khóa lũy đẳng gắn với cùng một ý định nghiệp vụ, không phải mỗi lần thử HTTP
+5125	Đối chiếu Codex nguồn mở và bài viết kỹ thuật của Claude như thế nào để không tạo mâu thuẫn?
+30860	Token hiện tại
+3932	Chờ kiểm chứng
+30869	Đầu vào cần thiết
+5803	Ảnh chụp trạng thái
+10375	Biến đồ thị tri thức thành phán đoán kỹ thuật thay vì bách khoa khái niệm như thế nào?
+6956	Bộ nhớ trải nghiệm
+7066	Trích xuất
+19856	Phép bù khi từ chối
+5762	Worker tóm tắt nhìn thấy
+30294	Hợp nhất bản tóm tắt với hậu tố trực tiếp
+5770	Hợp nhất bản tóm tắt với hậu tố trực tiếp. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+6718	Tệp đã được sửa thành r8
+6667	Tìm kiếm văn bản
+3924	Sinh văn bản đã kết thúc
+30345	Mới thất bại
+30344	Mới thành công
+30347	Cũ thất bại
+30346	Cũ thành công
+30870	Nhật ký/tóm tắt cũ
+7076	Sản phẩm hợp lệ+mốc tiến độ
+30880	Số đếm khung hình này (đơn vị nêu trong văn bản)
+20777	Nguồn S084, kỹ thuật ngữ cảnh hiệu quả
+21021	Nguồn S096, truy hồi lai tăng cường bằng ngữ cảnh
+22092	Nguồn S143, phương pháp đánh giá Agent đầy đủ
+7068	Nguồn và phạm vi
+10402	Xem tệp cục bộ tương ứng
+2724	Nhãn, teacher forcing và shift
+5765	Kiểm chứng đạt
+3867	Mô hình→khung thực thi
+3922	Phản hồi mô hình
+3920	Trạng thái lúc này
+30856	Bước 5
+30857	Bước 6
+30859	Giả định giản lược rằng mỗi bước mất cùng thời gian; ✓ nghĩa là yêu cầu hoàn thành khi bước đó kết thúc.
+27775	Chi phí mỗi câu 1, tổng chi phí 20; kết quả giảng dạy: 14 câu thành công, 6 câu được kiểm tra xác nhận thất bại. Xem xét riêng tỷ lệ thành công và độ chính xác phát hiện.
+5763	Lịch sử đang hoạt động
+6721	Sửa tiếp sau kiểm thử
+3926	Kiểm thử đang chạy
+7350	Skill nạp dần trở thành năng lực thực tế từ một “tệp” như thế nào?
+7067	Sự kiện nguồn→ứng viên
+8292	Tệp nguồn
+30309	Chuỗi phiên bản mã nguồn và bằng chứng
+6724	Chuỗi phiên bản mã nguồn và bằng chứng. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+6494	Phiên bản và môi trường
+30845	Trang vật lý: mỗi trang 2 ô Token
+6722	Môi trường+đầu vào chạy
+23179	Dùng quá trình cụ thể để hỗ trợ hiểu: <a href="../visual/F18.html">Huấn luyện: đặt bài toán “mục tiếp theo” ở mỗi vị trí</a>. Minh họa giải thích cơ chế chung; phương pháp riêng và kết luận thí nghiệm của tài liệu này vẫn căn cứ vào bài giảng của mục này.
+9977	Đã nhìn đúng giao diện, vì sao hành động vẫn có thể nhấn sai?
+3462	Bài 33</a>. Thứ tự đọc: xác nhận hợp đồng vận hành trước, xem phản ví dụ và bản sửa sau, cuối cùng kiểm tra ranh giới.
+26885	Bài 42
+10051	Bài 49
+26888	Bài 58
+16593	Độ chuẩn xác xét có bao nhiêu kết quả trả về liên quan; độ bao phủ xét tìm được bao nhiêu trong số mục liên quan cần tìm; MRR lấy trung bình nghịch đảo thứ hạng của mục đúng đầu tiên; nDCG xét mức liên quan và vị trí xếp hạng rồi chuẩn hóa theo thứ hạng lý tưởng. <span class="concept-micro">Ví dụ độc lập: cần tìm 5 bài, trả về 4 bài trong đó 3 bài liên quan, độ chuẩn xác 3/4, độ bao phủ 3/5. Đừng hoán đổi hai mẫu số này.
+6048	Khi xây dựng chỉ mục, siêu dữ liệu nào mất rồi rất khó bổ sung lại?
+5767	Nếu xảy ra hoàn tác
+27656	Mô hình nháp rẻ nhưng sẽ phân bổ sai xác suất. Trong ví dụ này mục tiêu p=[0.6,0.3,0.1], bản nháp q=[0.4,0.4,0.2]. Không thể coi thẳng mọi đầu ra nháp là đầu ra mục tiêu.
+30483	Hàng: Query hiện tại; cột: Key có thể đọc
+492	Định dạng văn bản biểu diễn dữ liệu có cấu trúc như đối tượng, mảng, chuỗi và số. Ví dụ: JSON hợp lệ không bảo đảm nội dung trường hợp lệ về nghiệp vụ.
+30871	Cần
+8332	Bản ghi
+7191	Truy hồi bộ nhớ phải qua cửa kiểm tra phạm vi áp dụng trước, rồi mới so độ tương đồng ngữ nghĩa
+30310	Điều kiện công bố của đường ống bộ nhớ
+7078	Điều kiện công bố của đường ống bộ nhớ. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+16387	Bằng chứng và ranh giới hiểu biết:</strong> Không được gộp thất bại, hủy và kết quả chưa xác định thành một trạng thái; an toàn khi thử lại phụ thuộc tính lũy đẳng hoặc kiểm chứng phía hạ nguồn, thí nghiệm trong sách không bảo đảm exactly-once của sản phẩm.
+15942	Bằng chứng và ranh giới hiểu biết:</strong> Thứ hạng cao không có nghĩa là bằng chứng bao phủ câu hỏi. Ví dụ nhỏ RRF trong sách không phải truy vấn sản xuất chính thức; cần phân biệt ngữ cảnh khối với bằng chứng gốc.
+7984	Yêu cầu
+8892	Vì sao đọc được một “chỉ dẫn” không có nghĩa là nó có quyền?
+7914	Vị trí xuất hiện hết thời gian chờ nằm giữa “yêu cầu” và “phản hồi”
+30867	Trọng số định tuyến 0.3, lần này được chọn
+30865	Trọng số định tuyến 0.5, lần này được chọn
+3826	Lượt
+2799	Đầu vào và điều kiện.
+30861	Đầu vào vô hướng x=2
+7074	Vẫn chưa có nghĩa là công bố thành công
+949	Đây là cấu trúc truyền thẳng có cổng. Wg tạo một đường đi qua SiLU, Wu tạo đường nội dung khác, hai đường nhân từng phần tử rồi dùng Wd ánh xạ về độ rộng gốc. Các W này là ba nhóm tham số, không phải ba Agent. <span class="concept-micro">Khi đọc (SiLU(XWg)⊙XWu)Wd, tính XWg và XWu trước, rồi SiLU, rồi ⊙, cuối cùng nhân Wd. Mỗi vị trí dùng độc lập cùng một nhóm tham số.
+30852	Ở đây chỉ quản lý khối KV; không xóa nội dung ngữ cảnh.
+30858	Gộp lô liên tục: 4 bước
+30851	Ánh xạ logic→vật lý
+8695	So sánh ghép cặp trước hết xem câu nào từ thất bại thành thành công, câu nào ngược lại
+6723	Thay đổi cấu hình và dữ liệu
+27534	Lượng tử hóa thay đổi độ chính xác biểu diễn số, không biến Token ID thành Embedding. Trước hết ghi rõ đối tượng cần xấp xỉ và phạm vi.
+8294	Đạt đối với r7
+10433	Công cụ đọc
+3933	Cần bằng chứng nghiệm thu r9
+8298	Cần chạy lại kiểm tra bị ảnh hưởng
+30846	Trang 0
+30847	Trang 1
+30848	Trang 2
+30849	Trang 3
+30850	Trang 4
+5097	Kiến thức tiên quyết: <a href="../foundations/24.html">Bài 02
+8276	Nghiệm thu
+30341	Bằng chứng nghiệm thu gắn với sản phẩm cuối cùng
+8299	Bằng chứng nghiệm thu gắn với sản phẩm cuối cùng. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+17907	: Tệp cục bộ đầy đủ.
+2086	và
+8342	12 passed @r8 + phản ví dụ biên
+29574	20 nhiệm vụ ghép cặp; không phải 40 nhiệm vụ độc lập
+30374	Ảnh RGB 32×32 → bốn khối 16×16
+30290	35 đơn vị
+30288	5 đơn vị
+24863	7. Câu hỏi nghiệm thu
+30376	768 là độ rộng sau trải phẳng của mỗi khối; 4 là số khối; 8 là độ rộng phép chiếu giảng dạy. Ảnh không đi vào mô hình qua tra bảng bằng Token ID văn bản.
+30319	A Định vị · 2 phút
+30293	A/B có chung 3 mục đầu liên tục; B/C chỉ có chung 1 mục đầu liên tục. T1 giống nhau phía sau không thể vượt qua new khác nhau để nối tiền tố.
+6006	ANN và HNSW: cấu trúc truy hồi gần đúng
+30253	A kết thúc
+30211	A chọn E0/E1, B chọn E3/E2. Chiều cao cột là xác suất định tuyến cho trước trong hình này, không phải chất lượng đầu ra chuyên gia.
+30296	A: độ dài 100 / tần suất từ 2
+30320	B Triển khai · 4 phút
+30255	B kết thúc
+30297	B: độ dài 1000 / tần suất từ 4
+30321	C Kiểm thử · 3 phút
+30256	C đã sẵn sàng, chưa tính prefill. Các cột cùng độ rộng chỉ biểu diễn bước lập lịch, không có nghĩa là mỗi bước mất cùng thời gian thực tế.
+30254	C kết thúc
+30322	D Tích hợp · 1 phút
+2232	DP, TP, PP, ZeRO và FSDP
+2500	FLOPs và FLOP/s: số lượng và tốc độ
+6553	Các phương pháp kiểu GraphRAG dùng quan hệ thực thể và thông tin tổ chức như cộng đồng; RAPTOR dùng phân cụm phân cấp và tóm tắt để hỗ trợ truy hồi. Chúng đưa vào thông tin phái sinh bổ sung, đồng thời phát sinh vấn đề cập nhật, nguồn và lan truyền lỗi. <span class="concept-micro">Khi tài liệu nguồn thay đổi, bản tóm tắt cũ hoặc quan hệ trong đồ thị có thể hết hiệu lực. Sửa nguyên văn không chứng minh mọi chỉ mục phái sinh đã được cập nhật đồng bộ.
+4807	JSON-RPC, stdio và HTTP
+30833	Nhóm KV 0
+14940	Bộ nhớ đệm KV lưu các vị trí đã xử lý theo từng lớp; Token vừa chọn chưa được ghi vào
+15054	LoRA, lượng tử hóa và MoE, mỗi cách tiết kiệm phần nào?
+10167	MLA: biểu diễn K/V số chiều thấp được học
+3021	PagedAttention: quản lý lưu trữ K/V bằng phân trang
+30186	Đường cơ sở dP có trọng số P
+30828	Đầu Q 0
+30830	Đầu Q 1
+30831	Đầu Q 2
+30832	Đầu Q 3
+30368	Dịch vụ R1
+30369	Dịch vụ R2
+30370	Dịch vụ R3
+9993	SAE, kích hoạt và đặc trưng có thể diễn giải
+9330	SLI là chỉ số mức dịch vụ đo thực tế; SLO là mục tiêu của chỉ số đó; ngân sách lỗi là khoảng thất bại mục tiêu tương ứng cho phép. Chúng là đối tượng quản lý vận hành dịch vụ, không phải tham số mô hình. <span class="concept-micro">“API trả 200” có thể chưa phải người dùng thành công; một số nghiệp vụ cần định nghĩa chỉ số theo tỷ lệ hoàn thành đúng nhiệm vụ trong thời gian giới hạn.
+1391	SiLU: đầu vào nhân với một hệ số cổng
+3450	TTFT, TPOT, p95 và thông lượng
+7010	TTL là thiết lập hết hạn của lưu trữ hoặc bộ nhớ đệm; thời gian hiệu lực chỉ thời điểm sự kiện áp dụng; thời gian ghi nhận chỉ thời điểm hệ thống biết. Chính sách hết hạn không thể thay kiểm chứng sự kiện và nguồn. <span class="concept-micro">Đến ngày 10 tháng 10 mới đọc được quy tắc có hiệu lực ngày 1 tháng 10: thời gian hiệu lực nghiệp vụ tính từ ngày 1, thời điểm hệ thống biết việc này tính từ ngày 10.
+3984	Thread, Turn, Session: các cấp vận hành
+30209	Xác suất định tuyến của Token A
+30210	Xác suất định tuyến của Token B
+7746	WAL, fsync và thay thế nguyên tử
+1748	Wk / W_K: tham số phép chiếu Key
+822	Wout, LM head: tham số chấm điểm bảng từ vựng
+1750	Wv / W_V: tham số phép chiếu Value
+12305	Vì sao [2,3] trở thành [2,3,4]?
+6413	bi-encoder, cross-encoder và xếp hạng lại
+28088	c1 nối hành động của M1 với bằng chứng của T1 như thế nào
+4486	Bộ đệm c7
+4487	Bộ đệm c8
+30188	Tổng dS bằng 0, phản ánh rằng dịch đều hai điểm số không làm thay đổi softmax. Hình này tính ảnh hưởng của hàm mất mát đối với các đại lượng trung gian.
+16044	grep, AST, LSP và đồ thị gọi, mỗi loại nhìn thấy gì?
+13129	Vì sao không thể dùng thay nhau reshape, chuyển vị và broadcast?
+10612	γ, β, ε: phân biệt tham số với hằng số ổn định
+2355	π, π_ref và β: ký hiệu của mục tiêu ưu tiên
+1393	σ: phân biệt ký hiệu hàm với đại lượng thống kê
+15479	“Mô hình biết đã làm” khác “hệ thống có thể khôi phục” như thế nào?
+15953	Giữa “liên quan” và “đủ để trả lời” còn thiếu những bước nào?
+12934	Vì sao “chứa vừa” và “tính nhanh” không phải cùng một việc?
+18011	. Điều kiện ví dụ được cho trong mục này; kết quả giảng dạy không đại diện cho mô hình thương mại hay hiệu năng sản xuất.
+13580	Một hàng chú ý: gom ba nguồn nhìn thấy thành đầu ra của một vị trí
+13035	Số trong một ô đầu ra thực sự đến từ những ô đầu vào nào?
+16649	Một thí nghiệm phân biệt cải thiện thực sự với dao động ngẫu nhiên như thế nào?
+12749	Một nhóm số dấu phẩy động thay thế mã số một Token như thế nào?
+30282	Ba ranh giới có quy tắc bộ đệm riêng. Nhận được chunk mạng không cấu thành cấp quyền thực thi.
+18016	Mục trước và mục tiếp theo
+30183	dO thượng nguồn
+30214	Xử lý ở lượt tiếp theo
+30218	Không xử lý EOS nữa
+30279	Chưa phải đối tượng JSON đầy đủ
+4495	Không thể ghép lẫn với nhau
+4134	Không được âm thầm thay bằng R4 để diễn giải đề xuất cũ
+8341	Không thể tự động suy rộng sang r8
+8348	Đừng nhầm lẫn:</strong> Không được viết lại “kiểm thử không phát hiện vấn đề” thành “không có bất kỳ vấn đề nào”, nhất là khi độ bao phủ và môi trường đều có giới hạn.
+9236	Song song với A
+9235	Song song với B
+25604	Chuyên đề nghiên cứu</span><span>Khoảng 3.0 nghìn chữ</span><span>Biểu đồ và giải thích từng mục
+30249	Phân bổ mỗi bước của hai ô giải mã
+30298	Hai thanh dùng chung thang 0—1.5. B trong hình có tần suất từ cao hơn nhưng do tài liệu rất dài nên điểm thấp hơn; không phải phép đo BM25 toàn diện.
+30171	Cả hai phía đều có hình dạng hợp lệ nhưng tính các giá trị trung bình khác nhau. ✓ trong hình này nghĩa là logic cho phép; ý nghĩa True của mặt nạ boolean trong API cần tra riêng.
+9234	Quan hệ tuần tự và song song
+12632	PAD thêm vào cho đều có bị mô hình hiểu nhầm là nội dung không?
+14124	Vì sao “hạ gradient” đôi khi làm tham số tăng?
+16741	Vì sao “mô hình đã được thuyết phục dừng” không thể là tuyến phòng vệ duy nhất?
+16446	Vì sao “mọi kiểm thử đều qua” vẫn có thể bàn giao sai thứ cần làm?
+15673	Vì sao đôi khi “đọc càng nhiều” lại càng dễ hiểu sai?
+15173	Vì sao GPU có năng lực tính toán cao hơn chưa chắc làm nhiệm vụ nhanh hơn tương ứng?
+12505	Vì sao không thể xem “một chữ Hán” là “một lần sinh”?
+13332	Vì sao còn cần đặt hàm phi tuyến giữa nhiều lớp?
+14897	Vì sao tính ít đi nhiều bước mà Token tiếp theo vẫn nhìn thấy quá khứ?
+15379	Vì sao tuyệt đối không thể thực thi khi mới thấy nửa đoạn JSON?
+16932	Vì sao hiểu được ảnh chụp màn hình vẫn có thể nhấn sai nút?
+16543	Vì sao độ chuẩn xác cao không đồng nghĩa đã tìm đủ bằng chứng?
+16346	Vì sao tự động thử lại đôi khi làm cùng một việc hai lần?
+14253	Vì sao huấn luyện nhìn toàn bộ câu nhưng khi sinh chỉ có thể tiến về trước?
+16829	Vì sao tối ưu bước nổi bật nhất mà toàn bộ quá trình vẫn không nhanh hơn?
+8339	Sau đó sửa thành r8
+8645	Mô hình nhị thức thường dùng cho số lần thử thành công/thất bại độc lập cố định; sai số chuẩn mô tả thang dao động của ước lượng; Wilson là cách xây dựng khoảng cho tỷ lệ. McNemar xét hai hướng bất đồng trong kết quả phân loại ghép cặp. <span class="concept-micro">Sự phụ thuộc mẫu, pha trộn độ khó nhiệm vụ hoặc chọn lọc câu hỏi làm thay đổi phạm vi có thể diễn giải; công thức thống kê không phải bằng chứng rằng “điểm tăng chắc chắn do thay đổi này”.
+17031	Khi nào nên sửa Prompt, truy hồi, bộ nhớ hoặc mô hình?
+8340	Vẫn hiển thị đèn xanh cũ
+16244	Từ “đã cài kỹ năng” đến “viết mã tốt hơn” đi qua những gì?
+22106	Định vị suy giảm từ bảng bốn ô
+30259	Khối lượng xác suất từ phân phối bản nháp đến phân phối mục tiêu
+18006	Mã, mô hình, mẫu, thiết lập công cụ/truy hồi
+18004	Tập nhiệm vụ và cách chia, không chỉ số lượng nhiệm vụ
+9759	Tối ưu phải xác định nút thắt trước, không thể chỉ theo đuổi ít Token hơn
+30363	Tối ưu đường găng mới thay đổi thời gian thực
+9239	Tối ưu đường găng mới thay đổi thời gian thực. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+1889	Bộ tối ưu, Adam và AdamW
+28941	Vị trí 3 · 爱
+30172	Chênh lệch vị trí 1: tích vô hướng 0
+17955	Phạm vi bài tập
+18010	Căn cứ và phạm vi:
+15855	Chỉ mục đảo và chỉ mục vectơ, mỗi loại giúp việc gì?
+4138	Cho phép môi trường kiểm thử
+8345	Trước hết kiểm tra đã thực sự thực thi chưa, sau đó kiểm tra đang đo phiên bản nào, cuối cùng kiểm tra ca kiểm thử có đánh trúng lỗi mục tiêu không. Không thể thiếu cửa kiểm tra nào trong ba cửa.
+1248	Lan truyền xuôi chung: tham số đi vào từ bên cạnh; phần dư giữ và hợp lại biểu diễn gốc
+30323	Đường găng: A → B → D = 2+4+1 = 7 phút
+22108	Ranh giới chính:</strong> Lặp lại cùng câu hỏi không phải nhiệm vụ độc lập; cần ghi lại việc lấy mẫu và thay đổi môi trường.
+20334	Ranh giới chính:</strong> Thí nghiệm chỉ liên quan dữ liệu cục bộ tạm thời; nó không chứng minh dịch vụ bên thứ ba cung cấp cùng giao thức khử trùng lặp.
+30216	Xử lý ở lượt sau nữa
+30154	Trừ giá trị lớn nhất 2
+2354	Quy tắc hàm là sigmoid(x)=1/(1+exp(-x)). Hàm tính từng số riêng, không yêu cầu tổng kết quả cùng hàng bằng 1, nên không thể dùng trực tiếp thay softmax nhiều ứng viên. <span class="concept-micro">Ví dụ nhỏ độc lập: sigmoid(0)=0.5; tính riêng hai số 0 cho [0.5,0.5] chỉ là trùng hợp, tổng hai mục với đầu vào [1,1] lớn hơn 1.
+4494	Cho phép sau khi kiểm tra riêng từng phần
+3143	Khi tiền tố thay đổi giữa chừng, bộ nhớ đệm tại chỗ thay đổi và phần hậu tố cần được tính lại
+4304	Vì sao kiểm tra trước và sau không thể thay thế nhau?
+7281	Nạp
+27269	Minh họa động</span><span>Khoảng 1 nghìn chữ</span><span>Biểu đồ và giải thích từng mục
+5543	Cô đọng
+26815	Bài báo đánh giá gốc</span> <span class="badge gray">Đối chiếu nguyên văn liên quan
+12223	Tham số θ
+30283	Lắp ghép phần tăng thêm của tham số theo ID lời gọi
+4496	Lắp ghép phần tăng thêm của tham số theo ID lời gọi. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+30173	Cả hai cùng thêm 1: tích vô hướng vẫn 0
+2079	Lan truyền ngược theo phụ thuộc thực tế: cả hai điểm phần dư đều phải hợp gradient
+6992	Đánh đổi
+8346	Kiểm thử đột biến có thể cố tình đưa triển khai sai trở lại; nếu vẫn xanh toàn bộ thì kiểm thử không có khả năng phân biệt.
+30129	Chỉ còn một mục; nguyên văn vẫn là abc
+30275	Chỉ đủ hai byte UTF-8 đầu của “爱”
+8338	Chỉ bao phủ r7
+29704	Chỉ tính a1/a2/a3; không khẳng định tỷ lệ giảm tổng đỉnh
+18007	Điều kiện có thể kiểm soát; ghi rõ phần không hỗ trợ hoặc chưa đo
+30291	Tổng: 100 đơn vị
+30207	Tổng: 16000 B
+13816	Cùng một Token xuất hiện ở vị trí khác nhau, vì sao cần xử lý thêm?
+13534	Biểu diễn của cùng một “爱” đi qua ba bảng tham số thành Q/K/V
+14768	Cùng bộ trọng số đã huấn luyện: dự đoán từng lượt, thêm vào, dừng
+15279	Cùng một câu nhiệm vụ của người dùng, vì sao có thể gọi mô hình nhiều hơn một lần?
+30373	Cùng tập 100 câu trả lời: tuyên bố chắc khoảng 80%, thực tế 60 câu đúng. Chỉ là mẫu giảng dạy, không phải đo thực tế mô hình thương mại.
+30272	Cùng yêu cầu gắn với đối tượng diễn giải, vẫn kiểm tra quyền khi thực thi
+4140	Cùng yêu cầu gắn với đối tượng diễn giải, vẫn kiểm tra quyền khi thực thi. Các giá trị số và trạng thái thuộc ví dụ giảng dạy được quy định rõ trong mục này; không phải phép đo hiệu năng sản xuất hay mô hình thương mại.
+30165	Cùng đầu vào, đối chiếu bảng cho phép đúng và sai
+4770	Không
+8335	Lệnh kết thúc thành công
+30182	Bốn Query vẫn tính tỷ phần và đầu ra riêng; mũi tên hợp lại nghĩa là đọc cùng nhóm KV, không có nghĩa kết quả giống nhau.
+17627	Trở lại giải thích đầy đủ của Bài 13 →
+17585	Trở lại giải thích đầy đủ của Bài 16 →
+17598	Trở lại giải thích đầy đủ của Bài 17 →
+17641	Trở lại giải thích đầy đủ của Bài 26 →
+17151	Trở lại giải thích đầy đủ của Bài 35 →
+17320	Trở lại giải thích đầy đủ của Bài 44 →
+20333	Thoát tiến trình con sau khi ghi xong SQLite tạm và trước khi nhật ký khung thực thi xác nhận. Khi khôi phục, thử lại riêng với khóa thao tác cũ và khóa thao tác mới để so số lần tác dụng phụ.
+29595	Thời gian thực cơ sở 16 giây; khối lượng công cụ 11 giây
+12502	Phần cơ sở</span><span>Khoảng 2.7 nghìn chữ</span><span>1 nhóm trình diễn có thể điều khiển
+9238	Thời gian thực
+4488	Phần tăng thêm 1
+4490	Phần tăng thêm 2
+4492	Phần tăng thêm 3
+7635	Nhiều Agent chạy song song và tránh tổn thất bàn giao như thế nào?
+4493	Mục hoàn thành
+30372	Độ chính xác được kiểm chứng thực tế
+8334	Thực tế có thể chứng minh
+8329	Số kiểm thử thực sự chạy, không bị bỏ qua.
+18014	Phạm vi chạy thực tế
+4683	Tập giao thức để khung thực thi tương tác với công cụ bên ngoài hoặc máy chủ tài nguyên. Ví dụ: không phải tên chung cho mọi giao tiếp giữa các Agent.
+30219	Khung thực thi thấy dấu kết thúc và chấm dứt các phép tính mô hình tiếp theo.
+30185	Đối với P
+30184	Đối với V0 / V1
+30187	Đối với điểm số S
+8343	Tương ứng sản phẩm hiện tại
+8330	Danh tính sản phẩm
+6954	Bộ nhớ làm việc
+30278	Đã hoàn thành một sự kiện
+18013	Triển khai đầy đủ có số dòng
+1615	Dropout đảo ngược thường dùng đặt ngẫu nhiên phần tử về không theo xác suất loại bỏ p khi huấn luyện, chia phần giữ lại cho 1-p để giữ thang kỳ vọng. Chế độ đánh giá thường tắt thao tác ngẫu nhiên này; hàm cấp thấp có thể yêu cầu bên gọi truyền rõ p=0. <span class="concept-micro">Ví dụ độc lập: p=0.5, giá trị 2 nếu được giữ trong một mặt nạ thì cho đầu ra 4, bị loại thì 0. Đây không phải huấn luyện xóa vĩnh viễn tham số mô hình tương ứng.
+7283	Áp dụng
+18005	Phiên bản của sản phẩm chờ xử lý và sản phẩm bàn giao
+13236	Từ cùng ba điểm số đi đến lấy mẫu không bỏ bước nào như thế nào?
+13709	Ngăn đọc tương lai hoặc đọc PAD thành nội dung như thế nào?
+30324	Tổng khối lượng công việc 10 phút. Rút ngắn nhánh không găng C chưa chắc làm thay đổi thời điểm bàn giao; chưa tính chi phí giao tiếp và tích hợp.
+18008	Thành công, thất bại, chưa xác định, chưa chạy và bản ghi gốc tương ứng
+30262	Mọi thanh dùng cùng thang xác suất 0—1; tổng khối lượng chấp nhận ở giữa là 0.7, phần còn lại 0.3 được phép bù khi từ chối điền vào B.
+30281	Lúc đó mới bắt đầu phân tích, kiểm tra kiểu và cấp quyền
+8328	Số lượng thực thi
+15765	Cô đọng lịch sử một trăm lượt thành vài câu dễ làm mất điều gì nhất?
+3818	Khi vẽ mô hình, khung thực thi và công cụ thành các làn riêng, câu hỏi “ai thực sự thay đổi tệp” có đáp án rõ ràng. Theo dõi mỗi thông điệp trả về rồi đánh giá cần tiếp tục gọi mô hình, thực thi công cụ hay kết thúc; đừng xem mô hình nói hoàn thành là môi trường đã hoàn thành.
+6922	Báo cáo
+30277	Ghép E7 88 B1 mới giải mã được “爱”
+30157	Tổng hàm mũ = 1 + 0.367879… + 0.135335… = 1.503215…
+607	Công cụ chuyển đổi qua lại văn bản và mã Token theo quy tắc đi kèm mô hình. Ví dụ: không thể tùy ý đổi bộ tách token mà giữ tham số mô hình không tương thích.
+30501	Hàm mất mát=2
+17753	Tiếp quản mô hình
+9118	Cần làm gì sau khi rút D1
+8326	Số lượng thu thập
+30174	q mới bị đặt nhầm về không: tích vô hướng 1
+16140	Khi sự kiện mới xuất hiện, cập nhật bộ nhớ cũ mà không phá hủy lịch sử như thế nào?
+30130	Ô vuông biểu diễn mục ký hiệu hiện tại; một ô chưa chắc tương đương một ký tự.
+14547	Mô hình đã biết nối Token tiếp theo, vì sao còn cần SFT và huấn luyện ưu tiên?
+22107	Cũ và mới đều đúng 12, sửa đúng 5, suy giảm 1, cả hai đều sai 2; tính cũ 13/20 và mới 17/20, rồi giải thích từng nhiệm vụ trong 6 nhiệm vụ bất đồng.
+30122	Thời điểm 0
+30124	Thời điểm 1
+30126	Thời điểm 2
+30128	Thời điểm 3
+9233	Thời lượng (giây giảng dạy)
+12556	Mục từ vựng thông thường
+18003	Các trường bàn giao tối thiểu
+30261	Mục tiêu cuối cùng p
+8337	Có kiểm thử hữu hiệu
+6838	Kỳ vọng
+4895	Nội dung ví dụ này
+8325	Điều kiện ví dụ này:</strong> Bản ghi độc lập: lệnh kiểm thử thoát 0 nhưng thu thập 0 mục; lần khác có 12 mục qua, nhưng chạy trên r7 trong khi mã cuối cùng đã sửa thành r8.
+18012	Mã và bản ghi cục bộ
+30190	Quan hệ có thể thấy lần này
+18015	Kết quả kiểm thử cơ chế lượt này
+30158	Độ dài thanh tỷ lệ với xác suất, ranh giới là xác suất tích lũy chưa làm tròn. argmax chọn A; số lấy mẫu cho trước 0.70 chọn B. Đây không phải độ chính xác của câu trả lời toàn câu.
+20343	Nguồn S004, lắp ghép đầu vào và vòng lặp thực thi của Codex
+18945	Nguồn S039, bộ nhớ đệm tiền tố Prompt
+20344	Nguồn S068, cơ chế hoạt động của Claude Code
+20372	Nguồn S071, cách ly và quyền hạn của Agent con
+19099	Nguồn S085, hiệu ứng vị trí trong ngữ cảnh dài
+19100	Nguồn S088, cửa sổ danh định và năng lực hiệu dụng
+20788	Nguồn S089, trạng thái cô đọng không minh bạch và thực thi liên tục
+20800	Nguồn S130, phát triển liên tục qua các ngữ cảnh
+17735	Xây dựng vòng lặp
+30127	Tra bảng từ vựng cố định
+2725	Nhãn là mục tiêu đúng cần so sánh; huấn luyện Token tiếp theo căn vị trí đầu vào với Token ngay sau. Teacher forcing dùng tiền tố thực trong dữ liệu để tính, không thay bằng kết quả vừa lấy mẫu. <span class="concept-micro">Ví dụ độc lập: chuỗi đầy đủ [a,b,c,d], có thể dùng đầu vào [a,b,c] đối với nhãn [b,c,d]. Khi giao diện đã dịch nhãn, không được dịch thêm lần nữa ở bên ngoài.

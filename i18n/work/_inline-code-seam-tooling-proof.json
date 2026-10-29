@@ -1,0 +1,296 @@
+{
+  "version": 1,
+  "status": "implemented_independent_review_pending",
+  "owner": "i18n/apply.py:space_seams",
+  "consumer": "i18n/apply.py:main after splice/chrome/relink/head",
+  "scope": {
+    "languages": [
+      "en",
+      "es",
+      "vi"
+    ],
+    "change": "Constrain the existing seam insertion positions to stay outside literal code payloads. If the matched punctuation crosses its closing code tag, move only the new space past that tag; skip insertions inside internal markup. Preserve every existing whitespace byte.",
+    "japanese": "main continues to skip space_seams entirely for LANG == ja; no Japanese output was written.",
+    "worker_writes": "Only apply.py and test_apply_seams.py; this worker did not write Chinese source, table, or edition outputs."
+  },
+  "files": {
+    "apply.py": "beff42cc19585605611554be1cfd4ca42e03d288d14cafb6f115a4a09167f13b",
+    "test_apply_seams.py": "077c949e296c4e1d444ae5e1b684e88f22d2f0ca08da79405f263c4c685f346c"
+  },
+  "before_files": {
+    "apply.py": "86fe7b39551bf5b0790e0c7e7132fe04a5390e736cc8a6867972f9329a279077"
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s i18n -p 'test_*.py'",
+    "passed": 77,
+    "previous_suite": 71,
+    "new_seam_tests": 6,
+    "independently_repeated_current_run": false
+  },
+  "behavioral_red": {
+    "tests": 6,
+    "failures": 20,
+    "errors": 0,
+    "actual_six_endings_fail_for_all_three_latin_languages": true,
+    "baseline_source_sha256": "86fe7b39551bf5b0790e0c7e7132fe04a5390e736cc8a6867972f9329a279077",
+    "test_module": "test_apply_seams.py",
+    "cause": "PUNCT_SEAM matched payload-ending colons or the semicolon in &gt; before </code> and inserted its gap inside code.",
+    "actual_endings": [
+      "&lt;untrusted&gt;",
+      "data:",
+      "query:",
+      "passage:",
+      "&lt;PAD&gt;",
+      "data:"
+    ],
+    "other_failed_controls": [
+      "Internal inline markup received unwanted spaces.",
+      "Nested closing tags kept the new gap inside code."
+    ],
+    "setup_or_import_failures": 0
+  },
+  "readonly_whole_book": {
+    "construction": "For every extracted page and each Latin edition, build splice/chrome/relink/head in memory, compare all raw code payloads immediately before/after space_seams, and compare against the snapshotted old seam implementation.",
+    "languages": {
+      "en": {
+        "pages": 262,
+        "code_payloads_including_pre": 2448,
+        "code_payload_preservation_failures": [],
+        "changed_pages": [
+          {
+            "page": "chapters/01.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "chapters/10.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "chapters/15.html",
+            "code_payload_repairs": 2,
+            "whitespace_only": true
+          },
+          {
+            "page": "foundations/03.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "foundations/23.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          }
+        ],
+        "legacy_payload_repairs": [
+          {
+            "page": "chapters/01.html",
+            "index": 57,
+            "old": "&lt;untrusted&gt; ",
+            "fixed": "&lt;untrusted&gt;"
+          },
+          {
+            "page": "chapters/10.html",
+            "index": 6,
+            "old": "data: ",
+            "fixed": "data:"
+          },
+          {
+            "page": "chapters/15.html",
+            "index": 4,
+            "old": "query: ",
+            "fixed": "query:"
+          },
+          {
+            "page": "chapters/15.html",
+            "index": 5,
+            "old": "passage: ",
+            "fixed": "passage:"
+          },
+          {
+            "page": "foundations/03.html",
+            "index": 5,
+            "old": "&lt;PAD&gt; ",
+            "fixed": "&lt;PAD&gt;"
+          },
+          {
+            "page": "foundations/23.html",
+            "index": 3,
+            "old": "data: ",
+            "fixed": "data:"
+          }
+        ]
+      },
+      "es": {
+        "pages": 262,
+        "code_payloads_including_pre": 2448,
+        "code_payload_preservation_failures": [],
+        "changed_pages": [
+          {
+            "page": "chapters/01.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "chapters/10.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "chapters/15.html",
+            "code_payload_repairs": 2,
+            "whitespace_only": true
+          },
+          {
+            "page": "foundations/03.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "foundations/23.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          }
+        ],
+        "legacy_payload_repairs": [
+          {
+            "page": "chapters/01.html",
+            "index": 57,
+            "old": "&lt;untrusted&gt; ",
+            "fixed": "&lt;untrusted&gt;"
+          },
+          {
+            "page": "chapters/10.html",
+            "index": 6,
+            "old": "data: ",
+            "fixed": "data:"
+          },
+          {
+            "page": "chapters/15.html",
+            "index": 4,
+            "old": "query: ",
+            "fixed": "query:"
+          },
+          {
+            "page": "chapters/15.html",
+            "index": 5,
+            "old": "passage: ",
+            "fixed": "passage:"
+          },
+          {
+            "page": "foundations/03.html",
+            "index": 5,
+            "old": "&lt;PAD&gt; ",
+            "fixed": "&lt;PAD&gt;"
+          },
+          {
+            "page": "foundations/23.html",
+            "index": 3,
+            "old": "data: ",
+            "fixed": "data:"
+          }
+        ]
+      },
+      "vi": {
+        "pages": 262,
+        "code_payloads_including_pre": 2448,
+        "code_payload_preservation_failures": [],
+        "changed_pages": [
+          {
+            "page": "chapters/01.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "chapters/10.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "chapters/15.html",
+            "code_payload_repairs": 2,
+            "whitespace_only": true
+          },
+          {
+            "page": "foundations/03.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          },
+          {
+            "page": "foundations/23.html",
+            "code_payload_repairs": 1,
+            "whitespace_only": true
+          }
+        ],
+        "legacy_payload_repairs": [
+          {
+            "page": "chapters/01.html",
+            "index": 57,
+            "old": "&lt;untrusted&gt; ",
+            "fixed": "&lt;untrusted&gt;"
+          },
+          {
+            "page": "chapters/10.html",
+            "index": 6,
+            "old": "data: ",
+            "fixed": "data:"
+          },
+          {
+            "page": "chapters/15.html",
+            "index": 4,
+            "old": "query: ",
+            "fixed": "query:"
+          },
+          {
+            "page": "chapters/15.html",
+            "index": 5,
+            "old": "passage: ",
+            "fixed": "passage:"
+          },
+          {
+            "page": "foundations/03.html",
+            "index": 5,
+            "old": "&lt;PAD&gt; ",
+            "fixed": "&lt;PAD&gt;"
+          },
+          {
+            "page": "foundations/23.html",
+            "index": 3,
+            "old": "data: ",
+            "fixed": "data:"
+          }
+        ]
+      }
+    },
+    "result": "Each edition preserves 2,448 code payloads across all 262 pages; only the five named pages differ from the old implementation, repairing six payloads per edition; every full-page delta is whitespace-only.",
+    "published_outputs_written": false
+  },
+  "regression_and_negative_controls": [
+    "Original spaces, tabs and newlines in payloads are retained.",
+    "Internal code markup stays byte-identical.",
+    "Adjacent code tags and nested closing tags put gaps outside code.",
+    "Existing word, punctuation, accent/combining mark, subscript, superscript and hyphen attachment behavior is retained.",
+    "pre/script/style/svg/textarea regions stay byte-identical.",
+    "Applying the repaired seam transform twice is idempotent on the actual ending fixtures."
+  ],
+  "independent_review": {
+    "agent": "/root/es_vi_review",
+    "status": "passed",
+    "tests": 77,
+    "blocking_findings": 0,
+    "reviewed_hashes": {
+      "apply.py": "beff42cc19585605611554be1cfd4ca42e03d288d14cafb6f115a4a09167f13b",
+      "test_apply_seams.py": "077c949e296c4e1d444ae5e1b684e88f22d2f0ca08da79405f263c4c685f346c"
+    },
+    "code_payloads_each_language": 2448,
+    "old_new_page_differences_each": 5,
+    "old_new_payload_differences_each": 6
+  },
+  "actual_published_repair_proof": "_inline-code-seam-repair.json",
+  "limits": [
+    "This evidence is a tooling-stage in-memory comparison. The main process owns actual regenerated editions and the separate published repair proof.",
+    "No service or browser was started.",
+    "No browser, interaction, or native-language linguistic acceptance is claimed."
+  ]
+}

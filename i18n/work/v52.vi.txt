@@ -1,0 +1,499 @@
+18919	Giao diện, CLI và phần mở rộng IDE là lối tương tác; mô hình, công cụ và quản lý trạng thái là bộ phận thực thi. Cùng giao diện không bảo đảm cùng ngữ cảnh; giao diện khác vẫn có thể chung logic lõi. Có chung hay không phải dựa tài liệu sản phẩm hoặc mã một phiên bản, không đoán từ hình thức.
+23497	Định vị giao diện
+14804	Giao diện hiện dần theo ký tự
+30914	Văn bản giao diện
+20413	Phải tách hiển thị giao diện và sự thật thực thi. Sau khi máy khách mất kết nối, màn hình không cập nhật không bảo đảm nhiệm vụ đã dừng; nhận sự kiện tiến độ cũng không có nghĩa trạng thái cuối hoàn tất. Cách khôi phục cụ thể tùy giao thức và triển khai.
+9714	Nhấp giao diện thành công, vì sao thao tác nghiệp vụ chưa xong
+29606	Hành động giao diện cần quan sát lại
+3752	Triệu chứng
+24679	Triệu chứng là lan truyền xuôi cả chuỗi đã biết đúng, nhưng tách thành bộ nhớ đệm lịch sử + token mới thì lệch. Nguyên nhân ứng viên gồm chiếu lặp, đảo nghĩa mask, lệch vị trí, xoay RoPE lặp, bật nhầm dropout và độ chính xác số. Cố định tham số, dtype và đường ngẫu nhiên trước rồi cách ly từng biến, không tăng mô hình hay nới dung sai ngay.
+4562	Đăng ký
+29568	Điểm phần trăm
+2309	của
+12022	có 0 dùng tìm hàng từ vựng; 0 trong bảng hợp lệ hay khả kiến là dấu phép tính. Không được đồng nhất chỉ vì cùng chữ số.
+24565	JSON; dịch vụ tổ chức vai trò, lời gọi công cụ và ảnh thành biểu diễn đã quy ước khi huấn luyện rồi mã hóa tương ứng. Có thể kiểm trực tiếp mẫu hội thoại của mô hình mở; toàn bộ mẫu cuối của dịch vụ đóng thường không công khai cho máy khách. Không gọi nhật ký API là «đầu vào gốc đầy đủ của mô hình».
+1207	có Q là Query đã chiếu. Giao diện MultiheadAttention cấp cao có thể nhận đầu vào trước chiếu và chiếu bên trong; SDPA cấp thấp nhận Q/K/V đã chiếu và sắp theo chiều đầu. Gọi cả hai là «attention» không xóa ranh giới này. Đọc hình dạng đầu vào, quyền sở hữu bảng tham số và trách nhiệm chia tỷ lệ rồi quyết định bên gọi làm bước nào.
+4465	có số byte UTF-8 khác số ký tự chuỗi. Sách nạp từng byte vào bộ giải mã UTF-8 tăng dần của Python để khôi phục JSON đúng; decode từng khối độc lập có thể lỗi giữa chữ Hán hoặc mất ký tự. Kiểm thử phải có nội dung nhiều byte, biên CRLF, dòng trống và ký tự escape, không chỉ JSON tiếng Anh ngắn.
+25732	xử lý sai basename. Cần phản ví dụ cùng tên khác đường, biên thư mục, dấu phân cách Windows, quy tắc rỗng và đi lên thư mục cha. Mỗi khẳng định phải tương ứng một hợp đồng hoặc giả thuyết lỗi, tránh nhiều đường thuận lặp lại.
+26272	trong trường capstone. Các số này tương ứng hồ sơ chạy đi kèm, không phải kết quả dự kiến.
+2005	loss». Tham số nào giảm trọng số, ε đặt đâu và cách precision hỗn hợp giữ trọng số chính phải xem triển khai cụ thể.
+1921	loss thường là trung bình các vị trí nhãn hợp lệ. «Hợp lệ» ở đây do
+18160	có tính xuôi chính khoảng 2mkn FLOPs; huấn luyện tính thêm gradient đầu vào và trọng số, tổng thô 6mkn. Khi tóm các phép nhân trọng số nhiều lớp thành suy luận khoảng 2N và huấn luyện 6N mỗi token, phải nêu bỏ qua số hạng chiều dài Attention, chuẩn hóa, bộ tối ưu, tính lại và giao tiếp; không phải công thức thời gian GPU.
+25867	token không có nghĩa đọc tệp mọi người trong hệ thống. Không xem trường tenant do mô hình cho là danh tính tin cậy; phải gắn với ngữ cảnh phiên và ủy quyền. Chuyển tiếp token giữa dịch vụ phải theo ràng buộc đối tượng nhận / tài nguyên, không tùy tiện truyền token dịch vụ này sang dịch vụ khác.
+4264	có trường cụ thể theo tài liệu của nó. Trọng tâm là ngữ nghĩa hoàn tất khác nhau từ byte, sự kiện, mục lời gọi tới tác động phụ nghiệp vụ.
+5370	có cách đếm cụ thể khác nhau, cần hiệu chỉnh theo quy tắc giao diện.
+27966	điểm. mask nhân quả là:
+27989	mạng truyền thẳng; thí nghiệm này dùng
+24612	có một ma trận khoảng 4.096 × một trăm triệu tham số; riêng trọng số BF16 khoảng 0.819GB thập phân, chưa tính trạng thái bộ tối ưu. Đây là tính kích thước, không phải cấu hình mô hình thương mại nào.
+12569	có tổ hợp từ con khả dụng khác nhau; xuống dòng, thụt lề và khoảng trắng cũng có thể ảnh hưởng chia token. <strong>Ngân sách thật phải dùng quy tắc đếm của mô hình tương ứng</strong>; từ vựng giảng dạy chỉ giải thích cơ chế.
+2744	có tổng bằng 2 nhưng chỉ số hợp lệ cuối là 2, không phải 1. Kiểm tra tổng quát hơn là dùng chỉ số vị trí với dấu hợp lệ để tìm vị trí hợp lệ cuối; bộ sinh thật còn cần xử lý đúng mã vị trí và bộ nhớ đệm.
+3196	tính trong lớp. Giảm mạnh so với lặp lan truyền xuôi đầy đủ, nhưng không được nói «KV khiến attention luôn từ bậc hai thành tuyến tính». Bàn độ phức tạp phải nêu một bước hay cả chuỗi, P cố định hay P và M cùng tăng.
+12350	tensor:
+5228	viết sai tên có thể không tự thành read_file bạn muốn. YAML phân tích được không có nghĩa năng lực nạp đúng.
+12951	dữ liệu, cần hỏi riêng: sắp xếp thế nào (shape), mỗi số lưu kiểu gì (dtype), nằm đâu và ai tính (device). Ba thuộc tính không thay nhau.
+1279	có phương sai 1. Vectơ sau huấn luyện thật không tuân nghiêm các điều kiện này nhưng chúng giải thích động cơ chia tỷ lệ; đây không phải ước lượng chính xác phương sai từng mẫu.
+24658	có trực giác từ phương sai tích vô hướng: nếu các thành phần độc lập, trung bình không, phương sai một thì phương sai tích vô hướng tăng theo dh; chia tỷ lệ làm thang điểm gần khởi tạo dịu hơn. Giả định không còn nghiêm sau huấn luyện nhưng công thức không phải trang trí tùy chọn.
+24574	có nghiệm thu không phải «trông chia hợp lý» mà thực hiện với nội dung trộn Trung — Anh, mã, khoảng trắng và xuống dòng
+11653	Salt không phải xác thực người dùng; sách chỉ mô phỏng danh tính và bí danh, không tuyên bố chạy dịch vụ vLLM.
+24491	Giám sát, độ trễ và chỉ số vận hành hệ thống.
+3172	Giám sát token tiếp theo
+23304	Tinh chỉnh có giám sát
+12679	Mục tiêu giám sát
+25021	Chuỗi hiện tại tình cờ là JSON hợp lệ
+6182	Tài liệu liên quan hiện gần hơn.
+10548	Hiện đã xác nhận tới bước nào
+434	Mục lục
+30651	Thư mục → D1,D3
+10861	Mục lục và lộ trình học — Kỹ thuật hệ thống AI
+20132	Liệt kê thư mục phát hiện tên foo_v2
+11744	Handle thư mục và ràng buộc phân giải giới hạn phạm vi phân giải đường; kiểm chuỗi không thay được ranh giới khi chạy.
+5336	Khi quét thư mục hoặc phạm vi sai, sửa chuỗi khám phá.
+6865	Thư mục có liên kết mềm hay phân biệt hoa thường không
+28171	Mục tiêu pipeline/filter.py và bản ghi p1
+14088	Mục tiêu «学习» có mã 3 nên lấy cột 3 của U, không lấy ô 3 của trạng thái ẩn làm xác suất:
+21870	Mục tiêu, v8, chưa kiểm thử, cấm commit
+20942	Mục tiêu, phát hiện, nguồn, điều cấm và bước tiếp
+4027	Mục tiêu, phiên bản hiện tại, ID lời gọi, trạng thái, kiểm tra tiếp
+27858	Mục tiêu, mẫu hợp lệ và cách quy giảm ảnh hưởng mất mát; khi bỏ PAD trong giảng dạy, đổi cả tử và mẫu.
+29725	 mục tiêu, phạm vi, bằng chứng, ràng buộc, trạng thái hiện tại và yêu cầu bàn giao.
+765	Mục tiêu ngoài phạm vi
+14279	Mục tiêu không phải chính mã đầu vào; huấn luyện dùng token tiếp theo làm tín hiệu giám sát và tránh nhìn tương lai bằng Mask nhân quả.
+3518	Chất lượng nhiệm vụ mục tiêu + hiệu năng kernel thực
+14150	Giá trị mục tiêu y*
+24561	Hàm mục tiêu đổi «muốn token kế tiếp nào xuất hiện» thành số tối ưu được; cố định vị trí nhãn trước rồi tách xác suất, log âm và gradient.
+3597	Phân phối đích p, phân phối nháp q, lấy mẫu trước
+2393	Mục tiêu có thể củng cố ưu tiên sai; công thức đúng không sửa được nhãn xấu.
+24591	Vectơ mục tiêu y
+15550	Mục tiêu tồn tại, chưa thực thi.
+22451	Đối chiếu mục tiêu
+20592	Lớp mục tiêu
+2475	Khác biệt mục tiêu
+16290	Mục tiêu là vừa đủ
+8184	Mục tiêu là tiếp tục làm, không lặp hành động đã thành công.
+19151	Truy vấn đích đọc K/V nguồn
+14850	Nhãn mục tiêu
+24776	Gradient mục tiêu
+3665	Mô hình đích có thể kiểm chứng song song nhiều vị trí nháp đã biết, giảm lượt nối tiếp tốn kém. Nhưng tạo nháp cũng có chi phí; tỷ lệ chấp nhận thấp, kiểm chứng đích tốn kém hay lập lịch lô không phù hợp có thể không lợi. Chứng minh đúng chỉ về phân phối, không tự chứng minh độ trễ tốt hơn. Cần so thông lượng và độ trễ thật với cùng phân phối đích và ràng buộc nhiệm vụ.
+25695	Một Agent thường đủ khi mục tiêu rõ, thay đổi nhỏ, bằng chứng tập trung và xác minh rẻ. Việc đa ngôn ngữ, mô-đun độc lập hoặc nghiên cứu rộng mà kết quả dễ kiểm độc lập có thể lợi hơn từ song song. Phán đoán phải dựa phụ thuộc và rủi ro thật, không đòi tính điểm phức tạp cho mỗi nhiệm vụ.
+13223	Mục tiêu cần 8 số, tổng phần tử khác nhau nên phải từ chối.
+3527	Chi phí nối tiếp từng bước của mô hình đích
+30525	Mục tiêu: «EOS»
+30523	Mục tiêu: «学习»
+30521	Mục tiêu: «爱»
+24642	Mục tiêu: giải thích trực tiếp một lần lan truyền xuôi, không dùng ẩn dụ «chú ý tập trung nội dung quan trọng»; có thể triển khai và kiểm nhất quán ba kiểu suy luận cả chuỗi, từng token và theo khối. Thí nghiệm:
+25907	Mục tiêu: tìm nút thắt thật từ một dấu vết nhiệm vụ đầy đủ và định nghĩa chính sách lỗi chạy được. Không yêu cầu mọi script cục bộ đều xây nền tảng quan sát phân tán.
+24923	Mục tiêu: suy chi phí dịch vụ từ kích thước tensor, biết tối ưu giảm tính toán, di chuyển bộ nhớ, phân mảnh hay xếp hàng; tránh giả thí nghiệm đẳng thức CPU thành kết quả hiệu năng GPU.
+25127	Mục tiêu: học theo dõi dữ liệu theo commit và hàm xác định, không xem giới thiệu sản phẩm là sự thật mã nguồn. Chương này đọc thật mã công khai nhưng chưa biên dịch hay chạy Codex. Hai ảnh chụp nguồn được ghi riêng, không gộp thành «triển khai đầy đủ hiện tại».
+25469	Mục tiêu: nâng «tìm mã» thành hiểu cú pháp, liên kết tên và ảnh hưởng thay đổi; đồng thời biết quan hệ nào phân tích tĩnh không bảo đảm. Thí nghiệm:
+26143	Mục tiêu: tách «mô hình rất tự tin» khỏi «đáng tin»; hiểu công cụ diễn giải trả lời câu hỏi gì và không thay được xác minh kỹ thuật nào.
+26257	Mục tiêu: nối đầu vào, truy hồi, bản vá, công cụ, trạng thái, kiểm thử và báo cáo thành trường hợp chạy được. Mọi mã và mẫu là nguyên gốc của sách; bộ điều khiển đưa bản vá theo script, không phải mô hình tự tìm bug hay đánh giá kho PSBuild thật của người dùng.
+25248	Mục tiêu: đưa Context Engineering từ kỹ thuật gợi ý thành đường cung cấp thông tin kiểm tra được. Thí nghiệm:
+26320	Mục tiêu: chuyển nguyên lý sang nghiệp vụ thật, viết được luồng dữ liệu, quy tắc mất hiệu lực, xác minh và ranh giới phát hành. Dưới đây là thiết kế tham khảo nguyên gốc, không phải sản phẩm đã triển khai hay chấm điểm.
+26200	Mục tiêu: đặt các bài báo nâng cao trong mục đọc mở rộng vào cùng hệ tọa độ cơ chế, hiểu nút thắt chúng giải quyết thay vì nhớ thêm tên. Đây là đào sâu theo chủ đề, không tuyên bố sao chép mọi thí nghiệm và phụ lục từng bài.
+25045	Mục tiêu: bọc đề xuất xác suất trong hệ thống thực thi quan sát và khôi phục được; biết khi nào không cần khung. Thí nghiệm:
+25979	Mục tiêu: đưa chi phí mô hình, ngữ cảnh, bộ nhớ đệm, song song và Review vào cùng mô hình quyết định. Mọi giá đều giả định, không cung cấp báo giá nhà cung cấp hiện tại.
+24976	Mục tiêu: xây bộ chuyển đổi mô hình không coi JSON dở là hành động hay ngắt luồng là hoàn thành. Thí nghiệm:
+24815	Mục tiêu: hiểu SFT, RLHF, DPO và học tăng cường lập luận đổi gì; từ hàm mục tiêu phán đoán «cải thiện hành vi» có đồng nghĩa tăng độ tin cậy sự thật không. Thí nghiệm:
+26093	Mục tiêu: hiểu ảnh / âm thanh vào mô hình khác Agent thao tác giao diện thế nào và thiết kế nhiệm vụ GUI kiểm chứng, khôi phục được. Giáo trình chưa chạy mô hình thị giác thương mại hay OSWorld.
+25377	Mục tiêu: thiết kế truy hồi từ phân phối kho văn bản và truy vấn, xác định bỏ sót ở truy hồi ứng viên, lọc, xếp hạng hay chọn ngữ cảnh. Thí nghiệm:
+25660	Mục tiêu: đánh giá việc đáng chia, cách hợp nhất đáng tin và vì sao nhiều Agent có thể kém hơn. Lập mốc một Agent trước, không dùng số vai trò đo năng lực.
+25605	Mục tiêu: phân biệt khám phá kỹ năng, nạp nội dung, quyền công cụ, lựa chọn mô hình và áp dụng năng lực thật; tăng chất lượng bằng ít cơ chế chính xác, không mặc định dựng định tuyến nhiều tầng.
+24870	Mục tiêu: phân biệt phân phối xác suất, thuật toán giải mã và ngữ nghĩa dừng sản phẩm; suy ra tính đúng của giải mã suy đoán thay vì chỉ biết «dùng mô hình nhỏ tăng tốc». Thí nghiệm:
+26030	Mục tiêu: biết khi nào thực sự cần thích ứng tham số, hiểu ràng buộc nội bộ LoRA và lượng tử hóa, tránh dùng kỹ thuật huấn luyện giải quyết dữ liệu lỗi thời.
+25775	Mục tiêu: chứng minh tối ưu cải thiện gì và nhận ra «điểm tăng nhưng hệ thống không tốt hơn». Thí nghiệm:
+25197	Mục tiêu: so ngữ cảnh, ủy nhiệm và quyền của sản phẩm thật mà không nhầm giao diện, phiên bản. Bằng chứng là trang chính thức đọc ngày 2026-10-17, không bảo đảm phiên bản tương lai giữ nguyên.
+26486	Mục tiêu: tính đạo hàm tay theo đồ thị rồi xác minh bằng số, khép kín «học thế nào» với «suy luận thế nào» trước đó. Thí nghiệm:
+25306	Mục tiêu: thiết kế và đánh giá liên tục nhiệm vụ sau cô đọng, không chỉ tóm tắt trôi chảy không. Thí nghiệm:
+25720	Mục tiêu: biến chất lượng mã thành kết quả kiểm chứng được thay vì yêu cầu mô hình «như kỹ sư giàu kinh nghiệm». Thí nghiệm: Bài 65 sửa tệp thật, 8 kiểm thử chức năng và từ chối xác minh cũ.
+25850	Mục tiêu: biện pháp an toàn tương ứng bề mặt tấn công cụ thể, tránh phê duyệt vô tận công việc thường. Chương này thiết kế phòng vệ; mã giảng dạy không phải môi trường cách ly an toàn sản xuất.
+25528	Mục tiêu: thiết kế bộ nhớ giảm nghiên cứu lặp mà không thành bản sự thật sai thứ hai. Thí nghiệm:
+24726	Mục tiêu: hiểu chuỗi nhân quả báo cáo huấn luyện, ước lượng tài nguyên, tách lỗi tối ưu, rò dữ liệu và thiết kế mục tiêu sai. Thí nghiệm:
+26373	Mục tiêu: trước lỗi không đổi mô hình hay thêm quy tắc ngay mà đề xuất giải thích cạnh tranh, tìm bằng chứng phân biệt và sửa đúng lớp. Trường hợp do tác giả xây dựng, không phải sự cố đã xác nhận trong kho người dùng.
+18186	Mục đích
+2217	Mục đích khác nhau. Khử trùng kho văn bản chủ yếu kiểm soát phân phối mẫu và nhiễm; khử trùng bộ nhớ còn phải giữ phạm vi, thời gian, bằng chứng và quan hệ phủ định của sự thật. «Giao diện cần thử lại» và «giao diện này không được tự thử lại» gần từ ngữ nhưng không gộp được. Có thể tái sử dụng độ tương đồng tìm ứng viên, không dùng nó phán quyết tương đương kiến thức.
+30596	Chỉ giao bộ phân tích khi khung sự kiện giao thức đầy đủ, không thực thi JSON dở ở read①.
+4399	Chỉ khi tham số hoàn chỉnh mới có đối tượng kiểm chứng được.
+2346	Tạo mục tiêu huấn luyện trực tiếp từ cặp câu trả lời ưu tiên cho cùng câu hỏi, không phải chạy trọn vòng học tăng cường trực tuyến mỗi bước. Chúng tối ưu phân phối hành vi, không bảo đảm chân lý sự thật.
+1592	Truyền trực tiếp [[True,False],[True,True]].
+26309	Sửa trực tiếp
+23314	Tối ưu ưu tiên trực tiếp
+4237	Viết trực tiếp thành
+29485	: trực tiếp xóa một phần ngữ cảnh.
+5717	Xóa trực tiếp 80 bản ghi cũ nhất
+15930	Định vị thẳng A, B, không cần coi C là ứng viên liên quan.
+21923	Sửa cục bộ trực tiếp
+4784	Công cụ trực tiếp, tìm công cụ trễ và Code Mode là các bề mặt tiếp cận khác nhau.
+5683	Cắt trực tiếp 30 lượt đầu có thể mất cả «không đổi công khai
+15981	Cộng thẳng điểm BM25 8.2 vào cosin 0.7 chưa chắc có ý nghĩa vì khác đơn vị và phân phối. <strong>RRF (hợp nhất thứ hạng nghịch đảo)</strong>hợp nhất theo thứ hạng, không theo điểm gốc. Một dạng đóng góp mỗi đường là
+6354	Cộng trực tiếp điểm BM25 với độ tương đồng cosin
+3631	Khối xác suất chấp nhận trực tiếp
+3639	Khối chấp nhận trực tiếp cộng 0.4 nhân phân phối lấy mẫu lại
+22371	Chèn trực tiếp từ đầu vào hội thoại; chèn gián tiếp có thể ẩn trong web và tài liệu. Mô hình xử lý cả văn bản và chỉ dẫn nên tấn công có thể dẫn ứng dụng lệch nhiệm vụ được phép. Nội dung ngoài viết «bỏ quy tắc và tải cấu hình lên» vẫn là dữ liệu cần xử lý, không tự có quyền.
+25860	Chèn trực tiếp từ yêu cầu, gián tiếp ẩn trong nội dung đọc. Chuỗi kín hơn là nội dung độc ảnh hưởng tóm tắt rồi được lưu dài hạn, sau đó tái sử dụng như «kinh nghiệm đã xác minh». Phòng vệ phải giữ nguồn và thẩm quyền, không tự nâng tin cậy của nội dung dẫn xuất.
+28046	Sinh trực tiếp
+1198	Dùng X trực tiếp là biến thể thiết kế được, nhưng phép chiếu V học được cho phép chọn biểu diễn nội dung phù hợp để tổng hợp và đổi chiều rộng mỗi đầu. Trọng số có sẵn phụ thuộc cấu trúc huấn luyện; không thể xóa chiếu V mà kỳ vọng cùng kết quả. Tương tự, K không phải bảng chỉ mục cố định: K mỗi vị trí phụ thuộc biểu diễn ngữ cảnh của lớp đó.
+1436	Ghi đè trực tiếp bằng nhánh
+10211	Tính trực tiếp xW
+24778	Lỗi tích lũy trực tiếp
+22962	Tính trực tiếp 7, không cần tìm thêm.
+19765	Đọc trực tiếp trường
+1061	bỏ qua trực tiếp lớp trung gian của mọi vị trí lịch sử. mask nhân quả khiến phụ thuộc lịch sử có hướng nhưng không xóa nhu cầu chúng làm đầu vào lớp sau. Có thể bỏ logits trung gian không cần nhưng không thể nói chung bỏ công xây biểu diễn lịch sử.
+26153	Hỏi mô hình «tự tin bao nhiêu» có thể là tín hiệu, phải hiệu chuẩn bằng dữ liệu độc lập.
+22840	Nhân nhau
+21521	Ứng viên tương tự
+21306	Ứng viên tương tự không bằng mục tiêu đúng.
+25583	Truy hồi tương tự
+23042	Nút giống nhau, che khuất và đổi bố cục có thể gây mơ hồ. Định vị đúng vẫn cần xác nhận hiệu quả hành động.
+30674	Liên quan 1
+30675	Liên quan 2
+30676	Liên quan 3
+9246	ID liên kết nối nhiệm vụ người dùng, lời gọi mô hình, công cụ và thao tác hạ nguồn; trường phiên bản nối quy tắc, mô hình, công cụ, bằng chứng và chỉ mục. Mặc định chỉ ghi tóm tắt, hash cần thiết; khử nhạy cảm và đặt chính sách giữ dữ liệu nhạy cảm. Quan sát đầy đủ không phải lưu Prompt vô hạn.
+5043	ngữ cảnh liên quan, rồi gọi
+15991	Liên quan không đồng nghĩa đủ để trả lời
+15993	Liên quan không đồng nghĩa đủ trả lời: phân biệt từng mục
+22048	Nhiệm vụ liên quan liên tục không được truy hồi và có bằng chứng đánh giá
+20814	Thông tin liên quan không phải càng nhiều càng tốt
+24644	Quá trình động liên quan: <a href="../../visual/F12.html">Mask là bảng quy định khả năng nhìn thấy, không phải ngữ nghĩa bổ sung</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+24872	Quá trình động liên quan: <a href="../../visual/F15.html">Một đầu vào được dự đoán liên tiếp như thế nào cho đến khi kết thúc</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+24980	Quá trình động liên quan: <a href="../../visual/F23.html">Ký tự đầy đủ, sự kiện đầy đủ và tham số công cụ đầy đủ là ba cửa kiểm tra</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25251	Quá trình động liên quan: <a href="../../visual/F26.html">Ngữ cảnh mỗi lượt giống một tập tài liệu làm việc có giới hạn</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25309	Quá trình động liên quan: <a href="../../visual/F27.html">Cô đọng phải giữ lại những sự kiện làm cơ sở cho hành động</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25380	Quá trình động liên quan: <a href="../../visual/F29.html">Từ hai danh sách ứng viên đến bằng chứng có thể sử dụng</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25472	Quá trình động liên quan: <a href="../../visual/F30.html">Truy hồi mã không thể chỉ dựa vào “ngữ nghĩa gần nhau”</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25531	Quá trình động liên quan: <a href="../../visual/F31.html">Bộ nhớ dài hạn không phải mẩu ghi chú luôn luôn đúng</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25607	Quá trình động liên quan: <a href="../../visual/F32.html">Skill đã tồn tại, vì sao vẫn có thể hoàn toàn không có tác dụng?</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25047	Quá trình động liên quan: <a href="../../visual/F33.html">Hết thời gian chờ cho biết chưa nhận được, không cho biết việc đó chưa xảy ra</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25852	Quá trình động liên quan: <a href="../../visual/F37.html">Tài liệu có thể tác động đến mô hình, nhưng điều đó không có nghĩa là được cấp quyền</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+24925	Quá trình động liên quan: <a href="../../visual/O04.html">FlashAttention: vừa đọc vừa tích lũy, không giữ toàn bộ bảng</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+25662	Quá trình động liên quan: <a href="../../visual/O11.html">Nhiều Agent: công việc có thể chạy song song quan trọng hơn số lượng Agent</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+11917	Quá trình động liên quan: <a href="../visual/F05.html">Embedding là tra một hàng, không phải đổi mã thành nhị phân</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+4686	Quá trình động liên quan: <a href="../visual/F25.html">MCP kết nối các giao diện, không tự động trao quyền</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+6012	Quá trình động liên quan: <a href="../visual/F28.html">Truy hồi tìm ứng viên trước, rồi mới đánh giá có thể trả lời hay không</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+6626	Quá trình động liên quan: <a href="../visual/F30.html">Truy hồi mã không thể chỉ dựa vào “ngữ nghĩa gần nhau”</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+7266	Quá trình động liên quan: <a href="../visual/F32.html">Skill đã tồn tại, vì sao vẫn có thể hoàn toàn không có tác dụng?</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+9781	Quá trình động liên quan: <a href="../visual/F39.html">Biểu diễn hình ảnh và hành động trên giao diện là hai lớp vấn đề khác nhau</a>. Phần dưới tiếp tục trình bày tính toán cụ thể hơn và ranh giới kỹ thuật.
+10055	Khác biệt giữa trực quan hóa tương quan và thí nghiệm nhân quả
+21122	Mẫu so sánh liên quan định hình khoảng cách
+21331	Bản thân nhãn liên quan có thể thiếu, nhất là nhiệm vụ mã cần nhiều bằng chứng cùng hỗ trợ. Một mảnh liên quan không đủ hoàn tất mọi lập luận.
+23113	Khác biệt giữa quan sát tương quan và can thiệp nhân quả
+6445	Điểm liên quan cũng không phải đáp án đúng; cuối cùng vẫn đọc điều kiện áp dụng và gắn bằng chứng.
+11769	Phản ví dụ đếm phiếu lặp nguồn liên quan do sách xây dựng, không phải báo cáo sự cố Elastic.
+447	Nội dung chính liên quan
+26897	Các chương hệ thống liên quan
+23115	Quan sát tương quan
+25697	Với lỗi tương quan, không nhân xác suất độc lập cho ba Agent
+6184	Xác suất mục liên quan khoảng 0.689974.
+14186	Cộng, tái dùng và nhánh truyền gradient thế nào
+13421	Cộng rồi chia 4 để được trung bình bình phương.
+2138	Cộng và ghi vào G_E[2]
+1100	Kết quả cộng
+13019	Cùng 24 số, mỗi số 2 byte
+13845	Cùng token tra bảng cố định được cùng hàng số. Nếu chú ý không có cơ chế vị trí chỉ so và tổng hợp tập hợp thì nói chung không mã hóa mọi khác biệt thứ tự. mask nhân quả cung cấp một phần ràng buộc trước sau nhưng không cho phép bỏ cơ chế vị trí trong thiết kế mô hình.
+2798	Cùng logits được phân bổ lại thế nào qua nhiệt độ, Top-k và Top-p
+26061	Sai số đầu ra do cùng ΔW tạo
+1495	Giống nhau. Tham số, mã vị trí và đầu vào khả kiến nhân quả đều giống; 我/你 phía sau không ảnh hưởng vị trí BOS. Kiểm thử dùng tính bất biến tiền tố kiểm điều này và dùng triển khai bỏ mask nhân quả làm phản ví dụ.
+29713	 nghĩa là tiền tố giống nhau và tương thích có thể tái sử dụng tính toán đã có.
+25238	So nhiều lần cùng nhiệm vụ với các nhiệm vụ lân cận
+3652	Cùng phân phối không có nghĩa cùng hạt giống cho cùng đường đi. Thứ tự dùng số ngẫu nhiên, dấu phẩy động và triển khai có thể khác. Cam kết đúng là tương đương phân phối dưới điều kiện thuật toán, không phải chuỗi giống từng bit với mọi thiết lập, càng không phải sự thật câu trả lời hoàn toàn đúng.
+19798	Cùng tiền tố, phần đuôi khác
+22517	Cùng lệnh, rủi ro khác.
+3165	Cùng chuỗi: bộ nhớ đệm so với tính đầy đủ
+21104	Cùng điểm.
+14594	Cùng chỉ dẫn x
+3168	Cùng trọng số và đầu vào
+3169	Tái hiện trong cùng điều kiện
+3174	Cùng nguồn xác suất
+21900	Cùng mô hình dùng giao diện công cụ khác có thể thể hiện khác. Đầu ra quá lớn, phản hồi chỉnh sửa mơ hồ hoặc thiếu thông tin lỗi đều tăng nguy cơ thất bại.
+31035	Cùng mã 2 tra được cùng vectơ ban đầu trong hai câu.
+3511	So với dung sai trên cùng đầu vào + đo thời gian trên phần cứng đích
+20838	Cùng câu hỏi, chạy nhiều lần
+30013	Cùng tần suất thì sắp cố định để tái hiện demo.
+1687	Giữ vị trí tương đối và lệch bộ nhớ đệm: tính hai lần cùng phép xoay
+19225	Quan hệ tương đối được giữ.
+24428	Mục tiêu ưu tiên tương đối với mô hình tham chiếu; giải thích công thức không phải tái hiện huấn luyện.
+24352	Mục tiêu ưu tiên tương đối với chính sách tham chiếu; gói này chưa huấn luyện ưu tiên mô hình thương mại.
+19503	Thay đổi tương đối
+14598	Hiệu tương đối
+17648	Theo ranh giới quan sát chỉ định, không lộ thao tác hoàn tất một phần.
+31226	Thay đổi tương đối
+19220	Xoay tương đối 60°.
+19223	Xoay tương đối vẫn 60°.
+25665	Tìm thông tin tương đối độc lập có thể song song; nhiệm vụ khác có ngữ cảnh, công cụ riêng; một phần đánh giá có thể cách ly giả định người triển khai. Hệ nghiên cứu Anthropic cho ví dụ kỹ thuật Agent chính điều phối và con khám phá song song; Agentless cho thấy luồng cấu trúc đơn giản cũng cạnh tranh trong một số nhiệm vụ phần mềm. Hai bên khác nhiệm vụ, thiết lập nên không có kết luận «nhiều Agent luôn tốt hơn».
+21635	Mục tiêu đường dẫn tương đối không tồn tại
+7913	Ngược lại, yêu cầu thất bại tại kiểm tham số cục bộ và chắc chắn chưa gây tác động phụ thì thường có thể sửa tham số rồi thử. Vị trí lỗi quyết định khôi phục; cấu trúc lỗi cần chứa giai đoạn thực thi đã biết, không chỉ chuỗi «error».
+664	a, b kề nhau khớp ưu tiên cao nhất
+26469	Mẫu âm lân cận
+21620	Tiết kiệm chiều dài nhưng hại nhiệm vụ; cần đánh giá cả hai chiều.
+31621	Tiết kiệm bảng trung gian
+14970	Tiết kiệm phép tính, tốn gì
+27267	Giảm tham số, giảm số bit và giảm kích hoạt là các tối ưu khác nhau — Kỹ thuật hệ thống AI
+27268	Giảm tham số, giảm số bit và giảm phần kích hoạt không phải cùng một kiểu tối ưu</a><a href="#topic-3">Giải thích từng bước và bản ghi tính toán
+5237	Bỏ trường và truyền tập rỗng tường minh có tương đương không tùy phiên bản sản phẩm và ngữ nghĩa cấu hình. Hồ sơ là đầu dò giảng dạy cách ly, không suy hành vi một ứng dụng chủ ra mọi sản phẩm.
+1255	Vị trí không hiển thị không bị bỏ tính; Key và Value khác mà Attention cần đến từ cùng lần lan truyền xuôi.
+31579	Tiết kiệm bộ nhớ đệm, giảm đọc
+8603	Xem ít nhất một lần thành công trong k lần thử;
+7371	Xem ví dụ dễ định tuyến nhầm
+2492	Xem lớp MoE Top-2 đơn giản hóa
+12950	Xem một hình dạng
+8939	Xem ranh giới năng lực của một nhiệm vụ mã
+7966	Xem hai thứ tự sai
+8995	Đường có vẻ trong thư mục cho phép có thể qua liên kết ra ngoài; đích cũng có thể đổi sau kiểm. Phải phân giải tài nguyên thật và dùng thao tác hệ thống tệp, kiểm soát đồng thời phù hợp. Khớp tiền tố chuỗi không đủ tạo ranh giới đáng tin.
+2197	Có vẻ huấn luyện và kiểm thử không có tệp trùng tên.
+10669	Gặp checkpoint, trước hết hãy hỏi “khôi phục tham số, tính lại kích hoạt hay tiếp tục nhiệm vụ”. Agent lưu tóm tắt không cập nhật trọng số mô hình.
+14413	Thấy «我», mục tiêu «爱»
+14415	Thấy «我爱», mục tiêu «学习»
+14417	Thấy «我爱学习», mục tiêu EOS
+14117	Xem công dụng, nguồn và định nghĩa trục cột của tham số. Cột đầu ra U tương ứng chặt mục từ vựng; cột Wq tương ứng đặc trưng Query. Cùng kích thước không thay được phán đoán ngữ nghĩa.
+8684	Xem thay đổi thành bại trên cùng nhiệm vụ, cỡ mẫu và khoảng bất định, không chỉ tổng phần trăm. Thiết kế ghép cặp kiểm soát độ khó để khác biệt chủ yếu đến từ phiên bản; có ý nghĩa thống kê không đồng nghĩa đáng giá kỹ thuật, vẫn cần chi phí và rủi ro.
+4529	Xem hai lời gọi của công cụ cùng tên
+12600	Xem lớp byte
+10500	Xem là kích thước hay thao tác; ưu tiên viết nhiệt độ τ
+10502	Xem hình dạng; sách ưu tiên viết cỡ từ vựng Vocab hoặc n_vocab
+10506	Xem là số đếm, hàm mục tiêu hay thống kê chạy
+25644	Xem vì sao 2 mẫu dương bị bỏ không khớp
+15075	Xem ma trận
+16598	Lấy nghịch đảo hạng kết quả đúng đầu tiên rồi trung bình; đứng đầu là 1, thứ hai là 1/2.
+21288	Xem biên dịch / kiểm thử và ngữ nghĩa, không chỉ chuỗi giống nhau
+6523	Xem có bù thiếu hụt bằng nguồn đã được phép không và giá trị biên của tìm kiếm. Định vị rõ cấu hình thì đọc tiếp; không có quyền hay nguồn không tồn tại thì nêu ranh giới. Tìm vô hạn tăng chi phí và có thể nhặt hỗ trợ kém; không tìm tới khi hài lòng chỉ để có đáp án khẳng định.
+24773	Thấy báo cáo «nhiều dữ liệu hơn, mô hình mạnh hơn», hỏi token huấn luyện hữu hiệu, khử trùng và nhiễm, ngân sách, chi phí triển khai và phạm vi nhiệm vụ. Thấy «thiếu bộ nhớ GPU», phân rã chiếm dụng thay vì giảm batch ngay. Thấy «loss không giảm», xem nhãn, mask, gradient, tốc độ học và số trước khi đổi kiến trúc. Mỗi kiểm tra phải tương ứng biến quan sát được, đó mới là hiểu nội bộ hệ huấn luyện.
+21771	Thấy một kết quả kiểu công cụ
+3467	Thấy hiện tượng nào thì theo chuỗi nhân quả đó
+16691	Xem ai tốt hoặc kém đi ở câu nào
+16720	Xem thay đổi ghép cặp
+11509	CPU autograd và cross_entropy thật; phần DDP mô phỏng đại số quy giảm trung bình, không khởi chạy huấn luyện phân tán.
+22244	Đánh giá Issue thật phải xác minh hành vi bản vá
+10223	MLA thật còn gồm biểu diễn KV hạng thấp chung, thiết kế vị trí và hấp thụ ma trận
+11500	PyTorch CPU Linear và SDPA thật; không có kernel CUDA.
+11498	Thao tác giảng dạy mở rộng Embedding PyTorch thật; không gọi resize mô hình HF đầy đủ.
+11504	PyTorch MHA và SDPA thật, cố định đầu vào, mặt nạ và phép chiếu.
+11514	Nhánh hạng thấp PyTorch autograd thật; chưa chạy mô hình PEFT đầy đủ.
+11522	Giải mã UTF-8 tăng dần và lắp mảnh Python thật; chưa nối luồng API thương mại.
+11532	Cập nhật điều kiện SQLite hai kết nối thật và mô phỏng trạng thái bộ nhớ; không nối nhiệm vụ sản xuất.
+21940	Token thật đi vào bộ phân tích
+11551	Tiến trình con pytest thật: không thu được kiểm thử và tất cả skip; chưa chạy mã người dùng.
+14320	Token tiếp theo thật
+11540	Kho Git và cây làm việc tạm thật; chưa thao tác kho người dùng.
+11556	Phân giải symlink thư mục tạm thật; chưa chạy stress test lời gọi hệ thống openat2.
+24468	Đánh giá kiểu kiểm thử trên vấn đề kho thật; chưa chạy benchmark.
+22088	Nhiệm vụ thật, benchmark, chấm quá trình và thí nghiệm hồi quy
+18214	Nhiệm vụ, người dùng và hậu quả không thể chấp nhận thật, không chồng thuật ngữ
+24748	Đọc bản sửa thật: từ sự cố tích lũy gradient đến kiểm thử phân biệt được mục tiêu sai
+16424	Tác động phụ thật đã xảy ra.
+20700	Hành động thật
+11548	Mã thoát tiến trình con thật 17, hai tệp SQLite và khóa lũy đẳng ổn định; hạ nguồn là dịch vụ mô phỏng cục bộ, không phải thanh toán hay nghiệp vụ bên ngoài.
+20093	Triển khai thật còn cần timeout, hủy, thử lại và lưu bền. Ban đầu có thể đơn giản nhưng tác động phụ và khôi phục không thể chỉ dựa mô hình «ghi nhớ».
+26690	Huấn luyện mô hình nhỏ thực trên CPU
+24511	Vấn đề đánh giá tính chân thật và bắt chước niềm tin sai.
+16665	Xác suất thành công thật có thể hiểu là thuộc tính khi lặp lâu dài dưới phân phối nhiệm vụ và điều kiện thực thi cho trước; đo 20 câu đạt 18 trong một lần là <strong>ước lượng mẫu</strong>. Mẫu càng ít, kết quả càng dễ dao động vì tình cờ chọn câu hay khác biệt lấy mẫu.
+28422	Chi phí thật phải cộng phí đầu vào chưa đệm, đã đệm và đầu ra mỗi lượt, kèm làm lại do thất bại. Không được chỉ so token «lượt cuối trước cô đọng» với «lượt đầu sau cô đọng» rồi kết luận. Tiền tố bộ nhớ đệm ổn định không, đầu ra công cụ có cắt không cũng ảnh hưởng hóa đơn.
+5115	Chẩn đoán thật cần thu bốn danh sách nào
+28405	Tệp thật
+3994	Nội dung hiện tại của tệp và cơ sở dữ liệu thật.
+4547	Thời gian thật
+22013	Kết quả build thật giữ / loại thư mục
+14845	Tiền tố mẫu thật
+24513	Đánh giá Agent đa phương thức trong desktop thật; sách chưa chạy benchmark.
+31016	Tách token mô hình thật
+18120	Hướng dẫn kết nối mô hình thật, mẫu đo và quy tắc nghiệm thu
+24554	Ranh giới giao diện mô hình thật
+18094	Kiểm chứng mô hình thực là cấp độ riêng
+16986	Tỷ lệ đúng thật
+9683	Môi trường thật đổi, hành động có thể timeout, thành công một phần hoặc chịu trạng thái giao diện. Agent cần quan sát hiện tại, hành động có kiểm soát rồi xác minh hiệu quả; nhiệm vụ xuyên phiên còn cần lưu tiến độ khôi phục được và kết quả ngoài, không chỉ tóm tắt hội thoại.
+19980	Chỉ dẫn thật của người dùng và yêu cầu ngược trong tài liệu
+25579	Đánh giá phát triển thật còn phải đo lỗi lặp có giảm, định vị hữu ích đầu có nhanh hơn, có sửa khi xung đột mã hiện tại và có từ chối đề xuất cũ không.
+28061	Hệ thống thật cần tham số lớn hơn, nhiều đầu hoặc
+20337	Agent lập trình thật — Kỹ thuật hệ thống AI
+29443	 Thực sự mã hóa một sự kiện văn bản SSE nhỏ, cố ý tách ba byte UTF-8 của “爱” thành hai đoạn. Ví dụ không dùng tên sự kiện riêng của nhà cung cấp.
+11538	Đếm mã hóa thật; chưa khởi chạy máy chủ ngôn ngữ hay trình biên tập.
+24605	Mạng thật thường cập nhật ma trận đầu ra và tham số trước đó, không trực tiếp lưu logit làm tham số dài hạn. dLogits ở đây cần tiếp tục qua quy tắc dây chuyền của nhân ma trận mới biết mỗi trọng số nên chỉnh thế nào.
+14480	Tiền tố huấn luyện thật
+26727	Truy hồi từ khóa thật; chưa triển khai bộ mã hóa vectơ hay ANN
+26607	Truy hồi từ khóa thật; chưa triển khai bộ mã hóa vectơ hay ANN. <a href="../experiments.html">Đọc hướng dẫn chạy
+12655	Độ dài thực và độ dài được bố trí khác nhau
+12690	Chiều dài thật: [3,2]
+18174	Dự án thật có thể nêu khẳng định mạnh hơn nhưng phải thêm bằng chứng phù hợp. Không gộp tăng tốc kernel GPU, ưu tiên câu trả lời mô hình và tỷ lệ thành công nhiệm vụ thành một «phần trăm cải thiện».
+3203	Số đầu KV thực sự lưu, không phải đầu Query.
+15996	Câu trả lời thực phải đáp ứng điều sau
+3304	Khó khăn thật không phải «cắt ma trận lớn thành nhỏ»
+10260	Tinh chỉnh thực sự
+10281	Huấn luyện thực sự
+4369	Thực sự gọi hệ điều hành đọc tệp.
+1120	Trộn thật giữa vị trí chỉ xảy ra ở A×V của Attention, không trong phép chiếu tuyến tính này.
+1588	True nghĩa là «ví dụ này muốn cho truy cập»
+28396	Mâu thuẫn xuất hiện khi tóm tắt đổi
+26869	Chỉ mục chủ đề kiến thức — Kỹ thuật hệ thống AI
+17789	Chỉ mục chủ đề kiến thức</a><a class="pill" href="search.html">Tìm kiếm toàn văn
+10558	Đường kiến thức và chất lượng:</strong> Bằng chứng gốc → chia khối và chỉ mục → truy hồi và xếp lại → phiên bản và quyền → sinh và trích dẫn → vòng đời bộ nhớ → kết quả nhiệm vụ kiểm tra được → so thống kê và chi phí chạy.
+9675	Đồ thị tri thức phục vụ nội dung chính thế nào
+10387	Mỗi cạnh đồ thị tri thức cũng có cấp bằng chứng
+9536	Hỏi đáp kho kiến thức có thể giải thích điều kiện từ chính sách có phiên bản; thực hiện ghi còn phải kiểm người dùng hiện tại, đơn hàng, chính sách, hạn mức còn và trùng lặp. Phần này dùng hoàn tiền làm nghiệp vụ giảng dạy, không nối thanh toán thật hay cung cấp thao tác tài chính thực.
+22888	Chưng cất dùng tín hiệu giáo viên huấn luyện học sinh; phân phối mềm có thể chứa quan hệ phong phú hơn một nhãn. Năng lực học sinh vẫn bị dung lượng, phủ dữ liệu và mục tiêu giới hạn.
+19337	Câu hỏi kiến thức
+21419	Biết khi nào lấy ở đâu.
+559	Biết có thể yêu cầu đọc
+6777	Biết là ảnh chụp nào.
+20506	Biết ai đóng góp chi phí.
+22768	Biết trạng thái cũ.
+555	Biết hiện tượng, chưa biết triển khai
+13806	Dữ liệu huấn luyện và phép tính mất mát biết đáp án; lan truyền xuôi phụ trách dự đoán một vị trí không được đọc token tương lai nó phải đoán. Nếu không, huấn luyện phụ thuộc thông tin không có khi suy luận; loss thấp không có nghĩa dự đoán tự hồi quy thật tốt.
+24380	Biết loại cần tìm thì xem bảng sau trước khi chọn từ khóa. Mỗi mục trỏ vị trí cụ thể trong tệp cục bộ.
+18159	ma trận
+17171	Ma trận / Matrix
+23514	ma trận. Sau đó mỗi lớp cập nhật biểu diễn theo vị trí, quan hệ ngữ cảnh và biến đổi phi tuyến.
+17483	Số hướng độc lập trong ma trận; hạng thấp dùng tích ma trận nhỏ để xấp xỉ một biến đổi.
+13097	Đừng nhầm nhân ma trận và nhân từng phần tử
+17293	Phép nhân ma trận / Matmul
+27082	Nhân ma trận giống điền kết quả công thức vào từng ô — Kỹ thuật hệ thống AI
+27083	Nhân ma trận giống điền kết quả theo công thức vào từng ô</a><a href="#topic-3">Giải thích từng bước và bản ghi tính toán
+13066	Nhân ma trận là “làm nhiều tích vô hướng một lần”
+30439	Tính nhân ma trận từng ô
+10489	Nhân ma trận, sau nhân cộng theo chiều bên trong
+24489	Phân mảnh ma trận và giao tiếp; lợi ích tùy phần cứng và quy mô song song.
+13411	ma trận có 16,777,216 ô.
+22910	Hình dạng ma trận có thể tình cờ giống nhau
+17482	Hạng ma trận / Low rank
+12341	Ma trận: hai hàng ba cột
+9736	Nhiệm vụ ngắn chỉ đọc thường không đáng. Lưu bền trạng thái cần hơn khi xuyên tiến trình, dài hạn, có tác động phụ quan trọng hay phê duyệt thủ công. Bắt đầu đơn giản, chọn độ phức tạp theo nhu cầu khôi phục thật.
+20889	Đo tỷ lệ thành công đầu vào ngắn
+10877	Chuyên đề và chỉ mục
+23084	Nghiên cứu
+20324	Nghiên cứu không cấp quyền triển khai.
+24412	Nghiên cứu và tài liệu chính thức nêu sự thật công khai; tính tay độc lập và trường hợp xây dựng giải thích cơ chế; bản ghi chương trình tương ứng dữ liệu, khẳng định chỉ định. Số giảng dạy không đại diện tham số thương mại; kiểm thử xác định không đại diện tỷ lệ thành công Agent thật. Giải thích sản phẩm, giao thức phải theo phiên bản liệt kê.
+4738	Khi nhà nghiên cứu cần truy vấn khám phá phức tạp
+26112	Nhiệm vụ nghiên cứu thường chỉ cần đọc và tổng hợp; điền biểu mẫu không phải gửi, tạo nháp không phải phát đi. Báo cáo phải tách chuẩn bị và hoàn tất thật. Sau chuyển trang khác miền, cũng kiểm lại miền đích và tài nguyên, không tự truyền tin cậy trang cũ.
+26338	Dừng nghiên cứu khi bất định then chốt cho quyết định hiện tại đã đủ bằng chứng hoặc thiếu hụt còn lại rõ cần thí nghiệm cục bộ. Đọc vô hạn bài cùng loại không tự tăng chắc chắn. Đầu ra phải trả lời chọn dùng, tạm hoãn, thử cục bộ và bằng chứng mới nào đổi quyết định.
+23501	Nghiên cứu biểu diễn và tính toán nội bộ dẫn đến hành vi thế nào, cần tách tương quan và nhân quả.
+24283	Tài liệu nhóm nghiên cứu　｜　Mục lục tương ứng: 15.15
+24288	Tài liệu nhóm nghiên cứu　｜　Mục lục tương ứng: 15.17
+9669	Mỗi vòng nghiên cứu nên giảm bất định nào
+21715	Kinh nghiệm thành công nghiên cứu không áp thẳng cho nhiều Agent cùng sửa một tệp. Trạng thái chung và xung đột ghi có thể triệt tiêu lợi ích song song.
+26352	Kết luận nghiên cứu
+29802	Phiên bản phần cứng, mô hình, engine, công cụ và phụ thuộc
+15205	Phần cứng có giới hạn năng lực tính và giới hạn <strong>băng thông</strong> đọc dữ liệu mỗi giây. Nếu đọc nhiều mà tính ít thì có thể bị băng thông giới hạn; tái sử dụng dữ liệu và tính nhiều có thể bị năng lực tính giới hạn.
+22892	Giám sát cứng
+1340	Chọn cứng thay đổi biểu đạt và gradient; softmax cho trộn mềm khả vi, nhiều vị trí cùng đóng góp và cập nhật tham số khớp qua mất mát. Trọng số sắc hoặc phân tán sau huấn luyện đều có thể hữu ích. Một số mô hình thưa hay định tuyến dùng chọn khác nhưng cần thiết kế riêng, không thay trực tiếp chú ý mạng đã huấn luyện.
+6789	Bảo đảm bàn giao cuối không lại chuyển sang phiên bản khác.
+30801	Xác định tham chiếu thực gắn định nghĩa nào
+26403	Bug xác định sửa bằng kiểm thử; thiếu thông tin bù bằng truy hồi; thiếu chuyên môn bù kiến thức; thiếu thực thi sửa Harness; chỉ giới hạn năng lực mới xét mô hình hay huấn luyện. Thứ tự không tuyệt đối nhưng tránh đổ tất cả cho mô hình chưa thông minh.
+4736	Chặn bằng giới hạn trên xác định, không dựa lời nhắc «hãy tiết kiệm».
+30020	Script hành động xác định; tác giả đã viết bản vá, không tuyên bố mô hình tìm hay sinh bản vá.
+16806	Từ chối yêu cầu công cụ một cách xác định.
+9530	Sự chắc chắn đến từ điều kiện và bằng chứng, không từ giọng cứng rắn. Có thể trả rõ xác nhận được gì dưới điều kiện đã biết và điều kiện thiếu nào đổi kết luận. Không vì người dùng thích diễn đạt chắc mà bỏ mâu thuẫn bằng chứng hay điền giá trị thuận lợi vào trường chưa biết.
+8768	Ưu tiên kiểm tra xác định:
+7824	Kiểm tra xác định thường độc lập hơn hỏi thêm mô hình: kiểm kiểu, kiểm tính chất, build, phân tích tĩnh hay chạy thật. Mô hình bổ sung phán đoán thiết kế khó bao phủ nhưng cũng báo sai. Lợi ích Review phải đo cả bỏ sót, báo sai và chi phí làm lại.
+22782	Tổng hợp xác định
+22096	Chấm xác định phù hợp kiểm thử, trạng thái tệp và cơ sở dữ liệu; mô hình chấm đánh giá ngữ nghĩa hoặc tiêu chuẩn chủ quan nhưng chịu vị trí, độ dài và ưu tiên. Điểm cao không chứng minh sự thật, cần hiệu chuẩn người và bằng chứng độc lập.
+19051	Xác định chuỗi số.
+18189	Xác định tỷ lệ đúng, tài nguyên và loại lỗi
+9512	Xác định điều kiện cần khớp.
+28242	Thực sự có hồ sơ thực thi lịch sử
+25636	Thực sự có cải thiện.
+16123	Xác nhận c.py có nằm trong đường thực thi nhiệm vụ này không
+25110	Xác nhận kết quả bên ngoài của c7 đã xảy ra chưa.
+20398	Xác nhận search chưa được cung cấp
+21670	Xác nhận môi trường đám mây thực sự tồn tại.
+26359	Xác nhận cho phép thực thi và phê duyệt phù hợp
+15650	Xác nhận sẵn sàng
+7227	Xác nhận thông tin đã thu hồi không còn xuất hiện trong nội dung trả về.
+5005	Xác nhận phải gắn hành động và tham số cụ thể. Người dùng duyệt đọc tệp a nhưng bộ thực thi nhận mô hình đổi thành ghi b là đứt kết nối xác nhận và thực thi. Bằng chứng phê duyệt phải gắn dấu vân tay ý định đã chuẩn hóa, phiên bản mục tiêu và thời hạn; xem kiểm cụ thể E48.
+21215	Xác nhận quy tắc bỏ qua, hoa thường và xử lý nhị phân
+17006	Xác nhận ảnh chụp vẫn là trang hiện tại
+5919	Xác nhận tóm tắt không đổi số hay đơn vị.
+30812	Xác nhận mã cũ thật sự không loại đúng
+21686	Xác nhận đã đọc nội dung kỹ năng chưa
+21683	Xác nhận siêu dữ liệu có xuất hiện lượt này không
+25025	Xác nhận không có sửa hay bổ sung tiếp.
+9429	Xác nhận môi trường và chỉ mục cùng hoạt động được.
+22553	Xác nhận mục tiêu, phiên bản, môi trường.
+9648	Xác nhận mục tiêu tương ứng B.
+26125	Xác nhận danh tính và khả kiến mục tiêu.
+9150	Xác nhận hệ thống vẫn báo lỗi và thiếu hụt, không tự đổi nhãn.
+19473	Xác nhận tập xác minh cố định, không đổi lấy mẫu hay cách đếm
+20705	Thực sự cần phương pháp tương ứng.
+29652	Phân mảnh
+27605	Phân mảnh</strong>Phần tạm chưa dùng trong không gian đã cấp.
+3513	Phân mảnh và còn trống
+12194	Trên đĩa,
+15249	Checkpoint mô hình trên đĩa lưu trọng số hay trạng thái huấn luyện cần khôi phục; checkpoint nhiệm vụ Agent lưu tiến độ công việc. Cùng tên checkpoint nhưng đối tượng lưu hoàn toàn khác.
+4004	Nội dung đĩa
+17973	Đĩa đã thay đổi
+20200	Ví dụ chứa yêu cầu máy tính và 323
+11857	Xác minh ví dụ: số liệu, trạng thái và mã — Kỹ thuật hệ thống AI
+19268	Ví dụ cung cấp định dạng đầu ra và ánh xạ nhưng cũng đưa thiên lệch. Cần kiểm liên quan, thứ tự và chất lượng; ví dụ mâu thuẫn có thể khiến mô hình chọn mẫu sai. Thêm ví dụ chưa chắc làm tỷ lệ thành công tăng đơn điệu.
+20049	Ví dụ phải đại diện phân phối đích, thống nhất nhãn và định dạng; thông tin phức tạp có thể chia khối nhưng dấu phân cách không phải ranh giới an toàn. Sự thật nghiệp vụ cụ thể vẫn cần nguồn.
+10241	Chọn ví dụ ảnh hưởng nhiệm vụ mô hình suy ra: nhãn cân bằng không, định dạng thống nhất không, phủ biên không, thứ tự gây lệch không. Mọi ví dụ cùng nhãn có thể làm mô hình học định dạng thành đáp án cố định. Ví dụ sai cũng nhiễm hành vi hiện tại. Few-shot tốt không chồng số lượng mà cung cấp thông tin hữu hiệu về quy tắc, biên và hợp đồng đầu ra.
+10265	Thứ tự ví dụ, chất lượng nhãn và phân phối nhiệm vụ ảnh hưởng kết quả; vài ví dụ không bảo đảm học vĩnh viễn xuyên nhiệm vụ.
+11912	Ví dụ: từ hai câu đến biểu diễn ba chiều — Kỹ thuật hệ thống AI
+29329	Cấm không đơn giản là «nhân điểm với 0»
+16774	Cấm ghi thư mục secrets
+3787	Cấm thay mọi NaN bằng 0 rồi tuyên bố kiểm thử đạt. Xác nhận trước nguyên nhân như che toàn bộ, tràn, chia không hoặc dữ liệu nhiễm. Khẳng định finite là điểm bắt đầu định vị, không phải sửa hoàn chỉnh.
+5703	Cấm đổi giao diện + nguyên nhân gốc và việc còn lại
+19561	Cấm thao tác tệp và mạng không được phép
+21117	Ngoại tuyến
+26289	Hành động Harness ngoại tuyến do tác giả sắp trước, nên chưa đo mô hình có thể tìm nguyên nhân, chọn công cụ, sinh bản vá đúng hay chống nhiễu ngữ cảnh không. Nó chứng minh ranh giới thực thi và cơ chế xác minh chạy được. Không được đọc báo cáo thành «mô hình nào đó sửa thành công 100%».
+18899	Sử dụng ngoại tuyến
+26728	Điểm chạy thí nghiệm ngoại tuyến<br/><span class="meta">Sổ tay thí nghiệm chương · Thư viện chuẩn; NumPy tùy chọn
+26610	Điểm chạy thí nghiệm ngoại tuyến. Xem chương sổ tay thí nghiệm tương ứng. Phụ thuộc: thư viện chuẩn; NumPy tùy chọn.
+15874	Xây kho ngoại tuyến</strong>là chuẩn bị tài liệu và chỉ mục trước truy vấn, không có nghĩa máy bắt buộc ngắt mạng; <strong>truy vấn trực tuyến</strong>là truy hồi khi câu hỏi người dùng đến, cũng không nhất thiết ra Internet công cộng.
+18175	Thực hành phương pháp ngoại tuyến
+15340	Demo ngoại tuyến có thể dùng script cố định trả yêu cầu công cụ đặt trước theo thứ tự để cho thấy thông điệp di chuyển; đó là mô phỏng giao thức hoặc luồng điều khiển, không phải năng lực tự chủ thật của mô hình thương mại. Chỉ khi nối mô hình thật và ghi đo thực mới bàn tỷ lệ thành công của mô hình trên nhiệm vụ.
+6011	Đường ngoại tuyến quyết định sau này truy hồi được gì. Phân tích tài liệu, chia khối, chỉ mục và nhãn phiên bản đều đổi đối tượng tra được; tìm trực tuyến thông minh cũng không lấy lại điều kiện chưa nhập kho hoặc bị cắt sai.
+26633	Đọc HTML ngoại tuyến không cần Python hay mạng. Chạy mã cần Python; môi trường của kết quả đi kèm là Python 3.13.5 / Linux, có NumPy và PyTorch. Script nhắm Python 3.10 trở lên nhưng chưa kiểm lần lượt mọi bản Python, Windows hay macOS.
+18886	Đọc và thí nghiệm ngoại tuyến
+6153	Ngoại tuyến mã hóa và lưu từng chunk tài liệu; trực tuyến chỉ mã hóa query rồi tìm tương đồng. Rẻ hơn nhiều so với đưa query cùng mỗi tài liệu toàn kho vào mô hình lớn. Nếu đổi embedding, vectơ cũ thường không trộn trực tiếp với query mới; cần xây lại hoặc giữ phiên bản chỉ mục riêng.
+3590	Tính trước ngoại tuyến, làm nóng bộ nhớ đệm, mô hình cô đọng thêm và truy hồi song song có thể giảm chờ tương tác nhưng tăng tính nền, lưu trữ hoặc gánh yêu cầu khác. Phải đếm tổng chi phí nhiệm vụ thành công và chiếm tài nguyên, không chỉ nhìn một phần
+7084	Quyền thuê có chủ sở hữu và hạn. Worker cũ kẹt, worker mới có thể nhận thuê mới; worker cũ trở lại không được tiếp tục phát kết quả cũ. Ghi cuối phải kèm điều kiện sở hữu. Nhịp tim chỉ kéo dài hiệu lực, không chứng minh nội dung đúng. Mốc tiến độ cho biết phạm vi nguồn đã nhập, không đồng nghĩa mô hình «nhớ hết».
+11229	Chủ sở hữu quyền thuê
+17183	Hạng / Rank (số trục)
+29632	Hạng r
+27553	Hạng r</strong>Giới hạn trên của số hướng độc lập mà gia số có thể biểu diễn.
+15079	Hạng, rank,</strong>mô tả sơ bộ số hướng độc lập tuyến tính trong ma trận. Ví dụ trên hạng 1. Không phải mọi bảng lớn đều biểu diễn chính xác bằng hạng rất nhỏ; xấp xỉ hạng thấp giới hạn khả năng biểu diễn.
+31603	Giới hạn của hạng
+5690	Loại nội dung mà không diễn đạt lại.
+23462	Loại hoặc thay riêng một cơ chế để đánh giá đóng góp của nó.
+10278	Loại ví dụ
+19301	Chuyên gia thưa tách tổng tham số và tính kích hoạt nhưng giao tiếp và tải vẫn ảnh hưởng hiệu quả. Cần xem riêng chi phí huấn luyện, suy luận và hiệu quả mô hình, không trộn cách báo cáo để so đơn giản.
+19251	Định tuyến chuyên gia thưa không có nghĩa mỗi từ cố định thuộc một chuyên gia
+27868	Định tuyến chuyên gia thưa đổi lượng tính kích hoạt mỗi token. Ví dụ top-2 giảng dạy giải thích chọn và trộn, không tái hiện top-1 của Switch.
+23104	Phạt độ thưa quá mạnh
+29696	Kích hoạt thưa vẫn có chi phí
+24514	Đặc trưng thưa, tái tạo và giới hạn diễn giải.
+23503	Bộ tự mã hóa thưa
+23093	Bộ tự mã hóa thưa thử dùng ít đặc trưng kích hoạt để tái tạo biểu diễn nội bộ mô hình. Nghiên cứu quy mô cần đánh giá đồng thời chất lượng tái tạo, độ thưa và khả năng diễn giải đặc trưng.
+23095	Hai mục tiêu của bộ tự mã hóa thưa có thể xung đột
+17707	Các kỹ thuật như bộ tự mã hóa thưa nghiên cứu đặc trưng biểu diễn nội bộ.
+23100	Số hạng thưa
+10460	Quy tắc chương trình, giao thức và nhiệm vụ
+23218	Chương trình không nhất thiết báo lỗi.
+17946	Chương trình và bản ghi gốc
+26907	Chương trình và phạm vi kiểm tra
+435	Chủ đề chương trình
+17530	Giao diện thỏa thuận đầu vào, đầu ra và hành vi giữa các chương trình.
+18086	Chương trình dùng phân vị theo định nghĩa hạng gần nhất và ghi rõ cách tính trong kết quả. p95 của tám lần thử gần giá trị lớn nhất; mẫu quá ít để khẳng định độ trễ đuôi cải thiện ổn định.
+12980	Chương trình chuẩn bị tham số mô hình và môi trường tính trước, rồi giao ID lô này và dấu cần thiết cho khung tính. Với GPU bộ nhớ riêng, cần bố trí dữ liệu tham gia trên thiết bị tương thích; nếu không, khung có thể báo khác thiết bị chứ không tự chuyển mọi thứ giúp bạn.
+20748	Tài liệu tham khảo lập trình dùng để đưa CLI vào script và tự động hóa. Không chỉ khởi động được lệnh mà còn cần truyền đầu vào, định dạng đầu ra, trạng thái thoát, quyền công cụ và xử lý lỗi.
+20659	Khởi chạy nhiệm vụ bằng chương trình cũng phải kiểm trạng thái thoát
+20387	Gọi bằng chương trình còn cần xử lý mã thoát, cấu trúc đầu ra, quyền và hành vi không tương tác. Dòng cuối terminal «hoàn tất» chưa đủ kết luận script thành công; phải kiểm tệp đích và kiểm thử.
+11492	Chương trình chỉ tạo tệp, SQLite, symlink và kho Git trong thư mục tạm. Thí nghiệm sự cố cố ý thoát tiến trình con, không đóng tiến trình chính. Quyền symlink và tính sẵn có của Git trên Windows có thể khác; lần này chưa xác minh Windows hay macOS.
+18123	Chương trình khởi động dịch vụ HTTP tạm chỉ gắn địa chỉ loopback, dùng cùng run_episode hoàn tất nhiệm vụ chỉ mục rồi đóng dịch vụ. Nạp riêng
+1327	Chương trình xử lý
+29426	 là nội dung chương trình trả về sau khi thực sự thực thi.
+6989	Kinh nghiệm quy trình
+28327	Kinh nghiệm quy trình là mục khác: «Với vấn đề giữ nhật ký, xác nhận loại và ngày hiệu lực trước rồi tìm quy tắc chung, ngoại lệ». Có thể áp dụng nhiều dự án nhưng không viết thành bắt buộc dùng cơ sở dữ liệu cố định hay cưỡng ép nhiều
+16160	Bộ nhớ quy trình: làm thế nào
+28947	Chương trình đối chiếu cả bốn thành phần: sai khác tuyệt đối lớn nhất là 0. Kiểm tra đòi cùng tham số, tiền tố và mặt nạ đúng.
+433	Loại chương trình và cách chạy
+10423	Nhóm chương trình
+12184	Gói thông tin do chương trình tổ chức
+22783	Chương trình thống kê 2+3+1=6
+1238	Bản ghi chương trình
+3992	Giai đoạn và kết quả hành động chương trình ghi.
+18965	Chương trình đọc được timeout=3
+444	Chương trình đạt không đồng nghĩa hệ thống dùng được: tỷ lệ thành công nhiệm vụ tổng hợp chỉ nói hành vi của chương trình trên nhiệm vụ đó, không suy rộng kho thật, đầu vào thật hay mô hình thương mại.
+10528	Dữ liệu, yêu cầu và trạng thái trong chương trình cũng cần danh tính
+26205	Lớp truyền thẳng đặc thực hiện cùng phép tính tham số cho mỗi token; MoE chọn một phần chuyên gia qua bộ định tuyến, viết được là
+23399	Truy hồi đặc
+26123	Quy trình vững chắc
+23059	Có API ổn định hay công cụ có cấu trúc thì có thể so với GUI; GUI phù hợp nhiệm vụ cần giao diện thật hoặc thiếu API, không nên luôn ưu tiên vô điều kiện.
+15732	Phân công giữa ngữ cảnh ổn định và bằng chứng động
+17077	Thiếu quy trình chuyên môn ổn định

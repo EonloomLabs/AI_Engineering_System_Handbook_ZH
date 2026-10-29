@@ -1,0 +1,445 @@
+25831	Câu hỏi nghiệm thu: phiên bản mới vượt qua thêm 2 trong số 20 nhiệm vụ, có thể tuyên bố cải thiện 10% không? Có thể nói tỷ lệ thành công trên mẫu này tăng 10 điểm phần trăm, nhưng không nên suy rộng ngay ra toàn bộ hoạt động thực tế; còn phải xem kết quả ghép cặp, tính đại diện của mẫu, biến động qua các lần lặp và khoảng ước lượng. Cũng phải phân biệt phần trăm với điểm phần trăm.
+25654	Câu hỏi nghiệm thu: độ chính xác định tuyến tăng nhưng chất lượng mã sinh ra giảm, có nên hợp nhất không? Không thể chỉ dựa vào chỉ số định tuyến. Có thể đã chọn đúng kỹ năng nhưng nội dung kỹ năng lỗi thời, hoặc chi phí nạp đã lấn chỗ bằng chứng từ mã nguồn. Mục tiêu cuối cùng là nhiệm vụ kỹ thuật, không phải bản thân bộ phân loại định tuyến.
+25753	Câu hỏi nghiệm thu: bản vá của mô hình vượt qua mọi kiểm thử hiện có nhưng không đáp ứng yêu cầu mới của người dùng, trách nhiệm nằm ở đâu? Bộ kiểm thử chưa bao phủ hợp đồng mới; không thể dùng kiểm thử cũ thay cho nghiệm thu yêu cầu. Cần thêm kiểm thử cho hành vi mới và kiểm tra hành vi cũ còn được giữ hay không. Chất lượng kỹ thuật AI trước hết vẫn là chất lượng kỹ thuật phần mềm.
+24721	Câu hỏi nghiệm thu: nếu đầu ra xử lý toàn chuỗi và đầu ra dùng bộ nhớ đệm khác nhau, cần kiểm tra gì trước? Trước hết kiểm tra dropout đã tắt chưa, tham số có giống nhau không, độ lệch vị trí và mask có khớp không; sau đó kiểm tra dtype và dung sai số học. Không được chỉ nới dung sai để che lỗi logic. Nếu sai số đột ngột tăng theo độ dài, còn phải kiểm tra giới hạn vị trí, cắt ngắn cache, padding và quy tắc cửa sổ trượt. Kết quả giảng dạy có độ chính xác cao chỉ là mốc đối chiếu; kernel độ chính xác thấp cần quy định riêng sai số chấp nhận được và phạm vi suy giảm của nhiệm vụ cuối cùng.
+25463	Câu hỏi nghiệm thu: sau khi nâng cấp mô hình xếp hạng lại, nDCG tăng nhưng câu trả lời kém đi, có thể do đâu? Độ bao phủ ứng viên có thể không đổi nhưng tính đa dạng của bằng chứng giảm, cắt tài liệu dài làm mất điều kiện, mô hình ưu tiên tài liệu trôi chảy thay vì phiên bản hiện tại, hoặc điểm nhiệm vụ không khớp nhãn truy hồi. Cần định vị từng tầng trong quy trình, thay vì tiếp tục thêm mô hình vectơ lớn hơn.
+21775	Kiểm tra X có hỗ trợ hay không.
+14477	loss trên tập xác thực
+8496	Kiểm tra sản phẩm tải xuống và tệp mốc đối chiếu không bị sửa trái phép đồng thời
+14518	Cần xác thực điều gì để biết mô hình không nhìn trước thông tin
+9561	Khi xác thực, chạy kiểm thử liên quan đến nguyên nhân gốc trước, rồi bổ sung hồi quy theo phạm vi ảnh hưởng. Bàn giao cuối cùng phải gắn với phiên bản hiện tại của không gian làm việc: đã sửa gì, vì sao đúng, kiểm thử thực sự chạy gì, phần nào chưa xác minh. Mô hình có thể giải thích bằng chứng này nhưng không thể dùng giải thích thay kết quả chạy. Việc commit, push hay triển khai phụ thuộc phạm vi được cho phép; bốn chữ “nhiệm vụ hoàn thành” không tự mở rộng quyền.
+17129	Xác thực các trường hợp khác
+22014	Xác thực hành vi đầy đủ nhưng tốn chi phí hơn.
+31501	Xác thực sản phẩm r8
+25322	Kiểm tra các sự kiện đã xác nhận có viện dẫn bằng chứng tồn tại không, và phiên bản bằng chứng có khớp sản phẩm hiện tại không. Nó không xác định được “nội dung bằng chứng có thực sự hỗ trợ kết luận không”; điều đó đòi hỏi đọc tài liệu gốc, đánh giá ngữ nghĩa chuyên biệt hoặc con người xem xét. Nhầm việc vượt qua xác thực cấu trúc với giữ đúng ngữ nghĩa là hiểu lầm rất dễ nảy sinh từ các thí nghiệm mô phỏng kiểu cũ.
+3500	Chi phí xác minh, tốc độ bản nháp và tỷ lệ chấp nhận quyết định lợi ích; thêm một mô hình nhỏ không chắc sẽ nhanh hơn. Thuật toán đầy đủ còn phải làm rõ tiền tố đã chấp nhận, lùi bộ nhớ đệm sau điểm từ chối và cách xử lý token bổ sung của mô hình đích.
+15836	Xác thực bản tóm tắt
+2987	Lợi ích của xác thực
+1444	Phương pháp xác thực
+25450	Xác thực quyền và tính cập nhật
+14481	Tiền tố thực của mẫu xác thực
+30795	Trạng thái xác thực
+11487	Mục tiêu xác thực không phải “chương trình chạy được”, mà là bản triển khai đúng đáp ứng các bất biến và có thể phân biệt được bản triển khai bị cố ý làm sai.
+26713	Phạm vi và giới hạn xác thực
+19470	Xác thực xu hướng
+11861	Giới hạn xác thực:</strong> 401 ví dụ giảng dạy không tương đương 401 thí nghiệm về năng lực mô hình. 108 kiểm thử bổ sung kiểm tra công thức số học, chiều, tính nhân quả, gradient, phân mảnh giao thức và hành vi trạng thái đơn giản hóa; các tình huống khác suy diễn rõ ràng từ điều kiện cho trước. Chúng không chứng minh hiệu quả của Agent thương mại, tốc độ GPU, nội bộ mã đóng hay an toàn sản xuất.
+31464	Giai đoạn xác thực
+31198	Tập xác thực
+14521	Tập xác thực, quá khớp và giới hạn thí nghiệm này
+22470	Xác thực cần
+11620	MHA cấp cao bao gồm phép chiếu; tên tham số của giao diện cấp cao không chứng minh tensor đã được chiếu.
+6231	Đồ thị ở tầng cao thưa hơn; từ nút vào, so khoảng cách các nút lân cận và di chuyển tham lam đến gần truy vấn hơn; đi xuống từng tầng, rồi khám phá với tập ứng viên rộng hơn ở tầng đáy.
+22552	Ảnh hưởng lớn và có tác dụng phụ
+10029	Vị trí có trọng số lớn đóng góp rất ít.
+22794	Chuyên đề nâng cao — Kỹ thuật hệ thống AI
+10853	Giao diện cấp cao và toán tử cấp thấp
+10526	Giao diện cấp cao cũng có thể đặt tên dữ liệu trước phép chiếu là
+17097	Mức nâng cao: biết đọc chi tiết triển khai
+18090	Đối chiếu hộp đen phải giữ cả những lần thử không thành công
+25224	Thí nghiệm sản phẩm hộp đen: chỉ đổi một nguồn chỉ dẫn
+1218	Mặc định, SDPA dùng nội bộ cho tích vô hướng
+12261	Giả định bạn biết cộng, trừ, nhân, chia và đọc các bước chương trình thông thường; không giả định bạn biết đại số tuyến tính, vi tích phân, xác suất hay học sâu. Các bài tiên quyết giới thiệu phần cần thiết trước khi dùng. Mã là cách diễn đạt thứ hai giúp đối chiếu quá trình; không chạy mã vẫn có thể đọc hết nội dung.
+11657	Giá trị mặc định thay đổi theo phiên bản; sách không đưa ra cấu hình vạn năng hay phần trăm tăng tốc chưa qua kiểm thử tải.
+11640	Khởi tạo tham chiếu mặc định dùng Kaiming-uniform cho A và B bằng không, để phần tăng ban đầu bằng không.
+18132	Mặc định chỉ chấp nhận endpoint localhost. Chế độ từ xa cần HTTPS và xác nhận rõ ràng. Không đưa token vào URL hay commit vào kho mã. API key của dịch vụ chưa chắc bao phủ mọi tuyến; endpoint giám sát, quản trị và các giao diện tương thích khác còn cần gateway hoặc tường lửa. Không được coi việc lắng nghe trên 0.0.0.0 rồi đặt một key là kiểm soát truy cập đầy đủ. TLS, xác thực danh tính và cấp quyền công cụ cho nhiệm vụ là các tầng khác nhau.
+26634	Mặc định, thí nghiệm không gửi yêu cầu mạng. NumPy dùng cho tính toán số và lan truyền ngược, PyTorch chỉ dùng huấn luyện mô hình nhỏ. Kiểm thử cơ chế bằng thư viện chuẩn không cần cả hai; khi thiếu NumPy, kiểm thử liên quan sẽ được bỏ qua rõ ràng, không được hiểu “bỏ qua” là vượt qua. Bản thân việc cài phụ thuộc có thể cần mạng, không thuộc phần vận hành giáo trình ngoại tuyến.
+18100	Mặc định là kịch bản cố định, không sai vì khác biệt trong hiểu ngôn ngữ; nhiệm vụ chỉ thay tên thư mục. Vượt qua toàn bộ mẫu hữu hạn chỉ hỗ trợ quan sát với các dữ liệu kiểm thử đó. Phân bố, tính ngẫu nhiên, ngữ cảnh dài và nhiệm vụ bất thường của mô hình thực vẫn cần đo.
+20753	Mô hình mặc định và nhánh từ xa có thể cập nhật
+23101	Khuyến khích ít đặc trưng hoạt động
+23098	Khuyến khích tái dựng kích hoạt gốc
+31154	Bộ nhớ đệm của ！: 3 → 4
+12783	(trong 6 vị trí, chỉ vị trí số 2 bằng 1)
+12836	(“爱”).
+14225	(không nhân 0.5), tốc độ học 0.1.
+13180	(đổi chỗ một số trục), hai bước có vai trò riêng.
+14943	(thêm lô thành [1,1,4]). Nó phải cho phép đọc cả bốn mục ở vị trí 0—3.
+441	(nếu môi trường cho phép)
+12786	(hàng 2 của bảng tham số mô hình)
+12780	(lưu số nguyên 2 bằng 8 bit)
+18135	(nếu engine cung cấp), liên kết bằng ID yêu cầu. Không được trộn vi chuẩn QPS tĩnh với khoảng chờ giữa các công cụ của Agent thực.
+24406	) đều mở cùng một chỉ mục từ mọi trang, với danh sách kết quả giống trang này; trang này còn giữ góc nhìn kết quả đầy đủ và hai bảng đối chiếu ở trên.
+11791	); không gọi 3.17 là giao thức mới nhất.
+978	, mỗi trong 4 vị trí có 8 số. Lưu ý: một vị trí là một token, chưa chắc là một từ.
+7802	, Agent B vẫn theo
+2629	, hình dạng A
+4469	, A nhận
+6375	, A dẫn trước.
+2630	, hình dạng B
+6374	, B nhận được
+6392	, D2 nhận
+6393	, D3 nhận
+820	, token có ID 100 lấy
+4531	, với ID lần lượt c1, c2. b.py trả về trước. Nếu coi “kết quả đầu tiên ứng với lời gọi đầu tiên”, mô hình sẽ nhầm tệp B thành A và bản vá sau có thể sửa sai tệp. Cách đúng là giữ
+28043	, K là
+26037	, LoRA đóng băng W cơ sở và học
+1863	, O xấp xỉ
+14188	, R và D đều có đạo hàm trực tiếp theo H bằng 1, nên G_H truyền về cả hai đường. Nếu R còn là đầu vào của D, cuối cùng R nhận hai đóng góp “trực tiếp từ đường chính” và “qua nhánh D”, phải cộng lại.
+4802	, Server trả tên công cụ, description, inputSchema và có thể có nextCursor. Nếu phân trang, cần tiếp tục yêu cầu cho đến khi hoàn tất việc khám phá cần thiết. Host chuyển định nghĩa công cụ được chọn sang dạng giao diện mô hình hỗ trợ; bước này là chính sách của Host, không phải Server trực tiếp điều khiển Prompt của mô hình.
+24609	, ID token tra bảng để được
+1210	, hình dạng W là
+3189	, attention xấp xỉ
+6697	, trước b có 2 điểm mã Unicode, 3 code unit UTF-16 và 5 byte UTF-8. Vì thế len của chuỗi thông thường trong Python, độ dài chuỗi thường dùng trong JavaScript, Content-Length khi truyền giao thức và vị trí LSP có thể cho số khác nhau. Vượt qua kiểm thử tiếng Trung và tiếng Anh không có nghĩa xử lý vị trí Unicode đúng.
+10173	, chiều d_c của c nhỏ hơn chiều sau khi trải toàn bộ đầu K/V. Nội dung
+13419	, d=4, ε=0.00001, hệ số co giãn g1 ban đầu đều là 1.
+14339	, m=max(z). Điều này giữ tính bất biến theo phép tịnh tiến như softmax, đồng thời tránh vấn đề số học do tính xác suất cực nhỏ rồi lấy log.
+6423	, từ query có thể tương tác với các vị trí khác nhau trong tài liệu, giúp kiểm tra “phiên bản cũ/cấm/ngoại lệ” dễ hơn, nhưng không phù hợp để chạy trực tiếp từng tài liệu trong hàng triệu tài liệu.
+2494	, router tính
+1350	, softmax trả về
+1281	, softmax dồn gần như toàn bộ khối lượng vào mục đầu tiên. Đạo hàm softmax chứa
+14140	, với x=3 kết quả là 9. Đổi x thành 3.01, kết quả 9.0601; kết quả tăng 0.0601, đầu vào tăng 0.01, tỷ số xấp xỉ 6.01.
+14374	, η là tốc độ học, g là gradient tham số hiện tại. g âm làm w tăng, g dương làm w giảm; “đi xuống” nói đến việc cố giảm loss, không có nghĩa mọi tham số đều phải nhỏ đi.
+13093	, thu được ba điểm so sánh cùng lúc. Đến F11 mới đưa biểu diễn bên nhận và biểu diễn ứng viên này vào như Query và Key, và giải thích đầy đủ nguồn gốc tham số của chúng.
+27929	, ba ID lấy ra ba hàng, được
+3603	, tỷ lệ chấp nhận ba ứng viên lần lượt là
+22102	, thành công cả ba lần là
+27958	, trong thí nghiệm này cả ba đều là
+2083	, phía trước là G_y. Trước hết ghi
+5913	, chuẩn bị triển khai ở bước tiếp theo; nhưng cây làm việc hiện tại là v9.
+7353	, không có nghĩa nhiệm vụ rà soát đã sử dụng nó. Phải được thư mục khám phá; mô tả khớp nhiệm vụ; hướng dẫn đầy đủ được đọc; script hoặc tài liệu tham khảo được lấy khi cần; cuối cùng hành động thực sự tuân theo và cho kết quả đúng. Bốn bước đầu chỉ là điều kiện, bước thứ năm mới gần với áp dụng hiệu quả.
+28192	, không có nghĩa mỗi Agent con đều truy cập được; Agent con trả “hoàn thành” cũng không có nghĩa không gian làm việc cuối cùng đã tích hợp và vượt qua kiểm thử.
+13431	, không đổi sang bộ số khác. Trung bình μ=2, độ lệch [-1,1], bình phương độ lệch [1,1], phương sai tổng thể là trung bình 1; độ lệch chuẩn khi chưa thêm ε là 1.
+12487	, không còn là một hàng số.
+28017	, chưa bao gồm 7 vừa chọn. Muốn dự đoán đầu ra thứ ba, tiếp tục đưa ID7 vào vị trí 4, bộ nhớ đệm mỗi tầng tăng lên 5. Thí nghiệm có thể tiếp tục bước này trực tiếp; ở đây nhấn mạnh dòng thời gian, không gán cho các ID vô nghĩa ngôn ngữ này vai trò câu trả lời thực.
+3539	, không tính lặp thêm một Decode đầy đủ. Truyền dòng cải thiện thời gian chờ cảm nhận nhưng không tự giảm tổng tính toán.
+7546	, không phải 1. Chưa tính định tuyến, xác thực, truy hồi lặp, làm lại và tổn thất khi thất bại. Số liệu là giả định giảng dạy, không phải giá mô hình thời gian thực. Chương trình cục bộ đã kiểm tra quan hệ đại số này.
+865	, không phải bản thân h.
+28013	, không phải sinh lại toàn bộ
+12848	, không phải sinh thêm 4096 token.
+5883	, không chỉ có
+14590	, không phải softmax nhiều ứng viên.
+5761	, không thay thế mù quáng.
+13160	, không thể xếp thành dạng này mà không bỏ hoặc thêm mục:
+18029	, không coi mã giả là dịch vụ đầy đủ có thể triển khai trực tiếp.
+25551	, không chọn ngẫu nhiên một mục.
+13895	, tích vô hướng với K lịch sử thành 1, không còn là 0.
+2846	, nhất quán với quy ước ở bài softmax cơ bản.
+2529	, chuyên gia 1 xuất ra
+4624	, kiểu hai trường lần lượt là chuỗi và số nguyên.
+4274	, ghi rõ path chỉ nhận đường dẫn tương đối trong kho mã, và số dòng bắt đầu từ một, bao gồm hai đầu.
+28011	, nhân với K chuyển vị của lịch sử và hiện tại
+1397	, cổng nhân điều khiển đặc trưng nào đi qua. Nó dùng cùng bộ trọng số tại mỗi vị trí nhưng không trực tiếp đọc vị trí khác; thông tin ở nơi khác trước hết đi qua Attention vào biểu diễn vị trí này, rồi được FFN xử lý.
+27935	, cũng không khẳng định mọi LLM hiện đại đều cộng trực tiếp hàm sin vào
+13052	, cũng có thể viết thành
+12213	, thứ hai là quá trình nhiều bước khi giải quyết vấn đề phức tạp:
+14454	, hai giá trị gần nhau. Các vị trí khác cơ bản đã được khớp, nhưng tại BOS vẫn cần giữ hai khả năng.
+13058	, vẫn tính theo vị trí tương ứng:
+12882	, vẫn cần giới hạn vị trí hợp lệ.
+7089	, khi phiên bản kho mã thay đổi và thư mục đã bị xóa, cần vô hiệu mục hoặc xác nhận lại, không sửa lời giải thích để ký ức cũ tiếp tục đúng. Khi người dùng rút lại một sự kiện, xóa bản ghi gốc chưa đủ: phải tìm phụ thuộc nguồn và vô hiệu cả tóm tắt, vectơ, quy tắc kinh nghiệm sinh từ nó.
+10088	, thay vào được:
+3598	, với
+1984	, cũng như
+3193	, và attention của Q mới với T mục K/V xấp xỉ
+9686	, ưu tiên nó giúp xử lý tính lũy đẳng, lỗi và trạng thái dễ hơn. Khi buộc thao tác GUI, quan sát đến từ ảnh chụp, DOM hoặc cây trợ năng; chúng đều có thời điểm thu thập và trang có thể đổi trước khi nhấp. Tọa độ chỉ vị trí thị giác tại thời điểm đó, không phải đối tượng nghiệp vụ cố định.
+19358	, bộ tối ưu cập nhật tham số qua gradient. Áp lực dự đoán có thể thúc đẩy mô hình học ngữ pháp, cấu trúc và mẫu có thể chuyển giao, nhưng bản thân mục tiêu huấn luyện không bảo đảm mọi tri thức thế giới đều đúng hoặc mới nhất.
+4238	, sẽ nhầm “đề xuất chạy kiểm thử” với “kiểm thử đã vượt qua”. Coi HTTP thành công là nghiệp vụ thành công cũng nguy hiểm tương tự: dịch vụ có thể báo thất bại nghiệp vụ bằng phản hồi giao thức bình thường.
+9183	, nhưng
+14825	, nhưng ID4 chưa chạy lan truyền xuôi, KV vẫn dài 3.
+1405	, nhưng “Attention luôn chiếm nhiều tham số/tính toán nhất” không phải quy luật chung.
+8302	, nhưng không được loại nhầm
+4593	, nhưng vẫn có thể vượt quyền. Ngay cả khi schema chỉ cho phép “đường dẫn tương đối trong kho mã”,
+4142	, nhưng sau khi nó xuất đối số, khung thực thi đã đổi sang S8 và hiểu công cụ cùng tên thành giao diện khác. Nếu bộ thực thi chỉ tìm “công cụ mới nhất” theo tên, quyết định cũ có thể bị áp vào ngữ nghĩa mới. Vấn đề này là thay đổi giữa kiểm tra và sử dụng; chưa cần thuộc chữ viết tắt, trước hết nhớ rằng “thứ nhìn thấy lúc quyết định” và “thứ dùng lúc thực thi” có thể không giống nhau.
+3538	, nhưng thời gian mỗi bước decode thực tế thay đổi theo độ dài và batch, và có thể xen kẽ việc bị chiếm quyền thực thi. Token đầu có thể đến từ phần cuối của Prefill:
+4036	, nhưng sửa đổi tệp vẫn còn; mất cơ sở dữ liệu cũng không tự khôi phục nhật ký thao tác đáng tin cậy từ KV. Hai lỗi này cần cách phục hồi khác nhau.
+24984	, nhưng Agent thực cần phân biệt thông điệp văn bản, lời gọi hàm, kết quả hàm, trạng thái lập luận hoặc cô đọng và trạng thái kết thúc phản hồi. Có giao diện cho dịch vụ giữ lịch sử, có giao diện yêu cầu phía khách truyền lại các mục; cấu hình riêng tư, năng lực mô hình và giao diện sản phẩm cùng quyết định cách dùng. Tầng chuyển đổi phải giữ đối tượng có cấu trúc, không chỉ lấy văn bản rồi bỏ mọi mục còn lại.
+14770	, vị trí
+1654	, vị trí p và tần số θ tương ứng:
+24665	, vị trí p ứng với góc quay pθ:
+18914	, để bỏ qua thư mục chỉ định mà không đổi hành vi cũ khi chưa cấu hình trường này. Trường hợp này không phải kiểm toán kho mã thực của người dùng, cũng không có nghĩa sản phẩm nào đã thực hiện các sửa đổi đó.
+1128	, dùng phép nhân bên phải với
+13307	, giữ chênh lệch tương đối.
+14818	, mã ứng viên là 4, 5, EOS; chúng được cho trước để giảng dạy.
+13209	, vị trí tương ứng của phần tử thực sự đổi chỗ.
+8607	, thành công toàn bộ là
+22310	, thành công toàn bộ là
+528	, tổng cộng 1,048,576 số. <strong>4096 không phải kích thước từ vựng, số token hay tổng tham số.</strong> Ở đây “chiều ẩn” là độ rộng biểu diễn bên trong mỗi vị trí.
+24649	, tổng cộng hai tầng. Số nhỏ cho phép in lần lượt hình dạng, không thể từ đó đánh giá năng lực mô hình lớn.
+2082	, trong đó
+10086	, N là số tham số, D là số token huấn luyện. Giả sử thêm tính toán huấn luyện
+13993	, trong đó sigmoid(x)=1/(1+exp(-x)).
+28996	, ε là số dương rất nhỏ; so với gradient thu được qua lan truyền ngược. Đây gọi là <strong>kiểm tra sai phân hữu hạn
+27999	, hàng cuối dùng dự đoán token đầu ra đầu tiên ngay sau đầu vào.
+25146	, sau đó là tên dự phòng được cấu hình. Việc đọc chịu
+13158	, nhưng vị trí nội dung khác nhau. Cách trước nhóm lại; cách sau đổi vai trò “hàng gốc” và “cột gốc”. Đây là nguồn nhiều lỗi triển khai Attention.
+4909	, nội dung là các bước dựng; ngoài ra có công cụ test thực sự chạy được kiểm thử.
+3047	, kernel có thể dùng bố trí bộ nhớ khác nhưng không được nhầm trục ngữ nghĩa.
+13635	, bên trong mới nhân W; một số giao diện cấp thấp khác nhận Q/K/V đã được chiếu. <strong>Cùng tên không có nghĩa cùng giai đoạn tính toán.</strong> Trước khi đọc mã nguồn cần xem giao diện có chịu trách nhiệm chiếu không, tránh tự nhân W rồi thư viện nhân lần nữa. Lớp tuyến tính PyTorch còn lưu tham số theo dạng
+2226	, rồi nhân số tham số.
+13166	, rồi đổi trục T với trục đầu, thành
+28050	, rồi kết hợp ràng buộc padding hoặc cửa sổ trượt. Kiểm thử trong gói đồng thời so lan truyền toàn bộ với lan truyền tăng dần một token/hai token, và cố ý dùng vị trí sai để tạo khác biệt, chứng minh kiểm thử phát hiện lỗi cụ thể chứ không chỉ chứng minh chương trình không sập.
+4597	, rồi chọn trong tập cho phép. Triển khai quyết định hỗ trợ schema thực tế, cách biên dịch và hành vi lỗi; không được bịa rằng mọi nhà cung cấp dùng cùng engine ngữ pháp nội bộ. Với số và quan hệ thực tế, trạng thái ngữ pháp đơn thuần không thể truy vấn cơ sở dữ liệu để đối chiếu.
+14343	, rồi lấy đạo hàm tổng hàm mũ được
+2087	, rồi cộng tác động của mọi ô đầu ra lên mẫu số đó. Nếu chỉ viết số hạng đầu, tức đã coi nhầm r là hằng; giá trị và hướng học của hai cách có thể rất khác.
+1359	, rồi phân luồng theo ngữ nghĩa nhiệm vụ.</strong> Sau khi dùng giá trị thay thế an toàn cho hàng không hợp lệ trong tính toán số, còn phải loại kết quả thay thế khỏi kết quả nghiệp vụ. Chỉ dùng
+24918	, rồi bù theo toàn bộ p sẽ phân bổ lặp một phần khối lượng; bù đúng là phân bố phần dư dương. Chứng minh cần viết tổng xác suất mỗi token từ hai nhánh, không trả lời bằng “trông có vẻ gần giống”.
+26269	, rồi kiểm tra danh sách quy tắc. Nó bỏ thư mục, khiến đường dẫn chính xác lồng nhau không khớp và loại nhầm tệp cùng tên ở thư mục khác. Chỉ kiểm thử cấp trên cùng
+15084	, rồi dùng
+15982	, rồi cộng lại.
+1721	, rồi quay thêm 90° thành
+6323	, giảm phụ thuộc vào thang điểm gốc. Đây là phương pháp hợp nhất thứ hạng, không phải hiệu chuẩn xác suất.
+25267	, định nghĩa hàm giải thích path tương đối với gốc kho mã, kiểm thử nói dấu gạch chéo cuối là thư mục. Ba đoạn cùng định nghĩa hành vi. Chỉ giữ điểm gọi sẽ hiểu sai xử lý chuỗi; chỉ giữ tên kiểm thử mà không có khẳng định cũng không đủ biết hợp đồng.
+3329	, lần lượt trỏ tới khối vật lý 7, 2, 19. Vị trí logic 5 nằm ở khối logic 1, độ lệch trong khối 1, nên thực tế truy cập độ lệch 1 của khối vật lý 2. A thêm token thứ 11, 12 sẽ lấp đầy khối 19; đến token thứ 13 mới cần khối mới.
+14288	, chia cho mười câu là
+28044	, điểm
+28012	, điểm là
+13998	, mẫu số r2=
+10087	, thì
+13668	, điểm và tỷ phần là
+9259	, chi phí mô hình là, với mỗi lời gọi,
+26528	, gradient đầu vào là
+13433	, với gamma=1, beta=0 ban đầu, xấp xỉ [-0.999995,0.999995]. RMSNorm không trừ trung bình; trung bình bình phương là 5, kết quả xấp xỉ [0.447213,1.341639]. Điều này giải thích vì sao sau RMSNorm vẫn có thể toàn số dương; nó không hứa trung bình bằng không.
+14465	, gồm cấu hình mô hình và mảng tham số. Chọn JSON để kiểm tra từng số và cho phép bộ suy luận thư viện chuẩn cũng nạp được; không khuyên mô hình quy mô lớn dùng JSON thay định dạng trọng số hiệu quả.
+9258	, đơn giá là
+21839	, kiểm thử đơn vị kiểm tra chuẩn hóa, tích hợp kiểm tra cấu hình và danh sách tệp, đầu-cuối kiểm tra sản phẩm tạo ra. Còn phải kiểm tra các tệp không được loại để tránh “lọc hết” vượt qua khẳng định một phía. Hồ sơ kiểm thử phải gắn phiên bản mã; sau khi bản vá A vượt qua rồi thêm B, kết quả cũ không tự bao phủ phiên bản mới.
+12840	, tức <strong>4 số dùng để tính toán</strong>. Câu đầu vẫn có 3 vị trí, vẫn có 2 câu; thay đổi là <strong>mỗi vị trí lưu gì</strong>, nên thêm hướng chỉ mục “số thứ mấy bên trong vị trí”:
+13773	, tức “không phải giá trị số hợp lệ”. Triển khai phải xử lý hoặc tránh rõ ràng những hàng này, không để NaN âm thầm truyền tiếp.
+1220	, lại dùng SDPA mặc định, sẽ thu toàn bộ điểm còn tỷ lệ so với ban đầu:
+13568	, trái lại vẫn nhận tỷ phần.
+703	, thành
+16949	, mô hình khác dùng
+3195	, ngoài ra có
+2806	, chỉ làm Top-k=2; giữ hai mục đầu, bỏ mục thứ ba
+15138	, chỉ lấy 2 mục đầu
+13205	, chỉ đổi nhóm.
+1140	, chỉ xem một đầu, tạm chưa chuẩn hóa và quay vị trí. Giả sử
+1125	, có thể gộp thành một lần; thêm ReLU đặt số âm về 0 thì không còn một ma trận cố định thay tương đương đầu ra cho mọi đầu vào. Bài cơ bản tương ứng sẽ cho thấy ô âm/dương đổi kết quả mạng truyền thẳng thế nào.
+13577	, có thể triệt tiêu; bước này tránh tràn khi lấy hàm mũ điểm dương rất lớn. Đừng hiểu thành làm điểm gốc “đáng tin hơn”.
+14945	, có thể chỉ cho phép mục đầu; tuy chạy được nhưng kết quả đã sai.
+6638	, có thể tìm thấy định nghĩa hàm, chú thích, chuỗi và dữ liệu kiểm thử. grep nhanh và tổng quát nhưng không biết đâu là cùng một ký hiệu. AST nhận diện khai báo hàm và biểu thức gọi, loại một phần nhiễu từ chú thích/chuỗi; nhưng chỉ cây cú pháp chưa chắc phân giải được bí danh nhập, generic hay phân phối lúc chạy.
+5510	, yêu cầu hiện tại có thể gửi đi nhưng vừa điền kết quả công cụ là tràn cửa sổ. Bản thân giao diện cô đọng cũng có giới hạn độ dài đầu vào; không thể mong sau khi vượt giới hạn vẫn “cô đọng vô hạn”.
+23560	, Key nhìn thấy là
+2305	, tổng loss cục bộ của mỗi rank cần theo
+24830	, với cùng lời nhắc,
+25983	, đồng thời báo riêng tiêu hao của nhiệm vụ thất bại. Chỉ chọn ca thành công để tính sẽ đánh giá hệ thống không ổn định quá lạc quan.
+15451	, tiếp theo là hai dấu xuống dòng. Mạng có thể cắt giữa các byte UTF-8 của “学”.
+18026	, backend trả thông điệp assistant. Thông điệp có thể gồm nhiều lời gọi hàm hoặc kết thúc sinh. Khung thực thi kiểm tra cấu trúc và ID của toàn bộ danh sách trước, rồi chạy lần lượt công cụ được phép và sắp kết quả theo
+25019	, sau đó vẫn có thể đến delta tiếp hoặc sự kiện kết thúc của cùng mục đầu ra.
+1627	, truyền cho SDPA
+16016	, truy hồi vectơ trả về
+1867	, tổng bằng 0.
+13314	, tổng bằng 1.
+3308	, vì trước đó chúng được đếm theo mốc cũ.
+15985	, nên B nhỉnh lên trước. Giá trị này không phải xác suất đúng. Khi ứng viên chỉ xuất hiện ở một đường, đường kia không tự thêm điểm.
+6394	, nên D2 đứng đầu. RRF hợp nhất đóng góp từ thứ hạng, không cộng trực tiếp điểm từ vựng với độ tương đồng cosin. Hằng 60 là lựa chọn trong ví dụ, không phải giá trị mọi hệ thống phải dùng.
+6807	, giữ nguyên “nhãn HEAD” nhưng thay hash nội dung tệp. Thí nghiệm không giả mạo commit Git, chỉ dùng thay đổi tệp thật chứng minh logic: riêng danh tính commit không bao phủ trạng thái cây làm việc.
+2559	, thêm
+25476	, chúng có thể lần lượt là hàm dựng sẵn, phương thức hoặc bí danh nhập; tìm toàn văn không phân biệt được.
+1579	, nó điều khiển chấm điểm, không tự điều khiển attention.
+13646	, hàm mũ của nó tiến đến 0 theo giới hạn. Cộng 0 vào vị trí cho phép. Đặt tên <strong>bảng mặt nạ cộng</strong> này là M:
+18126	, kết quả đầy đủ là
+24932	, thực tế còn mất mát do khởi động, đồng bộ, truyền thông, lập lịch và mức tận dụng. Cường độ tính toán F/M giúp xác định hướng tối ưu.
+23561	, Value tương ứng là
+13113	, chưa cộng tổng, không thể thay nó cho tích vô hướng 13.
+3650	, có thể phá tính nhất quán phân bố. Suy đoán tham lam có quy tắc khớp đơn giản hơn; không được trộn tùy ý công thức lấy mẫu ngẫu nhiên với xác minh tham lam.
+5454	, có thể chọn vài đoạn trông liên quan nhưng không ghép được thành chuỗi bằng chứng hữu dụng.
+14051	, thể hiện phi tuyến tại từng vị trí.
+14224	, mong muốn y=6; ban đầu w=1. Đặt loss rõ ràng là
+13840	, cách đánh số vị trí thường dùng là
+24572	, đoạn thường gặp có thể được nén thành ít ký hiệu hơn. Nhưng không bảo đảm mọi định danh mới cũng ít tốn token. Ký tự tiếng Trung có thể trải nhiều byte; tính khả nghịch ở mức byte bảo đảm dựng lại byte gốc, không bảo đảm mỗi token là ký tự hoàn chỉnh hiển thị được. Dòng đầu ra cũng có thể cắt giữa ký tự UTF-8, nên giải mã tăng dần qua mạng phải giữ trạng thái byte riêng, xem Bài 60.
+672	, không phải cộng mã ký tự.
+6373	, đồng hạng. Nếu cộng nhầm đường một lần nữa, A được
+691	, và phân biệt “ngữ nghĩa văn bản giống nhau” với “byte hoàn toàn giống nhau”.
+5137	, đồng thời phân biệt kiểm tra tệp đầy đủ, đọc phạm vi dòng chỉ định, giải thích từ bài viết/tài liệu chính thức và suy diễn giảng dạy nguyên gốc. Các chương cũ khác giữ commit lịch sử ban đầu; không thể ghép hai loại thành cùng một phiên bản. Đọc mã không phải chuẩn đo đầu-cuối sản phẩm, stub kiểm thử không phải thực đo mô hình thương mại. Mỗi kết luận chỉ đúng trong phạm vi đã ghi; phần chưa công bố giữ là chưa biết, không lấp bằng suy đoán để giả làm đầy đủ.
+1612	, đồng thời xử lý vị trí và phạm vi loss. Nếu cho phép ngữ cảnh xuyên tài liệu thì có thể dùng chính sách khác; điều cốt yếu là nêu rõ mục tiêu huấn luyện, không coi “xuất hiện dấu phân cách” là cách ly tất định.
+13272	, không đổi sang bộ dữ liệu khác.</strong> Tính từng bước như sau. Máy tính thường trừ giá trị lớn nhất trước để tránh hàm mũ quá lớn; lý do cụ thể sẽ được chứng minh ở phần sau.
+896	, đồng thời kiểm tra 6 hàng gốc không đổi. Điều đó chứng minh sửa dung lượng đúng, <strong>không chứng minh hàng mới đã có ngữ nghĩa</strong>. Hàng mới còn cần khởi tạo và học phù hợp.
+9560	, khi áp dụng cần kiểm tra nội dung hoặc phiên bản cũ; nếu người dùng cùng sửa tệp, đọc lại và phối hợp, không ghi đè.
+13263	, cơ số e xấp xỉ 2.71828. Hàm mũ biến mọi số thực thành số dương: exp(0)=1, exp(1) xấp xỉ 2.718, exp(-1) xấp xỉ 0.368.
+13548	, khi thêm nhiều đầu sẽ tách rõ thành
+23543	, trọng số sau chuẩn hóa xấp xỉ
+1282	, khi p cực đoan, nhiều gradient trở nên rất nhỏ. Mô hình quá nhọn ngay đầu huấn luyện sẽ khó học. Co giãn là một phần ổn định huấn luyện, không thay chuẩn hóa, khởi tạo, tốc độ học hay yếu tố khác.
+26039	, giảm đáng kể số tham số huấn luyện khi r nhỏ.
+27964	, hình dạng
+12805	, hình dạng là
+14158	, thu được
+2495	, được điểm của E chuyên gia. Chọn chỉ mục Top-2 a, b và chuẩn hóa điểm đã chọn thành trọng số w_a, w_b; tính riêng FFN chuyên gia
+13999	, được N2=
+1353	, được NaN. Hai cách viết thất bại khác nhau; không thể dùng “không có NaN” làm bằng chứng đúng.
+27997	, thu được tại mỗi vị trí 8
+13285	, tổng xấp xỉ
+3605	, tổng xác suất từ chối 0.2; phần dư đều ở ứng viên đầu nên cuối cùng vẫn là
+2566	, khôi phục giá trị xấp xỉ
+9262	, nên chi phí lần lượt 1.25 và 1.5. B rẻ hơn mỗi lần nhưng đắt hơn cho một lần thành công. Thực tế giả định độc lập thường không đúng: các lần chạy đều thiếu cùng bằng chứng có thể liên tục thất bại, nên không được dùng công thức mù quáng để dự báo hóa đơn sản xuất.
+12811	, nên khi tính viết thành
+9311	, nhưng tổng thời lượng mọi Span con là 10 giây. Quan hệ cha-con và song song trong Trace dùng giải thích thời gian, không phải cộng mọi đoạn như nhau.
+1352	, tự viết “trừ giá trị lớn nhất” sẽ xuất hiện
+3043	, nối K/V mới vào bộ nhớ đệm tầng đó, thực hiện
+13631	, đổi kết quả trộn về độ rộng mạng chính cần. Wo là phép chiếu đầu ra chú ý, không phải đầu ra mô hình ngôn ngữ cuối cùng chấm điểm ứng viên từ vựng.
+15310	, gắn kết quả với danh tính lời gọi này.
+1603	, dùng nó dự đoán
+2769	, theo
+4532	, ghép đầu ra theo giao thức; cùng tên công cụ không định danh duy nhất một lời gọi.
+26491	, softmax theo hàng được P, đầu ra
+1919	, loss là
+3604	, khối lượng chấp nhận là
+5103	, thời điểm commit 2026-10-21 02:02:49Z, tệp
+25378	, cung cấp BM25 và RRF thực, không gọi so khớp chuỗi là Embedding.
+26487	, cung cấp lan truyền ngược giải tích và sai phân hữu hạn.
+8034	, cố ý bỏ xác nhận; rồi khởi động lại để phục hồi. Đường không có khóa lũy đẳng tạo 2 tác dụng phụ; đường có ràng buộc duy nhất ở hạ nguồn cho khóa ý định ổn định chỉ tạo 1.
+13842	, chỉ số cột mảng là 0, 1, 2, còn vị trí logic của hai token thực có thể là 0, 1. Giá trị vị trí PAD theo quy ước triển khai; không thể dùng chỉ số cột chưa xử lý thay toàn bộ logic vị trí.
+3254	, điểm lớn nhất của khối mới là m_b. Đặt
+14177	, loss mới 0.08. Ví dụ chỉ giải thích quy tắc dây chuyền, không thay huấn luyện AdamW của M.
+28048	, truy vấn mới không thấy phần lớn lịch sử và chính nó. Bug này không luôn báo lỗi chiều mà âm thầm đổi đầu ra, rất phù hợp để hỏi tiếp khi phỏng vấn “mã chạy được sao vẫn sai”.
+8748	, kết quả mới là
+13167	, để mỗi đầu tính độc lập dễ hơn.
+2740	, lấy cột cuối vô điều kiện được
+5531	, không có bộ nhớ đệm xấp xỉ
+26151	, vừa phạt sai vừa xét độ tin cậy. ECE chia mẫu theo mức tin cậy, so trung bình độ tin cậy và độ chính xác của mỗi nhóm rồi lấy trọng số; nó chịu ảnh hưởng của cách chia nhóm, cỡ mẫu và phân bố nhiệm vụ, không thể đứng một mình làm chỉ số chất lượng đầy đủ.
+20368	, làm rõ đường dẫn tương đối với gốc kho mã hay thư mục cấu hình hữu ích hơn lặp lại “bạn là kỹ sư chuyên nghiệp”.
+24727	, là huấn luyện thực nhưng không tái hiện năng lực mô hình lớn.
+12843	, là số thứ 1 của vectơ khởi tạo token “爱” trong câu đầu “我爱学习”;
+11978	, là số đầu tiên trong biểu diễn khởi tạo của token thứ hai “爱” ở câu đầu. <strong>Thứ thêm là trục đặc trưng số bên trong mỗi vị trí, không phải từ hay bit bổ sung.
+975	, tạm dùng
+2804	, phân tán hơn.
+6422	, cuối cùng một tích vô hướng. Tính trước tài liệu có chi phí thấp nhưng nhiều chi tiết đã bị nén vào một vectơ. Cross-encoder:
+27991	, cuối cùng cộng phần dư. Mô hình thực có thể dùng
+2739	, chỉ mục hợp lệ cuối phải là 1, 2. Sau khi tạo điểm ứng viên, chọn đúng được lớp
+1334	, giá trị lớn nhất cũng là
+4050	, phía máy chủ khôi phục ngữ cảnh cần thiết. Nó giảm gánh nặng truyền tường minh và quản lý trạng thái, không có nghĩa mọi lịch sử cũ vào mô hình vô hạn. Dịch vụ vẫn có thể cắt ngắn, cô đọng hoặc yêu cầu truyền mục trạng thái cụ thể, tùy giao diện.
+24978	, sách không chạy lời gọi trả phí.
+13935	, kết quả biến đổi đoạn này
+13105	, ma trận trọng số
+13190	, một số mask có thể có trục đầu dài 1 để broadcast, biểu đạt “mọi đầu dùng chung giới hạn này”. Nhưng hình dạng broadcast được không chứng minh ngữ nghĩa đúng; vẫn phải kiểm tra vai trò trục.
+1836	, một hàng xác suất a ứng với gradient phía trước g:
+527	, sau tra bảng thành
+12018	, kết quả tra bảng là
+894	, truy vấn ID6 thực sự ném lỗi vượt biên; mở rộng thành
+1277	, độ lệch chuẩn là
+16950	, thứ tự khác nhưng cần hiểu nhất quán.
+9927	, mỗi patch đổi thành vectơ, Transformer thị giác sinh đặc trưng rồi chiếu sang chiều phía ngôn ngữ dùng được. Độ phân giải, cắt ảnh và bố trí patch ảnh hưởng chi tiết giữ lại; văn bản quá nhỏ hoặc điều khiển quan trọng ngoài vùng cắt thì suy luận sau mạnh mấy cũng không dùng được thông tin không tồn tại.
+13117	, mọi vị trí dùng cùng trọng số.
+12491	, mỗi trục trả lời một câu hỏi khác.
+1336	, không có phân bố chuẩn hóa hợp lệ. Triển khai đúng phải tránh trước truy vấn này hoặc quy ước xuất không, bỏ qua
+19387	, kiểm thử cung cấp kết quả hành vi, rà soát quy ước đường dẫn và tương thích cung cấp bằng chứng quá trình. Có thể kết hợp theo rủi ro: sửa đơn giản không cần phân tích lặp, logic xuyên mô-đun cần bằng chứng đầy đủ hơn. Đây là khuyến nghị kỹ thuật, không phải bảo đảm phổ quát của bài báo.
+26278	, tệp kiểm thử do Harness giảng dạy tạo và được thực thi cố định.
+25259	, thỏa mãn
+14203	, chia cho 2δ để ước lượng đạo hàm, phù hợp đối chiếu mô hình nhỏ, không phù hợp huấn luyện hàng tỷ tham số.
+14175	, mục tiêu 4, loss
+14344	, nhân lại chính là pⱼ.
+1335	, trừ nhau xuất hiện
+13936	, cộng lại được
+2617	, bỏ nhánh bổ sung; về toán tương đương cùng phần tăng tuyến tính, nhưng dấu phẩy động và lượng tử hóa lại vẫn có thể gây khác biệt. Cộng trực tiếp nhiều bộ chuyển đổi cũng không bảo đảm hành vi nghiệp vụ không xung đột. Khi đổi bộ chuyển đổi động, cần đưa danh tính bộ chuyển đổi vào quản lý bộ nhớ đệm và phiên bản.
+2631	, lược hằng số co giãn. Khởi tạo tham chiếu PEFT cho một bên ngẫu nhiên, một bên bằng không, để phần tăng ban đầu không đổi đầu ra nền; triển khai vectơ cột thường viết tích là BA. Khi so mã, xác nhận qua hình dạng và bên nào khởi tạo bằng không, không đoán theo thứ tự chữ.
+14236	, thực sự nhỏ hơn 16.
+27932	, chương trình lược trục batch luôn bằng 1.
+659	, chuỗi thứ 2
+13383	, ma trận W1 và độ chệch b1 tầng đầu là:
+1540	, hàng đầu chỉ thấy old0, hàng thứ hai chỉ thấy old0 và old1, phần lớn lịch sử bị che sai. Nó vẫn là ma trận 2×5 hợp lệ nên kiểm tra shape không làm lộ lỗi.
+11924	, câu thứ hai thành
+13453	, tầng thứ hai
+1131	, tính ra là
+13388	, kết quả
+14055	, kết quả là
+14157	, cho x=2, mục tiêu y=4, ban đầu w=1. Dự đoán là 2. Định nghĩa loss
+12017	, bảng mã là
+2297	, chứ không phải
+5292	, thay vì dựa vào việc lặp “bắt buộc” trong mô tả. Cơ chế cưỡng chế cũng phải tương xứng rủi ro.
+1133	, không phải chép nguyên. Với ma trận vuông, hai cách có hình dạng hợp lệ nhưng giá trị khác, nên “không báo lỗi shape” không chứng minh triển khai nhất quán.
+3585	, không chỉ đếm tổng token.
+1822	, không chỉ nhìn chú thích có chữ “dùng chung”.
+13225	, không phải ở hàng 3 bảng trên:
+25547	, có thể phân biệt thông tin đến muộn. Khoảng hiệu lực đóng trái mở phải để tránh hai phiên bản cùng tự có hiệu lực tại thời điểm ranh giới.
+25989	, nếu gọi thẳng mô hình lớn có chi phí Cl, để chuỗi tầng có lợi cần
+13201	, thứ tự theo hàng là
+4800	, biểu thị khởi tạo hoàn tất. request có id để liên kết phản hồi, notification không chờ phản hồi tương ứng.
+13485	, quan sát “爱” tại vị trí 2. Hàng này chỉ đọc ba vị trí 0, 1, 2; “学习” và “！” có trong tensor nhưng vị trí hiện tại không được nhìn trước. Mọi giá trị từ cùng một bộ trọng số khởi tạo, không trộn với minh họa hai chiều hoặc trọng số sau huấn luyện.
+1833	, đặt gradient phía trước
+12776	, từ vựng có tổng cộng 6 mục.
+14690	, từ vựng chỉ có 6 mục, dùng trọng số giảng dạy 2 hàng 6 cột:
+23545	, đầu ra chiều này xấp xỉ 25.75.
+616	, cặp kề nhau tương ứng trong ngữ liệu cũng được hợp nhất. Sau đó thống kê lại, có thể tiếp tục gộp
+1918	, đổi thành xác suất
+1628	, đầu ra nhất quán; không đảo thì không nhất quán. Kiểm thử này cô lập riêng “ý nghĩa mặt nạ”, không trộn với kiểm thử ma trận bất đối xứng ở phần trước để kiểm tra chuyển vị phép chiếu.
+2496	, trả về
+25483	, chưa chứng minh nó được gọi, càng chưa chứng minh nội dung trả về đi vào đầu vào mô hình. Dấu vết thực thi và chuỗi mã nguồn cùng xây dựng bằng chứng.
+2162	, còn cần phân biệt nhiễm bẩn huấn luyện mô hình, rò rỉ từ kho truy hồi và lộ chính kiểm thử; ba đường này khác nhau.
+12593	, chưa tra Embedding.
+13054	, đây gọi là <strong>trung bình có trọng số</strong>. Khi trọng số không âm và tổng bằng 1, nó biểu thị “mỗi phần chiếm bao nhiêu”.
+13213	, đây là phép tính số sau broadcast.
+821	, đây là tra một hàng, không dùng 100 tham gia tính ngữ nghĩa. Cùng token ở các câu khác nhau có thể có cùng vectơ tra bảng ban đầu, nhưng xử lý vị trí và chú ý sau đó làm biểu diễn khác đi.
+7172	, để thời điểm ranh giới không đồng thời thuộc hai bản cũ và mới. Cần phân biệt sửa sai, thay đổi bình thường và thu hồi: sửa sai có thể nói bản ghi quá khứ vốn đã sai, còn thay đổi bình thường không phủ nhận giá trị cũ từng có hiệu lực.
+18042	, kiểm tra từng đường sau: JSON sai, call_id trùng, công cụ không biết, kiểu đối số sai, hash hết hạn, final quá sớm và cạn ngân sách. Trường hợp biểu đạt được như lỗi công cụ thì phải điền kết quả; lỗi backend hoặc giao thức cần để lại lý do dừng rõ. Đừng nuốt mọi ngoại lệ chỉ để “chạy xong”.
+26660	, tạo gián đoạn bằng việc thoát tiến trình con thực. Sau phục hồi thấy tệp đã là nội dung đích thì ghi reconciled, không ghi lại; từ chối nếu không khớp nội dung tiền điều kiện hoặc cùng ID mà đối số khác.
+8691	, lấy mẫu lại ID nhiệm vụ và tính chênh lệch để được khoảng; với kết quả nhị phân ghép cặp có thể dùng ý tưởng McNemar kiểm tra hướng của cặp bất đồng. Khi có nhiều trial, nên dùng nhiệm vụ làm đơn vị cụm chính, tránh coi lặp cùng câu là mẫu hoàn toàn độc lập.
+14694	, dựng lại cùng cấu trúc và chép tham số. Dùng θ*, không còn là giá trị khởi tạo θ₀ của bài cơ bản tương ứng, cũng không chạy lại 400 lần cập nhật mỗi vòng trò chuyện.
+11786	, tập trung dòng 80—240 và 245—410, gồm kiểm tra việc công khai, ánh xạ đầu ra có kiểu và phân phối. Nó giải thích phân tầng mã nguồn, không khẳng định đã dựng hoặc chạy trình khách Rust này.
+24578	, quy tắc dây chuyền cho:
+14293	, lỗi lớn hơn.
+2669	, độ dài P=4. Ta muốn sinh
+13856	, độ dài không đổi.
+2829	, ngưỡng 0.6 cần giữ A và B.
+1144	, chia cho
+1470	: Q0/Q1 đọc cùng nhóm KV 0, Q2/Q3 đọc nhóm 1. Query vẫn bốn đầu, bộ nhớ đệm chỉ lưu hai nhóm KV; lưu trữ KV thô lý tưởng giảm một nửa so với Hkv=4.
+13078	: mỗi ô Y lấy tích vô hướng một hàng X với một cột W.
+1396	: tăng chiều trước, rồi phi tuyến, rồi giảm về d. Dạng SwiGLU có thể viết
+17965	: nó sinh đề xuất công cụ theo quy tắc nhiệm vụ đã biết, không phải LLM. Có thể luyện quan sát sự kiện nhưng không dùng đánh giá trí thông minh, tổng quát hóa hay hiệu năng mô hình thương mại. Tệp chỉ sửa trong thư mục tạm mới; hồ sơ đầu ra giữ cấu hình cuối và hash, không gian tạm được dọn sau đó.
+16883	: số nhiệm vụ trung bình trong hệ thống = tốc độ đến trung bình × thời gian lưu trung bình. Nó giúp đối chiếu hàng đợi và độ trễ, không phải dự báo chính xác áp dụng vô điều kiện cho mọi biến động tức thời.
+12847	: có 2 đầu vào, mỗi đầu 128 vị trí; mã ở mỗi vị trí đổi thành 4096 số, nên được 2 bảng 128 hàng 4096 cột. Hình dạng là
+14015	: số dương không đổi, số âm về không. Ví dụ không chọn ô ngẫu nhiên, cũng không học tham số ReLU.
+14184	: nếu đổi U[j,v], chỉ mục này đổi với tốc độ F_j; nếu đổi F_j, cả tám ứng viên có thể đổi, phải cộng ảnh hưởng loss của từng ứng viên. Vì vậy:
+28129	: cần đối chiếu.
+2849	; C nhận phần còn lại. u=0.70 rơi vào B. Chọn B không có nghĩa thuật toán sai; nó đang cho phép chọn mục không lớn nhất theo phân bố.
+28006	; ID6 là kết quả chọn từ phân bố đầu ra, chưa đi qua các tầng nên chưa có K/V riêng.
+12925	; One-hot là
+1211	; tham số PyTorch Linear được lưu thành
+13671	; độ dài Query và Key mới cần ghép đôi để lấy tích vô hướng.
+25133	; chuyển đổi sự kiện SSE từ một commit khác
+16113	; b.py có chú thích “build có thể thất bại”; c.py viết
+24992	; chunk chỉ là ranh giới truyền tải, không phải ranh giới giao thức.
+25786	; “thành công cả k lần” là
+1970	; một
+12878	; ba hàng số cùng biểu diễn ba token khởi tạo của cả câu.
+14047	; không ghi đè x gốc.
+12596	; “爱” trong hai câu có cùng mã.
+12810	; để ghép lô với câu đầu, cuối câu thêm một
+11955	; nhưng Embedding thực sự tra được ở ví dụ này là
+13891	; chênh lệch vị trí đã đổi mức khớp.
+25669	; thêm chi phí phối hợp, truyền thông, lặp và hợp nhất thì tốc độ thực thấp hơn. Đây là áp dụng suy diễn kiểu Amdahl, không phải kết quả thí nghiệm mô hình.
+12735	; lô độ dài biến đổi có thể triển khai cách khác, không nhất thiết điền thành hình chữ nhật.
+24977	; bộ chuyển đổi trực tuyến tùy chọn:
+28117	; đường dẫn tuyệt đối cùng tệp
+676	; cùng văn bản có thể có số token khác nhau.
+12831	; mạng phía sau cập nhật từng biểu diễn theo vị trí và ngữ cảnh.
+520	; với từ vựng 6 mục, về khái niệm có thể viết thành One-hot
+2621	; nhiều ngữ cảnh không liên quan cần đổi cách chọn. Tinh chỉnh khi chưa định vị nguyên nhân gốc có thể khắc kiến thức dễ cũ vào tham số mà vẫn không giải quyết quyền công cụ hoặc dữ liệu.
+11953	; nếu chỉ bàn cách máy tính lưu nó bằng 8 bit, có thể viết
+11954	; nếu dùng mã one-hot dài 6, có thể viết
+15134	; LoRA thực còn có quy ước co giãn.
+12687	; đệm trái sẽ viết thành
+14505	; nếu lấy trung bình của hai giá trị trung bình thì
+10527	; tham số cùng tên ở giao diện cấp thấp có thể là dữ liệu đã chiếu. Kiểm tra “bên trong giao diện đã biến đổi W chưa” quan trọng hơn chỉ nhìn tên. Công thức và chương trình còn có thể lần lượt dùng nhân bảng tham số bên phải và bố trí lưu trọng số chuyển vị; cần căn bố trí trước rồi so giá trị.
+12544	; tách “你爱” thành “你、爱”, được
+1107	; tính cả lô là
+24885	; bù sau từ chối phủ vừa đúng
+3601	; lấy mẫu từ phân bố phần dư chuẩn hóa này khi từ chối sẽ bù phần thiếu của phân bố đích.
+13017	; di chuyển không tự thêm ngữ nghĩa.
+15984	; tài liệu B lần lượt hạng 2, 1, được
+12885	; trục cuối chọn đặc trưng thứ mấy của một token.
+28368	; có người đề nghị gấp đôi ngữ cảnh. Nên làm gì trước?
+12926	; Embedding ví dụ này là
+12587	; ví dụ này quy định rõ “学习” là một token. Nó không đại diện cho cách chia token thật của mô hình nào.
+14976	; lan truyền xuôi độc lập bằng thư viện chuẩn và kết quả PyTorch cũng nhất quán trong dung sai dấu phẩy động. Đây không phải chuẩn đo hiệu năng GPU. Tăng tốc hay không tùy độ dài chuỗi, kernel, lập lịch và phần cứng; đọc bộ nhớ đệm tự nó cũng có thể nghẽn băng thông.
+11962	; bây giờ vị trí này ứng với một hàng
+22311	; các lần thử thực tế thường có tương quan, không được áp công thức vô điều kiện.
+4016	; phiên bản đĩa vẫn là v7.
+1351	; chương trình không có NaN nhưng đã lấy trung bình nội dung bị cấm. Nếu điền bằng
+15143	; chuyên gia thứ 3 không được tính lần này nhưng tham số vẫn tồn tại.
+1152	; vị trí thứ hai chỉ thấy hai mục đầu. Ví dụ cũng cho thấy mask nhân quả và độ liên quan nội dung là hai cơ chế khác nhau: token tương lai dù liên quan cao vẫn phải bị che.
+12718	; câu thứ hai “你爱” là
+27977	; chiều thứ hai là
+15131	; hàng thứ hai gấp 2 lần hàng đầu nên hạng 1.
+971	; sau phép chiếu đầu ra cộng lại phần dư; rồi chuẩn hóa và mạng truyền thẳng, cộng phần dư lần hai. Lặp các tầng xong, chuẩn hóa cuối và chiếu từ vựng, ở vị trí cuối:
+25776	; mọi ví dụ thống kê đều do tác giả dựng, không phải điểm chuẩn Agent thương mại.
+521	; Embedding ban đầu thực sự vào các tầng mô hình sau là
+17258	; nếu E có hình dạng [6,4], nhân One-hot này với E về toán bằng lấy E[2], nhưng lúc chạy thường tra bảng trực tiếp.
+14608	; huấn luyện chỉ cập nhật các tham số A/B được chọn và tương tự; W vẫn tham gia lan truyền xuôi nhưng không tính hoặc không áp dụng cập nhật của nó.
+28307	; câu trả lời đó chưa đối chiếu tình trạng trực tuyến, cũng chưa thực hiện sửa đổi.
+12443	; chuyển vị được
+13220	; còn phải giữ trục vị trí tương ứng trục đầu.
+12657	; điều này không chứng minh cả hai câu gốc đều có 128 token.
+13111	; đây là
+5272	; nhánh từ xa vẫn bản cũ. Người dùng chạy cùng câu hỏi riêng trong IDE, CLI cục bộ và nhiệm vụ đám mây.
+3034	; thêm token mới không đổi các trạng thái cũ này. Vì thế K/V chiếu từ vị trí cũ ở mỗi tầng cũng không đổi. Vị trí mới chỉ cần Q riêng để truy vấn K/V lịch sử tầng đó; đầu ra cũ do Q cũ sinh đã tính xong, thường không cần dùng lại.
+13286	; chia từng mục vẫn xấp xỉ
+1567	; dùng đệm phải, vị trí token thực là 0, 1.
+15128	; lượng tử hóa lấy x=0.26, thang s=0.1; định tuyến chuyên gia có ba ứng viên.
+1214	; chuyển vị thừa lần nữa được

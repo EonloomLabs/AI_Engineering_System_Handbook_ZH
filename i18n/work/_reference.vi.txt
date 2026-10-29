@@ -1,0 +1,331 @@
+# vi edition reference. Chinese source is authoritative; English glossary includes related concepts, not synonyms.
+# Keep toy tokens 我 / 爱 / 学习 / 你 / ！, identifiers, numbers, tags, attributes, file names unchanged.
+# Context compaction: cô đọng ngữ cảnh; data compression: nén. Model inference: suy luận; reasoning: lập luận. MCP Host: ứng dụng chủ. 第NN课: Bài NN; 单元NN: Học phần NN; 作业NN: Bài tập NN. 追问：: Câu hỏi mở rộng:; 预备知识：: Kiến thức tiên quyết:
+# Retrieval: truy hồi; recall metric: độ bao phủ; precision: độ chuẩn xác; accuracy: độ chính xác.
+# Learning-rate step is tamaño del paso / kích thước bước, not array stride.
+# Translate BOTH body and UI; do not copy existing locales notice saying body remains Chinese.
+
+# Glossary
+上下文	→	ngữ cảnh
+专家混合	→	hỗn hợp chuyên gia
+事件	→	sự kiện
+事务	→	giao dịch
+交叉熵	→	entropy chéo
+位置编号	→	mã vị trí
+余弦相似度	→	độ tương đồng cosin
+假设文档	→	tài liệu giả định
+偏置	→	độ chệch
+关键路径	→	đường găng
+函数	→	hàm
+分片	→	phân mảnh
+切片	→	lát cắt
+前向	→	lan truyền xuôi
+前向传播	→	lan truyền xuôi
+压缩	→	cô đọng
+原子操作	→	thao tác nguyên tử
+参数	→	tham số
+反向传播	→	lan truyền ngược
+变异测试	→	kiểm thử đột biến
+可解释性	→	khả năng diễn giải
+向量	→	vectơ
+回归测试	→	kiểm thử hồi quy
+因果掩码	→	mặt nạ nhân quả
+多模态编码	→	mã hóa đa phương thức
+失效	→	mất hiệu lực
+奖励	→	phần thưởng
+字符	→	ký tự
+字节	→	byte
+学习率η	→	tốc độ học η
+宿主执行框架	→	khung thực thi
+导数	→	đạo hàm
+嵌入表	→	bảng nhúng
+工作流	→	luồng công việc
+工具调用	→	lời gọi công cụ
+带宽	→	băng thông
+幂等	→	tính lũy đẳng
+广播	→	broadcast
+张量	→	tensor
+归一化	→	chuẩn hóa
+形状	→	hình dạng
+截断	→	cắt ngắn
+批次	→	lô
+按需加载	→	nạp theo nhu cầu
+推理	→	suy luận
+数据类型	→	kiểu dữ liệu
+显存	→	bộ nhớ GPU
+未知结果	→	kết quả chưa xác định
+权重	→	trọng số
+来源追溯	→	truy xuất nguồn gốc
+查表	→	tra bảng
+标签	→	nhãn
+标量	→	đại lượng vô hướng
+校准	→	hiệu chuẩn
+梯度	→	gradient
+概率	→	xác suất
+模型	→	mô hình
+步幅	→	bước nhảy
+步长	→	bước nhảy
+残差	→	phần dư
+残差连接	→	kết nối phần dư
+沙箱	→	môi trường cách ly
+注意力	→	chú ý
+注意力掩码	→	mặt nạ chú ý
+浮点数	→	số dấu phẩy động
+消融	→	loại bỏ thành phần
+温度	→	nhiệt độ
+激活	→	kích hoạt
+点积	→	tích vô hướng
+状态	→	trạng thái
+独热编码	→	mã hóa one-hot
+矩阵	→	ma trận
+矩阵乘法	→	phép nhân ma trận
+矩阵秩	→	hạng ma trận
+租户隔离	→	cách ly bên thuê
+秩	→	hạng
+策略	→	chính sách
+索引	→	chỉ mục
+线性层	→	lớp tuyến tính
+置信区间	→	khoảng tin cậy
+聊天模板	→	mẫu hội thoại
+自回归	→	tự hồi quy
+自注意力	→	tự chú ý
+范数	→	chuẩn
+蒸馏	→	chưng cất
+补齐	→	đệm
+视图	→	khung nhìn
+训练	→	huấn luyện
+设备	→	thiết bị
+贪心选择	→	lựa chọn tham lam
+路由	→	định tuyến
+转置	→	chuyển vị
+转轴	→	hoán vị trục
+轴	→	trục
+过拟合	→	quá khớp
+退避	→	chờ trước khi thử lại
+配对实验	→	thí nghiệm ghép cặp
+采样	→	lấy mẫu
+重排	→	xếp hạng lại
+量化	→	lượng tử hóa
+链式法则	→	quy tắc dây chuyền
+门控	→	điều khiển cổng
+隐藏状态	→	trạng thái ẩn
+非线性	→	tính phi tuyến
+
+# Existing table entries
+。	→	.
+：	→	:
+、	→	,
+；PAD 	→	;PAD 
+X、U、R、Y	→	X,U,R,Y
+Wq、Wk、Wv、Wo、W1、W2	→	Wq,Wk,Wv,Wo,W1,W2
+Norm、Attention、FFN	→	Norm,Attention,FFN
+S、A、O、M	→	S,A,O,M
+B、T、d、H、Dh	→	B,T,d,H,Dh
+I、γ、β、ε	→	I,γ,β,ε
+？	→	?
+；	→	;
+。PyTorch 	→	.PyTorch 
+，	→	,
+y=[2.5,−0.75]。	→	y=[2.5,−0.75].
+q=[0,1]；k=[1,0]	→	q=[0,1];k=[1,0]
+q0=[1,0]，k1=[0,1]	→	q0=[1,0],k1=[0,1]
+q1=[0,1]，k2=[−1,0]	→	q1=[0,1],k2=[−1,0]
+Q0→KV0，Q1→KV0，Q2→KV1，Q3→KV1	→	Q0→KV0,Q1→KV0,Q2→KV1,Q3→KV1
+dV0=[0.25,0.25]；dV1=[0.75,0.75]	→	dV0=[0.25,0.25];dV1=[0.75,0.75]
+dQ=dS K/√2，dK=dSᵀ Q/√2	→	dQ=dS K/√2,dK=dSᵀ Q/√2
+m̂=2；v̂=4	→	m̂=2;v̂=4
+0.02。	→	0.02.
+0.00004。	→	0.00004.
+m̂=m/(1−0.9)，v̂=v/(1−0.999)	→	m̂=m/(1−0.9),v̂=v/(1−0.999)
+4MB。	→	4MB.
+σ(0.405465)=0.6；−ln0.6	→	σ(0.405465)=0.6;−ln0.6
+PPO、GRPO、advantage	→	PPO,GRPO,advantage
+0.5。	→	0.5.
+logits=[2,1,0]。	→	logits=[2,1,0].
+；B 	→	;B 
+call_id、item_id、request_id	→	call_id,item_id,request_id
+AE=0.306，AF=0.294，BD=0.396，BF=0.004	→	AE=0.306,AF=0.294,BD=0.396,BF=0.004
+m=1，l=exp(0)=1，u=2	→	m=1,l=exp(0)=1,u=2
+TTFT=120ms。	→	TTFT=120ms.
+0.4。	→	0.4.
+L0、L1 / L2、L3	→	L0,L1 / L2,L3
+r8: timeout=10；op9=succeeded	→	r8: timeout=10;op9=succeeded
+path:str；recursive:bool	→	path:str;recursive:bool
+ToolRouter、ToolCall、ToolInvocation	→	ToolRouter,ToolCall,ToolInvocation
+750。	→	750.
+A=180、B=120、C=200	→	A=180,B=120,C=200
+0.470004。	→	0.470004.
+A≈0.523548，B≈0.566580，C=0。	→	A≈0.523548,B≈0.566580,C=0.
+q=[1,0]；d=[0.9,0.1]	→	q=[1,0];d=[0.9,0.1]
+q·a=0.8，q·b=0	→	q·a=0.8,q·b=0
+1/61≈0.016393。	→	1/61≈0.016393.
+1/62+1/61≈0.032522。	→	1/62+1/61≈0.032522.
+1/63+1/62≈0.032002。	→	1/63+1/62≈0.032002.
+1/63≈0.015873。	→	1/63≈0.015873.
+B、C、A、D。	→	B,C,A,D.
+MaxSim=1.8。	→	MaxSim=1.8.
+scope=P1；version=3.11；temporary	→	scope=P1;version=3.11;temporary
+M1：P2=10	→	M1:P2=10
+M2：P1 v1=30	→	M2:P1 v1=30
+M3：P1 v2=20	→	M3:P1 v2=20
+A=1，B=0.7	→	A=1,B=0.7
+A=100/80=1.25，B=70/40=1.75	→	A=100/80=1.25,B=70/40=1.75
+0.8。	→	0.8.
+0.992。	→	0.992.
+0.512。	→	0.512.
+A=(10+2)/20，B=(10+6)/20	→	A=(10+2)/20,B=(10+6)/20
+A/P/2025：100	→	A/P/2025:100
+B/P/2026：200	→	B/P/2026:200
+A/P/2026：150	→	A/P/2026:150
+A：100	→	A:100
+B：150	→	B:150
+0.34。	→	0.34.
+H、h	→	H,h
+q、k	→	q,k
+pending、running、unknown、succeeded	→	pending,running,unknown,succeeded
+MCP、Host、Client、Server	→	MCP,Host,Client,Server
+Trace、Span、Log、Metric	→	Trace,Span,Log,Metric
+2024-12-19。	→	2024-12-19.
+2025-09-29。	→	2025-09-29.
+2025-09-11。	→	2025-09-11.
+2025-06-13。	→	2025-06-13.
+2025-11-26。	→	2025-11-26.
+2026-01-09。	→	2026-01-09.
+2024-09-19。	→	2024-09-19.
+2025-11-04。	→	2025-11-04.
+2025-11-24。	→	2025-11-24.
+2025-10-20。	→	2025-10-20.
+2026-02-05。	→	2026-02-05.
+2026-03-24。	→	2026-03-24.
+2026-04-08。	→	2026-04-08.
+2026-04-23。	→	2026-04-23.
+also_read：['https://github.com/microsoft/language-server-protocol/blob/gh-pages/_specifications/lsp/3.17/types/position.md']	→	also_read:['https://github.com/microsoft/language-server-protocol/blob/gh-pages/_specifications/lsp/3.17/types/position.md']
+v2，2025-03-04	→	v2,2025-03-04
+src/transformers/loss/loss_utils.py；fixed_cross_entropy / ForCausalLMLoss；blob efa23d24e360b4dce21121a301e8ba7a6f79230b	→	src/transformers/loss/loss_utils.py;fixed_cross_entropy / ForCausalLMLoss;blob efa23d24e360b4dce21121a301e8ba7a6f79230b
+also_read：['https://github.com/huggingface/transformers/blob/c1c7e89620b43f0924148e267a6da5d38450ce1f/src/transformers/loss/loss_utils.py']	→	also_read:['https://github.com/huggingface/transformers/blob/c1c7e89620b43f0924148e267a6da5d38450ce1f/src/transformers/loss/loss_utils.py']
+（blob 	→	(blob 
+SSE · WHATWG：Server-sent events	→	SSE · WHATWG:Server-sent events
+RRF · Elasticsearch：RRF	→	RRF · Elasticsearch:RRF
+a→1，bc→5	→	a→1,bc→5
+E[2]+P[2]=[-0.2, 0.8, 0, 0.45]。	→	E[2]+P[2]=[-0.2, 0.8, 0, 0.45].
+6×8=48；24×4=96	→	6×8=48;24×4=96
+B=2、T=128、d=4096	→	B=2,T=128,d=4096
+W1、W2	→	W1,W2
+[4,8]、[8,4]	→	[4,8],[8,4]
+g1、g2、gf	→	g1,g2,gf
+y=1。	→	y=1.
+run.json：initial_trace / initial_parameters	→	run.json:initial_trace / initial_parameters
+X、Wq、Wk	→	X,Wq,Wk
+X、Wk、Wv	→	X,Wk,Wv
+σ=1。	→	σ=1.
+L=0.5×(2w−4)²；dL/dw=(2w−4)×2	→	L=0.5×(2w−4)²;dL/dw=(2w−4)×2
+−ln0.8≈0.223144，−ln0.5≈0.693147，−ln0.25≈1.386294	→	−ln0.8≈0.223144,−ln0.5≈0.693147,−ln0.25≈1.386294
+、PyTorch 	→	,PyTorch 
+0。	→	0.
+0 PAD，6 BOS，7 EOS	→	0 PAD,6 BOS,7 EOS
+、B=	→	,B=
+SSE（Server-Sent Events）	→	SSE(Server-Sent Events)
+MCP（Model Context Protocol）	→	MCP(Model Context Protocol)
+，B=	→	,B=
+，C=	→	,C=
+Precision=6/8；Recall=6/10	→	Precision=6/8;Recall=6/10
+80%。	→	80%.
+1/3≈33.3%。	→	1/3≈33.3%.
+1/2=50%。	→	1/2=50%.
+1−0.2³=0.992。	→	1−0.2³=0.992.
+12/20=60%。	→	12/20=60%.
+16/20=80%。	→	16/20=80%.
+1/3≈0.3333。	→	1/3≈0.3333.
+[1,2]·[3,4]=11。	→	[1,2]·[3,4]=11.
+exp(0)=1，exp(ln2)=2。	→	exp(0)=1,exp(ln2)=2.
+w_new=w−η×gradient。	→	w_new=w−η×gradient.
+a／bc。	→	a／bc.
+[1,3,6]。	→	[1,3,6].
+600。	→	600.
+300。	→	300.
+p=[0.5,0.3,0.2]。	→	p=[0.5,0.3,0.2].
+0.5、0.8、0.95	→	0.5,0.8,0.95
+p=[0.6,0.3,0.1]，q=[0.2,0.5,0.3]。	→	p=[0.6,0.3,0.1],q=[0.2,0.5,0.3].
+[0.2,0.3,0.1]。	→	[0.2,0.3,0.1].
+[0.4,0,0]。	→	[0.4,0,0].
+1010ms。	→	1010ms.
+q=[1,0]，dA=[0.8,0.6]，dB=[0,1]。	→	q=[1,0],dA=[0.8,0.6],dB=[0,1].
+A0.8，B0。	→	A0.8,B0.
+X=1，Y=1/2	→	X=1,Y=1/2
+pass@1、pass@k、pass^k	→	pass@1,pass@k,pass^k
+A=[[1],[2]]，B=[[0.1,0.2]]。	→	A=[[1],[2]],B=[[0.1,0.2]].
+[[0.1,0.2],[0.2,0.4]]。	→	[[0.1,0.2],[0.2,0.4]].
+y=(2w−10)^2，w=1。	→	y=(2w−10)^2,w=1.
+2w−10=−8，y=64	→	2w−10=−8,y=64
+dy/dz=2z=−16，dz/dw=2	→	dy/dz=2z=−16,dz/dw=2
+ACCUMULATION · Hugging Face · Fixing Gradient Accumulation（2024-10-16）	→	ACCUMULATION · Hugging Face · Fixing Gradient Accumulation(2024-10-16)
+[CHAT] Hugging Face：Chat templates	→	[CHAT] Hugging Face:Chat templates
+[BPE] Hugging Face：Byte-Pair Encoding tokenization	→	[BPE] Hugging Face:Byte-Pair Encoding tokenization
+[CACHE] Hugging Face：KV cache strategies	→	[CACHE] Hugging Face:KV cache strategies
+[TOOLS] OpenAI：Function calling	→	[TOOLS] OpenAI:Function calling
+[COMPACT] OpenAI：Compaction	→	[COMPACT] OpenAI:Compaction
+[PCACHE] OpenAI：Prompt caching	→	[PCACHE] OpenAI:Prompt caching
+[MCP-LIFE] MCP Lifecycle，2025-11-25	→	[MCP-LIFE] MCP Lifecycle,2025-11-25
+[MCP-TOOLS] MCP Tools，2025-11-25	→	[MCP-TOOLS] MCP Tools,2025-11-25
+[SUBAGENTS] Claude Code：Subagents	→	[SUBAGENTS] Claude Code:Subagents
+[CLAUDEMEM] Claude Code：Memory	→	[CLAUDEMEM] Claude Code:Memory
+[COPILOTSKILL] GitHub Copilot：Agent Skills	→	[COPILOTSKILL] GitHub Copilot:Agent Skills
+[BM25] Stanford IR Book：Okapi BM25	→	[BM25] Stanford IR Book:Okapi BM25
+[RRF] Elasticsearch：Reciprocal rank fusion	→	[RRF] Elasticsearch:Reciprocal rank fusion
+[TREESITTER] Tree-sitter：Using parsers	→	[TREESITTER] Tree-sitter:Using parsers
+[OTEL] OpenTelemetry：GenAI agent and framework spans	→	[OTEL] OpenTelemetry:GenAI agent and framework spans
+[GENERATION] Hugging Face：Generation strategies	→	[GENERATION] Hugging Face:Generation strategies
+[SPEC] OpenAI Model Spec，2025-12-18	→	[SPEC] OpenAI Model Spec,2025-12-18
+[REASON] OpenAI：Reasoning models	→	[REASON] OpenAI:Reasoning models
+[STRUCTURED] OpenAI：Structured outputs	→	[STRUCTURED] OpenAI:Structured outputs
+[STREAM] OpenAI：Streaming responses	→	[STREAM] OpenAI:Streaming responses
+[SSE] WHATWG HTML：Server-sent events	→	[SSE] WHATWG HTML:Server-sent events
+[TP] PyTorch：Tensor Parallel tutorial	→	[TP] PyTorch:Tensor Parallel tutorial
+[SRE] Google SRE：Monitoring Distributed Systems	→	[SRE] Google SRE:Monitoring Distributed Systems
+[SLO] Google SRE Workbook：Implementing SLOs	→	[SLO] Google SRE Workbook:Implementing SLOs
+[IDEMPOTENT] AWS Builders Library：Making retries safe with idempotent APIs	→	[IDEMPOTENT] AWS Builders Library:Making retries safe with idempotent APIs
+[SQLITE] SQLite：Isolation	→	[SQLITE] SQLite:Isolation
+[LATENCY] OpenAI：Latency optimization	→	[LATENCY] OpenAI:Latency optimization
+[REVIEW] Google Engineering Practices：The Standard of Code Review	→	[REVIEW] Google Engineering Practices:The Standard of Code Review
+[OWASP] OWASP LLM01：Prompt Injection	→	[OWASP] OWASP LLM01:Prompt Injection
+[F-TENSOR] PyTorch：Tensors	→	[F-TENSOR] PyTorch:Tensors
+[F-EMBED] PyTorch：Embedding	→	[F-EMBED] PyTorch:Embedding
+[F-PADDING] Hugging Face：Padding and truncation	→	[F-PADDING] Hugging Face:Padding and truncation
+[F-CACHE] Hugging Face：How caching works	→	[F-CACHE] Hugging Face:How caching works
+[F-AUTOGRAD] PyTorch：Automatic Differentiation	→	[F-AUTOGRAD] PyTorch:Automatic Differentiation
+[F-IR] Stanford IR Book：Evaluation of Ranked Retrieval Results	→	[F-IR] Stanford IR Book:Evaluation of Ranked Retrieval Results
+CS2680-A3 · CS2680 Assignment 3：Harness competition	→	CS2680-A3 · CS2680 Assignment 3:Harness competition
+CS2680-A4 · CS2680 Assignment 4：Mads-Serve	→	CS2680-A4 · CS2680 Assignment 4:Mads-Serve
+p=0.665241，y=0	→	p=0.665241,y=0
+p=0.244728，y=1	→	p=0.244728,y=1
+p=0.090031，y=0	→	p=0.090031,y=0
+A=3，B=2	→	A=3,B=2
+(1+2+3+4)/4=2.5。	→	(1+2+3+4)/4=2.5.
+A=2，r=1.5	→	A=2,r=1.5
+A=−2，r=0.5	→	A=−2,r=0.5
+A90%，B80%	→	A90%,B80%
+A20%，B10%	→	A20%,B10%
+A29/110≈26.36%，B81/110≈73.64%	→	A29/110≈26.36%,B81/110≈73.64%
+A1000，B800	→	A1000,B800
+A≈1.0101，B≈0.8163	→	A≈1.0101,B≈0.8163
+1+0.26=1.26；1+0.30=1.30	→	1+0.26=1.26;1+0.30=1.30
+1+26=27；1+30=31	→	1+26=27;1+30=31
+1。	→	1.
+0.001。	→	0.001.
+A80%，B90%	→	A80%,B90%
+A100%，B50%	→	A100%,B50%
+A80，B45	→	A80,B45
+dQ、dK	→	dQ,dK
+N08 · GQA：Grouped-Query Attention	→	N08 · GQA:Grouped-Query Attention
+N09 · RoFormer：Rotary Position Embedding	→	N09 · RoFormer:Rotary Position Embedding
+N10 · FlashAttention：IO-Aware Exact Attention	→	N10 · FlashAttention:IO-Aware Exact Attention
+N29 · MCP Authorization，2026-07-28	→	N29 · MCP Authorization,2026-07-28
+N37 · Chinchilla：Compute-Optimal Language Models	→	N37 · Chinchilla:Compute-Optimal Language Models
+N41 · CoALA：Cognitive Architectures for Language Agents	→	N41 · CoALA:Cognitive Architectures for Language Agents
+N46 · GraphRAG：From Local to Global	→	N46 · GraphRAG:From Local to Global
+N51 · Google SRE：Implementing SLOs	→	N51 · Google SRE:Implementing SLOs
+N61 · InstructGPT：Human Feedback	→	N61 · InstructGPT:Human Feedback
+N98 · LLaVA：Visual Instruction Tuning	→	N98 · LLaVA:Visual Instruction Tuning
+N99 · Whisper：Robust Speech Recognition	→	N99 · Whisper:Robust Speech Recognition
+u=0.70 → B；argmax → A	→	u=0.70 → B;argmax → A
+task=t7，call=c19，patch=p1	→	task=t7,call=c19,patch=p1

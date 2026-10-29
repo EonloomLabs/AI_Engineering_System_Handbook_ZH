@@ -1,0 +1,550 @@
+14589	π representa la probabilidad condicional de la respuesta completa, normalmente obtenida sumando las probabilidades logarítmicas de sus tokens; β configura la pérdida y no es β1/β2 de Adam. sigmoid es 
+22308	τ-bench evalúa herramientas, interacción con usuarios y cumplimiento de reglas, y examina la fiabilidad con ejecuciones repetidas. Tener éxito una vez y en todas las repeticiones son objetivos distintos.
+2853	Los productos suelen interpretar τ=0 como alguna configuración de selección determinista; la fórmula matemática no puede dividir directamente por 0. Este ejemplo voraz toma argmax directamente, sin simularlo mediante división por 0.
+2792	Con τ=1 basta AB; con τ=2 no basta
+10590	ᵀ, transpose: intercambiar filas y columnas de la matriz
+14036	«32 capas, anchura 4096» describe profundidad y anchura por posición, no 32 agentes de chat independientes. Al final del modelo suele haber también normalización y proyección de salida al vocabulario; la siguiente lección parte de aquí para llegar al texto.
+13849	Cuesta expresar el orden de «AB» y «BA»
+17054	«La IA no reparó el bug» puede deberse a no leer el archivo pertinente, leer una versión antigua, omitir condiciones de negocio, inferir mal, carecer de permisos de herramienta, desconocer el resultado de la modificación o usar criterios de prueba débiles. No se resuelven todas estas causas «cambiando a un modelo más grande».
+10794	«La API devuelve 200» puede no equivaler al éxito del usuario; en algunos negocios, la métrica debe definirse como la proporción de tareas completadas correctamente dentro del tiempo límite.
+10377	Unir las palabras «agente-herramienta-memoria» aporta muy poca información. Son más útiles relaciones como:
+21559	«Por qué afecta v8 a A»
+26152	“Language Models (Mostly) Know What They Know” estudia la expresión de incertidumbre y la autoevaluación del modelo, pero estas capacidades dependen de la pregunta y del método. El título no demuestra que el modelo sepa en todo momento cuándo se equivoca.
+10388	«ToolRouter contiene especificaciones visibles» es una relación de código; «un hook posterior no revierte efectos secundarios ya producidos» es una conclusión de secuencia de ejecución; «añadir verificación para acciones de alto riesgo» es una recomendación de ingeniería. Requieren métodos de verificación distintos y no deben representarse todas como los mismos «requisitos oficiales».
+6694	Ante «character=3», preguntar primero la unidad
+24759	«Si loss baja, todo está bien» es falso: un objetivo incorrecto también puede disminuir. «Basta con gradientes aproximadamente parecidos» tampoco: primero hay que ver si la definición del objetivo explica las diferencias y después analizar el error de punto flotante. La PR histórica sustenta el mecanismo del problema, pero no demuestra que la versión actual conserve el bug.
+20114	«La prueba nested_paths conserva erróneamente la entrada src/a.py» es más accionable que «ten más cuidado». Los estados terminales deben incluir éxito, evidencia insuficiente, falta de permisos, fallo de entorno y presupuesto agotado, evitando que el modelo finja haber terminado para entregar una respuesta final.
+10768	«El parche p7 falló por una prueba omitida» es una experiencia; «ahora hay que admitir Windows» es un hecho; «comprobar los separadores al modificar reglas de rutas» es un procedimiento condicionado y no debe convertirse directamente en ejecutar todas las pruebas para cualquier tarea.
+13545	«q es como una solicitud, k como la etiqueta de correspondencia del objeto consultado y v como el contenido legible» solo explica las responsabilidades. No se generan primero términos de búsqueda chinos ni se consultan claves de base de datos con cadenas exactamente iguales. Después se calculan puntuaciones continuas mediante productos escalares y se mezclan varios Value según proporciones, en vez de obtener un único acierto.
+9771	El artículo de la «herramienta think» se publicó el 2025-03-20 y el autor añadió el 2025-12-15 que, en la mayoría de los casos, ahora recomienda el razonamiento extendido, que ha mejorado. La herramienta think independiente queda como opción histórica de diseño, no como componente que instalar por defecto en todos los agentes. Prolongar el razonamiento no añade evidencia automáticamente; la entrega sigue necesitando citar resultados de herramientas y pruebas.
+15111	«Experto» es un nombre estructural; no implica por naturaleza que un grupo sea experto en matemáticas y otro en emociones. El enrutamiento MoE dentro de la red neuronal y elegir otro modelo para una tarea del agente pertenecen a niveles distintos.
+7135	«Cuándo entra en vigor» y «cuándo se sabe» no son el mismo tiempo
+13627	«Proporciones sin cambios» se refiere solo a la rama de atención de esta ejecución; tras cambiar la salida, las capas posteriores también pueden cambiar. <strong>Una comparación local no demuestra que el resto del modelo permanezca siempre inalterado.
+15074	Comprender «bajo rango» con una tabla de estructura repetida
+12082	Comprender «bajo rango» con una tabla de estructura repetida</a><a href="foundations/20.html#fdiag-20-02">LoRA no modifica todo el modelo base</a><a href="foundations/20.html#fdiag-20-03">Cuantizar representa números en una escala finita</a><a href="foundations/20.html#fdiag-20-04">Por qué MoE tiene muchos parámetros, pero solo invoca parte</a><a href="foundations/20.html#fdiag-20-05">Qué hacen exactamente la destilación y el ajuste fino
+7644	«Eres experto, revísalo» es demasiado vago. Un buen traspaso indica versión, alcance permitido de lectura y escritura, preguntas concretas obligatorias, ubicación de evidencia, rutas descartadas, aspectos sin confirmar y longitud del resultado. «Sin problemas» del subagente no es evidencia; devolver 
+12595	«你爱» se divide en «你／爱»
+16088	El «cierre de dependencias» sigue las relaciones necesarias hasta obtener asociaciones suficientes para explicar el problema actual; el «grafo estático de llamadas» se infiere del código y las «relaciones dinámicas de llamadas» proceden de ejecuciones reales. El despacho dinámico, la reflexión y los plugins impiden que el grafo estático coincida completamente con las rutas reales.
+24888	«Conservar la distribución» exige condiciones: p y q deben ser distribuciones normalizadas bajo las reglas reales de decodificación, y los cálculos de aceptación y residuo deben ser correctos. Si el objetivo usa Top-p pero la verificación usa softmax sin truncar, ya no es la misma p. Un borrador muy malo causa demasiados rechazos y puede añadir más cálculo del que ahorra. Mejora la eficiencia de planificación del cálculo; no hace más inteligente al modelo objetivo de la nada.
+16470	«Corregir exclude» no es suficientemente preciso. ¿Debe excluir todo el directorio o solo una ruta?
+26296	«Se corrigió la clasificación errónea de rutas relativas causada por comparar basename; se añadieron separadores de límite al emparejar directorios; se superaron 8 pruebas de contrato sobre el artefacto actual y se verificó el rechazo de resultados obsoletos. No se implementaron glob ni una biblioteca completa de rutas multiplataforma, ni se verificó el rendimiento en producción».
+15824	«Reparación terminada, pruebas superadas, listo para entregar»
+15494	«Hasta dónde hemos llegado» necesita objetos concretos
+12091	«Hasta dónde hemos llegado» necesita objetos concretos</a><a href="foundations/24.html#fdiag-24-02">La máquina de estados comienza con una tabla mínima</a><a href="foundations/24.html#fdiag-24-03">Qué guardan los eventos y las instantáneas</a><a href="foundations/24.html#fdiag-24-04">Por qué importa el número de versión</a><a href="foundations/24.html#fdiag-24-05">El punto de control guarda lo necesario para recuperar
+15496	«Hasta dónde hemos llegado» necesita objetos concretos: distinguir elemento por elemento
+15995	«Suficiente»: incluye las condiciones clave
+21172	«Cuál es exactamente el tiempo de espera»
+13414	«Congelar parámetros» significa no actualizar algunos al entrenar; «usar pesos fijos en inferencia» significa no actualizar en este cálculo. Algunos servicios entrenan versiones nuevas en otros momentos, pero corregir al modelo en una conversación ordinaria no equivale a entrenamiento en línea.
+13509	«Dividir en tres conjuntos de parámetros» no prohíbe matemáticamente que sean iguales. Algunos casos didácticos usan la misma matriz y ciertas estructuras de investigación comparten parámetros. Sin embargo, <strong>el diseño separado habitual permite aprender transformaciones distintas en las tres rutas</strong>. La igualdad numérica y el uso compartido dependen de la configuración concreta del ejemplo o modelo.
+16406	«Sustitución atómica» no garantiza «cero pérdidas ante cualquier corte eléctrico» ni una transacción conjunta de varios archivos y API remotas. Hay que precisar las garantías de la plataforma concreta.
+5578	«La caché acertó, así que la ventana creció»
+3944	«Respuesta terminada», «resultado de herramienta disponible» y «tarea terminada» deben tener marcas de tiempo separadas. Si la respuesta termina a las 10:00:02 y las pruebas salen a las 10:00:08, no se pueden declarar superadas a las 10:00:02. Si el archivo vuelve a cambiar a las 10:00:09, el resultado de las 10:00:08 solo demuestra la versión antigua, no la nueva.
+25188	«En esta ruta de este commit»
+8906	La «marca de contaminación de contexto externo» no es un modelo detector de malicia
+12845	«Añadir un eje» no añade una clase de texto ni copia un entero 4 veces.</strong> Los bits solo describen el almacenamiento numérico; las 6 posiciones One-hot designan elementos del vocabulario; las 4 características añadidas por Embedding proceden de las 4 columnas de la tabla elegida. No deben confundirse estas tres «longitudes». El relleno cambia las posiciones T; Embedding cambia la anchura de representación d de cada posición.
+16208	«Hay 1000 registros» solo describe cantidad, no demuestra calidad. La finalidad de la memoria es mejorar la corrección o eficiencia del siguiente intento, no construir un archivo cada vez más grande.
+12620	Si «学习» ocupa un token en el vocabulario didáctico, ¿ocurre lo mismo en todos los modelos reales?
+12559	Aquí «学习» es <strong>un</strong> token y «！» también es un token. BOS/EOS son símbolos específicos; no dividen las letras B, O y S en tres elementos. El vocabulario tiene 8 elementos, lo que no significa que las frases de entrenamiento tengan 8 posiciones en total.
+21086	«Ello» no tiene un referente concreto.
+3999	«Ya corregido a 10»
+10550	«Modificado, pendiente de pruebas»
+31185	«Etiqueta conocida» y «permitir que el modelo la lea» son cosas distintas.
+8289	«Se discutió la solución» es progreso de conocimiento; «archivo escrito, función verificada y artefacto publicado» es progreso del entorno. Al recuperar una sesión hay que comprobar ambos, además de confiar en el resumen anterior. Un punto de control fiable contiene objetivo, restricciones, versión actual, partes completadas con evidencia, partes pendientes, último fallo y siguiente paso.
+12196	«Leído, todavía sin modificar»
+7579	«Mira el problema de la base de datos» es demasiado amplio. Un traspaso didáctico más ejecutable sería: confirmar si los reembolsos duplicados proceden de reintentos; limitarse al módulo payment y sus llamadores; no modificar código; observar que un mismo pedido tiene dos solicitudes remotas; proporcionar los pertinentes
+16104	Qué información hace falta para «entender el negocio»
+12601	Los bytes UTF-8 de «我» son, en hexadecimal, 
+30738	«我爱» es contenido legible por personas
+13832	«我爱你» y «你爱我» usan fragmentos parecidos en distinto orden. Token ID identifica el elemento del vocabulario; <strong>position ID (identificador de posición)</strong> indica su posición lógica en la secuencia.
+12589	«我爱学习» se divide en «我／爱／学习»
+12629	Las frases de longitudes distintas «我爱学习» y «你爱» solo explican el relleno: PAD no añade texto real. El entrenamiento transversal usa siempre las muestras completas «我爱学习！» y «你爱学习！», con BOS/EOS; tienen igual longitud. A continuación se muestran explícitamente muestras completas, entradas y etiquetas, sin convertir los ID del ejemplo de relleno en registros de entrenamiento de otro modelo.
+28863	«我／爱／学习» toma las filas 1, 2, 3; «你／爱», las filas 4, 2
+7431	«Todo el código sigue el formato del proyecto» puede expresarse en instrucciones del proyecto; «comprobar reversión y compatibilidad en migraciones de base de datos» puede ser una habilidad; «ejecutar el comprobador de migraciones» es una herramienta; «ejecutar automáticamente una comprobación determinista de formato antes de confirmar» puede realizarlo un hook adecuado/
+7400	Cómo provoca cargas erróneas la descripción «aplicable a todas las tareas de desarrollo»
+16078	«Encontrar la definición de función» sigue siendo distinto de «saber qué datos entraron en producción». El sistema de tipos elimina algunos errores, pero los problemas de ejecución causados por una configuración pueden necesitar registros, pruebas o entradas reales.
+23524	«Excluir A, conservar B» y «conservar A, excluir B» usan palabras parecidas, pero el orden cambia el significado. La codificación de posición aporta información de orden a la red; la máscara causal impide a la posición generada leer respuestas futuras. La codificación de posición no es memoria a largo plazo y la máscara no controla permisos de usuario: ambas actúan en el cálculo interno del modelo.
+6123	«exclusión» aparece en A y B
+15926	«exclusión» aparece 1 vez en A y 2 en B
+529	«Mover al dispositivo» significa colocar los datos y parámetros en el dispositivo que realiza las operaciones:
+25268	La «evidencia mínima suficiente» no tiene un número fijo de líneas: es un cierre suficiente para resolver la decisión actual. La lectura de código puede empezar por definiciones y llamadas clave y ampliarse a tratamiento de excepciones y pruebas límite; cada ampliación debe explicar qué incertidumbre resuelve la evidencia nueva. Así se evitan escaneos incondicionales sin reducir tareas complejas a fragmentos parciales.
+23556	«Con atención no se omite ninguna entrada».</strong> No. El cálculo permite intercambiar información, pero no garantiza que la red entrenada use fiablemente todas las restricciones complejas. La investigación de contexto largo debe evaluarse por el rendimiento en tareas.
+9519	«Dentro del plazo, pero el sábado no cumple la condición de día de tramitación»
+10717	«Sin probar» no puede compactarse como «pruebas superadas»; «se agotó el tiempo y se desconoce el efecto» tampoco como «la llamada falló».
+10463	«Peso» tiene dos sentidos habituales.</strong> Los pesos de la matriz de parámetros W son coeficientes que guarda el modelo; los de la tabla de atención A son proporciones de información calculadas con la entrada actual. Ambos multiplican, pero su origen y ciclo de vida difieren. «Parámetro» también tiene dos sentidos: los del modelo son números aprendidos; los de una llamada a herramienta son campos de una solicitud. No deben confundirse.
+10531	«Comprobar a.py»
+12212	«Inferencia del modelo» puede referirse a dos cosas: por una parte, ejecutar un modelo existente para producir salidas, es decir, 
+10553	«El modelo recordó» tiene al menos tres niveles: unas K/V en la caché de inferencia, hechos y resúmenes de la sesión actual y recuerdos a largo plazo recuperados entre sesiones. Hay que preguntar qué objeto se guardó, cuándo se escribió y cuándo se invalida, sin tratar todos los niveles como actualizaciones de parámetros.
+10242	«El modelo recuerda mi proyecto» exige seguir preguntando: ¿sigue la información en el contexto actual, el cliente volvió a cargar archivos, el sistema de recuperación obtuvo recuerdos o el modelo fue realmente ajustado? Distinguir estos mecanismos permite diseñar correctamente recuperación, borrado y privacidad.
+12244	«El modelo dice que modificó el archivo» es una salida; «el contenido cambió realmente» es un hecho del entorno; «el archivo nuevo supera sus pruebas» es un hecho de verificación. El tercero no se deduce del primero. Separar estos objetos permite entender por qué un agente necesita resultados de herramientas y pruebas, además de su propia confirmación.
+3738	«El modelo da una salida incorrecta» no localiza directamente el problema en la tasa de aprendizaje, Attention o el muestreo. Primero confirmar la identidad de entradas y pesos, después comprobar la propagación compartida y por último los pasos específicos de entrenamiento o generación. Cambiar diez cosas a la vez dificulta atribuir incluso una reparación correcta.
+21956	«La comparación es más estricta»
+25414	«No hay material pertinente»
+5748	«No se ejecutaron pruebas», «aún no hay autorización», «no es la causa raíz» y «no modificar la API pública» son estados que determinan las acciones posteriores. Una prueba de compactación que solo pregunta por la conclusión final los omite. Hay que enumerar las proposiciones que conservar en una tabla de verdadero/falso/desconocido y cotejarlas después de compactar, sin convertir automáticamente desconocido en falso ni intentado en completado.
+23555	«Los pesos de atención son la confianza del modelo».</strong> No. Son pesos de combinación de información de una capa y cabeza, no la probabilidad de que la respuesta final sea correcta.
+15544	«La prueba A no se ha ejecutado» es estado de la tarea actual; «el proyecto usa una norma de código» puede ser conocimiento entre tareas; «se entregó antes un parche erróneo por ignorar la versión» es experiencia histórica. Sus periodos de conservación, activadores de recuperación y reglas de invalidación difieren.
+5979	«Pruebas superadas» solo respalda v7
+30975	Vector de «爱»
+12923	«爱» tiene identificador 2, el vocabulario 6 elementos y Embedding anchura 4: ¿qué son su almacenamiento binario, One-hot y Embedding? ¿Por qué consultar la tabla añade un eje?
+21489	«Qué lenguaje prefiere ahora»
+4643	«Generar JSON válido» restringe solo la sintaxis; schema también restringe campos, tipos, enumeraciones y otros aspectos. Un array JSON válido puede no ser en absoluto el objeto requerido. Incluso usando schema, la aplicación debe tratar explícitamente versiones compatibles y restricciones no admitidas, sin asumir soporte para todas las palabras clave de JSON Schema.
+7372	«Para todas las tareas de almacenamiento, bases de datos, cachés, archivos, rendimiento, seguridad y arquitectura» es tan amplio que casi cualquier cambio de backend lo activa. En cambio, «usar solo si el usuario pide explícitamente optimizar índices SQL» puede omitir expresiones naturales como «la consulta de la interfaz es demasiado lenta, ayúdame a localizar el problema».
+15994	«Pertinente»: menciona el tema
+26749	«Verificación del original pertinente» significa comprobar los mecanismos utilizados por este libro y sus partes relacionadas, no cotejar cada palabra de todos los apéndices, reproducir todos los experimentos ni monitorizar continuamente las últimas versiones. De N95 solo se verificó el resumen. Las 194 fuentes de lectura ampliada originales se conservan aparte y no cuentan entre las 80 de esta ronda.
+13767	Cómo cambia softmax una «prohibición» concreta
+20926	«Despliegue prohibido; pruebas sin ejecutar»
+21492	«Qué dijo la vez 1»
+25557	«Cuánto sabíamos entonces, el día 6» y «cuánto había realmente el día 6, visto ahora» son preguntas distintas. Este libro consulta el mismo flujo de eventos por tiempo de validez y de registro y obtiene 10 y 20. Si la memoria guarda solo el valor más reciente, ambas preguntas se reducen a una misma respuesta. El razonamiento temporal y la actualización de conocimiento requieren evaluación específica.
+19556	La palabra «sistema» no cambia el origen.
+12647	«Formar lotes» es procesar varias entradas conjuntamente
+12046	«Formar lotes» es procesar varias entradas conjuntamente</a><a href="foundations/04.html#fdiag-04-02">La longitud real y la asignada son distintas</a><a href="foundations/04.html#fdiag-04-03">Qué diferencia hay entre rellenar a la izquierda y a la derecha</a><a href="foundations/04.html#fdiag-04-04">Rellenar no es truncar ni compactar el contexto</a><a href="foundations/04.html#fdiag-04-05">Por qué formar lotes puede ser más rápido o hacer esperar más a una persona
+14643	La «recompensa de resultado» evalúa el resultado final; la «supervisión del proceso», los pasos intermedios. Un proceso largo no implica corrección y el razonamiento adicional tiene coste. Al llegar aquí y releer Q021—Q086 avanzado, deberías explicar de dónde procede cada cantidad, además de decir «se usó aprendizaje por refuerzo».
+5179	«Heredar del agente padre» tiene al menos siete sentidos distintos
+15827	«Parche escrito; pruebas de r7 superadas; r8 pendiente de regresión; despliegue prohibido»
+20808	«Véanse los registros anteriores» no es una referencia fiable. Hay que conservar al menos ubicación, versión, alcance y comando de ejecución. Si se modifica otra vez un parche que superó las pruebas, el estado debe pasar a «versión antigua superada; nueva pendiente de verificación», sin arrastrar la conclusión satisfactoria.
+16435	¿En qué difiere repetir «fijar el saldo en 100» de repetir «aumentar el saldo en 100»?
+12183	«Leer la función foo»
+20054	«Tiempo de espera de 3 segundos, ya confirmado»
+8766	«¿Es bueno este código, de 0 a 10?» difícilmente da resultados estables. Puede sustituirse por: si cumple cada requisito; si introduce cambios de interfaz innecesarios; si hay evidencia de las pruebas declaradas; si existen defectos concretos reproducibles; y qué observaciones son solo de estilo. Cada juicio negativo debe dar ubicación, motivo y contraejemplo mínimo, en vez de críticas genéricas.
+12367	«Es un tensor tridimensional» suele indicar 3 ejes; «cada token es un vector de 4096 dimensiones» indica 4096 números por fila. «Dimensión» se refiere a niveles distintos en ambas frases.
+11979	«Es un tensor tridimensional» indica tres ejes; «cada posición es un vector de cuatro dimensiones» indica cuatro números por fila. Hay que distinguir estos dos sentidos de <strong>dimensión</strong>. Aquí un <strong>vector</strong> es simplemente una fila ordenada de números; no hace falta imaginar primero un espacio de cuatro dimensiones.
+25561	«Se puede reintentar tras agotar el tiempo» debe incluir condiciones: solo lectura, idempotencia posterior o verificación de que no se ejecutó. Guardarlo como experiencia general sin condiciones transforma una estrategia segura pasada en una acción futura peligrosa. Una experiencia debe conservar al menos activador, origen, versión y límites de éxito y fallo, además de una recomendación afirmativa.
+20923	«Desplegar, probar»
+11936	«Dentro se almacena
+28132	». Si la tabla de estado y los efectos secundarios externos no comparten una transacción atómica, sigue habiendo una ventana. El objetivo de ingeniería es aclarar resultados, evitar repeticiones peligrosas y ofrecer recuperación controlada cuando no se puede determinar el resultado.
+9391	» a «failed» puede repetir escrituras. Los pedidos externos, correos y despliegues no se deshacen automáticamente al revertir el programa; requieren verificación y compensación según la semántica del negocio. Una reversión más segura puede detener escrituras nuevas y conservar comprobaciones de solo lectura y toma de control humana, en lugar de seguir con código antiguo incompatible.
+6282	» tienen denominadores distintos, que deben declararse al informar.
+5377	» puede importar más que los diez últimos resultados inútiles de búsqueda. Las exploraciones fallidas irrelevantes pueden compactarse o descargarse; los efectos secundarios pendientes y las conclusiones negativas deben conservarse.
+465	» oculta problemas como quién convierte, cuántas veces, qué objetos hay antes y después y qué información no aparece en la interfaz del chat. Los formatos de mensajes y los números siguientes son ejemplos didácticos; no se presentan como la plantilla interna completa de un servicio cerrado.
+11937	» describe el contenido; «la forma es
+11938	» describe el tamaño. No deben confundirse. La tabla de identificadores contiene
+5684	» junto con sus restricciones originales. Un resumen que conserve «corregir exclude, pruebas superadas» parece breve, pero omite la versión probada, qué pruebas se ejecutaron, si hubo omisiones y una acción remota aún sin confirmar. Descargar los registros completos y conservar solo la ruta permite recuperarlos, pero el modelo debe saber cuándo leer qué tramo en el siguiente paso. La caché puede abaratar el cálculo de 40 turnos del original, aunque siga ocupando contexto lógico y espacio de procesamiento de atención.
+1072	» no basta para depurar una implementación real.
+10479	ℓ indica a qué capa pertenecen los parámetros
+24722	← 01｜Cómo el texto se convierte en probabilidades: tokenizer, plantillas, función objetivo y gradientes</a><a href="03.html">03｜Interior del sistema de entrenamiento: datos, optimizadores, memoria de GPU y costes distribuidos
+24811	← 02｜Dentro del Decoder: corrección de formas tensoriales, RoPE, GQA y caché KV</a><a href="04.html">04｜Posentrenamiento y modelos de razonamiento: de objetivos de preferencias a capacidades verificables
+24866	← 03｜Interior del sistema de entrenamiento: datos, optimizadores, memoria de GPU y costes distribuidos</a><a href="05.html">05｜Cómo se elige la salida: muestreo, decodificación especulativa y condiciones de parada
+24920	← 04｜Posentrenamiento y modelos de razonamiento: de objetivos de preferencias a capacidades verificables</a><a href="06.html">06｜Cuellos de botella reales de los servicios de inferencia: memoria, FlashAttention, paginación y planificación
+24973	← 05｜Cómo se elige la salida: muestreo, decodificación especulativa y condiciones de parada</a><a href="07.html">07｜Interior de la interfaz del modelo: mensajes, elementos de salida, SSE y protocolo de llamadas a herramientas
+25040	← 06｜Cuellos de botella reales de los servicios de inferencia: memoria, FlashAttention, paginación y planificación</a><a href="08.html">08｜Interior del harness de ejecución: decisión, ejecución, persistencia y recuperación de fallos
+25122	← 07｜Interior de la interfaz del modelo: mensajes, elementos de salida, SSE y protocolo de llamadas a herramientas</a><a href="09.html">09｜Seguimiento del código de Codex: de reglas del repositorio a historial, bucles y compactación
+25192	← 08｜Interior del harness de ejecución: decisión, ejecución, persistencia y recuperación de fallos</a><a href="10.html">10｜Claude Code y Copilot: mecanismos públicos, comportamientos verificables e interior desconocido
+25242	← 09｜Seguimiento del código de Codex: de reglas del repositorio a historial, bucles y compactación</a><a href="11.html">11｜Compilador de contexto: selección de información, cierre de dependencias y presupuesto
+25302	← 10｜Claude Code y Copilot: mecanismos públicos, comportamientos verificables e interior desconocido</a><a href="12.html">12｜Problemas profundos de la compactación: estado con pérdidas, recuperación de evidencia y continuación de la ejecución
+25373	← 11｜Compilador de contexto: selección de información, cierre de dependencias y presupuesto</a><a href="13.html">13｜Interior de la recuperación: BM25, vectores, ANN, fusión y actualidad del índice
+25464	← 12｜Problemas profundos de la compactación: estado con pérdidas, recuperación de evidencia y continuación de la ejecución</a><a href="14.html">14｜Interior de la inteligencia de código: AST, LSP, grafos de dependencias y evidencia versionada
+25523	← 13｜Interior de la recuperación: BM25, vectores, ANN, fusión y actualidad del índice</a><a href="15.html">15｜Interior de la memoria: dos tiempos, conflictos, origen y olvido útil
+25600	← 14｜Interior de la inteligencia de código: AST, LSP, grafos de dependencias y evidencia versionada</a><a href="16.html">16｜Enrutamiento de Skills, herramientas y modelos: cómo entra realmente la especialización en una tarea
+25655	← 15｜Interior de la memoria: dos tiempos, conflictos, origen y olvido útil</a><a href="17.html">17｜Interior de múltiples agentes: DAG, traspaso de contexto, conflictos concurrentes y errores correlacionados
+25715	← 16｜Enrutamiento de Skills, herramientas y modelos: cómo entra realmente la especialización en una tarea</a><a href="18.html">18｜Núcleo de la calidad de ingeniería: contratos, pruebas, contraejemplos, Review y evidencia de entrega
+25771	← 17｜Interior de múltiples agentes: DAG, traspaso de contexto, conflictos concurrentes y errores correlacionados</a><a href="19.html">19｜Evaluación avanzada: experimentos por pares, fiabilidad, atribución causal y sesgo de puntuación
+25846	← 18｜Núcleo de la calidad de ingeniería: contratos, pruebas, contraejemplos, Review y evidencia de entrega</a><a href="20.html">20｜Seguridad interna: límites de confianza, autorización MCP, sandbox y control de efectos secundarios
+25903	← 19｜Evaluación avanzada: experimentos por pares, fiabilidad, atribución causal y sesgo de puntuación</a><a href="21.html">21｜Observabilidad y operación fiable en producción: Trace, colas, cancelación y recuperación
+25974	← 20｜Seguridad interna: límites de confianza, autorización MCP, sandbox y control de efectos secundarios</a><a href="22.html">22｜Decisiones de coste y rendimiento: por tarea completada con éxito, no por token
+26026	← 21｜Observabilidad y operación fiable en producción: Trace, colas, cancelación y recuperación</a><a href="23.html">23｜Ajuste fino, cuantización y destilación: cambiar el modelo o el sistema de entrada
+26090	← 22｜Decisiones de coste y rendimiento: por tarea completada con éxito, no por token</a><a href="24.html">24｜Multimodalidad y manejo del ordenador: representación, localización y ciclo de observación-acción
+26139	← 23｜Ajuste fino, cuantización y destilación: cambiar el modelo o el sistema de entrada</a><a href="25.html">25｜Respuestas fiables e interpretabilidad: calibración, rechazo a responder, evidencia e intervención causal
+26196	← 24｜Multimodalidad y manejo del ordenador: representación, localización y ciclo de observación-acción</a><a href="26.html">26｜Ramas de investigación avanzada: criterios para elegir arquitecturas, búsqueda, RAG y métodos de memoria
+26253	← 25｜Respuestas fiables e interpretabilidad: calibración, rechazo a responder, evidencia e intervención causal</a><a href="27.html">27｜Caso transversal: corregir exclude, del fallo original a una entrega recuperable
+26316	← 26｜Ramas de investigación avanzada: criterios para elegir arquitecturas, búsqueda, RAG y métodos de memoria</a><a href="28.html">28｜Planos de aplicaciones en profundidad: preguntas y respuestas empresariales, diagnóstico de repositorios, investigación y automatización controlada
+26369	← 27｜Caso transversal: corregir exclude, del fallo original a una entrega recuperable</a><a href="29.html">29｜Manual de diagnóstico de fallos: del síntoma a la corrección mínima eficaz
+26421	← 28｜Planos de aplicaciones en profundidad: preguntas y respuestas empresariales, diagnóstico de repositorios, investigación y automatización controlada</a><a href="30.html">30｜Evaluación de competencias avanzadas: preguntas abiertas, respuestas de referencia y proyecto final
+28066	← 28｜Investigación avanzada y juicio integral de sistemas</a><a href="b.html">Recorrido completo B｜Entradas, salidas, herramientas y recuperación en cada turno de una reparación de repositorio →
+26482	← 29｜Manual de diagnóstico de fallos: del síntoma a la corrección mínima eficaz</a><a href="31.html">31｜Apéndice de derivaciones: propagación hacia atrás de la atención y recuperación entrenable
+26578	← 30｜Evaluación de competencias avanzadas: preguntas abiertas, respuestas de referencia y proyecto final
+22359	← Ingeniería de software con IA</a><a href="chapter-13.html">Seguridad y permisos →
+20764	← Fundamentos de agentes</a><a href="chapter-07.html">Ingeniería de contexto →
+23684	← Cómo funciona Claude Code</a><a href="guide-08.html">Cómo mantener la continuidad de la tarea después de compactar →
+23610	← Cadena completa de uso de un LLM</a><a href="guide-05.html">Desplegar el bucle de ejecución de Codex →
+22084	← Skills y múltiples agentes</a><a href="chapter-12.html">Métodos de evaluación →
+21343	← Ingeniería de contexto</a><a href="chapter-09.html">Memoria a largo plazo →
+23706	← Métodos centrales de ingeniería de contexto</a><a href="guide-09.html">Hacer que la recuperación aporte la evidencia realmente necesaria →
+23773	← Comprender la memoria eficaz mediante CoALA</a><a href="guide-12.html">Cómo demostrar que una optimización de agentes funciona →
+19351	← Visión general</a><a href="chapter-02.html">Formación de capacidades →
+28194	← Recorrido completo A｜Cómo una entrada se convierte en tres tokens de salida</a><a href="c.html">Recorrido completo C｜De la incorporación de documentos a recuperación, respuesta, actualización de memoria y olvido →
+28360	← Recorrido completo B｜Entradas, salidas, herramientas y recuperación en cada turno de una reparación de repositorio</a><a href="d.html">Recorrido completo D｜Cómo localizar la causa raíz de una regresión del agente «más lento y peor» →
+28478	← Recorrido completo C｜De la incorporación de documentos a recuperación, respuesta, actualización de memoria y olvido
+17795	← Prefacio y guía de uso</a><a href="foundations/01.html">Lección 35｜Ciclo de vida del modelo: objetos, parámetros, entrenamiento e inferencia →
+23730	← Cómo mantener la continuidad de la tarea después de compactar</a><a href="guide-10.html">Comprender la memoria eficaz mediante CoALA →
+23564	← Transformer ilustrado</a><a href="guide-03.html">Cadena completa de uso de un LLM →
+22793	← Seguridad y permisos</a><a href="chapter-15.html">Temas avanzados →
+423	← Introducción: cómo estudiar un sistema complejo de IA</a><a href="sources.html">Fuentes y ámbito de aplicación →
+23661	← Desplegar el bucle de ejecución de Codex</a><a href="guide-07.html">Métodos centrales de ingeniería de contexto →
+23638	← Cómo construir agentes eficaces</a><a href="guide-06.html">Cómo funciona Claude Code →
+449	← Cambiar los números y observar qué ocurre en cada paso</a><a href="checks.html">Código, valores y límites de verificación →
+20082	← Inferencia y servicio</a><a href="chapter-05.html">Fundamentos de agentes →
+24407	← Consulta rápida de términos y símbolos</a><a href="topics.html">Índice de temas de conocimiento →
+21566	← Recuperación e inteligencia de código</a><a href="chapter-10.html">Skills y múltiples agentes →
+19656	← Interior del modelo</a><a href="chapter-03.html">Inferencia y servicio →
+12126	← Índice de ilustraciones y cálculos detallados del texto</a><a href="visual-guides.html">Ilustraciones y animaciones →
+23587	← Calcular el mecanismo de atención paso a paso</a><a href="guide-04.html">Cómo construir agentes eficaces →
+23796	← Mejorar la calidad de entrega con el entorno de ingeniería
+21003	← Agentes reales de programación</a><a href="chapter-08.html">Recuperación e inteligencia de código →
+11165	← Índice de temas de conocimiento</a><a href="sources.html">Fuentes y ámbito de aplicación →
+12028	← Lección 40｜Qué es «mover al dispositivo»: tipos de datos, memoria, CPU y GPU</a><a href="../foundations/07.html">Lección 42｜La aritmética más habitual del modelo: suma ponderada, producto escalar y multiplicación matricial
+19898	← Formación de capacidades</a><a href="chapter-04.html">Interfaces de entrada y salida →
+23751	← Hacer que la recuperación aporte la evidencia realmente necesaria</a><a href="guide-11.html">Mejorar la calidad de entrega con el entorno de ingeniería →
+22559	← Métodos de evaluación</a><a href="chapter-14.html">Operación y rendimiento →
+20331	← Interfaces de entrada y salida</a><a href="chapter-06.html">Agentes reales de programación →
+23127	← Operación y rendimiento</a><a href="chapter-16.html">Complementos de matemáticas e implementación →
+21816	← Memoria a largo plazo</a><a href="chapter-11.html">Ingeniería de software con IA →
+23257	← Temas avanzados
+27917	→Transformer→salida». Seguimos simultáneamente cuatro líneas: cómo cambia la solicitud, cómo cambian los tensores, qué contiene la caché y en qué se basa el programa para continuar. Al final relacionamos los cálculos con el código ejecutable del paquete.
+1000	→Conexión residual
+17435	∂ / derivada parcial
+10632	∂L/∂w pregunta cómo cambia la pérdida L ante un pequeño cambio de w, manteniendo constantes las demás variables independientes. Estas tasas de variación de varios parámetros forman el gradiente ∇L. Son notaciones de derivadas, no una división directa de dos números corrientes.
+17210	∈ se lee «pertenece a»; R representa el conjunto de números reales.
+24599	−0.755272: el descenso de gradiente aumenta la puntuación del candidato correcto
+10620	√ / sqrt: raíz cuadrada
+17212	≈ / aproximación
+28538	　Una ventana de 1000 Token no permite dedicar los 1000 Token a documentos
+28656	　100 materiales no equivalen a 100 fuentes de información independientes
+28580	　¿Es suficiente evidencia una mejora de 20 puntos porcentuales en 20 tareas?
+28647	　4 cabezas Q comparten 2 cabezas KV
+28847	　Cómo se emparejan exactamente 4 cabezas Q que comparten 2 cabezas KV
+28811	　Qué presupuesto de errores permite un objetivo del 99%
+28507	　Primer paso de AdamW: calcular el momento, la corrección del sesgo y el decaimiento
+28768	　Lo que devuelve Agent-as-tool sigue siendo un resultado pendiente de verificación
+28776	　La revisión de un agente debe hacer más que repetir el diff
+28798	　Los riesgos de los agentes incluyen efectos secundarios reales
+28597	　¿Un peso de Attention alto demuestra que es la causa de la respuesta?
+28852	　Por qué BPE no elige siempre el par de la izquierda al fusionar
+28491	　BPE sigue prioridades de fusión; no combina arbitrariamente al encontrar palabras largas
+28714	　El directorio actual del CLI cambia el proyecto visible
+28706	　El bucle al estilo de Claude Code observa antes de continuar
+28763	　Localizar problemas de habilidades de Codex siguiendo la cadena de datos
+28551	　Cómo se calcula en ColBERT «la mejor correspondencia para cada token de consulta»
+28766	　Las aristas del DAG determinan qué puede ejecutarse simultáneamente
+28831	　La localización por DOM y las coordenadas visuales tienen límites propios
+28660	　DPO compara el cambio respecto al modelo de referencia
+28711	　Qué versión comprueba el Hook al interceptar la confirmación
+28697	　Qué mensajes gestionan respectivamente Host, Client y Server
+28738	　El documento hipotético de HyDE no es evidencia de una fuente
+28529	　Por qué un JSON de formato completamente correcto aún no puede ejecutarse
+28845	　Divergencia KL: las mismas dos distribuciones dan valores distintos al invertir la dirección
+28818	　Qué forma tiene exactamente un incremento LoRA de rango 1
+28512	　Si el enrutamiento MoE elige dos expertos, cómo se combinan los resultados
+28606	　En PPO se recorta la ventaja positiva; la negativa no sigue la misma selección
+28502	　Prompt de longitud 3, seguido de 2 tokens generados: indicar la longitud de cada turno
+28739	　Los resúmenes superiores de RAPTOR localizan; los niveles inferiores conservan los detalles
+28813	　Aunque RPM no supere el límite, TPM aún puede provocar limitación de tasa
+28689	　Las observaciones de ReAct cambian el paso siguiente
+28760	　El contenido de un Skill cita un script inexistente
+28702	　Diferencias de ciclo de vida entre Thread y Turn
+28838	　El tokenizer y los pesos del modelo deben corresponderse
+28586	　Tres span de un Trace suman 10 segundos: ¿por qué la tarea solo tarda 7?
+28644	　Word2Vec no escribe enteros en binario
+28684	　call_id conecta llamadas y resultados
+28556	　exclude elimina por error el directorio ab: de la entrada fallida a la causa raíz, paso a paso
+28741	　No concluir inmediatamente que algo no existe si grep no lo encuentra
+28767	　handoff difiere de una llamada que devuelve un resultado
+28853	　Si las posiciones padding no aportan pérdida, también debe cambiar el denominador
+28579	　Por qué pass@3 y el éxito en tres intentos consecutivos dan cifras muy distintas
+28674	　prefill procesa tres posiciones; decode, una nueva
+28608	　Por qué roofline solo estima un límite inferior y no es una medición real
+28560	　«Cuándo entra en vigor» y «cuándo se sabe» no son el mismo tiempo
+28563	　Cómo provoca cargas erróneas la descripción «aplicable a todas las tareas de desarrollo»
+28562	　Cómo pasa un Skill del archivo en disco a la acción actual
+28494	　Un Decoder de una capa y dos posiciones, desde la entrada hasta las probabilidades del vocabulario
+28578	　Una tarea ejecutada tres veces: cuántas filas tiene realmente la tabla de estadísticas
+28522	　Por qué una reparación produce tres llamadas al modelo
+28614	　Una compactación ahorra el 90%, pero hay que contar dos tipos de errores por separado
+28837	　Orden de comprobación de un sistema de entrenamiento ejecutable
+28762	　Que una plataforma admita Skill no implica iguales reglas de carga en todas sus superficies
+28587	　Una solución ahorra tokens, pero añade dos idas y vueltas a herramientas
+28832	　Qué significa que una neurona responda a dos conceptos a la vez
+28559	　Qué comprobaciones necesita una conjetura del modelo antes de entrar en la memoria a largo plazo
+28640	　El número de posiciones no se reduce por arte de magia al atravesar una capa
+28596	　Dividir una imagen de 4×4 en cuatro bloques: cuántas posiciones entran al modelo
+28807	　Cómo conecta una trace al modelo con las herramientas
+28617	　Un recuerdo similar no se aplica al entorno actual
+28531	　Qué mensajes ocurren, en orden, en una conexión MCP
+28816	　Cambiar una sola variable interpretable cada vez
+28496	　Un cálculo estable de softmax con un contraejemplo totalmente enmascarado
+28569	　Por qué la aprobación de tres agentes revisores no equivale a tres evidencias independientes
+28779	　Qué errores detecta cada una de las tres capas de pruebas
+28707	　El contexto contiene más que el chat actual
+28812	　Ejecutar un fallo recuperable antes de pasar a producción
+28799	　Un fragmento no confiable no puede elevar su propio rol
+28804	　No asumir que los límites de una superficie de ejecución se aplican a otra
+28777	　Distinguir mejoras imperfectas del código de defectos bloqueantes
+28727	　Los elementos opacos de compactación deben continuarse tal cual
+28557	　Las reglas de negocio están en las pruebas: por qué no basta leer el cuerpo de la función
+28568	　Dos agentes escriben el mismo archivo desde v7: qué pasa con la segunda escritura
+28528	　Dos herramientas terminan en paralelo: cómo asociar el resultado que llega después
+28547	　Dos documentos contienen «exclusión»: por qué BM25 no se limita a contar apariciones
+28636	　Dos tokens de salida se deciden en dos pasos
+28516	　Cómo obtener el mismo resultado con dos bloques de puntuaciones sin guardar toda la tabla de probabilidades
+28550	　Fusionar dos tablas de puestos en RRF fila por fila
+28567	　Cómo calcular la ruta crítica de dos tareas paralelas más su integración
+28592	　Dos fuentes dan conclusiones opuestas: cómo evitar decidir por número de votos
+28527	　Un carácter chino dividido en tres fragmentos de red: por qué no puede decodificarse cada fragmento
+28649	　Aprendizaje en contexto de una correspondencia temporal
+28717	　Cinco extensiones resuelven necesidades distintas
+28789	　Intercambiar el orden de respuestas para comprobar sesgos del evaluador
+28782	　Ante regresiones de calidad del producto, separar primero modelo y harness de ejecución
+28591	　Qué objetos deben ser coherentes desde la descripción del bug hasta la entrega del parche
+28534	　Del registro de herramientas al dispatch real: comprobar la accesibilidad en cada control
+28635	　Distinguir los límites desde el texto de entrada hasta el resultado de herramientas
+28639	　Orden mínimo de aceptación al implementar desde cero
+28703	　Cómo reduce búsquedas repetidas la legibilidad del repositorio
+28745	　La evaluación de autocompletado de repositorios debe evitar la filtración de respuestas cercanas
+28719	　Conflictos entre la memoria del repositorio y el código actual
+28590	　Cómo vincular cada cláusula de una respuesta empresarial con la evidencia
+28752	　Los puntos de control de sesión y el Store a largo plazo conservan ciclos de vida distintos
+28723	　El experimento del efecto de posición solo desplaza la evidencia objetivo
+28599	　La caché de rango bajo guarda menos números: por qué no permite comprimir K/V arbitrariamente
+28565	　Un modelo barato ahorra en una llamada, pero tras el retrabajo cuesta más por tarea exitosa
+28500	　Conservar 4 cabezas de consulta y almacenar solo 2 grupos Key/Value en caché
+28583	　Poder leer el repositorio y ejecutar pruebas no autoriza leer el directorio personal
+28784	　Definir el éxito real antes de calcular puntuaciones
+28690	　Definir primero una tarea mínima entregable
+28646	　Desplazar todas las posiciones por igual no cambia la rotación relativa
+28631	　Contenido igual pero más lento: alinear trayectorias antes de conjeturar
+28814	　Reducir operaciones fuera de la ruta crítica no cambia la duración total
+28561	　Por qué el índice vectorial puede seguir filtrando un recuerdo después de eliminarlo
+28730	　Conservar una ubicación recuperable antes de eliminar registros grandes
+28581	　Cómo descubrir que el modelo evaluador prefiere la primera respuesta
+28645	　Las atenciones aditiva y de producto escalar pueden usar evaluadores distintos
+28671	　La caché dinámica y la preasignada ocupan espacios distintos
+28732	　La compactación reduce tokens, pero cambia el prefijo de caché
+28680	　Acortar la salida a veces ahorra más tiempo que acortar la entrada
+28731	　El umbral de compactación debe activarse antes de llenar la ventana
+28661	　Cómo restringe la revisión la retroalimentación de principios sin sustituir la comprobación factual
+28642	　Relaciones de visibilidad entre el codificador y el decodificador originales
+28572	　Qué paso separa escribir atómicamente de «comprobar la versión y después escribir»
+28736	　La recuperación de doble torre codifica la consulta y el documento por separado
+28595	　Tres reflexiones respaldan la misma conjetura: ¿cuándo sigue sin haber progreso?
+28694	　La reflexión debe conservar la causa concreta del fallo
+28753	　Al condensar acontecimientos en experiencia, la reflexión debe evitar la generalización excesiva
+28759	　Qué ahorra cargar solo las Skills pertinentes
+28589	　Por qué persiste el fallo tras revertir solo el Prompt
+28495	　Qué cambia al modificar solo Value y al modificar solo Query
+28802	　Prohibir solo la red aún permite filtraciones en registros de archivos
+28665	　Cómo puntúan las recompensas verificables a los candidatos
+28641	　Fusionar según prioridades en lugar de adivinar la subcadena más larga
+28603	　Cómo se acumulan los gradientes de la fila de Embedding cuando el mismo «爱» aparece dos veces
+28524	　El mismo session_id no implica la misma entrada del modelo
+28490	　La misma tarea «reparar el tiempo de espera»: comparar la entrada de la interfaz con la solicitud real
+28493	　El mismo «爱»: seguir la representación inicial, la contextualización y las puntuaciones finales del vocabulario
+28532	　Qué diferencia hay al usar los mismos materiales de un repositorio como Resource, Tool o Skill
+28558	　Qué guardan las cuatro clases de memoria en un mismo incidente
+28692	　Qué posee cada uno de Runner y Session en una misma tarea
+28536	　Por qué las mismas instrucciones de repositorio pueden diferir entre IDE, CLI y tareas en la nube
+28630	　Qué capa falta al convertir una misma conclusión de investigación en una acción automática
+28510	　Para la misma pareja de respuestas, SFT y DPO observan señales de entrenamiento distintas
+28848	　Por qué la misma «tabla de acceso permitido» tiene booleanos opuestos en distintas interfaces
+28525	　Cuándo parar tras repetir cinco veces la misma búsqueda
+28607	　La misma tabla de probabilidades: el muestreo de núcleo y la selección voraz admiten conjuntos distintos
+28554	　El mismo nombre foo aparece tres veces: por qué difieren los conjuntos de grep y LSP
+28743	　Variables con el mismo nombre tienen vinculaciones distintas
+28521	　Los mismos dos dispositivos: qué divide cada uno de DP, TP y PP
+28748	　Recuperar las mismas dos entradas puede tener calidad de ordenación distinta
+28576	　Por qué cambia el esfuerzo de revisión aunque en ambos casos se modifique una línea
+28843	　Qué hacen LayerNorm, RMSNorm y SwiGLU con el mismo [1,3]
+28540	　Con el mismo texto, mover un campo inicial puede cambiar la caché
+28712	　Permitir el nombre del comando no significa que todos sus parámetros sean seguros
+28751	　Los espacios de nombres evitan mezclar memorias entre usuarios
+28605	　Por qué acumular gradientes de cuatro minilotes no equivale necesariamente a cuadruplicar la tasa de aprendizaje
+28511	　Cómo se convierten en ventajas relativas las recompensas de cuatro trayectorias candidatas
+28594	　Cómo calcularlo si las cuatro veces declara una confianza del 80% pero solo acierta dos
+28553	　Qué paso realiza cada una de las cuatro mejoras RAG ante la misma pregunta
+28542	　Qué cambia cada una de las cuatro acciones para «reducir la carga»
+28504	　Cuatro señales de parada significan cosas distintas en la misma salida
+28704	　Fijar el commit y seguir una cadena de llamadas
+28637	　Punto donde divergen flujo fijo y Agent
+28655	　Intercambio entre parámetros y datos con cálculo fijo
+28598	　Por qué los datos pueden reducirse a la mitad al duplicar los parámetros con un presupuesto fijo de entrenamiento
+28758	　La recuperación en grafos responde relaciones entre documentos
+28747	　Ajustarlo bien para un tipo de documento no garantiza que funcione bien para otro
+28677	　Reescalado de softmax en línea
+28616	　Analizar incrementalmente el cambio de nombre de una función: qué evidencia debe actualizarse
+28610	　Ventana de caída entre la escritura externa de archivos y el commit de la base de datos local
+28663	　Un texto externo no puede declararse mensaje del sistema
+28770	　Las conversaciones multiagent pueden caer en un bucle de acuerdo
+28822	　Varios adaptadores deben coincidir con la versión base
+28664	　El razonamiento de varios pasos puede revelar dónde falló el cálculo
+28545	　Cómo comprobar si la compactación cambió «sin confirmar» por «completado»
+28805	　El modelo de amenazas precisa primero qué se protege
+28566	　Por qué un «sin problemas» devuelto por el subagente no permite integrar con seguridad
+28709	　El traspaso al subagente no copia automáticamente todo el historial
+28535	　El subagente solo recibe un resumen: por qué desconoce las restricciones del agente principal
+28774	　Cómo evitar volver al diseño cuando la revisión detecta un nombre menor incorrecto
+28501	　Calcular a mano el gradiente de Attention de una consulta y comprobarlo con perturbaciones
+28654	　Mejorar en escala logarítmica no implica un aumento proporcional inevitable de exactitud
+28523	　La conversación dice «escrito», pero disco y estado de tarea discrepan
+28713	　Separar reparación pequeña directa y diseño complejo
+28785	　Aprobar un paso no aprueba todo el flujo
+28609	　Tras terminar sintácticamente los parámetros, ¿debe esperarse también la señal de fin de llamada?
+28773	　Cómo conservar líneas en la interfaz mejora la localización de parches
+28817	　Combinar herramientas puede transmitir menos datos, no necesita reducir validación
+28695	　Devolver 10000 líneas o 10 resultados con procedencia
+28622	　Cómo evita una recuperación con permisos delegar la autorización a conjeturas del modelo
+28764	　Separar reglas residentes y materiales profesionales bajo demanda
+28571	　Por qué la clave también debe vincular parámetros y resultados
+28726	　Cómo probar la ventana efectiva al aumentar interferencia
+28588	　Por qué sigue creciendo la cola con 10 solicitudes concurrentes
+28775	　Los módulos del compilador escrito en paralelo deben compartir interfaces coherentes
+28765	　Asignar ámbitos de evidencia distintos a investigadores paralelos
+28601	　Antes de un framework nuevo, hacer una comparación que pueda refutarnos
+28620	　Una familia de entradas en pruebas de propiedades detecta el error de prefijo
+28651	　No mezclar parámetros totales de expertos y parámetros activados
+28585	　Cómo desvía una tarea nueva una sugerencia maliciosa guardada en memoria
+28564	　Para imponer formato, ¿Prompt o Hook?
+28624	　Con una diferencia de 1 punto porcentual, los fallos críticos importan más que el precio medio
+28810	　Éxito normal con más cola también es una alerta
+28828	　Escalar la captura cambia coordenadas
+28705	　El entorno alojado no decide autorización de negocio por la aplicación
+28604	　Con longitudes reales distintas en un lote, la posición de caché no depende solo del relleno
+28537	　Skill no encontrada: descartar con cuatro hechos observables
+28718	　La coincidencia de Skills debe incluir contraejemplos cercanos
+28618	　¿Mejora recuperar más Skills si también se cargan más erróneas?
+28710	　Nombrar una Skill no demuestra lectura de su cuerpo
+28530	　Qué se pierde y gana al sustituir «SQL arbitrario» por «consultar incidencias»
+28574	　Convertir «admitir exclude» en una tabla verificable de entradas y salidas
+28513	　Elegir intervenciones separadas para conocimiento viejo y formato erróneo
+28497	　Eliminar una rama residual conserva forma pero cambia función
+28546	　Por qué cortar una condición puede producir error incluso tras recuperarla
+28515	　Calcular desde unidades los bytes K/V de contexto largo
+28621	　Estratificar dificultad puede invertir la victoria global
+28498	　Dibujar causal, padding y loss mask sobre la misma secuencia
+28653	　Situar cada técnica en la capa que cambia
+28577	　Por qué cambiar espacios en documentación rompe hashes pero no funcionalidad
+28787	　Convertir fallos reales en regresión continua
+28627	　Si aumentan la abstención de respuesta y la proporción de respuestas correctas, ¿es realmente mejor?
+28678	　La distribución tras el rechazo no puede elegirse arbitrariamente
+28780	　Las pruebas de integración continua deben dirigirse al resultado de la fusión
+28492	　Las instrucciones influyen en el modelo, pero el ejecutor sigue decidiendo los permisos de escritura de archivos
+28659	　Las muestras de instrucciones y de preferencias tienen supervisión distinta
+28839	　Las exponenciales y los logaritmos deben indicar la base
+28539	　Cargar una habilidad bajo demanda requiere incorporar dos dependencias
+28825	　La recuperación bajo demanda no significa buscar obligatoriamente para cada frase
+28750	　Se descarga el texto principal; la tarea actual aún debe conservar el índice
+28735	　La fusión de clasificaciones usa posiciones, no las escalas de las puntuaciones
+28652	　Cambiar el modo de razonamiento no añade automáticamente hechos a la entrada
+28688	　El estado de razonamiento no es texto ordinario que pueda concatenarse arbitrariamente
+28672	　El presupuesto de razonamiento también debe reservarse en la capacidad de la solicitud
+28682	　Los cambios de versión del prompt deben vincularse a la evaluación
+28720	　Los plugins contienen herramientas, pero instalarlos no equivale a autorizarlas automáticamente
+28544	　Si el resumen dice «se cambió la configuración», ¿cómo se recupera después el fundamento?
+28728	　El resumen debe conservar las negaciones y lo pendiente
+28543	　Llega otro resultado de herramienta durante la generación del resumen: cómo evitar perderlo
+28742	　Qué actualiza el árbol sintáctico incremental tras cambiar una línea
+28821	　Qué información adicional aporta la distribución suave del profesor frente a una sola etiqueta
+28830	　Dos botones con el mismo texto necesitan localización contextual
+28771	　Cómo continúa la reparación un contexto nuevo sin repetir el trabajo
+28541	　Qué comparar primero si un archivo nuevo contradice la memoria antigua
+28795	　Que las preguntas nuevas sean posteriores al límite de entrenamiento no garantiza contaminación cero
+28754	　Tras actualizar una preferencia antigua, responder con el valor nuevo
+28761	　Una habilidad explícita también requiere comprobar las restricciones de la tarea actual
+28505	　Más razonamiento, búsqueda externa y múltiples agentes: tres formas de aumentar el trabajo para una misma pregunta
+28836	　Incluso un entrenamiento mínimo de GPT debe desplazar correctamente las etiquetas
+28552	　Qué hacer si la evidencia con mayor puntuación no responde «si es válida ahora»
+28625	　Igual error de pesos, pero activaciones distintas producen errores de salida distintos
+28615	　Por qué top-k puede quedar incompleto al filtrar permisos después de recuperar candidatos
+28781	　El registro de decisiones arquitectónicas debe incluir condiciones de abandono
+28737	　Cada token de consulta busca su mejor posición del documento
+28506	　Un desplazamiento incorrecto de etiquetas también puede hacer parecer fluido el entrenamiento
+28668	　Ramas y poda de la búsqueda en árbol
+28670	　Por qué el muestreo de núcleo conserva el elemento que supera el umbral
+28829	　El éxito de una tarea de escritorio no se mide por el número de clics
+28840	　Los gradientes se acumulan por defecto: por qué ponerlos a cero
+28699	　También hay que recuperar los eventos añadidos después del punto de control
+28733	　Recuperar no es «extraer» una respuesta del interior del modelo
+28548	　Por qué los vectores de recuperación necesitan entrenamiento, en vez de coordenadas arbitrarias
+28826	　Volver a buscar si falla la recuperación, sin forzar respuestas con material erróneo
+28824	　Cotejar una probabilidad del 80% con resultados del mismo tipo
+28600	　Si el modelo responde siguiendo dos ejemplos, ¿han cambiado sus pesos?
+28815	　Recuperar el estado de ejecución con el ID de tarea tras agotarse el tiempo del modelo
+28526	　El modelo emite un nombre de función: quién la ejecuta realmente
+28783	　La tarea externa puede seguir ejecutándose aunque se interrumpa el proceso del modelo
+28662	　Un cálculo del recorte PPO con ventaja positiva
+28632	　Evidencia de aceptación del proyecto final, además de una demostración de «puede chatear»
+28842	　Con «我爱学习／你爱», calcular realmente una capa del modelo hasta el final
+28797	　Las filtraciones pueden proceder de entradas y de registros
+28800	　Cómo detectar una inyección que cambia el objetivo de la tarea
+28679	　Cómo cambia el conjunto activo entre rondas
+28823	　El modelo también puede repetir errores populares
+28575	　Se supera el 100% de las pruebas: por qué el parche puede seguir siendo incorrecto
+28791	　Entornos de prueba distintos pueden dar resultados distintos para un mismo parche
+28628	　Antes de buscar en árbol para investigación profunda, comprobar si se puede juzgar la calidad de los candidatos
+28611	　Mismo nombre de función en el código: cómo cambia la validez de la conclusión al cambiar las condiciones de llamada
+28820	　Las activaciones amplifican el error de cuantización de pesos
+28809	　El span padre incluye esperas; la suma de hijos no equivale al padre
+28846	　Calcular con 1000 parámetros qué estado reparte exactamente ZeRO
+28633	　Comprobar con una derivada direccional que la propagación matricial hacia atrás esté bien conectada
+28698	　Combinar tres consultas con código: qué datos no necesitan entrar al modelo
+28514	　Demostrar capa por capa con dependencias causales por qué no cambian las K/V antiguas
+28584	　El usuario aprueba desplegar v8: por qué no se puede desplegar v9 de paso
+28638	　Una frase del usuario se convierte en varias solicitudes
+28593	　El clic en la interfaz tuvo éxito: por qué la operación de negocio no ha terminado
+28722	　Más información pertinente no siempre es mejor
+28834	　Diferencia entre observar correlaciones e intervenir causalmente
+28619	　Con errores correlacionados, no multiplicar las probabilidades de tres agentes como si fueran independientes
+28503	　Cómo se redistribuyen unos mismos logits tras temperatura, Top-k y Top-p
+28675	　Prefijo idéntico y finales distintos
+28499	　Conservación de posiciones relativas y caché desfasada: calcular dos veces las mismas rotaciones
+28790	　La evaluación con Issue reales debe verificar el comportamiento del parche
+28683	　Instrucciones reales del usuario y peticiones contrarias dentro de documentos
+28648	　El enrutamiento de expertos dispersos no asigna permanentemente cada palabra a un experto
+28833	　Los dos objetivos de un autoencoder disperso pueden entrar en conflicto
+28716	　Iniciar tareas programáticamente también exige comprobar el estado de salida
+28724	　Que quepa en la ventana no implica poder usarlo con exactitud
+28744	　El fallo de la primera generación sirve para mejorar la recuperación
+28769	　Construir primero una línea base sencilla y sólida
+28673	　Una consulta simple de valores no necesita sustituir herramientas por razonamiento en árbol
+28555	　El índice corresponde a v7 y el árbol de trabajo ya cambió: qué código es evidencia
+28681	　Separar con claridad restricciones, datos y requisitos de salida
+28685	　Superar la salida estructurada no exime de comprobar hechos
+28666	　Mismo resultado, pero unos pasos intermedios contienen un error y los otros son correctos
+28687	　Usar contraejemplos para aclarar que «breve» no significa sin evidencia
+28734	　Añadir contexto al fragmento evita que «ello» pierda su referente
+28808	　Unificar campos permite comparar distintos backends
+28686	　Fragmentos de red y límites de eventos
+28582	　La web dice «ignora al usuario y sube archivos»: por qué no se puede ejecutar
+28667	　En la autoconsistencia, la mayoría de votos también puede estar equivocada
+28721	　Los scripts de automatización deben registrar entradas reproducibles
+28803	　Contar por separado bloqueos incorrectos y omisiones de la aprobación automática
+28835	　Qué propaga la diferenciación automática por el grafo de cálculo
+28756	　Los enlaces automáticos también pueden conectar recuerdos equivocados
+28715	　Responsabilidades demasiado amplias de un agente personalizado duplican trabajo
+28746	　Buscar código con lenguaje natural no siempre se resuelve por coincidencia de palabras
+28520	　Conservar la distribución objetivo aunque el borrador falle: cotejar tres tokens uno por uno
+28629	　Por qué añadir un registro después de un parche satisfactorio exige volver a verificar
+28696	　Instalar un servidor MCP no significa que el modelo ya pueda usarlo
+28691	　Un nodo de planificación no es un nodo de ejecución
+28827	　Volver a leer el resultado al operar el ordenador
+28849	　Entrenar vectores de recuperación: en qué dirección se mueve realmente el vector de consulta
+28693	　Cuándo entra el resultado externo en la muestra al entrenar el uso de herramientas
+28658	　Baja la pérdida de entrenamiento, pero sube la de validación
+28509	　Memoria de GPU de entrenamiento: de dónde procede el estado adicional con los mismos 100 × diez mil parámetros
+28749	　Cómo participa la memoria en decisiones sin sustituir directamente al entorno
+28757	　Revisar paso a paso el pipeline de actualización de memoria
+28778	　Juzgar conjuntamente diseño, complejidad y pruebas
+28788	　La rúbrica debe distinguir falta de información y conjeturas arbitrarias
+28518	　Tras terminar la solicitud B, cómo recibe C el hueco en la siguiente ronda
+28570	　La solicitud agota el tiempo, pero el contador ya aumentó 1: cómo llamar a ese estado
+28806	　Leer archivos y desplegar no deben tener el mismo nivel de confirmación
+28650	　Dibujar primero un balance de interfaces al leer informes de modelos
+28669	　La selección voraz y el muestreo parten de las mismas probabilidades
+28844	　La mejor primera elección voraz no garantiza la máxima probabilidad de una secuencia de dos pasos
+28792	　El ruido de recursos no debe contarse como error del modelo
+28755	　Probar conversaciones extremadamente largas requiere más que copiar una frase
+28700	　Recibir un resultado de otro agente no implica que sea ejecutable
+28793	　Separar los resultados de entornos distintos
+28786	　La evaluación de trayectorias detecta excesos de permisos detrás de la respuesta
+28643	　La multiplicación matricial encaja tras cambiar los ejes
+28701	　Si una herramienta no es visible en la entrada, no puede culparse al modelo por no elegirla
+28850	　Por qué la búsqueda aproximada en grafos puede omitir el punto realmente más cercano
+28549	　La búsqueda aproximada solo ve dos puntos: cómo omite al vecino realmente más cercano
+28657	　Los duplicados aproximados entre entrenamiento y validación contaminan la evaluación
+28613	　Seleccionar un fragmento de puntuación alta y omitir la negación de su primera mitad
+28796	　Las tareas de asistentes generales requieren leer, calcular y comprobar conjuntamente
+28676	　Bloques lógicos y físicos
+28533	　Todos se llaman «fallo de herramienta», pero cuatro capas de errores requieren cuatro reparaciones
+28794	　El éxito repetido mide la estabilidad de ejecución
+28508	　Cómo convierten las muestras duplicadas una evaluación en «haber memorizado la respuesta»
+28573	　Cómo distinguir reintentar, reanudar, reproducir y cancelar
+28623	　Cómo amplifica un fallo temporal una tormenta de reintentos
+28851	　Cuantizar no es solo redondear: también puede recortar valores fuera del rango
+28819	　Separar los pesos base cuantizados de los parámetros entrenables de adaptación
+28725	　Evaluar tareas distintas de contexto largo requiere más que encontrar una frase

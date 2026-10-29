@@ -1,17 +1,18 @@
 """Rebuild the offline continuous edition from current page articles.
 
 The Chinese complete.html owns layout, the 250-page order, adapted scripts,
-and resource coverage. Current paged articles own teaching content. English
-prose is read from en/ and table.json; this generator never translates it.
+and resource coverage. Current paged articles own teaching content. Edition
+prose is read from en/ or ja/ and table.json; this generator never translates it.
 All work is prepared and checked before one atomic output replacement.
 
 Run: python3 i18n/build_complete.py --lang=en
+     python3 i18n/build_complete.py --lang=ja
      python3 i18n/build_complete.py --lang=en --output /tmp/en-complete.html
      python3 i18n/build_complete.py --diagnose-zh --output /tmp/zh-complete.html \
              --report /tmp/complete-diagnostic.json
 
-Only en/complete.html and explicit temporary outputs may be written. The
-Chinese original, source resources, datasets and translation table are read-only.
+Only the selected edition's complete.html and explicit temporary outputs may be
+written. The Chinese original, source resources, datasets and translation table are read-only.
 No server, child process, third-party package, or network access is used.
 """
 import argparse
@@ -174,19 +175,19 @@ def assignments(source):
     return result
 
 
-def english_scope(template, index_source):
+def edition_scope(template, index_source):
     """Copy the edition-owned scope notice without changing other head markup."""
     source = Markup(index_source)
     heads = [n for n in source.nodes if n['tag'] == 'head' and 'close_start' in n]
     scopes = [n for n in source.nodes if n['tag'] == 'meta' and
               (n['attrs'].get('name') or '').lower() == 'i18n-scope']
     if len(heads) != 1 or len(scopes) != 1:
-        raise CompleteError('English index must have one head and one i18n-scope meta')
+        raise CompleteError('edition index must have one head and one i18n-scope meta')
     scope, head = scopes[0], heads[0]
     content = scope['attrs'].get('content')
     if (not isinstance(content, str) or not content.strip() or
             not head['open_end'] <= scope['start'] < head['close_start']):
-        raise CompleteError('English index i18n-scope must have nonempty content in head')
+        raise CompleteError('edition index i18n-scope must have nonempty content in head')
     markup = '<meta name="i18n-scope" content="%s">' % html.escape(content, quote=True)
     destination = Markup(template)
     heads = [n for n in destination.nodes if n['tag'] == 'head' and 'close_start' in n]
@@ -258,8 +259,8 @@ class Resources:
 
 class Builder:
     def __init__(self, root=None, lang='en'):
-        if lang not in ('en', 'zh-CN'):
-            raise CompleteError('supported languages: en, zh-CN diagnostic')
+        if lang not in ('en', 'ja', 'es', 'vi', 'zh-CN'):
+            raise CompleteError('supported languages: en, ja, es, vi, zh-CN diagnostic')
         self.root, self.lang = Path(root or ROOT).resolve(), lang
         self.inputs = Inputs(self.root)
         self.base = self.root if lang == 'zh-CN' else self.root / lang
@@ -281,18 +282,30 @@ class Builder:
             self.inputs.read(self.root / 'i18n/complete-registry.json')
             self.inputs.read(self.root / 'i18n/table.json')
             registry, self.mapping = complete_strings.translations(self.root, lang)
-            template = complete_strings.localize_shell(template, registry, self.mapping)
+            template = complete_strings.localize_shell(template, registry, self.mapping, lang=lang)
         i18n_asset = self.inputs.text(self.base / 'assets/i18n-data.js')
         self.bundle = next((value for name, _, _, value in assignments(i18n_asset)
                             if name == 'I18N_STRINGS'), {}).get(lang, {})
         if not self.bundle:
             raise CompleteError('missing interface bundle language: %s' % lang)
         if lang != 'zh-CN':
+            if lang == 'ja':
+                # chrome's CJK leftover heuristic is English-only. Japanese
+                # fallbacks may contain kanji or only kana; use the selected
+                # bundle for every label, and validate its keys directly.
+                missing = [match.group('k') for match in apply.EL.finditer(template)
+                           if not isinstance(self.bundle.get(match.group('k')), str)
+                           or not self.bundle[match.group('k')].strip()]
+                if missing:
+                    raise CompleteError('missing interface fallback: %s' % ', '.join(missing[:5]))
+                template = apply.EL.sub(lambda match: '<%s%s>%s' %
+                    (match.group('n'), match.group('at'), self.bundle[match.group('k')]), template)
             template, leftovers = apply.chrome(template, self.bundle)
-            if leftovers:
+            if lang != 'ja' and leftovers:
                 raise CompleteError('missing interface fallback: %s' % ', '.join(leftovers[:5]))
-            template = re.sub(r'(<html\b[^>]*\blang=)[\'"][^\'"]+[\'"]', r'\1"en"', template, count=1)
-            template = english_scope(template, self.inputs.text(self.base / 'index.html'))
+            template = re.sub(r'(<html\b[^>]*\blang=)[\'"][^\'"]+[\'"]',
+                              lambda match: match.group(1) + '"' + lang + '"', template, count=1)
+            template = edition_scope(template, self.inputs.text(self.base / 'index.html'))
         self.template = template
         self.index = complete_strings.CompleteIndex(template)
         embedded = next(p for p in self.index.sections if p['attrs'].get('id') == 'embedded-resources')
@@ -437,7 +450,7 @@ class Builder:
                                     unquote(parsed.fragment) not in self.current_ids[parsed.path] and
                                     unquote(parsed.fragment) not in self.removed[parsed.path]):
                                 if self.lang != 'zh-CN':
-                                    raise CompleteError('stale English search anchor; rebuild gen_assets: %s' % row['path'])
+                                    raise CompleteError('stale %s search anchor; rebuild gen_assets: %s' % (self.lang, row['path']))
                                 # The root Chinese search asset predates its
                                 # current page ids. This read-only diagnostic
                                 # keeps the row reachable at the same page's
@@ -455,12 +468,13 @@ class Builder:
                         changes.append((start, end, json.dumps(rows, ensure_ascii=False, separators=(',', ':'))))
                     source = splice(source, changes)
             elif 'Interface localisation.' in source:
-                # The English runtime uses this edition's scope notice. Its
+                # The edition runtime uses this edition's scope notice. Its
                 # local asset is required; Chinese diagnostics retain the
                 # original runtime because self.base is the book root there.
                 source = self.inputs.text(self.base / 'assets/i18n.js')
             elif self.lang != 'zh-CN':
-                source = runtime_strings.localize_js(source, self.mapping, 'complete.html#script-%d' % number)
+                source = runtime_strings.localize_js(source, self.mapping,
+                    'complete.html#script-%d' % number, lang=self.lang)
             source = re.sub(r'</script', r'<\/script', source, flags=re.I)
             replacements.append((node['open_end'], node['close_start'], source))
         return replacements
@@ -663,7 +677,9 @@ def is_temporary(path):
                {Path(tempfile.gettempdir()).resolve(), Path('/tmp').resolve()})
 
 
-def output_path(value, *, default=None):
+def output_path(value, *, default=None, lang='en'):
+    if lang not in ('en', 'ja', 'es', 'vi', 'zh-CN'):
+        raise CompleteError('supported output languages: en, ja, es, vi, zh-CN diagnostic')
     path = Path(value).expanduser() if value else default
     if path is None:
         raise CompleteError('Chinese diagnostics require an explicit temporary --output')
@@ -672,14 +688,16 @@ def output_path(value, *, default=None):
     if path.is_symlink():
         raise CompleteError('output file is a symlink')
     resolved = path.resolve()
-    if not is_temporary(resolved) and resolved != ROOT / 'en/complete.html':
-        raise CompleteError('output must be en/complete.html or inside the temporary directory')
+    edition = ROOT / lang / 'complete.html' if lang != 'zh-CN' else None
+    if not is_temporary(resolved) and resolved != edition:
+        raise CompleteError('output must be %s or inside the temporary directory' %
+                            (lang + '/complete.html' if edition else 'a temporary diagnostic file'))
     return resolved
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--lang', default='en')
+    parser.add_argument('--lang', choices=('en', 'ja', 'es', 'vi'), default='en')
     parser.add_argument('--output')
     parser.add_argument('--report', help='optional JSON proof/diagnostic file in the temporary directory')
     parser.add_argument('--diagnose-zh', action='store_true')
@@ -687,10 +705,10 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         language = 'zh-CN' if args.diagnose_zh else args.lang
-        destination = output_path(args.output, default=ROOT / 'en/complete.html' if language == 'en' else None)
-        if language != 'en' and destination == ROOT / 'en/complete.html':
-            raise CompleteError('Chinese diagnostic output must be temporary')
-        report_path = output_path(args.report) if args.report else None
+        destination = output_path(args.output,
+            default=ROOT / language / 'complete.html' if language != 'zh-CN' else None,
+            lang=language)
+        report_path = output_path(args.report, lang=language) if args.report else None
         if report_path and not is_temporary(report_path):
             raise CompleteError('reports must be temporary')
         if report_path == destination:

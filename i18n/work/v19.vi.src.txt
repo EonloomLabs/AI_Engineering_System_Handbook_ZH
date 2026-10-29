@@ -1,0 +1,550 @@
+# Remaining vi part 19 — 543 strings — target language: vi
+# Translate every line into vi. Keep the leading "N<TAB>" exactly; N is a table key, not a count.
+# [tags] lines carry inline HTML: keep every tag and its attributes unchanged.
+#        You may move tags to suit the target language's word order.
+# Keep numbers, code, file names and anchors exactly as they are.
+# Terminology: i18n/glossary.json is the book's own bilingual glossary - follow it.
+
+1134	Q074｜Q、K、V为什么要分成三份？Attention到底算出什么？
+11883	Q075 · 一次稳定softmax计算，加一个全屏蔽反例
+18249	Q075 · 减最大值只换计算尺度，不改候选之间的概率</a><small>chapters/02.html · 正文对应小节 [tags]
+18370	Q075 · 减最大值只换计算尺度，不改候选之间的概率</a><small>studies/chapters/05.html · 正文对应小节 [tags]
+1265	Q075｜为什么除以√d？为什么softmax？数值稳定为什么必须减最大值？
+18250	Q076 · 残差、归一化和FFN，不是重复做一次Attention</a><small>chapters/02.html · 正文对应小节 [tags]
+1371	Q076｜为什么一层除了Attention还需要残差、Norm和FFN？
+18251	Q077 · 缓存解码的掩码要按绝对位置填，不能照抄小三角</a><small>chapters/03.html · 正文对应小节 [tags]
+18360	Q077 · 缓存解码的掩码要按绝对位置填，不能照抄小三角</a><small>studies/chapters/02.html · 正文对应小节 [tags]
+1528	Q077｜因果mask、padding mask、分块解码mask到底如何构造？
+18252	Q078 · RoPE保留的是相对角度，不是每轮重新开始的位置</a><small>chapters/03.html · 正文对应小节 [tags]
+18361	Q078 · RoPE保留的是相对角度，不是每轮重新开始的位置</a><small>studies/chapters/02.html · 正文对应小节 [tags]
+1647	Q078｜RoPE如何让注意力知道位置？为什么缓存位置不能每轮从零开始？
+18253	Q079 · GQA保留多个Query，只让它们共享较少的K/V</a><small>chapters/03.html · 正文对应小节 [tags]
+18363	Q079 · GQA保留多个Query，只让它们共享较少的K/V</a><small>studies/chapters/02.html · 正文对应小节 [tags]
+1736	Q079｜MHA、MQA、GQA到底少了什么？是不是把多头删掉了？
+18259	Q080 · 训练标签右移一格，代表每个位置要回答下一项</a><small>chapters/05.html · 正文对应小节 [tags]
+18357	Q080 · 训练标签右移一格，代表每个位置要回答下一项</a><small>studies/chapters/01.html · 正文对应小节 [tags]
+1898	Q080｜Next-token训练到底预测什么？标签如何移动，损失又对哪些位置计算？
+18254	Q081 · 反向不是把前向箭头倒放，而是把“影响”按依赖分配</a><small>chapters/03.html · 正文对应小节 [tags]
+18455	Q081 · 反向不是把前向箭头倒放，而是把“影响”按依赖分配</a><small>studies/chapters/31.html · 正文对应小节 [tags]
+11884	Q081 · 对一个查询手算Attention的梯度，再用扰动检查
+1825	Q081｜Attention如何反向传播？为什么自动求导正常不等于模型实现正确？
+18260	Q082 · AdamW的“历史状态”，与本次梯度分开记账</a><small>chapters/05.html · 正文对应小节 [tags]
+18364	Q082 · AdamW的“历史状态”，与本次梯度分开记账</a><small>studies/chapters/03.html · 正文对应小节 [tags]
+11886	Q082 · AdamW的第一步，把动量、偏差修正与衰减都算出来
+1986	Q082｜Loss算出来后，参数怎样更新？为什么AdamW不只是梯度乘学习率？
+18261	Q083 · 一条训练样本怎样带着来源与标签进入计算</a><small>chapters/05.html · 正文对应小节 [tags]
+18430	Q083 · 一条训练样本怎样带着来源与标签进入计算</a><small>studies/chapters/23.html · 正文对应小节 [tags]
+2153	Q083｜预训练数据进入模型前经历什么？为什么数据质量会变成系统问题？
+18262	Q084 · 训练显存不是“参数量乘两字节”这一笔账</a><small>chapters/05.html · 正文对应小节 [tags]
+18365	Q084 · 训练显存不是“参数量乘两字节”这一笔账</a><small>studies/chapters/03.html · 正文对应小节 [tags]
+2218	Q084｜训练为什么比推理更吃显存？梯度累积、Checkpoint和分片各节省什么？
+18263	Q085 · DPO比较的是“相对参考模型的偏好提升”</a><small>chapters/06.html · 正文对应小节 [tags]
+18367	Q085 · DPO比较的是“相对参考模型的偏好提升”</a><small>studies/chapters/04.html · 正文对应小节 [tags]
+11887	Q085 · 同一对回答，SFT与DPO看的训练信号不同
+2339	Q085｜SFT、RLHF、DPO分别怎样改变模型？DPO公式在比较什么？
+18264	Q086 · 组内奖励只是相对比较，不是绝对正确证明</a><small>chapters/06.html · 正文对应小节 [tags]
+18368	Q086 · 组内奖励只是相对比较，不是绝对正确证明</a><small>studies/chapters/04.html · 正文对应小节 [tags]
+2424	Q086｜推理模型为什么常用强化学习？PPO、GRPO和过程监督有什么不同？
+18265	Q087 · MoE的路由结果，要跟着每个Token逐个看</a><small>chapters/06.html · 正文对应小节 [tags]
+18438	Q087 · MoE的路由结果，要跟着每个Token逐个看</a><small>studies/chapters/26.html · 正文对应小节 [tags]
+2486	Q087｜MoE为什么总参数很多却只激活一部分？Router实际做什么？
+18266	Q088 · LoRA、量化和蒸馏，分别改变不同对象</a><small>chapters/06.html · 正文对应小节 [tags]
+18428	Q088 · LoRA、量化和蒸馏，分别改变不同对象</a><small>studies/chapters/23.html · 正文对应小节 [tags]
+2551	Q088｜LoRA、QLoRA、量化、蒸馏怎样选择？它们到底改了什么？
+18255	Q089 · 刚选出的Token，还没进入自己的那一轮计算</a><small>chapters/04.html · 正文对应小节 [tags]
+18543	Q089 · 刚选出的Token，还没进入自己的那一轮计算</a><small>reading-notes/guide-03.html · 正文对应小节 [tags]
+2661	Q089｜Prefill与Decode有什么区别？第一个输出Token何时产生？
+18256	Q090 · 同一分数，不同采样处理顺序会给出不同候选集合</a><small>chapters/04.html · 正文对应小节 [tags]
+11885	Q090 · 相同logits经过温度、Top-k和Top-p后怎样重新分配
+2758	Q090｜Temperature、Top-k、Top-p怎样改变输出？为什么温度为0也不等于百分之百复现？
+18257	Q091 · “输出停止”与“任务成功”要画在不同状态线上</a><small>chapters/04.html · 正文对应小节 [tags]
+18372	Q091 · “输出停止”与“任务成功”要画在不同状态线上</a><small>studies/chapters/05.html · 正文对应小节 [tags]
+18377	Q091 · “输出停止”与“任务成功”要画在不同状态线上</a><small>studies/chapters/07.html · 正文对应小节 [tags]
+2872	Q091｜模型怎么知道答案结束？EOS、停止字符串、长度限制和工具调用结束有什么区别？
+18258	Q092 · 内部推理预算、外部搜索和多Agent不在同一层</a><small>chapters/04.html · 正文对应小节 [tags]
+2939	Q092｜推理模型“多想一会儿”到底发生了什么？与多Agent、CoT有什么关系？
+18267	Q093 · 旧K/V为什么能复用：新Token不能反向改变旧前缀</a><small>chapters/07.html · 正文对应小节 [tags]
+18362	Q093 · 旧K/V为什么能复用：新Token不能反向改变旧前缀</a><small>studies/chapters/02.html · 正文对应小节 [tags]
+3030	Q093｜为什么历史K/V可以缓存，而Q通常不缓存？请给出逐层解释。
+11888	Q094 · 把一条长上下文的K/V字节数从单位算出来
+18268	Q094 · 缓存用字节计数，计算节省另算一笔</a><small>chapters/07.html · 正文对应小节 [tags]
+3179	Q094｜KV缓存到底节约多少计算，又占多少显存？
+18269	Q095 · 不存完整softmax表，也能把前后块合成同一答案</a><small>chapters/07.html · 正文对应小节 [tags]
+18373	Q095 · 不存完整softmax表，也能把前后块合成同一答案</a><small>studies/chapters/06.html · 正文对应小节 [tags]
+11889	Q095 · 两块分数如何不存完整概率表也得到同一结果
+3246	Q095｜FlashAttention为什么省内存？不存完整注意力矩阵怎样算softmax？
+18270	Q096 · 分页改变物理存放，不改变Token的逻辑次序</a><small>chapters/07.html · 正文对应小节 [tags]
+18374	Q096 · 分页改变物理存放，不改变Token的逻辑次序</a><small>studies/chapters/06.html · 正文对应小节 [tags]
+3323	Q096｜PagedAttention的“分页”具体分页什么？为什么能提升并发？
+18271	Q097 · 连续组批把空出来的槽给新请求，但调度步不等于等长时间</a><small>chapters/08.html · 正文对应小节 [tags]
+18375	Q097 · 连续组批把空出来的槽给新请求，但调度步不等于等长时间</a><small>studies/chapters/06.html · 正文对应小节 [tags]
+3395	Q097｜Continuous Batching与普通Batch有什么区别？Prefill为什么会干扰Decode？
+18272	Q098 · 先拆等待、首项、后续项，再问为什么慢</a><small>chapters/08.html · 正文对应小节 [tags]
+3532	Q098｜TTFT、TPOT、端到端延迟怎样拆？怎样用Roofline定位瓶颈？
+18273	Q099 · 拒绝草稿时的补偿，才保证目标分布不被带偏</a><small>chapters/08.html · 正文对应小节 [tags]
+18371	Q099 · 拒绝草稿时的补偿，才保证目标分布不被带偏</a><small>studies/chapters/05.html · 正文对应小节 [tags]
+11890	Q099 · 草稿错了仍可保持目标分布：三种Token逐项对账
+3592	Q099｜Speculative Decoding为什么能更快，还能保持目标分布？
+1804	Q0=[1,0]、Q1=[0,1]，同一键K0=[2,3]
+18274	Q100 · 分布式的“切开”，要先指明切的是样本、矩阵还是状态</a><small>chapters/08.html · 正文对应小节 [tags]
+18366	Q100 · 分布式的“切开”，要先指明切的是样本、矩阵还是状态</a><small>studies/chapters/03.html · 正文对应小节 [tags]
+3674	Q100｜DP、TP、PP、ZeRO和Prefill/Decode分离分别切什么？
+18347	Q101 · “我有80%把握”是否可靠，要用一组实际结果校准</a><small>chapters/27.html · 正文对应小节 [tags]
+18434	Q101 · “我有80%把握”是否可靠，要用一组实际结果校准</a><small>studies/chapters/25.html · 正文对应小节 [tags]
+11896	Q101 · 四次都说80%把握，实际只对两次，怎么算
+9783	Q101｜为什么LLM会“自信地说错”？怎样区分置信度、校准与选择性回答？
+18348	Q102 · 有效反思需要新证据；重复自评可能只是重写错误</a><small>chapters/27.html · 正文对应小节 [tags]
+18437	Q102 · 有效反思需要新证据；重复自评可能只是重写错误</a><small>studies/chapters/25.html · 正文对应小节 [tags]
+9860	Q102｜Self-reflection为什么有时越改越错？怎样设计有效反馈？
+18349	Q103 · 图像块向量与文字Embedding，输入来源不同但可接入同一计算链</a><small>chapters/27.html · 正文对应小节 [tags]
+18431	Q103 · 图像块向量与文字Embedding，输入来源不同但可接入同一计算链</a><small>studies/chapters/24.html · 正文对应小节 [tags]
+9921	Q103｜多模态模型怎样把图片接入语言模型？GUI Agent又多了哪些环节？
+18350	Q104 · 注意力热图是观察，因果干预才开始检验解释</a><small>chapters/27.html · 正文对应小节 [tags]
+18436	Q104 · 注意力热图是观察，因果干预才开始检验解释</a><small>studies/chapters/25.html · 正文对应小节 [tags]
+9990	Q104｜模型可解释性研究真的能告诉我们“它为什么这样回答”吗？
+18343	Q105 · 企业问答的正确答案，要同时过范围、时间和证据三关</a><small>chapters/26.html · 正文对应小节 [tags]
+18444	Q105 · 企业问答的正确答案，要同时过范围、时间和证据三关</a><small>studies/chapters/28.html · 正文对应小节 [tags]
+9478	Q105｜企业知识问答怎样做到不仅能回答，还能证明回答适用且不过期？
+18344	Q106 · 最小仓库修复器，也应留下能复核的四份对象</a><small>chapters/26.html · 正文对应小节 [tags]
+18445	Q106 · 最小仓库修复器，也应留下能复核的四份对象</a><small>studies/chapters/28.html · 正文对应小节 [tags]
+9552	Q106｜一个仓库修复Agent从接单到交付，最少需要哪些内部对象？
+18345	Q107 · 两个来源矛盾，先对齐时间和口径再谈谁对</a><small>chapters/26.html · 正文对应小节 [tags]
+9614	Q107｜研究型Agent怎样处理“多个来源说法冲突”，而不是写一篇流畅拼贴？
+18346	Q108 · 界面坐标只对那一张截图与窗口状态有效</a><small>chapters/26.html · 正文对应小节 [tags]
+18432	Q108 · 界面坐标只对那一张截图与窗口状态有效</a><small>studies/chapters/24.html · 正文对应小节 [tags]
+9680	Q108｜长任务与计算机操作为什么需要“观察—动作—核验”，而不能只顺序播放脚本？
+18351	Q109 · 规模规律是条件下的拟合，不是永远适用的配方</a><small>chapters/28.html · 正文对应小节 [tags]
+10079	Q109｜Scaling Laws和Chinchilla究竟说明什么？为什么不能死记一个Token/参数比例？
+18352	Q110 · GQA少存KV组，MLA尝试把KV表示压到潜变量</a><small>chapters/28.html · 正文对应小节 [tags]
+18439	Q110 · GQA少存KV组，MLA尝试把KV表示压到潜变量</a><small>studies/chapters/26.html · 正文对应小节 [tags]
+10164	Q110｜MLA和GQA有什么本质区别？低秩KV为何可以减少缓存？
+18353	Q111 · In-Context Learning改变本次条件，不等于改了权重文件</a><small>chapters/28.html · 正文对应小节 [tags]
+10234	Q111｜In-Context Learning到底是不是“学习”？为什么换几个示例就会改变行为？
+18354	Q112 · 先找到最早错误边界，再决定换模型还是改系统</a><small>chapters/28.html · 正文对应小节 [tags]
+18454	Q112 · 先找到最早错误边界，再决定换模型还是改系统</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+10292	Q112｜面对一个新框架、新论文或Agent失败，如何判断应该改哪一层？
+19169	QK转置
+27866	QLORA · 量化与参数高效微调
+26044	QLoRA结合低比特冻结基座与可训练适配器，研究中使用特定量化表示及内存管理方法。关键是基础参数低比特存储，计算时按算子需求反量化/使用较高精度，梯度更新主要作用在适配器。
+22853	QLoRA结合量化基础模型与低秩适配，以降低微调内存需求。量化、计算精度和适配参数是不同层面。
+22805	QLoRA结合量化基础模型与低秩适配；AWQ利用激活信息指导低比特权重量化。量化权重不等于全部计算同样低比特，速度仍依赖内核与硬件。蒸馏利用教师信号训练学生，不保证复制全部能力。PEFT提供实现，不替代数据治理。
+27867	QLoRA采用量化基础权重等设计；本书均匀刻度例不冒充NF4格式。
+12417	Q[b,t,j]是一格具体值
+17490	Quantization / 量化
+13489	Query、Key、Value各做哪一件事
+24422	Query分组与KV共享；缓存算例为本书独立计算。
+13626	Query可能变化，份额与混合结果也可能变化
+28054	Query在本次数组里编号0，并不代表它是整条序列的位置0。加上past_length=3，它才是位置3。
+28885	Query投影 Wq
+1081	Query输出j=0
+1082	Query输出j=1
+1083	Query输出j=2
+1084	Query输出j=3
+13494	Query，查询向量q
+19314	Qwen3报告讨论推理与非推理模式以及模型家族。模式选择改变任务中的推理行为，但不是一个同时保证最高质量和最低成本的开关。
+26506	Q、K、V若都由同一个X通过不同投影产生，X梯度是三条路径贡献之和；每个投影权重梯度分别由输入转置乘对应输出梯度得到。残差支路还要把上游梯度直接加回。多头实现只是额外的形状重排和各头计算，最后合并处同样需要正确逆变换。
+13699	Q、K的每行宽度必须等于V的每行宽度吗？
+1137	Q与K共同决定“某位置如何从可见位置取信息”，V决定“取到的内容是什么”。它们来自可学习投影，语义不是人为固定的“问题、关键词、答案”。Attention输出是Value的加权混合，不是直接生成词，也不是数据库精确查询。
+13660	Q与K点积、缩放、加M
+13689	Q与K点积得到的是什么，V负责什么？
+2130	Q与K的缩放各自沿相应路径只经过一次1/2，不要漏掉，也不要在进入SDPA前后各除一次。
+19240	Q仍4头
+27961	Q回答“当前查询要匹配什么方向”，K提供被匹配方向，V提供聚合内容。这是功能解释，不意味着维度天然对应人类可读概念。训练会共同调整这些投影，使最终预测目标更好。
+1655	Q在位置p、K在位置t时，点积为
+1790	Q头0、1读KV组0；Q头2、3读KV组1
+1796	Q投影仍8维；最终残差宽度不随KV组数自动减半。
+10477	Q是这张W的用途标签
+19074	Q用于匹配其他位置，K用于被匹配，V提供组合内容。M是掩码：因果生成时禁止访问未来Token，通常把相应分数设为负无穷。注意力是模型内部的加权运算，不是数据库查询，也不是调用搜索引擎。
+31087	Q：接收者的匹配表示
+19801	R/T一致
+10922	R00 · 全局认知<span class="module-count">5 项 [tags]
+10921	R00 全局认知</a><a href="#module-01">R01 模型内部</a><a href="#module-02">R02 能力形成</a><a href="#module-03">R03 推理与服务</a><a href="#module-04">R04 输入输出接口</a><a href="#module-05">R05 Agent基础</a><a href="#module-06">R06 真实编码Agent</a><a href="#module-07">R07 上下文工程</a><a href="#module-08">R08 检索与代码智能</a><a href="#module-09">R09 长期记忆</a><a href="#module-10">R10 Skills与多Agent</a><a href="#module-11">R11 AI软件工程</a><a href="#module-12">R12 评测方法</a><a href="#module-13">R13 安全与权限</a><a href="#module-14">R14 运行与性能</a><a href="#module-15">R15 高级专题</a><a href="#module-16">R16 数学与实现补充 [tags]
+18554	R00-01 · 从文本输入到工具结果分清边界</a><small>reading-notes/chapter-00.html · 正文对应小节 [tags]
+18555	R00-02 · 两个输出Token分两次决定</a><small>reading-notes/chapter-00.html · 正文对应小节 [tags]
+18556	R00-03 · 固定工作流与Agent的分岔点</a><small>reading-notes/chapter-00.html · 正文对应小节 [tags]
+18557	R00-04 · 用户的一句话变成多轮请求</a><small>reading-notes/chapter-00.html · 正文对应小节 [tags]
+18558	R00-05 · 从零实现时最小验收顺序</a><small>reading-notes/chapter-00.html · 正文对应小节 [tags]
+10931	R01 · 模型内部<span class="module-count">14 项 [tags]
+18559	R01-01 · 一层处理前后，位置数没有凭空减少</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18560	R01-02 · 合并优先级而不是最长子串猜测</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18561	R01-03 · 原始编码器与解码器的可见关系</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18562	R01-04 · 转轴后矩阵乘法才匹配</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18563	R01-05 · Word2Vec不是把整数写成二进制</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18564	R01-06 · 加性与点积注意力可以有不同评分器</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18565	R01-07 · 共同平移位置不改变相对旋转</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18566	R01-08 · 4个Q头共享2个KV头</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18567	R01-09 · 稀疏专家的路由不等于每个词固定属于一个专家</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18568	R01-10 · 临时映射的上下文学习</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18569	R01-11 · 读模型报告先画接口账本</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18570	R01-12 · 总专家参数和激活参数不能混计</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18571	R01-13 · 推理模式不同不意味着输入事实自动增加</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+18572	R01-14 · 把技术名放回它改变的那一层</a><small>reading-notes/chapter-01.html · 正文对应小节 [tags]
+10947	R02 · 能力形成<span class="module-count">15 项 [tags]
+18573	R02-01 · 对数尺度上的改善不是准确率必然按比例增</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18574	R02-02 · 固定计算下参数与数据的交换</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18575	R02-03 · 100份资料不等于100份独立信息</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18576	R02-04 · 近重复跨训练与验证会污染评价</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18577	R02-05 · 训练损失下降，验证损失却上升</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18578	R02-06 · 指令样本与偏好样本的监督不同</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18579	R02-07 · DPO比较的是相对参考模型的变化</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18580	R02-08 · 原则反馈怎样约束改写，而非代替事实检查</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18581	R02-09 · 正优势的PPO裁剪算一次</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18582	R02-10 · 外部文本不能自称系统消息</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18583	R02-11 · 多步推理可以暴露算错点</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18584	R02-12 · 可验证奖励如何给候选打分</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18585	R02-13 · 结果相同，中间步骤一个含错一个正确</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18586	R02-14 · 自一致性多数票仍可能多数错</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+18587	R02-15 · 树搜索的分支与剪枝</a><small>reading-notes/chapter-02.html · 正文对应小节 [tags]
+10964	R03 · 推理与服务<span class="module-count">12 项 [tags]
+18588	R03-01 · 贪心与采样从同一概率开始</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18589	R03-02 · 核采样为什么保留越过阈值的那项</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18590	R03-03 · 动态缓存与预分配缓存占用不同</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18591	R03-04 · 推理预算也要留在请求容量里</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18592	R03-05 · 简单查值不必用树状推理替代工具</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18593	R03-06 · prefill处理三位置，decode处理一个新位置</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18594	R03-07 · 相同前缀与不同尾部</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18595	R03-08 · 逻辑块与物理块</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18596	R03-09 · 在线softmax重标度</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18597	R03-10 · 拒绝后的分布不能随便选</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18598	R03-11 · 活跃集合怎样轮间改变</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+18599	R03-12 · 压缩输出有时比压缩输入更省时</a><small>reading-notes/chapter-03.html · 正文对应小节 [tags]
+10977	R04 · 输入输出接口<span class="module-count">8 项 [tags]
+18600	R04-01 · 约束、数据和输出要求分别放清楚</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+18601	R04-02 · 提示版本变化要和评测绑定</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+18602	R04-03 · 真实用户指令与文档中的反向要求</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+18603	R04-04 · call_id把调用与结果连起来</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+18604	R04-05 · 结构化输出通过仍要核对事实</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+18605	R04-06 · 网络分片与事件边界</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+18606	R04-07 · 给出反例明确“简洁”不等于缺证据</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+18607	R04-08 · 推理状态不是可随意拼接的普通文本</a><small>reading-notes/chapter-04.html · 正文对应小节 [tags]
+10987	R05 · Agent基础<span class="module-count">12 项 [tags]
+18608	R05-01 · ReAct中的观察改变下一步</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18609	R05-02 · 先确定一个最小可交付任务</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18610	R05-03 · 计划节点不等于执行节点</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18611	R05-04 · 同一任务的Runner与Session各持有什么</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18612	R05-05 · 训练工具使用时，外部结果何时进入样本</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18613	R05-06 · 反思必须保留失败的具体原因</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18614	R05-07 · 工具返回10000行还是10条带来源结果</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18615	R05-08 · 装上MCP服务器不等于模型已经能用</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18616	R05-09 · Host、Client、Server各自处理哪条消息</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18617	R05-10 · 用代码组合三次查询，哪些数据不必进模型</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18618	R05-11 · 检查点后追加的事件也要恢复</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+18619	R05-12 · 跨Agent收到结果不等于结果可执行</a><small>reading-notes/chapter-05.html · 正文对应小节 [tags]
+11001	R06 · 真实编码Agent<span class="module-count">21 项 [tags]
+18620	R06-01 · 输入中工具不可见时不能归因于模型漏选</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18621	R06-02 · Thread与Turn的生命周期差异</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18622	R06-03 · 仓库可读性怎样减少反复搜索</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18623	R06-04 · 固定commit再追一条调用链</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18624	R06-05 · 托管执行环境不替应用决定业务授权</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18625	R06-06 · Claude Code式循环先观察再继续</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18626	R06-07 · 上下文由不止当前聊天组成</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18627	R06-08 · 项目规则与个人偏好冲突</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18628	R06-09 · 子Agent交接没有自动复制所有历史</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18629	R06-10 · 技能名出现不等于正文已读</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18630	R06-11 · Hook拦截提交时检查哪个版本</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18631	R06-12 · 命令名允许，不代表所有参数都安全</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18632	R06-13 · 小修直接做与复杂设计分开</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18633	R06-14 · CLI的当前目录改变了可见项目</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18634	R06-15 · 自定义Agent职责太宽会重复工作</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18635	R06-16 · 程序化启动任务也要检查退出状态</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18636	R06-17 · 五种扩展分别解决不同需求</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18637	R06-18 · 技能匹配必须包括相邻反例</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18638	R06-19 · 仓库记忆与当前代码冲突</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18639	R06-20 · 插件包含工具，但安装不等于自动授权</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+18640	R06-21 · 自动化脚本需要记录可复现输入</a><small>reading-notes/chapter-06.html · 正文对应小节 [tags]
+11024	R07 · 上下文工程<span class="module-count">11 项 [tags]
+18641	R07-01 · 相关信息不是越多越好</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18642	R07-02 · 位置效应实验只移动目标证据</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18643	R07-03 · 窗口能装下不代表能准确使用</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18644	R07-04 · 长上下文不同任务不能只看找一句话</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18645	R07-05 · 干扰增加时有效窗口怎样测试</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18646	R07-06 · 不透明压缩项需要按原样续接</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18647	R07-07 · 摘要必须保留否定与未完成</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18648	R07-08 · 阶段结束压缩比正在写入时容易一致</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18649	R07-09 · 删除大日志前先保留可恢复位置</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18650	R07-10 · 压缩阈值不能等到窗口已经用满</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+18651	R07-11 · 压缩后Token少了但缓存前缀变了</a><small>reading-notes/chapter-07.html · 正文对应小节 [tags]
+11037	R08 · 检索与代码智能<span class="module-count">16 项 [tags]
+18652	R08-01 · 检索不是把答案从模型里“挖出来”</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18653	R08-02 · 给片段补上下文，避免“它”失去指代</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18654	R08-03 · 排名融合按名次而非分数量纲</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18655	R08-04 · 双塔检索把查询和文档分别编码</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18656	R08-05 · 查询的每个Token各找最佳文档位置</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18657	R08-06 · HyDE假设文档不是来源证据</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18658	R08-07 · RAPTOR的上层摘要帮助定位，下层保留细节</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18659	R08-08 · 限制路径让同名符号搜索更精确</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18660	R08-09 · grep不到时不要立刻断定不存在</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18661	R08-10 · 改一行后增量语法树更新什么</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18662	R08-11 · 同名变量有不同绑定</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18663	R08-12 · 第一次生成失败反过来改进检索</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18664	R08-13 · 仓库补全评测要隔离邻近答案泄漏</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18665	R08-14 · 自然语言搜代码不总能靠同词命中</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18666	R08-15 · 在一种文档上调好，不代表另一种也好</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+18667	R08-16 · 同样召回两条，排序质量可以不同</a><small>reading-notes/chapter-08.html · 正文对应小节 [tags]
+11055	R09 · 长期记忆<span class="module-count">10 项 [tags]
+18668	R09-01 · 记忆如何进入决策而不直接替代环境</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18669	R09-02 · 换出的是正文，当前任务还要留索引</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18670	R09-03 · 命名空间避免跨用户记忆混用</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18671	R09-04 · 会话检查点与长期Store保存不同生命周期</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18672	R09-05 · 反思把事件归纳成经验时要避免过度泛化</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18673	R09-06 · 旧偏好更新后要回答新值</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18674	R09-07 · 超长会话不能只测试复制一句话</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18675	R09-08 · 自动连边也可能连错记忆</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18676	R09-09 · 记忆更新流水线逐项核对</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+18677	R09-10 · 图检索回答跨文档关系</a><small>reading-notes/chapter-09.html · 正文对应小节 [tags]
+11067	R10 · Skills与多Agent<span class="module-count">12 项 [tags]
+18678	R10-01 · 只加载相关技能节省什么</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18679	R10-02 · Skill正文引用不存在的脚本</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18680	R10-03 · 显式技能仍需检查当前任务约束</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18681	R10-04 · 一个平台支持Skill不代表所有表面加载规则相同</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18682	R10-05 · Codex技能问题沿数据链定位</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18683	R10-06 · 常驻规则与按需专业材料分别放</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18684	R10-07 · 并行研究者要给不同证据范围</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18685	R10-08 · DAG边决定谁可以同时跑</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18686	R10-09 · handoff与返回结果的调用不同</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18687	R10-10 · Agent-as-tool返回仍是待核验结果</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18688	R10-11 · 简单强基线先做出来</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+18689	R10-12 · 多Agent对话会循环赞同</a><small>reading-notes/chapter-10.html · 正文对应小节 [tags]
+11081	R11 · AI软件工程<span class="module-count">13 项 [tags]
+18690	R11-01 · 新上下文如何接着修复而不重做</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18691	R11-02 · 长应用开发按可验证功能推进</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18692	R11-03 · 工具接口保留行号怎样帮助补丁准确定位</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18693	R11-04 · 审查发现小命名问题，如何避免重走设计</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18694	R11-05 · 并行写编译器的模块接口要一致</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18695	R11-06 · Agent审查不能只复述diff</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18696	R11-07 · 不完美但改善代码与阻塞缺陷分开</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18697	R11-08 · 设计、复杂度与测试一起判断</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18698	R11-09 · 三层测试分别抓哪类错</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18699	R11-10 · 持续集成测试必须针对合并结果</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18700	R11-11 · 架构决策记录需要包含放弃条件</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18701	R11-12 · 产品质量回退先拆模型与Harness</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+18702	R11-13 · 模型进程中断，外部任务仍可能运行</a><small>reading-notes/chapter-11.html · 正文对应小节 [tags]
+11096	R12 · 评测方法<span class="module-count">13 项 [tags]
+18703	R12-01 · 先定义真实成功，再统计分数</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18704	R12-02 · 工作流中某一步通过不代表全流程通过</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18705	R12-03 · 轨迹评分发现答案背后的越权</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18706	R12-04 · 把真实失败变成持续回归样本</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18707	R12-05 · 评分规则要区分缺信息与乱猜</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18708	R12-06 · 交换答案顺序检查评委偏差</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18709	R12-07 · 真实Issue评测要验证补丁行为</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18710	R12-08 · 测试环境不同会让同一补丁结果不同</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18711	R12-09 · 资源噪声不能算作模型错误</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18712	R12-10 · 跨环境成绩需分开看</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18713	R12-11 · 重复成功衡量稳定执行</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18714	R12-12 · 新题时间晚于训练截止仍不自动零污染</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+18715	R12-13 · 通用助手任务要同时读、算、核对</a><small>reading-notes/chapter-12.html · 正文对应小节 [tags]
+11111	R13 · 安全与权限<span class="module-count">10 项 [tags]
+18716	R13-01 · 泄漏既可能来自输入也可能来自日志</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18717	R13-02 · Agent风险多了真实副作用</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18718	R13-03 · 不可信片段不能升级自己的角色</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18719	R13-04 · 注入改变任务目标时怎样识别</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18720	R13-05 · 间接注入可能藏在搜索结果摘要</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18721	R13-06 · 只禁网络仍可能泄漏到文件日志</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18722	R13-07 · 自动审批的误拦与漏拦分别统计</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18723	R13-08 · 不同运行表面的边界不可互相假定</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18724	R13-09 · 威胁模型先明确保护什么</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+18725	R13-10 · 读文件与部署不应使用同一级确认</a><small>reading-notes/chapter-13.html · 正文对应小节 [tags]
+11123	R14 · 运行与性能<span class="module-count">11 项 [tags]
+18726	R14-01 · 一条trace怎样串起模型与工具</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18727	R14-02 · 统一字段才能比较不同后端</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18728	R14-03 · 父span包含等待，子span和不等于父span</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18729	R14-04 · 成功率正常但排队上升也是预警</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18730	R14-05 · 99%目标给多少错误预算</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18731	R14-06 · 上线前先跑一次可恢复失败</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18732	R14-07 · RPM没超但TPM仍可能限流</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18733	R14-08 · 减少非关键路径操作不改变总耗时</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18734	R14-09 · 模型超时后用任务ID接回执行状态</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18735	R14-10 · 一次只变一个可解释变量</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+18736	R14-11 · 工具组合可以少传数据，不必少做验证</a><small>reading-notes/chapter-14.html · 正文对应小节 [tags]
+11136	R15 · 高级专题<span class="module-count">17 项 [tags]
+18737	R15-01 · LoRA秩1增量具体长什么样</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18738	R15-02 · 量化基础权重与可训练适配参数分开</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18739	R15-03 · 激活放大权重量化误差</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18740	R15-04 · 教师软分布比单个标签多给什么信息</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18741	R15-05 · 多个适配器要与基础版本对齐</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18742	R15-06 · 流行错误也可能被模型复述</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18743	R15-07 · 概率80%要与同类结果对账</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18744	R15-08 · 按需检索不是每句话都固定搜一次</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18745	R15-09 · 检索错误时重新查，而非用错资料硬答</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18746	R15-10 · 计算机操作要读回结果</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18747	R15-11 · 截图缩放改变坐标</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18748	R15-12 · 桌面任务不以点击次数判成功</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18749	R15-13 · 文字一样的两个按钮需要上下文定位</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18750	R15-14 · DOM定位与视觉坐标各有边界</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18751	R15-15 · 一个神经元同时响应两个概念意味着什么</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18752	R15-16 · 稀疏自编码器的两个目标可能冲突</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+18753	R15-17 · 相关性观察与因果干预的差别</a><small>reading-notes/chapter-15.html · 正文对应小节 [tags]
+11155	R16 · 数学与实现补充<span class="module-count">6 项 [tags]
+18754	R16-01 · 自动求导从计算图传播什么</a><small>reading-notes/chapter-16.html · 正文对应小节 [tags]
+18755	R16-02 · 最小GPT训练也要正确移动标签</a><small>reading-notes/chapter-16.html · 正文对应小节 [tags]
+18756	R16-03 · 一个可运行训练系统的检查顺序</a><small>reading-notes/chapter-16.html · 正文对应小节 [tags]
+18757	R16-04 · Tokenizer与模型权重必须匹配</a><small>reading-notes/chapter-16.html · 正文对应小节 [tags]
+18758	R16-05 · 指数和对数必须说明底数</a><small>reading-notes/chapter-16.html · 正文对应小节 [tags]
+18759	R16-06 · 梯度默认会累积，为什么要清零</a><small>reading-notes/chapter-16.html · 正文对应小节 [tags]
+26301	R8只覆盖v8
+10754	RAG与生成证据
+22799	RAG提供外部证据，Memory保存跨任务信息，Skills组织方法，Harness管理执行，Fine-tuning改变参数行为。未知最新源码优先检索，权限错误优先改执行器，稳定行为偏差才可能需要训练。
+21015	RAG连接外部检索与生成。原论文中的训练与推理设计，不等于今天所有“搜索后放入Prompt”的广义实践。工程系统还包含入库、切分、索引、查询、召回、重排和拼装。任何一层错误都可能使答案失真。
+16009	RAG（检索增强生成）</strong>不是一个新的基础模型种类，而是先取证据再让生成模型利用证据的系统方式。可以这样检查： [tags]
+17089	RAG：取外部事实
+21166	RAPTOR的上层摘要帮助定位，下层保留细节
+26223	RAPTOR通过聚类与递归摘要构建层级表示，适合需要跨片段理解的任务；GraphRAG围绕实体/关系与社区摘要支持某些全局问题。它们增加了摘要与图抽取的成本，也需要处理抽取错误、来源追溯和更新失效。
+21164	RAPTOR通过递归摘要组织层级结构，帮助检索跨片段和较全局的信息。叶节点与高层摘要承担不同粒度的证据作用。
+16969	RGB三通道和文字Token编号完全不同；视觉投影是数值变换，不是每个像素去查中文词表。
+14603	RLHF与DPO为什么不能只按一个名称互换
+10648	RLHF泛指利用人类反馈训练行为的流程。奖励模型是对回答等行为打分的模型；策略是实际生成动作的概率模型。两者职责不同，得高奖励不自动等于事实正确。
+31235	RLHF路径
+24356	RMSNorm原始机制；推导与本地参数由本教材独立给出。
+24652	RMSNorm对最后一维计算均方根：
+12917	RMSNorm沿4个特征计算；输入不直接当作Q。
+14064	RMSNorm的均方根
+26526	RMSNorm设
+13424	RMSNorm逐格计算
+24318	RMS统计和逐特征参数；本例显式ε=1e-5而非隐式套默认值。
+27848	ROPE · RoFormer 与旋转位置表示
+22717	RPM没超但TPM仍可能限流
+23827	RRF与检索指标 — AI系统工程
+21028	RRF对不同排序按
+10743	RRF对某文档在每条召回路径上的排名r贡献1/(c+r)，再相加。c是平滑常数，r通常从1开始；没进入某条路径的候选不凭空获得该路贡献。
+6368	RRF对每路检索结果按
+21098	RRF按不同检索结果中的名次融合，常见形式为对各列表累加
+11768	RRF按各候选的排名而非原始相关分数融合；窗口截断决定哪些候选能参与。
+23722	RRF按名次融合多个列表，不直接相加不同分数。重排进一步判断候选相关性，但无法补回所有召回器都漏掉的证据。
+20884	RULER关注标称上下文长度与实际有效能力之间的差异，通过不同任务与长度测试模型。它提醒我们，接口接受输入只是能力评价的起点。
+20127	ReAct中的观察改变下一步
+20125	ReAct把推理与行动交替组织，行动获取新信息，观察帮助修正后续判断。它区别于只在固定输入中一直生成答案。
+13457	ReLU把负数变为0，因此h=0。
+10596	ReLU是一个函数，规则是max(0,x)：负数改0，非负数保留。作用于一排数时逐格执行。它不是参数表，也不需要从别的Token取信息。
+2091	ReLU的负值支路在此为0；零点导数约定与框架有关，本实现使用PyTorch约定。有限差分应避开正好跨过零点的坐标，不然不光滑性会使对照难解释。
+14014	ReLU逐格执行 
+10595	ReLU：逐格保留正数
+16581	Recall：真实应找到中找回多少
+20210	Reflexion利用任务反馈形成文字反思，影响后续尝试。外部经验可以在不更新参数时改变行为，但反思文本本身可能错误。
+21278	RepoBench关注仓库级代码补全与上下文使用的评价，帮助区分检索能力和生成能力。数据设置、可见文件与任务定义会影响结果解释。
+21261	RepoCoder研究仓库级代码补全中的迭代检索与生成。生成的中间结果可以帮助下一轮检索，但也可能引入错误方向，需要真实上下文修正。
+21047	RepoCoder研究迭代检索与生成，RepoBench和CodeSearchNet评价不同仓库上下文任务。补全、搜索与Issue修复不是同一种能力，指标不能直接换算。
+16034	Reranker能否把召回集合外的正确文档重新排进来？
+17599	Reranking / 重排
+17382	Residual / 残差连接
+15615	Resources：可读数据
+20453	ResponseItem如何转ToolCall
+4112	Responses的output包含有类型的项目，可能有message、function_call、reasoning等；
+8151	Retry重新尝试某个操作；Resume从已知状态继续任务；Replay重放记录以重建或诊断；Cancel请求停止后续工作。它们不能互换，尤其不能把重放日志自动变成再次执行副作用。
+21847	Review不追求无穷完美
+8395	Review应发现实现者或自动测试可能遗漏的重要问题，按风险与证据选择深度。局部小问题可直接修复并验证；只有推翻关键设计或扩大影响范围才需要重新分析。目标是改善代码健康度，不是追求所有细节完美。
+16506	Review怎样服务修改，而不是阻止一切变化
+8305	Review怎样避免循环浪费
+10627	RoPE、旋转位置编码
+13864	RoPE可把一排特征按两个一组拆开，对不同组使用不同频率；位置越靠后，按对应频率旋转的角度就不同。例如某一组在位置m用角度mθ，在位置n用nθ。
+26525	RoPE对固定位置是正交线性变换，反向使用旋转矩阵转置，也就是相反角度旋转上游梯度。位置频率若固定，不需要对它优化；若某种架构学习相关参数，则计算图不同，不应一概而论。
+13863	RoPE怎样用位置改变匹配
+24670	RoPE扩展并不意味着“把最大位置参数改大就获得可靠长上下文”。位置插值、频率修改、训练长度和数据都会影响行为。对具体模型应使用其受支持的配置，再做长范围信息组合任务，而不只是检查能否接受长输入。
+19215	RoPE通过旋转编码位置信息，使Q、K之间的点积包含相对位置关系。它不同于直接在输入向量上加位置Embedding，具体应用需看模型实现。
+1472	RoPE：在Q/K里旋转，为什么能表示相对位置
+3542	Roofline的简化估算：给F次浮点操作、R字节内存传输、设备有效算力C和带宽B，则时间不低于
+17628	Routing / 路由
+1474	R保持长度；对Q和K施加配套旋转后，匹配会受位置差影响。贯通模型则是在进入网络前加P[pos]，两种位置机制不能同时混写为同一步。
+2103	R接收两条贡献
+9601	R记录v8、命令、退出码与边界断言
+18766	S01 · 同一“爱”出现两次，Embedding行的梯度怎样累加</a><small>studies/chapters/01.html · 正文对应小节 [tags]
+18767	S02 · 批内真实长度不同，缓存位置不能只看补齐长度</a><small>studies/chapters/02.html · 正文对应小节 [tags]
+18768	S03 · 四个微批累积梯度，为什么不一定等于四倍学习率</a><small>studies/chapters/03.html · 正文对应小节 [tags]
+18770	S04 · PPO正优势被裁剪，负优势却不是同一种取法</a><small>studies/chapters/04.html · 正文对应小节 [tags]
+18771	S05 · 同一概率表，核采样与贪心的可选集合不同</a><small>studies/chapters/05.html · 正文对应小节 [tags]
+18772	S06 · roofline估算为什么只能给下界，不能直接当实测</a><small>studies/chapters/06.html · 正文对应小节 [tags]
+18773	S07 · 工具参数语法结束后，还需要等待调用结束信号吗</a><small>studies/chapters/07.html · 正文对应小节 [tags]
+18774	S08 · 外部文件写入与本地数据库提交之间的崩溃窗口</a><small>studies/chapters/08.html · 正文对应小节 [tags]
+18775	S09 · 源码函数名相同，调用条件改变后结论如何失效</a><small>studies/chapters/09.html · 正文对应小节 [tags]
+18776	S10 · 黑箱产品实验：只改一项指令来源</a><small>studies/chapters/10.html · 正文对应小节 [tags]
+18777	S11 · 选了高分片段，却漏掉它的否定前半句</a><small>studies/chapters/11.html · 正文对应小节 [tags]
+18778	S12 · 一个压缩方案省90%，但两类错误要分开计</a><small>studies/chapters/12.html · 正文对应小节 [tags]
+18779	S13 · 权限过滤在召回后做，为什么top-k会不足</a><small>studies/chapters/13.html · 正文对应小节 [tags]
+18781	S14 · 增量分析一个函数改名，哪些证据应更新</a><small>studies/chapters/14.html · 正文对应小节 [tags]
+18782	S15 · 一条相似记忆不适用于当前环境</a><small>studies/chapters/15.html · 正文对应小节 [tags]
+18783	S16 · 技能召回变高但误加载也变高，算不算优化</a><small>studies/chapters/16.html · 正文对应小节 [tags]
+18784	S17 · 相关错误下，三位Agent不应按独立概率相乘</a><small>studies/chapters/17.html · 正文对应小节 [tags]
+18785	S18 · 性质测试用一个族的输入抓住前缀错误</a><small>studies/chapters/18.html · 正文对应小节 [tags]
+18786	S19 · 把任务难度分层后，总体胜率可能换个方向</a><small>studies/chapters/19.html · 正文对应小节 [tags]
+19145	S1与S2可双向关联
+9122	S1摘要
+18787	S20 · 带权限的检索工具怎样避免把授权交给模型猜</a><small>studies/chapters/20.html · 正文对应小节 [tags]
+18788	S21 · 重试风暴怎样把暂时故障放大</a><small>studies/chapters/21.html · 正文对应小节 [tags]
+18789	S22 · 成功率差1个百分点时，关键故障比均价重要</a><small>studies/chapters/22.html · 正文对应小节 [tags]
+18790	S23 · 权重误差一样大，激活不同使输出误差不同</a><small>studies/chapters/23.html · 正文对应小节 [tags]
+18791	S24 · 页面滚动了200像素，旧坐标为何点错</a><small>studies/chapters/24.html · 正文对应小节 [tags]
+18792	S25 · 拒答率提高，正确率提高，是否真的更好</a><small>studies/chapters/25.html · 正文对应小节 [tags]
+18793	S26 · 深研究用树搜索前，先看候选能不能判好坏</a><small>studies/chapters/26.html · 正文对应小节 [tags]
+18794	S27 · 补丁成功后再加一处日志，为什么需要重新验证</a><small>studies/chapters/27.html · 正文对应小节 [tags]
+18795	S28 · 同一份研究结论转为自动化动作，需要补哪一层</a><small>studies/chapters/28.html · 正文对应小节 [tags]
+18796	S29 · 内容没变但变慢：把运行轨迹对齐再猜</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+18797	S30 · 毕业项目的验收证据，而不是“能聊天”的演示</a><small>studies/chapters/30.html · 正文对应小节 [tags]
+11897	S31 · 用一个方向导数核对矩阵反传是否接对
+18798	S31 · 用一个方向导数核对矩阵反传是否接对</a><small>studies/chapters/31.html · 正文对应小节 [tags]
+17706	SAE / 可解释性
+10804	SAE是稀疏自编码器，用较少活跃特征的组合重构模型激活。激活是本次计算的中间数值，不是完整自然语言推理记录。重构成功不自动证明某特征具有唯一因果含义。
+27844	SDPA · 缩放点积注意力
+27822	SDPA · 缩放点积注意力</a><a href="#topic-8">ATTN · Transformer 原始论文</a><a href="#topic-9">ROPE · RoFormer 与旋转位置表示 [tags]
+14502	SDPA是函数接口，它的dropout_p由调用者传入。即使外层模块处于eval，也需要传正确的0值来禁用它，不能假设函数自动读取外层状态。
+27897	SECURITY · Agent 安全与控制
+19368	SFT、RLHF与偏好优化
+24427	SFT、奖励模型和偏好优化的基础流程。
+14583	SFT到底怎样处理问题与回答
+24580	SFT常常只对助手回答位置计损失。这里的
+2332	SFT提供目标答案，偏好训练比较回答，强化学习用奖励改善策略。低秩、量化和专家结构讨论参数怎样组织与计算，不是把知识库加入上下文。
+2379	SFT样本
+24821	SFT样本的关键并非只有最终文本，还包括任务分布、正确的工具调用与恢复过程、是否允许模型看到验证反馈。把失败轨迹全部删除，可能让模型只学到顺利路径；无选择地加入失败轨迹，又可能复制错误。数据设计应明示哪些动作值得模仿、哪些内容只是环境反馈。
+1962	SFT若只训练助手回答
+19369	SFT通过输入—目标输出样本训练任务行为。它可以指导格式、指令遵循和工具调用，但错误演示也可能被学到。样本如何屏蔽非目标位置，要看具体训练实现。
+10645	SFT：监督微调
+24358	SHIFT · Transformers 4.32.0 · GPT2LMHeadModel labels约定
+27889	SKILLS · Agent Skills 规范
+11849	SKILLS · Agent Skills开放规范
+11802	SKILLS · Agent Skills开放规范</a><a href="#topic-32">EVALS · Anthropic：Agent评测 [tags]
+16893	SLI、SLO是什么
+10793	SLI是实际测量的服务水平指标；SLO是该指标的目标；错误预算是相应目标允许的失败空间。它们是服务运行管理对象，不是模型参数。
+22599	SLO与降级
+25950	SLO应该围绕用户价值，例如在规定资源与时间内完成合法任务的比例，或高风险动作零未授权执行。可用性、正确性、延迟和安全是不同维度，不一定能合成一个数字。Google SRE关于SLO的实践提供了定义用户可感知指标与错误预算的方法。
+22683	SLO把服务目标定义为可度量约定，错误预算帮助理解允许的失败空间与变更风险。指标必须说明范围、时间窗和成功条件。
+22600	SLO需说明任务范围、成功定义、时间窗与预算。只读问答与自动修改应有不同目标。依赖不可用时可以降级为证据和建议，不能声称已经执行；权限不足时停止对应动作，仍可完成独立部分。
+27871	SPEC · 推测解码
+11722	SQLite事务不能回滚外部文件或网络副作用；本书故障实验只用本地临时目录。
+25064	SQLite事务能够约束自身数据库的更新，但不能自动覆盖外部文件替换或远程API；两个系统没有共享事务时，需要对账、幂等或补偿，而不是在表里写一个
+10844	SQL是操作关系数据的语言；SQLite是可嵌入应用的数据库引擎。将操作状态写入数据库，是宿主程序的持久化动作，不会修改模型神经网络参数。
+25340	SQL语义是“只有当前rev仍等于我读取的10才写入”；影响行数为0时必须作为冲突处理，而不是认为调用没抛异常就是成功。最终保留[11, c7 succeeded]。这个状态证据比检查摘要语言是否通顺更关键。
+22665	SRE监控强调从服务行为与用户影响选择信号。日志、指标和告警各有用途，收集越多不一定越容易发现问题。
+27878	SSE · SSE 事件流
+26730	SSE与工具参数状态<br/><span class="meta">章节07 · 标准库 [tags]
+26614	SSE与工具参数状态。对应第60课。依赖：标准库。
+4523	SSE事件拼好、工具参数拼好、响应流结束是三层边界。Codex所读路径在完成工具项到达后记录调用，然后选择即时或延期执行；它不要求所有调用都等整条响应流关闭。延期分派前若已取消，仍可能需要一条与call_id对应的中止输出，否则重放历史会看到只有调用、没有结果。
+15398	SSE事件边界
+26695	SSE协议分片
+10702	SSE是服务端发送事件的文本协议；网络chunk是这次收到的一段字节；delta是某个输出项的增量内容。三者边界不保证重合。一个完整事件也未必意味着完整工具参数。
+15426	SSE的事件边界
+27880	STATE · SQLite 原子提交
+13953	SVG图源</a> · 数据来自本包 TinyLM 实现与 run.json。 [tags]
+21899	SWE-agent研究面向Agent的计算机交互接口如何影响自动软件工程。搜索、读取、编辑和测试工具的设计会影响模型能否有效行动。
+22242	SWE-bench使用真实仓库问题和测试评价修复能力。任务需要理解代码并产生补丁，区别于只补全一个短函数。
+26230	SWE-bench关注真实Issue修复；AgentBench、τ-bench、GAIA覆盖不同环境中的Agent能力；LiveCodeBench关注代码评测与时间变化；OSWorld关注计算机环境。分数不能直接横向比较，因为任务、工具、预算和验收不同。
+22115	SWE-bench测试真实Issue修复，具体子集需注明；LiveCodeBench关注持续更新与污染；AgentBench、GAIA覆盖不同环境和任务。补全、算法代码、工具业务和仓库修复不是同一能力。
+22259	SWE-bench项目存在不同数据子集和评测设置。比较结果需要注明具体版本、任务集合、运行环境和允许预算。
+17405	Sampling / 采样
+17684	Sandbox / 沙箱
+15121	Scaling Laws为什么不是永恒比例表
+10082	Scaling laws研究模型规模、数据与计算预算怎样影响损失；计算最优讨论在给定预算和假设下如何分配参数与训练
+4652	Schema保证到哪一层
+4776	Schema可以约束 
+15404	Schema在检查什么
+15407	Schema在检查什么：逐项辨别
+10700	Schema是一份字段和类型等结构规则；结构化输出机制让模型更容易返回符合规则的数据。字段合法仍不等于目标文件存在、已授权或业务正确。
+11666	Schema约束不等于事实与权限正确；拒绝和不完整响应需要分支处理。
+4653	Schema约束字段、类型和部分取值结构，不保证文件存在、金额正确、用户获授权、记录版本仍有效。严格输出还可能有拒绝和不完整响应，必须显式处理。
+15405	Schema（结构约束）</strong>可以要求path是字符串且必须提供，禁止某些额外字段。它能发现“path给成数组”之类形状错误，却不证明 [tags]
+15409	Schema：结构要求
+23041	SeeClick关注GUI Grounding，将语言目标与界面中的位置对应。定位能力是计算机操作的一部分，不等于完整任务规划与业务理解。
+22824	SeeClick研究界面定位，OSWorld评价真实桌面任务。命中“保存”按钮不等于保存成功，必填项缺失就可能失败。集成执行器需要验证实际状态，而非只看坐标或模型声明。
+13553	Self-Attention的self指什么
+19622	Self-Consistency采样多条推理路径，再聚合最终答案。它增加推理时计算，不是多个独立事实来源的交叉验证。
+6566	Self-RAG原始研究包含训练与反思标记等机制，不等同于在任意模型后追加一句“请检查”。Corrective RAG也需要质量判断组件；若这个判断本身不可靠，可能触发无意义网络搜索或错误丢弃好证据。
+6602	Self-RAG式选择
+26224	Self-RAG把检索与反思相关行为纳入学习/生成机制；不能仅在普通模型前加一句“自己反思”就称复现该方法。纠错RAG类方法尝试评估证据质量并决定补充检索，但评估器本身也会错。
+22815	Self-RAG研究学习何时检索与评价生成，不只是普通Prompt加“自查”；CRAG研究证据质量不足时如何纠正。检索桥梁和自评都不是已证实事实。

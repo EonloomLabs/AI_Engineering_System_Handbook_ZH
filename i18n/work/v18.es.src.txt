@@ -1,0 +1,499 @@
+# Remaining es part 18 — 492 strings — target language: es
+# Translate every line into es. Keep the leading "N<TAB>" exactly; N is a table key, not a count.
+# [tags] lines carry inline HTML: keep every tag and its attributes unchanged.
+#        You may move tags to suit the target language's word order.
+# Keep numbers, code, file names and anchors exactly as they are.
+# Terminology: i18n/glossary.json is the book's own bilingual glossary - follow it.
+
+11790	LSP的偏移单位依据固定3.17协议的 
+16075	LSP（语言服务器协议）</strong>让编辑器向语言服务请求“定义在哪、有哪些引用、是否存在类型错误”等能力。它是通信协议，实际分析由对应语言服务完成。 [tags]
+21732	LangGraph区分预设工作流与动态Agent，并提供路由、并行和协调等编排模式。框架表达能力不等于每种模式都应该使用。
+21447	LangGraph的会话检查点与长期Store承担不同职责。前者帮助恢复当前线程状态，后者支持跨线程组织信息；具体持久化能力取决于所用实现。
+24461	Late interaction与细粒度匹配。
+10509	LayerNorm偏移；Adam平滑系数；DPO设置系数
+13432	LayerNorm先减μ，再除 
+13978	LayerNorm实际规范化哪一排数
+13429	LayerNorm的“均值、方差”多做了什么
+14061	LayerNorm的均值与方差
+13980	LayerNorm：每一格沿同一特征排计算
+17454	Learning rate / 学习率η
+24316	Linear存储weight为[out,in]，与本书右乘W[in,out]之间的转置关系。
+9370	Little关系
+24948	Little定律在稳定系统中给出
+22328	LiveCodeBench通过时间更新的代码任务关注更贴近新问题的评价和污染风险。动态数据有助于降低某些记忆化问题，但不能证明绝对没有相似训练内容。
+19095	Llama3、DeepSeek-V3、Qwen3提供不同系统案例。读报告要区分架构、数据、训练、后训练与服务优化，不能把整体表现归因于单个组件，也不把历史技术报告当当前排行榜。
+19286	Llama3报告把架构、数据、训练、后训练与评测放在完整系统中。阅读重点是多个选择如何共同影响能力，而不是只记当时参数量或排行榜。
+21500	LoCoMo关注很长对话跨度中的记忆与关联能力。长时间跨度会带来实体、事件和时间关系的复杂性，不只是输入字数更多。
+22801	LoRA、QLoRA、AWQ与蒸馏
+31258	LoRA主路
+15164	LoRA冻结基础W，是否意味着前向不再使用W？
+22802	LoRA冻结基础权重，以低秩增量
+903	LoRA只训练被选中的增量路径，并不会自动保证所有新增Embedding行可训练。需要核对
+2604	LoRA小账本
+31261	LoRA支路
+15080	LoRA改的不是整个基础模型
+10658	LoRA用两个较小矩阵的乘积表示一部分权重增量，而不是重新训练整个大矩阵。r是中间维度，限制这个乘积的最大秩。不同资料采用行/列向量约定时，A、B的左右次序可能不同。
+2557	LoRA的尺寸与梯度流
+22839	LoRA秩1增量具体长什么样
+14606	LoRA究竟训练了哪一部分
+22837	LoRA通过低秩矩阵学习基础权重的增量，通常冻结原始权重，减少可训练参数。它改变参数化行为，不是检索或会话记忆。
+27548	LoRA：冻结大表，学习小增量 — AI系统工程
+27549	LoRA：冻结大表，学习小增量</a><a href="#topic-3">逐步说明与计算记录 [tags]
+27556	LoRA：冻结大表，学习小增量：逐步运行图解
+16849	Log：具体事件
+20865	LongBench通过多任务、长输入设置评价长上下文理解。不同任务可能要求检索、总结或综合信息，不能用单一任务分数代表所有长任务能力。
+21382	LongMemEval和LoCoMo把长期互动记忆变成可测任务，但对话问答不等于工程不再犯错。原创实验比较无记忆、静态规则、按需证据记忆，覆盖旧规则仍适用、版本变更、同名不同项目、证据缺失。
+21482	LongMemEval把长期交互中的信息保留、更新与使用转成可评测任务。能存很多历史不代表能在正确时刻取出正确版本。
+7246	LongMemEval明确包含知识更新与弃答能力。
+25578	LongMemEval等评测包含跨会话信息利用、时间与更新等挑战，说明记忆评价不能只做一次事实问答。
+17260	Lookup / 查表
+13783	Loss mask又是什么
+20779	Lost in the Middle研究位置影响；LongBench和RULER从多任务考察长上下文能力。接受某个长度不代表所有任务都能可靠完成，针找回与综合多处约束也不同。结论依赖模型、任务和干扰内容。
+20830	Lost in the Middle研究相关信息在长输入中的位置如何影响模型表现。其结论来自特定模型与任务，不能写成所有新模型在中间位置必然失败。
+3803	L→Gz=(p−onehot)/10→U反传到最终F→RMSNorm到H→残差/FFN合流到R→Wo到mix→G_A→softmax到G_S→缩放点积到G_Q→Σ_b,t N1[b,t,0]G_Q[b,t,0]。还要为更早输入合并K/V和残差路径；本初值的G_Wq[0,0]约−0.002217527833。
+17201	L（层数）
+9124	M1记忆
+28082	M1输出不是最终答案，而是：
+28095	M2根据定位结果发出两个读取动作：
+22617	M2缺U7结果
+30902	M2能决定继续读取哪些范围
+28119	M3输出运行测试调用c4，而不是“我已经验证过”：
+28180	M5看到c19 unknown，选择：
+28185	M6调用测试c21，结果应表明实际在r43上运行了哪些测试。若通过，再检查改动范围和用户约束，形成最终交付。若测试期间源码再次变化，结果不能自动证明新版本正确，需要重新核对受影响范围。
+21052	MAP综合相关结果出现位置；nDCG支持分级相关性并按位置折损后归一化。若相关集未知，召回率本身也难精确测量。
+27876	MCP · MCP 架构
+11834	MCP-LIFE · MCP 2025-06-18：生命周期
+11836	MCP-TOOLS · MCP 2025-06-18：工具
+20115	MCP与A2A的边界
+17562	MCP中的应用宿主、协议客户端与提供能力的服务器角色。
+20248	MCP为模型应用接入外部能力提供标准化交互。它不是一个模型，也不是所有工具必然可用的保证，更不自动解决授权。
+25864	MCP区分Host、Client、Server，支持工具、资源等接口。发现一个工具，只说明接口可被列出；调用还需要传输、身份、授权和服务端检查。工具描述不是权限证明。
+15606	MCP可以提供发现与调用接口，但连接成功不等于所有工具已加载，更不等于所有动作都获授权。教学工具deploy虽然出现在目录中，没有部署批准就不能执行。工具read_file虽已安装，若没有进入本轮可见目录，模型可能根本不知道它。先分清“存在、可发现、可执行、允许执行”，再定位到底哪一层有问题。
+9083	MCP安全实践与幂等API设计分别强调信任边界和同一调用意图。
+9537	MCP安全设计要求资源与权限匹配，幂等API实践要求重复调用意图明确，Agent评测要求看真实环境结果而非文本声明。
+10706	MCP是一种让AI宿主连接工具和资源的协议。Host是应用，Client是它内部的协议连接参与者，Server提供能力。连接、发现、向模型暴露、授权与实际调用是不同步骤。
+16778	MCP服务可能运行在另一环境，使用另一身份。需要看完整数据路径：模型提出动作→宿主检查→工具服务执行→外部系统响应。一个局部沙箱不能自动覆盖所有连接系统。
+20266	MCP架构区分Host、Client与Server，并组织工具、资源与提示等原语。工具执行动作，资源提供内容，提示提供可复用交互结构，职责不同。
+4685	MCP解决连接与能力描述，不替业务决定授权。先把“工具存在”“本次对模型可见”“当前用户可执行”画成三个检查点，再看Schema与协议细节，就不会误认为发现成功等于有权限。
+4828	MCP请求ID关联协议响应，模型的call_id关联模型输出项；宿主可能需要维护两者映射，不要认为两个ID必然相同。
+20116	MCP连接Host、Client和Server，区分工具、资源与提示。协议标准化交互，但不保证服务可信、权限继承或模型一定调用。版本、认证与能力协商仍需核验。
+27329	MCP连起接口，不自动交出权限 — AI系统工程
+15668	MCP连起接口，不自动交出权限</a><a href="#foundations-25-s1">先别把MCP理解成“给模型装了一个新大脑”</a><a href="#foundations-25-s2">一次从连接到工具结果的逻辑次序</a><a href="#foundations-25-s3">Tools、Resources、Prompts各是什么</a><a href="#foundations-25-s4">工具Schema不应替代业务判断</a><a href="#foundations-25-s5">stdio、HTTP与JSON-RPC先只懂职责</a><a href="#foundations-25-s6">身份、认证和授权</a><a href="#foundations-25-s7">子Agent为什么不一定继承全部工具</a><a href="#self-check">课后自检 [tags]
+15571	MCP连起接口，不自动交出权限</a><a href="#foundations-25-s1">先别把MCP理解成“给模型装了一个新大脑”</a><a href="#foundations-25-s2">一次从连接到工具结果的逻辑次序</a><a href="#foundations-25-s3">Tools、Resources、Prompts各是什么</a><a href="#foundations-25-s4">工具Schema不应替代业务判断</a><a href="#foundations-25-s5">stdio、HTTP与JSON-RPC先只懂职责</a><a href="#foundations-25-s6">身份、认证和授权</a><a href="#foundations-25-s7">子Agent为什么不一定继承全部工具</a><a href="#self-check">课后自检</a><a class="sub ap-toc" href="#agent-foundation-tools">从工具名称到真实能力，中间有四道门 [tags]
+27330	MCP连起接口，不自动交出权限</a><a href="#topic-3">逐步说明与计算记录 [tags]
+25851	MCP通信和业务授权不是同一层；工具schema、身份、网络与文件边界要分别看。
+16276	MCP：连接外部工具
+27887	MEMORY · CoALA 认知架构
+27828	MEMORY · CoALA 认知架构</a><a href="#topic-34">SKILLS · Agent Skills 规范</a><a href="#topic-35">MULTI · 多Agent研究系统工程</a><a href="#topic-36">TEST · 代码审查标准</a><a href="#topic-37">EVAL · Agent评测</a><a href="#topic-38">SECURITY · Agent 安全与控制 [tags]
+19091	MHA、MQA、GQA与MoE
+24696	MHA中每个Q头通常拥有对应K、V头；GQA让一组Q头共享一个K、V头，MQA可看作只有一个KV头的极端。h不变而g减少，缓存与K/V投影输出规模下降，Q头仍可通过不同Q表示产生不同注意分布。
+11619	MHA的布尔掩码True表示禁止对应位置，与SDPA语义相反。
+19092	MHA通常为不同查询头提供独立KV；MQA共享单组KV；GQA让查询头分组共享。减少KV头有助于缓存和带宽，但不保证相同比例端到端加速。MoE是另一层面的稀疏性：路由器选择少数专家网络处理Token，不是多个聊天Agent开会。总参数与激活参数也不是同一个量。
+29617	MHA：每个查询头有自己的K/V
+24431	MLA、MoE与相关架构；仅解释所用机制，不声称复现报告全部实验。
+10842	MLA指多头潜在注意力的一类架构。用较低维的潜在表示联合组织K/V相关内容，并按设计处理位置部分。它改变模型表示与参数结构，不只是把普通KV文件用ZIP压缩。
+10222	MLA边界
+29619	MQA：所有查询头共享一组K/V
+21337	MRR贡献不同。
+27891	MULTI · 多Agent研究系统工程
+22070	Managed Agents文章讨论把模型运行、会话状态和执行环境解耦。这样可以减少单一容器或进程故障对整个任务连续性的影响，但也增加边界设计需求。
+22596	Managed Agents案例把会话事件、Harness与沙箱解耦，减少执行环境故障的耦合。小型本地Agent不必立即拆成多个服务，但可保持接口清晰并逐步增加恢复能力。
+27160	Mask是可见性表，不是额外语义 — AI系统工程
+27161	Mask是可见性表，不是额外语义</a><a href="#topic-3">逐步说明与计算记录 [tags]
+13727	Mask是规则表
+13725	Mask（掩码）</strong>是一份控制哪些元素允许参与某项运算的标记。在注意力里，一行是一个查询位置，一列是一个被读取位置。因此一个格子回答“这一行能不能读这一列”。 [tags]
+21536	Mem0研究记忆抽取、维护与规模化使用。自动提取可以减少手工记录，但决定什么值得长期保存仍然是有误差的判断。
+21410	MemGPT借鉴分层存储思想，通过管理上下文内外的信息应对有限窗口。外部存储与换入换出并没有让单次模型调用获得无限物理上下文。
+21359	MemGPT借鉴分层存储思路管理上下文换入换出。“虚拟上下文”依赖外部存储和调度，不意味着一次模型调用能处理无限内容。Checkpoint保存线程执行状态，长期Store保存跨任务信息；选择内存实现也不会自动得到进程重启后的持久化。
+17090	Memory：跨任务保留
+28969	Mermaid源文件
+16850	Metrics：整体量化
+17496	MoE / 专家混合
+2550	MoE router是模型内部、Token粒度的可训练计算；Agent路由通常在请求或子任务粒度选择一个完整模型、工具或技能。二者预算、训练方法和失败模式不同。不要把“MoE已经路由”当作不需要Agent任务分派的理由。
+15106	MoE为什么很多参数但只调用部分
+10232	MoE改变前馈计算的稀疏选择；MLA改变注意力表示；
+10630	MoE是包含多套子网络的模型结构；路由器为当前Token表示选择或加权少数专家。专家通常是数值子网络，不是被赋予“数学老师”等提示词的聊天Agent。
+2526	MoE路由选两个专家，结果怎样合成
+15107	MoE（混合专家）</strong>在一些层准备多组可选择的子网络，路由器根据当前Token表示选择部分专家计算，再合并结果。例如有8个专家，每个Token只选择2个。 [tags]
+27671	MoE：每个Token选部分计算路径 — AI系统工程
+27672	MoE：每个Token选部分计算路径</a><a href="#topic-3">逐步说明与计算记录 [tags]
+27679	MoE：每个Token选部分计算路径：逐步运行图解
+8370	Mock使测试快速确定，适合隔离局部行为；真实集成验证协议、配置和边界。若全部mock，可能错过实际
+19550	Model Spec描述期望行为与指令冲突处理，是规范而非运行时权限保证。本书用可核验的2025-12-18版本解释概念，不将历史版冒充最新规范。
+19910	Model Spec是期望行为规范，不是运行时权限系统。本文依据可核验历史版本说明概念，不宣称它代表所有模型的最新行为。低信任内容可以提供事实，但不能自行授权；高优先级指令约束行为，也不使其中的外部事实永远正确。
+1223	Module的eval模式改变模块行为，不会神奇地把任意函数入参改成0。PyTorch文档明确说SDPA依
+10854	MultiheadAttention包含投影等完整层级逻辑；scaled_dot_product_attention直接计算给定Query/Key/Value之间的注意力。核对接口负责的阶段，可避免重复投影及掩码极性误用。这里不承诺所有库采用相同布局。
+17659	Mutation / 变异测试
+25741	Mutation分数也不能单独代表质量。很多机械突变没有业务意义，有些等价变换不应导致失败。优先针对真实失败模式设计负对照，比盲目追求杀死所有变异更有价值。
+20995	M不等于H前缀
+17198	N / V（词表）
+26750	N01 · Codex Agent Loop：模型、上下文与工具循环
+26740	N01 · Codex Agent Loop：模型、上下文与工具循环</a><a href="#section-2">N02 · Codex project_doc.rs：项目规则发现与预算</a><a href="#section-3">N03 · Codex codex.rs：初始上下文与run_turn</a><a href="#section-4">N04 · Codex compact.rs：一种本地压缩路径</a><a href="#section-5">N05 · Codex SSE响应事件转换</a><a href="#section-6">N06 · OpenAI Compaction：压缩状态与连续会话 [tags]
+26756	N02 · Codex project_doc.rs：项目规则发现与预算
+26760	N03 · Codex codex.rs：初始上下文与run_turn
+26762	N04 · Codex compact.rs：一种本地压缩路径
+26764	N05 · Codex SSE响应事件转换
+26767	N06 · OpenAI Compaction：压缩状态与连续会话
+13519	N1分别乘上述参数的本次结果
+26805	N32 · Stanford信息检索教材：BM25
+26743	N32 · Stanford信息检索教材：BM25</a><a href="#section-33">N33 · Faiss索引类型</a><a href="#section-34">N34 · LSP 3.17官方元模型 [tags]
+26808	N33 · Faiss索引类型
+26811	N34 · LSP 3.17官方元模型
+1479	Norm、Dropout、权重共享等改动会牵动哪里
+10462	Norm函数、softmax、mask、执行状态
+10610	Norm在层公式中表示一个规范化函数。LayerNorm通常按一个Token的特征减均值、除标准差，再缩放平移；RMSNorm通常不减均值，按均方根缩放。它们不等于softmax。
+10123	N变20亿
+6098	N是文档数，df是包含该词的文档数；tf是该词在当前文档出现次数；|d|是长度，avgdl是平均长度。k1影响饱和速度，b控制长度归一化，b=0不按长度调整，b=1更充分按相对长度调整。分词与索引单位会影响所有统计。
+10105	N约减半
+15199	O(T²)到底是什么意思
+26970	O01 · 4步
+27805	O01 · GQA/MQA：减少的是K/V组数
+26973	O02 · 4步
+27809	O02 · 量化：省存储，也引入近似
+27271	O02 · 量化：省存储，也引入近似</a><a href="O03.html">O03 · LoRA：冻结大表，学习小增量</a><a href="O08.html">O08 · MoE：每个Token选部分计算路径 [tags]
+26976	O03 · 4步
+27810	O03 · LoRA：冻结大表，学习小增量
+26979	O04 · 5步
+27811	O04 · FlashAttention：一边读一边累计，不攒整张表
+27282	O04 · FlashAttention：一边读一边累计，不攒整张表</a><a href="O05.html">O05 · PagedAttention：逻辑连续，物理可以分块</a><a href="O06.html">O06 · 连续组批：有座位空出来，就接下一位</a><a href="O09.html">O09 · Activation Checkpointing：少存一点，反向时重算 [tags]
+26982	O05 · 4步
+27812	O05 · PagedAttention：逻辑连续，物理可以分块
+26985	O06 · 4步
+27813	O06 · 连续组批：有座位空出来，就接下一位
+26988	O07 · 5步
+27814	O07 · 推测解码：草稿可以快，但必须正确校验
+26991	O08 · 4步
+27815	O08 · MoE：每个Token选部分计算路径
+26994	O09 · 5步
+27816	O09 · Activation Checkpointing：少存一点，反向时重算
+26997	O10 · 4步
+27817	O10 · 压缩、检索与Prompt Cache：三种不同的“省”
+27000	O11 · 4步
+27818	O11 · 多Agent：可并行的工作，比Agent数量重要
+27003	O12 · 4步
+27819	O12 · 模型路由：便宜一次，不一定便宜一项成功任务
+23024	OSWorld在真实计算机环境中评价多模态Agent任务。任务包含规划、定位、动作与结果验证，不只是识别界面元素。
+26132	OSWorld等基准在真实计算机环境中评价开放式任务，强调最终环境状态，而不只是截图描述正确与否。不同操作系统、应用版本、分辨率和初始状态会影响结果，不能把一个基准分数直接解释成任意桌面自动化可靠性。
+22528	OWASP Agentic Security Initiative提供持续的研究与治理入口。安全不是一次性安装检查器，而是随着工具、权限和环境变化重新评估。
+22395	OWASP的LLM安全资料提供风险类别与防护讨论。版本会更新，本书按机制展开，不把未经逐项核验的旧编号冒充2026版完整榜单。
+17255	One-hot / 独热编码
+12789	One-hot与Embedding确实有数学联系：</strong>如果把One-hot当作一行数字，并与6行4列的Embedding矩阵相乘，结果恰好选出第2行。这称为一种等价的数学表达；实际实现通常直接按编号查表，不需要真的先生成那6个0/1再做矩阵乘法。 [tags]
+12788	One-hot也不是一般意义的二进制数：</strong>它的长度取决于词表有多少项；当词表变大，One-hot会更长。而整数2的二进制表示取决于整数存储格式。 [tags]
+12782	One-hot（独热）向量
+20901	OpenAI Compaction提供专用压缩状态，使长交互能够在有限上下文中继续。部分返回内容是不透明或加密表示，不应假设它等同于一段可编辑的人类摘要。
+20365	OpenAI的工程文章来自特定团队案例，强调知识在仓库中有组织地可发现，重要边界由可执行检查维护，而不是把全部规则堆进巨大入口文件。不能把案例结果外推成所有项目的效率承诺。
+25913	OpenTelemetry提供生成式AI相关语义约定，且规范位置与字段会演进。本书采用任务/调用/工具/验证这些稳定概念，不把某个未稳定字段硬编码为永恒标准。接入生产时应固定SDK与约定版本。
+22631	OpenTelemetry的GenAI语义约定尝试统一生成式AI操作的记录方式。相关规范持续演进，字段与支持情况需要按版本核对。
+10735	Outbox把业务变更和待发送消息一起持久化，再由投递器转发；Saga把跨服务步骤组织为可补偿流程。它们是解决跨边界可靠性的设计，不是天然保证远端恰好执行一次。
+7972	Outbox把业务变更和待发送消息一起持久化，再由投递器转发；Saga把跨服务步骤组织为可补偿流程。它们是解决跨边界可靠性的设计，不是天然保证远端恰好执行一次。<span class="concept-micro">发过的邮件通常不能让收件人“没看过”。补偿可能是发更正通知，不能等同真正撤销历史效果。 [tags]
+27835	PADDING · 组批、补齐与截断
+13752	PAD、attention mask和loss mask不要合并
+24704	PAD不是有效的历史词。
+14747	PAD不是有效结束位置
+14431	PAD不贡献loss，也不贡献有效数量
+13761	PAD位置：1,1,0
+12864	PAD向量全为0
+14306	PAD或忽略标签不计数
+28987	PAD是占位，不是“你爱”的第三个词。
+1573	PAD查询位置2
+13765	PAD查询行本身不是本次有意义的输出，不用它继续生成，也不让其预测计入正常损失。实际内核怎样避免全屏蔽行的数值问题，要遵守接口语义，不能盲目把整行都填负无穷。
+12861	PAD行是零，就能不用mask吗
+12863	PAD行是零，就能不用mask吗：逐项辨别
+12827	PAD（非原文）
+22905	PEFT工具库组织参数高效微调方法，帮助实现适配训练。工具能降低实现成本，但不替代训练数据、许可、评价和部署兼容性治理。
+14641	PPO、GRPO为什么不能靠缩写互换
+2434	PPO常对新旧策略概率比
+14642	PPO是一类策略优化方法，常用新旧策略概率比及裁剪等机制控制更新；RLHF某些流程会训练奖励模型和价值估计。GRPO类方法利用同一问题多个采样结果的组内比较形成优势，具体实现与奖励设计仍重要。
+24846	PPO正优势被裁剪，负优势却不是同一种取法
+2476	PPO还可有价值估计与裁剪概率比
+19535	PPO通过限制策略更新等设计改善优化稳定性，最初不是专为LLM提出。语言模型训练可把生成视作策略行为，但奖励、采样与参考约束仍需具体实现。
+3685	PP把前几层放设备A、后几层放B。一个micro-batch先经过A，再把激活送到B；多个micro-batch可形成流水线，但启动/结束存在气泡。阶段计算量不平衡会让快设备等待慢设备；推理单条自回归序列还需在每Token重新穿过各阶段。
+11780	PR已合并；该提交中提供num_items_in_batch时使用损失总和再除以该数；CausalLM损失先移动logits与labels。
+17243	Padding / 补齐
+12654	Padding（补齐）</strong>是在短输入中增加占位项，不是在原话中补出有意义的新内容。编号0在本教材恰好是PAD；真实模型的PAD编号可能不同，也可能需要按模型配置处理。 [tags]
+12709	Padding：补占位
+15226	PagedAttention与连续组批
+3490	PagedAttention与连续组批：管理存储和调度
+19815	PagedAttention按块管理KV缓存，减少连续预留空间浪费，并支持相应共享。它主要解决服务端内存和吞吐，不直接提高答案事实性。
+27599	PagedAttention：逻辑连续，物理可以分块 — AI系统工程
+27600	PagedAttention：逻辑连续，物理可以分块</a><a href="#topic-3">逐步说明与计算记录 [tags]
+27607	PagedAttention：逻辑连续，物理可以分块：逐步运行图解
+17699	Patch / 多模态编码
+4038	Plan保存希望完成的步骤，Checkpoint保存可恢复的执行位置和状态，长期记忆保存未来可复用事实或经验。计划“测试”不证明测试运行过；Checkpoint中一次通过不代表跨版本永远通过；长期经验“此类接口要幂等”也不能替代当前调用的状态。
+13835	Position ID：位于第几位
+11712	PositionEncodingKind（position.md blob 49f13964bc12c6e65c35a349c33e7e3314245c60）及文档版本
+4347	PostToolUse阻止
+21330	Precision关注返回结果中有多少相关，Recall关注必要证据找到多少；MRR、MAP和nDCG进一步考虑排序与相关程度。它们衡量不同目标，不能互相替代。
+16580	Precision：预测为真中多少真
+10673	Prefill / Decode：两种计算阶段
+3687	Prefill/Decode分离在Prefill设备算完后把KV等必要状态送给Decode设备。资源可分别针对吞吐/带宽优化，但KV传输可能很大：第60课例子一条32k序列就是4GiB。若网络慢、上下文短或请求量小，分离收益可能被传输与排队抵消。
+14751	Prefill和Decode只是两种运行阶段
+19779	Prefill处理已知输入，Decode扩展新序列，二者的并行与访存特征不同。不能把所有耗时都归为一个笼统的模型速度。
+19662	Prefill处理已知输入，Decode逐步生成新Token。前者能批量处理已有序列，后者存在自回归依赖。两者对计算与访存的需求不同，不能只按输入输出Token总数估算响应时间。
+10674	Prefill处理已经给定的一段输入，形成表示与缓存；Decode把刚选出的新Token送入，预测再下一个。选出来的新Token要到下一次前向才产生自己的K/V。
+24928	Prefill处理整个输入前缀，矩阵运算通常具有更高并行度；Decode每步只新增少量位置，却需要读取模型权重和增长的KV。具体瓶颈取决于batch、模型、精度与硬件，不能绝对说前者总是算力受限、后者总是带宽受限。它们是常见分析方向，不是无需测量的结论。
+2709	Prefill末尾预测
+2707	Prefill输入
+28033	Prefill输入[1,2,3]
+14752	Prefill（预填充）</strong>是处理已经给定的整段输入，生成各层所需表示及可保留的中间结果。Prefill结束时最后位置已有下一Token分数，所以可以选出第一个输出Token。 [tags]
+19675	Prompt Cache不是压缩
+15723	Prompt Cache为什么需要稳定前缀
+19676	Prompt Caching复用匹配前缀的计算；压缩改变真正提供的信息。命中缓存不代表上下文不占窗口，失去缓存也不代表历史被删除。稳定前缀有利于复用，但不应为了缓存保留大量无关规则。
+19796	Prompt Caching复用符合条件的相同前缀计算，不改变上下文内容本身。阈值、保留时间与计费是产品规则，不能无版本记成普遍常数。
+10797	Prompt Injection、沙箱与权限
+16764	Prompt Injection（提示注入）</strong>利用进入模型上下文的数据，试图改变模型行为。<strong>间接注入</strong>把恶意指令藏在网页、文档、邮件或工具结果里，而不是直接作为正常用户请求出现。 [tags]
+15695	Prompt assembly或context assembly</strong>就是宿主选择、组织这些内容的过程。它既涉及什么该读，也涉及身份、顺序、预算和证据适用性。 [tags]
+15616	Prompts：提示模板
+17064	Prompt、RAG、Memory、Skill和Fine-tuning怎样选
+17087	Prompt、RAG、Memory、Skill和Fine-tuning怎样选：逐项辨别
+25606	Prompt、Skill、工具、模型各在不同层起作用；先确认失败点，再改变路由。
+23770	Prompt、工具、上下文裁剪和模型配置都可能改变质量。官方产品复盘表明Harness调整也会造成回退，因此长任务、压缩、恢复和边界任务需要覆盖。
+19933	Prompt版本与实验
+19959	Prompt管理涉及模板、变量、复用与版本。复用可以减少重复组织，但不同任务需要的证据与约束仍应区分，模板不宜变成所有场景的固定长流程。
+25996	Prompt缓存依赖服务支持的可复用前缀。稳定系统说明和工具定义可能有帮助，但动态任务事实不能为追求命中而固定不更新。第59课区分了KV状态与服务计费缓存。
+20987	Prompt缓存复用符合条件的相同前缀计算，压缩与编辑则改变内容。二者可能互相影响，但影响范围取决于实际修改位置和产品规则。
+2704	Prompt长3，再生成2个Token，逐轮列出长度
+16274	Prompt：本轮指令
+17088	Prompt：表达任务
+17579	Provenance / 来源追溯
+3139	PyTorch 2.10 SDPA的非方阵 
+10852	PyTorch Linear · 参数与形状
+23244	PyTorch通过张量与自动求导支持模型实现。自动求导计算梯度，优化器更新参数，两者不是同一动作；推理通常不需要保存同样的训练图。
+11863	Python 3.10及以上，仅使用标准库。在解压目录执行：
+23866	Python 3.10及以上，仅标准库；无需API、账号或网络。
+9598	P声明基线v7与改动范围
+1862	P约 
+30473	Q · 参与匹配
+10454	Q/K/V、分数S、份额A、隐藏状态、logits
+27133	Q/K/V：先算从哪读，再算读进多少 — AI系统工程
+27134	Q/K/V：先算从哪读，再算读进多少</a><a href="#topic-3">逐步说明与计算记录 [tags]
+27143	Q/K/V：先算从哪读，再算读进多少：逐步运行图解
+18275	Q001 · 一次任务里的两轮模型调用，各自多知道了什么</a><small>chapters/09.html · 正文对应小节 [tags]
+18544	Q001 · 一次任务里的两轮模型调用，各自多知道了什么</a><small>reading-notes/guide-04.html · 正文对应小节 [tags]
+18763	Q001 · 一次任务里的两轮模型调用，各自多知道了什么</a><small>reading-notes/guide-05.html · 正文对应小节 [tags]
+18383	Q001 · 一次任务里的两轮模型调用，各自多知道了什么</a><small>studies/chapters/09.html · 正文对应小节 [tags]
+3821	Q001｜用户输入一句话后，Agent怎样经过多轮模型调用完成任务？
+18276	Q002 · 模型说“写好了”，任务记录和磁盘可能各是另一回事</a><small>chapters/09.html · 正文对应小节 [tags]
+3976	Q002｜Agent有哪些状态？为什么对话摘要不能替代任务数据库？
+18277	Q003 · 有状态与无状态接口，区别在于谁保存前一轮对象</a><small>chapters/09.html · 正文对应小节 [tags]
+18385	Q003 · 有状态与无状态接口，区别在于谁保存前一轮对象</a><small>studies/chapters/10.html · 正文对应小节 [tags]
+4042	Q003｜无状态API与有状态会话各怎样构建下一轮输入？会话ID是不是长期记忆？
+18278	Q004 · 结束判定要看证据增量，而不是循环次数本身</a><small>chapters/09.html · 正文对应小节 [tags]
+4170	Q004｜Agent何时应该停？为什么“继续直到完成”容易变成死循环？
+18327	Q005 · 完成条件应包含“不能改变什么”，不只包含一个成功例</a><small>chapters/22.html · 正文对应小节 [tags]
+18411	Q005 · 完成条件应包含“不能改变什么”，不只包含一个成功例</a><small>studies/chapters/18.html · 正文对应小节 [tags]
+8236	Q005｜怎样把模糊需求变成Agent能验证的完成条件？
+18328	Q006 · 绿色测试需要绑定“真的运行过”和“当前版本”</a><small>chapters/22.html · 正文对应小节 [tags]
+18381	Q006 · 绿色测试需要绑定“真的运行过”和“当前版本”</a><small>studies/chapters/08.html · 正文对应小节 [tags]
+18413	Q006 · 绿色测试需要绑定“真的运行过”和“当前版本”</a><small>studies/chapters/18.html · 正文对应小节 [tags]
+18442	Q006 · 绿色测试需要绑定“真的运行过”和“当前版本”</a><small>studies/chapters/27.html · 正文对应小节 [tags]
+18450	Q006 · 绿色测试需要绑定“真的运行过”和“当前版本”</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+8314	Q006｜为什么测试全绿仍可能是假完成？怎样识别弱测试与过期验证？
+18329	Q007 · Review是否值得，取决于新证据而非固定多走一轮</a><small>chapters/22.html · 正文对应小节 [tags]
+18412	Q007 · Review是否值得，取决于新证据而非固定多走一轮</a><small>studies/chapters/18.html · 正文对应小节 [tags]
+8393	Q007｜Review什么时候值得？怎样避免分析—审查—重设计无限循环？
+18330	Q008 · 测Prompt的行为契约，不要把每个字节都当业务要求</a><small>chapters/22.html · 正文对应小节 [tags]
+8449	Q008｜测试Skill或Prompt为什么不宜大量使用hash快照？应该测什么？
+18279	Q009 · 函数调用的JSON是订单，执行器才是履行订单的人</a><small>chapters/10.html · 正文对应小节 [tags]
+4268	Q009｜Function Calling到底是谁调用函数？模型怎样知道工具参数？
+11891	Q010 · 中文字符被拆成三个网络片段，为什么不能逐片decode
+18280	Q010 · 字节、事件、参数三种完整性，分别用不同缓冲区处理</a><small>chapters/10.html · 正文对应小节 [tags]
+18376	Q010 · 字节、事件、参数三种完整性，分别用不同缓冲区处理</a><small>studies/chapters/07.html · 正文对应小节 [tags]
+4384	Q010｜流式输出为什么不能收到半段JSON就执行？SSE具体怎么解析？
+18281	Q011 · 结果先回来，不代表它属于第一个调用</a><small>chapters/10.html · 正文对应小节 [tags]
+4525	Q011｜并行工具结果乱序返回，如何配对？哪些错误可以交给模型修？
+18282	Q012 · Schema通过后，还有业务合法性与授权两层检查</a><small>chapters/10.html · 正文对应小节 [tags]
+18378	Q012 · Schema通过后，还有业务合法性与授权两层检查</a><small>studies/chapters/07.html · 正文对应小节 [tags]
+4585	Q012｜Structured Outputs怎样约束生成？为什么符合Schema仍不等于可执行？
+18283	Q013 · 工具粒度要按常见工作单元，而非函数越少越好</a><small>chapters/11.html · 正文对应小节 [tags]
+4688	Q013｜给Agent设计工具时，应该拆成很多小工具还是一个万能工具？
+18284	Q014 · MCP先协商能力，再发现工具，最后才尝试调用</a><small>chapters/11.html · 正文对应小节 [tags]
+4788	Q014｜MCP从连接到调用工具经历哪些消息？Host、Client、Server分别是谁？
+18285	Q015 · 资源、提示、工具和Skill，用同一任务看分工</a><small>chapters/11.html · 正文对应小节 [tags]
+4881	Q015｜MCP Tools、Resources、Prompts与Skills分别是什么？
+18286	Q016 · 错误发生在哪一层，决定该修参数还是修连接</a><small>chapters/11.html · 正文对应小节 [tags]
+4929	Q016｜MCP报错应怎样分层？身份与网络边界在哪里？
+18291	Q017 · 上下文预算，先扣掉必须保留的空间再选资料</a><small>chapters/13.html · 正文对应小节 [tags]
+5366	Q017｜模型一轮输入应由哪些对象组成？预算应该怎么计算？
+18292	Q018 · 只取命中的一行，可能把判断条件一起丢掉</a><small>chapters/13.html · 正文对应小节 [tags]
+18388	Q018 · 只取命中的一行，可能把判断条件一起丢掉</a><small>studies/chapters/11.html · 正文对应小节 [tags]
+5441	Q018｜JIT加载怎样既省Token又不漏关键内容？为什么要补“依赖闭包”？
+18293	Q019 · 缓存前缀是在复用相同前段，不是复用“差不多的意思”</a><small>chapters/13.html · 正文对应小节 [tags]
+18427	Q019 · 缓存前缀是在复用相同前段，不是复用“差不多的意思”</a><small>studies/chapters/22.html · 正文对应小节 [tags]
+5524	Q019｜Prompt Cache为什么要求稳定前缀？怎样算压缩后的缓存得失？
+18294	Q020 · 指令冲突与事实冲突，不能用同一“最新优先”解决</a><small>chapters/13.html · 正文对应小节 [tags]
+18389	Q020 · 指令冲突与事实冲突，不能用同一“最新优先”解决</a><small>studies/chapters/11.html · 正文对应小节 [tags]
+5607	Q020｜上下文中有互相冲突的指令和事实时，应该如何排列与裁决？
+18315	Q021 · Skill有效应用是一条证据链，不是一个“loaded”日志</a><small>chapters/19.html · 正文对应小节 [tags]
+18398	Q021 · Skill有效应用是一条证据链，不是一个“loaded”日志</a><small>studies/chapters/14.html · 正文对应小节 [tags]
+18405	Q021 · Skill有效应用是一条证据链，不是一个“loaded”日志</a><small>studies/chapters/16.html · 正文对应小节 [tags]
+18447	Q021 · Skill有效应用是一条证据链，不是一个“loaded”日志</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+7268	Q021｜一个Skill从存在于磁盘到真正影响输出，经历哪些阶段？
+18316	Q022 · 路由描述的好坏，要看正例与近邻反例是否分得开</a><small>chapters/19.html · 正文对应小节 [tags]
+18404	Q022 · 路由描述的好坏，要看正例与近邻反例是否分得开</a><small>studies/chapters/16.html · 正文对应小节 [tags]
+7367	Q022｜怎样写路由Description，既不漏边界任务又不过度触发？
+18317	Q023 · 把需要确定执行的动作放在程序里，不只写进说明</a><small>chapters/19.html · 正文对应小节 [tags]
+18390	Q023 · 把需要确定执行的动作放在程序里，不只写进说明</a><small>studies/chapters/11.html · 正文对应小节 [tags]
+7425	Q023｜Skill、Instruction、Hook、Tool和Agent分别应该承担什么？
+18318	Q024 · 便宜模型先试的收益，要减掉返工与漏检</a><small>chapters/19.html · 正文对应小节 [tags]
+18369	Q024 · 便宜模型先试的收益，要减掉返工与漏检</a><small>studies/chapters/04.html · 正文对应小节 [tags]
+18406	Q024 · 便宜模型先试的收益，要减掉返工与漏检</a><small>studies/chapters/16.html · 正文对应小节 [tags]
+18426	Q024 · 便宜模型先试的收益，要减掉返工与漏检</a><small>studies/chapters/22.html · 正文对应小节 [tags]
+7484	Q024｜多模型路由怎样优化成本而不牺牲质量？为什么不能只按Prompt长度选模型？
+18287	Q025 · 读源码时，把“注册、暴露、构造调用、分派”拆开</a><small>chapters/12.html · 正文对应小节 [tags]
+18545	Q025 · 读源码时，把“注册、暴露、构造调用、分派”拆开</a><small>reading-notes/guide-05.html · 正文对应小节 [tags]
+5023	Q025｜Codex源码里，工具从模型可见到真正分派经过哪些对象？压缩又怎样替换历史？
+18288	Q026 · 子Agent继承什么，要逐字段检查而不是说“全继承”</a><small>chapters/12.html · 正文对应小节 [tags]
+18386	Q026 · 子Agent继承什么，要逐字段检查而不是说“全继承”</a><small>studies/chapters/10.html · 正文对应小节 [tags]
+5141	Q026｜Claude Code怎样获得项目上下文？Subagent为什么不等于主Agent的完全复制？
+18289	Q027 · IDE、CLI与云端任务的工作区不是天然同一份</a><small>chapters/12.html · 正文对应小节 [tags]
+18387	Q027 · IDE、CLI与云端任务的工作区不是天然同一份</a><small>studies/chapters/10.html · 正文对应小节 [tags]
+5240	Q027｜Copilot的IDE、CLI、云端Agent为什么必须分开看？
+18290	Q028 · 把“它不懂我项目”改成可以排除的四个假设</a><small>chapters/12.html · 正文对应小节 [tags]
+18382	Q028 · 把“它不懂我项目”改成可以排除的四个假设</a><small>studies/chapters/09.html · 正文对应小节 [tags]
+5295	Q028｜怎样把“产品不好用”的抱怨转成可定位的问题？
+18299	Q029 · 分块时，表头与例外条款可能是答案的一部分</a><small>chapters/15.html · 正文对应小节 [tags]
+6014	Q029｜RAG建库从原文件到索引经历哪些步骤？Chunk应该怎样切？
+18300	Q030 · BM25把词频与长度放在同一个分母里比较</a><small>chapters/15.html · 正文对应小节 [tags]
+18394	Q030 · BM25把词频与长度放在同一个分母里比较</a><small>studies/chapters/13.html · 正文对应小节 [tags]
+11892	Q030 · 两个文档都含“排除”，BM25为什么不只数次数
+6089	Q030｜BM25的公式每一项做什么？为什么词出现四次不一定比两次得分高？
+18301	Q031 · 向量同维度，不代表能放在同一个相似度空间</a><small>chapters/15.html · 正文对应小节 [tags]
+18395	Q031 · 向量同维度，不代表能放在同一个相似度空间</a><small>studies/chapters/13.html · 正文对应小节 [tags]
+18457	Q031 · 向量同维度，不代表能放在同一个相似度空间</a><small>studies/chapters/31.html · 正文对应小节 [tags]
+6141	Q031｜Embedding检索模型怎样训练？为什么语义相似不等于回答相关？
+18302	Q032 · 先检索少量候选再过滤，可能一个结果也剩不下</a><small>chapters/15.html · 正文对应小节 [tags]
+6225	Q032｜HNSW怎样近似找最近邻？权限过滤放在哪一步才安全？
+18303	Q033 · RRF融合的是排名，不是把BM25与余弦分数硬相加</a><small>chapters/16.html · 正文对应小节 [tags]
+18549	Q033 · RRF融合的是排名，不是把BM25与余弦分数硬相加</a><small>reading-notes/guide-09.html · 正文对应小节 [tags]
+18396	Q033 · RRF融合的是排名，不是把BM25与余弦分数硬相加</a><small>studies/chapters/13.html · 正文对应小节 [tags]
+11893	Q033 · 两张排名表，逐行融合成RRF
+6318	Q033｜BM25与向量检索怎样融合？RRF为什么不直接相加原始分数？
+18304	Q034 · Reranker更精细，是因为它有机会同时看查询与候选</a><small>chapters/16.html · 正文对应小节 [tags]
+18764	Q034 · Reranker更精细，是因为它有机会同时看查询与候选</a><small>reading-notes/guide-09.html · 正文对应小节 [tags]
+6410	Q034｜Cross-encoder Reranker和ColBERT为什么比简单余弦更细？
+18305	Q035 · 一个结论需要哪些证据，逐句列出来才知道够不够</a><small>chapters/16.html · 正文对应小节 [tags]
+18435	Q035 · 一个结论需要哪些证据，逐句列出来才知道够不够</a><small>studies/chapters/25.html · 正文对应小节 [tags]
+6471	Q035｜检索到了相关资料，如何判断已经足够回答？引用怎样与结论绑定？
+18306	Q036 · 先定位检索失败类型，再决定是否增加高级RAG组件</a><small>chapters/16.html · 正文对应小节 [tags]
+18440	Q036 · 先定位检索失败类型，再决定是否增加高级RAG组件</a><small>studies/chapters/26.html · 正文对应小节 [tags]
+6547	Q036｜HyDE、RAPTOR、GraphRAG、Self-RAG分别解决哪个失败环节？什么时候不该用？
+18307	Q037 · grep、AST、LSP、运行日志分别回答不同层的问题</a><small>chapters/17.html · 正文对应小节 [tags]
+18397	Q037 · grep、AST、LSP、运行日志分别回答不同层的问题</a><small>studies/chapters/14.html · 正文对应小节 [tags]
+6628	Q037｜grep、AST、LSP、调用图各知道什么？为什么不能互相替代？
+18308	Q038 · 同一路径，commit、工作树、编辑器可以有三份内容</a><small>chapters/17.html · 正文对应小节 [tags]
+18399	Q038 · 同一路径，commit、工作树、编辑器可以有三份内容</a><small>studies/chapters/14.html · 正文对应小节 [tags]
+18449	Q038 · 同一路径，commit、工作树、编辑器可以有三份内容</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+6738	Q038｜代码索引怎样处理Git版本、工作树和未保存文件？
+18309	Q039 · 定位Bug：用能区分假设的输入，而不是盲目多读文件</a><small>chapters/17.html · 正文对应小节 [tags]
+18441	Q039 · 定位Bug：用能区分假设的输入，而不是盲目多读文件</a><small>studies/chapters/27.html · 正文对应小节 [tags]
+6821	Q039｜一个Bug应怎样逐步定位？为什么“多读源码”不是充分方法？
+18310	Q040 · 业务规则要有可执行的例外，而不只是一句口号</a><small>chapters/17.html · 正文对应小节 [tags]
+18446	Q040 · 业务规则要有可执行的例外，而不只是一句口号</a><small>studies/chapters/28.html · 正文对应小节 [tags]
+6875	Q040｜怎样让Agent“懂业务”，而不是每次只看局部代码？
+18295	Q041 · 四种“节省上下文”操作，保留的东西完全不同</a><small>chapters/14.html · 正文对应小节 [tags]
+5675	Q041｜Compaction与截断、Prompt Cache、外部记忆有什么根本区别？
+18296	Q042 · 压缩候选生成期间，新工具结果不能被旧快照覆盖</a><small>chapters/14.html · 正文对应小节 [tags]
+18384	Q042 · 压缩候选生成期间，新工具结果不能被旧快照覆盖</a><small>studies/chapters/09.html · 正文对应小节 [tags]
+18392	Q042 · 压缩候选生成期间，新工具结果不能被旧快照覆盖</a><small>studies/chapters/12.html · 正文对应小节 [tags]
+5787	Q042｜一次安全压缩应该按什么顺序运行？为什么要避免边执行边替换？
+18297	Q043 · 找回证据需要内容身份，而不只是一个文件名</a><small>chapters/14.html · 正文对应小节 [tags]
+18393	Q043 · 找回证据需要内容身份，而不只是一个文件名</a><small>studies/chapters/12.html · 正文对应小节 [tags]
+5874	Q043｜压缩后怎样找回原始证据？摘要与外部存储如何协作？
+18298	Q044 · 保真检查要问“还能正确做什么”，不只看摘要像不像</a><small>chapters/14.html · 正文对应小节 [tags]
+18391	Q044 · 保真检查要问“还能正确做什么”，不只看摘要像不像</a><small>studies/chapters/12.html · 正文对应小节 [tags]
+18448	Q044 · 保真检查要问“还能正确做什么”，不只看摘要像不像</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+5940	Q044｜如何评估压缩保真？只比较摘要与原文相似度为什么不够？
+18311	Q045 · 四类记忆放在不同地方，才不会把临时假设当永久规则</a><small>chapters/18.html · 正文对应小节 [tags]
+18550	Q045 · 四类记忆放在不同地方，才不会把临时假设当永久规则</a><small>reading-notes/guide-10.html · 正文对应小节 [tags]
+6944	Q045｜工作记忆、情景记忆、语义记忆、程序性记忆有什么区别？
+18312	Q046 · 信息写入长期记忆前，要把观察、假设、规则分开</a><small>chapters/18.html · 正文对应小节 [tags]
+18401	Q046 · 信息写入长期记忆前，要把观察、假设、规则分开</a><small>studies/chapters/15.html · 正文对应小节 [tags]
+7003	Q046｜一条信息从对话进入长期记忆，应该经过哪些判断？
+18313	Q047 · 有效时间与记录时间，是两个独立的问题</a><small>chapters/18.html · 正文对应小节 [tags]
+18402	Q047 · 有效时间与记录时间，是两个独立的问题</a><small>studies/chapters/15.html · 正文对应小节 [tags]
+7095	Q047｜新旧记忆冲突怎样处理？Valid time和Recorded time为什么要分开？
+18314	Q048 · 记忆检索先过适用门，再比语义相似度</a><small>chapters/18.html · 正文对应小节 [tags]
+18403	Q048 · 记忆检索先过适用门，再比语义相似度</a><small>studies/chapters/15.html · 正文对应小节 [tags]
+18453	Q048 · 记忆检索先过适用门，再比语义相似度</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+7183	Q048｜记忆检索怎样避免拿错项目、拿到过期规则？什么时候应该遗忘？
+18323	Q049 · 超时出现的位置，位于“请求”与“响应”之间</a><small>chapters/21.html · 正文对应小节 [tags]
+18379	Q049 · 超时出现的位置，位于“请求”与“响应”之间</a><small>studies/chapters/08.html · 正文对应小节 [tags]
+18443	Q049 · 超时出现的位置，位于“请求”与“响应”之间</a><small>studies/chapters/27.html · 正文对应小节 [tags]
+7906	Q049｜工具超时后为什么必须有unknown状态？不能直接标记failed吗？
+18324	Q050 · 幂等键绑定的是同一次业务意图，不是每次HTTP尝试</a><small>chapters/21.html · 正文对应小节 [tags]
+18421	Q050 · 幂等键绑定的是同一次业务意图，不是每次HTTP尝试</a><small>studies/chapters/20.html · 正文对应小节 [tags]
+18452	Q050 · 幂等键绑定的是同一次业务意图，不是每次HTTP尝试</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+7962	Q050｜幂等键怎样设计？为什么本地去重表不能保证跨系统Exactly Once？
+18325	Q051 · 原子替换防半写，CAS防覆盖，它们不是一回事</a><small>chapters/21.html · 正文对应小节 [tags]
+18380	Q051 · 原子替换防半写，CAS防覆盖，它们不是一回事</a><small>studies/chapters/08.html · 正文对应小节 [tags]
+18400	Q051 · 原子替换防半写，CAS防覆盖，它们不是一回事</a><small>studies/chapters/14.html · 正文对应小节 [tags]
+8088	Q051｜本地文件修改怎样用CAS和原子替换防止覆盖？它与数据库事务如何配合？
+18326	Q052 · Retry、Resume、Replay、Cancel，对动作的含义不同</a><small>chapters/21.html · 正文对应小节 [tags]
+18424	Q052 · Retry、Resume、Replay、Cancel，对动作的含义不同</a><small>studies/chapters/21.html · 正文对应小节 [tags]
+8148	Q052｜长任务重启后怎么继续？Retry、Resume、Replay、Cancel分别是什么？
+18319	Q053 · 交接包至少要让接手者知道证据和未完成动作</a><small>chapters/20.html · 正文对应小节 [tags]
+18408	Q053 · 交接包至少要让接手者知道证据和未完成动作</a><small>studies/chapters/17.html · 正文对应小节 [tags]
+7574	Q053｜子Agent收到什么，主Agent又拿回什么？交接包应包含哪些内容？
+18320	Q054 · DAG上的最长依赖路径，决定并行任务最早何时结束</a><small>chapters/20.html · 正文对应小节 [tags]
+18407	Q054 · DAG上的最长依赖路径，决定并行任务最早何时结束</a><small>studies/chapters/17.html · 正文对应小节 [tags]
+7656	Q054｜任务DAG怎样决定并行？为什么切得越细不一定越快？
+18321	Q055 · 不同文件无文本冲突，也可能产生语义冲突</a><small>chapters/20.html · 正文对应小节 [tags]
+18409	Q055 · 不同文件无文本冲突，也可能产生语义冲突</a><small>studies/chapters/17.html · 正文对应小节 [tags]
+7737	Q055｜多个Agent改同一个仓库，怎样避免覆盖与错误合并？
+18322	Q056 · 两个Reviewer同意，可能只是共享了同一个盲点</a><small>chapters/20.html · 正文对应小节 [tags]
+18410	Q056 · 两个Reviewer同意，可能只是共享了同一个盲点</a><small>studies/chapters/17.html · 正文对应小节 [tags]
+7818	Q056｜独立Reviewer为什么可能仍犯相同错误？A2A解决了什么，又没解决什么？
+18335	Q057 · 外部内容可以成为证据，不能自己签发执行权限</a><small>chapters/24.html · 正文对应小节 [tags]
+18418	Q057 · 外部内容可以成为证据，不能自己签发执行权限</a><small>studies/chapters/20.html · 正文对应小节 [tags]
+18433	Q057 · 外部内容可以成为证据，不能自己签发执行权限</a><small>studies/chapters/24.html · 正文对应小节 [tags]
+8855	Q057｜Prompt Injection与普通恶意用户输入有什么区别？为什么外部资料不能变成指令？
+18336	Q058 · 文件、网络和远程工具是三条不同的出入口</a><small>chapters/24.html · 正文对应小节 [tags]
+18419	Q058 · 文件、网络和远程工具是三条不同的出入口</a><small>studies/chapters/20.html · 正文对应小节 [tags]
+8933	Q058｜沙箱到底隔离什么？为什么文件权限、网络权限和MCP权限要分别看？
+18337	Q059 · 人工批准要绑定具体参数与版本，不能只绑定工具名</a><small>chapters/24.html · 正文对应小节 [tags]
+18420	Q059 · 人工批准要绑定具体参数与版本，不能只绑定工具名</a><small>studies/chapters/20.html · 正文对应小节 [tags]
+9020	Q059｜人工批准应该批准什么？为什么“允许这次任务”不能覆盖所有后续动作？
+18338	Q060 · 删除源文档后，派生摘要与向量块还可能继续传播旧结论</a><small>chapters/24.html · 正文对应小节 [tags]
+9099	Q060｜记忆污染和检索投毒怎样发生？为什么删除源文档后还可能继续受影响？
+18331	Q061 · Task、Trial、Trace、Outcome分别计数，分母才不会乱</a><small>chapters/23.html · 正文对应小节 [tags]
+18414	Q061 · Task、Trial、Trace、Outcome分别计数，分母才不会乱</a><small>studies/chapters/19.html · 正文对应小节 [tags]
+8542	Q061｜Agent评测最小单元是什么？Task、Trial、Trace、Outcome怎样区分？
+11894	Q062 · pass@3与连续三次都成功，数字为何差很多
+18332	Q062 · pass@k与pass^k，一个看机会，一个看稳定</a><small>chapters/23.html · 正文对应小节 [tags]
+18415	Q062 · pass@k与pass^k，一个看机会，一个看稳定</a><small>studies/chapters/19.html · 正文对应小节 [tags]
+8596	Q062｜pass@1、pass@k、pass^k有什么区别？请算一个例子。
+11895	Q063 · 20个任务提升20个百分点，证据足够强吗
+18333	Q063 · 配对比较先看哪些题从失败变成功，哪些反过来</a><small>chapters/23.html · 正文对应小节 [tags]
+18416	Q063 · 配对比较先看哪些题从失败变成功，哪些反过来</a><small>studies/chapters/19.html · 正文对应小节 [tags]
+8681	Q063｜A/B版本成功率差两个百分点，怎样判断是否真实？配对评测为何重要？
+18334	Q064 · 模型裁判先看同一答案换顺序后会不会改变判断</a><small>chapters/23.html · 正文对应小节 [tags]
+18417	Q064 · 模型裁判先看同一答案换顺序后会不会改变判断</a><small>studies/chapters/19.html · 正文对应小节 [tags]
+8761	Q064｜LLM-as-a-Judge为什么有用又危险？怎样降低评分偏差？
+18339	Q065 · Trace里的并行段不能直接相加成用户等待时间</a><small>chapters/25.html · 正文对应小节 [tags]
+18422	Q065 · Trace里的并行段不能直接相加成用户等待时间</a><small>studies/chapters/21.html · 正文对应小节 [tags]
+9171	Q065｜一个Agent任务应该怎样记录Trace，才能定位“慢、贵、错”？
+18340	Q066 · 成功任务成本的分子，必须包含失败和返工</a><small>chapters/25.html · 正文对应小节 [tags]
+18425	Q066 · 成功任务成本的分子，必须包含失败和返工</a><small>studies/chapters/22.html · 正文对应小节 [tags]
+18451	Q066 · 成功任务成本的分子，必须包含失败和返工</a><small>studies/chapters/29.html · 正文对应小节 [tags]
+9252	Q066｜为什么“每Token便宜”不等于“完成工作便宜”？成本应怎样算？
+18341	Q067 · 平均处理能力够，不代表高峰请求不用排队</a><small>chapters/25.html · 正文对应小节 [tags]
+18423	Q067 · 平均处理能力够，不代表高峰请求不用排队</a><small>studies/chapters/21.html · 正文对应小节 [tags]
+9326	Q067｜并发越大吞吐越高吗？怎样从排队理解Agent延迟？
+18342	Q068 · 回滚要成组恢复兼容对象，不只换回模型名</a><small>chapters/25.html · 正文对应小节 [tags]
+9383	Q068｜Agent系统上线时究竟要版本化什么？回滚为什么不只是换回模型？
+18243	Q069 · 模型接到的是一份请求，不是整个工作区</a><small>chapters/01.html · 正文对应小节 [tags]
+471	Q069｜向编码Agent输入“修复这个Bug”后，模型实际收到的究竟是什么？
+18244	Q070 · BPE的合并次序，决定后面还能合并什么</a><small>chapters/01.html · 正文对应小节 [tags]
+18356	Q070 · BPE的合并次序，决定后面还能合并什么</a><small>studies/chapters/01.html · 正文对应小节 [tags]
+604	Q070｜Tokenizer到底如何工作？为什么中文、代码和空格会影响Token数量？
+18245	Q071 · 指令优先级与执行权限是两道独立的门</a><small>chapters/01.html · 正文对应小节 [tags]
+731	Q071｜system、developer、user只是文字，为什么能控制模型？它们是否等于权限？
+18246	Q072 · 四种“向量”，按坐标含义而不是外形区分</a><small>chapters/01.html · 正文对应小节 [tags]
+18359	Q072 · 四种“向量”，按坐标含义而不是外形区分</a><small>studies/chapters/01.html · 正文对应小节 [tags]
+805	Q072｜Embedding、隐藏状态、输出logits、向量检索表示，到底是什么关系？
+11882	Q073 · 一个两位置单层Decoder，从输入一直算到词表概率
+18247	Q073 · 一次前向中，哪些步骤混合位置，哪些只混合特征</a><small>chapters/02.html · 正文对应小节 [tags]
+964	Q073｜一串Token进入Transformer后，究竟依次经过哪些计算？
+18248	Q074 · 从同一份X算三条支路，再得到一个具体输出</a><small>chapters/02.html · 正文对应小节 [tags]
+18542	Q074 · 从同一份X算三条支路，再得到一个具体输出</a><small>reading-notes/guide-02.html · 正文对应小节 [tags]

@@ -1,0 +1,3381 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="Giáo trình được dịch từ tiếng Trung, từ khái niệm cơ sở đến cơ chế bên trong mô hình ngôn ngữ lớn, thực thi Agent và thực hành kỹ thuật." name="description"/><title>Xác minh ví dụ: số liệu, trạng thái và mã — Kỹ thuật hệ thống AI</title><link href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2032%2032%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20rx=%226%22%20fill=%22#22272e%22/%3E%3Cg%20fill=%22none%22%20stroke=%22#fff%22%20stroke-width=%222.4%22%20stroke-linecap=%22round%22%3E%3Cpath%20d=%22M8%2011h16%22/%3E%3Cpath%20d=%22M8%2021h16%22/%3E%3C/g%3E%3Cpath%20d=%22M8%2016h9%22%20fill=%22none%22%20stroke=%22#5b8def%22%20stroke-width=%222.4%22%20stroke-linecap=%22round%22/%3E%3C/svg%3E" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/visual.css" rel="stylesheet"/><link href="../assets/atelier.css" rel="stylesheet"/><link href="../assets/mechanisms.css" rel="stylesheet"/><link href="../assets/model-course.css" rel="stylesheet"/><link href="../assets/integrated-course.css" rel="stylesheet"/><link href="../assets/diagrams.css" rel="stylesheet"/><link href="../assets/i18n.css" rel="stylesheet"/><meta content="zh-CN,en,ja,es,vi" name="i18n-locales"/><meta content="Giao diện và nội dung khóa học được dịch từ bản gốc tiếng Trung giản thể." name="i18n-scope"/></head><body class="is-reader" data-page="example-verification.html" data-root=""><a class="skip-link" href="#main-content" data-i18n="skip.toContent">Chuyển đến nội dung</a><header class="site-header"><button aria-controls="book-sidebar" aria-expanded="false" aria-label="Mở mục lục khóa học" data-i18n-attr="aria-label:rail.menuAria" class="icon-button menu-trigger" data-studio-menu="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a class="site-brand" href="index.html"><span>Kỹ thuật hệ thống AI</span><span class="brand-detail" data-i18n="brand.detail">Tài liệu tham khảo kỹ thuật</span></a><nav aria-label="Điều hướng chính" data-i18n-attr="aria-label:nav.aria" class="site-links"><a class="section-active" href="contents.html" data-i18n="nav.docs">Tài liệu</a><a href="visual-guides.html" data-i18n="nav.figures">Hình minh họa</a><a href="studies/index.html" data-i18n="nav.topics">Chuyên đề</a></nav><div class="site-actions"><button aria-label="Tìm trong giáo trình" data-i18n-attr="aria-label:search.triggerAria" class="search-trigger" data-search="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><span data-i18n="search.trigger">Tìm trong sách…</span><kbd>⌘ K</kbd></button><button aria-label="Bật/tắt chế độ tập trung" aria-pressed="false" class="icon-button focus-trigger" data-focus="" title="Chế độ tập trung" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"></path></svg></button><button aria-label="Cài đặt đọc" data-i18n-attr="aria-label:settings.title" class="icon-button settings-trigger" data-settings="" title="Cài đặt đọc" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"></path><circle cx="9" cy="7" fill="var(--paper)" r="2.5"></circle><circle cx="15" cy="17" fill="var(--paper)" r="2.5"></circle></svg></button></div></header><div aria-hidden="true" class="page-progress"><span></span></div><aside aria-label="Mục lục các chương trong sách" class="book-rail sidebar" id="book-sidebar"><div class="rail-top"><strong data-i18n="rail.title">Mục lục khóa học</strong><div class="rail-actions"><button aria-label="Cuộn mục lục đến bài hiện tại" data-i18n-attr="aria-label:rail.locateAria" class="rail-locate" data-locate-current="" title="Định vị chương hiện tại" type="button" data-i18n="rail.locate">Đến bài hiện tại</button><button aria-label="Đóng mục lục" data-i18n-attr="aria-label:rail.closeAria" class="rail-close icon-button" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div></div><nav aria-label="Các chương của giáo trình" class="rail-scroll" tabindex="0"><a class="rail-home" data-section="index" data-target="index.html" href="index.html" title="Kỹ thuật hệ thống AI"><span class="rail-name" data-i18n="railhome.index">Tổng quan khóa học</span></a><a class="rail-home" data-section="preface" data-target="preface.html" href="preface.html" title="Lời mở đầu và hướng dẫn sử dụng"><span class="rail-name" data-i18n="railhome.preface">Lời nói đầu và cách dùng</span></a><a class="rail-home" data-section="guide" data-target="guide.html" href="guide.html" title="Mở đầu: học một hệ thống AI phức tạp như thế nào"><span class="rail-name" data-i18n="railhome.guide">Dẫn nhập và phương pháp học</span></a><a class="rail-home" data-section="contents" data-target="contents.html" href="contents.html" title="Mục lục và lộ trình học"><span class="rail-name" data-i18n="railhome.contents">Mục lục đầy đủ</span></a><a class="rail-home" data-section="search" data-target="search.html" href="search.html" title="Tìm kiếm toàn văn"><span class="rail-name" data-i18n="railhome.search">Tìm kiếm toàn văn</span></a><details class="rail-group course-rail-stage" data-group="progressive-stage-1"><summary data-i18n="rail.stage1">Giai đoạn 01 · Quan sát hệ thống</summary><div class="rail-links"><div class="rail-section-name">Học phần 01 · Từ kết quả nhiệm vụ suy ngược một lần chạy Agent</div><a class="" data-section="foundations--22" data-target="foundations/22.html" href="foundations/22.html" title="Bài 01｜Agent vận hành: từ đề xuất đến thực thi, rồi đến nghiệm thu"><span class="rail-code">Bài 01</span><span class="rail-name">Agent vận hành: từ đề xuất đến thực thi, rồi đến nghiệm thu</span></a><a class="" data-section="foundations--24" data-target="foundations/24.html" href="foundations/24.html" title="Bài 02｜Trạng thái, sự kiện và điểm kiểm tra: phân biệt điều mô hình biết với điều hệ thống ghi lại"><span class="rail-code">Bài 02</span><span class="rail-name">Trạng thái, sự kiện và điểm kiểm tra: phân biệt điều mô hình biết với điều hệ thống ghi lại</span></a><a class="" data-section="chapters--09" data-target="chapters/09.html" href="chapters/09.html" title="Bài 03｜Toàn bộ vòng lặp của một nhiệm vụ Agent: ai suy nghĩ, ai thực thi"><span class="rail-code">Bài 03</span><span class="rail-name">Toàn bộ vòng lặp của một nhiệm vụ Agent: ai suy nghĩ, ai thực thi</span></a><div class="rail-section-name">Học phần 02 · Viết điều kiện hoàn thành thành bằng chứng có thể kiểm tra lại</div><a class="" data-section="foundations--34" data-target="foundations/34.html" href="foundations/34.html" title="Bài 04｜Nền tảng chất lượng kỹ thuật: yêu cầu, phản ví dụ, kiểm thử và rà soát"><span class="rail-code">Bài 04</span><span class="rail-name">Nền tảng chất lượng kỹ thuật: yêu cầu, phản ví dụ, kiểm thử và rà soát</span></a><a class="" data-section="foundations--35" data-target="foundations/35.html" href="foundations/35.html" title="Bài 05｜Mẫu số của chỉ số đánh giá: tỷ lệ thành công, độ chuẩn xác, độ bao phủ và pass"><span class="rail-code">Bài 05</span><span class="rail-name">Mẫu số của chỉ số đánh giá: tỷ lệ thành công, độ chuẩn xác, độ bao phủ và pass</span></a><a class="" data-section="chapters--22" data-target="chapters/22.html" href="chapters/22.html" title="Bài 06｜Chất lượng kỹ thuật: từ yêu cầu đến kiểm thử, rồi đến mã thực sự có thể bàn giao"><span class="rail-code">Bài 06</span><span class="rail-name">Chất lượng kỹ thuật: từ yêu cầu đến kiểm thử, rồi đến mã thực sự có thể bàn giao</span></a><a class="" data-section="labs--projects--assignment1" data-target="labs/projects/assignment1.html" href="labs/projects/assignment1.html" title="Bài tập 01｜Quan sát: biến một nhiệm vụ thành vết thực thi có thể kiểm tra"><span class="rail-code">Bài tập 01</span><span class="rail-name">Quan sát: biến một nhiệm vụ thành vết thực thi có thể kiểm tra</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-2"><summary data-i18n="rail.stage2">Giai đoạn 02 · Xây dựng vòng lặp</summary><div class="rail-links"><div class="rail-section-name">Học phần 03 · Biến đề xuất của mô hình thành lời gọi công cụ có kiểm soát</div><a class="" data-section="foundations--23" data-target="foundations/23.html" href="foundations/23.html" title="Bài 07｜API và giao thức truyền luồng: yêu cầu trở thành dữ liệu có thể thực thi như thế nào"><span class="rail-code">Bài 07</span><span class="rail-name">API và giao thức truyền luồng: yêu cầu trở thành dữ liệu có thể thực thi như thế nào</span></a><a class="" data-section="foundations--25" data-target="foundations/25.html" href="foundations/25.html" title="Bài 08｜Công cụ và MCP: tách bốn lớp kết nối, khám phá, cấp quyền và thực thi"><span class="rail-code">Bài 08</span><span class="rail-name">Công cụ và MCP: tách bốn lớp kết nối, khám phá, cấp quyền và thực thi</span></a><a class="" data-section="chapters--10" data-target="chapters/10.html" href="chapters/10.html" title="Bài 09｜Đầu ra mô hình trở thành lời gọi công cụ thực tế như thế nào: giao thức và ranh giới thực thi"><span class="rail-code">Bài 09</span><span class="rail-name">Đầu ra mô hình trở thành lời gọi công cụ thực tế như thế nào: giao thức và ranh giới thực thi</span></a><a class="" data-section="chapters--11" data-target="chapters/11.html" href="chapters/11.html" title="Bài 10｜Thiết kế công cụ và MCP: từ kết nối đến thực thi có kiểm soát"><span class="rail-code">Bài 10</span><span class="rail-name">Thiết kế công cụ và MCP: từ kết nối đến thực thi có kiểm soát</span></a><div class="rail-section-name">Học phần 04 · Lắp ghép ngữ cảnh đúng cho mỗi yêu cầu</div><a class="" data-section="foundations--26" data-target="foundations/26.html" href="foundations/26.html" title="Bài 11｜Lắp ghép ngữ cảnh: mỗi lượt đưa chính xác những gì cho mô hình và vì sao"><span class="rail-code">Bài 11</span><span class="rail-name">Lắp ghép ngữ cảnh: mỗi lượt đưa chính xác những gì cho mô hình và vì sao</span></a><a class="" data-section="chapters--13" data-target="chapters/13.html" href="chapters/13.html" title="Bài 12｜Prompt được lắp ghép mỗi lượt như thế nào: ngữ cảnh là một đường ống dữ liệu"><span class="rail-code">Bài 12</span><span class="rail-name">Prompt được lắp ghép mỗi lượt như thế nào: ngữ cảnh là một đường ống dữ liệu</span></a><a class="" data-section="foundations--32" data-target="foundations/32.html" href="foundations/32.html" title="Bài 13｜Skill, định tuyến và nhiều Agent: hiểu trước ai chịu trách nhiệm việc gì"><span class="rail-code">Bài 13</span><span class="rail-name">Skill, định tuyến và nhiều Agent: hiểu trước ai chịu trách nhiệm việc gì</span></a><a class="" data-section="chapters--19" data-target="chapters/19.html" href="chapters/19.html" title="Bài 14｜Skills và định tuyến: cách nạp đúng năng lực chuyên môn cần thiết"><span class="rail-code">Bài 14</span><span class="rail-name">Skills và định tuyến: cách nạp đúng năng lực chuyên môn cần thiết</span></a><a class="" data-section="chapters--12" data-target="chapters/12.html" href="chapters/12.html" title="Bài 15｜Codex, Claude Code, Copilot: từ sự kiện công khai đến chuỗi vận hành có thể chẩn đoán"><span class="rail-code">Bài 15</span><span class="rail-name">Codex, Claude Code, Copilot: từ sự kiện công khai đến chuỗi vận hành có thể chẩn đoán</span></a><div class="rail-section-name">Học phần 05 · Để kết quả truy hồi trở thành bằng chứng đầy đủ</div><a class="" data-section="foundations--28" data-target="foundations/28.html" href="foundations/28.html" title="Bài 16｜Nhập môn truy hồi: danh mục, chỉ mục đảo, vectơ và tìm kiếm gần đúng"><span class="rail-code">Bài 16</span><span class="rail-name">Nhập môn truy hồi: danh mục, chỉ mục đảo, vectơ và tìm kiếm gần đúng</span></a><a class="" data-section="foundations--29" data-target="foundations/29.html" href="foundations/29.html" title="Bài 17｜Từ kết quả tìm kiếm đến câu trả lời đáng tin: truy hồi ứng viên, xếp hạng lại và bằng chứng"><span class="rail-code">Bài 17</span><span class="rail-name">Từ kết quả tìm kiếm đến câu trả lời đáng tin: truy hồi ứng viên, xếp hạng lại và bằng chứng</span></a><a class="" data-section="foundations--30" data-target="foundations/30.html" href="foundations/30.html" title="Bài 18｜Mã không phải tài liệu thông thường: cây cú pháp, quan hệ gọi và phiên bản"><span class="rail-code">Bài 18</span><span class="rail-name">Mã không phải tài liệu thông thường: cây cú pháp, quan hệ gọi và phiên bản</span></a><a class="" data-section="chapters--15" data-target="chapters/15.html" href="chapters/15.html" title="Bài 19｜Chuỗi truy hồi ngoại tuyến: tài liệu trở thành chỉ mục có thể truy vấn như thế nào"><span class="rail-code">Bài 19</span><span class="rail-name">Chuỗi truy hồi ngoại tuyến: tài liệu trở thành chỉ mục có thể truy vấn như thế nào</span></a><a class="" data-section="chapters--16" data-target="chapters/16.html" href="chapters/16.html" title="Bài 20｜Chuỗi truy hồi trực tuyến: truy hồi ứng viên, hợp nhất, xếp hạng lại và mức đầy đủ của bằng chứng"><span class="rail-code">Bài 20</span><span class="rail-name">Chuỗi truy hồi trực tuyến: truy hồi ứng viên, hợp nhất, xếp hạng lại và mức đầy đủ của bằng chứng</span></a><a class="" data-section="chapters--17" data-target="chapters/17.html" href="chapters/17.html" title="Bài 21｜Phân tích mã thông minh: từ tìm kiếm văn bản đến ký hiệu, phiên bản và bằng chứng chạy"><span class="rail-code">Bài 21</span><span class="rail-name">Phân tích mã thông minh: từ tìm kiếm văn bản đến ký hiệu, phiên bản và bằng chứng chạy</span></a><div class="rail-section-name">Học phần 06 · Trạng thái qua các lượt, cô đọng và bộ nhớ dài hạn</div><a class="" data-section="foundations--27" data-target="foundations/27.html" href="foundations/27.html" title="Bài 22｜Cô đọng không phải phép thuật: bản tóm tắt, nguyên văn và trạng thái thực thi phối hợp thế nào"><span class="rail-code">Bài 22</span><span class="rail-name">Cô đọng không phải phép thuật: bản tóm tắt, nguyên văn và trạng thái thực thi phối hợp thế nào</span></a><a class="" data-section="foundations--31" data-target="foundations/31.html" href="foundations/31.html" title="Bài 23｜Cơ sở bộ nhớ dài hạn: sự kiện, trải nghiệm, quy trình và thời gian"><span class="rail-code">Bài 23</span><span class="rail-name">Cơ sở bộ nhớ dài hạn: sự kiện, trải nghiệm, quy trình và thời gian</span></a><a class="" data-section="chapters--14" data-target="chapters/14.html" href="chapters/14.html" title="Bài 24｜Cô đọng ngữ cảnh: thực sự loại bỏ những gì và khôi phục ra sao khi bị mất"><span class="rail-code">Bài 24</span><span class="rail-name">Cô đọng ngữ cảnh: thực sự loại bỏ những gì và khôi phục ra sao khi bị mất</span></a><a class="" data-section="chapters--18" data-target="chapters/18.html" href="chapters/18.html" title="Bài 25｜Bộ nhớ dài hạn: ghi, truy hồi, xung đột, hết hiệu lực và quên"><span class="rail-code">Bài 25</span><span class="rail-name">Bộ nhớ dài hạn: ghi, truy hồi, xung đột, hết hiệu lực và quên</span></a><div class="rail-section-name">Học phần 07 · Khôi phục sau thất bại và ranh giới cộng tác</div><a class="" data-section="foundations--33" data-target="foundations/33.html" href="foundations/33.html" title="Bài 26｜Thử lại, tính lũy đẳng và giao dịch: vì sao hết thời gian chờ không chứng minh thất bại"><span class="rail-code">Bài 26</span><span class="rail-name">Thử lại, tính lũy đẳng và giao dịch: vì sao hết thời gian chờ không chứng minh thất bại</span></a><a class="" data-section="chapters--21" data-target="chapters/21.html" href="chapters/21.html" title="Bài 27｜Thực thi tin cậy: thử lại, tính lũy đẳng, sự cố và khôi phục trạng thái"><span class="rail-code">Bài 27</span><span class="rail-name">Thực thi tin cậy: thử lại, tính lũy đẳng, sự cố và khôi phục trạng thái</span></a><a class="" data-section="chapters--20" data-target="chapters/20.html" href="chapters/20.html" title="Bài 28｜Nhiều Agent: lợi ích của song song và tổn thất khi bàn giao"><span class="rail-code">Bài 28</span><span class="rail-name">Nhiều Agent: lợi ích của song song và tổn thất khi bàn giao</span></a><a class="" data-section="labs--projects--assignment2" data-target="labs/projects/assignment2.html" href="labs/projects/assignment2.html" title="Bài tập 02｜Xây dựng: tiếp quản vòng lặp, công cụ và nghiệm thu"><span class="rail-code">Bài tập 02</span><span class="rail-name">Xây dựng: tiếp quản vòng lặp, công cụ và nghiệm thu</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-3"><summary data-i18n="rail.stage3">Giai đoạn 03 · Tối ưu hộp đen</summary><div class="rail-links"><div class="rail-section-name">Học phần 08 · Kiểm soát rủi ro bắt đầu từ quyền tối thiểu</div><a class="" data-section="foundations--37" data-target="foundations/37.html" href="foundations/37.html" title="Bài 29｜Cơ sở an toàn: dữ liệu có thể tác động đến mô hình nhưng không vì thế mà được cấp quyền"><span class="rail-code">Bài 29</span><span class="rail-name">Cơ sở an toàn: dữ liệu có thể tác động đến mô hình nhưng không vì thế mà được cấp quyền</span></a><a class="" data-section="chapters--24" data-target="chapters/24.html" href="chapters/24.html" title="Bài 30｜An toàn: ranh giới chỉ dẫn, môi trường cách ly, quyền hạn và ô nhiễm bộ nhớ"><span class="rail-code">Bài 30</span><span class="rail-name">An toàn: ranh giới chỉ dẫn, môi trường cách ly, quyền hạn và ô nhiễm bộ nhớ</span></a><div class="rail-section-name">Học phần 09 · Cố định nhiệm vụ rồi mới đánh giá tối ưu có hiệu quả hay không</div><a class="" data-section="foundations--36" data-target="foundations/36.html" href="foundations/36.html" title="Bài 31｜Đừng để vài điểm phần trăm đánh lừa: tính ngẫu nhiên, mẫu và phán đoán thống kê"><span class="rail-code">Bài 31</span><span class="rail-name">Đừng để vài điểm phần trăm đánh lừa: tính ngẫu nhiên, mẫu và phán đoán thống kê</span></a><a class="" data-section="chapters--23" data-target="chapters/23.html" href="chapters/23.html" title="Bài 32｜Evaluation: chứng minh một tối ưu thực sự mang lại lợi ích như thế nào"><span class="rail-code">Bài 32</span><span class="rail-name">Evaluation: chứng minh một tối ưu thực sự mang lại lợi ích như thế nào</span></a><div class="rail-section-name">Học phần 10 · Tính mọi lần chờ và lời gọi vào toàn bộ nhiệm vụ</div><a class="" data-section="foundations--38" data-target="foundations/38.html" href="foundations/38.html" title="Bài 33｜Hiểu hoạt động sản xuất: Trace, hàng đợi, chi phí và hoàn tác"><span class="rail-code">Bài 33</span><span class="rail-name">Hiểu hoạt động sản xuất: Trace, hàng đợi, chi phí và hoàn tác</span></a><a class="" data-section="chapters--25" data-target="chapters/25.html" href="chapters/25.html" title="Bài 34｜Vận hành sản xuất: Trace, chi phí, hàng đợi, triển khai từng phần và hoàn tác"><span class="rail-code">Bài 34</span><span class="rail-name">Vận hành sản xuất: Trace, chi phí, hàng đợi, triển khai từng phần và hoàn tác</span></a><a class="" data-section="labs--projects--assignment3" data-target="labs/projects/assignment3.html" href="labs/projects/assignment3.html" title="Bài tập 03｜Tối ưu: nên thay đổi gì để có lợi khi mô hình vẫn là hộp đen"><span class="rail-code">Bài tập 03</span><span class="rail-name">Tối ưu: nên thay đổi gì để có lợi khi mô hình vẫn là hộp đen</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-4"><summary data-i18n="rail.stage4">Giai đoạn 04 · Tiếp quản mô hình</summary><div class="rail-links"><div class="rail-section-name">Học phần 11 · Từ giao diện dịch vụ đi vào con số và đầu vào mô hình</div><a class="" data-section="foundations--01" data-target="foundations/01.html" href="foundations/01.html" title="Bài 35｜Vòng đời mô hình: đối tượng, tham số, huấn luyện và suy luận"><span class="rail-code">Bài 35</span><span class="rail-name">Vòng đời mô hình: đối tượng, tham số, huấn luyện và suy luận</span></a><a class="" data-section="foundations--02" data-target="foundations/02.html" href="foundations/02.html" title="Bài 36｜Một hàng số, một bảng và một chồng bảng: hiểu tensor và hình dạng"><span class="rail-code">Bài 36</span><span class="rail-name">Một hàng số, một bảng và một chồng bảng: hiểu tensor và hình dạng</span></a><a class="" data-section="foundations--03" data-target="foundations/03.html" href="foundations/03.html" title="Bài 37｜Văn bản trở thành mã số như thế nào: tách token, bảng từ vựng và ranh giới chuỗi"><span class="rail-code">Bài 37</span><span class="rail-name">Văn bản trở thành mã số như thế nào: tách token, bảng từ vựng và ranh giới chuỗi</span></a><a class="" data-section="foundations--04" data-target="foundations/04.html" href="foundations/04.html" title="Bài 38｜Từ nhiều câu đến lô huấn luyện: gộp lô, đệm và vị trí nhãn"><span class="rail-code">Bài 38</span><span class="rail-name">Từ nhiều câu đến lô huấn luyện: gộp lô, đệm và vị trí nhãn</span></a><a class="" data-section="foundations--05" data-target="foundations/05.html" href="foundations/05.html" title="Bài 39｜Embedding và vị trí: từ tra mã số trong bảng đến đầu vào mô hình"><span class="rail-code">Bài 39</span><span class="rail-name">Embedding và vị trí: từ tra mã số trong bảng đến đầu vào mô hình</span></a><a class="" data-section="foundations--06" data-target="foundations/06.html" href="foundations/06.html" title="Bài 40｜“Đưa lên thiết bị” là gì: kiểu dữ liệu, bộ nhớ, CPU và GPU"><span class="rail-code">Bài 40</span><span class="rail-name">“Đưa lên thiết bị” là gì: kiểu dữ liệu, bộ nhớ, CPU và GPU</span></a><a class="" data-section="chapters--01" data-target="chapters/01.html" href="chapters/01.html" title="Bài 41｜Đầu vào thực sự là gì: từ một câu của người dùng đến tensor mô hình"><span class="rail-code">Bài 41</span><span class="rail-name">Đầu vào thực sự là gì: từ một câu của người dùng đến tensor mô hình</span></a><div class="rail-section-name">Học phần 12 · Tính rõ từng phép nhân cộng của một lượt lan truyền xuôi</div><a class="" data-section="foundations--07" data-target="foundations/07.html" href="foundations/07.html" title="Bài 42｜Phép toán mô hình thực hiện thường xuyên nhất: tổng có trọng số, tích vô hướng và nhân ma trận"><span class="rail-code">Bài 42</span><span class="rail-name">Phép toán mô hình thực hiện thường xuyên nhất: tổng có trọng số, tích vô hướng và nhân ma trận</span></a><a class="" data-section="foundations--08" data-target="foundations/08.html" href="foundations/08.html" title="Bài 43｜reshape, hoán vị trục, broadcast: hình dạng thay đổi chưa chắc nội dung đã được tính toán"><span class="rail-code">Bài 43</span><span class="rail-name">reshape, hoán vị trục, broadcast: hình dạng thay đổi chưa chắc nội dung đã được tính toán</span></a><a class="" data-section="foundations--09" data-target="foundations/09.html" href="foundations/09.html" title="Bài 44｜Xác suất, hàm mũ và softmax: biến điểm số thành tỷ lệ"><span class="rail-code">Bài 44</span><span class="rail-name">Xác suất, hàm mũ và softmax: biến điểm số thành tỷ lệ</span></a><a class="" data-section="foundations--10" data-target="foundations/10.html" href="foundations/10.html" title="Bài 45｜Tham số, lan truyền xuôi và chuẩn hóa: cùng một đầu vào trở thành biểu diễn hữu ích như thế nào"><span class="rail-code">Bài 45</span><span class="rail-name">Tham số, lan truyền xuôi và chuẩn hóa: cùng một đầu vào trở thành biểu diễn hữu ích như thế nào</span></a><a class="" data-section="foundations--11" data-target="foundations/11.html" href="foundations/11.html" title="Bài 46｜Tính Attention từng bước: tính điểm liên quan trước, rồi trộn nội dung"><span class="rail-code">Bài 46</span><span class="rail-name">Tính Attention từng bước: tính điểm liên quan trước, rồi trộn nội dung</span></a><a class="" data-section="foundations--12" data-target="foundations/12.html" href="foundations/12.html" title="Bài 47｜Mask không phải hộp đen: biểu diễn “ai có thể nhìn ai” bằng một bảng"><span class="rail-code">Bài 47</span><span class="rail-name">Mask không phải hộp đen: biểu diễn “ai có thể nhìn ai” bằng một bảng</span></a><a class="" data-section="foundations--13" data-target="foundations/13.html" href="foundations/13.html" title="Bài 48｜Mã vị trí và RoPE: hiểu vị trí trước, phép quay sau"><span class="rail-code">Bài 48</span><span class="rail-name">Mã vị trí và RoPE: hiểu vị trí trước, phép quay sau</span></a><a class="" data-section="foundations--14" data-target="foundations/14.html" href="foundations/14.html" title="Bài 49｜Hoàn thành một lượt lan truyền xuôi: phần dư, mạng truyền thẳng và điểm số trên bảng từ vựng"><span class="rail-code">Bài 49</span><span class="rail-name">Hoàn thành một lượt lan truyền xuôi: phần dư, mạng truyền thẳng và điểm số trên bảng từ vựng</span></a><a class="" data-section="chapters--02" data-target="chapters/02.html" href="chapters/02.html" title="Bài 50｜Một lượt lan truyền xuôi Transformer: làm rõ từng tensor, từng toán tử"><span class="rail-code">Bài 50</span><span class="rail-name">Một lượt lan truyền xuôi Transformer: làm rõ từng tensor, từng toán tử</span></a><a class="" data-section="chapters--03" data-target="chapters/03.html" href="chapters/03.html" title="Bài 51｜Câu hỏi chuyên sâu về chú ý: vị trí, mặt nạ và nhiều đầu"><span class="rail-code">Bài 51</span><span class="rail-name">Câu hỏi chuyên sâu về chú ý: vị trí, mặt nạ và nhiều đầu</span></a><div class="rail-section-name">Học phần 13 · Huấn luyện trước, rồi đóng băng tham số</div><a class="" data-section="foundations--15" data-target="foundations/15.html" href="foundations/15.html" title="Bài 52｜Đạo hàm, gradient và quy tắc dây chuyền: huấn luyện tìm hướng điều chỉnh như thế nào"><span class="rail-code">Bài 52</span><span class="rail-name">Đạo hàm, gradient và quy tắc dây chuyền: huấn luyện tìm hướng điều chỉnh như thế nào</span></a><a class="" data-section="foundations--16" data-target="foundations/16.html" href="foundations/16.html" title="Bài 53｜Một lần huấn luyện từ đầu đến cuối: nhãn, hàm mất mát, cập nhật, kiểm định và lưu"><span class="rail-code">Bài 53</span><span class="rail-name">Một lần huấn luyện từ đầu đến cuối: nhãn, hàm mất mát, cập nhật, kiểm định và lưu</span></a><a class="" data-section="foundations--17" data-target="foundations/17.html" href="foundations/17.html" title="Bài 54｜Hậu huấn luyện: tinh chỉnh có giám sát, sở thích, phần thưởng và điều chỉnh tham số"><span class="rail-code">Bài 54</span><span class="rail-name">Hậu huấn luyện: tinh chỉnh có giám sát, sở thích, phần thưởng và điều chỉnh tham số</span></a><a class="" data-section="chapters--04" data-target="chapters/04.html" href="chapters/04.html" title="Bài 55｜Cơ chế huấn luyện: hàm mất mát, toàn bộ lan truyền ngược và cập nhật tham số"><span class="rail-code">Bài 55</span><span class="rail-name">Cơ chế huấn luyện: hàm mất mát, toàn bộ lan truyền ngược và cập nhật tham số</span></a><a class="" data-section="chapters--05" data-target="chapters/05.html" href="chapters/05.html" title="Bài 56｜Hậu huấn luyện và tùy chỉnh mô hình: mục tiêu, cấu trúc và điều chỉnh tham số"><span class="rail-code">Bài 56</span><span class="rail-name">Hậu huấn luyện và tùy chỉnh mô hình: mục tiêu, cấu trúc và điều chỉnh tham số</span></a><div class="rail-section-name">Học phần 14 · Dùng kết quả huấn luyện để suy luận từng lượt</div><a class="" data-section="foundations--18" data-target="foundations/18.html" href="foundations/18.html" title="Bài 57｜Nạp kết quả huấn luyện: dự đoán từng mục, lựa chọn và dừng"><span class="rail-code">Bài 57</span><span class="rail-name">Nạp kết quả huấn luyện: dự đoán từng mục, lựa chọn và dừng</span></a><a class="" data-section="foundations--19" data-target="foundations/19.html" href="foundations/19.html" title="Bài 58｜Bộ nhớ đệm KV: tái sử dụng tính toán quá khứ với cùng một kết quả"><span class="rail-code">Bài 58</span><span class="rail-name">Bộ nhớ đệm KV: tái sử dụng tính toán quá khứ với cùng một kết quả</span></a><a class="" data-section="chapters--06" data-target="chapters/06.html" href="chapters/06.html" title="Bài 59｜Cơ chế suy luận: nạp, chiến lược giải mã và sinh liên tục"><span class="rail-code">Bài 59</span><span class="rail-name">Cơ chế suy luận: nạp, chiến lược giải mã và sinh liên tục</span></a><a class="" data-section="chapters--07" data-target="chapters/07.html" href="chapters/07.html" title="Bài 60｜Các quá trình bên trong KV Cache, FlashAttention và PagedAttention"><span class="rail-code">Bài 60</span><span class="rail-name">Các quá trình bên trong KV Cache, FlashAttention và PagedAttention</span></a><div class="rail-section-name">Học phần 15 · Từ toán tử đến GPU và lập lịch dịch vụ</div><a class="" data-section="foundations--20" data-target="foundations/20.html" href="foundations/20.html" title="Bài 61｜Hạng thấp, lượng tử hóa và chuyên gia: trước hết xem thực sự đã giảm những phép tính nào"><span class="rail-code">Bài 61</span><span class="rail-name">Hạng thấp, lượng tử hóa và chuyên gia: trước hết xem thực sự đã giảm những phép tính nào</span></a><a class="" data-section="foundations--21" data-target="foundations/21.html" href="foundations/21.html" title="Bài 62｜Tính nhanh và chứa vừa: độ phức tạp, băng thông, xử lý theo lô và song song"><span class="rail-code">Bài 62</span><span class="rail-name">Tính nhanh và chứa vừa: độ phức tạp, băng thông, xử lý theo lô và song song</span></a><a class="" data-section="chapters--08" data-target="chapters/08.html" href="chapters/08.html" title="Bài 63｜Dịch vụ suy luận: lập lịch, thông lượng, độ trễ và song song"><span class="rail-code">Bài 63</span><span class="rail-name">Dịch vụ suy luận: lập lịch, thông lượng, độ trễ và song song</span></a><a class="" data-section="labs--projects--assignment4" data-target="labs/projects/assignment4.html" href="labs/projects/assignment4.html" title="Bài tập 04｜Dịch vụ: từ hợp đồng giao diện đi sâu xuống mô hình và bộ máy"><span class="rail-code">Bài tập 04</span><span class="rail-name">Dịch vụ: từ hợp đồng giao diện đi sâu xuống mô hình và bộ máy</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-5"><summary data-i18n="rail.stage5">Giai đoạn 05 · Kiểm chứng toàn hệ thống</summary><div class="rail-links"><div class="rail-section-name">Học phần 16 · Kết nối lại đa phương thức và bất định với nghiệm thu</div><a class="" data-section="foundations--39" data-target="foundations/39.html" href="foundations/39.html" title="Bài 64｜Đa phương thức và độ tin cậy: hình ảnh trở thành đầu vào như thế nào, vì sao khả năng giải thích có giới hạn"><span class="rail-code">Bài 64</span><span class="rail-name">Đa phương thức và độ tin cậy: hình ảnh trở thành đầu vào như thế nào, vì sao khả năng giải thích có giới hạn</span></a><a class="" data-section="chapters--27" data-target="chapters/27.html" href="chapters/27.html" title="Bài 65｜Độ tin cậy sự kiện, đa phương thức và khả năng diễn giải: ranh giới năng lực nằm ở đâu"><span class="rail-code">Bài 65</span><span class="rail-name">Độ tin cậy sự kiện, đa phương thức và khả năng diễn giải: ranh giới năng lực nằm ở đâu</span></a><div class="rail-section-name">Học phần 17 · Tối ưu cùng một hệ thống qua các lớp</div><a class="" data-section="foundations--40" data-target="foundations/40.html" href="foundations/40.html" title="Bài 66｜Từ khái niệm cơ sở đến phân tích hệ thống: cách định vị vấn đề thay vì chồng thêm công nghệ"><span class="rail-code">Bài 66</span><span class="rail-name">Từ khái niệm cơ sở đến phân tích hệ thống: cách định vị vấn đề thay vì chồng thêm công nghệ</span></a><a class="" data-section="chapters--26" data-target="chapters/26.html" href="chapters/26.html" title="Bài 67｜Ứng dụng chuyên sâu: ghép các thành phần thành hệ thống làm việc có thể giải thích"><span class="rail-code">Bài 67</span><span class="rail-name">Ứng dụng chuyên sâu: ghép các thành phần thành hệ thống làm việc có thể giải thích</span></a><a class="" data-section="labs--projects--assignment5" data-target="labs/projects/assignment5.html" href="labs/projects/assignment5.html" title="Bài tập 05｜Toàn bộ hệ thống: cải thiện cùng một nhiệm vụ bằng một giả thuyết có thể bác bỏ"><span class="rail-code">Bài tập 05</span><span class="rail-name">Toàn bộ hệ thống: cải thiện cùng một nhiệm vụ bằng một giả thuyết có thể bác bỏ</span></a><div class="rail-section-name">Học phần 18 · Hoàn thành khóa học bằng kết luận dự án có thể kiểm tra lại</div><a class="" data-section="chapters--28" data-target="chapters/28.html" href="chapters/28.html" title="Bài 68｜Nghiên cứu chuyên sâu và phán đoán hệ thống tổng hợp"><span class="rail-code">Bài 68</span><span class="rail-name">Nghiên cứu chuyên sâu và phán đoán hệ thống tổng hợp</span></a></div></details><details class="rail-group" data-group="walkthroughs"><summary data-i18n="rail.cases">Ví dụ xuyên suốt</summary><div class="rail-links"><a class="" data-section="walkthroughs--a" data-target="walkthroughs/a.html" href="walkthroughs/a.html" title="Phân tích toàn trình A｜Một đầu vào trở thành ba Token đầu ra như thế nào"><span class="rail-name">Một đầu vào trở thành ba Token đầu ra như thế nào</span></a><a class="" data-section="walkthroughs--b" data-target="walkthroughs/b.html" href="walkthroughs/b.html" title="Phân tích toàn trình B｜Đầu vào, đầu ra, công cụ và khôi phục ở mỗi lượt của một lần sửa kho mã"><span class="rail-name">Đầu vào, đầu ra, công cụ và khôi phục ở mỗi lượt của một lần sửa kho mã</span></a><a class="" data-section="walkthroughs--c" data-target="walkthroughs/c.html" href="walkthroughs/c.html" title="Phân tích toàn trình C｜Từ nhập tài liệu đến truy hồi, trả lời, cập nhật bộ nhớ và quên"><span class="rail-name">Từ nhập tài liệu đến truy hồi, trả lời, cập nhật bộ nhớ và quên</span></a><a class="" data-section="walkthroughs--d" data-target="walkthroughs/d.html" href="walkthroughs/d.html" title="Phân tích toàn trình D｜Tìm nguyên nhân gốc của một đợt hồi quy Agent “chậm hơn và kém hơn” như thế nào"><span class="rail-name">Tìm nguyên nhân gốc của một đợt hồi quy Agent “chậm hơn và kém hơn” như thế nào</span></a></div></details><details class="rail-group" data-group="labs" open=""><summary data-i18n="rail.labs">Thực hành và kiểm chứng</summary><div class="rail-links"><a class="" data-section="labs--stack-code" data-target="labs/stack/code.html" href="labs/stack/code.html" title="Thí nghiệm xuyên suốt: định vị mã và đối tượng"><span class="rail-name">Mã thí nghiệm xuyên suốt</span></a><a class="" data-section="labs" data-target="labs.html" href="labs.html" title="Thay đổi các con số để xem từng bước thay đổi như thế nào"><span class="rail-name">Thay đổi các con số để xem từng bước thay đổi như thế nào</span></a><a class="" data-section="labs--model-viewer" data-target="labs/model-viewer.html" href="labs/model-viewer.html" title="Thí nghiệm mô hình: xem từng bước các giá trị trung gian của huấn luyện và suy luận"><span class="rail-name">Thí nghiệm mô hình: xem từng bước các giá trị trung gian của huấn luyện và suy luận</span></a><a class="" data-section="labs--model-values" data-target="labs/model-values.html" href="labs/model-values.html" title="Thí nghiệm mô hình: tham số, bản ghi lan truyền xuôi và gradient"><span class="rail-name">Thí nghiệm mô hình: tham số, bản ghi lan truyền xuôi và gradient</span></a><a class="" data-section="labs--model-run" data-target="labs/model-run.html" href="labs/model-run.html" title="Thí nghiệm mô hình: mã đầy đủ và kết quả chạy"><span class="rail-name">Thí nghiệm mô hình: mã đầy đủ và kết quả chạy</span></a><a class="" data-section="reference--model-code" data-target="reference/model-code.html" href="reference/model-code.html" title="Mã nguồn và tham số gốc của thí nghiệm mô hình"><span class="rail-name">Mã nguồn và tham số gốc của thí nghiệm mô hình</span></a><a class="" data-section="checks" data-target="checks.html" href="checks.html" title="Ranh giới kiểm chứng của mã và số liệu"><span class="rail-name">Ranh giới kiểm chứng của mã và số liệu</span></a><a aria-current="page" class="active" data-section="example-verification" data-target="example-verification.html" href="example-verification.html" title="Kiểm tra ví dụ: giá trị số, trạng thái và mã"><span class="rail-name">Kiểm tra ví dụ: giá trị số, trạng thái và mã</span></a></div></details><details class="rail-group" data-group="visual"><summary data-i18n="rail.visual">Hình vẽ và hoạt họa</summary><div class="rail-links"><a class="" data-section="visual-guides" data-target="visual-guides.html" href="visual-guides.html" title="Minh họa động: nhìn rõ từng bước"><span class="rail-name">Minh họa động: nhìn rõ từng bước</span></a><a class="" data-section="worked-examples" data-target="worked-examples.html" href="worked-examples.html" title="Chỉ mục ví dụ chạy"><span class="rail-name">Chỉ mục ví dụ chạy</span></a><a class="" data-section="worked-model" data-target="worked-model.html" href="worked-model.html" title="Ví dụ xuyên suốt: hai câu đi qua một lớp mô hình như thế nào"><span class="rail-name">Ví dụ xuyên suốt: hai câu đi qua một lớp mô hình như thế nào</span></a><a class="" data-section="foundation-atlas" data-target="foundation-atlas.html" href="foundation-atlas.html" title="Chỉ mục minh họa từng mục của phần cơ sở"><span class="rail-name">Chỉ mục minh họa từng mục của phần cơ sở</span></a><a class="" data-section="mechanisms--index" data-target="mechanisms/index.html" href="mechanisms/index.html" title="Chỉ mục minh họa và tính toán chi tiết của phần nội dung chính"><span class="rail-name">Chỉ mục minh họa và tính toán chi tiết của phần nội dung chính</span></a><a class="" data-section="examples--input-representation" data-target="examples/input-representation.html" href="examples/input-representation.html" title="Ví dụ: từ hai câu đến biểu diễn ba chiều"><span class="rail-name">Ví dụ: từ hai câu đến biểu diễn ba chiều</span></a><a class="" data-section="visual--F01" data-target="visual/F01.html" href="visual/F01.html" title="Một câu đi qua những đối tượng khác nhau nào"><span class="rail-name">Một câu đi qua những đối tượng khác nhau nào</span></a><a class="" data-section="visual--F02" data-target="visual/F02.html" href="visual/F02.html" title="Thêm một trục thì thực sự thêm điều gì"><span class="rail-name">Thêm một trục thì thực sự thêm điều gì</span></a><a class="" data-section="visual--F03" data-target="visual/F03.html" href="visual/F03.html" title="Văn bản, byte, Token và mã số là bốn thứ khác nhau"><span class="rail-name">Văn bản, byte, Token và mã số là bốn thứ khác nhau</span></a><a class="" data-section="visual--F04" data-target="visual/F04.html" href="visual/F04.html" title="Gộp lô không trộn hai câu thành một"><span class="rail-name">Gộp lô không trộn hai câu thành một</span></a><a class="" data-section="visual--F05" data-target="visual/F05.html" href="visual/F05.html" title="Embedding là tra một hàng, không phải đổi mã thành nhị phân"><span class="rail-name">Embedding là tra một hàng, không phải đổi mã thành nhị phân</span></a><a class="" data-section="visual--F06" data-target="visual/F06.html" href="visual/F06.html" title="Chuyển dữ liệu sang GPU chỉ thay đổi vị trí, không thay đổi ý nghĩa"><span class="rail-name">Chuyển dữ liệu sang GPU chỉ thay đổi vị trí, không thay đổi ý nghĩa</span></a><a class="" data-section="visual--F07" data-target="visual/F07.html" href="visual/F07.html" title="Nhân ma trận giống điền kết quả theo công thức vào từng ô"><span class="rail-name">Nhân ma trận giống điền kết quả theo công thức vào từng ô</span></a><a class="" data-section="visual--F08" data-target="visual/F08.html" href="visual/F08.html" title="Phân biệt thay đổi cách sắp xếp với thay đổi giá trị số"><span class="rail-name">Phân biệt thay đổi cách sắp xếp với thay đổi giá trị số</span></a><a class="" data-section="visual--F09" data-target="visual/F09.html" href="visual/F09.html" title="Softmax không đơn thuần chia các điểm số cho tổng của chúng"><span class="rail-name">Softmax không đơn thuần chia các điểm số cho tổng của chúng</span></a><a class="" data-section="visual--F10" data-target="visual/F10.html" href="visual/F10.html" title="Lớp mạng đang tổ chức lại các giá trị số, không tạo ra những câu ẩn"><span class="rail-name">Lớp mạng đang tổ chức lại các giá trị số, không tạo ra những câu ẩn</span></a><a class="" data-section="visual--F11" data-target="visual/F11.html" href="visual/F11.html" title="Q/K/V: tính đọc từ đâu trước, rồi tính đọc vào bao nhiêu"><span class="rail-name">Q/K/V: tính đọc từ đâu trước, rồi tính đọc vào bao nhiêu</span></a><a class="" data-section="visual--F12" data-target="visual/F12.html" href="visual/F12.html" title="Mask là bảng quy định khả năng nhìn thấy, không phải ngữ nghĩa bổ sung"><span class="rail-name">Mask là bảng quy định khả năng nhìn thấy, không phải ngữ nghĩa bổ sung</span></a><a class="" data-section="visual--F13" data-target="visual/F13.html" href="visual/F13.html" title="Vị trí đi vào phép tính số như thế nào"><span class="rail-name">Vị trí đi vào phép tính số như thế nào</span></a><a class="" data-section="visual--F14" data-target="visual/F14.html" href="visual/F14.html" title="Một lớp Transformer không chỉ có Attention"><span class="rail-name">Một lớp Transformer không chỉ có Attention</span></a><a class="" data-section="visual--F15" data-target="visual/F15.html" href="visual/F15.html" title="Một đầu vào được dự đoán liên tiếp như thế nào cho đến khi kết thúc"><span class="rail-name">Một đầu vào được dự đoán liên tiếp như thế nào cho đến khi kết thúc</span></a><a class="" data-section="visual--F16" data-target="visual/F16.html" href="visual/F16.html" title="KV Cache: giữ lại phần đã tính, không bỏ qua phần cần đọc"><span class="rail-name">KV Cache: giữ lại phần đã tính, không bỏ qua phần cần đọc</span></a><a class="" data-section="visual--F17" data-target="visual/F17.html" href="visual/F17.html" title="Gradient giống độ dốc; tốc độ học giống độ dài một bước đi"><span class="rail-name">Gradient giống độ dốc; tốc độ học giống độ dài một bước đi</span></a><a class="" data-section="visual--F18" data-target="visual/F18.html" href="visual/F18.html" title="Huấn luyện: đặt bài toán “mục tiếp theo” ở mỗi vị trí"><span class="rail-name">Huấn luyện: đặt bài toán “mục tiếp theo” ở mỗi vị trí</span></a><a class="" data-section="visual--F19" data-target="visual/F19.html" href="visual/F19.html" title="Hậu huấn luyện thay đổi hành vi; phần thưởng không phải trọng tài phán định sự thật"><span class="rail-name">Hậu huấn luyện thay đổi hành vi; phần thưởng không phải trọng tài phán định sự thật</span></a><a class="" data-section="visual--F20" data-target="visual/F20.html" href="visual/F20.html" title="Giảm tham số, giảm số bit và giảm phần kích hoạt không phải cùng một kiểu tối ưu"><span class="rail-name">Giảm tham số, giảm số bit và giảm phần kích hoạt không phải cùng một kiểu tối ưu</span></a><a class="" data-section="visual--F21" data-target="visual/F21.html" href="visual/F21.html" title="Tính chậm có thể là do chuyển dữ liệu chậm"><span class="rail-name">Tính chậm có thể là do chuyển dữ liệu chậm</span></a><a class="" data-section="visual--F22" data-target="visual/F22.html" href="visual/F22.html" title="Tách một nhiệm vụ Agent thành những lượt thực sự diễn ra"><span class="rail-name">Tách một nhiệm vụ Agent thành những lượt thực sự diễn ra</span></a><a class="" data-section="visual--F23" data-target="visual/F23.html" href="visual/F23.html" title="Ký tự đầy đủ, sự kiện đầy đủ và tham số công cụ đầy đủ là ba cửa kiểm tra"><span class="rail-name">Ký tự đầy đủ, sự kiện đầy đủ và tham số công cụ đầy đủ là ba cửa kiểm tra</span></a><a class="" data-section="visual--F24" data-target="visual/F24.html" href="visual/F24.html" title="Trạng thái nhiệm vụ không phải một câu tổng kết trong cuộc trò chuyện"><span class="rail-name">Trạng thái nhiệm vụ không phải một câu tổng kết trong cuộc trò chuyện</span></a><a class="" data-section="visual--F25" data-target="visual/F25.html" href="visual/F25.html" title="MCP kết nối các giao diện, không tự động trao quyền"><span class="rail-name">MCP kết nối các giao diện, không tự động trao quyền</span></a><a class="" data-section="visual--F26" data-target="visual/F26.html" href="visual/F26.html" title="Ngữ cảnh mỗi lượt giống một tập tài liệu làm việc có giới hạn"><span class="rail-name">Ngữ cảnh mỗi lượt giống một tập tài liệu làm việc có giới hạn</span></a><a class="" data-section="visual--F27" data-target="visual/F27.html" href="visual/F27.html" title="Cô đọng phải giữ lại những sự kiện làm cơ sở cho hành động"><span class="rail-name">Cô đọng phải giữ lại những sự kiện làm cơ sở cho hành động</span></a><a class="" data-section="visual--F28" data-target="visual/F28.html" href="visual/F28.html" title="Truy hồi tìm ứng viên trước, rồi mới đánh giá có thể trả lời hay không"><span class="rail-name">Truy hồi tìm ứng viên trước, rồi mới đánh giá có thể trả lời hay không</span></a><a class="" data-section="visual--F29" data-target="visual/F29.html" href="visual/F29.html" title="Từ hai danh sách ứng viên đến bằng chứng có thể sử dụng"><span class="rail-name">Từ hai danh sách ứng viên đến bằng chứng có thể sử dụng</span></a><a class="" data-section="visual--F30" data-target="visual/F30.html" href="visual/F30.html" title="Truy hồi mã không thể chỉ dựa vào “ngữ nghĩa gần nhau”"><span class="rail-name">Truy hồi mã không thể chỉ dựa vào “ngữ nghĩa gần nhau”</span></a><a class="" data-section="visual--F31" data-target="visual/F31.html" href="visual/F31.html" title="Bộ nhớ dài hạn không phải mẩu ghi chú luôn luôn đúng"><span class="rail-name">Bộ nhớ dài hạn không phải mẩu ghi chú luôn luôn đúng</span></a><a class="" data-section="visual--F32" data-target="visual/F32.html" href="visual/F32.html" title="Skill đã tồn tại, vì sao vẫn có thể hoàn toàn không có tác dụng?"><span class="rail-name">Skill đã tồn tại, vì sao vẫn có thể hoàn toàn không có tác dụng? </span></a><a class="" data-section="visual--F33" data-target="visual/F33.html" href="visual/F33.html" title="Hết thời gian chờ cho biết chưa nhận được, không cho biết việc đó chưa xảy ra"><span class="rail-name">Hết thời gian chờ cho biết chưa nhận được, không cho biết việc đó chưa xảy ra</span></a><a class="" data-section="visual--F34" data-target="visual/F34.html" href="visual/F34.html" title="Kiểm thử là tìm phản ví dụ, không phải đóng dấu xanh cho mã"><span class="rail-name">Kiểm thử là tìm phản ví dụ, không phải đóng dấu xanh cho mã</span></a><a class="" data-section="visual--F35" data-target="visual/F35.html" href="visual/F35.html" title="Khi đọc chỉ số, trước hết hãy hỏi mẫu số của nó là gì"><span class="rail-name">Khi đọc chỉ số, trước hết hãy hỏi mẫu số của nó là gì</span></a><a class="" data-section="visual--F36" data-target="visual/F36.html" href="visual/F36.html" title="Tăng 10 điểm phần trăm, vì sao vẫn chưa thể vội kết luận?"><span class="rail-name">Tăng 10 điểm phần trăm, vì sao vẫn chưa thể vội kết luận? </span></a><a class="" data-section="visual--F37" data-target="visual/F37.html" href="visual/F37.html" title="Tài liệu có thể tác động đến mô hình, nhưng điều đó không có nghĩa là được cấp quyền"><span class="rail-name">Tài liệu có thể tác động đến mô hình, nhưng điều đó không có nghĩa là được cấp quyền</span></a><a class="" data-section="visual--F38" data-target="visual/F38.html" href="visual/F38.html" title="Trace phải cho biết quan hệ nhân quả, không chỉ dấu thời gian"><span class="rail-name">Trace phải cho biết quan hệ nhân quả, không chỉ dấu thời gian</span></a><a class="" data-section="visual--F39" data-target="visual/F39.html" href="visual/F39.html" title="Biểu diễn hình ảnh và hành động trên giao diện là hai lớp vấn đề khác nhau"><span class="rail-name">Biểu diễn hình ảnh và hành động trên giao diện là hai lớp vấn đề khác nhau</span></a><a class="" data-section="visual--F40" data-target="visual/F40.html" href="visual/F40.html" title="Trước hết xác định lỗi xảy ra ở lớp nào, rồi mới bàn chuyện đổi mô hình"><span class="rail-name">Trước hết xác định lỗi xảy ra ở lớp nào, rồi mới bàn chuyện đổi mô hình</span></a><a class="" data-section="visual--O01" data-target="visual/O01.html" href="visual/O01.html" title="GQA/MQA: giảm số nhóm K/V"><span class="rail-name">GQA/MQA: giảm số nhóm K/V</span></a><a class="" data-section="visual--O02" data-target="visual/O02.html" href="visual/O02.html" title="Lượng tử hóa: tiết kiệm dung lượng lưu trữ, đồng thời đưa vào sai số xấp xỉ"><span class="rail-name">Lượng tử hóa: tiết kiệm dung lượng lưu trữ, đồng thời đưa vào sai số xấp xỉ</span></a><a class="" data-section="visual--O03" data-target="visual/O03.html" href="visual/O03.html" title="LoRA: đóng băng bảng lớn, học phần thay đổi nhỏ"><span class="rail-name">LoRA: đóng băng bảng lớn, học phần thay đổi nhỏ</span></a><a class="" data-section="visual--O04" data-target="visual/O04.html" href="visual/O04.html" title="FlashAttention: vừa đọc vừa tích lũy, không giữ toàn bộ bảng"><span class="rail-name">FlashAttention: vừa đọc vừa tích lũy, không giữ toàn bộ bảng</span></a><a class="" data-section="visual--O05" data-target="visual/O05.html" href="visual/O05.html" title="PagedAttention: liên tục về logic, có thể chia khối về vật lý"><span class="rail-name">PagedAttention: liên tục về logic, có thể chia khối về vật lý</span></a><a class="" data-section="visual--O06" data-target="visual/O06.html" href="visual/O06.html" title="Gộp lô liên tục: có chỗ trống thì nhận mục tiếp theo"><span class="rail-name">Gộp lô liên tục: có chỗ trống thì nhận mục tiếp theo</span></a><a class="" data-section="visual--O07" data-target="visual/O07.html" href="visual/O07.html" title="Giải mã suy đoán: bản nháp có thể nhanh, nhưng phải được kiểm tra đúng"><span class="rail-name">Giải mã suy đoán: bản nháp có thể nhanh, nhưng phải được kiểm tra đúng</span></a><a class="" data-section="visual--O08" data-target="visual/O08.html" href="visual/O08.html" title="MoE: mỗi Token chọn một phần các đường tính toán"><span class="rail-name">MoE: mỗi Token chọn một phần các đường tính toán</span></a><a class="" data-section="visual--O09" data-target="visual/O09.html" href="visual/O09.html" title="Activation Checkpointing: lưu ít hơn, tính lại khi lan truyền ngược"><span class="rail-name">Activation Checkpointing: lưu ít hơn, tính lại khi lan truyền ngược</span></a><a class="" data-section="visual--O10" data-target="visual/O10.html" href="visual/O10.html" title="Cô đọng, truy hồi và Prompt Cache: ba cách “tiết kiệm” khác nhau"><span class="rail-name">Cô đọng, truy hồi và Prompt Cache: ba cách “tiết kiệm” khác nhau</span></a><a class="" data-section="visual--O11" data-target="visual/O11.html" href="visual/O11.html" title="Nhiều Agent: công việc có thể chạy song song quan trọng hơn số lượng Agent"><span class="rail-name">Nhiều Agent: công việc có thể chạy song song quan trọng hơn số lượng Agent</span></a><a class="" data-section="visual--O12" data-target="visual/O12.html" href="visual/O12.html" title="Định tuyến mô hình: rẻ hơn mỗi lần gọi chưa chắc đã rẻ hơn mỗi nhiệm vụ thành công"><span class="rail-name">Định tuyến mô hình: rẻ hơn mỗi lần gọi chưa chắc đã rẻ hơn mỗi nhiệm vụ thành công</span></a><a class="" data-section="visual--coverage" data-target="visual/coverage.html" href="visual/coverage.html" title="Bảng đối chiếu chương và minh họa"><span class="rail-name">Bảng đối chiếu chương và minh họa</span></a><a class="" data-section="visual--optimizations" data-target="visual/optimizations.html" href="visual/optimizations.html" title="Lựa chọn tối ưu: xem xét cả lợi ích lẫn chi phí"><span class="rail-name">Lựa chọn tối ưu: xem xét cả lợi ích lẫn chi phí</span></a><a class="" data-section="visual--sources" data-target="visual/sources.html" href="visual/sources.html" title="Nguồn và ranh giới áp dụng của các minh họa"><span class="rail-name">Nguồn và ranh giới áp dụng của các minh họa</span></a><a class="" data-section="visual--verification" data-target="visual/verification.html" href="visual/verification.html" title="Số liệu và chương trình của các minh họa"><span class="rail-name">Số liệu và chương trình của các minh họa</span></a></div></details><details class="rail-group" data-group="engineering"><summary data-i18n="rail.engineering">Đào sâu kỹ thuật</summary><div class="rail-links"><a class="" data-section="engineering--index" data-target="engineering/index.html" href="engineering/index.html" title="Phân tích kỹ thuật chuyên sâu: từ cơ chế đến ranh giới lỗi"><span class="rail-name">Phân tích kỹ thuật chuyên sâu: từ cơ chế đến ranh giới lỗi</span></a><a class="" data-section="engineering--labs" data-target="engineering/labs.html" href="engineering/labs.html" title="Phản ví dụ lỗi, kết quả thực tế và mã đầy đủ"><span class="rail-name">Phản ví dụ lỗi, kết quả thực tế và mã đầy đủ</span></a><a class="" data-section="engineering--agent-validation" data-target="engineering/agent-validation.html" href="engineering/agent-validation.html" title="Phản ví dụ có thể chạy của cơ chế Agent và phạm vi kiểm chứng"><span class="rail-name">Phản ví dụ có thể chạy và phạm vi kiểm chứng</span></a><a class="" data-section="engineering--sources" data-target="engineering/sources.html" href="engineering/sources.html" title="Căn cứ và phạm vi áp dụng của phần phân tích kỹ thuật chuyên sâu"><span class="rail-name">Căn cứ và phạm vi áp dụng của phần phân tích kỹ thuật chuyên sâu</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="engineering/agent-evidence.html"><span class="rail-name">Bằng chứng cơ chế Agent</span></a></div></details><details class="rail-group" data-group="studies"><summary data-i18n="rail.studies">Chuyên đề nghiên cứu</summary><div class="rail-links"><a class="" data-section="studies--chapters--01" data-target="studies/chapters/01.html" href="studies/chapters/01.html" title="01｜Văn bản trở thành xác suất như thế nào: Tokenizer, mẫu, hàm mục tiêu và gradient"><span class="rail-name">Văn bản trở thành xác suất như thế nào: Tokenizer, mẫu, hàm mục tiêu và gradient</span></a><a class="" data-section="studies--chapters--02" data-target="studies/chapters/02.html" href="studies/chapters/02.html" title="02｜Đi vào Decoder: hình dạng tensor, RoPE, GQA và tính đúng đắn của bộ nhớ đệm KV"><span class="rail-name">Đi vào Decoder: hình dạng tensor, RoPE, GQA và tính đúng đắn của bộ nhớ đệm KV</span></a><a class="" data-section="studies--chapters--03" data-target="studies/chapters/03.html" href="studies/chapters/03.html" title="03｜Bên trong hệ thống huấn luyện: dữ liệu, bộ tối ưu, bộ nhớ GPU và chi phí phân tán"><span class="rail-name">Bên trong hệ thống huấn luyện: dữ liệu, bộ tối ưu, bộ nhớ GPU và chi phí phân tán</span></a><a class="" data-section="studies--chapters--04" data-target="studies/chapters/04.html" href="studies/chapters/04.html" title="04｜Hậu huấn luyện và mô hình lập luận: từ mục tiêu ưu tiên đến năng lực có thể kiểm chứng"><span class="rail-name">Hậu huấn luyện và mô hình lập luận: từ mục tiêu ưu tiên đến năng lực có thể kiểm chứng</span></a><a class="" data-section="studies--chapters--05" data-target="studies/chapters/05.html" href="studies/chapters/05.html" title="05｜Đầu ra được chọn như thế nào: lấy mẫu, giải mã suy đoán và điều kiện dừng"><span class="rail-name">Đầu ra được chọn như thế nào: lấy mẫu, giải mã suy đoán và điều kiện dừng</span></a><a class="" data-section="studies--chapters--06" data-target="studies/chapters/06.html" href="studies/chapters/06.html" title="06｜Nút thắt thực tế của dịch vụ suy luận: bộ nhớ, FlashAttention, phân trang và lập lịch"><span class="rail-name">Nút thắt thực tế của dịch vụ suy luận: bộ nhớ, FlashAttention, phân trang và lập lịch</span></a><a class="" data-section="studies--chapters--07" data-target="studies/chapters/07.html" href="studies/chapters/07.html" title="07｜Bên trong giao diện mô hình: thông điệp, mục đầu ra, SSE và giao thức gọi công cụ"><span class="rail-name">Bên trong giao diện mô hình: thông điệp, mục đầu ra, SSE và giao thức gọi công cụ</span></a><a class="" data-section="studies--chapters--08" data-target="studies/chapters/08.html" href="studies/chapters/08.html" title="08｜Bên trong Harness: quyết định, thực thi, lưu bền và khôi phục sau sự cố"><span class="rail-name">Bên trong Harness: quyết định, thực thi, lưu bền và khôi phục sau sự cố</span></a><a class="" data-section="studies--chapters--09" data-target="studies/chapters/09.html" href="studies/chapters/09.html" title="09｜Theo dấu mã nguồn Codex: từ quy tắc kho mã đến lịch sử, vòng lặp và cô đọng"><span class="rail-name">Theo dấu mã nguồn Codex: từ quy tắc kho mã đến lịch sử, vòng lặp và cô đọng</span></a><a class="" data-section="studies--chapters--10" data-target="studies/chapters/10.html" href="studies/chapters/10.html" title="10｜Claude Code và Copilot: cơ chế công khai, hành vi có thể kiểm chứng và phần bên trong chưa biết"><span class="rail-name">Claude Code và Copilot: cơ chế công khai, hành vi có thể kiểm chứng và phần bên trong chưa biết</span></a><a class="" data-section="studies--chapters--11" data-target="studies/chapters/11.html" href="studies/chapters/11.html" title="11｜Bộ biên dịch ngữ cảnh: lựa chọn thông tin, bao đóng phụ thuộc và ngân sách"><span class="rail-name">Bộ biên dịch ngữ cảnh: lựa chọn thông tin, bao đóng phụ thuộc và ngân sách</span></a><a class="" data-section="studies--chapters--12" data-target="studies/chapters/12.html" href="studies/chapters/12.html" title="12｜Vấn đề sâu hơn của cô đọng: trạng thái mất mát, khôi phục bằng chứng và tiếp tục thực thi"><span class="rail-name">Vấn đề sâu hơn của cô đọng: trạng thái mất mát, khôi phục bằng chứng và tiếp tục thực thi</span></a><a class="" data-section="studies--chapters--13" data-target="studies/chapters/13.html" href="studies/chapters/13.html" title="13｜Bên trong hệ thống truy hồi: BM25, vectơ, ANN, hợp nhất và độ mới của chỉ mục"><span class="rail-name">Bên trong hệ thống truy hồi: BM25, vectơ, ANN, hợp nhất và độ mới của chỉ mục</span></a><a class="" data-section="studies--chapters--14" data-target="studies/chapters/14.html" href="studies/chapters/14.html" title="14｜Bên trong phân tích mã thông minh: AST, LSP, đồ thị phụ thuộc và bằng chứng có phiên bản"><span class="rail-name">Bên trong phân tích mã thông minh: AST, LSP, đồ thị phụ thuộc và bằng chứng có phiên bản</span></a><a class="" data-section="studies--chapters--15" data-target="studies/chapters/15.html" href="studies/chapters/15.html" title="15｜Bên trong hệ thống bộ nhớ: hai trục thời gian, xung đột, nguồn và việc quên hữu ích"><span class="rail-name">Bên trong hệ thống bộ nhớ: hai trục thời gian, xung đột, nguồn và việc quên hữu ích</span></a><a class="" data-section="studies--chapters--16" data-target="studies/chapters/16.html" href="studies/chapters/16.html" title="16｜Skills, công cụ và định tuyến mô hình: năng lực chuyên môn thực sự đi vào nhiệm vụ như thế nào"><span class="rail-name">Skills, công cụ và định tuyến mô hình: năng lực chuyên môn thực sự đi vào nhiệm vụ như thế nào</span></a><a class="" data-section="studies--chapters--17" data-target="studies/chapters/17.html" href="studies/chapters/17.html" title="17｜Bên trong nhiều Agent: DAG, bàn giao ngữ cảnh, xung đột đồng thời và lỗi tương quan"><span class="rail-name">Bên trong nhiều Agent: DAG, bàn giao ngữ cảnh, xung đột đồng thời và lỗi tương quan</span></a><a class="" data-section="studies--chapters--18" data-target="studies/chapters/18.html" href="studies/chapters/18.html" title="18｜Cốt lõi chất lượng kỹ thuật: hợp đồng, kiểm thử, phản ví dụ, Review và bằng chứng bàn giao"><span class="rail-name">Cốt lõi chất lượng kỹ thuật: hợp đồng, kiểm thử, phản ví dụ, Review và bằng chứng bàn giao</span></a><a class="" data-section="studies--chapters--19" data-target="studies/chapters/19.html" href="studies/chapters/19.html" title="19｜Đánh giá nâng cao: thí nghiệm ghép cặp, độ tin cậy, quy kết nhân quả và thiên lệch chấm điểm"><span class="rail-name">Đánh giá nâng cao: thí nghiệm ghép cặp, độ tin cậy, quy kết nhân quả và thiên lệch chấm điểm</span></a><a class="" data-section="studies--chapters--20" data-target="studies/chapters/20.html" href="studies/chapters/20.html" title="20｜Bên trong an toàn: ranh giới tin cậy, cấp quyền MCP, môi trường cách ly và kiểm soát tác dụng phụ"><span class="rail-name">Bên trong an toàn: ranh giới tin cậy, cấp quyền MCP, môi trường cách ly và kiểm soát tác dụng phụ</span></a><a class="" data-section="studies--chapters--21" data-target="studies/chapters/21.html" href="studies/chapters/21.html" title="21｜Khả năng quan sát sản xuất và vận hành tin cậy: Trace, hàng đợi, hủy và khôi phục"><span class="rail-name">Khả năng quan sát sản xuất và vận hành tin cậy: Trace, hàng đợi, hủy và khôi phục</span></a><a class="" data-section="studies--chapters--22" data-target="studies/chapters/22.html" href="studies/chapters/22.html" title="22｜Quyết định chi phí và hiệu năng: trên mỗi nhiệm vụ thành công, không phải mỗi Token"><span class="rail-name">Quyết định chi phí và hiệu năng: trên mỗi nhiệm vụ thành công, không phải mỗi Token</span></a><a class="" data-section="studies--chapters--23" data-target="studies/chapters/23.html" href="studies/chapters/23.html" title="23｜Tinh chỉnh, lượng tử hóa và chưng cất: thay đổi mô hình hay thay đổi hệ thống đầu vào"><span class="rail-name">Tinh chỉnh, lượng tử hóa và chưng cất: thay đổi mô hình hay thay đổi hệ thống đầu vào</span></a><a class="" data-section="studies--chapters--24" data-target="studies/chapters/24.html" href="studies/chapters/24.html" title="24｜Đa phương thức và thao tác máy tính: biểu diễn, định vị và vòng lặp quan sát—hành động"><span class="rail-name">Đa phương thức và thao tác máy tính: biểu diễn, định vị và vòng lặp quan sát—hành động</span></a><a class="" data-section="studies--chapters--25" data-target="studies/chapters/25.html" href="studies/chapters/25.html" title="25｜Câu trả lời đáng tin và khả năng diễn giải: hiệu chuẩn, từ chối trả lời, bằng chứng và can thiệp nhân quả"><span class="rail-name">Câu trả lời đáng tin và khả năng diễn giải: hiệu chuẩn, từ chối trả lời, bằng chứng và can thiệp nhân quả</span></a><a class="" data-section="studies--chapters--26" data-target="studies/chapters/26.html" href="studies/chapters/26.html" title="26｜Nhánh nghiên cứu nâng cao: logic lựa chọn kiến trúc, tìm kiếm, RAG và phương pháp bộ nhớ"><span class="rail-name">Nhánh nghiên cứu nâng cao: logic lựa chọn kiến trúc, tìm kiếm, RAG và phương pháp bộ nhớ</span></a><a class="" data-section="studies--chapters--27" data-target="studies/chapters/27.html" href="studies/chapters/27.html" title="27｜Tình huống xuyên suốt: sửa exclude, từ lỗi ban đầu đến bàn giao có thể khôi phục"><span class="rail-name">Tình huống xuyên suốt: sửa exclude, từ lỗi ban đầu đến bàn giao có thể khôi phục</span></a><a class="" data-section="studies--chapters--28" data-target="studies/chapters/28.html" href="studies/chapters/28.html" title="28｜Bản thiết kế ứng dụng chuyên sâu: hỏi đáp doanh nghiệp, chẩn đoán kho mã, nghiên cứu và tự động hóa có kiểm soát"><span class="rail-name">Bản thiết kế ứng dụng chuyên sâu: hỏi đáp doanh nghiệp, chẩn đoán kho mã, nghiên cứu và tự động hóa có kiểm soát</span></a><a class="" data-section="studies--chapters--29" data-target="studies/chapters/29.html" href="studies/chapters/29.html" title="29｜Sổ tay chẩn đoán lỗi: từ hiện tượng đến bản sửa nhỏ nhất có hiệu quả"><span class="rail-name">Sổ tay chẩn đoán lỗi: từ hiện tượng đến bản sửa nhỏ nhất có hiệu quả</span></a><a class="" data-section="studies--chapters--30" data-target="studies/chapters/30.html" href="studies/chapters/30.html" title="30｜Nghiệm thu năng lực cấp cao: câu hỏi mở, đáp án tham khảo và dự án tốt nghiệp"><span class="rail-name">Nghiệm thu năng lực cấp cao: câu hỏi mở, đáp án tham khảo và dự án tốt nghiệp</span></a><a class="" data-section="studies--chapters--31" data-target="studies/chapters/31.html" href="studies/chapters/31.html" title="31｜Phụ chương suy diễn: lan truyền ngược của chú ý và truy hồi có thể huấn luyện"><span class="rail-name">Phụ chương suy diễn: lan truyền ngược của chú ý và truy hồi có thể huấn luyện</span></a><a class="" data-section="studies--index" data-target="studies/index.html" href="studies/index.html" title="Chuyên đề nghiên cứu: triển khai, kiểm chứng và ứng dụng"><span class="rail-name">Chuyên đề nghiên cứu: triển khai, kiểm chứng và ứng dụng</span></a><a class="" data-section="studies--experiments" data-target="studies/experiments.html" href="studies/experiments.html" title="Sổ tay thí nghiệm: triển khai, phản ví dụ và giới hạn của kết quả đo thực tế"><span class="rail-name">Sổ tay thí nghiệm: triển khai, phản ví dụ và giới hạn của kết quả đo thực tế</span></a><a class="" data-section="studies--results" data-target="studies/results.html" href="studies/results.html" title="Kết quả thực tế · Hiển thị đầy đủ bản ghi và vết thực thi"><span class="rail-name">Kết quả thực tế · Hiển thị đầy đủ bản ghi và vết thực thi</span></a><a class="" data-section="studies--roadmap" data-target="studies/roadmap.html" href="studies/roadmap.html" title="Cách đọc các chuyên đề nghiên cứu"><span class="rail-name">Cách đọc các chuyên đề nghiên cứu</span></a><a class="" data-section="studies--source-code" data-target="studies/source-code.html" href="studies/source-code.html" title="Mã nguồn thí nghiệm đầy đủ · 12 tệp Python"><span class="rail-name">Mã nguồn thí nghiệm đầy đủ · 12 tệp Python</span></a><a class="" data-section="studies--sources" data-target="studies/sources.html" href="studies/sources.html" title="Nguồn, phiên bản và ranh giới sự kiện"><span class="rail-name">Nguồn, phiên bản và ranh giới sự kiện</span></a></div></details><details class="rail-group" data-group="reading-notes"><summary data-i18n="rail.reading">Đọc thêm</summary><div class="rail-links"><a class="" data-section="reading-notes--chapter-00" data-target="reading-notes/chapter-00.html" href="reading-notes/chapter-00.html" title="Nhận thức tổng thể"><span class="rail-name">Nhận thức tổng thể</span></a><a class="" data-section="reading-notes--chapter-01" data-target="reading-notes/chapter-01.html" href="reading-notes/chapter-01.html" title="Bên trong mô hình"><span class="rail-name">Bên trong mô hình</span></a><a class="" data-section="reading-notes--chapter-02" data-target="reading-notes/chapter-02.html" href="reading-notes/chapter-02.html" title="Hình thành năng lực"><span class="rail-name">Hình thành năng lực</span></a><a class="" data-section="reading-notes--chapter-03" data-target="reading-notes/chapter-03.html" href="reading-notes/chapter-03.html" title="Suy luận và phục vụ"><span class="rail-name">Suy luận và phục vụ</span></a><a class="" data-section="reading-notes--chapter-04" data-target="reading-notes/chapter-04.html" href="reading-notes/chapter-04.html" title="Giao diện đầu vào và đầu ra"><span class="rail-name">Giao diện đầu vào và đầu ra</span></a><a class="" data-section="reading-notes--chapter-05" data-target="reading-notes/chapter-05.html" href="reading-notes/chapter-05.html" title="Kiến thức cơ bản về Agent"><span class="rail-name">Kiến thức cơ bản về Agent</span></a><a class="" data-section="reading-notes--chapter-06" data-target="reading-notes/chapter-06.html" href="reading-notes/chapter-06.html" title="Agent lập trình thực tế"><span class="rail-name">Agent lập trình thực tế</span></a><a class="" data-section="reading-notes--chapter-07" data-target="reading-notes/chapter-07.html" href="reading-notes/chapter-07.html" title="Kỹ thuật ngữ cảnh"><span class="rail-name">Kỹ thuật ngữ cảnh</span></a><a class="" data-section="reading-notes--chapter-08" data-target="reading-notes/chapter-08.html" href="reading-notes/chapter-08.html" title="Truy hồi và phân tích mã thông minh"><span class="rail-name">Truy hồi và phân tích mã thông minh</span></a><a class="" data-section="reading-notes--chapter-09" data-target="reading-notes/chapter-09.html" href="reading-notes/chapter-09.html" title="Bộ nhớ dài hạn"><span class="rail-name">Bộ nhớ dài hạn</span></a><a class="" data-section="reading-notes--chapter-10" data-target="reading-notes/chapter-10.html" href="reading-notes/chapter-10.html" title="Skills và nhiều Agent"><span class="rail-name">Skills và nhiều Agent</span></a><a class="" data-section="reading-notes--chapter-11" data-target="reading-notes/chapter-11.html" href="reading-notes/chapter-11.html" title="Kỹ nghệ phần mềm AI"><span class="rail-name">Kỹ nghệ phần mềm AI</span></a><a class="" data-section="reading-notes--chapter-12" data-target="reading-notes/chapter-12.html" href="reading-notes/chapter-12.html" title="Phương pháp đánh giá"><span class="rail-name">Phương pháp đánh giá</span></a><a class="" data-section="reading-notes--chapter-13" data-target="reading-notes/chapter-13.html" href="reading-notes/chapter-13.html" title="An toàn và quyền hạn"><span class="rail-name">An toàn và quyền hạn</span></a><a class="" data-section="reading-notes--chapter-14" data-target="reading-notes/chapter-14.html" href="reading-notes/chapter-14.html" title="Vận hành và hiệu năng"><span class="rail-name">Vận hành và hiệu năng</span></a><a class="" data-section="reading-notes--chapter-15" data-target="reading-notes/chapter-15.html" href="reading-notes/chapter-15.html" title="Chuyên đề nâng cao"><span class="rail-name">Chuyên đề nâng cao</span></a><a class="" data-section="reading-notes--chapter-16" data-target="reading-notes/chapter-16.html" href="reading-notes/chapter-16.html" title="Bổ sung toán học và triển khai"><span class="rail-name">Bổ sung toán học và triển khai</span></a><a class="" data-section="reading-notes--guide-01" data-target="reading-notes/guide-01.html" href="reading-notes/guide-01.html" title="Minh họa Transformer"><span class="rail-name">Minh họa Transformer</span></a><a class="" data-section="reading-notes--guide-02" data-target="reading-notes/guide-02.html" href="reading-notes/guide-02.html" title="Cơ chế chú ý, tính rõ từng bước"><span class="rail-name">Cơ chế chú ý, tính rõ từng bước</span></a><a class="" data-section="reading-notes--guide-03" data-target="reading-notes/guide-03.html" href="reading-notes/guide-03.html" title="Toàn bộ chuỗi sử dụng LLM"><span class="rail-name">Toàn bộ chuỗi sử dụng LLM</span></a><a class="" data-section="reading-notes--guide-04" data-target="reading-notes/guide-04.html" href="reading-notes/guide-04.html" title="Xây dựng Agent hiệu quả như thế nào"><span class="rail-name">Xây dựng Agent hiệu quả như thế nào</span></a><a class="" data-section="reading-notes--guide-05" data-target="reading-notes/guide-05.html" href="reading-notes/guide-05.html" title="Phân tích vòng lặp thực thi của Codex"><span class="rail-name">Phân tích vòng lặp thực thi của Codex</span></a><a class="" data-section="reading-notes--guide-06" data-target="reading-notes/guide-06.html" href="reading-notes/guide-06.html" title="Claude Code hoạt động như thế nào"><span class="rail-name">Claude Code hoạt động như thế nào</span></a><a class="" data-section="reading-notes--guide-07" data-target="reading-notes/guide-07.html" href="reading-notes/guide-07.html" title="Các phương pháp cốt lõi của kỹ thuật ngữ cảnh"><span class="rail-name">Các phương pháp cốt lõi của kỹ thuật ngữ cảnh</span></a><a class="" data-section="reading-notes--guide-08" data-target="reading-notes/guide-08.html" href="reading-notes/guide-08.html" title="Duy trì tính liên tục của nhiệm vụ sau khi cô đọng như thế nào"><span class="rail-name">Duy trì tính liên tục của nhiệm vụ sau khi cô đọng như thế nào</span></a><a class="" data-section="reading-notes--guide-09" data-target="reading-notes/guide-09.html" href="reading-notes/guide-09.html" title="Để truy hồi cung cấp bằng chứng thực sự cần thiết"><span class="rail-name">Để truy hồi cung cấp bằng chứng thực sự cần thiết</span></a><a class="" data-section="reading-notes--guide-10" data-target="reading-notes/guide-10.html" href="reading-notes/guide-10.html" title="Hiểu bộ nhớ hiệu quả từ CoALA"><span class="rail-name">Hiểu bộ nhớ hiệu quả từ CoALA</span></a><a class="" data-section="reading-notes--guide-11" data-target="reading-notes/guide-11.html" href="reading-notes/guide-11.html" title="Nâng cao chất lượng bàn giao bằng môi trường kỹ thuật"><span class="rail-name">Nâng cao chất lượng bàn giao bằng môi trường kỹ thuật</span></a><a class="" data-section="reading-notes--guide-12" data-target="reading-notes/guide-12.html" href="reading-notes/guide-12.html" title="Chứng minh tối ưu Agent có hiệu quả như thế nào"><span class="rail-name">Chứng minh tối ưu Agent có hiệu quả như thế nào</span></a><a class="" data-section="reading-notes--index" data-target="reading-notes/index.html" href="reading-notes/index.html" title="Đọc mở rộng: chủ đề nghiên cứu và bài giảng tiếng Việt"><span class="rail-name">Đọc mở rộng: chủ đề nghiên cứu và bài giảng tiếng Việt</span></a><a class="" data-section="reading-notes--about" data-target="reading-notes/about.html" href="reading-notes/about.html" title="Nguồn và quy ước ví dụ của phần đọc mở rộng"><span class="rail-name">Nguồn và quy ước ví dụ của phần đọc mở rộng</span></a><a class="" data-section="reading-notes--glossary" data-target="reading-notes/glossary.html" href="reading-notes/glossary.html" title="Bảng thuật ngữ Việt–Anh"><span class="rail-name">Bảng thuật ngữ Việt–Anh</span></a><a class="" data-section="reading-notes--lab-01" data-target="reading-notes/lab-01.html" href="reading-notes/lab-01.html" title="BPE dùng cho giảng dạy: ký tự được ghép thành Token như thế nào"><span class="rail-name">BPE dùng cho giảng dạy: ký tự được ghép thành Token như thế nào</span></a><a class="" data-section="reading-notes--lab-02" data-target="reading-notes/lab-02.html" href="reading-notes/lab-02.html" title="Tính tay cơ chế chú ý và mặt nạ nhân quả"><span class="rail-name">Tính tay cơ chế chú ý và mặt nạ nhân quả</span></a><a class="" data-section="reading-notes--lab-03" data-target="reading-notes/lab-03.html" href="reading-notes/lab-03.html" title="Ước tính bộ nhớ đệm KV và tái sử dụng tiền tố"><span class="rail-name">Ước tính bộ nhớ đệm KV và tái sử dụng tiền tố</span></a><a class="" data-section="reading-notes--lab-04" data-target="reading-notes/lab-04.html" href="reading-notes/lab-04.html" title="RRF và các chỉ số truy hồi"><span class="rail-name">RRF và các chỉ số truy hồi</span></a><a class="" data-section="reading-notes--lab-05" data-target="reading-notes/lab-05.html" href="reading-notes/lab-05.html" title="Bảo toàn độ trung thực khi cô đọng: không được mất trạng thái và ý phủ định"><span class="rail-name">Bảo toàn độ trung thực khi cô đọng: không được mất trạng thái và ý phủ định</span></a><a class="" data-section="reading-notes--lab-06" data-target="reading-notes/lab-06.html" href="reading-notes/lab-06.html" title="Phạm vi bộ nhớ, phiên bản, hết hạn và xung đột"><span class="rail-name">Phạm vi bộ nhớ, phiên bản, hết hạn và xung đột</span></a><a class="" data-section="reading-notes--lab-07" data-target="reading-notes/lab-07.html" href="reading-notes/lab-07.html" title="Tách đề xuất của mô hình khỏi thực thi bằng chương trình"><span class="rail-name">Tách đề xuất của mô hình khỏi thực thi bằng chương trình</span></a><a class="" data-section="reading-notes--lab-08" data-target="reading-notes/lab-08.html" href="reading-notes/lab-08.html" title="Tỷ lệ thành công, so sánh ghép cặp và cách tính chi phí thực tế"><span class="rail-name">Tỷ lệ thành công, so sánh ghép cặp và cách tính chi phí thực tế</span></a><a class="" data-section="reading-notes--lab-09" data-target="reading-notes/lab-09.html" href="reading-notes/lab-09.html" title="Từ hợp đồng đến bản vá và kiểm thử phản ví dụ"><span class="rail-name">Từ hợp đồng đến bản vá và kiểm thử phản ví dụ</span></a><a class="" data-section="reading-notes--lab-10" data-target="reading-notes/lab-10.html" href="reading-notes/lab-10.html" title="Trace song song: thời gian thực và tổng khối lượng thao tác khác nhau"><span class="rail-name">Trace song song: thời gian thực và tổng khối lượng thao tác khác nhau</span></a><a class="" data-section="reading-notes--labs" data-target="reading-notes/labs.html" href="reading-notes/labs.html" title="10 thí nghiệm cơ chế ngoại tuyến"><span class="rail-name">10 thí nghiệm cơ chế ngoại tuyến</span></a><a class="" data-section="reading-notes--roadmap" data-target="reading-notes/roadmap.html" href="reading-notes/roadmap.html" title="Cách đọc tài liệu mở rộng"><span class="rail-name">Cách đọc tài liệu mở rộng</span></a><a class="" data-section="reading-notes--sources" data-target="reading-notes/sources.html" href="reading-notes/sources.html" title="Ghi chú về nguồn và phiên bản"><span class="rail-name">Ghi chú về nguồn và phiên bản</span></a></div></details><details class="rail-group" data-group="reference"><summary data-i18n="rail.reference">Chỉ mục và nguồn</summary><div class="rail-links"><a class="" data-section="guide-coverage" data-target="coverage.html" href="coverage.html" title="Chỉ mục chuyên đề và phụ thuộc kiến thức"><span class="rail-name">Chỉ mục chuyên đề và phụ thuộc kiến thức</span></a><a class="" data-section="guide-advanced-labs" data-target="advanced-labs.html" href="advanced-labs.html" title="Thí nghiệm nâng cao về tính toán số và vận hành Agent"><span class="rail-name">Phụ lục mã nâng cao</span></a><a class="" data-section="guide-about" data-target="about.html" href="about.html" title="Về cuốn sách này và ranh giới bằng chứng"><span class="rail-name">Về cuốn sách này và ranh giới bằng chứng</span></a><a class="" data-section="glossary" data-target="glossary.html" href="glossary.html" title="Tra nhanh thuật ngữ và ký hiệu"><span class="rail-name">Tra nhanh thuật ngữ và ký hiệu</span></a><a class="" data-section="concepts" data-target="concepts.html" href="concepts.html" title="Công thức và thuật ngữ: nhận biết đối tượng trước, hiểu phép toán sau"><span class="rail-name">Công thức và thuật ngữ: nhận biết đối tượng trước, hiểu phép toán sau</span></a><a class="" data-section="topics" data-target="topics.html" href="topics.html" title="Chỉ mục chủ đề kiến thức"><span class="rail-name">Chỉ mục chủ đề kiến thức</span></a><a class="" data-section="sources" data-target="sources.html" href="sources.html" title="Tài liệu tham khảo và phạm vi áp dụng"><span class="rail-name">Tài liệu tham khảo và phạm vi áp dụng</span></a><a class="" data-section="reference--model-sources" data-target="reference/model-sources.html" href="reference/model-sources.html" title="Cơ chế mô hình: nguồn nguyên lý và phiên bản giao diện"><span class="rail-name">Cơ chế mô hình: nguồn nguyên lý và phiên bản giao diện</span></a><a class="" data-section="example-sources" data-target="example-sources.html" href="example-sources.html" title="Ví dụ chạy: căn cứ, tham số và phạm vi"><span class="rail-name">Ví dụ chạy: căn cứ, tham số và phạm vi</span></a><a class="" data-section="mechanisms--sources" data-target="mechanisms/sources.html" href="mechanisms/sources.html" title="Nguồn và điều kiện áp dụng của các minh họa trong nội dung chính"><span class="rail-name">Nguồn và điều kiện áp dụng của các minh họa trong nội dung chính</span></a><a class="" data-section="mechanisms--verification" data-target="mechanisms/verification.html" href="mechanisms/verification.html" title="Bản ghi tính toán và kiểm chứng minh họa"><span class="rail-name">Bản ghi tính toán và kiểm chứng minh họa</span></a></div></details><details class="rail-group" data-group="implementation"><summary data-i18n="rail.implementation">Mã nguồn thực hành đầy đủ</summary><div class="rail-links"><a class="" data-section="studies--code--attention_gradients" data-target="studies/code/attention_gradients.html" href="studies/code/attention_gradients.html" title="attention_gradients.py"><span class="rail-name">attention_gradients.py</span></a><a class="" data-section="studies--code--capstone" data-target="studies/code/capstone.html" href="studies/code/capstone.html" title="capstone.py"><span class="rail-name">capstone.py</span></a><a class="" data-section="studies--code--context_memory" data-target="studies/code/context_memory.html" href="studies/code/context_memory.html" title="context_memory.py"><span class="rail-name">context_memory.py</span></a><a class="" data-section="studies--code--journal" data-target="studies/code/journal.html" href="studies/code/journal.html" title="journal.py"><span class="rail-name">journal.py</span></a><a class="" data-section="studies--code--live_readonly" data-target="studies/code/live_readonly.html" href="studies/code/live_readonly.html" title="live_readonly.py"><span class="rail-name">live_readonly.py</span></a><a class="" data-section="studies--code--numerics" data-target="studies/code/numerics.html" href="studies/code/numerics.html" title="numerics.py"><span class="rail-name">numerics.py</span></a><a class="" data-section="studies--code--retrieval" data-target="studies/code/retrieval.html" href="studies/code/retrieval.html" title="retrieval.py"><span class="rail-name">retrieval.py</span></a><a class="" data-section="studies--code--run_all" data-target="studies/code/run_all.html" href="studies/code/run_all.html" title="run_all.py"><span class="rail-name">run_all.py</span></a><a class="" data-section="studies--code--sse_protocol" data-target="studies/code/sse_protocol.html" href="studies/code/sse_protocol.html" title="sse_protocol.py"><span class="rail-name">sse_protocol.py</span></a><a class="" data-section="studies--code--statistics_lab" data-target="studies/code/statistics_lab.html" href="studies/code/statistics_lab.html" title="statistics_lab.py"><span class="rail-name">statistics_lab.py</span></a><a class="" data-section="studies--code--test_suite" data-target="studies/code/test_suite.html" href="studies/code/test_suite.html" title="test_suite.py"><span class="rail-name">test_suite.py</span></a><a class="" data-section="studies--code--train_tiny_lm" data-target="studies/code/train_tiny_lm.html" href="studies/code/train_tiny_lm.html" title="train_tiny_lm.py"><span class="rail-name">train_tiny_lm.py</span></a></div></details></nav><div class="rail-foot"><span><span data-i18n="rail.current">Hiện tại</span> <span data-nav-current-label=""></span></span><a href="contents.html" data-i18n="rail.full">Mục lục đầy đủ</a></div></aside><div class="reading-layout"><main class="reading-main" id="main-content"><article class="article"><div class="breadcrumb"><a href="index.html" data-i18n="page.home">Trang chủ</a> / <a href="contents.html">Công cụ đọc</a></div><div class="eyebrow">Kỹ thuật hệ thống AI · Ví dụ chạy</div><h1>Kiểm tra ví dụ: giá trị số, trạng thái và mã</h1><details class="mobile-outline"><summary data-i18n="outline.summary">Trong trang này</summary><nav aria-label="Đề cương chương này" class="toc"><a href="#run">Cách tính lại</a><a href="#logs">Nhật ký kiểm thử gốc</a><a href="#calculated-results">Đầu ra chương trình của ví dụ tính toán trong nội dung</a><a href="#code">Chương trình đầy đủ</a></nav></details><div aria-label="Thông tin đọc" class="reading-meta"><span class="meta-kind">Công cụ đọc</span><span>Khoảng 1.4 nghìn chữ</span></div><p class="lead">Đối chiếu con số trong sách với mã có thể chạy, đồng thời nói rõ kết luận nào nằm ngoài phạm vi chứng minh của các kiểm thử này.</p><div class="validation-scope"><strong>Giới hạn xác thực:</strong> 401 ví dụ giảng dạy không tương đương 401 thí nghiệm về năng lực mô hình. 108 kiểm thử bổ sung kiểm tra công thức số học, chiều, tính nhân quả, gradient, phân mảnh giao thức và hành vi trạng thái đơn giản hóa; các tình huống khác suy diễn rõ ràng từ điều kiện cho trước. Chúng không chứng minh hiệu quả của Agent thương mại, tốc độ GPU, nội bộ mã đóng hay an toàn sản xuất.</div><h2 id="run">Cách tính lại</h2><p>Python 3.10 trở lên, chỉ dùng thư viện chuẩn. Thực hiện trong thư mục giải nén:</p><pre><code>python3 worked-examples/run_all.py</code></pre><p>Ba nhóm chứng cứ tổng cộng 108 kiểm thử (34＋60＋14) đều đã thực sự chạy vượt qua. 39 kiểm thử cơ sở, 49 kiểm thử chuyên đề và 12 chứng cứ chạy cũ cũng đã chạy lại vượt qua; thêm 10 thí nghiệm mở rộng vượt tự kiểm tra. Phần sau tính là 10 thí nghiệm, không giả làm 10 kiểm thử đơn vị cùng cách tính.</p><p>Chưa huấn luyện lại mô hình thương mại hay chạy toàn bộ benchmark bài báo; bản ghi huấn luyện mô hình nhỏ vốn có được giữ làm tài liệu thí nghiệm gốc. Trang này hiển thị kết quả máy đọc được, không dùng câu khẳng định thay tính toán.</p><h2 id="logs">Nhật ký kiểm thử gốc</h2><h3 id="topic-1">Cơ sở giá trị số và trạng thái: 34 mục</h3><pre>test_acl_before_model (__main__.WitnessTests.test_acl_before_model) ... ok
+test_adamw (__main__.WitnessTests.test_adamw) ... ok
+test_atomic_replace_fixture (__main__.WitnessTests.test_atomic_replace_fixture) ... ok
+test_bm25_ranking (__main__.WitnessTests.test_bm25_ranking) ... ok
+test_cache_equivalence (__main__.WitnessTests.test_cache_equivalence) ... ok
+test_cache_wrong_offset_detected (__main__.WitnessTests.test_cache_wrong_offset_detected) ... ok
+test_ce_update (__main__.WitnessTests.test_ce_update) ... ok
+test_chunk_mask (__main__.WitnessTests.test_chunk_mask) ... ok
+test_compare_and_swap (__main__.WitnessTests.test_compare_and_swap) ... ok
+test_dag_critical_path (__main__.WitnessTests.test_dag_critical_path) ... ok
+test_dpo_margin (__main__.WitnessTests.test_dpo_margin) ... ok
+test_embedding_semantics (__main__.WitnessTests.test_embedding_semantics) ... ok
+test_future_mask (__main__.WitnessTests.test_future_mask) ... ok
+test_gradient_finite_difference (__main__.WitnessTests.test_gradient_finite_difference) ... ok
+test_gradient_shift_sum (__main__.WitnessTests.test_gradient_shift_sum) ... ok
+test_lora_rank1 (__main__.WitnessTests.test_lora_rank1) ... ok
+test_memory_bitemporal (__main__.WitnessTests.test_memory_bitemporal) ... ok
+test_online_equals_full (__main__.WitnessTests.test_online_equals_full) ... ok
+test_paginated_position (__main__.WitnessTests.test_paginated_position) ... ok
+test_paired_exact (__main__.WitnessTests.test_paired_exact) ... ok
+test_pool_mask (__main__.WitnessTests.test_pool_mask) ... ok
+test_precision_recall (__main__.WitnessTests.test_precision_recall) ... ok
+test_quantization (__main__.WitnessTests.test_quantization) ... ok
+test_rope_preserves_norm (__main__.WitnessTests.test_rope_preserves_norm) ... ok
+test_rrf (__main__.WitnessTests.test_rrf) ... ok
+test_rrf_duplicate (__main__.WitnessTests.test_rrf_duplicate) ... ok
+test_softmax_invalid (__main__.WitnessTests.test_softmax_invalid) ... ok
+test_softmax_stability (__main__.WitnessTests.test_softmax_stability) ... ok
+test_source_version_gate (__main__.WitnessTests.test_source_version_gate) ... ok
+test_speculative_distribution (__main__.WitnessTests.test_speculative_distribution) ... ok
+test_sqlite_local_transaction (__main__.WitnessTests.test_sqlite_local_transaction) ... ok
+test_sse_all_byte_boundaries (__main__.WitnessTests.test_sse_all_byte_boundaries) ... ok
+test_sse_incomplete_not_emitted (__main__.WitnessTests.test_sse_incomplete_not_emitted) ... ok
+test_tool_result_pairing (__main__.WitnessTests.test_tool_result_pairing) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 0.005s
+
+OK
+</pre><h3 id="topic-2">Số và trạng thái thêm: 60 mục</h3><pre>test_activation_sensitive_error (__main__.MoreNumericTests.test_activation_sensitive_error) ... ok
+test_attention_value_scaling (__main__.MoreNumericTests.test_attention_value_scaling) ... ok
+test_bm25_exact_visible_numbers (__main__.MoreNumericTests.test_bm25_exact_visible_numbers) ... ok
+test_cache_units (__main__.MoreNumericTests.test_cache_units) ... ok
+test_calibration_brier (__main__.MoreNumericTests.test_calibration_brier) ... ok
+test_context_budget (__main__.MoreNumericTests.test_context_budget) ... ok
+test_contrastive_loss (__main__.MoreNumericTests.test_contrastive_loss) ... ok
+test_correlated_vote_counterexample (__main__.MoreNumericTests.test_correlated_vote_counterexample) ... ok
+test_cost_with_failures (__main__.MoreNumericTests.test_cost_with_failures) ... ok
+test_critical_path_after_change (__main__.MoreNumericTests.test_critical_path_after_change) ... ok
+test_dense_layer_chain (__main__.MoreNumericTests.test_dense_layer_chain) ... ok
+test_dot_matrix_distinction (__main__.MoreNumericTests.test_dot_matrix_distinction) ... ok
+test_error_budget (__main__.MoreNumericTests.test_error_budget) ... ok
+test_every_masked_probability_zero (__main__.MoreNumericTests.test_every_masked_probability_zero) ... ok
+test_grad_direction_finite_difference (__main__.MoreNumericTests.test_grad_direction_finite_difference) ... ok
+test_gradient_accumulation_equal_batches (__main__.MoreNumericTests.test_gradient_accumulation_equal_batches) ... ok
+test_gradient_accumulation_unequal_batches (__main__.MoreNumericTests.test_gradient_accumulation_unequal_batches) ... ok
+test_gradient_shared_embedding (__main__.MoreNumericTests.test_gradient_shared_embedding) ... ok
+test_high_weight_not_high_contribution (__main__.MoreNumericTests.test_high_weight_not_high_contribution) ... ok
+test_large_step_can_increase_loss (__main__.MoreNumericTests.test_large_step_can_increase_loss) ... ok
+test_layer_norm_constant_safe (__main__.MoreNumericTests.test_layer_norm_constant_safe) ... ok
+test_layer_norm_mean (__main__.MoreNumericTests.test_layer_norm_mean) ... ok
+test_lora_large_count (__main__.MoreNumericTests.test_lora_large_count) ... ok
+test_lora_small_count_not_saved (__main__.MoreNumericTests.test_lora_small_count_not_saved) ... ok
+test_maxsim_sum (__main__.MoreNumericTests.test_maxsim_sum) ... ok
+test_natural_log_units (__main__.MoreNumericTests.test_natural_log_units) ... ok
+test_nucleus_boundary (__main__.MoreNumericTests.test_nucleus_boundary) ... ok
+test_paired_table_marginals (__main__.MoreNumericTests.test_paired_table_marginals) ... ok
+test_pass_events_differ (__main__.MoreNumericTests.test_pass_events_differ) ... ok
+test_patch_projector (__main__.MoreNumericTests.test_patch_projector) ... ok
+test_ppo_sign_sensitive (__main__.MoreNumericTests.test_ppo_sign_sensitive) ... ok
+test_prefill_off_by_one (__main__.MoreNumericTests.test_prefill_off_by_one) ... ok
+test_rate_limit_dimensions (__main__.MoreNumericTests.test_rate_limit_dimensions) ... ok
+test_relative_rope_shift (__main__.MoreNumericTests.test_relative_rope_shift) ... ok
+test_roofline_units (__main__.MoreNumericTests.test_roofline_units) ... ok
+test_routing_precision_recall_tradeoff (__main__.MoreNumericTests.test_routing_precision_recall_tradeoff) ... ok
+test_scale_pair_product (__main__.MoreNumericTests.test_scale_pair_product) ... ok
+test_selective_accuracy_vs_coverage (__main__.MoreNumericTests.test_selective_accuracy_vs_coverage) ... ok
+test_simpson_construction (__main__.MoreNumericTests.test_simpson_construction) ... ok
+test_single_parameter_sgd (__main__.MoreNumericTests.test_single_parameter_sgd) ... ok
+test_spec_bad_resampling_changes_distribution (__main__.MoreNumericTests.test_spec_bad_resampling_changes_distribution) ... ok
+test_supercritical_queue (__main__.MoreNumericTests.test_supercritical_queue) ... ok
+test_time_to_first_vs_completion (__main__.MoreNumericTests.test_time_to_first_vs_completion) ... ok
+test_transpose_not_reshape (__main__.MoreNumericTests.test_transpose_not_reshape) ... ok
+test_utf8_three_bytes (__main__.MoreNumericTests.test_utf8_three_bytes) ... ok
+test_acl_topk_order (__main__.MoreStateTests.test_acl_topk_order) ... ok
+test_approval_bound_to_artifact_environment (__main__.MoreStateTests.test_approval_bound_to_artifact_environment) ... ok
+test_atomic_replace_is_not_compare_and_swap (__main__.MoreStateTests.test_atomic_replace_is_not_compare_and_swap) ... ok
+test_bitemporal_specific_scenario (__main__.MoreStateTests.test_bitemporal_specific_scenario) ... ok
+test_compaction_suffix_preserved (__main__.MoreStateTests.test_compaction_suffix_preserved) ... ok
+test_current_test_version (__main__.MoreStateTests.test_current_test_version) ... ok
+test_exclude_boundary_counterexample (__main__.MoreStateTests.test_exclude_boundary_counterexample) ... ok
+test_gui_scroll_transform (__main__.MoreStateTests.test_gui_scroll_transform) ... ok
+test_idempotency_parameter_conflict (__main__.MoreStateTests.test_idempotency_parameter_conflict) ... ok
+test_merge_lost_update_counterexample (__main__.MoreStateTests.test_merge_lost_update_counterexample) ... ok
+test_refund_conditions_and_not_or (__main__.MoreStateTests.test_refund_conditions_and_not_or) ... ok
+test_replay_does_not_repeat_effect (__main__.MoreStateTests.test_replay_does_not_repeat_effect) ... ok
+test_tool_completion_order_not_identity (__main__.MoreStateTests.test_tool_completion_order_not_identity) ... ok
+test_unknown_not_failure (__main__.MoreStateTests.test_unknown_not_failure) ... ok
+test_version_check_refuses_stale_write (__main__.MoreStateTests.test_version_check_refuses_stale_write) ... ok
+
+----------------------------------------------------------------------
+Ran 60 tests in 0.007s
+
+OK
+</pre><h3 id="topic-3">Mô hình xuyên suốt và toán tử: 14 mục</h3><pre>test_KL_asymmetry (__main__.ChainTests.test_KL_asymmetry) ... ok
+test_PAD_not_implicitly_generated (__main__.ChainTests.test_PAD_not_implicitly_generated) ... ok
+test_beam_joint_counterexample (__main__.ChainTests.test_beam_joint_counterexample) ... ok
+test_bool_masks_inversion (__main__.ChainTests.test_bool_masks_inversion) ... ok
+test_cache_full_equivalence (__main__.ChainTests.test_cache_full_equivalence) ... ok
+test_causal_change_later_cannot_change_first (__main__.ChainTests.test_causal_change_later_cannot_change_first) ... ok
+test_embedding_rows_match_foundation (__main__.ChainTests.test_embedding_rows_match_foundation) ... ok
+test_greedy_graph_can_stop_local (__main__.ChainTests.test_greedy_graph_can_stop_local) ... ok
+test_loss_denominator (__main__.ChainTests.test_loss_denominator) ... ok
+test_norms_differ (__main__.ChainTests.test_norms_differ) ... ok
+test_quant_clipping (__main__.ChainTests.test_quant_clipping) ... ok
+test_retrieval_q_gradient_fd (__main__.ChainTests.test_retrieval_q_gradient_fd) ... ok
+test_two_heads_each_row_probability (__main__.ChainTests.test_two_heads_each_row_probability) ... ok
+test_zero_state_accounting (__main__.ChainTests.test_zero_state_accounting) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.002s
+
+OK
+</pre><h2 id="calculated-results">Đầu ra chương trình của ví dụ tính toán trong nội dung</h2><p>Sáu chữ số thập phân trong bảng số để đọc; JSON dưới giữ nhiều chữ số hơn. Khi cùng phép tính được giải thích ở nhiều chương, có thể liên kết cùng một kết quả, không tính là thí nghiệm mới độc lập.</p><section id="result-F05"><h3 id="topic-4">Bài 39 · Cả câu lấy Embedding theo từng vị trí thế nào</h3><p><a href="foundations/05.html#worked-F05">Trở lại giải thích từng bước</a></p><pre>{
+  "table": [
+    [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.2,
+      -0.1,
+      0.7,
+      0.4
+    ],
+    [
+      -0.3,
+      0.8,
+      0.1,
+      0.5
+    ],
+    [
+      0.6,
+      0.2,
+      -0.4,
+      0.9
+    ],
+    [
+      0.1,
+      -0.5,
+      0.9,
+      0.3
+    ],
+    [
+      -0.2,
+      0.4,
+      0.5,
+      -0.6
+    ]
+  ],
+  "ids": [
+    [
+      1,
+      2,
+      3
+    ],
+    [
+      4,
+      2,
+      0
+    ]
+  ],
+  "output": [
+    [
+      [
+        0.2,
+        -0.1,
+        0.7,
+        0.4
+      ],
+      [
+        -0.3,
+        0.8,
+        0.1,
+        0.5
+      ],
+      [
+        0.6,
+        0.2,
+        -0.4,
+        0.9
+      ]
+    ],
+    [
+      [
+        0.1,
+        -0.5,
+        0.9,
+        0.3
+      ],
+      [
+        -0.3,
+        0.8,
+        0.1,
+        0.5
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ]
+  ]
+}</pre></section><section id="result-F06"><h3 id="topic-5">Bài 40 · Chuyển cùng tensor lên thiết bị, giá trị và chiếm dụng đổi riêng thế nào</h3><p><a href="foundations/06.html#worked-F06">Trở lại giải thích từng bước</a></p><pre>{
+  "ids_elements": 256,
+  "ids_bytes_int64": 2048,
+  "embedding_elements": 1048576,
+  "embedding_bytes_fp16": 2097152
+}</pre></section><section id="result-F09"><h3 id="topic-6">Bài 44 · Ba điểm thành xác suất lấy mẫu từng bước thế nào</h3><p><a href="foundations/09.html#worked-F09">Trở lại giải thích từng bước</a></p><pre>{
+  "logits": [
+    2,
+    1,
+    0
+  ],
+  "p": [
+    0.6652409557748218,
+    0.24472847105479764,
+    0.09003057317038046
+  ],
+  "shifted_p": [
+    0.6652409557748218,
+    0.24472847105479764,
+    0.09003057317038046
+  ],
+  "temperature2": [
+    0.506480391055654,
+    0.3071958857184984,
+    0.1863237232258476
+  ],
+  "temperature05": [
+    0.8668133321973349,
+    0.11731042782619838,
+    0.015876239976466765
+  ]
+}</pre></section><section id="result-F16"><h3 id="topic-7">Bài 58 · Vì sao mỗi lớp phải giữ K/V riêng cho cùng lịch sử</h3><p><a href="foundations/19.html#worked-F16">Trở lại giải thích từng bước</a></p><pre>{
+  "tiny_bytes": 96,
+  "GiB": 4.0,
+  "per_token_KiB": 128.0
+}</pre></section><section id="result-F18"><h3 id="topic-8">Bài 53 · Chấm từng vị trí trong ba vị trí huấn luyện, không để PAD lẫn trung bình</h3><p><a href="foundations/16.html#worked-F18">Trở lại giải thích từng bước</a></p><pre>{
+  "target_ps": [
+    0.8,
+    0.5,
+    0.25
+  ],
+  "losses": [
+    0.2231435513142097,
+    0.6931471805599453,
+    1.3862943611198906
+  ],
+  "mean": 0.7675283643313485,
+  "logits": [
+    0,
+    0
+  ],
+  "gradient": [
+    -0.5,
+    0.5
+  ],
+  "updated_logits": [
+    0.05,
+    -0.05
+  ],
+  "new_loss": 0.6443966600735709
+}</pre></section><section id="result-F19"><h3 id="topic-9">Bài 54 · Huấn luyện ưu tiên thực sự so hai tỷ số xác suất nào</h3><p><a href="foundations/17.html#worked-F19">Trở lại giải thích từng bước</a></p><pre>{
+  "pi_preferred": 0.6,
+  "pi_rejected": 0.2,
+  "ref_preferred": 0.3,
+  "ref_rejected": 0.2,
+  "beta": 1.0,
+  "margin": 0.6931471805599453,
+  "loss": 0.40546510810816444,
+  "baseline_loss": 0.6931471805599453,
+  "kl": 0.19274475702175753
+}</pre></section><section id="result-F28"><h3 id="topic-10">Bài 16 · Ba tài liệu biến thành chỉ mục đảo thế nào</h3><p><a href="foundations/28.html#worked-F28">Trở lại giải thích từng bước</a></p><pre>{
+  "N": 3,
+  "df": 2,
+  "avgdl": 2.6666666666666665,
+  "idf": 0.47000362924573563,
+  "rows": [
+    {
+      "doc": "A",
+      "length": 2,
+      "frequency": 1,
+      "denominator": 1.975,
+      "tf_factor": 1.1139240506329113,
+      "score": 0.5235483465015789
+    },
+    {
+      "doc": "B",
+      "length": 4,
+      "frequency": 2,
+      "denominator": 3.65,
+      "tf_factor": 1.2054794520547947,
+      "score": 0.5665797174469143
+    },
+    {
+      "doc": "C",
+      "length": 2,
+      "frequency": 0,
+      "denominator": 0.975,
+      "tf_factor": 0.0,
+      "score": 0.0
+    }
+  ]
+}</pre></section><section id="result-F29"><h3 id="topic-11">Bài 17 · Hợp nhất hai bảng xếp hạng rồi kiểm tra đã đủ trả lời chưa</h3><p><a href="foundations/29.html#worked-F29">Trở lại giải thích từng bước</a></p><pre>[
+  [
+    "B",
+    0.03252247488101534
+  ],
+  [
+    "C",
+    0.03200204813108039
+  ],
+  [
+    "A",
+    0.01639344262295082
+  ],
+  [
+    "D",
+    0.015873015873015872
+  ]
+]</pre></section><section id="result-F35"><h3 id="topic-12">Bài 05 · Đếm rõ riêng bốn mẫu số cho cùng nhóm kết quả</h3><p><a href="foundations/35.html#worked-F35">Trở lại giải thích từng bước</a></p><pre>{
+  "precision_recall": {
+    "precision": 0.3333333333333333,
+    "recall": 0.5
+  },
+  "pass1": 0.8,
+  "pass_at3": 0.992,
+  "pass_all3": 0.5120000000000001,
+  "finite_pass3": 0.9666666666666667,
+  "brier": 0.3400000000000001,
+  "mcnemar_p": 0.2890625
+}</pre></section><section id="result-Q005"><h3 id="topic-13">Q073 · Decoder một lớp hai vị trí, tính từ đầu vào đến xác suất bảng từ vựng</h3><p><a href="chapters/02.html#worked-Q005">Trở lại giải thích từng bước</a></p><pre>{
+  "X": [
+    [
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      2.0
+    ]
+  ],
+  "norm1": [
+    [
+      0.9999800005999799,
+      -0.9999800005999799
+    ],
+    [
+      -0.9999950000374997,
+      0.9999950000374997
+    ]
+  ],
+  "attention": {
+    "scores": [
+      [
+        1.4141569960932512,
+        "-inf"
+      ],
+      [
+        -1.414178208076984,
+        1.4141994203788915
+      ]
+    ],
+    "weights": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.055809827361326024,
+        0.9441901726386741
+      ]
+    ],
+    "output": [
+      [
+        0.9999800005999799,
+        -0.9999800005999799
+      ],
+      [
+        -0.8883767405249542,
+        0.8883767405249542
+      ]
+    ]
+  },
+  "residual1": [
+    [
+      1.99998000059998,
+      -0.9999800005999799
+    ],
+    [
+      -0.8883767405249542,
+      2.8883767405249543
+    ]
+  ],
+  "norm2": [
+    [
+      0.9999977777259269,
+      -0.9999977777259269
+    ],
+    [
+      -0.9999985978586216,
+      0.9999985978586216
+    ]
+  ],
+  "ffn": [
+    [
+      0.49999888886296345,
+      0.0
+    ],
+    [
+      0.0,
+      0.4999992989293108
+    ]
+  ],
+  "Y": [
+    [
+      2.4999788894629433,
+      -0.9999800005999799
+    ],
+    [
+      -0.8883767405249542,
+      3.3883760394542652
+    ]
+  ],
+  "final_norm": [
+    -0.999998906544809,
+    0.999998906544809
+  ],
+  "logits": [
+    -0.999998906544809,
+    0.999998906544809,
+    1.4999983598172135
+  ],
+  "probabilities": [
+    0.04861094091010992,
+    0.35918818389337787,
+    0.5922008751965122
+  ]
+}</pre></section><section id="result-Q007"><h3 id="topic-14">Q075 · Một phép tính softmax ổn định, thêm phản ví dụ che toàn bộ</h3><p><a href="chapters/02.html#worked-Q007">Trở lại giải thích từng bước</a></p><pre>{
+  "logits": [
+    2,
+    1,
+    0
+  ],
+  "p": [
+    0.6652409557748218,
+    0.24472847105479764,
+    0.09003057317038046
+  ],
+  "shifted_p": [
+    0.6652409557748218,
+    0.24472847105479764,
+    0.09003057317038046
+  ],
+  "temperature2": [
+    0.506480391055654,
+    0.3071958857184984,
+    0.1863237232258476
+  ],
+  "temperature05": [
+    0.8668133321973349,
+    0.11731042782619838,
+    0.015876239976466765
+  ]
+}</pre></section><section id="result-Q012"><h3 id="topic-15">Q081 · Tính tay gradient Attention cho một truy vấn rồi kiểm tra bằng nhiễu nhỏ</h3><p><a href="chapters/03.html#worked-Q012">Trở lại giải thích từng bước</a></p><pre>{
+  "Q": [
+    [
+      0.4,
+      -0.2
+    ]
+  ],
+  "K": [
+    [
+      1.0,
+      0.5
+    ],
+    [
+      -0.5,
+      1.0
+    ]
+  ],
+  "V": [
+    [
+      2.0,
+      -1.0
+    ],
+    [
+      0.5,
+      3.0
+    ]
+  ],
+  "upstream": [
+    [
+      0.7,
+      -0.3
+    ]
+  ],
+  "P": [
+    [
+      0.6212776533473258,
+      0.37872234665267435
+    ]
+  ],
+  "O": [
+    [
+      1.4319164800209887,
+      0.5148893866106973
+    ]
+  ],
+  "dP": [
+    [
+      1.7,
+      -0.5499999999999999
+    ]
+  ],
+  "dS": [
+    [
+      0.5294063942967733,
+      -0.5294063942967733
+    ]
+  ],
+  "dQ": [
+    [
+      0.5615202771161513,
+      -0.18717342570538376
+    ]
+  ],
+  "dK": [
+    [
+      0.14973874056430703,
+      -0.07486937028215351
+    ],
+    [
+      -0.14973874056430703,
+      0.07486937028215351
+    ]
+  ],
+  "dV": [
+    [
+      0.43489435734312804,
+      -0.18638329600419773
+    ],
+    [
+      0.26510564265687203,
+      -0.1136167039958023
+    ]
+  ],
+  "max_error": 1.8966389569996522e-10,
+  "coordinates_checked": 10
+}</pre></section><section id="result-Q014"><h3 id="topic-16">Q090 · Cùng logits sau nhiệt độ, Top-k và Top-p được phân phối lại thế nào</h3><p><a href="chapters/06.html#worked-Q014">Trở lại giải thích từng bước</a></p><pre>{
+  "logits": [
+    2,
+    1,
+    0
+  ],
+  "p": [
+    0.6652409557748218,
+    0.24472847105479764,
+    0.09003057317038046
+  ],
+  "shifted_p": [
+    0.6652409557748218,
+    0.24472847105479764,
+    0.09003057317038046
+  ],
+  "temperature2": [
+    0.506480391055654,
+    0.3071958857184984,
+    0.1863237232258476
+  ],
+  "temperature05": [
+    0.8668133321973349,
+    0.11731042782619838,
+    0.015876239976466765
+  ]
+}</pre></section><section id="result-Q018"><h3 id="topic-17">Q082 · Bước đầu tiên của AdamW: tính cả động lượng, hiệu chỉnh độ chệch và suy giảm</h3><p><a href="chapters/04.html#worked-Q018">Trở lại giải thích từng bước</a></p><pre>{
+  "w": 1.0,
+  "gradient": 0.2,
+  "m": 0.019999999999999997,
+  "v": 4.0000000000000044e-05,
+  "m_hat": 0.2,
+  "v_hat": 0.04000000000000001,
+  "after_decay": 0.999,
+  "new_w": 0.8990000049999998
+}</pre></section><section id="result-Q021"><h3 id="topic-18">Q085 · Cùng một cặp câu trả lời, SFT và DPO xét tín hiệu huấn luyện khác nhau</h3><p><a href="chapters/05.html#worked-Q021">Trở lại giải thích từng bước</a></p><pre>{
+  "pi_preferred": 0.6,
+  "pi_rejected": 0.2,
+  "ref_preferred": 0.3,
+  "ref_rejected": 0.2,
+  "beta": 1.0,
+  "margin": 0.6931471805599453,
+  "loss": 0.40546510810816444,
+  "baseline_loss": 0.6931471805599453,
+  "kl": 0.19274475702175753
+}</pre></section><section id="result-Q026"><h3 id="topic-19">Q094 · Tính số byte K/V của một ngữ cảnh dài từ đơn vị</h3><p><a href="chapters/07.html#worked-Q026">Trở lại giải thích từng bước</a></p><pre>{
+  "tiny_bytes": 96,
+  "GiB": 4.0,
+  "per_token_KiB": 128.0
+}</pre></section><section id="result-Q027"><h3 id="topic-20">Q095 · Hai khối điểm không lưu bảng xác suất đầy đủ mà vẫn có cùng kết quả thế nào</h3><p><a href="chapters/07.html#worked-Q027">Trở lại giải thích từng bước</a></p><pre>[
+  {
+    "score": 1,
+    "value": 2,
+    "max": 1,
+    "old_scale": 0.0,
+    "sum": 1.0,
+    "weighted_sum": 2.0,
+    "output": 2.0
+  },
+  {
+    "score": 3,
+    "value": 10,
+    "max": 3,
+    "old_scale": 0.1353352832366127,
+    "sum": 1.1353352832366128,
+    "weighted_sum": 10.270670566473225,
+    "output": 9.046376623823058
+  }
+]</pre></section><section id="result-Q031"><h3 id="topic-21">Q099 · Bản nháp sai vẫn giữ được phân phối đích: đối chiếu từng mục ba loại Token</h3><p><a href="chapters/08.html#worked-Q031">Trở lại giải thích từng bước</a></p><pre>{
+  "target": [
+    0.6,
+    0.3,
+    0.1
+  ],
+  "draft": [
+    0.2,
+    0.5,
+    0.3
+  ],
+  "accept_prob": [
+    1,
+    0.6,
+    0.33333333333333337
+  ],
+  "accepted_mass": [
+    0.2,
+    0.3,
+    0.1
+  ],
+  "rejection_mass": 0.4,
+  "residual_distribution": [
+    1.0,
+    0.0,
+    0.0
+  ],
+  "final_mass": [
+    0.6000000000000001,
+    0.3,
+    0.1
+  ]
+}</pre></section><section id="result-Q038"><h3 id="topic-22">Q010 · Ký tự Trung Quốc bị chia thành ba mảnh mạng, vì sao không thể decode từng mảnh</h3><p><a href="chapters/10.html#worked-Q038">Trở lại giải thích từng bước</a></p><pre>{
+  "utf8_bytes_of_wo": [
+    230,
+    136,
+    145
+  ],
+  "events": [
+    "{\"text\":\"我\"}"
+  ]
+}</pre></section><section id="result-Q058"><h3 id="topic-23">Q030 · Hai tài liệu đều có “loại trừ”, vì sao BM25 không chỉ đếm số lần</h3><p><a href="chapters/15.html#worked-Q058">Trở lại giải thích từng bước</a></p><pre>{
+  "N": 3,
+  "df": 2,
+  "avgdl": 2.6666666666666665,
+  "idf": 0.47000362924573563,
+  "rows": [
+    {
+      "doc": "A",
+      "length": 2,
+      "frequency": 1,
+      "denominator": 1.975,
+      "tf_factor": 1.1139240506329113,
+      "score": 0.5235483465015789
+    },
+    {
+      "doc": "B",
+      "length": 4,
+      "frequency": 2,
+      "denominator": 3.65,
+      "tf_factor": 1.2054794520547947,
+      "score": 0.5665797174469143
+    },
+    {
+      "doc": "C",
+      "length": 2,
+      "frequency": 0,
+      "denominator": 0.975,
+      "tf_factor": 0.0,
+      "score": 0.0
+    }
+  ]
+}</pre></section><section id="result-Q061"><h3 id="topic-24">Q033 · Hai bảng thứ hạng, hợp nhất từng hàng thành RRF</h3><p><a href="chapters/16.html#worked-Q061">Trở lại giải thích từng bước</a></p><pre>[
+  [
+    "B",
+    0.03252247488101534
+  ],
+  [
+    "C",
+    0.03200204813108039
+  ],
+  [
+    "A",
+    0.01639344262295082
+  ],
+  [
+    "D",
+    0.015873015873015872
+  ]
+]</pre></section><section id="result-Q090"><h3 id="topic-25">Q062 · pass@3 và thành công cả ba lần liên tiếp, vì sao con số khác nhiều</h3><p><a href="chapters/23.html#worked-Q090">Trở lại giải thích từng bước</a></p><pre>{
+  "pass1": 0.8,
+  "pass_at3": 0.992,
+  "pass_all3": 0.5120000000000001,
+  "finite_pass3": 0.9666666666666667
+}</pre></section><section id="result-Q091"><h3 id="topic-26">Q063 · 20 nhiệm vụ tăng 20 điểm phần trăm, bằng chứng có đủ mạnh không</h3><p><a href="chapters/23.html#worked-Q091">Trở lại giải thích từng bước</a></p><pre>{
+  "A_successes": 12,
+  "B_successes": 16,
+  "tasks": 20,
+  "A_rate": 0.6,
+  "B_rate": 0.8,
+  "discordant": 8,
+  "two_sided_exact_p": 0.2890625
+}</pre></section><section id="result-Q105"><h3 id="topic-27">Q101 · Cả bốn lần đều nói chắc 80%, thực tế chỉ đúng hai lần, tính thế nào</h3><p><a href="chapters/27.html#worked-Q105">Trở lại giải thích từng bước</a></p><pre>{
+  "probabilities": [
+    0.8,
+    0.8,
+    0.8,
+    0.8
+  ],
+  "labels": [
+    1,
+    1,
+    0,
+    0
+  ],
+  "Brier": 0.3400000000000001
+}</pre></section><section id="result-S31"><h3 id="topic-28">S31 · Dùng đạo hàm theo hướng đối chiếu lan truyền ngược ma trận nối đúng chưa</h3><p><a href="studies/chapters/31.html#worked-S31">Trở lại giải thích từng bước</a></p><pre>{
+  "direction": [
+    1,
+    -2
+  ],
+  "directional_derivative": 0.9358671285269188
+}</pre></section><section id="result-X01"><h3 id="topic-29">X01 · Dùng tiếp “我爱学习／你爱”, thực sự tính một lớp mô hình đến cùng</h3><p><a href="worked-model.html#worked-X01">Trở lại giải thích từng bước</a></p><pre>{
+  "sentence_A": {
+    "ids": [
+      1,
+      2,
+      3
+    ],
+    "words": [
+      "我",
+      "爱",
+      "学习"
+    ],
+    "X": [
+      [
+        0.2,
+        -0.1,
+        0.7,
+        0.4
+      ],
+      [
+        -0.3,
+        0.8,
+        0.1,
+        0.5
+      ],
+      [
+        0.6,
+        0.2,
+        -0.4,
+        0.9
+      ]
+    ],
+    "normalized": [
+      [
+        -0.34297699576097085,
+        -1.3719079830438836,
+        1.3719079830438834,
+        0.342976995760971
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ],
+      [
+        0.5650201202110635,
+        -0.2568273273686653,
+        -1.489598498738259,
+        1.1814057058958602
+      ]
+    ],
+    "Wq": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "Wk": [
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "Wv": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.5,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.5
+      ]
+    ],
+    "Q": [
+      [
+        -0.34297699576097085,
+        -1.3719079830438836,
+        1.3719079830438834,
+        0.342976995760971
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ],
+      [
+        0.5650201202110635,
+        -0.2568273273686653,
+        -1.489598498738259,
+        1.1814057058958602
+      ]
+    ],
+    "K_new": [
+      [
+        -1.3719079830438836,
+        -0.34297699576097085,
+        0.342976995760971,
+        1.3719079830438834
+      ],
+      [
+        1.2663108096297753,
+        -1.3869118391183253,
+        0.542704632698475,
+        -0.4221036032099251
+      ],
+      [
+        -0.2568273273686653,
+        0.5650201202110635,
+        1.1814057058958602,
+        -1.489598498738259
+      ]
+    ],
+    "V_new": [
+      [
+        -0.34297699576097085,
+        -0.6859539915219418,
+        1.3719079830438834,
+        0.1714884978804855
+      ],
+      [
+        -1.3869118391183253,
+        0.6331554048148876,
+        -0.4221036032099251,
+        0.2713523163492375
+      ],
+      [
+        0.5650201202110635,
+        -0.12841366368433266,
+        -1.489598498738259,
+        0.5907028529479301
+      ]
+    ],
+    "heads": [
+      {
+        "scores": [
+          [
+            0.6654339782957746,
+            "-inf",
+            "-inf"
+          ],
+          [
+            1.038315559790008,
+            -2.4837287671488384,
+            "-inf"
+          ],
+          [
+            -0.48583167819068557,
+            0.7577978145111113,
+            -0.2052202174328266
+          ]
+        ],
+        "weights": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.9713085308519348,
+            0.02869146914806531,
+            0.0
+          ],
+          [
+            0.17264843188821463,
+            0.5987755582887623,
+            0.22857600982302304
+          ]
+        ],
+        "output": [
+          [
+            -0.34297699576097085,
+            -0.6859539915219418
+          ],
+          [
+            -0.3729290201117488,
+            -0.6481068049740206
+          ],
+          [
+            -0.7605133067096621,
+            0.2313368171661363
+          ]
+        ]
+      },
+      {
+        "scores": [
+          [
+            0.6654339782957748,
+            "-inf",
+            "-inf"
+          ],
+          [
+            0.4241007216043693,
+            -0.32396462180202235,
+            "-inf"
+          ],
+          [
+            0.7848050186157225,
+            -0.9242505136522802,
+            -2.4887615459580976
+          ]
+        ],
+        "weights": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.6787570011392197,
+            0.3212429988607803,
+            0.0
+          ],
+          [
+            0.8204065891481991,
+            0.14852369763229697,
+            0.031069713219503917
+          ]
+        ],
+        "output": [
+          [
+            1.3719079830438834,
+            0.1714884978804855
+          ],
+          [
+            0.7955943210847245,
+            0.20356905040307596
+          ],
+          [
+            1.0165485628935624,
+            0.19934551124858982
+          ]
+        ]
+      }
+    ],
+    "concat_attention": [
+      [
+        -0.34297699576097085,
+        -0.6859539915219418,
+        1.3719079830438834,
+        0.1714884978804855
+      ],
+      [
+        -0.3729290201117488,
+        -0.6481068049740206,
+        0.7955943210847245,
+        0.20356905040307596
+      ],
+      [
+        -0.7605133067096621,
+        0.2313368171661363,
+        1.0165485628935624,
+        0.19934551124858982
+      ]
+    ],
+    "residual1": [
+      [
+        -0.14297699576097084,
+        -0.7859539915219418,
+        2.071907983043883,
+        0.5714884978804855
+      ],
+      [
+        -0.6729290201117488,
+        0.15189319502597942,
+        0.8955943210847245,
+        0.7035690504030759
+      ],
+      [
+        -0.16051330670966213,
+        0.4313368171661363,
+        0.6165485628935624,
+        1.09934551124859
+      ]
+    ],
+    "normalized2": [
+      [
+        -0.5375457231048607,
+        -1.1422230212813547,
+        1.5454069697365898,
+        0.13436177464962554
+      ],
+      [
+        -1.5481133247122487,
+        -0.19323668985226614,
+        1.0283881167102003,
+        0.7129618978543147
+      ],
+      [
+        -1.4570262083734293,
+        -0.14486747903237152,
+        0.26575541201519126,
+        1.3361382753906097
+      ]
+    ],
+    "ffn": [
+      [
+        0.026638704396888653,
+        0.07890418501095597,
+        0.49213512533270637,
+        0.0024080109431469515
+      ],
+      [
+        0.10506870807782567,
+        0.004217979178685728,
+        0.194754614176563,
+        0.08527681301454476
+      ],
+      [
+        0.10026713476934813,
+        0.0024336378144475014,
+        0.009994463250812926,
+        0.353417478623218
+      ]
+    ],
+    "hidden_output": [
+      [
+        -0.11633829136408219,
+        -0.7070498065109858,
+        2.5640431083765893,
+        0.5738965088236324
+      ],
+      [
+        -0.5678603120339232,
+        0.15611117420466514,
+        1.0903489352612874,
+        0.7888458634176208
+      ],
+      [
+        -0.060246171940313994,
+        0.4337704549805838,
+        0.6265430261443753,
+        1.452762989871808
+      ]
+    ],
+    "last_norm": [
+      -1.234288717037841,
+      -0.3288677410295592,
+      0.024440872525857662,
+      1.5387155855415424
+    ],
+    "logits_before_PAD_filter": [
+      0.0,
+      0.41862387568010506,
+      0.8789943023110618,
+      0.5687208995484289,
+      0.5246164597467301,
+      -0.7956982680662521
+    ],
+    "probabilities_after_PAD_filter": [
+      0.0,
+      0.19397390234211448,
+      0.30738285417678823,
+      0.22538738883221388,
+      0.21566282874820453,
+      0.057593025900678906
+    ],
+    "selected_token": 2,
+    "selected_word": "爱",
+    "cache": {
+      "K": [
+        [
+          -1.3719079830438836,
+          -0.34297699576097085,
+          0.342976995760971,
+          1.3719079830438834
+        ],
+        [
+          1.2663108096297753,
+          -1.3869118391183253,
+          0.542704632698475,
+          -0.4221036032099251
+        ],
+        [
+          -0.2568273273686653,
+          0.5650201202110635,
+          1.1814057058958602,
+          -1.489598498738259
+        ]
+      ],
+      "V": [
+        [
+          -0.34297699576097085,
+          -0.6859539915219418,
+          1.3719079830438834,
+          0.1714884978804855
+        ],
+        [
+          -1.3869118391183253,
+          0.6331554048148876,
+          -0.4221036032099251,
+          0.2713523163492375
+        ],
+        [
+          0.5650201202110635,
+          -0.12841366368433266,
+          -1.489598498738259,
+          0.5907028529479301
+        ]
+      ]
+    }
+  },
+  "sentence_B": {
+    "ids": [
+      4,
+      2
+    ],
+    "words": [
+      "你",
+      "爱"
+    ],
+    "X": [
+      [
+        0.1,
+        -0.5,
+        0.9,
+        0.3
+      ],
+      [
+        -0.3,
+        0.8,
+        0.1,
+        0.5
+      ]
+    ],
+    "normalized": [
+      [
+        -0.19999600011999602,
+        -1.399972000839972,
+        1.399972000839972,
+        0.19999600011999596
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ]
+    ],
+    "Wq": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "Wk": [
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "Wv": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.5,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.5
+      ]
+    ],
+    "Q": [
+      [
+        -0.19999600011999602,
+        -1.399972000839972,
+        1.399972000839972,
+        0.19999600011999596
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ]
+    ],
+    "K_new": [
+      [
+        -1.399972000839972,
+        -0.19999600011999602,
+        0.19999600011999596,
+        1.399972000839972
+      ],
+      [
+        1.2663108096297753,
+        -1.3869118391183253,
+        0.542704632698475,
+        -0.4221036032099251
+      ]
+    ],
+    "V_new": [
+      [
+        -0.19999600011999602,
+        -0.699986000419986,
+        1.399972000839972,
+        0.09999800005999798
+      ],
+      [
+        -1.3869118391183253,
+        0.6331554048148876,
+        -0.4221036032099251,
+        0.2713523163492375
+      ]
+    ],
+    "heads": [
+      {
+        "scores": [
+          [
+            0.3959639589061104,
+            "-inf"
+          ],
+          [
+            1.1938654037027494,
+            -2.4837287671488384
+          ]
+        ],
+        "weights": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.9753397724784735,
+            0.024660227521526565
+          ]
+        ],
+        "output": [
+          [
+            -0.19999600011999602,
+            -0.699986000419986
+          ],
+          [
+            -0.2292656147585984,
+            -0.6671104300485264
+          ]
+        ]
+      },
+      {
+        "scores": [
+          [
+            0.39596395890611025,
+            "-inf"
+          ],
+          [
+            0.47754616148109963,
+            -0.32396462180202235
+          ]
+        ],
+        "weights": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.6902975595329414,
+            0.30970244046705875
+          ]
+        ],
+        "output": [
+          [
+            1.399972000839972,
+            0.09999800005999798
+          ],
+          [
+            0.8356707395502289,
+            0.15306684999933975
+          ]
+        ]
+      }
+    ],
+    "concat_attention": [
+      [
+        -0.19999600011999602,
+        -0.699986000419986,
+        1.399972000839972,
+        0.09999800005999798
+      ],
+      [
+        -0.2292656147585984,
+        -0.6671104300485264,
+        0.8356707395502289,
+        0.15306684999933975
+      ]
+    ],
+    "residual1": [
+      [
+        -0.09999600011999601,
+        -1.199986000419986,
+        2.299972000839972,
+        0.39999800005999797
+      ],
+      [
+        -0.5292656147585983,
+        0.1328895699514736,
+        0.9356707395502288,
+        0.6530668499993397
+      ]
+    ],
+    "normalized2": [
+      [
+        -0.35547632541594226,
+        -1.2244240715329902,
+        1.5404016231276416,
+        0.03949877382129085
+      ],
+      [
+        -1.4833659426292805,
+        -0.29618841733983176,
+        1.1431173289264525,
+        0.6364370310426596
+      ]
+    ],
+    "ffn": [
+      [
+        0.01301717141981196,
+        0.08513994324236378,
+        0.48852155463920643,
+        0.00019887014948993128
+      ],
+      [
+        0.10172306748140784,
+        0.009353723209194037,
+        0.24770508249823658,
+        0.06622071158161205
+      ]
+    ],
+    "hidden_output": [
+      [
+        -0.08697882870018406,
+        -1.1148460571776222,
+        2.7884935554791785,
+        0.4001968702094879
+      ],
+      [
+        -0.4275425472771905,
+        0.14224329316066764,
+        1.1833758220484654,
+        0.7192875615809518
+      ]
+    ],
+    "last_norm": [
+      -1.373723709101048,
+      -0.4328128205320284,
+      1.2864523197198492,
+      0.5200842099132272
+    ],
+    "logits_before_PAD_filter": [
+      0.0,
+      0.8770868480021786,
+      0.45455419323329016,
+      -0.9573019285330696,
+      1.3928663900777418,
+      0.4327952475193865
+    ],
+    "probabilities_after_PAD_filter": [
+      0.0,
+      0.24205350317424174,
+      0.15863819948379718,
+      0.0386586290982537,
+      0.40542598586807865,
+      0.1552236823756288
+    ],
+    "selected_token": 4,
+    "selected_word": "你",
+    "cache": {
+      "K": [
+        [
+          -1.399972000839972,
+          -0.19999600011999602,
+          0.19999600011999596,
+          1.399972000839972
+        ],
+        [
+          1.2663108096297753,
+          -1.3869118391183253,
+          0.542704632698475,
+          -0.4221036032099251
+        ]
+      ],
+      "V": [
+        [
+          -0.19999600011999602,
+          -0.699986000419986,
+          1.399972000839972,
+          0.09999800005999798
+        ],
+        [
+          -1.3869118391183253,
+          0.6331554048148876,
+          -0.4221036032099251,
+          0.2713523163492375
+        ]
+      ]
+    }
+  },
+  "next_step_A": {
+    "ids": [
+      2
+    ],
+    "words": [
+      "爱"
+    ],
+    "X": [
+      [
+        -0.3,
+        0.8,
+        0.1,
+        0.5
+      ]
+    ],
+    "normalized": [
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ]
+    ],
+    "Wq": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "Wk": [
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "Wv": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.5,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.5
+      ]
+    ],
+    "Q": [
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ]
+    ],
+    "K_new": [
+      [
+        1.2663108096297753,
+        -1.3869118391183253,
+        0.542704632698475,
+        -0.4221036032099251
+      ]
+    ],
+    "V_new": [
+      [
+        -1.3869118391183253,
+        0.6331554048148876,
+        -0.4221036032099251,
+        0.2713523163492375
+      ]
+    ],
+    "heads": [
+      {
+        "scores": [
+          [
+            1.038315559790008,
+            -2.4837287671488384,
+            0.7577978145111113,
+            -2.4837287671488384
+          ]
+        ],
+        "weights": [
+          [
+            0.5511249666097909,
+            0.016279672703321285,
+            0.4163156879835665,
+            0.016279672703321285
+          ]
+        ],
+        "output": [
+          [
+            0.0010466131151194366,
+            -0.41089186789516574
+          ]
+        ]
+      },
+      {
+        "scores": [
+          [
+            0.4241007216043693,
+            -0.32396462180202235,
+            -0.9242505136522802,
+            -0.32396462180202235
+          ]
+        ],
+        "weights": [
+          [
+            0.4532617660923528,
+            0.2145203198848118,
+            0.11769759413802364,
+            0.2145203198848118
+          ]
+        ],
+        "output": [
+          [
+            0.2654116758073136,
+            0.26367465546571783
+          ]
+        ]
+      }
+    ],
+    "concat_attention": [
+      [
+        0.0010466131151194366,
+        -0.41089186789516574,
+        0.2654116758073136,
+        0.26367465546571783
+      ]
+    ],
+    "residual1": [
+      [
+        -0.29895338688488055,
+        0.3891081321048343,
+        0.3654116758073136,
+        0.7636746554657179
+      ]
+    ],
+    "normalized2": [
+      [
+        -1.5775498330234923,
+        0.2202585040479007,
+        0.15834298411985276,
+        1.1989483448557388
+      ]
+    ],
+    "ffn": [
+      [
+        0.10647918732019314,
+        0.006729387801927646,
+        0.003381673851209182,
+        0.27611694964160904
+      ]
+    ],
+    "hidden_output": [
+      [
+        -0.19247419956468742,
+        0.39583751990676197,
+        0.3687933496585228,
+        1.039791605107327
+      ]
+    ],
+    "last_norm": [
+      -1.3648661531888693,
+      -0.01638759358892958,
+      -0.07837596222908708,
+      1.4596297090068862
+    ],
+    "logits_before_PAD_filter": [
+      0.0,
+      0.2576542387635127,
+      1.1183270293660514,
+      0.5228199123667249,
+      0.2390577281714653,
+      -0.6485476133164731
+    ],
+    "probabilities_after_PAD_filter": [
+      0.0,
+      0.1651792442552844,
+      0.3906078063175441,
+      0.21533541595718736,
+      0.16213587244494412,
+      0.06674166102504007
+    ],
+    "selected_token": 2,
+    "selected_word": "爱",
+    "cache": {
+      "K": [
+        [
+          -1.3719079830438836,
+          -0.34297699576097085,
+          0.342976995760971,
+          1.3719079830438834
+        ],
+        [
+          1.2663108096297753,
+          -1.3869118391183253,
+          0.542704632698475,
+          -0.4221036032099251
+        ],
+        [
+          -0.2568273273686653,
+          0.5650201202110635,
+          1.1814057058958602,
+          -1.489598498738259
+        ],
+        [
+          1.2663108096297753,
+          -1.3869118391183253,
+          0.542704632698475,
+          -0.4221036032099251
+        ]
+      ],
+      "V": [
+        [
+          -0.34297699576097085,
+          -0.6859539915219418,
+          1.3719079830438834,
+          0.1714884978804855
+        ],
+        [
+          -1.3869118391183253,
+          0.6331554048148876,
+          -0.4221036032099251,
+          0.2713523163492375
+        ],
+        [
+          0.5650201202110635,
+          -0.12841366368433266,
+          -1.489598498738259,
+          0.5907028529479301
+        ],
+        [
+          -1.3869118391183253,
+          0.6331554048148876,
+          -0.4221036032099251,
+          0.2713523163492375
+        ]
+      ]
+    }
+  },
+  "full_recompute_A": {
+    "ids": [
+      1,
+      2,
+      3,
+      2
+    ],
+    "words": [
+      "我",
+      "爱",
+      "学习",
+      "爱"
+    ],
+    "X": [
+      [
+        0.2,
+        -0.1,
+        0.7,
+        0.4
+      ],
+      [
+        -0.3,
+        0.8,
+        0.1,
+        0.5
+      ],
+      [
+        0.6,
+        0.2,
+        -0.4,
+        0.9
+      ],
+      [
+        -0.3,
+        0.8,
+        0.1,
+        0.5
+      ]
+    ],
+    "normalized": [
+      [
+        -0.34297699576097085,
+        -1.3719079830438836,
+        1.3719079830438834,
+        0.342976995760971
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ],
+      [
+        0.5650201202110635,
+        -0.2568273273686653,
+        -1.489598498738259,
+        1.1814057058958602
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ]
+    ],
+    "Wq": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "Wk": [
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "Wv": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.5,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.5
+      ]
+    ],
+    "Q": [
+      [
+        -0.34297699576097085,
+        -1.3719079830438836,
+        1.3719079830438834,
+        0.342976995760971
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ],
+      [
+        0.5650201202110635,
+        -0.2568273273686653,
+        -1.489598498738259,
+        1.1814057058958602
+      ],
+      [
+        -1.3869118391183253,
+        1.2663108096297753,
+        -0.4221036032099251,
+        0.542704632698475
+      ]
+    ],
+    "K_new": [
+      [
+        -1.3719079830438836,
+        -0.34297699576097085,
+        0.342976995760971,
+        1.3719079830438834
+      ],
+      [
+        1.2663108096297753,
+        -1.3869118391183253,
+        0.542704632698475,
+        -0.4221036032099251
+      ],
+      [
+        -0.2568273273686653,
+        0.5650201202110635,
+        1.1814057058958602,
+        -1.489598498738259
+      ],
+      [
+        1.2663108096297753,
+        -1.3869118391183253,
+        0.542704632698475,
+        -0.4221036032099251
+      ]
+    ],
+    "V_new": [
+      [
+        -0.34297699576097085,
+        -0.6859539915219418,
+        1.3719079830438834,
+        0.1714884978804855
+      ],
+      [
+        -1.3869118391183253,
+        0.6331554048148876,
+        -0.4221036032099251,
+        0.2713523163492375
+      ],
+      [
+        0.5650201202110635,
+        -0.12841366368433266,
+        -1.489598498738259,
+        0.5907028529479301
+      ],
+      [
+        -1.3869118391183253,
+        0.6331554048148876,
+        -0.4221036032099251,
+        0.2713523163492375
+      ]
+    ],
+    "heads": [
+      {
+        "scores": [
+          [
+            0.6654339782957746,
+            "-inf",
+            "-inf",
+            "-inf"
+          ],
+          [
+            1.038315559790008,
+            -2.4837287671488384,
+            "-inf",
+            "-inf"
+          ],
+          [
+            -0.48583167819068557,
+            0.7577978145111113,
+            -0.2052202174328266,
+            "-inf"
+          ],
+          [
+            1.038315559790008,
+            -2.4837287671488384,
+            0.7577978145111113,
+            -2.4837287671488384
+          ]
+        ],
+        "weights": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.9713085308519348,
+            0.02869146914806531,
+            0.0,
+            0.0
+          ],
+          [
+            0.17264843188821463,
+            0.5987755582887623,
+            0.22857600982302304,
+            0.0
+          ],
+          [
+            0.5511249666097909,
+            0.016279672703321285,
+            0.4163156879835665,
+            0.016279672703321285
+          ]
+        ],
+        "output": [
+          [
+            -0.34297699576097085,
+            -0.6859539915219418
+          ],
+          [
+            -0.3729290201117488,
+            -0.6481068049740206
+          ],
+          [
+            -0.7605133067096621,
+            0.2313368171661363
+          ],
+          [
+            0.0010466131151194366,
+            -0.41089186789516574
+          ]
+        ]
+      },
+      {
+        "scores": [
+          [
+            0.6654339782957748,
+            "-inf",
+            "-inf",
+            "-inf"
+          ],
+          [
+            0.4241007216043693,
+            -0.32396462180202235,
+            "-inf",
+            "-inf"
+          ],
+          [
+            0.7848050186157225,
+            -0.9242505136522802,
+            -2.4887615459580976,
+            "-inf"
+          ],
+          [
+            0.4241007216043693,
+            -0.32396462180202235,
+            -0.9242505136522802,
+            -0.32396462180202235
+          ]
+        ],
+        "weights": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.6787570011392197,
+            0.3212429988607803,
+            0.0,
+            0.0
+          ],
+          [
+            0.8204065891481991,
+            0.14852369763229697,
+            0.031069713219503917,
+            0.0
+          ],
+          [
+            0.4532617660923528,
+            0.2145203198848118,
+            0.11769759413802364,
+            0.2145203198848118
+          ]
+        ],
+        "output": [
+          [
+            1.3719079830438834,
+            0.1714884978804855
+          ],
+          [
+            0.7955943210847245,
+            0.20356905040307596
+          ],
+          [
+            1.0165485628935624,
+            0.19934551124858982
+          ],
+          [
+            0.2654116758073136,
+            0.26367465546571783
+          ]
+        ]
+      }
+    ],
+    "concat_attention": [
+      [
+        -0.34297699576097085,
+        -0.6859539915219418,
+        1.3719079830438834,
+        0.1714884978804855
+      ],
+      [
+        -0.3729290201117488,
+        -0.6481068049740206,
+        0.7955943210847245,
+        0.20356905040307596
+      ],
+      [
+        -0.7605133067096621,
+        0.2313368171661363,
+        1.0165485628935624,
+        0.19934551124858982
+      ],
+      [
+        0.0010466131151194366,
+        -0.41089186789516574,
+        0.2654116758073136,
+        0.26367465546571783
+      ]
+    ],
+    "residual1": [
+      [
+        -0.14297699576097084,
+        -0.7859539915219418,
+        2.071907983043883,
+        0.5714884978804855
+      ],
+      [
+        -0.6729290201117488,
+        0.15189319502597942,
+        0.8955943210847245,
+        0.7035690504030759
+      ],
+      [
+        -0.16051330670966213,
+        0.4313368171661363,
+        0.6165485628935624,
+        1.09934551124859
+      ],
+      [
+        -0.29895338688488055,
+        0.3891081321048343,
+        0.3654116758073136,
+        0.7636746554657179
+      ]
+    ],
+    "normalized2": [
+      [
+        -0.5375457231048607,
+        -1.1422230212813547,
+        1.5454069697365898,
+        0.13436177464962554
+      ],
+      [
+        -1.5481133247122487,
+        -0.19323668985226614,
+        1.0283881167102003,
+        0.7129618978543147
+      ],
+      [
+        -1.4570262083734293,
+        -0.14486747903237152,
+        0.26575541201519126,
+        1.3361382753906097
+      ],
+      [
+        -1.5775498330234923,
+        0.2202585040479007,
+        0.15834298411985276,
+        1.1989483448557388
+      ]
+    ],
+    "ffn": [
+      [
+        0.026638704396888653,
+        0.07890418501095597,
+        0.49213512533270637,
+        0.0024080109431469515
+      ],
+      [
+        0.10506870807782567,
+        0.004217979178685728,
+        0.194754614176563,
+        0.08527681301454476
+      ],
+      [
+        0.10026713476934813,
+        0.0024336378144475014,
+        0.009994463250812926,
+        0.353417478623218
+      ],
+      [
+        0.10647918732019314,
+        0.006729387801927646,
+        0.003381673851209182,
+        0.27611694964160904
+      ]
+    ],
+    "hidden_output": [
+      [
+        -0.11633829136408219,
+        -0.7070498065109858,
+        2.5640431083765893,
+        0.5738965088236324
+      ],
+      [
+        -0.5678603120339232,
+        0.15611117420466514,
+        1.0903489352612874,
+        0.7888458634176208
+      ],
+      [
+        -0.060246171940313994,
+        0.4337704549805838,
+        0.6265430261443753,
+        1.452762989871808
+      ],
+      [
+        -0.19247419956468742,
+        0.39583751990676197,
+        0.3687933496585228,
+        1.039791605107327
+      ]
+    ],
+    "last_norm": [
+      -1.3648661531888693,
+      -0.01638759358892958,
+      -0.07837596222908708,
+      1.4596297090068862
+    ],
+    "logits_before_PAD_filter": [
+      0.0,
+      0.2576542387635127,
+      1.1183270293660514,
+      0.5228199123667249,
+      0.2390577281714653,
+      -0.6485476133164731
+    ],
+    "probabilities_after_PAD_filter": [
+      0.0,
+      0.1651792442552844,
+      0.3906078063175441,
+      0.21533541595718736,
+      0.16213587244494412,
+      0.06674166102504007
+    ],
+    "selected_token": 2,
+    "selected_word": "爱",
+    "cache": {
+      "K": [
+        [
+          -1.3719079830438836,
+          -0.34297699576097085,
+          0.342976995760971,
+          1.3719079830438834
+        ],
+        [
+          1.2663108096297753,
+          -1.3869118391183253,
+          0.542704632698475,
+          -0.4221036032099251
+        ],
+        [
+          -0.2568273273686653,
+          0.5650201202110635,
+          1.1814057058958602,
+          -1.489598498738259
+        ],
+        [
+          1.2663108096297753,
+          -1.3869118391183253,
+          0.542704632698475,
+          -0.4221036032099251
+        ]
+      ],
+      "V": [
+        [
+          -0.34297699576097085,
+          -0.6859539915219418,
+          1.3719079830438834,
+          0.1714884978804855
+        ],
+        [
+          -1.3869118391183253,
+          0.6331554048148876,
+          -0.4221036032099251,
+          0.2713523163492375
+        ],
+        [
+          0.5650201202110635,
+          -0.12841366368433266,
+          -1.489598498738259,
+          0.5907028529479301
+        ],
+        [
+          -1.3869118391183253,
+          0.6331554048148876,
+          -0.4221036032099251,
+          0.2713523163492375
+        ]
+      ]
+    }
+  },
+  "cached_vs_full_max_error": 0.0,
+  "operators": {
+    "X02": {
+      "input": [
+        1,
+        3
+      ],
+      "mean": 2,
+      "population_variance": 1,
+      "LayerNorm_epsilon1e5": [
+        -0.9999950000374997,
+        0.9999950000374997
+      ],
+      "RMSNorm_epsilon1e5": [
+        0.4472131482870333,
+        1.3416394448610998
+      ],
+      "SiLU_1_2": [
+        0.7310585786300049,
+        1.7615941559557646
+      ],
+      "SwiGLU_identity_gate_up_down": [
+        0.7310585786300049,
+        3.5231883119115293
+      ]
+    },
+    "X03": {
+      "first_probabilities": {
+        "A": 0.6,
+        "B": 0.4
+      },
+      "A_next": {
+        "E": 0.51,
+        "F": 0.49
+      },
+      "B_next": {
+        "D": 0.99,
+        "F": 0.01
+      },
+      "joint": {
+        "AE": 0.306,
+        "AF": 0.294,
+        "BD": 0.396,
+        "BF": 0.004
+      }
+    },
+    "X04": {
+      "p": [
+        0.8,
+        0.2
+      ],
+      "q": [
+        0.5,
+        0.5
+      ],
+      "KL_p_q": 0.19274475702175753,
+      "KL_q_p": 0.22314355131420976
+    },
+    "X05": {
+      "parameters": 1000,
+      "P_bytes": 4000,
+      "G_bytes": 4000,
+      "Adam_m_v_bytes": 8000,
+      "data_parallel_per_device": 16000,
+      "zero1_per_device": 12000,
+      "zero2_per_device": 10000,
+      "zero3_per_device": 8000
+    },
+    "X06": {
+      "Hq": 4,
+      "Hkv": 2,
+      "group_mapping": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "toy_KV_per_token": 8
+    },
+    "X07": {
+      "semantic_allowed": [
+        [
+          true,
+          false
+        ],
+        [
+          true,
+          true
+        ]
+      ],
+      "sdpa_bool": [
+        [
+          true,
+          false
+        ],
+        [
+          true,
+          true
+        ]
+      ],
+      "multihead_attention_bool_blocked": [
+        [
+          false,
+          true
+        ],
+        [
+          false,
+          false
+        ]
+      ],
+      "additive_mask": [
+        [
+          0,
+          "-inf"
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    "X08": {
+      "q": [
+        1.0,
+        0.0
+      ],
+      "a": [
+        0.8,
+        0.6
+      ],
+      "b": [
+        0.0,
+        1.0
+      ],
+      "p": [
+        0.6899744811276125,
+        0.31002551887238755
+      ],
+      "q_gradient": [
+        -0.24802041509791,
+        0.12401020754895506
+      ],
+      "q_after_lr01": [
+        1.024802041509791,
+        -0.012401020754895506
+      ]
+    },
+    "X09": {
+      "q": 0,
+      "positions": {
+        "A": 4,
+        "B": 5,
+        "C": 1
+      },
+      "undirected_edges": [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "C"
+        ]
+      ],
+      "greedy_stop": "A",
+      "best_after_explore_B": "C"
+    },
+    "X10": {
+      "scale": 0.1,
+      "integer_min": -2,
+      "integer_max": 2,
+      "input": [
+        -0.24,
+        0.03,
+        0.26
+      ],
+      "integer_codes": [
+        -2,
+        0,
+        2
+      ],
+      "reconstructed": [
+        -0.2,
+        0,
+        0.2
+      ]
+    },
+    "X11": {
+      "character_input": [
+        "a",
+        "b",
+        "c"
+      ],
+      "merge_rank": [
+        [
+          "b",
+          "c",
+          0
+        ],
+        [
+          "a",
+          "b",
+          1
+        ]
+      ],
+      "merged": [
+        "a",
+        "bc"
+      ],
+      "teaching_vocabulary": {
+        "a": 1,
+        "bc": 5
+      },
+      "IDs": [
+        1,
+        5
+      ]
+    },
+    "X12": {
+      "valid_target_probabilities": [
+        0.8,
+        0.5,
+        0.25
+      ],
+      "valid_count": 3,
+      "padded_count": 4,
+      "sum_NLL": 2.3025850929940455,
+      "correct_mean": 0.7675283643313485,
+      "wrong_divide4": 0.5756462732485114
+    }
+  }
+}</pre></section><section id="result-X02"><h3 id="topic-30">X02 · Cùng [1,3], LayerNorm, RMSNorm và SwiGLU mỗi bên làm gì</h3><p><a href="foundations/14.html#worked-X02">Trở lại giải thích từng bước</a></p><pre>{
+  "input": [
+    1,
+    3
+  ],
+  "mean": 2,
+  "population_variance": 1,
+  "LayerNorm_epsilon1e5": [
+    -0.9999950000374997,
+    0.9999950000374997
+  ],
+  "RMSNorm_epsilon1e5": [
+    0.4472131482870333,
+    1.3416394448610998
+  ],
+  "SiLU_1_2": [
+    0.7310585786300049,
+    1.7615941559557646
+  ],
+  "SwiGLU_identity_gate_up_down": [
+    0.7310585786300049,
+    3.5231883119115293
+  ]
+}</pre></section><section id="result-X03"><h3 id="topic-31">X03 · Tham lam tốt nhất ở bước đầu không có nghĩa xác suất chuỗi hai bước lớn nhất</h3><p><a href="chapters/06.html#worked-X03">Trở lại giải thích từng bước</a></p><pre>{
+  "first_probabilities": {
+    "A": 0.6,
+    "B": 0.4
+  },
+  "A_next": {
+    "E": 0.51,
+    "F": 0.49
+  },
+  "B_next": {
+    "D": 0.99,
+    "F": 0.01
+  },
+  "joint": {
+    "AE": 0.306,
+    "AF": 0.294,
+    "BD": 0.396,
+    "BF": 0.004
+  }
+}</pre></section><section id="result-X04"><h3 id="topic-32">X04 · Độ phân kỳ KL: cùng hai nhóm xác suất, đổi hướng sẽ cho giá trị khác</h3><p><a href="foundations/17.html#worked-X04">Trở lại giải thích từng bước</a></p><pre>{
+  "p": [
+    0.8,
+    0.2
+  ],
+  "q": [
+    0.5,
+    0.5
+  ],
+  "KL_p_q": 0.19274475702175753,
+  "KL_q_p": 0.22314355131420976
+}</pre></section><section id="result-X05"><h3 id="topic-33">X05 · Dùng 1000 tham số tính rõ ZeRO thực sự chia sẻ trạng thái nào</h3><p><a href="studies/chapters/03.html#worked-X05">Trở lại giải thích từng bước</a></p><pre>{
+  "parameters": 1000,
+  "P_bytes": 4000,
+  "G_bytes": 4000,
+  "Adam_m_v_bytes": 8000,
+  "data_parallel_per_device": 16000,
+  "zero1_per_device": 12000,
+  "zero2_per_device": 10000,
+  "zero3_per_device": 8000
+}</pre></section><section id="result-X06"><h3 id="topic-34">X06 · 4 đầu Q dùng chung 2 đầu KV, thực sự ghép cặp thế nào</h3><p><a href="chapters/03.html#worked-X06">Trở lại giải thích từng bước</a></p><pre>{
+  "Hq": 4,
+  "Hkv": 2,
+  "group_mapping": [
+    0,
+    0,
+    1,
+    1
+  ],
+  "toy_KV_per_token": 8
+}</pre></section><section id="result-X07"><h3 id="topic-35">X07 · Cùng một “bảng cho phép truy cập”, vì sao giá trị boolean các giao diện trái ngược</h3><p><a href="chapters/03.html#worked-X07">Trở lại giải thích từng bước</a></p><pre>{
+  "semantic_allowed": [
+    [
+      true,
+      false
+    ],
+    [
+      true,
+      true
+    ]
+  ],
+  "sdpa_bool": [
+    [
+      true,
+      false
+    ],
+    [
+      true,
+      true
+    ]
+  ],
+  "multihead_attention_bool_blocked": [
+    [
+      false,
+      true
+    ],
+    [
+      false,
+      false
+    ]
+  ],
+  "additive_mask": [
+    [
+      0,
+      "-inf"
+    ],
+    [
+      0,
+      0
+    ]
+  ]
+}</pre></section><section id="result-X08"><h3 id="topic-36">X08 · Cho vectơ truy hồi học: vectơ truy vấn thực sự đi hướng nào</h3><p><a href="studies/chapters/31.html#worked-X08">Trở lại giải thích từng bước</a></p><pre>{
+  "q": [
+    1.0,
+    0.0
+  ],
+  "a": [
+    0.8,
+    0.6
+  ],
+  "b": [
+    0.0,
+    1.0
+  ],
+  "p": [
+    0.6899744811276125,
+    0.31002551887238755
+  ],
+  "q_gradient": [
+    -0.24802041509791,
+    0.12401020754895506
+  ],
+  "q_after_lr01": [
+    1.024802041509791,
+    -0.012401020754895506
+  ]
+}</pre></section><section id="result-X09"><h3 id="topic-37">X09 · Vì sao tìm kiếm đồ thị gần đúng bỏ sót điểm thực sự gần nhất</h3><p><a href="studies/chapters/13.html#worked-X09">Trở lại giải thích từng bước</a></p><pre>{
+  "q": 0,
+  "positions": {
+    "A": 4,
+    "B": 5,
+    "C": 1
+  },
+  "undirected_edges": [
+    [
+      "A",
+      "B"
+    ],
+    [
+      "B",
+      "C"
+    ]
+  ],
+  "greedy_stop": "A",
+  "best_after_explore_B": "C"
+}</pre></section><section id="result-X10"><h3 id="topic-38">X10 · Lượng tử hóa không chỉ làm tròn, còn có thể cắt số vượt phạm vi</h3><p><a href="foundations/20.html#worked-X10">Trở lại giải thích từng bước</a></p><pre>{
+  "scale": 0.1,
+  "integer_min": -2,
+  "integer_max": 2,
+  "input": [
+    -0.24,
+    0.03,
+    0.26
+  ],
+  "integer_codes": [
+    -2,
+    0,
+    2
+  ],
+  "reconstructed": [
+    -0.2,
+    0,
+    0.2
+  ]
+}</pre></section><section id="result-X11"><h3 id="topic-39">X11 · Khi BPE gộp, vì sao không luôn chọn cặp bên trái</h3><p><a href="foundations/03.html#worked-X11">Trở lại giải thích từng bước</a></p><pre>{
+  "character_input": [
+    "a",
+    "b",
+    "c"
+  ],
+  "merge_rank": [
+    [
+      "b",
+      "c",
+      0
+    ],
+    [
+      "a",
+      "b",
+      1
+    ]
+  ],
+  "merged": [
+    "a",
+    "bc"
+  ],
+  "teaching_vocabulary": {
+    "a": 1,
+    "bc": 5
+  },
+  "IDs": [
+    1,
+    5
+  ]
+}</pre></section><section id="result-X12"><h3 id="topic-40">X12 · Vị trí padding không tính mất mát, mẫu số cũng bắt buộc thay đổi cùng</h3><p><a href="foundations/16.html#worked-X12">Trở lại giải thích từng bước</a></p><pre>{
+  "valid_target_probabilities": [
+    0.8,
+    0.5,
+    0.25
+  ],
+  "valid_count": 3,
+  "padded_count": 4,
+  "sum_NLL": 2.3025850929940455,
+  "correct_mean": 0.7675283643313485,
+  "wrong_divide4": 0.5756462732485114
+}</pre></section><h2 id="code">Chương trình đầy đủ</h2><p>Mã và kết quả hiển thị dùng cùng một bộ tham số. Sau khi sửa tham số, hãy chạy lại, đừng coi kết quả cũ là đầu ra của mã mới.</p><h3 id="code-engine">engine.py</h3><pre class="example-code"><code>"""Offline numerical witnesses for the worked examples. Python &gt;= 3.10, standard library only.
+All inputs are small, constructed teaching data, not real model weights or benchmarks.
+"""
+from __future__ import annotations
+import math, json, itertools, codecs, ast, hashlib, tempfile, os, sqlite3, unittest
+from pathlib import Path
+
+def softmax(xs):
+    if not xs or not any(math.isfinite(x) for x in xs): raise ValueError('no finite logit')
+    if any(math.isnan(x) or x==math.inf for x in xs): raise ValueError('invalid logit')
+    m=max(xs); es=[math.exp(x-m) for x in xs]; s=sum(es)
+    return [x/s for x in es]
+
+def dot(a,b):
+    if len(a)!=len(b): raise ValueError('shape mismatch')
+    return sum(x*y for x,y in zip(a,b))
+def matrix_shape(a):
+    if not isinstance(a, (list, tuple)) or not a or not isinstance(a[0], (list, tuple)) or not a[0]:
+        raise ValueError('expected a nonempty rectangular matrix')
+    cols=len(a[0])
+    if any(not isinstance(row,(list,tuple)) or len(row)!=cols for row in a):
+        raise ValueError('ragged matrix')
+    return len(a),cols
+
+def tr(a):
+    matrix_shape(a)
+    return [list(x) for x in zip(*a)]
+def mm(a,b):
+    _,inner=matrix_shape(a); rows,_=matrix_shape(b)
+    if inner!=rows: raise ValueError('shape mismatch')
+    return [[dot(x,y) for y in tr(b)] for x in a]
+def add(a,b):
+    if matrix_shape(a)!=matrix_shape(b):raise ValueError('shape mismatch')
+    return [[x+y for x,y in zip(ar,br)] for ar,br in zip(a,b)]
+def ln(x,eps=1e-5):
+    if not x or eps&lt;=0:raise ValueError('empty vector or nonpositive epsilon')
+    m=sum(x)/len(x); v=sum((a-m)**2 for a in x)/len(x)
+    return [(a-m)/math.sqrt(v+eps) for a in x]
+def attn(q,k,v,offset=0,causal=True):
+    nq,dq=matrix_shape(q);nk,dk=matrix_shape(k);nv,_=matrix_shape(v)
+    if dq!=dk or nk!=nv or offset&lt;0:raise ValueError('incompatible attention shapes or offset')
+    d=len(q[0]); s=[[dot(a,b)/math.sqrt(d) if not causal or j&lt;=offset+i else -math.inf for j,b in enumerate(k)] for i,a in enumerate(q)]
+    p=[softmax(row) for row in s]
+    return {'scores':s,'weights':p,'output':mm(p,v)}
+def finite(x):
+    if isinstance(x,float) and not math.isfinite(x): return '-inf' if x&lt;0 else str(x)
+    if isinstance(x,list): return [finite(v) for v in x]
+    if isinstance(x,dict): return {k:finite(v) for k,v in x.items()}
+    return x
+
+def transformer():
+    x=[[1.,0.],[0.,2.]]; u=[ln(row) for row in x]; a=attn(u,u,u)
+    r=add(x,a['output']); n=[ln(row) for row in r]; f=[[.5*max(0,z) for z in row] for row in n]; y=add(r,f)
+    last_norm=ln(y[-1]); logits=mm([last_norm],[[1.,0.,-1.],[0.,1.,.5]])[0]
+    return {'X':x,'norm1':u,'attention':a,'residual1':r,'norm2':n,'ffn':f,'Y':y,'final_norm':last_norm,'logits':logits,'probabilities':softmax(logits)}
+
+def grad_demo():
+    q=[[.4,-.2]];k=[[1.,.5],[-.5,1.]];v=[[2.,-1.],[.5,3.]];g=[[.7,-.3]]
+    a=attn(q,k,v,causal=False);p=a['weights']; dp=mm(g,tr(v));ds=[[pj*(gj-dot(pr,gr)) for pj,gj in zip(pr,gr)] for pr,gr in zip(p,dp)]
+    dq=[[z/math.sqrt(2) for z in row] for row in mm(ds,k)]
+    dk=[[z/math.sqrt(2) for z in row] for row in mm(tr(ds),q)];dv=mm(tr(p),g)
+    def loss(): return dot(attn(q,k,v,causal=False)['output'][0],g[0])
+    err=0.; checked=0
+    for arr,deriv in [(q,dq),(k,dk),(v,dv)]:
+        for i,row in enumerate(arr):
+            for j,old in enumerate(row):
+                h=1e-6; arr[i][j]=old+h; hi=loss();arr[i][j]=old-h;lo=loss();arr[i][j]=old
+                err=max(err,abs((hi-lo)/(2*h)-deriv[i][j]));checked+=1
+    return {'Q':q,'K':k,'V':v,'upstream':g,'P':p,'O':a['output'],'dP':dp,'dS':ds,'dQ':dq,'dK':dk,'dV':dv,'max_error':err,'coordinates_checked':checked}
+
+def online_softmax(scores,values):
+    m=-math.inf;l=0.;u=0.;trace=[]
+    for s,v in zip(scores,values):
+        new=max(m,s);scale=math.exp(m-new);e=math.exp(s-new);l=scale*l+e;u=scale*u+e*v;m=new
+        trace.append({'score':s,'value':v,'max':m,'old_scale':scale,'sum':l,'weighted_sum':u,'output':u/l})
+    return trace
+
+def bm25(docs,term,k1=1.2,b=.75):
+    n=len(docs); df=sum(term in d for d in docs);avg=sum(map(len,docs))/n;idf=math.log(1+(n-df+.5)/(df+.5)); rows=[]
+    for i,d in enumerate(docs):
+        f=d.count(term);den=f+k1*(1-b+b*len(d)/avg);part=f*(k1+1)/den
+        rows.append({'doc':chr(65+i),'length':len(d),'frequency':f,'denominator':den,'tf_factor':part,'score':idf*part})
+    return {'N':n,'df':df,'avgdl':avg,'idf':idf,'rows':rows}
+def rrf(lists,c=60):
+    scores={}
+    for ranking in lists:
+        unique=list(dict.fromkeys(ranking))
+        for rank,x in enumerate(unique,1):scores[x]=scores.get(x,0)+1/(c+rank)
+    return sorted(scores.items(),key=lambda kv:(-kv[1],kv[0]))
+
+def spec_demo():
+    p=[.6,.3,.1];q=[.2,.5,.3];accept=[min(1,pi/qi) for pi,qi in zip(p,q)]
+    accepted=[qi*ai for qi,ai in zip(q,accept)];r=sum(qi*(1-ai) for qi,ai in zip(q,accept));res=[max(0,pi-qi) for pi,qi in zip(p,q)];s=sum(res);res=[v/s for v in res]
+    return {'target':p,'draft':q,'accept_prob':accept,'accepted_mass':accepted,'rejection_mass':r,'residual_distribution':res,'final_mass':[a+r*b for a,b in zip(accepted,res)]}
+
+def adamw_demo():
+    w=1.;g=.2;b1=.9;b2=.999;lr=.1;wd=.01;eps=1e-8
+    m=(1-b1)*g;v=(1-b2)*g*g;mh=m/(1-b1);vh=v/(1-b2)
+    decay=w*(1-lr*wd);new=decay-lr*mh/(math.sqrt(vh)+eps)
+    return {'w':w,'gradient':g,'m':m,'v':v,'m_hat':mh,'v_hat':vh,'after_decay':decay,'new_w':new}
+
+def sse_trace(chunks):
+    decoder=codecs.getincrementaldecoder('utf-8')();buf='';events=[]
+    for chunk in chunks:
+        buf+=decoder.decode(chunk)
+        while '\n\n' in buf:
+            raw,buf=buf.split('\n\n',1);data=[]
+            for line in raw.split('\n'):
+                if line.startswith('data:'):
+                    text=line[5:]; data.append(text[1:] if text.startswith(' ') else text)
+            if data:events.append('\n'.join(data))
+    buf+=decoder.decode(b'',final=True)
+    return events,buf
+
+def memory_select(items,project,at,known_at):
+    known=[r for r in items if r['project']==project and r['recorded']&lt;=known_at]
+    # Each item here is a full assertion for a finite validity interval. Later corrections win only in this toy policy.
+    valid=[r for r in known if r['from']&lt;=at&lt;r['to']]
+    return max(valid,key=lambda r:r['recorded'],default=None)
+
+def precision_recall(ranking,relevant):
+    got=set(ranking);rel=set(relevant);tp=len(got&amp;rel)
+    return {'precision':tp/len(got) if got else 0,'recall':tp/len(rel) if rel else None}
+
+def compute():
+    E=[[0.,0.,0.,0.],[.2,-.1,.7,.4],[-.3,.8,.1,.5],[.6,.2,-.4,.9],[.1,-.5,.9,.3],[-.2,.4,.5,-.6]]
+    ids=[[1,2,3],[4,2,0]];embedded=[[E[j] for j in row] for row in ids]
+    a=attn([[1.,0.],[0.,1.],[1.,1.]],[[1.,0.],[0.,1.],[1.,1.]],[[1.,2.],[3.,4.],[4.,6.]])
+    bm=bm25([['排除','路径'],['排除','排除','路径','缓存'],['日志','输出']],'排除')
+    lp=math.log(2.);dpo=-math.log(1/(1+math.exp(-lp)))
+    wp=.6;wnew=wp-.1*(wp-1)
+    brier=((.8-1)**2+(.8-1)**2+(.8-0)**2+(.8-0)**2)/4
+    return {
+      'embedding':{'table':E,'ids':ids,'output':embedded},
+      'shapes':{'ids_elements':2*128,'ids_bytes_int64':2*128*8,'embedding_elements':2*128*4096,'embedding_bytes_fp16':2*128*4096*2},
+      'attention':a,'decoder':transformer(),'gradients':grad_demo(),
+      'softmax':{'logits':[2,1,0],'p':softmax([2,1,0]),'shifted_p':softmax([1002,1001,1000]),'temperature2':softmax([1,.5,0]),'temperature05':softmax([4,2,0])},
+      'online':online_softmax([1,3],[2,10]),
+      'adamw':adamw_demo(),
+      'loss':{'target_ps':[.8,.5,.25],'losses':[-math.log(p) for p in [.8,.5,.25]],'mean':sum(-math.log(p) for p in [.8,.5,.25])/3,'logits':[0,0],'gradient':[-.5,.5],'updated_logits':[.05,-.05],'new_loss':-math.log(softmax([.05,-.05])[0])},
+      'dpo':{'pi_preferred':.6,'pi_rejected':.2,'ref_preferred':.3,'ref_rejected':.2,'beta':1.,'margin':lp,'loss':dpo,'baseline_loss':math.log(2),'kl':sum(p*math.log(p/q) for p,q in zip([.8,.2],[.5,.5]))},
+      'speculative':spec_demo(),
+      'cache':{'tiny_bytes':2*2*1*3*1*2*4,'GiB':2*32*1*32768*8*128*2/2**30,'per_token_KiB':2*32*1*8*128*2/1024},
+      'bm25':bm,'rrf':rrf([['A','B','C'],['B','C','D']]),
+      'metrics':{'precision_recall':precision_recall(['A','X','Y'],['A','B']),'pass1':.8,'pass_at3':1-.2**3,'pass_all3':.8**3,'finite_pass3':1-math.comb(4,3)/math.comb(10,3),'brier':brier,'mcnemar_p':2*sum(math.comb(8,k) for k in range(3))/2**8},
+    }
+
+class WitnessTests(unittest.TestCase):
+    def test_embedding_semantics(self):
+        d=compute()['embedding'];self.assertEqual(d['output'][0][1],d['table'][2]);self.assertEqual(d['output'][1][1],d['table'][2]);self.assertEqual(len(d['output'][1]),3);self.assertEqual(d['output'][1][-1],[0.]*4)
+    def test_softmax_stability(self):
+        for a,b in zip(softmax([2,1,0]),softmax([1002,1001,1000])):self.assertAlmostEqual(a,b)
+        self.assertAlmostEqual(sum(softmax([-1000,-1001])),1)
+    def test_softmax_invalid(self):
+        for xs in [[],[-math.inf,-math.inf],[math.nan,0],[math.inf,0]]:
+            with self.assertRaises(ValueError):softmax(xs)
+    def test_future_mask(self):
+        a=compute()['attention'];self.assertEqual(a['weights'][0],[1,0,0]);self.assertEqual(a['weights'][1][2],0)
+    def test_chunk_mask(self):
+        self.assertEqual([[j&lt;=3+i for j in range(5)] for i in range(2)],[[True,True,True,True,False],[True]*5])
+    def test_cache_equivalence(self):
+        x=[[1.,0.],[0.,1.],[1.,1.]];v=[[1.,2.],[3.,4.],[4.,6.]]
+        full=attn(x,x,v)['output'];incremental=[attn([x[i]],x[:i+1],v[:i+1],i)['output'][0] for i in range(3)]
+        self.assertEqual(full,incremental)
+    def test_cache_wrong_offset_detected(self):
+        x=[[1.,0.],[0.,1.],[1.,1.]];v=[[1.,2.],[3.,4.],[4.,6.]]
+        self.assertNotEqual(attn([x[-1]],x,v,0)['output'],attn([x[-1]],x,v,2)['output'])
+    def test_gradient_finite_difference(self):self.assertLess(grad_demo()['max_error'],1e-8)
+    def test_gradient_shift_sum(self):self.assertAlmostEqual(sum(grad_demo()['dS'][0]),0)
+    def test_online_equals_full(self):
+        o=online_softmax([1,3],[2,10])[-1]['output'];self.assertAlmostEqual(o,dot(softmax([1,3]),[2,10]))
+    def test_speculative_distribution(self):
+        s=spec_demo()
+        for a,b in zip(s['target'],s['final_mass']):self.assertAlmostEqual(a,b)
+    def test_adamw(self):self.assertAlmostEqual(adamw_demo()['new_w'],.899000005,places=9)
+    def test_dpo_margin(self):self.assertAlmostEqual(compute()['dpo']['loss'],math.log(1.5))
+    def test_ce_update(self):self.assertLess(compute()['loss']['new_loss'],math.log(2))
+    def test_rope_preserves_norm(self):
+        x=[2.,1.];t=.7;c=math.cos(t);s=math.sin(t);y=[c*x[0]-s*x[1],s*x[0]+c*x[1]];self.assertAlmostEqual(dot(x,x),dot(y,y))
+    def test_bm25_ranking(self):
+        b=compute()['bm25'];self.assertGreater(b['rows'][1]['score'],b['rows'][0]['score']);self.assertEqual(b['rows'][2]['score'],0)
+    def test_rrf(self):self.assertEqual([a for a,b in compute()['rrf']],['B','C','A','D'])
+    def test_rrf_duplicate(self):self.assertEqual(rrf([['A','A','B']]),rrf([['A','B']]))
+    def test_sse_all_byte_boundaries(self):
+        wire='data: {"path":"学习.py"}\n\n'.encode('utf-8')
+        for cut in range(1,len(wire)):
+            e,buf=sse_trace([wire[:cut],wire[cut:]]);self.assertEqual(json.loads(e[0]),{'path':'学习.py'});self.assertEqual(buf,'')
+    def test_sse_incomplete_not_emitted(self):self.assertEqual(sse_trace([b'data: {"x":1}'])[0],[])
+    def test_tool_result_pairing(self):
+        calls={'a':'read(config)','b':'read(test)'};responses=[('b','TEST'),('a','CONFIG')]
+        paired={calls[k]:v for k,v in responses};self.assertEqual(paired['read(config)'],'CONFIG')
+    def test_memory_bitemporal(self):
+        items=[dict(project='A',recorded=1,**{'from':1,'to':99},value=3),dict(project='A',recorded=12,**{'from':10,'to':99},value=5)]
+        self.assertEqual(memory_select(items,'A',11,11)['value'],3);self.assertEqual(memory_select(items,'A',11,12)['value'],5)
+    def test_acl_before_model(self):
+        docs=[('private',.99,{'admin'}),('public',.8,{'user','admin'})];visible=[x[0] for x in docs if 'user' in x[2]];self.assertEqual(visible,['public'])
+    def test_compare_and_swap(self):
+        current={'version':8,'body':'B'};expected=7
+        if current['version']==expected:current.update(version=9,body='C')
+        self.assertEqual(current,{'version':8,'body':'B'})
+    def test_atomic_replace_fixture(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/'a.txt';q=Path(d)/'tmp.txt';p.write_text('old');q.write_text('new');os.replace(q,p);self.assertEqual(p.read_text(),'new')
+    def test_sqlite_local_transaction(self):
+        c=sqlite3.connect(':memory:');c.execute('create table receipts(id text primary key, result text)');c.execute('insert into receipts values(?,?)',('op1','done'));c.commit()
+        with self.assertRaises(sqlite3.IntegrityError):c.execute('insert into receipts values(?,?)',('op1','again'))
+        self.assertEqual(c.execute('select count(*) from receipts').fetchone()[0],1);c.close()
+    def test_precision_recall(self):self.assertEqual(precision_recall(['A','X','Y'],['A','B']),{'precision':1/3,'recall':.5})
+    def test_paired_exact(self):self.assertEqual(compute()['metrics']['mcnemar_p'],.2890625)
+    def test_lora_rank1(self):
+        self.assertEqual(mm([[1],[2]],[[3,4]]),[[3,4],[6,8]])
+    def test_quantization(self):self.assertEqual([round(x/.1) for x in [-.24,.03,.26]],[-2,0,3])
+    def test_pool_mask(self):
+        vectors=[[2.,0.],[0.,2.],[0.,0.]];valid=[1,1,0];pooled=[sum(r[j]*m for r,m in zip(vectors,valid))/sum(valid) for j in range(2)];self.assertEqual(pooled,[1,1])
+    def test_dag_critical_path(self):
+        durations={'A':2,'B':3,'C':5,'D':1};finish={'A':2,'B':5,'C':7,'D':8};self.assertEqual(finish['D'],2+max(3,5)+1)
+    def test_paginated_position(self):
+        blocks=[7,2,19];self.assertEqual((blocks[5//4],5%4),(2,1))
+    def test_source_version_gate(self):
+        verified={'commit':'r7','exit':0};current='r8';self.assertFalse(verified['commit']==current and verified['exit']==0)
+
+if __name__=='__main__':
+    import sys
+    if '--test' in sys.argv:unittest.main(argv=[sys.argv[0]],verbosity=2)
+    else: print(json.dumps(finite(compute()),ensure_ascii=False,indent=2,allow_nan=False))
+</code></pre><h3 id="code-additional_checks">additional_checks.py</h3><pre class="example-code"><code>"""离线示例核验。Python 3.10+，只使用标准库。
+本程序测试算术、矩阵与明确的状态反例；不测商业LLM效果或生产系统安全。
+"""
+from __future__ import annotations
+import math, json, unittest, tempfile, sqlite3, os
+from pathlib import Path
+import engine as e
+
+def extended_outputs():
+    # Keep outputs bound to the exact example that introduces the assumptions.
+    return {
+      'F07': {'A':[[1,2]], 'B':[[3,4],[5,6]],'product':e.mm([[1,2]],[[3,4],[5,6]])},
+      'F17': {'x':2,'target':6,'w_before':1,'loss_before':16,'gradient':-16,'learning_rate':.1,'w_after':2.6,'loss_after':(2.6*2-6)**2},
+      'Q006': {'probabilities':e.softmax([1/math.sqrt(2),0]),'output':e.mm([e.softmax([1/math.sqrt(2),0])],[[10,0],[0,20]])[0]},
+      'Q010': {'relative_angle_degrees':60,'dot_product':math.cos(math.pi/3)},
+      'Q030': {'queue_ms':40,'prefill_ms':60,'first_step_ms':20,'TTFT_ms':120,'TPOT_ms':20,'four_tokens_ms':180},
+      'Q038': {'utf8_bytes_of_wo':list('我'.encode()),'events':e.sse_trace([b'data: {"text":"'+bytes([0xe6]),bytes([0x88]),bytes([0x91])+b'"}\n\n'])[0]},
+      'Q049': {'input_budget':1000-200-50,'fixed':150+100+150,'evidence_budget':350,'selected_evidence':180+120,'used_input':700},
+      'Q059': {'scores':[.8,0],'probabilities':e.softmax([.8,0]),'loss':-math.log(e.softmax([.8,0])[0]),'score_gradient':[e.softmax([.8,0])[0]-1,e.softmax([.8,0])[1]]},
+      'Q062': {'query':[[1,0],[0,1]],'document':[[.8,.6],[0,1]],'max_per_query':[.8,1], 'MaxSim_A':1.8,'MaxSim_B':2/math.sqrt(2)},
+      'Q071': {'queries':[
+        {'valid_day':3,'known_day':11,'value':5},
+        {'valid_day':7,'known_day':8,'value':5},
+        {'valid_day':7,'known_day':11,'value':7}]},
+      'Q076': {'A':{'total_cost':100,'successes':80,'cost_per_success':100/80},'B':{'total_cost':70,'successes':40,'cost_per_success':70/40}},
+      'Q078': {'serial_seconds':3+5+2,'parallel_seconds':max(3,5)+2,'parallel_with_4s_overhead':max(3,5)+2+4},
+      'Q090': {k:v for k,v in e.compute()['metrics'].items() if k.startswith('pass') or k.startswith('finite')},
+      'Q091': {'A_successes':12,'B_successes':16,'tasks':20,'A_rate':.6,'B_rate':.8,'discordant':8,'two_sided_exact_p':2*sum(math.comb(8,k) for k in range(3))/2**8},
+      'Q097': {'base':max(3,5)+2,'A_optimized':max(1,5)+2,'B_optimized':max(3,2)+2},
+      'Q099': {'slots':10,'mean_service_seconds':2,'capacity_per_second':5,'arrivals_per_second':6,'extra_backlog_after_100s':(6-5)*100,'steady_L_at_lambda4_W3':4*3},
+      'Q105': {'probabilities':[.8]*4,'labels':[1,1,0,0],'Brier':e.compute()['metrics']['brier']},
+      'Q107': {'image':[list(range(i,i+4)) for i in [1,5,9,13]],'patches':[[1,2,5,6],[3,4,7,8],[9,10,13,14],[11,12,15,16]],'W':[[1,0],[0,1],[1,0],[0,1]],'projected':e.mm([[1,2,5,6],[3,4,7,8],[9,10,13,14],[11,12,15,16]],[[1,0],[0,1],[1,0],[0,1]])},
+      'Q108': {'weights':[.9,.1],'values':[.01,10],'contributions':[.009,1],'sum':1.009},
+      'Q109': {'C_FLOPs':6*10**9*20*10**9,'N_doubled':2*10**9,'D_halved':10*10**9},
+      'S01': {'gradient_occurrences':[[.1,-.2],[.3,.4]],'row_gradient':[.4,.2],'new_row':[.8-.1*.4,.6-.1*.2]},
+      'S03': {'microbatch_gradients':[1,2,3,4],'unscaled_sum':10,'correct_equal_size_mean':2.5},
+      'S04': {'positive_advantage':{'r':1.5,'A':2,'raw':3,'clipped':2.4,'objective':2.4},'negative_advantage':{'r':.5,'A':-2,'raw':-1,'clipped':-1.6,'objective':-1.6}},
+      'S05': {'p':[.5,.3,.15,.05],'top2':[.625,.375],'top_p_09':[x/.95 for x in [.5,.3,.15]]},
+      'S06': {'compute_lower_bound_us':1e9/1e14*1e6,'transfer_lower_bound_us':1e8/1e12*1e6,'ideal_overlap_lower_bound_us':100},
+      'S16': {'old_recall':8/10,'new_recall':10/10,'old_precision':8/(8+2),'new_precision':10/(10+30)},
+      'S19': {'A_easy':9/10,'B_easy':80/100,'A_hard':20/100,'B_hard':1/10,'A_total':29/110,'B_total':81/110},
+      'S22': {'A_cost_per_success':1000/990,'B_cost_per_success':800/980},
+      'S23': {'weight_errors':[.01,.01],'activations':[100,.1],'output_errors':[1,.001],'ratio':1000},
+      'S25': {'A_accuracy':80/100,'B_selective_accuracy':45/50,'A_coverage':1,'B_coverage':.5,'correct_counts':[80,45]},
+      'S31': {'direction':[1,-2],'directional_derivative':e.dot(e.grad_demo()['dQ'][0],[1,-2])},
+      'R03-12': {'total100':20+99*10,'half_prefill':10+99*10,'total50':20+49*10},
+      'R08-16': {'recall_at3_X':1,'recall_at3_Y':1,'reciprocal_rank_X':1,'reciprocal_rank_Y':.5},
+      'R13-07': {'false_block_rate':5/100,'false_allow_rate':1/10},
+      'R14-05': {'requests':10000,'SLO':.99,'allowed_errors':100,'used':80,'remaining':20},
+      'R14-07': {'requests':4,'request_limit':60,'tokens_per_request':2000,'tokens':8000,'token_limit':6000},
+      'R15-01': {'A':[[1],[2]],'B':[[.1,.2]],'AB':e.mm([[1],[2]],[[.1,.2]])},
+      'R16-01': {'w':1,'z':-8,'loss':64,'dz_dw':2,'dL_dz':-16,'dL_dw':-32},
+      'R16-05': {'negative_log_natural':-math.log(.5),'negative_log_base2':-math.log2(.5)},
+    }
+
+class MoreNumericTests(unittest.TestCase):
+    def test_dense_layer_chain(self):
+        t=e.transformer(); self.assertAlmostEqual(t['probabilities'][2],.592200875196,places=10);self.assertAlmostEqual(sum(t['probabilities']),1)
+    def test_every_masked_probability_zero(self):
+        a=e.compute()['attention'];
+        for i,row in enumerate(a['weights']):
+            for j,p in enumerate(row):
+                if j&gt;i:self.assertEqual(p,0)
+    def test_layer_norm_mean(self):
+        for row in [[1,0],[0,2],[2,2]]:self.assertAlmostEqual(sum(e.ln(row)),0)
+    def test_layer_norm_constant_safe(self):self.assertEqual(e.ln([2,2]),[0,0])
+    def test_dot_matrix_distinction(self):self.assertEqual(e.mm([[1,2]],[[3,4],[5,6]]),[[13,16]])
+    def test_transpose_not_reshape(self):self.assertEqual(e.tr([[1,2,3],[4,5,6]]),[[1,4],[2,5],[3,6]])
+    def test_single_parameter_sgd(self):self.assertAlmostEqual((2.6*2-6)**2,.64)
+    def test_large_step_can_increase_loss(self):self.assertGreater(((1-1*(-16))*2-6)**2,16)
+    def test_gradient_shared_embedding(self):self.assertEqual([.1+.3,-.2+.4],[.4,.2])
+    def test_gradient_accumulation_equal_batches(self):self.assertEqual(sum(x/4 for x in [1,2,3,4]),2.5)
+    def test_gradient_accumulation_unequal_batches(self):self.assertNotEqual((1*2+3*4)/(2+4),(1+3)/2)
+    def test_ppo_sign_sensitive(self):
+        def obj(r,a):return min(r*a,min(1.2,max(.8,r))*a)
+        self.assertAlmostEqual(obj(1.5,2),2.4);self.assertAlmostEqual(obj(.5,-2),-1.6)
+    def test_nucleus_boundary(self):
+        p=[.5,.3,.15,.05];ret=[];total=0
+        for x in p:
+            ret.append(x);total+=x
+            if total&gt;=.9:break
+        self.assertEqual(ret,[.5,.3,.15]);self.assertAlmostEqual(sum(x/total for x in ret),1)
+    def test_bm25_exact_visible_numbers(self):
+        d=e.compute()['bm25'];self.assertAlmostEqual(d['rows'][0]['score'],.523548346502,places=10);self.assertAlmostEqual(d['rows'][1]['score'],.566579717447,places=10)
+    def test_contrastive_loss(self):self.assertAlmostEqual(-math.log(e.softmax([.8,0])[0]),.371100665948,places=10)
+    def test_maxsim_sum(self):
+        qs=[[1,0],[0,1]];ds=[[.8,.6],[0,1]]
+        self.assertAlmostEqual(sum(max(e.dot(q,d) for d in ds) for q in qs),1.8)
+    def test_spec_bad_resampling_changes_distribution(self):
+        s=e.spec_demo();wrong=[a+s['rejection_mass']*p for a,p in zip(s['accepted_mass'],s['target'])]
+        for a,b in zip(wrong,[.44,.42,.14]):self.assertAlmostEqual(a,b)
+        self.assertNotEqual(wrong,s['target'])
+    def test_cache_units(self):
+        c=e.compute()['cache'];self.assertEqual(c['GiB'],4);self.assertEqual(c['per_token_KiB'],128);self.assertEqual(c['tiny_bytes'],96)
+    def test_attention_value_scaling(self):
+        p=e.softmax([1/math.sqrt(2),0]);o=e.mm([p],[[10,0],[0,20]])[0];d=e.mm([p],[[20,0],[0,40]])[0]
+        for x,y in zip(o,d):self.assertAlmostEqual(2*x,y)
+    def test_grad_direction_finite_difference(self):
+        q=[.4,-.2];k=[[1,.5],[-.5,1]];v=[[2,-1],[.5,3]];g=[.7,-.3];direction=[1,-2];h=1e-6
+        def f(t):return e.dot(e.attn([[q[i]+t*direction[i] for i in range(2)]],k,v,causal=False)['output'][0],g)
+        fd=(f(h)-f(-h))/(2*h);self.assertAlmostEqual(fd,e.dot(e.grad_demo()['dQ'][0],direction),places=8)
+    def test_context_budget(self):self.assertEqual(1000-200-50-(150+100+150),350)
+    def test_time_to_first_vs_completion(self):self.assertEqual(40+60+20+3*20,180)
+    def test_prefill_off_by_one(self):
+        out=extended_outputs()['R03-12'];self.assertEqual(out['total100'],1010);self.assertEqual(out['total100']-out['total50'],500)
+    def test_roofline_units(self):self.assertEqual(extended_outputs()['S06']['transfer_lower_bound_us'],100)
+    def test_cost_with_failures(self):self.assertLess(100/80,70/40)
+    def test_critical_path_after_change(self):self.assertEqual(max(1,5)+2,7);self.assertEqual(max(3,2)+2,5)
+    def test_supercritical_queue(self):self.assertEqual((6-10/2)*100,100)
+    def test_pass_events_differ(self):
+        d=e.compute()['metrics'];self.assertAlmostEqual(d['pass_at3'],.992);self.assertAlmostEqual(d['pass_all3'],.512);self.assertAlmostEqual(d['finite_pass3'],29/30)
+    def test_paired_table_marginals(self):self.assertEqual((10+2,10+6),(12,16));self.assertEqual(10+2+6+2,20)
+    def test_simpson_construction(self):self.assertGreater(9/10,80/100);self.assertGreater(20/100,1/10);self.assertLess(29/110,81/110)
+    def test_routing_precision_recall_tradeoff(self):self.assertEqual(10/(10+30),.25);self.assertGreater(10/10,8/10)
+    def test_correlated_vote_counterexample(self):self.assertGreater(.2,.2**3)
+    def test_patch_projector(self):self.assertEqual(extended_outputs()['Q107']['projected'],[[6,8],[10,12],[22,24],[26,28]])
+    def test_activation_sensitive_error(self):self.assertEqual(100*.01,1);self.assertEqual(.1*.01,.001)
+    def test_scale_pair_product(self):self.assertEqual(6*10**9*20*10**9,6*2*10**9*10*10**9)
+    def test_lora_small_count_not_saved(self):self.assertEqual(2*1+1*2,2*2)
+    def test_lora_large_count(self):self.assertEqual(1000*8+8*1000,16000)
+    def test_calibration_brier(self):self.assertAlmostEqual(sum((.8-y)**2 for y in [1,1,0,0])/4,.34)
+    def test_selective_accuracy_vs_coverage(self):self.assertGreater(45/50,80/100);self.assertLess(45,80)
+    def test_error_budget(self):self.assertEqual(100-80,20)
+    def test_rate_limit_dimensions(self):self.assertLess(4,60);self.assertGreater(4*2000,6000)
+    def test_natural_log_units(self):self.assertAlmostEqual(-math.log(.5),math.log(2));self.assertEqual(-math.log2(.5),1)
+    def test_utf8_three_bytes(self):self.assertEqual(list('我'.encode('utf-8')),[230,136,145])
+    def test_relative_rope_shift(self):
+        def r(t):return [math.cos(t),math.sin(t)]
+        self.assertAlmostEqual(e.dot(r(math.pi/6),r(3*math.pi/6)),e.dot(r(2*math.pi/6),r(4*math.pi/6)))
+    def test_high_weight_not_high_contribution(self):self.assertLess(.9*.01,.1*10)
+
+class MoreStateTests(unittest.TestCase):
+    def test_compaction_suffix_preserved(self):
+        snap=list(range(1,21));current=snap+[21];candidate={'covers':20,'summary':'state20'}
+        replacement=[candidate]+[i for i in current if i&gt;candidate['covers']]
+        self.assertEqual(replacement[-1],21);self.assertEqual(len(replacement),2)
+    def test_unknown_not_failure(self):
+        external={'counter':11};local={'op7':'unknown'}
+        self.assertEqual(external['counter'],11);self.assertNotEqual(local['op7'],'failed')
+    def test_idempotency_parameter_conflict(self):
+        receipts={'k7':{'amount':10,'result':110}}
+        def request(key,amount):
+            if key in receipts:
+                if receipts[key]['amount']!=amount:raise ValueError('same key different arguments')
+                return receipts[key]['result']
+            raise ValueError('fixture only supports pre-recorded action')
+        self.assertEqual(request('k7',10),110)
+        with self.assertRaises(ValueError):request('k7',20)
+    def test_merge_lost_update_counterexample(self):
+        a={'a':2,'b':1};b={'a':1,'b':2};disk=a.copy();disk=b.copy();self.assertNotEqual(disk,{'a':2,'b':2})
+    def test_version_check_refuses_stale_write(self):
+        disk={'version':9,'body':'B'};expected=7
+        if disk['version']==expected:disk.update(version=8,body='A')
+        self.assertEqual(disk['version'],9)
+    def test_atomic_replace_is_not_compare_and_swap(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/'x';tmp=Path(d)/'tmp';p.write_text('v7');observed=p.read_text();p.write_text('v9');tmp.write_text('v8');os.replace(tmp,p)
+            self.assertEqual(observed,'v7');self.assertEqual(p.read_text(),'v8')
+    def test_exclude_boundary_counterexample(self):
+        def correct(p,d):return p==d or p.startswith(d+'/')
+        for d in ['a','cache','build']:
+            self.assertTrue(correct(d,d));self.assertTrue(correct(d+'/x',d));self.assertFalse(correct(d+'b/x',d));self.assertTrue((d+'b/x').startswith(d))
+    def test_acl_topk_order(self):
+        ranked=[('A',False),('B',False),('C',True),('D',True)]
+        after=[x for x,ok in ranked[:2] if ok];before=[x for x,ok in ranked if ok][:2];self.assertEqual(after,[]);self.assertEqual(before,['C','D'])
+    def test_bitemporal_specific_scenario(self):
+        rows=[{'project':'prod','recorded':1,'from':1,'to':99,'value':5},{'project':'prod','recorded':10,'from':5,'to':99,'value':7}]
+        self.assertEqual(e.memory_select(rows,'prod',3,11)['value'],5);self.assertEqual(e.memory_select(rows,'prod',7,8)['value'],5);self.assertEqual(e.memory_select(rows,'prod',7,11)['value'],7)
+    def test_current_test_version(self):
+        report={'version':'v8','exit':0};artifact='v9';self.assertFalse(report['version']==artifact and report['exit']==0)
+    def test_approval_bound_to_artifact_environment(self):
+        approved=('P','staging','v8');self.assertNotEqual(approved,('P','staging','v9'));self.assertNotEqual(approved,('P','production','v8'))
+    def test_refund_conditions_and_not_or(self):
+        days=6;weekday=False;self.assertFalse(days&lt;=7 and weekday);self.assertTrue(days&lt;=7 or weekday)
+    def test_tool_completion_order_not_identity(self):
+        result_by_id=dict([('c2','B'),('c1','A')]);self.assertEqual(result_by_id['c1'],'A')
+    def test_replay_does_not_repeat_effect(self):
+        events=[('c7','succeeded'),('c8','pending')];state={}
+        for key,status in events:state[key]=status
+        for key,status in events:state[key]=status
+        self.assertEqual(state,{'c7':'succeeded','c8':'pending'})
+    def test_gui_scroll_transform(self):self.assertEqual(300-200,100);self.assertEqual((120/2,80/2),(60,40))
+
+if __name__=='__main__':
+    import sys
+    if '--test' in sys.argv:unittest.main(argv=[sys.argv[0]],verbosity=2)
+    else:print(json.dumps(e.finite(extended_outputs()),ensure_ascii=False,indent=2,allow_nan=False))
+</code></pre><h3 id="code-chain_and_operators">chain_and_operators.py</h3><pre class="example-code"><code>"""同一词表的微型Decoder与算子例。全部参数为教学设置，未训练。"""
+from __future__ import annotations
+import math,json,unittest
+import engine as e
+E=e.compute()['embedding']['table']
+WORDS=['PAD','我','爱','学习','你','！']
+I=[[float(i==j) for j in range(4)] for i in range(4)]
+WK=[[0.,1.,0.,0.],[1.,0.,0.,0.],[0.,0.,0.,1.],[0.,0.,1.,0.]]
+WV=[[1.,0.,0.,0.],[0.,.5,0.,0.],[0.,0.,1.,0.],[0.,0.,0.,.5]]
+
+def silu(x):return x/(1+math.exp(-x))
+def forward(ids, prior=None):
+    if not ids or any(type(i)is not int or i&lt;=0 or i&gt;=len(E) for i in ids):raise ValueError('valid non-PAD IDs only')
+    x=[list(E[i]) for i in ids];norm=[e.ln(v) for v in x];q=e.mm(norm,I);k=e.mm(norm,WK);v=e.mm(norm,WV)
+    prior=prior or {'K':[],'V':[]};offset=len(prior['K']);allk=prior['K']+k;allv=prior['V']+v
+    heads=[]
+    for h in range(2):
+        low=2*h;high=low+2
+        heads.append(e.attn([a[low:high] for a in q],[a[low:high] for a in allk],[a[low:high] for a in allv],offset=offset))
+    combined=[heads[0]['output'][j]+heads[1]['output'][j] for j in range(len(ids))]
+    r=e.add(x,combined);n2=[e.ln(row) for row in r]
+    # Wgate=Wup=I; Wdown=.25I, hence .25*silu(z)*z.
+    f=[[.25*silu(z)*z for z in row] for row in n2];y=e.add(r,f);last=e.ln(y[-1]);logits=e.mm([last],e.tr(E))[0]
+    # PAD is forbidden by this explicit teaching decoding policy, not by Embedding itself.
+    decoded_logits=[-math.inf]+logits[1:];p=e.softmax(decoded_logits);token=max(range(1,6),key=lambda j:p[j])
+    return {'ids':ids,'words':[WORDS[i] for i in ids],'X':x,'normalized':norm,'Wq':I,'Wk':WK,'Wv':WV,'Q':q,'K_new':k,'V_new':v,'heads':heads,'concat_attention':combined,'residual1':r,'normalized2':n2,'ffn':f,'hidden_output':y,'last_norm':last,'logits_before_PAD_filter':logits,'probabilities_after_PAD_filter':p,'selected_token':token,'selected_word':WORDS[token],'cache':{'K':allk,'V':allv}}
+
+def operator_outputs():
+    q=[1.,0.];a=[.8,.6];b=[0.,1.];p=e.softmax([e.dot(q,a),e.dot(q,b)]);gq=[(p[0]-1)*a[i]+p[1]*b[i] for i in range(2)]
+    rows={'X02':{'input':[1,3],'mean':2,'population_variance':1,'LayerNorm_epsilon1e5':e.ln([1,3]),'RMSNorm_epsilon1e5':[x/math.sqrt(5+1e-5) for x in [1,3]],'SiLU_1_2':[silu(1),silu(2)],'SwiGLU_identity_gate_up_down':[silu(1)*1,silu(2)*2]},
+      'X03':{'first_probabilities':{'A':.6,'B':.4},'A_next':{'E':.51,'F':.49},'B_next':{'D':.99,'F':.01},'joint':{'AE':.6*.51,'AF':.6*.49,'BD':.4*.99,'BF':.4*.01}},
+      'X04':{'p':[.8,.2],'q':[.5,.5],'KL_p_q':sum(x*math.log(x/y) for x,y in zip([.8,.2],[.5,.5])),'KL_q_p':sum(x*math.log(x/y) for x,y in zip([.5,.5],[.8,.2]))},
+      'X05':{'parameters':1000,'P_bytes':4000,'G_bytes':4000,'Adam_m_v_bytes':8000,'data_parallel_per_device':16000,'zero1_per_device':12000,'zero2_per_device':10000,'zero3_per_device':8000},
+      'X06':{'Hq':4,'Hkv':2,'group_mapping':[0,0,1,1],'toy_KV_per_token':2*2*2},
+      'X07':{'semantic_allowed':[[True,False],[True,True]],'sdpa_bool':[[True,False],[True,True]],'multihead_attention_bool_blocked':[[False,True],[False,False]],'additive_mask':[[0,'-inf'],[0,0]]},
+      'X08':{'q':q,'a':a,'b':b,'p':p,'q_gradient':gq,'q_after_lr01':[q[i]-.1*gq[i] for i in range(2)]},
+      'X09':{'q':0,'positions':{'A':4,'B':5,'C':1},'undirected_edges':[['A','B'],['B','C']],'greedy_stop':'A','best_after_explore_B':'C'},
+      'X10':{'scale':.1,'integer_min':-2,'integer_max':2,'input':[-.24,.03,.26],'integer_codes':[max(-2,min(2,round(x/.1))) for x in [-.24,.03,.26]],'reconstructed':[-.2,0,.2]},
+      'X11':{'character_input':['a','b','c'],'merge_rank':[ ['b','c',0], ['a','b',1]],'merged':['a','bc'],'teaching_vocabulary':{'a':1,'bc':5},'IDs':[1,5]},
+      'X12':{'valid_target_probabilities':[.8,.5,.25],'valid_count':3,'padded_count':4,'sum_NLL':sum(-math.log(x) for x in [.8,.5,.25]),'correct_mean':sum(-math.log(x) for x in [.8,.5,.25])/3,'wrong_divide4':sum(-math.log(x) for x in [.8,.5,.25])/4}}
+    return rows
+
+def compute_chain():
+    a=forward([1,2,3]);b=forward([4,2]);follow=forward([a['selected_token']],a['cache']);full=forward([1,2,3,a['selected_token']]);err=max(abs(x-y) for x,y in zip(follow['hidden_output'][0],full['hidden_output'][-1]))
+    return {'sentence_A':a,'sentence_B':b,'next_step_A':follow,'full_recompute_A':full,'cached_vs_full_max_error':err,'operators':operator_outputs()}
+
+class ChainTests(unittest.TestCase):
+    def test_embedding_rows_match_foundation(self):self.assertEqual(forward([1,2,3])['X'],[E[1],E[2],E[3]])
+    def test_two_heads_each_row_probability(self):
+        for h in forward([1,2,3])['heads']:
+            for row in h['weights']:self.assertAlmostEqual(sum(row),1)
+    def test_causal_change_later_cannot_change_first(self):
+        self.assertEqual(forward([1,2,3])['hidden_output'][0],forward([1,4,5])['hidden_output'][0])
+    def test_cache_full_equivalence(self):self.assertLess(compute_chain()['cached_vs_full_max_error'],1e-12)
+    def test_PAD_not_implicitly_generated(self):self.assertEqual(forward([4,2])['probabilities_after_PAD_filter'][0],0)
+    def test_norms_differ(self):self.assertNotEqual(operator_outputs()['X02']['LayerNorm_epsilon1e5'],operator_outputs()['X02']['RMSNorm_epsilon1e5'])
+    def test_beam_joint_counterexample(self):self.assertGreater(.4*.99,.6*.51)
+    def test_KL_asymmetry(self):o=operator_outputs()['X04'];self.assertNotEqual(o['KL_p_q'],o['KL_q_p']);self.assertGreater(o['KL_p_q'],0)
+    def test_zero_state_accounting(self):o=operator_outputs()['X05'];self.assertEqual(o['zero1_per_device'],4000+4000+8000/2);self.assertEqual(o['zero3_per_device'],(4000+4000+8000)/2)
+    def test_bool_masks_inversion(self):o=operator_outputs()['X07'];self.assertEqual(o['sdpa_bool'],[[not x for x in row] for row in o['multihead_attention_bool_blocked']])
+    def test_retrieval_q_gradient_fd(self):
+        o=operator_outputs()['X08'];q=o['q'][:];h=1e-6
+        def loss():return -math.log(e.softmax([e.dot(q,o['a']),e.dot(q,o['b'])])[0])
+        for i,g in enumerate(o['q_gradient']):
+            old=q[i];q[i]=old+h;hi=loss();q[i]=old-h;lo=loss();q[i]=old;self.assertAlmostEqual((hi-lo)/(2*h),g,places=8)
+    def test_greedy_graph_can_stop_local(self):self.assertGreater(5,4);self.assertLess(1,4)
+    def test_quant_clipping(self):self.assertEqual(operator_outputs()['X10']['integer_codes'],[-2,0,2])
+    def test_loss_denominator(self):o=operator_outputs()['X12'];self.assertAlmostEqual(o['correct_mean'],.767528364331,places=10);self.assertGreater(o['correct_mean'],o['wrong_divide4'])
+
+if __name__=='__main__':
+    import sys
+    if '--test' in sys.argv:unittest.main(argv=[sys.argv[0]],verbosity=2)
+    else:print(json.dumps(e.finite(compute_chain()),ensure_ascii=False,indent=2,allow_nan=False))
+</code></pre><h3 id="code-run_all">run_all.py</h3><pre class="example-code"><code>"""运行本书401例所配套的确定性数值/状态见证；不调用网络或模型。"""
+from pathlib import Path
+import subprocess,sys,json
+root=Path(__file__).resolve().parent
+results=[]
+for script in ["engine.py","additional_checks.py","chain_and_operators.py"]:
+    p=subprocess.run([sys.executable,str(root/script),"--test"],cwd=root,text=True,capture_output=True)
+    print(p.stdout);print(p.stderr)
+    results.append({"script":script,"returncode":p.returncode})
+    if p.returncode:raise SystemExit(p.returncode)
+for script,name in [("engine.py","numbers.json"),("additional_checks.py","extra_numbers.json"),("chain_and_operators.py","chain_numbers.json")]:
+    p=subprocess.run([sys.executable,str(root/script)],cwd=root,text=True,capture_output=True,check=True)
+    json.loads(p.stdout)
+    (root/name).write_text(p.stdout,encoding="utf-8")
+print(json.dumps({"all_passed":True,"suites":results},ensure_ascii=False,indent=2))
+</code></pre><footer class="footer">Kỹ thuật hệ thống AI: từ nền tảng đến bên trong · <a href="index.html">Trang chủ</a> · <a href="worked-examples.html">Chỉ mục ví dụ</a> · <a href="example-sources.html">Căn cứ và phạm vi</a></footer></article></main><aside aria-label="Mục lục chương này" class="chapter-outline"><div class="outline-label" data-i18n="article.outline">Trong bài này</div><nav aria-label="Đề cương chương này" class="toc"><a href="#run">Cách tính lại</a><a href="#logs">Nhật ký kiểm thử gốc</a><a href="#calculated-results">Đầu ra chương trình của ví dụ tính toán trong nội dung</a><a href="#code">Chương trình đầy đủ</a></nav><div class="outline-tools"><button data-settings="" type="button" data-i18n="outline.settings">Cài đặt đọc</button><button aria-pressed="false" data-focus="" type="button" data-i18n="outline.focus">Bật/tắt chế độ tập trung</button><button data-outline-top="" type="button" data-i18n="outline.top">Về đầu chương ↑</button></div></aside></div><button aria-label="Đóng mục lục" data-i18n-attr="aria-label:rail.closeAria" class="nav-backdrop" tabindex="-1" type="button"></button><button aria-label="Về đầu trang" data-i18n-attr="aria-label:page.backTop" class="back-top icon-button" data-top="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M12 20V5m-6 6 6-6 6 6"></path></svg></button><div aria-live="polite" class="toast" id="studio-toast" role="status"></div><dialog aria-label="Tìm trong giáo trình" data-i18n-attr="aria-label:search.triggerAria" class="studio-dialog" id="command-search"><div class="command-head"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><input aria-label="Tìm khái niệm, bài học hoặc số câu hỏi" data-i18n-attr="aria-label:search.inputAria" autocomplete="off" id="command-input" placeholder="Tìm khái niệm, chương hoặc mã câu hỏi" spellcheck="false"/><button aria-label="Đóng tìm kiếm" data-i18n-attr="aria-label:search.closeAria" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><p class="command-hint" id="command-hint" data-i18n="search.hint">Nhập từ khóa để tìm.</p><div class="command-results" id="command-results"></div><div class="command-foot"><span data-i18n="search.keys">↑ ↓ để chọn · Enter để mở</span><span data-i18n="search.esc">Esc để đóng · chỉ tìm cục bộ</span></div></dialog><dialog aria-labelledby="reading-settings-title" class="studio-dialog settings-dialog" id="reading-settings"><div class="settings-header"><h2 id="reading-settings-title" data-i18n="settings.title">Cài đặt đọc</h2><button aria-label="Đóng cài đặt đọc" data-i18n-attr="aria-label:settings.closeAria" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><div class="setting-row"><label data-i18n="settings.font">Cỡ chữ</label><div class="setting-picks"><button aria-label="Giảm cỡ chữ" data-i18n-attr="aria-label:settings.smallerAria" data-font="-1" type="button" data-i18n="settings.smaller">A- Nhỏ hơn</button><button aria-label="Tăng cỡ chữ" data-i18n-attr="aria-label:settings.largerAria" data-font="1" type="button" data-i18n="settings.larger">A+ Lớn hơn</button></div></div><div class="setting-row"><label data-i18n="settings.paper">Màu nền trang</label><div class="setting-picks"><button aria-pressed="true" data-paper-choice="sage" type="button" data-i18n="settings.paperSage">Xám nhạt</button><button aria-pressed="false" data-paper-choice="white" type="button" data-i18n="settings.paperWhite">Trắng trơn</button></div></div><div class="setting-row"><label data-i18n="settings.width">Độ rộng văn bản</label><div class="setting-picks"><button aria-pressed="false" data-width-choice="narrow" type="button" data-i18n="settings.widthNarrow">Hẹp</button><button aria-pressed="true" data-width-choice="comfortable" type="button" data-i18n="settings.widthComfy">Vừa</button><button aria-pressed="false" data-width-choice="wide" type="button" data-i18n="settings.widthWide">Rộng</button></div></div><p class="setting-info" data-i18n="settings.note">Cài đặt chỉ được lưu trong trình duyệt này. Không có dữ liệu nào được tải lên.</p></dialog><script src="assets/i18n-data.js"></script><script src="assets/i18n.js"></script><script src="assets/app.js"></script><script src="assets/visual-data.js"></script><script src="assets/visual-player.js"></script><script src="assets/catalog.js"></script><script src="assets/atelier.js"></script><script src="assets/reader-navigation.js"></script><script src="assets/mechanisms.js"></script><script src="assets/diagrams.js"></script></body></html>

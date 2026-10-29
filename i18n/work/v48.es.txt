@@ -1,0 +1,478 @@
+25446	Si un sistema de recuperación responde mal, puede proporcionarse temporalmente la evidencia correcta al generador para comprobar si sabe utilizarla; es un experimento diagnóstico, no un resultado de despliegue. Después restaura el índice real, conserva los candidatos por fase y localiza dónde aparece primero el error.
+6810	El índice puede actualizarse de forma asíncrona. Si el usuario acaba de modificar código y el índice semántico conserva una instantánea antigua, relee los archivos clave encontrados o explicita su versión. Para modificar, no uses directamente los números de línea de un snippet antiguo sobre el archivo actual.
+21395	Recuperar memoria
+25444	Diagnóstico de recuperación: comprobar primero el espacio representativo, después los candidatos autorizados y por último la fusión y clasificación
+21062	La recuperación aporta evidencia candidata y la generación la utiliza para producir salida; ambas pueden fallar. Documentos obsoletos, fragmentos sin condiciones o malas interpretaciones pueden dar respuestas incorrectas.
+23712	La calidad de recuperación empieza en los materiales originales
+24488	Evaluación de calidad de recuperación y estrategias de corrección.
+7219	Filtrado de recuperación
+16639	Se recuperan 10 documentos, 8 relevantes, de los 20 que deberían encontrarse: ¿cuáles son la precisión y la exhaustividad?
+22975	Volver a buscar si la recuperación falla, sin forzar una respuesta con material incorrecto
+26273	La recuperación devuelve rangos de funciones mediante AST de Python; solo localiza, sin inferencia de tipos ni grafo de llamadas entre archivos. La herramienta de lectura devuelve archivos pequeños completos con su versión para vincular el parche a un estado previo conocido.
+22958	Tanto decidir si recuperar como evaluar la evidencia puede fallar. La autoevaluación es solo una señal; no sustituye fuentes reales ni validación externa.
+20869	Problemas de recuperación
+15786	Recuperación: volver a obtenerlo después
+15117	Recuperación: consultar información externa actualizada
+21474	Comprobar
+12217	Concepto
+10430	Datos de definiciones de conceptos
+10560	Índice conceptual: objeto, origen, uso y microejemplo independiente
+17317	Probabilidad / Probability
+22942	Una probabilidad del 80% debe contrastarse con resultados del mismo tipo
+13260	La probabilidad</strong> representa aquí la proporción que el modelo asigna a cada candidato: ninguna es menor que 0 y suman 1. 0.2 equivale al 20%. Es una predicción del modelo bajo las condiciones actuales; no equivale automáticamente a la probabilidad real de que la respuesta sea correcta.
+13294	Probabilidades [0.6652,0.2447,0.0900]
+24524	Fundamentos de probabilidad, variables aleatorias y esperanza, sin copiar los ejemplos didácticos originales.
+16664	La probabilidad y una observación no son el mismo número
+12117	La probabilidad y una observación no son el mismo número</a><a href="foundations/36.html#fdiag-36-02">Por qué repetir la misma pregunta también da resultados distintos</a><a href="foundations/36.html#fdiag-36-03">Comparar pares informa más que mirar solo dos totales</a><a href="foundations/36.html#fdiag-36-04">Cómo entender el error estándar</a><a href="foundations/36.html#fdiag-36-05">Un intervalo de confianza no significa «el modelo tiene un 95% de confianza»
+13256	Las probabilidades deben ser no negativas
+9788	La probabilidad describe la distribución del «siguiente Token», no directamente la corrección de toda la respuesta. Una respuesta correcta admite muchas formulaciones; una incorrecta también puede componerse de palabras de alta probabilidad. Usar la probabilidad media de Token como confianza factual mezcla frecuencia de las expresiones, longitud y estilo lingüístico.
+23464	Calibración de probabilidades
+16672	Expectativa del modelo probabilístico
+14618	Qué compara realmente la razón de probabilidades
+14620	Qué compara realmente la razón de probabilidades: distinguir caso por caso
+2359	suma de probabilidades. El objetivo busca que la ventaja relativa al modelo de referencia de la respuesta preferida supere a la de la no preferida; no consiste en poner simplemente y⁺ a 1 e y⁻ a 0. La referencia aporta un ancla y β controla la escala del objetivo, relacionada con la intensidad de regularización de la derivación correspondiente.
+24903	La tabla de probabilidades aún no se convierte en texto; debe consultarse el Token.
+14316	Cuanto más se aproxima la probabilidad a 1, más se acerca el logaritmo negativo a 0; cuanto más se acerca a 0, mayor es la penalización. Comparación independiente: con probabilidad correcta 0.5, la pérdida es ln2≈0.693147; con 0.1, aproximadamente 2.302585. Puntúa el objetivo de entrenamiento, no evalúa directamente la calidad factual de todo el texto.
+29663	Ranura
+27626	Ranura</strong>Representación simplificada de una posición de solicitud procesable simultáneamente en una iteración.
+22925	Presión de imitación
+31389	foo del módulo A
+31392	foo del módulo B
+10920	Navegación entre módulos
+17148	Modelo / Model
+28454	Modelo/prompt
+22771	Modelo y prompt se comparan aparte
+16919	El modelo tarda 2 segundos, A tarda 5 y B 3 en paralelo, y la agregación final 1; el usuario espera unos 8 segundos. Acelerar B a 1 segundo mientras A sigue en 5 puede no reducir la espera total: A está en la ruta crítica. Incluye en el coste fallos, reintentos y resúmenes descartados. La traza registra causalidad y versiones, pero no debe guardar incondicionalmente claves ni todas las entradas privadas.
+12199	Un modelo</strong> puede entenderse inicialmente como una función enorme compuesta por muchos números y reglas de cálculo. Una función es «algo que produce salida según reglas dada una entrada». Por ejemplo, «multiplicar la entrada por 2» transforma 3 en 6; un modelo de lenguaje es mucho más complejo, pero sus entradas y salidas también se conectan mediante cálculos reales.
+7489	Una llamada al modelo A cuesta 1 y tiene éxito con probabilidad 0.9; B cuesta 0.2 y tiene éxito con 0.5. Con reintentos independientes e ideales, el coste aproximado por éxito es c/p, pero los fallos reales de agentes pueden necesitar trabajo repetido, revisión humana y recuperación de efectos secundarios; no puede aplicarse directamente la distribución geométrica.
+30892	Modelo M1
+30894	Modelo M2
+4157	Modelo, enrutamiento de herramientas, vínculos MCP y reglas cargadas
+23374	Protocolo de contexto del modelo
+12553	El modelo no multiplica matrices directamente sobre caracteres chinos. Primero un tokenizador didáctico definido manualmente y consultable divide el corpus en «我／爱／学习／！». Un tokenizador real puede dividirlo de otro modo; la lección no afirma reproducir los identificadores de Token de un producto.
+12198	El modelo no es una persona dentro del ordenador que ve directamente todos los archivos
+12200	El modelo no es una persona dentro del ordenador que ve directamente todos los archivos: distinguir caso por caso
+26033	Si el modelo desconoce una interfaz reciente, recupera primero su documentación actual; si repite un formato erróneo, repara primero Schema y ejemplos; considera ajuste fino si falla sistemáticamente en tareas de un dominio estable. La memoria permite usar información entre sesiones, Skill aporta métodos procedimentales y el harness organiza la ejecución; no sustituyen las actualizaciones de parámetros entre sí.
+23582	Por qué un modelo sigue necesitando un agente
+16802	El modelo quizá proponga una lectura sensible
+12297	Si un modelo aprende información de una pregunta, ¿la recordará necesariamente para siempre la próxima vez?
+22787	Tarea del modelo
+22763	Optimiza alrededor de la evaluación de tareas y considera prompt, selección de modelo, entrenamiento y entorno de herramientas como niveles distintos de intervención. Un modelo más barato no garantiza menor coste por tarea exitosa.
+2763	El modelo produce logits del vocabulario y la estrategia de decodificación los convierte en una distribución candidata y elige Token. La temperatura ajusta lo concentrada que es,
+19061	Interior del modelo — Ingeniería de sistemas de IA
+19060	Interior del modelo →
+24951	La caché KV interna es estado de inferencia; la caché de prefijos del servicio puede reutilizar cálculo entre solicitudes; la definición de acierto de caché para facturación es otro contrato del producto. Estabiliza los prefijos reutilizables y evita marcas temporales irrelevantes al principio, pero no conserves contenido erróneo o no autorizado por mejorar la caché. Seguridad y corrección tienen prioridad sobre los aciertos.
+12526	El modelo procesa números, no formas gráficas de caracteres. El tokenizador determina «qué entrada del vocabulario es» y el embedding posterior «qué fila numérica la representa». No deben fusionarse en la expresión ambigua «convertir a vector».
+17981	Proceso interno de razonamiento del modelo
+23291	Estructura dispersa cuyo enrutador interno selecciona parte de las redes expertas; no son varios agentes de chat reunidos.
+12204	Dentro del modelo: operaciones numéricas
+4375	El modelo responde después según el contenido; el resultado de una herramienta no se convierte automáticamente en una conclusión del modelo.
+9865	El modelo escribe una función de ordenación y la prueba muestra que cambió el orden de elementos con claves iguales. Una respuesta deficiente sería «el código no es suficientemente bueno, mejóralo»; una útil aporta entrada, expectativa, salida real y requisito de estabilidad. Así se acota el espacio de errores y el modelo revisa comparador y algoritmo, sin reescribir módulos irrelevantes.
+23367	Ciclo de decisión del modelo, acción de herramientas, observación de resultados y continuación.
+26138	¿Que el modelo describa correctamente un botón «Guardar» en una captura demuestra que sabe usar la aplicación? No. Reconocer, localizar, ejecutar, confirmar y recuperarse son capacidades distintas que necesitan pruebas de ciclo completo. Un sistema avanzado debe saber cuándo no tiene evidencia suficiente para continuar, no pulsar hasta que parezca tener éxito.
+2844	Las puntuaciones del modelo y la estrategia de decodificación son dos niveles
+17224	Unidad de fragmento usada por el tokenizador del modelo.
+24596	Probabilidad asignada por el modelo p / objetivo y
+3391	La pasada hacia delante es solo parte del servicio. La espera en cola, las solicitudes con las que se ejecuta, la expulsión de KV y el momento de devolver la salida determinan la velocidad percibida.
+30955	Parámetros del modelo θ
+31175	Deben ser compatibles parámetros, prefijo original, posiciones y reglas de atención, entre otros.
+16922	Si el modelo ocupa solo el 20% del tiempo, ¿duplicar su velocidad reduce a la mitad el total?
+4730	El modelo solo rellena u7 y 10.
+30896	El modelo solo propone la intención de buscar
+3848	El modelo puede solicitar varias herramientas independientes a la vez y el harness ejecutar comprobaciones predefinidas de forma determinista; cada ronda no necesita exactamente una acción. Lo esencial es una correspondencia explícita entre entrada, decisión, ejecución y respuesta. Deben vincularse las versiones entre lectura, modificación y pruebas para no aplicar evidencia antigua a estados nuevos.
+23600	El modelo puede sugerir qué archivo leer y el programa debe autorizar la ruta; puede proponer un parche y la herramienta debe informar si se aplicó; puede juzgar que la tarea parece completa, pero las pruebas y el estado de negocio aportan la evidencia final.
+4750	El modelo puede generar un programa que filtre, itere y agregue dentro del entorno de ejecución y devuelva al contexto solo lo necesario, reduciendo transferencias intermedias. Pero el entorno adquiere más capacidad y necesita límites de recursos y permisos; ejecutar código también introduce errores. Sirve para procesamiento programable de datos, sin implicar que toda llamada deba reescribirse como script.
+14809	El modelo puede generar un <strong>Token EOS (fin)</strong>; la aplicación anfitriona también puede fijar longitud máxima, cadenas de parada o aceptar cancelación. Son motivos distintos de parada, no todos significan «tarea completada con éxito».
+10059	El modelo puede explicar de forma coherente, pero la fidelidad de esa explicación al cálculo real necesita validación adicional. Descubrir algunas rutas en investigación no permite leer por completo sus pensamientos. El «proceso de pensamiento» visible al usuario no es un registro de ingeniería ni prueba de ejecución.
+787	El modelo puede ajustar el plan, pero no ampliar permisos mediante reintentos.
+5003	El modelo sugiere herramientas y recursos, pero un programa fiable debe normalizar objetivos, comprobar inquilino y usuario y restringir la red accesible. Las redirecciones URL, cambios DNS y acceso a direcciones internas pueden superar una lista de cadenas permitidas; las defensas concretas pertenecen a la red y al runtime, no al prompt «no accedas a la intranet».
+24825	El modelo puede explotar defectos de la recompensa, como preferir extensión, tono o apariencia de completitud. «Una respuesta más segura» no demuestra «hechos más correctos». Se necesitan resultados externos verificables, como compilación, estado final de base o proporción de afirmaciones sustentadas, no solo la satisfacción de otro modelo.
+16801	El modelo puede verse influido
+20489	El modelo puede sugerir revisar la definición de timeout
+20197	El modelo puede adivinar el número
+6521	El modelo puede rellenar huecos con conocimientos previos, confundir causalidad, ignorar negaciones o citar mal. El prompt restringe, no demuestra. Se necesitan evidencia suficiente, estados de carencia permitidos, comprobación de afirmaciones clave y validación determinista apropiada; prueba comportamientos de código y recalcula valores numéricos.
+21283	El modelo puede recordar una respuesta casi idéntica
+1960	El modelo puede copiar fácilmente la entrada actual y reducir la pérdida sin aprender correctamente el objetivo next-token.
+4530	El modelo invoca simultáneamente
+6055	Nombre del modelo, versión exacta, dimensión, normalización, pooling, prefijos y fragmentación determinan conjuntamente el significado vectorial. Dos vectores de 768 dimensiones no pueden mezclarse solo por tener igual longitud. Crear un índice nuevo, ejecutar consultas sombra y regresiones y después cambiar el alias ofrece más control que mezclar vectores nuevos en el mismo índice.
+30780	El modelo responde: timeout está configurado en 30
+10839	Que el modelo vea la función seleccionada en el IDE no significa que la misma tarea la haya recibido en CLI; comprueba primero la entrada de esta ronda.
+1903	El modelo lee en la posición i un prefijo no posterior a i y emite la distribución de i+1; el código de entrenamiento toma
+29403	Regla probabilística con la que el modelo elige salidas bajo un contexto dado.
+4735	El modelo rellena limit=100000
+23261	Símbolo discreto procesado por el modelo: palabra, subpalabra, puntuación o fragmento de bytes; no corresponde uno a uno de forma fija a palabras o caracteres chinos.
+19903	Entrada que recibe realmente el modelo
+20511	Lo que recibe el modelo difiere del historial de la interfaz
+26059	Rango numérico de entradas que encuentra realmente el modelo, no solo el de sus pesos.
+17851	Experimentos del modelo y evidencia comprobable
+24299	Código fuente y parámetros originales de los experimentos del modelo — Ingeniería de sistemas de IA
+17921	Experimentos del modelo: registros de parámetros, pasada hacia delante y gradientes — Ingeniería de sistemas de IA
+17901	Experimentos del modelo: código completo y resultados de ejecución — Ingeniería de sistemas de IA
+17934	Experimentos del modelo: inspección paso a paso de valores intermedios de entrenamiento e inferencia — Ingeniería de sistemas de IA
+1795	Con anchura de modelo 8, la proyección K de GQA puede producir 4 dimensiones
+29225	Números realmente calculados por el modelo para esta entrada, no un borrador secreto en chino.
+8896	Los prompts del modelo ayudan a respetar restricciones; el ejecutor comprueba argumentos, rutas, permisos y aprobación; el sandbox y los controles de red limitan el impacto incluso si se intenta una acción errónea. Ninguna capa ofrece garantías universales por sí sola. La ingeniería de sandbox de Anthropic combina aislamiento de archivos y red y también busca reducir aprobaciones inútiles operación a operación.
+17970	El modelo ha aceptado o comprendido
+19185	El modelo se inclina actualmente por «dormir».
+31048	Memoria de vídeo total del modelo
+30806	El modelo o enrutador conoce el uso
+25552	Los hechos extraídos por el modelo son inicialmente candidatos; la fluidez no los convierte automáticamente en active. Pueden validarse con código actual, pruebas deterministas, documentación autorizada o confirmación humana. Distintas evidencias permiten usos distintos, pero no hace falta inventar niveles complejos; «verificado/por comprobar/inválido» suele bastar.
+23583	La interfaz genera contenido, pero no gestiona automáticamente herramientas, permisos, estado ni aceptación. El agente conecta esos componentes externos en un ciclo. Un pipeline de clasificación no suele requerir un agente complejo; investigar un bug desconocido puede necesitar varias rondas de evidencia y acciones.
+4803	El modelo propone
+10538	El modelo propone y la aplicación anfitriona valida
+23358	El modelo propone herramientas y argumentos, el sistema externo valida y ejecuta y después devuelve el resultado.
+19918	El modelo propone nombre y argumentos; la aplicación valida y ejecuta y devuelve el resultado con un ID asociado; el modelo decide si continuar o responder. Generar una llamada no significa ejecutarla y un retorno exitoso no completa necesariamente toda la tarea.
+17542	Solicitud estructurada con nombre de herramienta, parámetros y otros datos propuestos por el modelo.
+11822	El modelo propone, la aplicación anfitriona ejecuta y el ID de llamada vincula el resultado devuelto. El seudoprotocolo del ejemplo no sustituye el schema completo de una API actual.
+23844	Separar propuesta del modelo y ejecución programática — Ingeniería de sistemas de IA
+4846	Tras la propuesta del modelo, el cliente envía tools/call
+25338	Un buen resumen del modelo también puede fallar por el protocolo de confirmación
+16911	El modelo integra
+3998	Texto del modelo
+20399	El modelo no puede invocarlo mediante una definición ordinaria de herramienta.
+19396	Un modelo mayor necesita datos y optimización suficientes; con presupuesto fijo, cada inversión tiene coste de oportunidad. El ciclo del servicio incluye inferencia; optimizar el entrenamiento no equivale a minimizar el coste total a largo plazo.
+12136	Al principio el modelo solo contiene parámetros y reglas de cálculo. Fundamentos explica cómo calculan esos números hacia delante, cómo se obtiene pérdida con etiquetas, se retropropaga y se actualizan parámetros, y finalmente cómo se cargan los resultados para generar uno a uno. La inferencia también calcula hacia delante, pero no retropropaga gradientes desde la pérdida ni actualiza parámetros. Agentes, herramientas y recuperación están fuera de esta cadena y tienen lecciones básicas propias después.
+24584	La salida final es un vector z de longitud V, el tamaño del vocabulario. El softmax estable resta primero el máximo m porque todos los numeradores y el denominador se multiplican simultáneamente por
+21069	El modelo obtiene información fuera de sus parámetros.
+2952	Recursos de razonamiento consumidos por el servicio del modelo en una solicitud.
+20256	El modelo no necesariamente lo recibió.
+14739	El modelo no añade directamente cadenas a una página web. Los identificadores elegidos deben decodificarse con el tokenizador y la aplicación anfitriona muestra, trunca, transfiere a herramientas o realiza otras acciones de negocio. Pasada de inferencia, elección de Token, decodificación textual e interfaz de usuario son límites distintos.
+24306	Mecanismos del modelo: fuentes de principios y versiones de interfaces — Ingeniería de sistemas de IA
+10507	Matriz de pesos del modelo; tiempo medio de permanencia en la ley de Little
+13406	Pesos del modelo: guardados tras entrenar
+25067	El modelo genera un parche con la versión A y el usuario cambia entretanto a B. Escribir sin comprobar sobrescribe sus cambios. CAS exige que «el contenido actual siga siendo el expected que leí»; de lo contrario devuelve stale y obliga a releer. Puede usarse commit, ETag o huella de contenido según el límite del artefacto.
+10668	Un punto de control del modelo guarda pesos o estado de entrenamiento; uno de activaciones guarda pocos nodos intermedios para recalcular en retropropagación; uno de tarea de agente guarda progreso de ejecución. Comparten nombre, pero restauran objetos totalmente diferentes.
+16985	Probabilidad del modelo
+14490	Modo del modelo
+3827	Qué ve el modelo en este momento
+4081	El modelo no recibió a=7; si session_id es solo un campo de negocio, no incorpora automáticamente el historial.
+17138	Si el modelo no leyó la configuración reciente, ¿es el ajuste fino la primera prioridad?
+10267	¿Responder siguiendo dos ejemplos cambia los pesos del modelo?
+8744	Versión del modelo, prompt, herramientas, entorno de pruebas, límites de recursos, instantánea del índice y muestras afectan a los resultados. La investigación pública de Anthropic sobre ruido de infraestructura de evaluación de código muestra que cambiar recursos del entorno puede cambiar los resultados por sí solo.
+10758	La hipótesis «quizá haya invalidación de caché» puede ampliar la búsqueda; sin evidencia real no puede presentarse como «invalidación de caché confirmada».
+15335	Generar un nombre de herramienta no completa un efecto secundario; perder la respuesta después del efecto tampoco implica que no ocurriera. Es el problema de unknown e idempotencia que explica F33.
+16995	La explicación textual del modelo también puede ser solo una narración plausible, no un registro fiel de todo el cálculo interno o razonamiento implícito. En ingeniería, diagnostica primero con entradas visibles, herramientas, versiones y resultados de validación y usa después con cautela la investigación de interpretaciones internas.
+15432	Los argumentos de herramientas también pueden dividirse en varios delta, es decir, fragmentos incrementales. Al recibir
+16761	Solicitud de herramienta del modelo
+770	Seguir instrucciones reduce propuestas erróneas; comprobar permisos limita sus consecuencias. Actúan en etapas de fallo distintas y no se sustituyen.
+26147	La probabilidad condicional del modelo no es la probabilidad de un hecho real. Una falsedad común puede ser fácil de continuar y un hecho correcto raro tener baja probabilidad. Aportar evidencia tampoco elimina automáticamente el error: el modelo puede citar párrafos que no apoyan la conclusión.
+938	Tabla de coeficientes del modelo
+23527	Que el modelo vea «las pruebas pasaron» no significa que se ejecutaran. La red procesa el texto, pero no sabe si es un hecho de herramienta, una afirmación del usuario o una conjetura salvo que entrada y entrenamiento ayuden a distinguirlo. La ingeniería debe conservar procedencia y estado real.
+20555	El modelo ve el nombre y la descripción
+17017	Tras ver la captura r7, una ventana lleva la interfaz a r8 y las coordenadas antiguas dejan de ser fiables. Confirma el estado antes de actuar y observa el resultado después. Pulsar no equivale a guardar correctamente. Los mapas de atención, probabilidades de Token y seguridad del modelo tampoco representan exactitud factual completa; aún hacen falta evidencia externa e incertidumbre explícita.
+4338	Lo visible al modelo puede estar anonimizado, resumido o sustituido; el registro de auditoría puede conservar información real con otro alcance. No trates el texto sustituido como salida original ni persistas secretos incondicionalmente por «trazabilidad». Registra al menos ID de llamada, resumen de argumentos finales, estado de ejecución, respuesta posterior, alcance autorizado y versión real del objeto.
+4350	Sustitución visible al modelo
+19009	El modelo observa el resultado antes de decidir la siguiente acción
+9746	Tras leer la captura, puede aparecer una ventana, desplazarse una lista o terminar de cargarse el diseño y las coordenadas pasar a otro botón. Es un cambio de estado entre observar y actuar, no un error de reconocimiento. Antes de acciones arriesgadas, vuelve a observar o localiza elementos estructurados y comprueba texto, alcance y visibilidad.
+21904	El modelo conoce la palabra clave, pero no dónde modificar
+24371	Comprobación estructural de capítulos del modelo
+17413	Token de final de secuencia definido por el modelo.
+14147	El modelo predice y un número mide cuánto se aleja del objetivo: la <strong>pérdida loss</strong>. El entrenamiento busca parámetros que la reduzcan. El gradiente indica en qué dirección y con qué rapidez cambia la pérdida al aumentar ligeramente cada parámetro.
+9984	La confianza del modelo difiere de la exactitud factual
+7466	El modelo puede comprenderlo, pero no garantiza ejecución determinista.
+552	Qué puede determinar el modelo con ello
+4771	El modelo puede proponerlo; el ejecutor debe rechazarlo
+16982	Seguridad del modelo, probabilidad y calibración
+16984	Seguridad del modelo, probabilidad y calibración: distinguir caso por caso
+4726	El modelo construye por sí mismo la consulta y las condiciones de permisos
+9789	La afirmación del modelo «90% de seguridad» es otra salida que debe comprobarse con tareas de verdad conocida. En clasificación binaria, la puntuación Brier es
+22940	La investigación sobre autoconocimiento estudia cómo juzgan los modelos la corrección de sus respuestas. Las señales obtenidas bajo condiciones de investigación no implican que toda confianza expresada por cualquier modelo esté calibrada.
+25902	Si un documento induce al modelo a proponer leer una clave y la herramienta lo rechaza, ¿es éxito? Para el límite de ejecución es un bloqueo eficaz; para la resistencia del modelo a la inyección, sigue siendo fallo; para la tarea global depende de si se completa el objetivo legítimo. Registra métricas por capa, sin ocultarlas en un único éxito o fallo.
+11741	Los jueces de modelos tienen sesgos de posición y extensión; que puntúe un modelo fuerte no lo convierte en verdad objetiva.
+4711	Qué debe decidir el modelo
+4379	Los nombres, campos y descripciones deben entrar en una representación utilizable por el modelo para que los comprenda. Muchas herramientas con descripciones largas aumentan la carga de entrada y la dificultad de selección. El descubrimiento bajo demanda reduce el conjunto predeterminado, pero introduce posibles omisiones; mide exhaustividad de herramientas necesarias y cargas innecesarias en vez de incluirlas todas incondicionalmente.
+18116	Cálculo del modelo
+26916	Cálculo del modelo, generación y finalización
+12189	Representaciones usadas en el cálculo del modelo
+10555	Ruta de cálculo del modelo:</strong> contenedores numéricos y formas → identificadores de Token y embedding → multiplicación de filas y columnas → parámetros y resultados intermedios → Query/Key/Value → puntuaciones y proporciones de lectura → máscaras y posiciones → múltiples cabezas, proyección de salida, residuales y red hacia delante → Token de salida y caché.
+2845	Tras entrenar, el modelo produce logits para el prefijo actual con parámetros fijos; el generador decide cómo obtener el siguiente elemento. Las lecciones 57—58 fijan elección voraz; esta usa un <strong>ejemplo independiente de tres candidatos</strong> para explicar estrategias, sin atribuir esas probabilidades al modelo integrado. Las puntuaciones de A/B/C se fijan en  
+10456	Diseño del modelo y longitud de la solicitud actual
+16708	Un evaluador de modelo</strong> puede puntuar respuestas abiertas, pero le afectan longitud, orden de posiciones, estilo y sus propios errores. Si al intercambiar izquierda y derecha cambian las puntuaciones, hay indicios de sesgo de posición.
+25806	Un evaluador de modelo puede verse afectado por posición, longitud, estilo, preferencias propias e inyección de prompts. Estudios como MT-Bench analizan estos límites; permite ampliar la evaluación, pero no equivale a verdad objetiva.
+24499	Sesgos de la puntuación por modelos y problemas de evaluación.
+8764	Los modelos pueden evaluar calidad abierta, apoyo de evidencia y estilo difíciles de formalizar por completo, pero influyen posición, longitud, redacción, preferencias y falta de información. Usa rúbricas claras, evaluación ciega o cambio de orden y muestras de calibración; prioriza validación determinista para lo juzgable mecánicamente.
+23745	El modelo escribe una conclusión errónea en memoria, la recupera después y toma su repetición como confirmación de múltiples fuentes. Cinco resúmenes de una misma generación siguen teniendo una sola fuente.
+3981	El modelo dice «voy a modificar filter.py»: es un plan. El harness genera c17 y registra pending: es estado de control. La herramienta escribe en disco y cambia el archivo: es estado del entorno. El proceso falla antes de registrar éxito en la base de tareas: el entorno tuvo éxito, el control sigue pending y el modelo aún no vio el resultado.
+15497	El modelo dice «terminado»
+16983	Que el modelo diga «seguro» es una salida lingüística; la probabilidad del siguiente Token es una distribución local de generación; la <strong>calibración calibration</strong> examina si la confianza predicha coincide con la tasa real de aciertos.
+27873	La aplicación anfitriona ejecuta la herramienta solicitada y devuelve el resultado. Solo se usan mecanismos públicos, sin deducir implementaciones internas cerradas.
+5420	La solicitud también incluye costes de límites de mensajes, roles, schema de herramientas y representaciones multimodales. El texto visible al usuario es solo parte de la entrada total. Comprueba recuento y composición reales; ni los caracteres del navegador ni el tamaño de archivo dan un número exacto de Token.
+30775	Solicitud al modelo: tarea + definición de read_file
+28030	Llamada al modelo
+24432	Llamadas al modelo, respuesta de herramientas y contexto; artículos históricos de arquitectura y código fijado se citan por separado.
+25917	La llamada registra modelo, versiones de prompt y herramientas, Token, estado y tiempo; la recuperación, versión del índice, filtros, ID y truncamiento; las herramientas, ID de acción, alcance, versión previa, resultado y tipo de error; la validación, comando o versión del evaluador y versión del artefacto.
+4129	Una llamada necesita más que la frase del usuario: reglas, historial, declaraciones de herramientas, entorno y evidencia. Esa lista forma la instantánea S7: selección del modelo, versión de reglas R3, catálogo T8, entorno E2 y evidencia 
+22748	Retomar el estado de ejecución por ID de tarea tras un timeout del modelo
+16313	Cómo enrutar modelos sin elegir solo por precio
+27765	Enrutamiento de modelos: una llamada barata no implica un coste bajo por tarea completada con éxito — Ingeniería de sistemas de IA
+27766	Enrutamiento de modelos: una llamada barata no implica un coste bajo por tarea completada con éxito</a><a href="#topic-3">Explicación paso a paso y registros de cálculo
+27773	Enrutamiento de modelos: una llamada barata no implica un coste bajo por tarea completada con éxito: guía gráfica paso a paso
+18962	Entrada del modelo
+16885	Entrada, salida, aciertos de caché, herramientas, reintentos y participación humana pueden tener coste. No compares solo el «precio por millón de Token» ignorando las rondas adicionales de un modelo barato.
+12289	¿Que el modelo diga «borrado» demuestra que el archivo no existe?
+15502	«Ya lo he verificado» es un mensaje del modelo; el código de salida del proceso real de pruebas y la versión del archivo son otro registro. Guardar este último es más fiable que hacer que la ronda siguiente recuerde el primero.
+4357	Si el modelo produce un nombre de función, ¿quién la ejecuta realmente?
+30776	Salida del modelo: call_id=c1, path=config.txt
+26556	Límites del modelo
+14738	El modelo devuelve logits; la aplicación anfitriona puede elegir el máximo o muestrear tras ajustar con temperatura y Top-k/Top-p. Los mismos pesos con estrategias distintas pueden dar otros resultados. La generación integrada fija primero la elección voraz para facilitar comprobaciones por ronda; el muestreo se compara de forma independiente en su derivación de Sistemas.
+3990	Registro de lo que el modelo vio y dijo esta vez.
+22072	El proceso del modelo se interrumpe, pero la tarea externa puede seguir ejecutándose
+2914	El modelo eligió un Token de fin
+10863	El orden de la parte del modelo es fijo: entrada y cálculo común → entrenamiento, validación y guardado → carga e inferencia → optimización de recursos. Casos, código y registros numéricos aparecen en experimentos como evidencia del texto.
+17246	Elemento especial de relleno en la configuración del modelo.
+511	Elemento especial de relleno en la configuración del modelo. Ejemplo: aquí PAD tiene ID 0; en modelos reales no tiene por qué ser 0.
+16670	Muestreo, entorno de servicio, tiempos de herramientas, cambios en datos de recuperación y concurrencia pueden influir. Fijar la semilla solo controla ciertas fuentes aleatorias, no todo el cálculo ni el entorno automáticamente.
+17153	Números que el modelo conserva a largo plazo y ajusta durante el entrenamiento.
+12766	El modelo necesita una representación numérica ponderable, combinable, comparable y actualizable. El identificador 1 es solo una dirección; su diferencia de 3 respecto al 4 no tiene significado lingüístico. Lo habitual es una tabla aprendible que asigna una fila numérica a cada ID. Se llama <strong>matriz de embedding (incrustación)</strong> y se representa por E.
+18185	Modelo/motor
+15298	Modelo: proponer el siguiente paso
+14720	Modo
+20013	El diseño del schema debe incluir estados reales, como evidencia ausente, falta de validación o fallo de herramienta. Permitir solo conclusiones exitosas puede obligar a clasificar mal estados intermedios. Rechazos y truncamientos también necesitan tratamiento separado.
+9149	Tarea con fallo de prueba simulado
+9404	Plantillas y regresión de comportamiento
+27924	La plantilla convierte roles y contenido al formato que el modelo aprendió a procesar. Escribir «system:» en una cadena no crea por sí solo un rol de sistema real. Los productos también pueden usar controles especializados
+24848	Ejemplo de ventaja positiva
+19537	Calcular una vez el recorte PPO con ventaja positiva
+26566	Gradiente del ejemplo positivo p_pos−1; gradiente del ejemplo negativo p_neg
+26564	Probabilidad del ejemplo positivo≈0.689974; del negativo≈0.310026.
+5995	Al modificar código con precisión, comparar varios fragmentos originales o revisar detalles repetidamente a corto plazo, conservar el original puede ser mejor que resumir. Si la tarea está por terminar, una llamada adicional de compactación puede no aportar nada. Compactar es un medio, no un ritual obligatorio de toda conversación larga.
+1362	Deben existir aserciones separadas para filas normales con varios candidatos, con uno solo, PAD totalmente prohibido y contenido real totalmente prohibido. Comprobar «peso 0 donde no se permite», «suma de pesos 1 en filas válidas» y «filas inválidas excluidas de pérdida» distingue más que comprobar solo salida finite. Prueba también precisión mixta: un negativo enorme puede ser finito en un dtype y desbordarse a menos infinito en otro.
+14522	El entrenamiento formal necesita validación aislada, control de filtraciones, evaluación del dominio y procesamiento reproducible. El modelo integrado repite dos frases y no tiene resultados fiables de generalización. El libro no presenta el acierto al continuar esas mismas frases como éxito de un conjunto de validación.
+18900	El paquete incluye texto, búsqueda e instrucciones experimentales. Las instrucciones Python explican dependencias y ejecución; la salida solo verifica las entradas y aserciones enumeradas, no una auditoría de seguridad multiplataforma.
+11170	El texto sigue Fundamentos y Sistemas. Esta página rastrea fuentes, sin crear un curso paralelo. Commit fijado de Codex:
+18804	El texto original presenta explicaciones independientes íntegramente en chino. Los números, candidatos, estados y rutas de las figuras son entradas didácticas declaradas; las fuentes de los principios no constituyen pruebas del rendimiento de modelos comerciales. Los gráficos basados en JSON de los experimentos de fallos existentes se limitan a redibujar sus registros originales, sin alterar el entorno ni el alcance originales de las mediciones.
+21614	Texto principal total: 10000
+7218	Borrar el texto principal no borra automáticamente todo lo derivado.
+7313	Carga del contenido principal
+18236	Índice de diagramas y cálculos detallados del texto — Ingeniería de sistemas de IA
+18801	Fuentes y condiciones de los diagramas del texto — Ingeniería de sistemas de IA
+11839	El texto adopta explícitamente la variante IDF no negativa ln(1+(N−df+0.5)/(df+0.5)), sin tratar el IDF de todas las implementaciones como idéntico.
+28980	Los ejemplos, autoevaluaciones, programas y referencias permanecen en sus ubicaciones originales. Las animaciones paso a paso están en <a href="visual-guides.html">Diagramas y animaciones</a>; las fuentes y registros de recálculo de los diagramas integrados, en el <a href="mechanisms/index.html">Índice de diagramas del texto
+11870	Salida del programa de los ejemplos del texto
+10687	La temperatura positiva τ suele dividir los logits antes de softmax. Una τ menor concentra la distribución y una mayor la suaviza; restar la misma constante a todas las puntuaciones conserva la distribución matemática.
+3135	Posición q correcta 3 → 2.5
+3136	Posición q correcta 4 → 3.0
+14349	El gradiente de la celda correcta es negativo y el descenso tiende a aumentar su logit; los demás suelen ser positivos y tienden a reducirlos. Pero se ajustan parámetros compartidos, no esa fila de logits de forma directa y permanente. También se suman gradientes de distintas preguntas sobre un mismo parámetro.
+24592	La celda correcta es 1 y las demás 0; aquí, [0,1,0].
+1433	Pasada hacia delante correcta
+8134	Coordinación correcta
+14512	Fusión correcta
+15431	El tratamiento correcto suele tener al menos estas capas: bytes de red → texto incremental → límites de eventos → análisis de datos de eventos → reconstrucción de elementos de salida del modelo. <strong>Estos límites no se sustituyen entre sí.
+26468	Localizar y explicar correctamente el contraejemplo ab.
+31496	Implementación correcta y variantes erróneas
+3783	Que la implementación correcta pase una prueba puede deberse a una aserción débil. Desactivar causal mask, usar posiciones erróneas de caché, repetir softmax o mezclar KV obsoleto debería producir diferencias detectables. Así se demuestra al menos que la prueba identifica esos fallos concretos.
+1439	La derivada correcta es I+J_F; la errónea solo J_F
+16469	Con respecto a qué se define primero la corrección
+12112	Con respecto a qué se define primero la corrección</a><a href="foundations/34.html#fdiag-34-02">Qué contiene una prueba</a><a href="foundations/34.html#fdiag-34-03">Qué capas examinan pruebas unitarias, de integración y de extremo a extremo</a><a href="foundations/34.html#fdiag-34-04">Usar contraejemplos para detectar pruebas débiles</a><a href="foundations/34.html#fdiag-34-05">Incluso una prueba aprobada debe vincularse a una versión
+14574	Corrección: si cumple los hechos
+25056	La recuperación correcta depende del sistema externo: con claves idempotentes, consulta o reintenta con la misma clave de negocio; si puede leerse el estado final, concilia; sin ninguna de las dos opciones, conserva el resultado desconocido y deriva a confirmación humana. Lo central no es cuántas veces reintentar, sino la semántica.
+26474	Informar correctamente de carencias, sin inventar evidencia.
+28379	Proponer correctamente el parche p1
+28049	La condición correcta es
+18934	Recuperación e interpretación correctas
+3661	El residual correcto normaliza [0.6,0], asignándolo todo a A y dando [0.8,0.2]. Si tras rechazar se muestrea directamente de p, A termina en 0.2+0.6×0.8=0.68 y B en 0.2+0.6×0.2=0.32. Sigue siendo una distribución válida, pero ya no es la del modelo objetivo. El programa enumera masas para verificar ambos resultados sin depender de errores aleatorios de muestreo.
+15424	El orden correcto es decodificar y almacenar los bytes, reconocer eventos completos del protocolo y analizar después sus argumentos estructurados.
+11648	El muestreo especulativo correcto conserva la distribución objetivo mediante corrección de aceptación y rechazo.
+2302	Una acumulación correcta requiere conocer primero el criterio de normalización
+14959	Tabla correcta de permisos no cuadrada
+1953	Objetivo correcto
+5986	El sistema correcto debe exigir pruebas adicionales y comprobar c7.
+4499	Organización correcta de objetos
+4549	Asociación correcta
+3133	Con máscara de posiciones absolutas correcta, la primera fila lee 1—4 y obtiene 2.5; la segunda lee 1—5 y obtiene 3.0. Con el triángulo superior izquierdo local erróneo, la primera solo lee 1 y la segunda 1,2, produciendo 1.0 y 1.5. Ambas tienen exactamente el mismo shape.
+24781	Escalado correcto
+22210	Comportamiento correcto
+19324	Complemento correcto
+28055	La regla correcta es posición absoluta de Key≤posición absoluta de Query; un alcance visible erróneo cambia silenciosamente la salida aunque las dimensiones sean correctas.
+18073	Interpretación correcta
+4763	Diagnóstico correcto
+1951	Entrada correcta
+14525	Si la probabilidad correcta sube de 0.25 a 0.5, ¿aumenta o disminuye la pérdida logarítmica negativa?
+11843	Objetivo recortado con advantage positivo y negativo; cifras construidas para un solo paso en el libro.
+28005	La longitud de caché aún es 3, no 4.</strong> La red acaba de procesar la entrada
+20259	Solo después puede producir una propuesta ejecutable.
+20558	Solo después se conocen las restricciones concretas.
+662	En ese momento hay 3 símbolos.
+4084	Ahora a=7 entra en el contexto actual.
+30664	Volver a ejecutar ahora puede duplicar efectos secundarios.
+8497	Aquí la igualdad de bytes es precisamente el objetivo.
+7912	Si el cliente marca failed y reintenta con un ID nuevo, el servidor crea un segundo ticket. Borrar uno después de que el modelo vea ambos no es necesariamente equivalente: pueden haberse producido notificaciones, auditorías o sincronización externa. La recuperación debe consultar o reintentar con la misma identidad idempotente o comprobar resultados mediante una condición de negocio única; si no puede determinarse, conserva unknown y solicita intervención humana apropiada.
+20038	Solo ahora se reconoce el evento como completo.
+523	Hay <strong>2 tablas, cada una con 3 filas y cada fila con 4 números</strong>, por lo que se escribe
+27937	Hay tres números que deben separarse: vocabulario 8 significa 8 tipos de Token; secuencia 3 indica 3 posiciones en esta entrada; anchura 4 indica 4 características por posición. Confundir longitud de secuencia con dimensión oculta lleva directamente a multiplicaciones matriciales erróneas.
+781	No se ha escrito ningún archivo.
+9219	Ahora se espera a A durante 3 segundos y la tarea pasa a 5 segundos, no 4.
+16372	El llamador solo tiene unknown; necesita claves idempotentes, ID estables o verificación externa, sin tratarlo directamente como fallo para reintentar.
+26647	Para enseñar, este modelo usa vectores de posición aprendidos, MHA y GELU; el experimento numérico hacia delante usa RoPE, GQA y SwiGLU. Son implementaciones distintas y no constituyen juntas una reproducción de un modelo comercial.
+14732	Esta solicitud de generación
+17893	La tabla solo muestra visibilidad causal. Las interfaces reales también combinan relleno y otras máscaras y requieren comprobar las convenciones de verdadero, falso y desplazamiento.
+14386	Paso
+14757	Paso 1</span><span>Prefill procesó a, b y c; la caché cubre 3 posiciones.
+16965	Paso 1</span><span>Un Patch cubre 16×16 posiciones de píxel.
+14275	Paso 1</span><span>La posición «我» predice el siguiente elemento «爱».
+15214	Paso 1</span><span>Se supone un límite inferior teórico de cálculo de 0.01 segundos.
+14163	Paso 1</span><span>Inicialmente w=1, la entrada x=2, el objetivo es 4 y la predicción 2.
+15881	Paso 1</span><span>Originales: D1: directorio/exclusión/regla; D2: archivo/ruta/regla; D3: directorio/permisos/comprobación.
+13072	Paso 1</span><span>Toma la fila 0 de X: [1,2,3].
+16696	Paso 1</span><span>En las mismas 20 tareas, A y B aciertan ambos 13.
+16861	Paso 1</span><span>Cola de 2 segundos, recuperación de 1 y modelo de 5.
+16587	Paso 1</span><span>Hay 5 documentos realmente relevantes.
+15702	Paso 1</span><span>El presupuesto de ventana didáctico es de 2000 Token.
+14983	Paso 1</span><span>La capa 0 guarda K y V para cada posición histórica 0, 1 y 2.
+12662	Paso 1</span><span>La primera frase «我／爱／学习» tiene tres Token reales: [1,2,3].
+12356	Paso 1</span><span>El primer eje selecciona la muestra 0, es decir, la primera frase.
+15420	Paso 1</span><span>La primera recepción de red contiene solo la mitad inicial del campo data; aún no puede analizarse como JSON completo.
+16190	Paso 1</span><span>La norma entra en vigor el día 1 del mes 10.
+16367	Paso 1</span><span>El llamador envía al sistema posterior una solicitud que cambia el estado.
+15098	Paso 1</span><span>Se elige escala de cuantización s=0.1 y el valor original es x=0.26.
+16697	Paso 2</span><span>A acierta solo 2 tareas y B solo 4.
+16368	Paso 2</span><span>El sistema posterior ya ejecutó y confirmó correctamente el efecto secundario.
+15882	Paso 2</span><span>Se crea la lista candidata D1, D3 para «directorio».
+14276	Paso 2</span><span>La posición «爱» predice el siguiente elemento «学习».
+15703	Paso 2</span><span>Se reservan 500 para salida y 100 de margen; quedan 1400 de entrada.
+15099	Paso 2</span><span>Se calcula x/s=2.6 y se redondea al entero q=3.
+13073	Paso 2</span><span>Toma la columna 0 de W: [1,0,1].
+15215	Paso 2</span><span>El límite inferior teórico de transferencia de datos de la misma tarea es de 0.10 segundos.
+16862	Paso 2</span><span>Las pruebas de herramientas tardan 8 segundos y el resumen del modelo 2.
+14164	Paso 2</span><span>Pérdida cuadrática L=0.5×(2−4)²=2 y gradiente −4.
+14758	Paso 2</span><span>El modelo elige d de la distribución candidata, pero d aún no atravesó las capas de la red.
+16966	Paso 2</span><span>Cada píxel tiene 3 canales RGB, por lo que hay 16×16×3=768 valores originales.
+14984	Paso 2</span><span>La capa 1 también guarda K y V para cada posición 0, 1 y 2.
+12663	Paso 2</span><span>La segunda frase «你／爱» solo tiene dos Token reales: [4,2].
+15421	Paso 2</span><span>La segunda recepción completa el contenido, pero quizá aún no alcance el límite de fin del evento SSE.
+12357	Paso 2</span><span>El segundo eje selecciona la posición 1, el segundo Token de la frase.
+16191	Paso 2</span><span>El sistema no recibe ni registra la norma hasta el día 10 del mes 10.
+16588	Paso 2</span><span>El sistema devuelve 4 documentos: 3 realmente relevantes y 1 irrelevante.
+14759	Paso 3</span><span>El siguiente Decode procesa realmente d como entrada; solo entonces la caché cubre 4 posiciones.
+14985	Paso 3</span><span>Los K/V de ambas capas proceden de representaciones de capas distintas; no basta conservar una sola copia.
+12664	Paso 3</span><span>Se añade un PAD para agrupar en lote y queda [4,2,0]; PAD no pertenece al texto original.
+15883	Paso 3</span><span>Se crea la lista candidata D1 para «exclusión».
+14277	Paso 3</span><span>La posición «学习» predice el marcador de fin EOS.
+16698	Paso 3</span><span>Ambos fallan en 1 tarea; total 13+2+4+1=20.
+15704	Paso 3</span><span>Reglas fijas 200, descripciones de herramientas 300 y tarea del usuario 100: total 600.
+14165	Paso 3</span><span>Tasa de aprendizaje 0.2; actualización w=1−0.2×(−4)=1.8.
+15216	Paso 3</span><span>El tiempo real no puede ser menor que el mayor de ambos límites: 0.10 segundos.
+13074	Paso 3</span><span>Multiplica y suma las posiciones correspondientes: 1×1+2×0+3×1=4.
+16967	Paso 3</span><span>Aplanar solo reorganiza esos 768 números.
+16369	Paso 3</span><span>La confirmación de éxito se pierde en el trayecto de vuelta.
+15422	Paso 3</span><span>El evento solo está completo al recibir la línea vacía que lo termina.
+16863	Paso 3</span><span>El ejemplo supone explícitamente ejecución totalmente secuencial: total 2+1+5+8+2=18 segundos.
+12358	Paso 3</span><span>El tercer eje selecciona la característica 2, el número 3 de los cuatro de esa posición.
+16589	Paso 3</span><span>Precisión=3÷4=75%; el denominador es la cantidad devuelta.
+16192	Paso 3</span><span>Para preguntar «qué era aplicable en el negocio» el día 5 del mes 10, se mira el tiempo de validez.
+15100	Paso 3</span><span>Se reconstruye q×s=0.3.
+16699	Paso 4</span><span>A acierta 15 tareas y B 17; hay una ganancia neta de 2 y también 2 regresiones.
+12359	Paso 4</span><span>Los tres índices juntos [0,1,2] localizan un número concreto.
+15884	Paso 4</span><span>Se crea la lista candidata D1, D2 para «regla».
+15423	Paso 4</span><span>Los argumentos estructurados se analizan después de completar el evento; los límites de bytes, eventos y JSON se evalúan por separado.
+14760	Paso 4</span><span>Al elegir después e, el propio e aún no se ha escrito en caché.
+15705	Paso 4</span><span>Solo los 1400−600=800 restantes se destinan al historial y la evidencia de esta ronda.
+15217	Paso 4</span><span>Duplicar solo la velocidad de cálculo puede dejar el sistema limitado por las transferencias.
+16590	Paso 4</span><span>Exhaustividad=3÷5=60%; el denominador es la cantidad realmente relevante.
+13075	Paso 4</span><span>Así, Y[0,0]=4; repite por celda para obtener Y=[[4,5],[10,11]].
+14986	Paso 4</span><span>Al continuar generando Token, se leen los datos históricos correspondientes por capa.
+14166	Paso 4</span><span>Nueva predicción 3.6 y pérdida 0.08; esta es la reducción del ejemplo.
+12665	Paso 4</span><span>Las marcas de posiciones válidas son [1,1,1] y [1,1,0].
+14278	Paso 4</span><span>En entrenamiento se calculan posiciones en paralelo, pero la causal mask impide mirar entradas futuras.
+16864	Paso 4</span><span>Las pruebas son la fase más larga; compactar solo el resumen final no reduce directamente a la mitad el tiempo total.
+16968	Paso 4</span><span>La proyección visual lo transforma en d características; la arquitectura determina d.
+16193	Paso 4</span><span>Preguntar «qué sabía entonces el sistema» el día 5 del mes 10 también requiere el tiempo de registro.
+15101	Paso 4</span><span>El error es 0.3−0.26=+0.04; baja precisión no significa conservar exactamente el valor original.
+16370	Paso 4</span><span>El llamador agota el tiempo y solo sabe que el resultado no está confirmado; no puede concluir que la operación falló.
+15885	Paso 5</span><span>La consulta obtiene candidatos directamente por términos, pero aún necesitan comprobación posterior de evidencia.
+16371	Paso 5</span><span>Reintentar directamente puede duplicar la acción; se necesitan claves idempotentes o verificar resultados externos.
+26699	Paso 1
+26700	Paso 2
+26701	Paso 3
+26702	Paso 4
+13940	El residual no conserva una copia en chino de «las palabras originales»; suma representaciones numéricas.
+13948	El residual no concatena listas de Token ni las promedia: suma celdas correspondientes con la misma forma. La ruta principal conserva un camino directo y la rama aporta ajustes; facilita la propagación de información y gradientes en redes profundas, sin garantizar «estabilidad permanente al añadir residuales».
+19110	Residual y red hacia delante
+24884	muestreo de la distribución residual. La contribución de probabilidad de los Token aceptados es
+1409	Rama residual
+19857	El residual normalizado solo elige la entrada 1
+14045	Suma residual
+10618	La salida residual suma la entrada original y el resultado de la subcapa. F(x) es el array calculado por esa rama, no otro documento histórico. Las formas y significados de características de ambos lados deben permitir sumarlos.
+23281	Conexión residual
+13932	Conexión residual: conservar una ruta directa
+10617	Conexión residual: conservar la ruta principal mediante suma
+13933	Una conexión residual (residual)</strong> consiste en
+1807	Por Token, K y V tienen cada uno 2 cabezas×2 números
+28866	A cada fila de 4 números se le resta su media y se divide entre su desviación estándar
+13590	Cada fila se normaliza por separado. Toda la tabla 5×5 suma 5, no 1.
+20775	Suministro de información en cada ronda
+25448	Cada etapa necesita su propio oracle
+14196	Cada contribución F×Gz se acumula en U compartida.
+30427	Cada ID selecciona una fila completa
+1810	Cada cabeza Q emite 2 números que después se concatenan por cabeza
+1756	Pesos de atención de cada cabeza Q
+1791	Cada Q tiene su propio vector de consulta; no se eliminan dos cabezas Q.
+20421	Cada turn puede tener varias ejecuciones
+17196	Anchura de la representación interna de cada posición.
+1952	Cada posición solo ve a sí misma y las anteriores.
+19114	Cada posición se transforma en 6 puntuaciones de vocabulario
+9962	Cada posición tiene 4 valores de píxel.
+28873	Cada posición tiene 4 números actualizados; solo la última predice el siguiente Token de esta ronda.
+14327	Cada posición tiene 8 logits y su objetivo es el ID del siguiente Token.
+11974	Cada posición usa cuatro números; por eso cada fila tiene cuatro columnas
+14075	H solo tiene 4 números por posición y el vocabulario tiene 8 entradas. Hace falta una transformación explícita de cuatro características a ocho puntuaciones candidatas. El modelo aplica RMSNorm final y después multiplica a la derecha por U[4,8]. <strong>El orden de columnas sigue estrictamente los ID del vocabulario 0—7.
+19108	Cada posición combina sus posiciones visibles
+10504	Especificar el objeto de cada fórmula antes de juzgar por la letra
+12362	Cada elección de «en qué dirección contar» es un <strong>eje (axis)</strong>. Los tres ejes son «qué frase», «qué fragmento» y «qué número de ese fragmento». <strong>El último eje no convierte el identificador a 4 bits binarios: aparece porque cada fragmento pasa de un ID único a 4 características numéricas.</strong> Pueden ser decimales y negativos, no solo 0 y 1. F05 desarrolla la consulta completa. El significado del eje depende de cómo organizes los datos; el tensor no sabe qué es una frase china.
+13423	Cada valor original se divide entre r y se multiplica por su escala aprendible g1[j].
+14383	Cada celda de parámetro tiene dos estados históricos: m es la media móvil exponencial del gradiente y v la del gradiente cuadrado. Cuanto más cerca de 1 está β, más historial suele conservarse. v guarda gradientes cuadrados, no varianza del parámetro ni una matriz Value.
+17358	Representación del contenido de cada posición legible que se agregará con pesos.
+13499	Una fila numérica generada por cada posición legible
+13503	Otra fila numérica generada por cada posición legible
+17356	Conjunto de números de cada posición legible para compararse con la consulta.
+18868	Cada diagrama permite pausar, avanzar, retroceder y ampliar. Lee primero las condiciones fijas y después observa los cambios numéricos o de estado; las fórmulas completas y la profundización siguen en el curso original.
+6053	Cada bloque necesita al menos ID del documento fuente, versión, rango de posiciones, alcance de permisos, tiempo de validez, método de análisis y generación del índice. Los registros vectoriales y léxicos deben compartir una identidad estable para reconocer duplicados al fusionar. Al retirar la fuente, elimina o invalida sus bloques derivados siguiendo el ID; borrarla solo del directorio original no garantiza que la base vectorial esté sincronizada.
+1066	Cada cabeza produce un resultado en su subespacio; concatenar solo los coloca uno al lado del otro,
+29615	Longitud de una fila de características de cada cabeza.
+24782	Dividir primero la pérdida de cada microlote entre 4
+13663	Representación nueva de cada posición receptora
+18869	Cada mecanismo presenta primero el objeto procesado y su origen y desarrolla después el cálculo. W, X, A y otras letras son nombres locales; si reaparecen entre capítulos, rige la definición actual. Ante un símbolo desconocido, consulta la <a href="concepts.html">Guía de fórmulas y objetos</a> para conocer su contexto completo en vez de adivinar siglas inglesas.
+6441	Cada Token de consulta busca una coincidencia de alta puntuación entre los Token del documento
+991	Cada posición de consulta puntúa cada posición de clave visible
+993	Una fila de puntuaciones de cada consulta se convierte en pesos de lectura
+1979	Contribución al gradiente de U[característica 0,candidato 学习] de cada posición supervisada
+4717	Cada detalle necesita otra decisión
+30741	Sustituir cada identificador por una fila de números de coma flotante
+12884	Cada identificador se sustituye por una fila de 4 números
+5302	Cada diagnóstico debe incluir una comprobación capaz de refutarlo. Si se sospecha de recuperación y la tarea sigue fallando con evidencia correcta dada, investiga modelo o ejecución; si se atribuye calidad a múltiples agentes pero uno solo logra el mismo éxito con igual presupuesto, reconsidera el valor de la orquestación.
+26519	Multiplicar cada característica de entrada por el dQ correspondiente
+13597	Todas las características de salida se mezclan con las mismas proporciones
+7271	Cada fase puede fallar de forma independiente
+587	Indicar fuente y versión de cada elemento, sin conservar solo cifras extraídas.
+23186	Cada posición solo puede ver el pasado.
+17880	Anchura por posición d
+25700	Cada posición tiene un 20%
+28484	Cada ejemplo declara primero entradas e hipótesis y después acciones internas, resultados intermedios y límites. F corresponde a Fundamentos; Q, a problemas de Sistemas; S, a estudio temático; R, a materiales individuales; X compara mecanismos entre pasos o fáciles de confundir. Los ejemplos se desarrollan completos y las respuestas de autoevaluación se consultan bajo demanda.
+3199	Con 2 bytes por elemento resultan 4GiB; cada Token adicional añade unos 128KiB. Con 32 cabezas KV y lo demás igual serían 16GiB. No incluye pesos, fragmentación de páginas, workspace ni metadatos del servicio. La concurrencia real no puede calcularse solo dividiendo toda la memoria de vídeo entre ese número.
+1117	Cada columna produce un número y juntos forman la fila de 4 números de q[0,2].
+10347	Antes de añadir un recuperador, agente, revisión o memoria, señala el fallo concreto que ocurriría sin él y la mejora observable. Si no puedes, conserva primero la implementación sencilla. La complejidad debe responder a evidencia y riesgos reales, no a completar un catálogo.
+19292	Anchura por cabeza 2
+15028	Cada capa tiene 12 números K/V en total.
+3743	¿Son correctos shape, mask, eje softmax y valores finitos de cada capa? ¿El prefijo mantiene invariancia causal?
+27854	Cada capa conserva K/V históricos y combina pasado y posiciones nuevas al generar. Reutilizar caché exige coincidencia de modelo y prefijo, entre otras condiciones.
+29366	Cada capa guarda Key y Value de las posiciones procesadas.
+29229	Cantidad de opciones de cada nivel de dirección, como [2,3,4].
+15036	El Q nuevo de cada capa lee los 4 Key de esa capa
+24673	La máscara de cada bloque nuevo no es un simple triángulo C×C, sino C×(P+C): la fila i del bloque permite las claves
+1257	Cada capa tiene sus propios parámetros de atención, normalización y FFN. H de la anterior entra en la siguiente y los K/V profundos proceden de la representación profunda actual, no de reutilizar siempre el embedding inferior. La cabeza de salida suele aparecer tras la última capa; no es necesario generar una palabra en cada capa antes de pasar a la siguiente.
+1491	Parámetros y KV independientes por capa, sin copiar solo el resultado de la última
+8210	Si cada capa fija por separado 30 segundos, sus reintentos pueden alargar la espera a minutos. Propaga el deadline restante y limita cada subllamada al presupuesto disponible; la espera antes de reintentar y el jitter también consumen tiempo. Comprueba tipo de error, idempotencia, tiempo restante, número acumulado y autorización actual antes de reintentar.
+3716	El cálculo matricial de cada capa se reparte entre dos dispositivos
+4920	Las responsabilidades de cada capa siguen separadas.
+15030	Cada capa tiene representaciones de entrada y pesos de proyección distintos
+24805	Cada dispositivo: 2000+2000+4000=8000 bytes.
+24802	Cada dispositivo: 4000+2000+4000=10000 bytes.
+24799	Cada dispositivo: 4000+4000+4000=12000 bytes.
+24796	Cada dispositivo: 4000+4000+8000=16000 bytes.
+24795	Cada dispositivo tiene P, G y dos momentos
+26011	Por tarea exitosa
+17881	Bytes por número
+17879	Posiciones por entrada T
+11973	Cada entrada tiene tres posiciones; por eso cada tabla tiene tres filas
+2132	Cada celda=N1[b,t,0]×G_Q[b,t,0]; suma de diez celdas=-0.002217527833.
+29346	Elegir siempre el candidato de mayor puntuación, sin muestreo probabilístico.

@@ -1,0 +1,550 @@
+4254	10｜Cómo la salida del modelo se convierte en llamadas reales a herramientas: protocolos y límites de ejecución
+4674	11｜Diseño de herramientas y MCP: de la conexión a una ejecución controlable
+5012	12｜Codex, Claude Code y Copilot: de los hechos públicos a una cadena de ejecución diagnosticable
+5354	13｜Cómo se monta cada Prompt: el contexto es una canalización de datos
+5664	14｜Compactación del contexto: qué se elimina exactamente y cómo se recupera lo perdido
+5998	15｜Recuperación sin conexión: cómo los documentos se convierten en un índice consultable
+6305	16｜Recuperación en línea: candidatos, fusión, reordenación y suficiencia de la evidencia
+6616	17｜Inteligencia de código: de la búsqueda de texto a símbolos, versiones y evidencia de ejecución
+6933	18｜Memoria a largo plazo: escritura, recuperación, conflictos, caducidad y olvido
+7256	19｜Skills y enrutamiento: cargar justo la capacidad especializada necesaria
+7561	20｜Múltiples agentes: beneficios del paralelismo y pérdidas en los traspasos
+7895	21｜Ejecución fiable: reintentos, idempotencia, caídas y recuperación del estado
+8224	22｜Calidad de ingeniería: de los requisitos a las pruebas y al código realmente entregable
+8530	23｜Evaluation: cómo demostrar el beneficio real de una optimización
+8843	24｜Seguridad: límites de las instrucciones, entornos aislados, permisos y contaminación de la memoria
+9159	25｜Funcionamiento en producción: Trace, costes, colas, despliegue gradual y reversión
+9466	26｜Aplicación en profundidad: combinar componentes en un sistema de trabajo explicable
+9758	27｜Fiabilidad factual, multimodalidad e interpretabilidad: dónde están los límites de las capacidades
+10068	28｜Investigación avanzada y juicio integral sobre sistemas
+30417	Tabla de parámetros E de 6 filas y 4 columnas
+8052	Registro del agente
+30367	A: coste total 100/80 éxitos=1.25; B: coste total 70/50 éxitos=1.40. El coste de las ejecuciones fallidas no se ha eliminado del numerador.
+30365	A: por tarea completada con éxito
+1608	BOS suele indicar el inicio de una secuencia, y EOS es un token especial que indica su final; los modelos y plantillas de mensajes concretos pueden usar nombres, cantidades y marcadores de fin distintos. Son símbolos del protocolo de entrada/salida, no una prueba de corrección semántica.<span class="concept-micro">Encontrar EOS no corta automáticamente la atención entre dos muestras de entrenamiento; para aislar la lectura también hacen falta una mask o límites de muestra admitidos por la implementación.
+30366	B: por tarea completada con éxito
+8092	CAS es una operación controlada que compara si la versión o el valor esperado sigue coincidiendo antes de actualizar. TOCTOU es una carrera en la que algo cambia entre la comprobación y el uso: «mirar primero la versión y después escribir» en pasos separados no equivale automáticamente a un CAS atómico.<span class="concept-micro">Si se genera un parche al leer la versión 7 y al confirmar ya es la 8, debe rechazarse la sobrescritura directa y procesarse de nuevo; también hay que impedir una intervención concurrente entre la comparación y la escritura.
+6415	ColBERT y MaxSim
+2251	Pesos maestros FP32
+5535	I: matriz identidad
+4809	MCP negocia primero las capacidades, descubre después las herramientas y solo al final intenta invocarlas
+951	Norm representa una función de normalización en las fórmulas de las capas. LayerNorm suele restar la media de las características de un token, dividir por la desviación estándar y aplicar escalado y traslación; RMSNorm suele escalar por la raíz de la media de cuadrados sin restar la media. No equivalen a softmax.<span class="concept-micro">Microejemplo independiente que omite el pequeño ε de estabilidad del denominador y el escalado aprendible: LayerNorm([1,3])=[-1,1]; RMSNorm([1,3])=[1/√5,3/√5].
+10779	Precision, Recall, MRR y nDCG
+1901	RLHF, modelo de recompensa y política
+6312	RRF aporta 1/(c+r) por la posición r de un documento en cada ruta de recuperación y después suma las contribuciones. c es una constante de suavizado y r suele empezar en 1; un candidato ausente de una ruta no obtiene una contribución ficticia de ella.<span class="concept-micro">Ejemplo independiente: c=10; un documento ocupa las posiciones 1 y 3 en dos rutas y obtiene 1/11+1/13, aproximadamente 0.167832. No se suman las puntuaciones originales de BM25 y del coseno.
+30308	RRF aporta según la posición, sin sumar las puntuaciones originales
+6397	RRF aporta según la posición, sin sumar las puntuaciones originales. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+4388	SSE es un protocolo de texto de eventos enviados por el servidor; un chunk de red es el tramo de bytes recibido esta vez; delta es contenido incremental de un elemento de salida. Sus límites no tienen por qué coincidir. Un evento completo tampoco implica necesariamente argumentos completos de herramienta.<span class="concept-micro">Los argumentos pueden recibirse primero como {"path":"a y después como .py"}; hay que ensamblarlos y esperar las condiciones de finalización del protocolo, sin ejecutar al ver un fragmento.
+5448	Skill, JIT y descripción de activación
+26954	¿Por qué un Skill puede existir y aun así no servir de nada?: el Skill existe en disco
+948	SwiGLU, Wg/Wu/Wd: dos transformaciones y una combinación posterior
+1744	d_k indica cuántos componentes tiene un vector Query/Key; d_v indica cuántos componentes tiene un vector Value. Dh o d_h es la anchura por cabeza en algunos capítulos. Son enteros que expresan tamaños, no la Key de índice k ni un valor de Value.<span class="concept-micro">Microejemplo de formas: Q[2,3], K[5,3], V[5,4] producen puntuaciones [2,5] y salida [2,4]. Es válido que Q/K compartan anchura 3 y Value tenga anchura 4.
+8599	pass@k y pass^k
+26909	Los distintos objetos por los que pasa una frase: texto del usuario
+5423	¿Por qué montar el contexto no puede limitarse a «tomar los primeros N elementos»?
+3875	El siguiente turno incorpora hechos sobre el archivo
+8055	El sistema posterior confirma K
+8051	Libro de registro del sistema posterior
+4127	¿Por qué cada llamada al modelo necesita una instantánea coherente del contexto?
+30302	Tras girar solo los vectores de documentos, la consulta no cambia de forma coordinada. La fórmula de distancia sigue funcionando, pero esa pareja ya no garantiza la relevancia anterior.
+8057	Sigue siendo K=done
+30110	Código copiado
+30111	Código seleccionado; copiarlo manualmente
+26951	La recuperación de código necesita más que una «semántica similar»: búsqueda de texto
+3880	Tarea completada; no se han modificado archivos
+3863	Se conoce la tarea, pero no el contenido
+2249	Pesos de baja precisión
+26966	Localizar la capa del error antes de plantearse cambiar de modelo: síntoma
+27513	Se comparten grupos K/V; no se eliminan cabezas de consulta ni se calculan arbitrariamente menos cabezas de un modelo anterior. Un cambio de arquitectura suele requerir un entrenamiento del modelo o un plan de conversión compatibles.
+30153	Puntuación original
+30502	Parámetro w
+7075	Publicación
+8053	Enviar la operación K
+30420	Las cuatro características obtenidas
+3868	Solo hay una propuesta; aún no se ha obtenido evidencia
+30486	Un mismo vector cambia de dirección
+30299	Dos dimensiones iguales pueden tener coordenadas con significados distintos
+26932	El posentrenamiento cambia el comportamiento; la recompensa no juzga los hechos: una misma pregunta, dos respuestas
+17532	Volver a la explicación completa de la Lección 07 →
+17332	Volver a la explicación completa de la Lección 45 →
+17385	Volver a la explicación completa de la Lección 49 →
+17466	Volver a la explicación completa de la Lección 54 →
+17401	Volver a la explicación completa de la Lección 57 →
+17485	Volver a la explicación completa de la Lección 61 →
+4405	Búfer de bytes
+8058	Todavía no hay confirmación de éxito
+30340	La caída ocurre entre dos confirmaciones independientes
+8062	La caída ocurre entre dos confirmaciones independientes. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+7072	El trabajador termina
+3925	Llamada a herramienta
+2683	Procesado
+30590	Ya recibido
+8290	Verificado
+505	Tabla de parámetros y operación que obtienen el vector aprendible correspondiente al identificador de entrada. Ejemplo: E tiene forma [6,4]; el identificador 2 obtiene la fila 2 de E.
+30503	Pérdida L
+30301	Cambiar al modelo d
+6840	Excluir
+30591	Siguiente / explicación
+30589	Estado del búfer receptor
+30665	Tabla didáctica de recuentos
+8054	Sin registro
+30670	No contabilizado
+30667	No seleccionado
+30406	Tabla de datos de este paso
+8060	Consultar/reutilizar K
+3418	Ranura 0
+3419	Ranura 1
+3866	El modelo dispone de descripciones de capacidades
+30569	Unidad del eje horizontal: milisegundos; es un límite inferior didáctico, no una medición real en GPU.
+8056	La caída ocurre ahora
+4482	Respuesta en streaming: ¿cuándo pueden ejecutarse realmente los argumentos?
+26957	Las pruebas buscan contraejemplos; no ponen un sello verde al código: requisitos explícitos
+8293	Resultados de las pruebas
+9229	Calcular con un Trace las esperas, el uso y el coste de los fallos
+30419	Seleccionar una fila por identificador, sin descomponerlo en binario.
+3617	Calidad al aceptar directamente
+26934	Reducir parámetros, bits y activaciones son optimizaciones distintas: pesos grandes originales
+30669	En realidad no se necesita
+30668	En realidad se necesita
+10867	Lección 01｜Un agente no es otra red neuronal: explicar el bucle mediante una lectura de archivo
+26892	Lección 16
+26893	Lección 64
+3877	La salida del modelo del segundo turno ha terminado
+30437	Tabla de coeficientes W
+6714	Objeto vinculado
+30364	Denominador uniforme: completar una tarea con éxito
+18808	Alcance:</strong> documentación oficial leída el 2026-10-21
+30306	Puntuación de fusión
+8061	Añadir el registro de éxito sin repetir el efecto secundario
+30666	Seleccionado
+737	Calcular las proporciones de correspondencia entre una consulta y los candidatos legibles y combinar después el contenido mediante ponderación. Ejemplo: calcular primero las puntuaciones y los pesos y usar después esos pesos para mezclar V.
+16616	Límites de la evidencia y la comprensión:</strong> registrar por separado la tarea, cada intento, la traza de ejecución y el resultado del entorno; las restricciones de recursos y un estado sin restablecer pueden confundir la comparación.
+3873	Evidencia obtenida
+6395	Posición léxica / posición vectorial
+3871	Leer r7 del disco
+30436	Entrada X
+30438	Salida Y
+3020	Mediante bloques, normalización en línea y otras técnicas, evita escribir de forma prolongada la matriz completa de puntuaciones/pesos de atención en la memoria de GPU más lenta; el objetivo sigue siendo la misma operación de atención, aunque el redondeo en coma flotante puede variar con el orden de las operaciones.<span class="concept-micro">No compacta permanentemente los tokens ni omite todas las Key. Distinguir entre «no almacenar toda la tabla en memoria de GPU» y «no realizar esos cálculos matemáticos».
+30300	Modelo d compatible
+6164	Emparejamiento
+29369	Recalcular
+2649	06｜Mecanismos de inferencia: carga, estrategias de decodificación y generación continua
+30879	3 segundos / verificación de la versión actual
+30876	6 segundos / evidencia y resultado
+30878	8 segundos / evidencia y resultado
+18017	Ingeniería de sistemas de IA · Curso sin conexión traducido del chino<br/>Los ejemplos didácticos, registros de ejecución y hechos sobre productos se distinguen mediante las explicaciones adyacentes; las versiones de referencia figuran en las páginas de fuentes.
+6416	Los métodos del tipo ColBERT conservan varios vectores de token para consultas y documentos y realizan después una interacción tardía. En el MaxSim habitual, cada token de consulta toma la similitud máxima con los tokens del documento y luego se agregan esos valores.<span class="concept-micro">No es una recuperación con dos codificadores en la que «todo el documento tiene un solo vector», ni es la salida de autoatención de cada capa de un modelo generativo.
+1614	Dropout: regla de puesta a cero aleatoria durante el entrenamiento
+6552	GraphRAG, RAPTOR y jerarquías organizativas
+6550	HyDE: el texto hipotético solo sirve para buscar materiales
+5536	En las fórmulas matriciales, I suele ser la matriz identidad: tiene 1 en la diagonal y 0 en las demás posiciones. Con dimensiones compatibles, multiplicar un vector o una matriz por I conserva sus valores. Wq=Wk=I es un caso especial elegido deliberadamente; no permite deducir que las proyecciones de los modelos reales sean todas iguales.<span class="concept-micro">Microejemplo independiente: I=[[1,0],[0,1]], [3,-2]I=[3,-2]. Aquí I no es la letra i como subíndice de posición.
+4791	Roles de aplicación anfitriona, cliente del protocolo y servidor que ofrece capacidades en MCP. Ejemplo: una aplicación anfitriona puede conectarse a distintos servidores mediante varios clientes.
+1902	RLHF designa, en general, un proceso que utiliza retroalimentación humana para entrenar el comportamiento. El modelo de recompensa puntúa comportamientos como las respuestas; la política es el modelo probabilístico que genera realmente las acciones. Tienen funciones distintas; una recompensa alta no equivale automáticamente a corrección factual.<span class="concept-micro">Ejemplo independiente: si el evaluador de recompensas prefiere respuestas largas, la política puede aprender a escribir más sin ser más exacta; por eso hay que validar los criterios de recompensa.
+6328	RRF fusiona posiciones en el ranking, no suma forzadamente puntuaciones de BM25 y del coseno
+9329	SLI, SLO y presupuesto de errores
+5766	S se basa en el prefijo original
+5768	S pierde validez
+7009	TTL, tiempo de vigencia y tiempo de registro
+1746	Wq / W_Q: parámetros de proyección de consultas
+8600	Las métricas del tipo pass@k suelen medir si al menos uno de k intentos tiene éxito; las del tipo pass^k destacan que todos los intentos tengan éxito. El criterio concreto de estimación depende del benchmark; no se debe confundir detenerse tras un éxito con ser fiable en todos los intentos.<span class="concept-micro">Bajo el supuesto independiente de probabilidad idéntica p=0.8, al menos un éxito en 3 intentos=0.992 y éxito en los 3=0.512. Si las tareas reales están correlacionadas o tienen distinta dificultad, hay que calcularlo de otra manera.
+6717	Texto anterior r7
+10766	Memoria semantic, episodic y procedural
+2353	sigmoid: convertir un número individual en un valor entre 0 y 1
+2885	«La salida se ha detenido» y «la tarea ha tenido éxito» deben dibujarse en líneas de estado distintas
+1389	⊙: multiplicación elemento a elemento, no multiplicación matricial
+5769	No instalar el candidato antiguo
+7202	No puede
+8295	No sobrescribir r8
+30862	Experto E0
+30864	Experto E1
+30866	Experto E2
+30868	Experto E3
+7691	Secuencial
+30873	Tarea principal
+8644	Distribución binomial, error estándar e intervalo de Wilson
+8296	Declaración de entrega
+8297	Solo puede describir r7
+3930	Solo demuestra que el contenido ha cambiado
+7077	Conserva el arrendamiento y supera la validación
+5764	S sigue generándose
+30287	Margen restante
+4746	Instrucciones especializadas y recursos relacionados que el agente utiliza según sus necesidades. Ejemplo: no equivale a añadir un nuevo conjunto de pesos al modelo.
+5950	La comprobación de fidelidad debe preguntar «qué se puede seguir haciendo correctamente», además de si el resumen se parece al original
+8291	Después de modificar
+7070	Candidato→artefacto
+7073	Artefacto candidato
+4656	Hipótesis
+5938	Patrón de sistema que recupera primero materiales externos y después hace que el modelo genere basándose en ellos. Ejemplo: disponer de citas o recuperación no garantiza automáticamente que la evidencia respalde la respuesta.
+7071	Arrendamiento global y espacio de trabajo
+30874	Objetivo común y restricciones
+7670	Ruta crítica
+7065	Umbral clave
+8103	La sustitución atómica evita escrituras parciales; CAS evita sobrescribir versiones. Son cosas distintas
+9870	Retroalimentación
+826	Se convierte en
+6750	Una misma ruta puede tener tres contenidos distintos en el commit, el árbol de trabajo y el editor
+30271	Cuatro tipos de finalización que no se sustituyen entre sí
+3934	Cuatro tipos de finalización que no se sustituyen entre sí. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+17290	Volver a la explicación completa de la Lección 42 →
+17353	Volver a la explicación completa de la Lección 46 →
+17431	Volver a la explicación completa de la Lección 52 →
+17450	Volver a la explicación completa de la Lección 53 →
+30853	Lote fijo: 6 pasos
+27704	En esta cadena simplificada, la retropropagación conserva además las activaciones intermedias a1, a2 y a3, de 100 unidades cada una, con un total residente de 300. La entrada y la salida final no se incluyen en esta cuenta.
+5449	En la carga de capacidades, un Skill es un conjunto de instrucciones y recursos reutilizables; JIT significa cargar cuando se necesita y no implica necesariamente la compilación en tiempo de ejecución de un compilador. La descripción de activación ayuda al modelo a determinar la aplicabilidad, sin conceder automáticamente permisos de herramientas.<span class="concept-micro">Hay que decidir primero si la tarea necesita el Skill y leer después su contenido detallado; cargar un Skill no significa haber cumplido realmente sus requisitos.
+13327	Fundamentos</span><span>Unos 2.5 mil caracteres</span><span>1 demostración controlable
+2664	Procesar un prefijo de entrada que ya se conoce en este momento. Ejemplo: obtener las representaciones de cada capa y los K/V reutilizables.
+8865	El contenido externo puede ser evidencia, pero no concederse permisos de ejecución
+6715	Condiciones de invalidez
+5149	Hay que comprobar campo por campo lo que hereda un subagente, sin afirmar que «lo hereda todo»
+30875	Subtarea A
+30877	Subtarea B
+8244	Las condiciones de finalización deben incluir «qué no puede cambiar», además de un caso correcto
+26768	Documentación oficial de interfaces</span> <span class="badge gray">Comprobación del texto original relacionado
+17902	Experimentos y fuentes
+17950	Experimentos y verificación
+3864	Harness→modelo
+3927	Aún no hay un resultado final de las pruebas
+6720	Hash del árbol de trabajo + comando
+4751	La herramienta existe, el modelo la ve, puede invocarla y está autorizado: cuatro capas de comprobación
+11168	Análisis de ingeniería
+3929	Ya modificado a r9
+3923	Terminado
+7976	La clave de idempotencia se vincula a una misma intención de negocio, no a cada intento HTTP
+5125	¿Cómo comparar el Codex de código abierto con los artículos de ingeniería de Claude sin crear contradicciones?
+30860	Token actual
+3932	Pendiente de verificación
+30869	Entrada necesaria
+5803	Instantánea
+10375	¿Cómo convertir un grafo de conocimientos en juicio de ingeniería, en vez de una enciclopedia de conceptos?
+6956	Memoria episódica
+7066	Extracción
+19856	Compensación al rechazar
+5762	Lo que ve el trabajador del resumen
+30294	Combinar la generación del resumen con el sufijo en vivo
+5770	Combinar la generación del resumen con el sufijo en vivo. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+6718	El archivo se ha cambiado a r8
+6667	Búsqueda de texto
+3924	Generación de texto terminada
+30345	Nuevo fallo
+30344	Nuevo éxito
+30347	Fallo anterior
+30346	Éxito anterior
+30870	Registros antiguos /
+7076	Artefacto válido + marca de progreso
+30880	Recuento de este fotograma (unidades indicadas en el texto)
+20777	Fuente S084, ingeniería eficaz del contexto
+21021	Fuente S096, recuperación híbrida con contexto ampliado
+22092	Fuente S143, metodología completa de evaluación de agentes
+7068	Fuente y alcance
+10402	Ver el archivo local correspondiente
+2724	Etiquetas, teacher forcing y shift
+5765	Verificación superada
+3867	Modelo→harness
+3922	Respuesta del modelo
+3920	Estado actual
+30856	Paso 5
+30857	Paso 6
+30859	Supuesto simplificado de que todos los pasos tardan lo mismo; ✓ indica que la solicitud ha terminado al final de ese paso.
+27775	Coste por pregunta 1, coste total 20; el resultado didáctico tiene 14 preguntas correctas y 6 fallos confirmados mediante comprobación. La tasa de éxito y la exactitud de la detección se consideran por separado.
+5763	Historial activo
+6721	Modificar de nuevo después de las pruebas
+3926	Pruebas en ejecución
+7350	¿Cómo convierte la carga progresiva un Skill de «archivo» en capacidad real?
+7067	Evento fuente→candidato
+8292	Archivo fuente
+30309	Cadena de versiones del código fuente y la evidencia
+6724	Cadena de versiones del código fuente y la evidencia. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+6494	Versión y entorno
+30845	Páginas físicas: 2 ranuras de token por página
+6722	Entorno + entrada de ejecución
+23179	Apoyar la comprensión con un proceso concreto: <a href="../visual/F18.html">Entrenamiento: plantear a cada posición una pregunta sobre el «siguiente elemento»</a>. La ilustración explica mecanismos comunes; los métodos específicos y las conclusiones experimentales de esta fuente siguen siendo los de sus apuntes.
+9977	¿Por qué una acción aún puede pulsar en el lugar equivocado aunque se haya interpretado bien la interfaz?
+3462	Lección 33</a>. Orden de lectura: confirmar primero el contrato de ejecución, examinar después los contraejemplos y las reparaciones, y comprobar por último los límites.
+26885	Lección 42
+10051	Lección 49
+26888	Lección 58
+16593	La precisión mide cuántos de los resultados devueltos son relevantes; la exhaustividad mide cuántos de los relevantes que debían encontrarse se han encontrado; MRR promedia el inverso de la posición del primer resultado correcto; nDCG considera el grado de relevancia y la posición y normaliza respecto al orden ideal.<span class="concept-micro">Ejemplo independiente: deben encontrarse 5 artículos, se devuelven 4 y 3 son relevantes; precisión 3/4 y exhaustividad 3/5. No intercambiar ambos denominadores.
+6048	¿Qué metadatos resultan difíciles de recuperar si se pierden al construir el índice?
+5767	Si se produce una reversión
+27656	El modelo borrador es barato, pero asigna mal las probabilidades. En este ejemplo, el objetivo es p=[0.6,0.3,0.1] y el borrador q=[0.4,0.4,0.2]. No se pueden tomar directamente todas las salidas del borrador como salidas del objetivo.
+30483	Filas: Query actual; columnas: Key que se pueden leer
+492	Formato de texto para representar datos estructurados como objetos, matrices, cadenas y números. Ejemplo: un JSON válido no garantiza que el contenido de sus campos sea válido para el negocio.
+30871	resumen
+8332	Registro
+7191	La recuperación de memoria debe comprobar primero la aplicabilidad y comparar después la similitud semántica
+30310	Condiciones de publicación de la canalización de memoria
+7078	Condiciones de publicación de la canalización de memoria. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+16387	Límites de la evidencia y la comprensión:</strong> fallo, cancelación y resultado desconocido no pueden agruparse en un solo estado; la seguridad de los reintentos depende de la idempotencia o comprobación del sistema posterior. Los experimentos del libro no son una garantía de exactly-once de un producto.
+15942	Límites de la evidencia y la comprensión:</strong> una posición alta no implica que la evidencia cubra la pregunta. El pequeño ejemplo RRF del libro no es una consulta oficial de producción; hay que distinguir el contexto del bloque de la evidencia original.
+7984	Solicitud
+8892	¿Por qué leer una «instrucción» no significa que tenga permisos?
+7914	El tiempo de espera se agota entre la «solicitud» y la «respuesta»
+30867	Peso de enrutamiento 0.3; seleccionado esta vez
+30865	Peso de enrutamiento 0.5; seleccionado esta vez
+3826	Turno
+2799	Entrada y condiciones.
+30861	Escalar de entrada x=2
+7074	Aún no equivale a una publicación correcta
+949	Esta es una estructura feed-forward con compuertas. Wg genera la rama que pasa por SiLU y Wu genera otra ruta de contenido; ambas se multiplican elemento a elemento y Wd las devuelve a la anchura original. Estas W son tres conjuntos de parámetros, no tres agentes.<span class="concept-micro">Al leer (SiLU(XWg)⊙XWu)Wd, calcular primero XWg y XWu, después SiLU, luego ⊙ y por último multiplicar por Wd. Cada posición utiliza de forma independiente el mismo conjunto de parámetros.
+30852	Aquí solo se gestionan bloques KV; no se elimina contenido del contexto.
+30858	Procesamiento continuo por lotes: 4 pasos
+30851	Correspondencia lógica→física
+8695	En una comparación emparejada, examinar primero qué preguntas pasan de fallo a éxito y cuáles cambian en sentido inverso
+6723	Cambios de configuración y datos
+27534	La cuantización cambia la precisión de representación de los números; no convierte Token ID en Embedding. Especificar primero qué objeto se aproxima y en qué intervalo.
+8294	Superado para r7
+10433	Herramientas de lectura
+3933	Se necesita evidencia de aceptación de r9
+8298	Hay que volver a ejecutar las comprobaciones afectadas
+30846	Página 0
+30847	Página 1
+30848	Página 2
+30849	Página 3
+30850	Página 4
+5097	Conocimientos previos: <a href="../foundations/24.html">Lección 02
+8276	Aceptación
+30341	La evidencia de aceptación se vincula al artefacto final
+8299	La evidencia de aceptación se vincula al artefacto final. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+17907	: archivo local completo.
+2086	y
+8342	12 passed @r8 + contraejemplos de límites
+29574	20 tareas emparejadas; no son 40 tareas independientes
+30374	Imagen RGB de 32×32 → cuatro bloques de 16×16
+30290	35 unidades
+30288	5 unidades
+24863	7. Preguntas de aceptación
+30376	768 es la anchura de cada bloque aplanado; 4 es el número de bloques y 8 es la anchura de la proyección didáctica. La imagen no entra en el modelo mediante una consulta de tabla con Token ID de texto.
+30319	A Localizar · 2 minutos
+30293	A/B comparten los 3 primeros elementos consecutivos; B/C solo comparten 1 elemento consecutivo al principio. El T1 coincidente posterior no puede concatenar un prefijo saltando por encima de un new distinto.
+6006	ANN y HNSW: estructuras de recuperación aproximada
+30253	A termina
+30211	A elige E0/E1 y B elige E3/E2. La altura de las barras es la probabilidad de enrutamiento fijada en esta figura, no la calidad de salida de los expertos.
+30296	A: longitud 100 / frecuencia del término 2
+30320	B Implementar · 4 minutos
+30255	B termina
+30297	B: longitud 1000 / frecuencia del término 4
+30321	C Probar · 3 minutos
+30256	C está listo; no se cuenta prefill. Las columnas de anchura uniforme solo indican pasos de planificación, sin implicar que todos tengan la misma duración real.
+30254	C termina
+30322	D Integrar · 1 minuto
+2232	DP, TP, PP, ZeRO y FSDP
+2500	FLOPs y FLOP/s: cantidad y tasa
+6553	Los métodos del tipo GraphRAG aprovechan información organizativa, como relaciones entre entidades y comunidades; RAPTOR utiliza agrupación jerárquica y resúmenes para apoyar la recuperación. Añaden información derivada y también problemas de actualización, procedencia y propagación de errores.<span class="concept-micro">Cuando cambia el documento fuente, los resúmenes antiguos o las relaciones del grafo pueden quedar obsoletos. Modificar el original no demuestra que todos los índices derivados se hayan actualizado de forma coordinada.
+4807	JSON-RPC, stdio y HTTP
+30833	Grupo KV 0
+14940	KV Cache guarda por capa las posiciones procesadas; el token recién elegido aún no se ha escrito
+15054	¿Qué parte ahorran exactamente LoRA, la cuantización y MoE?
+10167	MLA: representación K/V de baja dimensión aprendida
+3021	PagedAttention: gestionar el almacenamiento K/V por páginas
+30186	Línea base de dP ponderada por P
+30828	Cabeza Q 0
+30830	Cabeza Q 1
+30831	Cabeza Q 2
+30832	Cabeza Q 3
+30368	Servicio R1
+30369	Servicio R2
+30370	Servicio R3
+9993	SAE, activaciones y características interpretables
+9330	SLI es un indicador medido del nivel de servicio; SLO es el objetivo de ese indicador; el presupuesto de errores es el margen de fallos permitido por dicho objetivo. Son objetos de gestión operativa del servicio, no parámetros del modelo.<span class="concept-micro">«La API devuelve 200» puede no equivaler al éxito del usuario; en algunos negocios, la métrica debe definirse como la proporción de tareas completadas correctamente dentro del tiempo límite.
+1391	SiLU: multiplicar la entrada por un coeficiente de compuerta
+3450	TTFT, TPOT, p95 y rendimiento
+7010	TTL es una configuración de caducidad del almacenamiento o la caché; el tiempo de vigencia indica cuándo es aplicable un hecho y el tiempo de registro indica cuándo lo conoce el sistema. La política de caducidad no sustituye la comprobación de hechos y fuentes.<span class="concept-micro">Una regla que entra en vigor el 10/1 solo se lee el 10/10: la vigencia para el negocio comienza el día 1 y el conocimiento del sistema comienza el día 10.
+3984	Thread, Turn, Session: niveles de ejecución
+30209	Probabilidad de enrutamiento del token A
+30210	Probabilidad de enrutamiento del token B
+7746	WAL, fsync y sustitución atómica
+1748	Wk / W_K: parámetros de proyección de claves
+822	Wout, LM head: parámetros de puntuación del vocabulario
+1750	Wv / W_V: parámetros de proyección de valores
+12305	¿Por qué [2,3] se convierte en [2,3,4]?
+6413	bi-encoder, cross-encoder y reordenación
+28088	Cómo c1 conecta la acción de M1 con la evidencia de T1
+4486	Búfer de c7
+4487	Búfer de c8
+30188	La suma de dS es 0, lo que refleja que trasladar ambas puntuaciones por igual no cambia softmax. Esta figura calcula la influencia sobre la pérdida de una cantidad intermedia.
+16044	¿Qué ven respectivamente grep, AST, LSP y los grafos de llamadas?
+13129	¿Por qué reshape, transposición y difusión no son intercambiables?
+10612	γ, β, ε: separar los parámetros de las constantes de estabilidad
+2355	π, π_ref y β: símbolos del objetivo de preferencias
+1393	σ: distinguir los símbolos de funciones de los estadísticos
+15479	¿Qué diferencia hay entre «el modelo sabe que lo hizo» y «el sistema puede recuperarlo»?
+15953	¿Qué pasos faltan entre «relevante» y «suficiente para responder»?
+12934	¿Por qué «caber en memoria» y «calcular rápido» son cosas distintas?
+18011	. Las condiciones del ejemplo se fijan en esta sección; los resultados didácticos no representan modelos comerciales ni rendimiento en producción.
+13580	Una fila de atención: reunir tres fuentes visibles en la salida de una posición
+13035	¿De qué celdas de entrada procede exactamente el número de una celda de salida?
+16649	¿Cómo distingue un experimento una mejora real de una fluctuación casual?
+12749	¿Cómo sustituye un conjunto de números de coma flotante a un identificador de token?
+30282	Cada uno de los tres límites tiene sus reglas de búfer. Recibir un chunk de red no constituye autorización para ejecutar.
+18016	Sección anterior y siguiente
+30183	dO aguas arriba
+30214	Procesar en el turno siguiente
+30218	No seguir procesando EOS
+30279	No es un objeto JSON completo
+4495	No se pueden concatenar entre sí
+4134	No sustituir subrepticiamente el contexto por R4 para explicar una propuesta anterior
+8341	No se puede extrapolar automáticamente a r8
+8348	No confundir:</strong> «las pruebas no han encontrado problemas» no debe reformularse como «no hay ningún problema», sobre todo con cobertura y entornos limitados.
+9236	En paralelo con A
+9235	En paralelo con B
+25604	Estudio temático</span><span>Unos 3.0 mil caracteres</span><span>Gráficos y explicaciones por elemento
+30249	Asignación por paso de dos ranuras de decodificación
+30298	Ambas comparten la escala 0—1.5. En la figura, B tiene mayor frecuencia del término, pero obtiene menos puntuación por ser un documento muy largo; no es una medición exhaustiva de BM25.
+30171	Ambas opciones producen formas válidas, pero calculan medias distintas. En esta figura, ✓ indica que la lógica lo permite; hay que consultar aparte el significado de True en las máscaras booleanas de cada API.
+9234	Relaciones secuenciales y paralelas
+12632	¿Puede el modelo confundir con contenido el PAD añadido para igualar longitudes?
+14124	¿Por qué el «descenso de gradiente» a veces aumenta un parámetro?
+16741	¿Por qué «se ha convencido al modelo» no puede ser la única defensa?
+16446	¿Por qué aún se puede entregar algo equivocado aunque «todas las pruebas pasen»?
+15673	¿Por qué a veces «leer más» facilita el malentendido?
+15173	¿Por qué una GPU con más capacidad de cálculo no acelera necesariamente la tarea en la misma proporción?
+12505	¿Por qué no puede equipararse «un carácter chino» con «una generación»?
+13332	¿Por qué hay que intercalar una función no lineal entre las capas?
+14897	¿Por qué el siguiente token aún puede ver el historial aunque se ahorren muchos pasos?
+15379	¿Por qué nunca se debe ejecutar al ver medio JSON?
+16932	¿Por qué entender una captura no impide pulsar el botón equivocado?
+16543	¿Por qué una precisión alta no significa haber encontrado toda la evidencia?
+16346	¿Por qué los reintentos automáticos a veces realizan dos veces el mismo trabajo?
+14253	¿Por qué el entrenamiento ve la frase entera, pero la generación solo avanza hacia delante?
+16829	¿Por qué optimizar el paso más evidente puede no acelerar el conjunto?
+8339	Después se cambia a r8
+8645	El modelo binomial se utiliza habitualmente para un número fijo de ensayos independientes de éxito o fallo; el error estándar describe la escala de fluctuación del estimador; Wilson es una forma de construir intervalos para proporciones. McNemar analiza las discrepancias en ambos sentidos de resultados de clasificación emparejados.<span class="concept-micro">La dependencia entre muestras, la mezcla de dificultades o la selección de preguntas cambian el alcance de interpretación; las fórmulas estadísticas no demuestran que «la mejora de la puntuación se deba necesariamente a este cambio».
+17031	¿Cuándo conviene cambiar el Prompt, la recuperación, la memoria o el modelo?
+8340	Sigue mostrando la luz verde anterior
+16244	¿Qué ocurre entre «instalar un Skill» y «escribir mejor código»?
+22106	Localizar regresiones mediante una tabla de cuatro casillas
+30259	Masa de probabilidad de la distribución del borrador a la distribución objetivo
+18006	Código, modelo, plantilla y configuración de herramientas/recuperación
+18004	Conjunto de tareas y su división, además de su número
+9759	Antes de optimizar hay que localizar el cuello de botella; no basta con perseguir menos tokens
+30363	Solo optimizar la ruta crítica cambia el tiempo de reloj
+9239	Solo optimizar la ruta crítica cambia el tiempo de reloj. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+1889	Optimizadores, Adam y AdamW
+28941	Posición 3 · 爱
+30172	Diferencia de posición 1: producto escalar 0
+17955	Alcance de la tarea
+18010	Fundamento y alcance:
+15855	¿Qué aportan respectivamente un índice invertido y un índice vectorial?
+4138	Entorno de pruebas permitido
+8345	Comprobar primero si se ha ejecutado realmente, después qué versión se ha probado y por último si los casos pueden detectar el defecto buscado. Los tres controles son necesarios.
+1248	Propagación hacia delante común: los parámetros entran por un lado; los residuos conservan y reúnen la representación original
+30323	Ruta crítica: A → B → D = 2+4+1 = 7 minutos
+22108	Límite clave:</strong> repetir una misma pregunta no crea tareas independientes; hay que registrar el muestreo y los cambios del entorno.
+20334	Límite clave:</strong> el experimento solo usa datos locales temporales; no demuestra que un servicio de terceros ofrezca el mismo protocolo de deduplicación.
+30216	Procesar en el turno posterior al siguiente
+30154	Restar el máximo 2
+2354	La función es sigmoid(x)=1/(1+exp(-x)). Calcula número a número y no exige que los resultados de una fila sumen 1, por lo que no sustituye directamente al softmax de varios candidatos.<span class="concept-micro">Microejemplo independiente: sigmoid(0)=0.5; calcular por separado dos valores 0 produce [0.5,0.5] solo por coincidencia; las dos salidas de la entrada [1,1] suman más de 1.
+4494	Admitir después de validar por separado
+3143	Si el prefijo cambia a mitad de camino, hay que recalcular la caché desde el cambio y la del sufijo
+4304	¿Por qué los controles previos y posteriores no se sustituyen entre sí?
+7281	Cargar
+27269	Ilustración dinámica</span><span>Unos 1 mil caracteres</span><span>Gráficos y explicaciones por elemento
+5543	Compactación
+26815	Artículo de evaluación original</span> <span class="badge gray">Comprobación del texto original relacionado
+12223	Parámetro θ
+30283	Ensamblar los incrementos de argumentos por ID de llamada
+4496	Ensamblar los incrementos de argumentos por ID de llamada. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+30173	Sumar 1 a ambos: el producto escalar sigue siendo 0
+2079	La retropropagación sigue las dependencias reales: hay que sumar los gradientes en los dos puntos residuales
+6992	Compromisos
+8346	Las pruebas de mutación pueden reintroducir deliberadamente una implementación errónea; si todo sigue en verde, las pruebas carecen de capacidad de discriminación.
+30129	Solo queda un elemento; el texto original sigue siendo abc
+30275	Solo contiene los dos primeros bytes UTF-8 de «爱»
+8338	Solo cubre r7
+29704	Solo se cuentan a1/a2/a3; no se afirma un porcentaje de reducción del pico total
+18007	Condiciones controlables; indicar expresamente lo no admitido o no probado
+30291	Total: 100 unidades
+30207	Total: 16000 B
+13816	¿Por qué necesita tratamiento adicional un mismo token situado en posiciones distintas?
+13534	La representación de un mismo «爱» se convierte en Q/K/V mediante tres tablas de parámetros
+14768	Los mismos pesos entrenados: predecir, añadir y detenerse turno a turno
+15279	¿Por qué una misma tarea del usuario puede llamar al modelo más de una vez?
+30373	Un mismo conjunto de 100 respuestas: confianza declarada de aproximadamente el 80%, pero solo 60 respuestas correctas. Es una muestra didáctica, no una medición de un modelo comercial.
+30272	La misma solicitud se vincula al objeto que explica; al ejecutar se sigue comprobando la autorización
+4140	La misma solicitud se vincula al objeto que explica; al ejecutar se sigue comprobando la autorización. Los valores y estados pertenecen al ejemplo didáctico establecido explícitamente en esta sección; no son mediciones de rendimiento en producción ni de modelos comerciales.
+30165	Una misma entrada, comparando las tablas de permisos correcta e incorrecta
+4770	No
+8335	El comando termina correctamente
+30182	Las cuatro Query siguen calculando sus propias proporciones y salidas; la confluencia de flechas significa que leen un mismo grupo KV, no que sus resultados sean iguales.
+17627	Volver a la explicación completa de la Lección 13 →
+17585	Volver a la explicación completa de la Lección 16 →
+17598	Volver a la explicación completa de la Lección 17 →
+17641	Volver a la explicación completa de la Lección 26 →
+17151	Volver a la explicación completa de la Lección 35 →
+17320	Volver a la explicación completa de la Lección 44 →
+20333	Salir del subproceso después de completar la escritura en SQLite temporal y antes de que el registro del harness la confirme. Al recuperar, reintentar por separado con la misma clave de operación y con una nueva, y comparar el número de efectos secundarios.
+29595	Tiempo de reloj de referencia 16 segundos; trabajo de herramientas 11 segundos
+12502	Fundamentos</span><span>Unos 2.7 mil caracteres</span><span>1 demostración controlable
+9238	Tiempo de reloj
+4488	Incremento 1
+4490	Incremento 2
+4492	Incremento 3
+7635	¿Cómo trabajan los agentes en paralelo y evitan las pérdidas de los traspasos?
+4493	Elemento completado
+30372	Exactitud realmente verificada
+8334	Lo que realmente puede demostrarse
+8329	Número de pruebas realmente ejecutadas y no omitidas.
+18014	Alcance real de ejecución
+4683	Protocolo de interacción entre el harness y herramientas externas o servidores de recursos. Ejemplo: no es el nombre genérico de toda comunicación entre agentes.
+30219	El harness ve el marcador de fin y detiene los cálculos posteriores del modelo.
+30185	Con respecto a P
+30184	Con respecto a V0 / V1
+30187	Con respecto a las puntuaciones S
+8343	Corresponde al artefacto actual
+8330	Identidad del artefacto
+6954	Memoria de trabajo
+30278	Se ha completado un evento
+18013	Implementación completa con números de línea
+1615	El Dropout invertido habitual pone aleatoriamente elementos a cero durante el entrenamiento con probabilidad de descarte p y divide los conservados por 1-p para mantener la escala esperada. El modo de evaluación suele desactivar esta operación aleatoria; algunas funciones de bajo nivel exigen que el llamador pase p=0 explícitamente.<span class="concept-micro">Ejemplo independiente: con p=0.5, si un valor 2 se conserva en una máscara, produce 4; si se descarta, produce 0. No significa que el entrenamiento elimine permanentemente el parámetro correspondiente del modelo.
+7283	Aplicar
+18005	Versiones de los artefactos pendientes y de los entregables
+13236	¿Cómo pasar de las mismas tres puntuaciones al muestreo sin saltarse ningún paso?
+13709	¿Cómo impedir la lectura del futuro o que PAD se interprete como contenido?
+30324	Trabajo total 10 minutos. Acortar la rama no crítica C no cambia necesariamente el momento de entrega; aún no se han incluido los costes de comunicación e integración.
+18008	Éxito, fallo, desconocido, sin ejecutar y sus registros originales correspondientes
+30262	Todas las barras usan la misma escala de probabilidad 0—1; la masa total aceptada del centro es 0.7 y los 0.3 restantes vuelven a B mediante la compensación al rechazar.
+30281	Solo entonces comenzar el análisis, la validación de tipos y la autorización
+8328	Número ejecutado
+15765	¿Qué es más fácil perder al compactar cien turnos de historial en unas pocas frases?
+3818	Al dibujar modelo, harness y herramientas en carriles distintos, la pregunta «quién cambió realmente el archivo» tiene una respuesta clara. Seguir cada mensaje de retorno antes de decidir si hay que volver a llamar al modelo, ejecutar una herramienta o terminar; que el modelo diga que ha terminado no significa que el entorno haya terminado.
+6922	Informe
+30277	Solo al concatenar E7 88 B1 se decodifica «爱»
+30157	Suma de exponenciales = 1 + 0.367879… + 0.135335… = 1.503215…
+607	Herramienta que convierte texto e identificadores de token en ambos sentidos según las reglas compatibles con el modelo. Ejemplo: no se puede cambiar arbitrariamente el tokenizador manteniendo parámetros de modelo incompatibles.
+30501	Pérdida=2
+17753	Asumir el control del modelo
+9118	Qué hacer después de retirar D1
+8326	Número recopilado
+30174	La nueva q se pone a cero por error: producto escalar 1
+16140	¿Cómo actualizar la memoria anterior sin destruir el historial cuando aparecen hechos nuevos?
+30130	Las casillas representan los elementos simbólicos actuales; una casilla no equivale necesariamente a un carácter.
+14547	Si el modelo ya continúa con el siguiente token, ¿por qué necesita SFT y entrenamiento de preferencias?
+22107	Ambas versiones aciertan 12, se corrigen 5, empeora 1 y ambas fallan 2; calcular 13/20 para la anterior y 17/20 para la nueva y explicar después cada una de las 6 tareas discrepantes.
+30122	Instante 0
+30124	Instante 1
+30126	Instante 2
+30128	Instante 3
+9233	Duración (segundos didácticos)
+12556	Elemento ordinario del vocabulario
+18003	Campos mínimos para el traspaso
+30261	Objetivo final p
+8337	Hay pruebas válidas
+6838	Esperado
+4895	Contenido de este ejemplo
+8325	Condiciones de este ejemplo:</strong> registros independientes: un comando de pruebas termina con código 0, pero se recopilan 0 casos; en otra ejecución pasan 12 casos, pero se ejecutan en r7 y el código final ya ha cambiado a r8.
+18012	Código y registros locales
+30190	Relaciones visibles en esta ejecución
+18015	Resultados de las pruebas de mecanismos de este turno
+30158	La longitud de las barras es proporcional a la probabilidad; las divisiones son las probabilidades acumuladas sin redondear. argmax elige A; con el número de muestreo dado 0.70 se elige B. No es la exactitud de una respuesta completa.
+20343	Fuente S004, montaje de entradas y bucle de ejecución de Codex
+18945	Fuente S039, caché de prefijos de prompts
+20344	Fuente S068, mecanismos de funcionamiento de Claude Code
+20372	Fuente S071, aislamiento y permisos de subagentes
+19099	Fuente S085, efectos de la posición en contextos largos
+19100	Fuente S088, ventana declarada y capacidad efectiva
+20788	Fuente S089, estado opaco de compactación y ejecución continua
+20800	Fuente S130, desarrollo sostenido entre contextos
+17735	Construir el bucle
+30127	Consultar el vocabulario fijo
+2725	Las etiquetas son los objetivos correctos con los que se compara; el entrenamiento del siguiente token alinea cada posición de entrada con el token posterior. Teacher forcing calcula usando el prefijo real de los datos, sin sustituirlo por el resultado recién muestreado.<span class="concept-micro">Ejemplo independiente: para la secuencia completa [a,b,c,d], se pueden usar las entradas [a,b,c] con las etiquetas [b,c,d]. Si la interfaz ya desplaza las etiquetas, no hay que volver a desplazarlas desde fuera.

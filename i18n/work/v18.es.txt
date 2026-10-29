@@ -1,0 +1,492 @@
+11790	La unidad de desplazamiento de LSP se basa en el protocolo fijo 3.17, en 
+16075	LSP (protocolo de servidor de lenguaje)</strong> permite al editor solicitar al servicio de lenguaje funciones como «dónde está la definición», «qué referencias hay» o «si hay errores de tipo». Es un protocolo de comunicación; el servicio de lenguaje correspondiente realiza el análisis real.
+21732	LangGraph distingue flujos predefinidos de agentes dinámicos y ofrece patrones de orquestación como enrutamiento, paralelismo y coordinación. Que el marco pueda expresar un patrón no implica que haya que usar todos.
+21447	Los puntos de control de sesión de LangGraph y el Store a largo plazo tienen responsabilidades distintas. Los primeros permiten recuperar el estado del hilo actual; el segundo organiza información entre hilos. La persistencia concreta depende de la implementación utilizada.
+24461	Late interaction y correspondencias detalladas.
+10509	Desplazamiento de LayerNorm; coeficientes de suavizado de Adam; coeficiente de configuración de DPO
+13432	LayerNorm resta primero μ y después divide por 
+13978	Qué fila normaliza realmente LayerNorm
+13429	Qué añaden la «media y varianza» de LayerNorm
+14061	Media y varianza de LayerNorm
+13980	LayerNorm: cada celda se calcula a lo largo de la misma fila de características
+17454	Learning rate / tasa de aprendizaje η
+24316	Linear almacena weight como [out,in]; relación de transposición con W[in,out], que este libro multiplica por la derecha.
+9370	Relación de Little
+24948	En un sistema estable, la ley de Little establece
+22328	LiveCodeBench utiliza tareas de código actualizadas en el tiempo para evaluar problemas más recientes y estudiar el riesgo de contaminación. Los datos dinámicos ayudan a reducir ciertos problemas de memorización, pero no demuestran que no haya absolutamente ningún contenido de entrenamiento similar.
+19095	Llama3, DeepSeek-V3 y Qwen3 ofrecen casos de sistemas distintos. Al leer los informes hay que distinguir arquitectura, datos, entrenamiento, posentrenamiento y optimización del servicio; no atribuir el rendimiento global a un solo componente ni tomar informes históricos como clasificaciones actuales.
+19286	El informe de Llama3 presenta arquitectura, datos, entrenamiento, posentrenamiento y evaluación como un sistema completo. La lectura debe centrarse en cómo las distintas elecciones influyen juntas en las capacidades, además de recordar el número de parámetros o la clasificación de entonces.
+21500	LoCoMo se centra en la memoria y la asociación a lo largo de conversaciones muy extensas. La distancia temporal añade complejidad a las relaciones entre entidades, eventos y tiempos, además de aumentar la cantidad de texto de entrada.
+22801	LoRA, QLoRA, AWQ y destilación
+31258	Ruta principal de LoRA
+15164	Si LoRA congela la W base, ¿significa que la propagación hacia delante deja de usar W?
+22802	LoRA congela los pesos base y usa incrementos de rango bajo
+903	LoRA solo entrena las rutas incrementales seleccionadas y no garantiza automáticamente que todas las filas nuevas de Embedding sean entrenables. Hay que comprobar
+2604	Pequeño balance de LoRA
+31261	Rama LoRA
+15080	LoRA no modifica todo el modelo base
+10658	LoRA representa parte del incremento de los pesos mediante el producto de dos matrices menores, en lugar de volver a entrenar toda la matriz grande. r es la dimensión intermedia y limita el rango máximo de ese producto. El orden de A y B puede variar entre fuentes que adoptan convenciones de vectores fila o columna.
+2557	Dimensiones y flujo de gradientes de LoRA
+22839	Qué forma tiene exactamente un incremento LoRA de rango 1
+14606	Qué parte entrena exactamente LoRA
+22837	LoRA aprende incrementos de los pesos base mediante matrices de rango bajo, normalmente congelando los pesos originales para reducir los parámetros entrenables. Cambia el comportamiento mediante la parametrización; no es recuperación ni memoria de conversación.
+27548	LoRA: congelar la tabla grande y aprender pequeños incrementos — Ingeniería de sistemas de IA
+27549	LoRA: congelar la tabla grande y aprender pequeños incrementos</a><a href="#topic-3">Explicación paso a paso y registro de cálculo
+27556	LoRA: congelar la tabla grande y aprender pequeños incrementos: ilustración de la ejecución paso a paso
+16849	Log: eventos concretos
+20865	LongBench evalúa la comprensión de contexto largo con varias tareas y entradas extensas. Distintas tareas pueden exigir recuperación, resumen o síntesis de información; una sola puntuación no representa todas las capacidades para tareas largas.
+21382	LongMemEval y LoCoMo convierten la memoria de interacciones prolongadas en tareas medibles, pero responder preguntas de una conversación no equivale a dejar de cometer errores de ingeniería. El experimento original compara ausencia de memoria, reglas estáticas y memoria de evidencia bajo demanda, y cubre reglas antiguas todavía aplicables, cambios de versión, proyectos distintos con el mismo nombre y falta de evidencia.
+21482	LongMemEval convierte la conservación, actualización y uso de información en interacciones largas en tareas evaluables. Poder almacenar mucho historial no implica recuperar la versión correcta en el momento adecuado.
+7246	LongMemEval incluye explícitamente actualización de conocimiento y capacidad de abstenerse de responder.
+25578	Evaluaciones como LongMemEval incluyen retos de uso de información entre sesiones, tiempo y actualización; muestran que evaluar la memoria requiere más que una única pregunta factual.
+17260	Lookup / consulta de tabla
+13783	Qué es Loss mask
+20779	Lost in the Middle estudia los efectos de la posición; LongBench y RULER examinan el contexto largo con varias tareas. Aceptar una longitud no significa poder completar fiablemente todas las tareas, y recuperar una aguja difiere de combinar restricciones de varios puntos. Las conclusiones dependen del modelo, la tarea y los distractores.
+20830	Lost in the Middle estudia cómo afecta al rendimiento del modelo la posición de información pertinente en entradas largas. Sus conclusiones proceden de modelos y tareas concretos; no deben presentarse como si todos los modelos nuevos fallaran necesariamente en el centro.
+3803	L→Gz=(p−onehot)/10→U propaga hacia atrás al F final→RMSNorm hasta H→confluyen la conexión residual/FFN en R→Wo hasta mix→G_A→softmax hasta G_S→producto escalar escalado hasta G_Q→Σ_b,t N1[b,t,0]G_Q[b,t,0]. También hay que combinar las rutas K/V y residual para entradas anteriores; con esta inicialización, G_Wq[0,0]≈−0.002217527833.
+17201	L (número de capas)
+9124	Memoria M1
+28082	La salida de M1 no es la respuesta final, sino:
+28095	M2 emite dos acciones de lectura según el resultado de localización:
+22617	A M2 le falta el resultado de U7
+30902	M2 puede decidir qué rangos seguir leyendo
+28119	M3 emite la llamada c4 para ejecutar pruebas, en lugar de «ya lo he verificado»:
+28180	M5 ve c19 unknown y elige:
+28185	M6 llama a las pruebas c21, cuyo resultado debe indicar qué pruebas se ejecutaron realmente sobre r43. Si se superan, se comprueban el alcance de los cambios y las restricciones del usuario antes de la entrega final. Si el código fuente vuelve a cambiar durante las pruebas, el resultado no demuestra automáticamente que la versión nueva sea correcta; hay que volver a comprobar el alcance afectado.
+21052	MAP combina las posiciones de los resultados pertinentes; nDCG admite relevancia graduada, la descuenta por posición y normaliza. Si se desconoce el conjunto pertinente, la propia exhaustividad también resulta difícil de medir con precisión.
+27876	MCP · Arquitectura de MCP
+11834	MCP-LIFE · MCP 2025-06-18: ciclo de vida
+11836	MCP-TOOLS · MCP 2025-06-18: herramientas
+20115	Límites entre MCP y A2A
+17562	Roles de aplicación anfitriona, cliente de protocolo y servidor que ofrece capacidades en MCP.
+20248	MCP ofrece interacciones normalizadas para conectar aplicaciones de modelos con capacidades externas. No es un modelo ni garantiza la disponibilidad de todas las herramientas y tampoco resuelve automáticamente la autorización.
+25864	MCP distingue Host, Client y Server y admite interfaces como herramientas y recursos. Descubrir una herramienta solo indica que su interfaz puede listarse; llamarla requiere además transporte, identidad, autorización y comprobaciones del servidor. La descripción de la herramienta no demuestra permisos.
+15606	MCP proporciona interfaces de descubrimiento y llamada, pero conectar no implica que todas las herramientas estén cargadas ni que todas las acciones estén autorizadas. La herramienta didáctica deploy aparece en el catálogo, pero no puede ejecutarse sin aprobación de despliegue. Aunque read_file esté instalada, el modelo puede desconocerla si no aparece en el catálogo visible de este turno. Distinguir primero «existe, se puede descubrir, se puede ejecutar y está permitido ejecutarla» permite localizar la capa que falla.
+9083	Las prácticas de seguridad MCP y el diseño de API idempotentes destacan, respectivamente, los límites de confianza y una misma intención de llamada.
+9537	El diseño seguro de MCP exige correspondencia entre recursos y permisos; las prácticas de API idempotentes exigen aclarar la intención de llamadas repetidas; y la evaluación de agentes exige observar resultados reales del entorno, además de declaraciones textuales.
+10706	MCP es un protocolo que permite a una aplicación anfitriona de IA conectar herramientas y recursos. Host es la aplicación, Client un participante interno en la conexión del protocolo y Server ofrece capacidades. Conectar, descubrir, exponer al modelo, autorizar y llamar realmente son pasos distintos.
+16778	Un servicio MCP puede ejecutarse en otro entorno y con otra identidad. Hay que examinar toda la ruta de datos: el modelo propone una acción→la aplicación anfitriona comprueba→el servicio de herramientas ejecuta→el sistema externo responde. Un sandbox local no cubre automáticamente todos los sistemas conectados.
+20266	La arquitectura MCP distingue Host, Client y Server y organiza primitivas como herramientas, recursos y prompts. Las herramientas ejecutan acciones, los recursos aportan contenido y los prompts estructuras reutilizables de interacción; sus responsabilidades difieren.
+4685	MCP resuelve la conexión y la descripción de capacidades, sin decidir por el negocio la autorización. Representar primero «la herramienta existe», «es visible para el modelo esta vez» y «el usuario actual puede ejecutarla» como tres controles y después estudiar Schema y los detalles del protocolo evita confundir descubrimiento satisfactorio con permisos.
+4828	El ID de solicitud MCP asocia respuestas de protocolo; el call_id del modelo asocia elementos de salida del modelo. La aplicación anfitriona puede necesitar mantener la correspondencia entre ambos; no hay que suponer que los ID sean idénticos.
+20116	MCP conecta Host, Client y Server y distingue herramientas, recursos y prompts. El protocolo normaliza interacciones, pero no garantiza que el servicio sea fiable, que se hereden permisos ni que el modelo lo invoque. Hay que verificar también la versión, la autenticación y la negociación de capacidades.
+27329	MCP conecta interfaces, pero no concede permisos automáticamente — Ingeniería de sistemas de IA
+15668	MCP conecta interfaces, pero no concede permisos automáticamente</a><a href="#foundations-25-s1">No entender MCP como «instalar un cerebro nuevo al modelo»</a><a href="#foundations-25-s2">Secuencia lógica desde la conexión hasta el resultado de la herramienta</a><a href="#foundations-25-s3">Qué son Tools, Resources y Prompts</a><a href="#foundations-25-s4">El Schema de la herramienta no debe sustituir al juicio de negocio</a><a href="#foundations-25-s5">Comprender primero las responsabilidades de stdio, HTTP y JSON-RPC</a><a href="#foundations-25-s6">Identidad, autenticación y autorización</a><a href="#foundations-25-s7">Por qué un subagente puede no heredar todas las herramientas</a><a href="#self-check">Autoevaluación
+15571	MCP conecta interfaces, pero no concede permisos automáticamente</a><a href="#foundations-25-s1">No entender MCP como «instalar un cerebro nuevo al modelo»</a><a href="#foundations-25-s2">Secuencia lógica desde la conexión hasta el resultado de la herramienta</a><a href="#foundations-25-s3">Qué son Tools, Resources y Prompts</a><a href="#foundations-25-s4">El Schema de la herramienta no debe sustituir al juicio de negocio</a><a href="#foundations-25-s5">Comprender primero las responsabilidades de stdio, HTTP y JSON-RPC</a><a href="#foundations-25-s6">Identidad, autenticación y autorización</a><a href="#foundations-25-s7">Por qué un subagente puede no heredar todas las herramientas</a><a href="#self-check">Autoevaluación</a><a class="sub ap-toc" href="#agent-foundation-tools">Cuatro controles entre el nombre de una herramienta y la capacidad real
+27330	MCP conecta interfaces, pero no concede permisos automáticamente</a><a href="#topic-3">Explicación paso a paso y registro de cálculo
+25851	La comunicación MCP y la autorización de negocio pertenecen a capas distintas; hay que examinar por separado el schema de herramientas, la identidad y los límites de red y archivos.
+16276	MCP: conectar herramientas externas
+27887	MEMORY · Arquitectura cognitiva CoALA
+27828	MEMORY · Arquitectura cognitiva CoALA</a><a href="#topic-34">SKILLS · Especificación Agent Skills</a><a href="#topic-35">MULTI · Ingeniería de sistemas de investigación multiagente</a><a href="#topic-36">TEST · Criterios de revisión de código</a><a href="#topic-37">EVAL · Evaluación de agentes</a><a href="#topic-38">SECURITY · Seguridad y control de agentes
+19091	MHA, MQA, GQA y MoE
+24696	En MHA, cada cabeza Q suele tener sus cabezas K y V correspondientes; GQA permite que un grupo de cabezas Q comparta una cabeza K y V; MQA puede verse como el extremo de una sola cabeza KV. Si h no cambia y g disminuye, se reducen la caché y las salidas de proyecciones K/V, mientras las cabezas Q pueden seguir produciendo distribuciones de atención distintas con representaciones Q diferentes.
+11619	En la máscara booleana de MHA, True prohíbe la posición correspondiente, lo contrario de la semántica de SDPA.
+19092	MHA suele proporcionar KV independientes para cada cabeza de consulta; MQA comparte un solo grupo KV y GQA los comparte por grupos de consultas. Reducir las cabezas KV beneficia a la caché y el ancho de banda, pero no garantiza una aceleración proporcional del sistema completo. MoE aporta dispersión en otra capa: un enrutador elige pocas redes expertas para procesar tokens, no reúne a varios agentes de chat. Los parámetros totales y los activados tampoco son la misma cantidad.
+29617	MHA: cada cabeza de consulta tiene sus propias K/V
+24431	MLA, MoE y arquitecturas relacionadas; solo se explican los mecanismos utilizados, sin afirmar que se reproducen todos los experimentos del informe.
+10842	MLA designa una familia de arquitecturas de atención latente multicabeza. Organiza conjuntamente el contenido relacionado con K/V mediante representaciones latentes de menor dimensión y trata la parte posicional según su diseño. Cambia la representación del modelo y la estructura de sus parámetros; no se limita a comprimir un archivo KV normal con ZIP.
+10222	Límites de MLA
+29619	MQA: todas las cabezas de consulta comparten un grupo K/V
+21337	Las contribuciones a MRR son distintas.
+27891	MULTI · Ingeniería de sistemas de investigación multiagente
+22070	El artículo Managed Agents aborda la separación entre ejecución del modelo, estado de sesión y entorno de ejecución. Puede reducir el efecto de un fallo de un contenedor o proceso en la continuidad de toda la tarea, pero exige diseñar más límites.
+22596	El caso Managed Agents desacopla eventos de sesión, harness de ejecución y sandbox, reduciendo el acoplamiento de los fallos del entorno de ejecución. Un agente local pequeño no necesita dividirse inmediatamente en varios servicios, pero puede mantener interfaces claras y añadir capacidad de recuperación gradualmente.
+27160	Mask es una tabla de visibilidad, no semántica adicional — Ingeniería de sistemas de IA
+27161	Mask es una tabla de visibilidad, no semántica adicional</a><a href="#topic-3">Explicación paso a paso y registro de cálculo
+13727	Mask es una tabla de reglas
+13725	Una Mask (máscara)</strong> es un conjunto de marcas que controla qué elementos pueden participar en una operación. En atención, cada fila es una posición de consulta y cada columna una posición que se lee. Por tanto, una celda responde «¿puede esta fila leer esta columna?».
+21536	Mem0 estudia la extracción, el mantenimiento y el uso de memoria a escala. La extracción automática reduce el registro manual, pero decidir qué merece conservarse a largo plazo sigue siendo un juicio sujeto a errores.
+21410	MemGPT toma ideas del almacenamiento jerárquico y gestiona información dentro y fuera del contexto para afrontar una ventana limitada. El almacenamiento externo y el intercambio de contenido no dan un contexto físico infinito a una sola llamada del modelo.
+21359	MemGPT toma ideas del almacenamiento jerárquico para gestionar la entrada y salida de información del contexto. El «contexto virtual» depende del almacenamiento externo y la planificación; no significa que una llamada del modelo procese contenido ilimitado. Checkpoint guarda el estado de ejecución del hilo; el Store a largo plazo guarda información entre tareas. Elegir una implementación en memoria tampoco proporciona automáticamente persistencia tras reiniciar el proceso.
+17090	Memory: conservación entre tareas
+28969	Archivo fuente Mermaid
+16850	Metrics: cuantificación global
+17496	MoE / mezcla de expertos
+2550	El router de MoE es un cálculo entrenable interno del modelo a escala de token; el enrutamiento de agentes suele elegir un modelo completo, una herramienta o una habilidad a escala de solicitud o subtarea. Sus presupuestos, métodos de entrenamiento y modos de fallo difieren. Que «MoE ya enruta» no elimina la necesidad de repartir tareas entre agentes.
+15106	Por qué MoE tiene muchos parámetros, pero solo invoca parte
+10232	MoE cambia la selección dispersa del cálculo de propagación hacia delante; MLA cambia la representación de atención;
+10630	MoE es una arquitectura de modelo que contiene varias subredes; el enrutador selecciona o pondera unos pocos expertos para la representación del token actual. Los expertos suelen ser subredes numéricas, no agentes de chat a los que se asigna un prompt como «profesor de matemáticas».
+2526	Si el enrutamiento MoE elige dos expertos, cómo se combinan los resultados
+15107	MoE (mezcla de expertos)</strong> dispone en algunas capas varios grupos de subredes seleccionables. El enrutador elige algunos expertos según la representación del token actual y combina sus resultados. Por ejemplo, con 8 expertos, cada token elige solo 2.
+27671	MoE: cada token elige parte de las rutas de cálculo — Ingeniería de sistemas de IA
+27672	MoE: cada token elige parte de las rutas de cálculo</a><a href="#topic-3">Explicación paso a paso y registro de cálculo
+27679	MoE: cada token elige parte de las rutas de cálculo: ilustración de la ejecución paso a paso
+8370	Los Mock hacen las pruebas rápidas y deterministas y permiten aislar comportamientos locales; la integración real verifica protocolos, configuración y límites. Si todo se sustituye por mocks, pueden pasarse por alto condiciones reales de
+19550	Model Spec describe el comportamiento esperado y el tratamiento de conflictos de instrucciones; es una especificación, no una garantía de permisos en ejecución. Este libro explica los conceptos con la versión verificable 2025-12-18, sin presentar una versión histórica como la más reciente.
+19910	Model Spec es una especificación de comportamiento esperado, no un sistema de permisos de ejecución. El texto explica conceptos a partir de una versión histórica verificable y no afirma representar el comportamiento más reciente de todos los modelos. El contenido de baja confianza puede aportar hechos, pero no autorizarse por sí mismo; las instrucciones de alta prioridad restringen el comportamiento sin hacer eternamente correctos sus hechos externos.
+1223	El modo eval de un Module cambia su comportamiento; no convierte mágicamente en 0 los argumentos de cualquier función. La documentación de PyTorch aclara que SDPA depende de
+10854	MultiheadAttention incluye la lógica completa de una capa, como las proyecciones; scaled_dot_product_attention calcula directamente la atención entre las Query/Key/Value dadas. Comprobar qué fase corresponde a la interfaz evita proyectar dos veces y usar mal la polaridad de la máscara. Aquí no se promete la misma disposición en todas las bibliotecas.
+17659	Mutation / pruebas de mutación
+25741	La puntuación de Mutation tampoco representa por sí sola la calidad. Muchas mutaciones mecánicas carecen de significado de negocio y ciertas transformaciones equivalentes no deben hacer fallar las pruebas. Priorizar controles negativos para modos de fallo reales aporta más que perseguir ciegamente la eliminación de todas las mutaciones.
+20995	M no equivale al prefijo H
+17198	N / V (vocabulario)
+26750	N01 · Codex Agent Loop: bucle de modelo, contexto y herramientas
+26740	N01 · Codex Agent Loop: bucle de modelo, contexto y herramientas</a><a href="#section-2">N02 · Codex project_doc.rs: descubrimiento y presupuesto de reglas del proyecto</a><a href="#section-3">N03 · Codex codex.rs: contexto inicial y run_turn</a><a href="#section-4">N04 · Codex compact.rs: una ruta de compactación local</a><a href="#section-5">N05 · Conversión de eventos de respuesta SSE de Codex</a><a href="#section-6">N06 · OpenAI Compaction: estado de compactación y conversaciones continuas
+26756	N02 · Codex project_doc.rs: descubrimiento y presupuesto de reglas del proyecto
+26760	N03 · Codex codex.rs: contexto inicial y run_turn
+26762	N04 · Codex compact.rs: una ruta de compactación local
+26764	N05 · Conversión de eventos de respuesta SSE de Codex
+26767	N06 · OpenAI Compaction: estado de compactación y conversaciones continuas
+13519	Resultados de multiplicar N1 por cada parámetro anterior en esta ejecución
+26805	N32 · Libro de recuperación de información de Stanford: BM25
+26743	N32 · Libro de recuperación de información de Stanford: BM25</a><a href="#section-33">N33 · Tipos de índices de Faiss</a><a href="#section-34">N34 · Metamodelo oficial de LSP 3.17
+26808	N33 · Tipos de índices de Faiss
+26811	N34 · Metamodelo oficial de LSP 3.17
+1479	Qué afectan los cambios de Norm, Dropout y compartición de pesos
+10462	Funciones Norm, softmax, mask y estado de ejecución
+10610	Norm representa una función de normalización en las fórmulas de las capas. LayerNorm suele restar la media de las características de un token, dividir por la desviación estándar y aplicar escalado y traslación; RMSNorm suele escalar por la raíz de la media de cuadrados sin restar la media. No equivalen a softmax.
+10123	N pasa a 20 × cien millones
+6098	N es el número de documentos; df, los documentos que contienen el término; tf, sus apariciones en el documento actual; |d|, la longitud; y avgdl, la longitud media. k1 afecta a la velocidad de saturación y b controla la normalización por longitud: b=0 no ajusta por longitud y b=1 ajusta más plenamente por longitud relativa. La tokenización y la unidad de indexación afectan a todas las estadísticas.
+10105	N se reduce aproximadamente a la mitad
+15199	Qué significa exactamente O(T²)
+26970	O01 · 4 pasos
+27805	O01 · GQA/MQA: lo que se reduce es el número de grupos K/V
+26973	O02 · 4 pasos
+27809	O02 · Cuantización: ahorrar almacenamiento e introducir aproximaciones
+27271	O02 · Cuantización: ahorrar almacenamiento e introducir aproximaciones</a><a href="O03.html">O03 · LoRA: congelar la tabla grande y aprender pequeños incrementos</a><a href="O08.html">O08 · MoE: cada token elige parte de las rutas de cálculo
+26976	O03 · 4 pasos
+27810	O03 · LoRA: congelar la tabla grande y aprender pequeños incrementos
+26979	O04 · 5 pasos
+27811	O04 · FlashAttention: leer y acumular sin almacenar la tabla entera
+27282	O04 · FlashAttention: leer y acumular sin almacenar la tabla entera</a><a href="O05.html">O05 · PagedAttention: continuidad lógica con posibles bloques físicos</a><a href="O06.html">O06 · Procesamiento continuo por lotes: incorporar al siguiente cuando queda un sitio libre</a><a href="O09.html">O09 · Activation Checkpointing: guardar menos y recalcular en la propagación hacia atrás
+26982	O05 · 4 pasos
+27812	O05 · PagedAttention: continuidad lógica con posibles bloques físicos
+26985	O06 · 4 pasos
+27813	O06 · Procesamiento continuo por lotes: incorporar al siguiente cuando queda un sitio libre
+26988	O07 · 5 pasos
+27814	O07 · Decodificación especulativa: el borrador puede ser rápido, pero hay que verificarlo correctamente
+26991	O08 · 4 pasos
+27815	O08 · MoE: cada token elige parte de las rutas de cálculo
+26994	O09 · 5 pasos
+27816	O09 · Activation Checkpointing: guardar menos y recalcular en la propagación hacia atrás
+26997	O10 · 4 pasos
+27817	O10 · Compactación, recuperación y Prompt Cache: tres formas distintas de «ahorrar»
+27000	O11 · 4 pasos
+27818	O11 · Múltiples agentes: importa más el trabajo paralelizable que el número de agentes
+27003	O12 · 4 pasos
+27819	O12 · Enrutamiento de modelos: una llamada barata no implica un coste bajo por tarea completada con éxito
+23024	OSWorld evalúa tareas de agentes multimodales en entornos informáticos reales. Incluye planificación, localización, acciones y verificación de resultados, además del reconocimiento de elementos de interfaz.
+26132	Benchmarks como OSWorld evalúan tareas abiertas en entornos informáticos reales y destacan el estado final del entorno, además de la corrección de una descripción de captura. El sistema operativo, las versiones de aplicaciones, la resolución y el estado inicial afectan al resultado; una puntuación de benchmark no representa directamente la fiabilidad de cualquier automatización de escritorio.
+22528	OWASP Agentic Security Initiative ofrece un punto de acceso continuo a investigación y gobernanza. La seguridad exige reevaluar a medida que cambian herramientas, permisos y entornos, además de instalar un comprobador una sola vez.
+22395	Los materiales de seguridad LLM de OWASP ofrecen categorías de riesgo y análisis de defensas. Las versiones se actualizan; este libro desarrolla mecanismos y no presenta numeraciones antiguas sin verificar individualmente como si fueran la lista completa de 2026.
+17255	One-hot / codificación one-hot
+12789	One-hot y Embedding sí tienen una relación matemática:</strong> si se trata One-hot como una fila numérica y se multiplica por una matriz Embedding de 6 filas y 4 columnas, se selecciona exactamente la fila 2. Es una expresión matemática equivalente; las implementaciones suelen consultar directamente por identificador, sin generar realmente los 6 valores 0/1 antes de multiplicar matrices.
+12788	One-hot tampoco es un número binario en el sentido habitual:</strong> su longitud depende del número de elementos del vocabulario y aumenta al crecer este. En cambio, la representación binaria del entero 2 depende del formato de almacenamiento del entero.
+12782	Vector One-hot
+20901	OpenAI Compaction proporciona estados específicos de compactación para mantener interacciones largas en un contexto limitado. Parte de lo devuelto es una representación opaca o cifrada, que no debe suponerse equivalente a un resumen humano editable.
+20365	El artículo de ingeniería de OpenAI procede de un caso de un equipo concreto y destaca el conocimiento organizado y descubrible en el repositorio y los límites importantes mantenidos por comprobaciones ejecutables, en lugar de amontonar todas las reglas en un archivo de entrada enorme. Los resultados del caso no son promesas de eficiencia para todos los proyectos.
+25913	OpenTelemetry proporciona convenciones semánticas de IA generativa y tanto su ubicación como sus campos evolucionan. Este libro usa conceptos estables —tarea, llamada, herramienta y verificación— sin fijar en el código un campo inestable como estándar eterno. Al integrarlo en producción deben fijarse las versiones del SDK y las convenciones.
+22631	Las convenciones semánticas GenAI de OpenTelemetry intentan unificar cómo se registran operaciones de IA generativa. La especificación evoluciona continuamente y hay que comprobar los campos y el soporte según la versión.
+10735	Outbox persiste juntos el cambio de negocio y el mensaje pendiente de envío, que después reenvía un despachador; Saga organiza pasos entre servicios como un flujo compensable. Son diseños para la fiabilidad entre límites, pero no garantizan por naturaleza una única ejecución remota exacta.
+7972	Outbox persiste juntos el cambio de negocio y el mensaje pendiente de envío, que después reenvía un despachador; Saga organiza pasos entre servicios como un flujo compensable. Son diseños para la fiabilidad entre límites, pero no garantizan por naturaleza una única ejecución remota exacta.<span class="concept-micro">Normalmente no se puede conseguir que el destinatario «no haya visto» un correo ya enviado. La compensación puede consistir en enviar una corrección y no equivale a deshacer realmente el efecto histórico.
+27835	PADDING · Procesamiento por lotes, relleno y truncamiento
+13752	No fusionar PAD, attention mask y loss mask
+24704	PAD no es una palabra válida del historial.
+14747	PAD no es una posición final válida
+14431	PAD no aporta pérdida ni cuenta como elemento válido
+13761	Posiciones PAD: 1,1,0
+12864	El vector PAD contiene solo 0
+14306	PAD y las etiquetas ignoradas no cuentan
+28987	PAD es un marcador de relleno, no la tercera palabra de «你爱».
+1573	Posición de consulta PAD 2
+13765	La fila de consulta PAD no es una salida significativa en esta ejecución: no se usa para continuar generando y su predicción no se incluye en la pérdida normal. Para evitar problemas numéricos en filas totalmente enmascaradas, hay que respetar la semántica de la interfaz del kernel real, sin llenar ciegamente toda la fila con infinito negativo.
+12861	Si la fila PAD es cero, ¿puede prescindirse de la mask?
+12863	Si la fila PAD es cero, ¿se puede prescindir de mask?: distinguir elemento por elemento
+12827	PAD (no pertenece al original)
+22905	La biblioteca PEFT organiza métodos de ajuste fino eficiente en parámetros y ayuda a implementar entrenamiento de adaptación. Reduce el coste de implementación, pero no sustituye la gestión de datos de entrenamiento, licencias, evaluación y compatibilidad de despliegue.
+14641	Por qué no se intercambian PPO y GRPO solo por sus siglas
+2434	PPO suele utilizar el cociente de probabilidades entre las políticas nueva y anterior
+14642	PPO es una familia de métodos de optimización de políticas que suele controlar las actualizaciones con cocientes de probabilidad entre políticas nueva y anterior y mecanismos de recorte; algunos flujos RLHF entrenan modelos de recompensa y estimaciones de valor. Los métodos del tipo GRPO forman ventajas comparando dentro de un grupo varias muestras de la misma pregunta; siguen importando la implementación concreta y el diseño de recompensas.
+24846	En PPO se recorta la ventaja positiva; la negativa no sigue la misma selección
+2476	PPO también puede incluir estimación de valor y recorte del cociente de probabilidades
+19535	PPO mejora la estabilidad de optimización con diseños como limitar la actualización de la política y no se propuso originalmente para LLM. El entrenamiento de modelos de lenguaje puede tratar la generación como comportamiento de una política, pero las recompensas, el muestreo y las restricciones de referencia necesitan implementaciones concretas.
+3685	PP coloca las primeras capas en el dispositivo A y las últimas en B. Un micro-batch pasa primero por A y después envía sus activaciones a B; varios micro-batches forman un pipeline, con burbujas al iniciar y terminar. Si el cálculo entre etapas está desequilibrado, los dispositivos rápidos esperan a los lentos; en inferencia, una secuencia autorregresiva debe volver a atravesar todas las etapas por cada token.
+11780	La PR está integrada; en ese commit, si se proporciona num_items_in_batch, se suma la pérdida y después se divide por ese número; la pérdida CausalLM desplaza primero logits y labels.
+17243	Padding / relleno
+12654	Padding (relleno)</strong> añade marcadores a las entradas cortas, sin añadir contenido nuevo con significado a la frase original. En este libro el identificador 0 corresponde a PAD; en modelos reales puede ser otro y requerir tratamiento según la configuración del modelo.
+12709	Padding: añadir marcadores de relleno
+15226	PagedAttention y procesamiento continuo por lotes
+3490	PagedAttention y lotes continuos: gestionar almacenamiento y planificación
+19815	PagedAttention gestiona la caché KV por bloques, reduce el desperdicio de espacio continuo reservado y admite el uso compartido correspondiente. Resuelve principalmente memoria y throughput del servidor; no mejora directamente la veracidad de las respuestas.
+27599	PagedAttention: continuidad lógica con posibles bloques físicos — Ingeniería de sistemas de IA
+27600	PagedAttention: continuidad lógica con posibles bloques físicos</a><a href="#topic-3">Explicación paso a paso y registro de cálculo
+27607	PagedAttention: continuidad lógica con posibles bloques físicos: ilustración de la ejecución paso a paso
+17699	Patch / codificación multimodal
+4038	Plan guarda los pasos que se espera completar; Checkpoint, la posición y el estado recuperables de ejecución; y la memoria a largo plazo, hechos o experiencias reutilizables en el futuro. Planificar «pruebas» no demuestra que se hayan ejecutado; una prueba superada en un Checkpoint no garantiza que se supere para siempre en otras versiones; y la experiencia «este tipo de interfaz debe ser idempotente» tampoco sustituye el estado de la llamada actual.
+13835	Position ID: qué posición ocupa
+11712	PositionEncodingKind (position.md blob 49f13964bc12c6e65c35a349c33e7e3314245c60) y versión del documento
+4347	PostToolUse bloquea
+21330	Precision mide cuántos resultados devueltos son pertinentes; Recall, cuánta evidencia necesaria se ha encontrado; MRR, MAP y nDCG incorporan además el orden y el grado de relevancia. Miden objetivos distintos y no se sustituyen entre sí.
+16580	Precision: cuántas predicciones positivas son realmente positivas
+10673	Prefill / Decode: dos fases de cálculo
+3687	La separación Prefill/Decode envía a los dispositivos Decode los estados necesarios, como KV, después del cálculo en los dispositivos Prefill. Cada recurso puede optimizarse para throughput o ancho de banda, pero la transferencia KV puede ser grande: en el ejemplo de la Lección 60, una secuencia de 32k ocupa 4GiB. Con una red lenta, un contexto corto o pocas solicitudes, las transferencias y las colas pueden anular el beneficio de separarlos.
+14751	Prefill y Decode son dos fases de ejecución
+19779	Prefill procesa entradas conocidas y Decode amplía la secuencia; difieren en paralelismo y acceso a memoria. No debe atribuirse toda la duración a una vaga «velocidad del modelo».
+19662	Prefill procesa entradas conocidas y Decode genera tokens nuevos paso a paso. El primero procesa la secuencia existente en paralelo por lotes; el segundo tiene dependencias autorregresivas. Sus necesidades de cálculo y acceso a memoria difieren: el tiempo de respuesta no se estima solo sumando tokens de entrada y salida.
+10674	Prefill procesa un tramo de entrada ya dado y forma representaciones y caché; Decode introduce el token recién elegido y predice el siguiente. El token nuevo seleccionado no produce sus propias K/V hasta la siguiente propagación hacia delante.
+24928	Prefill procesa todo el prefijo de entrada y sus operaciones matriciales suelen tener más paralelismo; Decode añade pocas posiciones por paso, pero debe leer los pesos y una KV creciente. El cuello de botella depende del batch, modelo, precisión y hardware: no se puede afirmar categóricamente que el primero esté siempre limitado por cómputo y el segundo por ancho de banda. Son orientaciones habituales de análisis, no conclusiones que prescindan de medir.
+2709	Predicción al final del Prefill
+2707	Entrada del Prefill
+28033	Entrada del Prefill [1,2,3]
+14752	Prefill (prellenado)</strong> procesa toda la entrada ya dada y genera las representaciones necesarias de cada capa y los resultados intermedios que pueden conservarse. Al terminar, la última posición ya tiene puntuaciones del token siguiente y permite seleccionar el primer token de salida.
+19675	Prompt Cache no es compactación
+15723	Por qué Prompt Cache necesita un prefijo estable
+19676	Prompt Caching reutiliza el cálculo de prefijos coincidentes; la compactación cambia la información realmente proporcionada. Un acierto de caché no significa que el contexto deje de ocupar ventana y perder la caché tampoco significa borrar el historial. Un prefijo estable favorece la reutilización, pero no justifica conservar grandes cantidades de reglas irrelevantes.
+19796	Prompt Caching reutiliza cálculos de prefijos idénticos que cumplen las condiciones, sin cambiar el contenido del contexto. Los umbrales, el tiempo de conservación y la facturación son reglas del producto, no constantes universales que puedan memorizarse sin versión.
+10797	Prompt Injection, sandbox y permisos
+16764	Prompt Injection (inyección de prompts)</strong> intenta cambiar el comportamiento del modelo mediante datos que entran en su contexto. La <strong>inyección indirecta</strong> oculta instrucciones maliciosas en páginas web, documentos, correos o resultados de herramientas, en lugar de presentarlas directamente como una solicitud normal del usuario.
+15695	Prompt assembly o context assembly</strong> es el proceso por el que la aplicación anfitriona selecciona y organiza estos contenidos. Incluye qué leer, además de identidad, orden, presupuesto y aplicabilidad de la evidencia.
+15616	Prompts: plantillas de instrucciones
+17064	Cómo elegir entre Prompt, RAG, Memory, Skill y Fine-tuning
+17087	Cómo elegir entre Prompt, RAG, Memory, Skill y Fine-tuning: distinguir elemento por elemento
+25606	Prompt, Skill, herramientas y modelos actúan en capas distintas; identificar primero el punto de fallo antes de cambiar el enrutamiento.
+23770	Los prompts, las herramientas, el recorte del contexto y la configuración del modelo pueden cambiar la calidad. Las revisiones oficiales de productos muestran que los ajustes del harness también causan regresiones; por eso hay que cubrir tareas largas, compactación, recuperación y casos límite.
+19933	Versiones de prompts y experimentos
+19959	Gestionar prompts implica plantillas, variables, reutilización y versiones. Reutilizar reduce el trabajo repetido de organización, pero hay que distinguir la evidencia y las restricciones de cada tarea; una plantilla no debe convertirse en un flujo largo y fijo para todos los casos.
+25996	La caché de prompts depende de prefijos reutilizables admitidos por el servicio. Las instrucciones de sistema y las definiciones de herramientas estables pueden ayudar, pero los hechos dinámicos de la tarea no deben quedar congelados para aumentar los aciertos. La Lección 59 distingue el estado KV de la caché facturable del servicio.
+20987	La caché de prompts reutiliza cálculos de prefijos iguales que cumplen las condiciones; la compactación y la edición cambian el contenido. Pueden influirse mutuamente, pero el alcance depende de la posición realmente modificada y de las reglas del producto.
+2704	Prompt de longitud 3, seguido de 2 tokens generados: indicar la longitud de cada turno
+16274	Prompt: instrucciones de este turno
+17088	Prompt: expresar la tarea
+17579	Provenance / trazabilidad de origen
+3139	Las matrices no cuadradas de SDPA de PyTorch 2.10 
+10852	PyTorch Linear · Parámetros y formas
+23244	PyTorch permite implementar modelos mediante tensores y diferenciación automática. La diferenciación automática calcula gradientes y el optimizador actualiza parámetros: son acciones distintas. La inferencia normalmente no necesita conservar el mismo grafo de entrenamiento.
+11863	Python 3.10 o posterior, solo biblioteca estándar. Ejecutar en el directorio descomprimido:
+23866	Python 3.10 o posterior, solo biblioteca estándar; sin API, cuenta ni red.
+9598	P declara la línea base v7 y el alcance de los cambios
+1862	P≈ 
+30473	Q · Participa en la correspondencia
+10454	Q/K/V, puntuaciones S, proporciones A, estados ocultos y logits
+27133	Q/K/V: calcular primero de dónde leer y después cuánto incorporar — Ingeniería de sistemas de IA
+27134	Q/K/V: calcular primero de dónde leer y después cuánto incorporar</a><a href="#topic-3">Explicación paso a paso y registro de cálculo
+27143	Q/K/V: calcular primero de dónde leer y después cuánto incorporar: ilustración de la ejecución paso a paso
+18275	Q001 · Dos llamadas al modelo en una tarea: qué sabe de más cada una</a><small>chapters/09.html · Subsección correspondiente del texto principal
+18544	Q001 · Dos llamadas al modelo en una tarea: qué sabe de más cada una</a><small>reading-notes/guide-04.html · Subsección correspondiente del texto principal
+18763	Q001 · Dos llamadas al modelo en una tarea: qué sabe de más cada una</a><small>reading-notes/guide-05.html · Subsección correspondiente del texto principal
+18383	Q001 · Dos llamadas al modelo en una tarea: qué sabe de más cada una</a><small>studies/chapters/09.html · Subsección correspondiente del texto principal
+3821	Q001｜Tras una frase del usuario, ¿cómo completa el agente la tarea con varias llamadas al modelo?
+18276	Q002 · El modelo dice «ya está escrito», pero el registro de tarea y el disco pueden mostrar otra cosa</a><small>chapters/09.html · Subsección correspondiente del texto principal
+3976	Q002｜¿Qué estados tiene un agente? ¿Por qué un resumen de conversación no sustituye la base de datos de tareas?
+18277	Q003 · Interfaces con y sin estado: la diferencia es quién conserva los objetos del turno anterior</a><small>chapters/09.html · Subsección correspondiente del texto principal
+18385	Q003 · Interfaces con y sin estado: la diferencia es quién conserva los objetos del turno anterior</a><small>studies/chapters/10.html · Subsección correspondiente del texto principal
+4042	Q003｜¿Cómo construyen la siguiente entrada una API sin estado y una sesión con estado? ¿Es el ID de sesión memoria a largo plazo?
+18278	Q004 · La decisión de terminar depende del incremento de evidencia, no del número de iteraciones por sí solo</a><small>chapters/09.html · Subsección correspondiente del texto principal
+4170	Q004｜¿Cuándo debe detenerse un agente? ¿Por qué «continuar hasta terminar» puede convertirse en un bucle infinito?
+18327	Q005 · Las condiciones de finalización deben incluir «qué no puede cambiar», además de un caso correcto</a><small>chapters/22.html · Subsección correspondiente del texto principal
+18411	Q005 · Las condiciones de finalización deben incluir «qué no puede cambiar», además de un ejemplo de éxito</a><small>studies/chapters/18.html · Subsección correspondiente del texto principal
+8236	Q005｜¿Cómo convertir requisitos vagos en condiciones de finalización verificables por el agente?
+18328	Q006 · Las pruebas superadas deben vincularse a «se ejecutaron realmente» y «versión actual»</a><small>chapters/22.html · Subsección correspondiente del texto principal
+18381	Q006 · Las pruebas superadas deben vincularse a «se ejecutaron realmente» y «versión actual»</a><small>studies/chapters/08.html · Subsección correspondiente del texto principal
+18413	Q006 · Las pruebas superadas deben vincularse a «se ejecutaron realmente» y «versión actual»</a><small>studies/chapters/18.html · Subsección correspondiente del texto principal
+18442	Q006 · Las pruebas superadas deben vincularse a «se ejecutaron realmente» y «versión actual»</a><small>studies/chapters/27.html · Subsección correspondiente del texto principal
+18450	Q006 · Las pruebas superadas deben vincularse a «se ejecutaron realmente» y «versión actual»</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+8314	Q006｜¿Por qué todas las pruebas superadas pueden encubrir una falsa finalización? ¿Cómo identificar pruebas débiles y verificaciones caducadas?
+18329	Q007 · El valor de la Review depende de evidencia nueva, no de añadir siempre otra ronda</a><small>chapters/22.html · Subsección correspondiente del texto principal
+18412	Q007 · El valor de la Review depende de evidencia nueva, no de añadir siempre otra ronda</a><small>studies/chapters/18.html · Subsección correspondiente del texto principal
+8393	Q007｜¿Cuándo merece la pena la Review? ¿Cómo evitar un ciclo infinito de análisis, revisión y rediseño?
+18330	Q008 · Probar el contrato de comportamiento del prompt, sin tratar cada byte como requisito de negocio</a><small>chapters/22.html · Subsección correspondiente del texto principal
+8449	Q008｜¿Por qué conviene evitar el uso masivo de instantáneas hash al probar un Skill o un prompt? ¿Qué debe probarse?
+18279	Q009 · El JSON de una llamada a función es un pedido; el ejecutor es quien lo cumple</a><small>chapters/10.html · Subsección correspondiente del texto principal
+4268	Q009｜¿Quién llama realmente a la función en Function Calling? ¿Cómo conoce el modelo los parámetros de las herramientas?
+11891	Q010 · Un carácter chino dividido en tres fragmentos de red: por qué no puede decodificarse cada fragmento
+18280	Q010 · Integridad de bytes, eventos y parámetros: tres requisitos que necesitan búferes distintos</a><small>chapters/10.html · Subsección correspondiente del texto principal
+18376	Q010 · Integridad de bytes, eventos y parámetros: tres requisitos que necesitan búferes distintos</a><small>studies/chapters/07.html · Subsección correspondiente del texto principal
+4384	Q010｜¿Por qué no se puede ejecutar al recibir medio JSON en streaming? ¿Cómo se analiza exactamente SSE?
+18281	Q011 · Que un resultado llegue antes no significa que corresponda a la primera llamada</a><small>chapters/10.html · Subsección correspondiente del texto principal
+4525	Q011｜¿Cómo emparejar los resultados desordenados de herramientas paralelas? ¿Qué errores puede corregir el modelo?
+18282	Q012 · Después de superar Schema, quedan la validez de negocio y la autorización</a><small>chapters/10.html · Subsección correspondiente del texto principal
+18378	Q012 · Después de superar Schema, quedan la validez de negocio y la autorización</a><small>studies/chapters/07.html · Subsección correspondiente del texto principal
+4585	Q012｜¿Cómo restringe Structured Outputs la generación? ¿Por qué cumplir Schema todavía no implica poder ejecutar?
+18283	Q013 · La granularidad de herramientas debe seguir unidades habituales de trabajo; tener menos funciones no siempre es mejor</a><small>chapters/11.html · Subsección correspondiente del texto principal
+4688	Q013｜¿Al diseñar herramientas para agentes conviene ofrecer muchas pequeñas o una universal?
+18284	Q014 · MCP negocia primero capacidades, después descubre herramientas y por último intenta llamarlas</a><small>chapters/11.html · Subsección correspondiente del texto principal
+4788	Q014｜¿Qué mensajes recorre MCP desde la conexión hasta la llamada a una herramienta? ¿Quiénes son Host, Client y Server?
+18285	Q015 · Recursos, prompts, herramientas y Skill: observar su reparto en una misma tarea</a><small>chapters/11.html · Subsección correspondiente del texto principal
+4881	Q015｜¿Qué son MCP Tools, Resources, Prompts y Skills?
+18286	Q016 · La capa del error determina si hay que corregir parámetros o la conexión</a><small>chapters/11.html · Subsección correspondiente del texto principal
+4929	Q016｜¿Cómo clasificar por capas los errores MCP? ¿Dónde están los límites de identidad y red?
+18291	Q017 · Antes de seleccionar materiales para el presupuesto del contexto, descontar el espacio que debe conservarse</a><small>chapters/13.html · Subsección correspondiente del texto principal
+5366	Q017｜¿Qué objetos deben formar la entrada de un turno del modelo? ¿Cómo calcular el presupuesto?
+18292	Q018 · Recuperar solo la línea coincidente puede perder las condiciones de decisión</a><small>chapters/13.html · Subsección correspondiente del texto principal
+18388	Q018 · Recuperar solo la línea coincidente puede perder las condiciones de decisión</a><small>studies/chapters/11.html · Subsección correspondiente del texto principal
+5441	Q018｜¿Cómo ahorra tokens la carga JIT sin omitir contenido clave? ¿Por qué completar el «cierre de dependencias»?
+18293	Q019 · La caché de prefijos reutiliza un tramo inicial idéntico, no «un significado parecido»</a><small>chapters/13.html · Subsección correspondiente del texto principal
+18427	Q019 · La caché de prefijos reutiliza un tramo inicial idéntico, no «un significado parecido»</a><small>studies/chapters/22.html · Subsección correspondiente del texto principal
+5524	Q019｜¿Por qué Prompt Cache exige un prefijo estable? ¿Cómo calcular sus ganancias y pérdidas después de compactar?
+18294	Q020 · Los conflictos de instrucciones y de hechos no se resuelven con la misma «prioridad a lo más reciente»</a><small>chapters/13.html · Subsección correspondiente del texto principal
+18389	Q020 · Los conflictos de instrucciones y de hechos no se resuelven con la misma «prioridad a lo más reciente»</a><small>studies/chapters/11.html · Subsección correspondiente del texto principal
+5607	Q020｜¿Cómo ordenar y resolver instrucciones y hechos contradictorios dentro del contexto?
+18315	Q021 · La aplicación efectiva de un Skill es una cadena de evidencia, no un registro de «loaded»</a><small>chapters/19.html · Subsección correspondiente del texto principal
+18398	Q021 · La aplicación efectiva de un Skill es una cadena de evidencia, no un registro de «loaded»</a><small>studies/chapters/14.html · Subsección correspondiente del texto principal
+18405	Q021 · La aplicación efectiva de un Skill es una cadena de evidencia, no un registro de «loaded»</a><small>studies/chapters/16.html · Subsección correspondiente del texto principal
+18447	Q021 · La aplicación efectiva de un Skill es una cadena de evidencia, no un registro de «loaded»</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+7268	Q021｜¿Qué etapas recorre un Skill desde estar en el disco hasta influir realmente en la salida?
+18316	Q022 · La calidad de la descripción de enrutamiento depende de distinguir positivos y contraejemplos cercanos</a><small>chapters/19.html · Subsección correspondiente del texto principal
+18404	Q022 · La calidad de la descripción de enrutamiento depende de distinguir positivos y contraejemplos cercanos</a><small>studies/chapters/16.html · Subsección correspondiente del texto principal
+7367	Q022｜¿Cómo escribir una Description de enrutamiento que no omita tareas límite ni se active en exceso?
+18317	Q023 · Poner en programas las acciones que deban ejecutarse con certeza, además de describirlas</a><small>chapters/19.html · Subsección correspondiente del texto principal
+18390	Q023 · Poner en programas las acciones que deban ejecutarse con certeza, además de describirlas</a><small>studies/chapters/11.html · Subsección correspondiente del texto principal
+7425	Q023｜¿Qué responsabilidades deben asumir Skill, Instruction, Hook, Tool y Agent?
+18318	Q024 · Al beneficio de probar primero un modelo barato hay que restar el retrabajo y los fallos no detectados</a><small>chapters/19.html · Subsección correspondiente del texto principal
+18369	Q024 · Al beneficio de probar primero un modelo barato hay que restar el retrabajo y los fallos no detectados</a><small>studies/chapters/04.html · Subsección correspondiente del texto principal
+18406	Q024 · Al beneficio de probar primero un modelo barato hay que restar el retrabajo y los fallos no detectados</a><small>studies/chapters/16.html · Subsección correspondiente del texto principal
+18426	Q024 · Al beneficio de probar primero un modelo barato hay que restar el retrabajo y los fallos no detectados</a><small>studies/chapters/22.html · Subsección correspondiente del texto principal
+7484	Q024｜¿Cómo optimiza costes el enrutamiento multimodelo sin sacrificar calidad? ¿Por qué no elegir el modelo solo por la longitud del prompt?
+18287	Q025 · Al leer el código, separar «registro, exposición, construcción de la llamada y despacho»</a><small>chapters/12.html · Subsección correspondiente del texto principal
+18545	Q025 · Al leer el código, separar «registro, exposición, construcción de la llamada y despacho»</a><small>reading-notes/guide-05.html · Subsección correspondiente del texto principal
+5023	Q025｜¿Qué objetos recorre una herramienta en el código de Codex desde ser visible para el modelo hasta despacharse realmente? ¿Cómo sustituye la compactación el historial?
+18288	Q026 · Hay que comprobar campo por campo lo que hereda un subagente, sin afirmar que «lo hereda todo»</a><small>chapters/12.html · Subsección correspondiente del texto principal
+18386	Q026 · Comprobar campo por campo qué hereda un subagente, en lugar de decir «lo hereda todo»</a><small>studies/chapters/10.html · Subsección correspondiente del texto principal
+5141	Q026｜¿Cómo obtiene Claude Code el contexto del proyecto? ¿Por qué un Subagent no es una copia completa del agente principal?
+18289	Q027 · Los espacios de trabajo de tareas de IDE, CLI y nube no son idénticos por naturaleza</a><small>chapters/12.html · Subsección correspondiente del texto principal
+18387	Q027 · Los espacios de trabajo de tareas de IDE, CLI y nube no son idénticos por naturaleza</a><small>studies/chapters/10.html · Subsección correspondiente del texto principal
+5240	Q027｜¿Por qué distinguir el IDE, el CLI y los agentes en la nube de Copilot?
+18290	Q028 · Convertir «no entiende mi proyecto» en cuatro hipótesis refutables</a><small>chapters/12.html · Subsección correspondiente del texto principal
+18382	Q028 · Convertir «no entiende mi proyecto» en cuatro hipótesis refutables</a><small>studies/chapters/09.html · Subsección correspondiente del texto principal
+5295	Q028｜¿Cómo convertir la queja «el producto no funciona bien» en un problema localizable?
+18299	Q029 · Al dividir en fragmentos, los encabezados de tabla y las excepciones pueden ser parte de la respuesta</a><small>chapters/15.html · Subsección correspondiente del texto principal
+6014	Q029｜¿Qué pasos recorre un archivo original hasta el índice de RAG? ¿Cómo dividir los Chunk?
+18300	Q030 · BM25 compara la frecuencia de términos y la longitud en el mismo denominador</a><small>chapters/15.html · Subsección correspondiente del texto principal
+18394	Q030 · BM25 compara la frecuencia de términos y la longitud en el mismo denominador</a><small>studies/chapters/13.html · Subsección correspondiente del texto principal
+11892	Q030 · Dos documentos contienen «exclusión»: por qué BM25 no se limita a contar apariciones
+6089	Q030｜¿Qué hace cada término de la fórmula BM25? ¿Por qué aparecer cuatro veces no garantiza más puntuación que dos veces?
+18301	Q031 · Tener la misma dimensión vectorial no significa compartir espacio de similitud</a><small>chapters/15.html · Subsección correspondiente del texto principal
+18395	Q031 · Tener la misma dimensión vectorial no significa compartir espacio de similitud</a><small>studies/chapters/13.html · Subsección correspondiente del texto principal
+18457	Q031 · Tener la misma dimensión vectorial no significa compartir espacio de similitud</a><small>studies/chapters/31.html · Subsección correspondiente del texto principal
+6141	Q031｜¿Cómo se entrenan los modelos de Embedding para recuperación? ¿Por qué similitud semántica no equivale a pertinencia para responder?
+18302	Q032 · Recuperar pocos candidatos y filtrarlos después puede dejar cero resultados</a><small>chapters/15.html · Subsección correspondiente del texto principal
+6225	Q032｜¿Cómo aproxima HNSW la búsqueda de vecinos más cercanos? ¿En qué paso es seguro aplicar el filtrado de permisos?
+18303	Q033 · RRF fusiona puestos, sin sumar a la fuerza puntuaciones BM25 y coseno</a><small>chapters/16.html · Subsección correspondiente del texto principal
+18549	Q033 · RRF fusiona puestos, sin sumar a la fuerza puntuaciones BM25 y coseno</a><small>reading-notes/guide-09.html · Subsección correspondiente del texto principal
+18396	Q033 · RRF fusiona puestos, sin sumar a la fuerza puntuaciones BM25 y coseno</a><small>studies/chapters/13.html · Subsección correspondiente del texto principal
+11893	Q033 · Fusionar dos rankings fila por fila mediante RRF
+6318	Q033｜¿Cómo combinar BM25 y recuperación vectorial? ¿Por qué RRF no suma directamente las puntuaciones originales?
+18304	Q034 · Un Reranker es más detallado porque puede ver a la vez la consulta y el candidato</a><small>chapters/16.html · Subsección correspondiente del texto principal
+18764	Q034 · Un Reranker es más detallado porque puede ver a la vez la consulta y el candidato</a><small>reading-notes/guide-09.html · Subsección correspondiente del texto principal
+6410	Q034｜¿Por qué Cross-encoder Reranker y ColBERT son más detallados que un coseno simple?
+18305	Q035 · Enumerar la evidencia necesaria por frase permite saber si basta para la conclusión</a><small>chapters/16.html · Subsección correspondiente del texto principal
+18435	Q035 · Enumerar la evidencia necesaria por frase permite saber si basta para la conclusión</a><small>studies/chapters/25.html · Subsección correspondiente del texto principal
+6471	Q035｜Tras recuperar material pertinente, ¿cómo determinar si basta para responder? ¿Cómo vincular citas y conclusiones?
+18306	Q036 · Identificar el tipo de fallo de recuperación antes de añadir componentes RAG avanzados</a><small>chapters/16.html · Subsección correspondiente del texto principal
+18440	Q036 · Identificar el tipo de fallo de recuperación antes de añadir componentes RAG avanzados</a><small>studies/chapters/26.html · Subsección correspondiente del texto principal
+6547	Q036｜¿Qué fase de fallo resuelven HyDE, RAPTOR, GraphRAG y Self-RAG? ¿Cuándo no deben usarse?
+18307	Q037 · grep, AST, LSP y registros de ejecución responden a preguntas de capas distintas</a><small>chapters/17.html · Subsección correspondiente del texto principal
+18397	Q037 · grep, AST, LSP y registros de ejecución responden a preguntas de capas distintas</a><small>studies/chapters/14.html · Subsección correspondiente del texto principal
+6628	Q037｜¿Qué saben grep, AST, LSP y los grafos de llamadas? ¿Por qué no son intercambiables?
+18308	Q038 · Una misma ruta puede tener tres contenidos: commit, árbol de trabajo y editor</a><small>chapters/17.html · Subsección correspondiente del texto principal
+18399	Q038 · Una misma ruta puede tener tres contenidos: commit, árbol de trabajo y editor</a><small>studies/chapters/14.html · Subsección correspondiente del texto principal
+18449	Q038 · Una misma ruta puede tener tres contenidos: commit, árbol de trabajo y editor</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+6738	Q038｜¿Cómo gestionan los índices de código versiones de Git, árboles de trabajo y archivos sin guardar?
+18309	Q039 · Localizar bugs con entradas que distingan hipótesis, sin leer archivos a ciegas</a><small>chapters/17.html · Subsección correspondiente del texto principal
+18441	Q039 · Localizar bugs con entradas que distingan hipótesis, sin leer archivos a ciegas</a><small>studies/chapters/27.html · Subsección correspondiente del texto principal
+6821	Q039｜¿Cómo localizar un bug paso a paso? ¿Por qué «leer más código» no es un método suficiente?
+18310	Q040 · Las reglas de negocio necesitan excepciones ejecutables, además de un eslogan</a><small>chapters/17.html · Subsección correspondiente del texto principal
+18446	Q040 · Las reglas de negocio necesitan excepciones ejecutables, además de un eslogan</a><small>studies/chapters/28.html · Subsección correspondiente del texto principal
+6875	Q040｜¿Cómo hacer que un agente «entienda el negocio» en lugar de mirar siempre código local?
+18295	Q041 · Cuatro operaciones para «ahorrar contexto» conservan cosas completamente distintas</a><small>chapters/14.html · Subsección correspondiente del texto principal
+5675	Q041｜¿En qué difiere fundamentalmente Compaction del truncamiento, Prompt Cache y la memoria externa?
+18296	Q042 · Mientras se genera un candidato de compactación, una instantánea antigua no debe sobrescribir los nuevos resultados de herramientas</a><small>chapters/14.html · Subsección correspondiente del texto principal
+18384	Q042 · Los resultados nuevos de herramientas no deben quedar sobrescritos por una instantánea antigua mientras se generan candidatos de compactación</a><small>studies/chapters/09.html · Subsección correspondiente del texto principal
+18392	Q042 · Mientras se genera un candidato de compactación, una instantánea antigua no debe sobrescribir los nuevos resultados de herramientas</a><small>studies/chapters/12.html · Subsección correspondiente del texto principal
+5787	Q042｜¿En qué orden debe ejecutarse una compactación segura? ¿Por qué evitar sustituir el historial mientras se ejecutan acciones?
+18297	Q043 · Recuperar evidencia requiere identidad de contenido, además del nombre de archivo</a><small>chapters/14.html · Subsección correspondiente del texto principal
+18393	Q043 · Recuperar evidencia requiere identidad de contenido, además del nombre de archivo</a><small>studies/chapters/12.html · Subsección correspondiente del texto principal
+5874	Q043｜¿Cómo recuperar la evidencia original después de compactar? ¿Cómo colaboran resúmenes y almacenamiento externo?
+18298	Q044 · Comprobar la fidelidad exige preguntar «qué se puede seguir haciendo correctamente», además del parecido del resumen</a><small>chapters/14.html · Subsección correspondiente del texto principal
+18391	Q044 · Comprobar la fidelidad exige preguntar «qué se puede seguir haciendo correctamente», además del parecido del resumen</a><small>studies/chapters/12.html · Subsección correspondiente del texto principal
+18448	Q044 · Comprobar la fidelidad exige preguntar «qué se puede seguir haciendo correctamente», además del parecido del resumen</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+5940	Q044｜¿Cómo evaluar la fidelidad de compactación? ¿Por qué no basta comparar la similitud entre el resumen y el original?
+18311	Q045 · Separar cuatro clases de memoria evita convertir hipótesis temporales en reglas permanentes</a><small>chapters/18.html · Subsección correspondiente del texto principal
+18550	Q045 · Separar cuatro clases de memoria evita convertir hipótesis temporales en reglas permanentes</a><small>reading-notes/guide-10.html · Subsección correspondiente del texto principal
+6944	Q045｜¿En qué difieren la memoria de trabajo, episódica, semántica y procedimental?
+18312	Q046 · Distinguir observaciones, hipótesis y reglas antes de escribir en la memoria a largo plazo</a><small>chapters/18.html · Subsección correspondiente del texto principal
+18401	Q046 · Distinguir observaciones, hipótesis y reglas antes de escribir en la memoria a largo plazo</a><small>studies/chapters/15.html · Subsección correspondiente del texto principal
+7003	Q046｜¿Qué juicios debe superar una información al pasar de la conversación a la memoria a largo plazo?
+18313	Q047 · El tiempo de validez y el de registro son dos preguntas independientes</a><small>chapters/18.html · Subsección correspondiente del texto principal
+18402	Q047 · El tiempo de validez y el de registro son dos preguntas independientes</a><small>studies/chapters/15.html · Subsección correspondiente del texto principal
+7095	Q047｜¿Cómo tratar conflictos entre recuerdos nuevos y antiguos? ¿Por qué distinguir Valid time y Recorded time?
+18314	Q048 · La recuperación de memoria comprueba primero la aplicabilidad y después la similitud semántica</a><small>chapters/18.html · Subsección correspondiente del texto principal
+18403	Q048 · La recuperación de memoria comprueba primero la aplicabilidad y después la similitud semántica</a><small>studies/chapters/15.html · Subsección correspondiente del texto principal
+18453	Q048 · La recuperación de memoria comprueba primero la aplicabilidad y después la similitud semántica</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+7183	Q048｜¿Cómo evita la recuperación de memoria confundir proyectos y usar reglas caducadas? ¿Cuándo debe olvidar?
+18323	Q049 · El tiempo de espera se agota entre la «solicitud» y la «respuesta»</a><small>chapters/21.html · Subsección correspondiente del texto principal
+18379	Q049 · El tiempo de espera se agota entre la «solicitud» y la «respuesta»</a><small>studies/chapters/08.html · Subsección correspondiente del texto principal
+18443	Q049 · El tiempo de espera se agota entre la «solicitud» y la «respuesta»</a><small>studies/chapters/27.html · Subsección correspondiente del texto principal
+7906	Q049｜¿Por qué hace falta un estado unknown tras agotarse el tiempo de una herramienta? ¿No se puede marcar directamente failed?
+18324	Q050 · La clave de idempotencia se vincula a una misma intención de negocio, no a cada intento HTTP</a><small>chapters/21.html · Subsección correspondiente del texto principal
+18421	Q050 · La clave de idempotencia se vincula a una misma intención de negocio, no a cada intento HTTP</a><small>studies/chapters/20.html · Subsección correspondiente del texto principal
+18452	Q050 · La clave de idempotencia se vincula a una misma intención de negocio, no a cada intento HTTP</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+7962	Q050｜¿Cómo diseñar claves de idempotencia? ¿Por qué una tabla local de deduplicación no garantiza Exactly Once entre sistemas?
+18325	Q051 · La sustitución atómica evita escrituras parciales; CAS evita sobrescribir: son cosas distintas</a><small>chapters/21.html · Subsección correspondiente del texto principal
+18380	Q051 · La sustitución atómica evita escrituras parciales; CAS evita sobrescribir: son cosas distintas</a><small>studies/chapters/08.html · Subsección correspondiente del texto principal
+18400	Q051 · La sustitución atómica evita escrituras parciales; CAS evita sobrescribir: son cosas distintas</a><small>studies/chapters/14.html · Subsección correspondiente del texto principal
+8088	Q051｜¿Cómo evitar sobrescrituras locales con CAS y sustitución atómica? ¿Cómo coordinarlas con las transacciones de base de datos?
+18326	Q052 · Retry, Resume, Replay y Cancel tienen significados distintos para las acciones</a><small>chapters/21.html · Subsección correspondiente del texto principal
+18424	Q052 · Retry, Resume, Replay y Cancel tienen significados distintos para las acciones</a><small>studies/chapters/21.html · Subsección correspondiente del texto principal
+8148	Q052｜¿Cómo continuar una tarea larga después de reiniciar? ¿Qué son Retry, Resume, Replay y Cancel?
+18319	Q053 · El paquete de traspaso debe comunicar al menos la evidencia y las acciones pendientes</a><small>chapters/20.html · Subsección correspondiente del texto principal
+18408	Q053 · El paquete de traspaso debe comunicar al menos la evidencia y las acciones pendientes</a><small>studies/chapters/17.html · Subsección correspondiente del texto principal
+7574	Q053｜¿Qué recibe el subagente y qué recupera el principal? ¿Qué debe incluir el paquete de traspaso?
+18320	Q054 · La ruta de dependencias más larga del DAG determina cuándo pueden terminar como pronto las tareas paralelas</a><small>chapters/20.html · Subsección correspondiente del texto principal
+18407	Q054 · La ruta de dependencias más larga del DAG determina cuándo pueden terminar como pronto las tareas paralelas</a><small>studies/chapters/17.html · Subsección correspondiente del texto principal
+7656	Q054｜¿Cómo determina el paralelismo un DAG de tareas? ¿Por qué dividir más no siempre acelera?
+18321	Q055 · Archivos distintos sin conflictos textuales también pueden producir conflictos semánticos</a><small>chapters/20.html · Subsección correspondiente del texto principal
+18409	Q055 · Archivos distintos sin conflictos textuales también pueden producir conflictos semánticos</a><small>studies/chapters/17.html · Subsección correspondiente del texto principal
+7737	Q055｜¿Cómo evitar sobrescrituras e integraciones incorrectas cuando varios agentes modifican el mismo repositorio?
+18322	Q056 · La coincidencia de dos Reviewer puede deberse a un mismo punto ciego compartido</a><small>chapters/20.html · Subsección correspondiente del texto principal
+18410	Q056 · La coincidencia de dos Reviewer puede deberse a un mismo punto ciego compartido</a><small>studies/chapters/17.html · Subsección correspondiente del texto principal
+7818	Q056｜¿Por qué pueden cometer el mismo error dos Reviewer independientes? ¿Qué resuelve A2A y qué no?
+18335	Q057 · El contenido externo puede ser evidencia, pero no concederse permisos de ejecución</a><small>chapters/24.html · Subsección correspondiente del texto principal
+18418	Q057 · El contenido externo puede ser evidencia, pero no concederse permisos de ejecución</a><small>studies/chapters/20.html · Subsección correspondiente del texto principal
+18433	Q057 · El contenido externo puede ser evidencia, pero no concederse permisos de ejecución</a><small>studies/chapters/24.html · Subsección correspondiente del texto principal
+8855	Q057｜¿En qué difiere Prompt Injection de una entrada maliciosa ordinaria del usuario? ¿Por qué los materiales externos no pueden convertirse en instrucciones?
+18336	Q058 · Archivos, red y herramientas remotas son tres entradas y salidas distintas</a><small>chapters/24.html · Subsección correspondiente del texto principal
+18419	Q058 · Archivos, red y herramientas remotas son tres entradas y salidas distintas</a><small>studies/chapters/20.html · Subsección correspondiente del texto principal
+8933	Q058｜¿Qué aísla exactamente un sandbox? ¿Por qué distinguir permisos de archivos, red y MCP?
+18337	Q059 · La aprobación humana debe vincularse a parámetros y versiones concretos, además del nombre de herramienta</a><small>chapters/24.html · Subsección correspondiente del texto principal
+18420	Q059 · La aprobación humana debe vincularse a parámetros y versiones concretos, además del nombre de herramienta</a><small>studies/chapters/20.html · Subsección correspondiente del texto principal
+9020	Q059｜¿Qué debe aprobar una persona? ¿Por qué «permitir esta tarea» no cubre todas las acciones posteriores?
+18338	Q060 · Tras eliminar la fuente, los resúmenes y fragmentos vectoriales derivados pueden seguir difundiendo conclusiones antiguas</a><small>chapters/24.html · Subsección correspondiente del texto principal
+9099	Q060｜¿Cómo se contaminan la memoria y la recuperación? ¿Por qué pueden persistir los efectos tras eliminar el documento fuente?
+18331	Q061 · Contar Task, Trial, Trace y Outcome por separado evita confundir denominadores</a><small>chapters/23.html · Subsección correspondiente del texto principal
+18414	Q061 · Contar Task, Trial, Trace y Outcome por separado evita confundir denominadores</a><small>studies/chapters/19.html · Subsección correspondiente del texto principal
+8542	Q061｜¿Cuál es la unidad mínima de evaluación de un agente? ¿Cómo distinguir Task, Trial, Trace y Outcome?
+11894	Q062 · Por qué pass@3 y el éxito en tres intentos consecutivos dan cifras muy distintas
+18332	Q062 · pass@k y pass^k: uno mide oportunidades y el otro estabilidad</a><small>chapters/23.html · Subsección correspondiente del texto principal
+18415	Q062 · pass@k y pass^k: uno mide oportunidades y el otro estabilidad</a><small>studies/chapters/19.html · Subsección correspondiente del texto principal
+8596	Q062｜¿En qué difieren pass@1, pass@k y pass^k? Calcula un ejemplo.
+11895	Q063 · Si es suficiente evidencia una mejora de 20 puntos porcentuales en 20 tareas
+18333	Q063 · En una comparación emparejada, examinar primero qué preguntas pasan de fallo a éxito y cuáles cambian en sentido inverso</a><small>chapters/23.html · Subsección correspondiente del texto principal
+18416	Q063 · En una comparación emparejada, examinar primero qué preguntas pasan de fallo a éxito y cuáles cambian en sentido inverso</a><small>studies/chapters/19.html · Subsección correspondiente del texto principal
+8681	Q063｜¿Cómo saber si una diferencia de dos puntos porcentuales entre las tasas de éxito A/B es real? ¿Por qué importa evaluar por pares?
+18334	Q064 · Comprobar primero si el evaluador cambia su juicio al reordenar las mismas respuestas</a><small>chapters/23.html · Subsección correspondiente del texto principal
+18417	Q064 · Comprobar primero si el evaluador cambia su juicio al reordenar las mismas respuestas</a><small>studies/chapters/19.html · Subsección correspondiente del texto principal
+8761	Q064｜¿Por qué LLM-as-a-Judge es útil y peligroso? ¿Cómo reducir el sesgo de evaluación?
+18339	Q065 · Los tramos paralelos de un Trace no se suman directamente como tiempo de espera del usuario</a><small>chapters/25.html · Subsección correspondiente del texto principal
+18422	Q065 · Los tramos paralelos de un Trace no se suman directamente como tiempo de espera del usuario</a><small>studies/chapters/21.html · Subsección correspondiente del texto principal
+9171	Q065｜¿Cómo registrar el Trace de una tarea del agente para localizar «lentitud, coste y errores»?
+18340	Q066 · El numerador del coste por tarea completada con éxito debe incluir fallos y retrabajo</a><small>chapters/25.html · Subsección correspondiente del texto principal
+18425	Q066 · El numerador del coste por tarea completada con éxito debe incluir fallos y retrabajo</a><small>studies/chapters/22.html · Subsección correspondiente del texto principal
+18451	Q066 · El numerador del coste por tarea completada con éxito debe incluir fallos y retrabajo</a><small>studies/chapters/29.html · Subsección correspondiente del texto principal
+9252	Q066｜¿Por qué «cada token es barato» no equivale a «completar el trabajo es barato»? ¿Cómo contabilizar el coste?
+18341	Q067 · Una capacidad media suficiente no evita las colas en los picos de solicitudes</a><small>chapters/25.html · Subsección correspondiente del texto principal
+18423	Q067 · Una capacidad media suficiente no evita las colas en los picos de solicitudes</a><small>studies/chapters/21.html · Subsección correspondiente del texto principal
+9326	Q067｜¿Aumentar la concurrencia siempre aumenta el throughput? ¿Cómo entender la latencia del agente mediante las colas?
+18342	Q068 · Revertir exige restaurar juntos objetos compatibles, además de volver al nombre de modelo anterior</a><small>chapters/25.html · Subsección correspondiente del texto principal
+9383	Q068｜¿Qué debe versionarse al poner en producción un sistema de agentes? ¿Por qué revertir es más que volver al modelo anterior?
+18243	Q069 · El modelo recibe una solicitud, no todo el espacio de trabajo</a><small>chapters/01.html · Subsección correspondiente del texto principal
+471	Q069｜Qué recibe realmente el modelo al pedir «repara este Bug» a un agente de programación
+18244	Q070 · El orden de fusión BPE determina qué se podrá fusionar después</a><small>chapters/01.html · Subsección correspondiente del texto principal
+18356	Q070 · El orden de fusión BPE determina qué se podrá fusionar después</a><small>studies/chapters/01.html · Subsección correspondiente del texto principal
+604	Q070｜Cómo funciona Tokenizer y por qué chino, código y espacios cambian el número de tokens
+18245	Q071 · La prioridad de instrucciones y los permisos de ejecución son dos controles independientes</a><small>chapters/01.html · Subsección correspondiente del texto principal
+731	Q071｜Por qué las palabras system, developer y user controlan el modelo y si equivalen a permisos
+18246	Q072 · Cuatro «vectores»: distinguirlos por el significado de sus coordenadas, no por su aspecto</a><small>chapters/01.html · Subsección correspondiente del texto principal
+18359	Q072 · Cuatro «vectores»: distinguirlos por el significado de sus coordenadas, no por su aspecto</a><small>studies/chapters/01.html · Subsección correspondiente del texto principal
+805	Q072｜Relación entre Embedding, estado oculto, logits de salida y representaciones de recuperación vectorial
+11882	Q073 · Un Decoder de una capa y dos posiciones, desde la entrada hasta las probabilidades del vocabulario
+18247	Q073 · Qué pasos de una propagación hacia delante mezclan posiciones y cuáles solo mezclan características</a><small>chapters/02.html · Subsección correspondiente del texto principal
+964	Q073｜Qué cálculos atraviesa una secuencia de tokens al entrar en Transformer
+18248	Q074 · Calcular tres ramas desde la misma X para obtener una salida concreta</a><small>chapters/02.html · Subsección correspondiente del texto principal
+18542	Q074 · Calcular tres ramas desde la misma X para obtener una salida concreta</a><small>reading-notes/guide-02.html · Subsección correspondiente del texto principal

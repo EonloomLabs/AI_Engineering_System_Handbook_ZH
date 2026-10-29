@@ -9,7 +9,7 @@ Three things happen besides the splice:
   - elements carrying data-i18n get their Chinese fallback replaced with the
     reviewed English from the interface bundle, so the page reads English
     before the runtime swaps anything and still does if its script fails;
-  - local pages and available language assets stay in the translated tree;
+  - local pages and declared or available language assets stay in the translated tree;
     other references are rebuilt against the shared site root;
   - lang is corrected; the i18n-scope note comes from the translation table.
 
@@ -20,6 +20,9 @@ import json, os, re, sys
 from pathlib import Path
 from html import escape, unescape
 
+from data_strings import FILES as DATA_FILES
+from runtime_strings import FILES as RUNTIME_FILES, BUNDLE as RUNTIME_BUNDLE
+
 ROOT = Path(__file__).resolve().parent.parent
 UNITS = ROOT / 'i18n/units'
 VERIFY = '--verify' in sys.argv
@@ -28,6 +31,12 @@ TAG = re.compile(r'<[^>]+>')
 CJK = re.compile(r'[一-鿿]')
 
 REF = re.compile(r'(?P<a>\b(?:src|href)=")(?P<u>[^"]+)(?P<b>")')
+# These generators publish the same asset paths for all complete editions.
+# gen_assets.main declares its two outputs directly at their write_text calls;
+# the runtime and data owners expose their output paths as constants.
+# Keep this bounded: other assets still need an existing language mirror.
+EDITION_ASSETS = frozenset((*RUNTIME_FILES, RUNTIME_BUNDLE, *DATA_FILES,
+                            'assets/catalog.js', 'assets/search-data.js'))
 
 
 def bundle():
@@ -118,8 +127,10 @@ def chrome(html, en):
 def relink(html, rel, pages):
     """Rewrite references that have to reach out of the translated tree.
 
-    A reference to a translated page, its assembled complete.html, or an
-    available language asset keeps its path inside the translated tree.
+    A reference to a translated page, its assembled complete.html, or a
+    declared en/ja/es/vi generated asset, or available language asset keeps its path
+    inside the translated tree. Declared outputs remain local even on the first
+    build, before their generators run after the page translation step.
     Everything else has to climb out of that tree as well as out of the page's
     own directory, so it is rebuilt from the target's path
     relative to the site root. Prepending one '../' is not the same thing: it
@@ -140,6 +151,7 @@ def relink(html, rel, pages):
         if target.startswith('..'):
             return m.group(0)          # already outside the book; leave it alone
         if (target in pages or target == 'complete.html' or
+                (LANG in ('en', 'ja', 'es', 'vi') and target in EDITION_ASSETS) or
                 (ROOT / LANG / target).is_file()):
             return m.group(0)
         return m.group('a') + up + target + u[len(bare):] + m.group('b')
@@ -153,6 +165,7 @@ WORDISH = r'code|kbd|samp|var|a|strong|em|b|i|span|abbr|dfn|time|cite|q'
 SEAM_OPEN = re.compile(r'(?P<l>[A-Za-z0-9)\]])(?P<t><(?:%s)\b[^>]*>)(?P<r>[A-Za-z0-9(\[])' % WORDISH)
 SEAM_CLOSE = re.compile(r'(?P<l>[A-Za-z0-9)\]])(?P<t></(?:%s)>)(?P<r>[A-Za-z0-9(\[])' % WORDISH)
 OPAQUE = re.compile(r'<(pre|script|style|svg|textarea)\b.*?</\1>', re.S | re.I)
+INLINE_CODE = re.compile(r'<code\b[^>]*>(?P<body>.*?)</code\s*>', re.S | re.I)
 # English always sets a space after punctuation; Chinese does not, so a comma
 # or full stop that butts straight into the next inline element loses it:
 # "pin the model,<code>Tokenizer</code>", "Basis:<a>tiny_model.py</a>".
@@ -169,7 +182,7 @@ PUNCT_AFTER_TAG = re.compile(
     r'(?P<l></[\w-]+>)(?P<p>[,;:.!?])(?P<t>(?:<(?!/?(?:%s)\b)[^>]+>)+)(?P<r>[^\s<])' % BLOCK)
 
 
-def space_seams(html):
+def space_seams(html, *, lang='en'):
     """Put back the space English needs where Chinese needed none.
 
     Chinese sets no space around an inline element, so a text node ending a
@@ -179,8 +192,40 @@ def space_seams(html):
 
     A translation that deliberately attaches - "-style" after WordPiece, "-s"
     after an identifier - starts with punctuation, so it is left alone, and
-    pre/script/style/svg are skipped entirely.
+    pre/script/style/svg are skipped entirely. Code payloads are literal:
+    any new sentence gap must stay outside their opening/closing tags.
     """
+    # Keep the established boundary-letter classes. Spanish/Vietnamese also
+    # need word gaps when a boundary letter has an accent or combining mark.
+    seam_open, seam_close, punct_seam = SEAM_OPEN, SEAM_CLOSE, PUNCT_SEAM
+    if lang in ('es', 'vi'):
+        letters = r'A-Za-zÀ-ÖØ-öø-ɏḀ-ỿ\u0300-\u036f'
+        seam_open = re.compile(SEAM_OPEN.pattern.replace('A-Za-z', letters))
+        seam_close = re.compile(SEAM_CLOSE.pattern.replace('A-Za-z', letters))
+        punct_seam = re.compile(PUNCT_SEAM.pattern.replace('A-Za-z', letters))
+    def spaced(pattern, chunk, insertion):
+        # Recalculate offsets for each substitution pass. Matches refer to its
+        # unchanged input, so earlier replacements cannot stale these ranges.
+        payloads = [(m.start('body'),m.end('body'),m.end())
+                    for m in INLINE_CODE.finditer(chunk)]
+
+        def replace(match):
+            position = insertion(match)
+            for start,end,closing_end in payloads:
+                if start <= position <= end:
+                    # e.g. data:</code>lines or &gt;</code>word. Only move
+                    # the new gap if this very match crosses </code>; never
+                    # edit internal markup, entities, or existing whitespace.
+                    if closing_end > match.end('t'):
+                        return match.group(0)
+                    position = closing_end
+                    break
+            offset = position-match.start()
+            value = match.group(0)
+            return value[:offset]+' '+value[offset:]
+
+        return pattern.sub(replace,chunk)
+
     parts, last = [], 0
     for m in OPAQUE.finditer(html):
         parts.append((html[last:m.start()], True))
@@ -192,10 +237,10 @@ def space_seams(html):
     for chunk, editable in parts:
         if editable:
             for _ in range(2):          # a seam can need both sides fixed
-                chunk = SEAM_OPEN.sub(r'\g<l> \g<t>\g<r>', chunk)
-                chunk = SEAM_CLOSE.sub(r'\g<l>\g<t> \g<r>', chunk)
-            chunk = PUNCT_SEAM.sub(r'\g<p> \g<t>\g<r>', chunk)
-            chunk = PUNCT_AFTER_TAG.sub(r'\g<l>\g<p> \g<t>\g<r>', chunk)
+                chunk = spaced(seam_open,chunk,lambda m:m.start('t'))
+                chunk = spaced(seam_close,chunk,lambda m:m.end('t'))
+            chunk = spaced(punct_seam,chunk,lambda m:m.end('p'))
+            chunk = spaced(PUNCT_AFTER_TAG,chunk,lambda m:m.end('p'))
         out.append(chunk)
     return ''.join(out)
 
@@ -234,7 +279,7 @@ def main(argv):
                                      over=over_all.get(rel)), en)
         html = head(relink(html, rel, pages))
         if LANG != 'ja':
-            html = space_seams(html)
+            html = space_seams(html, lang=LANG)
         out = ROOT / LANG / rel
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding='utf-8')

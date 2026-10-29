@@ -47,15 +47,23 @@ def article(doc):
 
 def main():
     out = ROOT / LANG / 'assets'
-    kinds = {k: v[LANG] for k, v in
-             json.loads((ROOT / 'i18n/catalog-kinds.json').read_text(encoding='utf-8')).items()
-             if not k.startswith('_')}
+    kind_sources = [k for k in
+                    json.loads((ROOT / 'i18n/catalog-kinds.json').read_text(encoding='utf-8'))
+                    if not k.startswith('_')]
     table = json.loads((ROOT / 'i18n/table.json').read_text(encoding='utf-8'))['s']
+    kinds = {k: (table.get(k) or {}).get(LANG) for k in kind_sources}
+    missing_kinds = [k for k, value in kinds.items()
+                     if not isinstance(value, str) or not value.strip()]
+    if missing_kinds:
+        raise ValueError('missing catalogue kind translations for %s: %s' %
+                         (LANG, ', '.join(missing_kinds)))
 
     # A page's <title> is stored whole, suffix included ("… — AI系统工程"), while
     # catalog.js holds the bare title. Index the bare forms so one lookup finds
     # either, and the catalogue cannot drift from the page it points at.
     SUFFIX = re.compile(r'\s*(?:—|·|-)\s*AI\s*系统工程\s*$')
+    translated_book = 'AI Systems Engineering' if LANG == 'en' else table['AI 系统工程'][LANG]
+    translated_suffix = re.compile(r'\s*(?:—|·|-)\s*' + re.escape(translated_book) + r'\s*$')
     bare = {}
     for zh, v in table.items():
         t = v.get(LANG)
@@ -63,7 +71,7 @@ def main():
             continue
         stem = SUFFIX.sub('', zh)
         if stem != zh:
-            bare.setdefault(stem, re.sub(r'\s*(?:—|·|-)\s*AI Systems Engineering\s*$', '', t))
+            bare.setdefault(stem, translated_suffix.sub('', t))
 
     def tr(s):
         return (table.get(s) or {}).get(LANG) or bare.get(s) or kinds.get(s) or s
@@ -78,7 +86,9 @@ def main():
             if v == e['title']:
                 missing.append(e['title'])
             e['title'] = v
-        e['kind'] = tr(e['kind'])
+        if e['kind'] not in kinds:
+            raise ValueError('unregistered catalogue kind: %s' % e['kind'])
+        e['kind'] = kinds[e['kind']]
     out.mkdir(parents=True, exist_ok=True)
     (out / 'catalog.js').write_text(
         'window.BOOK_CATALOG=' + json.dumps(cat, ensure_ascii=False) + ';\n', encoding='utf-8')

@@ -1,0 +1,445 @@
+714	che giấu khác biệt. Cũng có thể có khác biệt về khoảng trắng, chia mảnh byte và chuẩn hóa. So sánh chuỗi ID và dấu điều khiển, không chỉ văn bản hiển thị trên màn hình. Nếu nghi thay đổi giữa phiên bản, trước hết cố định mô hình và tệp tokenizer rồi đối chiếu.
+2228	rất tốn kém; kernel tiết kiệm bộ nhớ hơn tránh hiện thực hóa nó.
+8997	Có, vì vậy cần cung cấp năng lực tối thiểu thực sự cần để hoàn thành nhiệm vụ, kèm thông tin từ chối dễ hiểu. Đọc ghi rủi ro thấp có thể tự động thực thi trong môi trường cách ly rõ ràng; mở rộng quyền rủi ro cao mới cần phê duyệt. Thiết kế an toàn tốt giảm xác nhận vô nghĩa, không làm mọi công việc đình trệ.
+1593	attn_mask truyền vào MultiheadAttention
+1590	Truyền vào scaled_dot_product_attention
+1868	Truyền tới Q/K
+26568	Truyền ngược về truy vấn
+14334	Truyền ngược gradient
+12995	Truyền dữ liệu, lập lịch và khởi chạy một phép toán đều có chi phí. Nếu tính toán thực sự chỉ có vài con số, chuẩn bị và vận chuyển có thể đắt hơn chính phép tính. GPU có thông lượng mạnh không đồng nghĩa với mọi thao tác nhỏ đều có độ trễ thấp.
+27879	Mảnh truyền tải, giải mã văn bản, khung SSE và sự kiện hoàn tất nghiệp vụ không thuộc cùng một lớp.
+4853	Truyền tải có bộ yêu cầu khác về kết nối, danh tính và phiên. Khác biệt truyền tải không thay đổi công cụ
+4869	Lỗi truyền tải</strong> có nghĩa là có thể chưa nhận được yêu cầu hoặc phản hồi; <strong>lỗi giao thức JSON-RPC</strong> biểu thị vấn đề định dạng yêu cầu, phương thức hoặc xử lý giao thức; <strong>isError trong kết quả công cụ</strong> biểu thị lỗi thực thi nghiệp vụ công cụ. Chuyển trường hợp sau thành ngôn ngữ tự nhiên thông thường “có vẻ thành công” sẽ làm mất trạng thái có cấu trúc; coi trường hợp đầu là nghiệp vụ chưa thực thi có thể dẫn đến thử lại nguy hiểm.
+1866	Truyền qua softmax
+24740	Ước lượng cần ghi rõ từng phần:
+19726	Ước lượng cần gồm số lớp, chuỗi, kích thước lô, số đầu KV và độ chính xác, không thể trực tiếp thay số đầu truy vấn vào mọi mô hình. Kiến trúc đặc biệt cũng có thể thay đổi cách biểu diễn.
+9224	ước lượng, trạng thái cắt bớt và thứ tự cuối cùng. Nó không dựng lại được toàn bộ văn bản, nhưng có thể phát hiện “tệp lẽ ra phải nạp đã không đi vào yêu cầu”. Khi cần phát lại nội dung, dùng thêm kho bằng chứng có kiểm soát quyền và thời hạn lưu hữu hạn. Tách danh sách khỏi nội dung là sự cân bằng giữa khả năng chẩn đoán và quyền riêng tư.
+25011	Nhưng “trả về ít hơn” không phải tối ưu tuyệt đối. Chỉ trả hàng khớp có thể mất điều kiện tiên quyết quyết định nhánh; chỉ trả tóm tắt có thể mất bằng chứng. Giao diện tốt hơn hỗ trợ định vị trước, rồi đọc một phạm vi liên tục và nêu rõ kết quả có đầy đủ không. Mô hình có thể mở rộng bằng chứng từng bước sẽ vững hơn việc công cụ tự ý loại bỏ vĩnh viễn thông tin then chốt.
+11930	Nhưng trong hai danh sách mã, một danh sách dài 3, danh sách kia dài 2. Để trước hết tính bằng bảng quy tắc thông thường, ta đặt một mã giữ chỗ 0 ở cuối danh sách ngắn:
+5771	Nhưng cũng không thể nối hậu tố vô điều kiện. Giả sử trong lúc đó có hoàn tác, e2 đã bị thu hồi nhưng tóm tắt cũ S vẫn chứa kết luận của e2, thì S phải mất hiệu lực. Cần phân biệt chỉ nối thêm với viết lại phá hủy, đồng thời đối chiếu bản ứng viên được sinh dựa trên phiên bản, mô hình, cấu hình cô đọng và danh tính được cấp quyền nào.
+6827	Nhưng vẫn đóng gói thư mục build. Nguyên nhân ứng viên có thể là cấu hình chưa nạp, phân tích quy tắc sai, chuẩn hóa đường dẫn không nhất quán hoặc kết quả khớp bị ghi đè sau đó. Trước hết xác nhận cấu hình chạy có quy tắc để loại nhóm đầu; rồi in ra hoặc kiểm thử đường dẫn mà mục vào khớp nhận được, phát hiện đó là đường dẫn tuyệt đối trong khi quy tắc hướng tới đường dẫn tương đối; dựng kiểm thử tối thiểu để tái hiện. Lúc này trọng tâm chuyển sang chuẩn hóa và ngữ nghĩa gốc thư mục, không phải tiếp tục đọc mô-đun đóng gói không liên quan.
+10221	Nhưng khi sử dụng vẫn cần khôi phục hoặc điều chỉnh đúng phần tính toán tiếp theo.
+25434	Nhưng không có nghĩa là toàn đồ thị không có điểm tốt hơn.
+4720	Nhưng viết mọi nghiệp vụ thành một tool(mode,payload) vạn năng lại che khuất ranh giới, khiến Schema khó biểu đạt các tổ hợp tham số khác nhau.
+15728	Nhưng đặt dấu thời gian hoặc trường ngẫu nhiên thay đổi mỗi lần ở đầu có thể phá tái sử dụng tiền tố dài. Ngược lại, giữ mãi nội dung lỗi thời để khớp bộ nhớ đệm cũng có thể hại chất lượng. Bộ nhớ đệm là tối ưu chi phí, không thay thế tính đúng của thông tin.
+26157	Nhưng từ chối trả lời cũng có chi phí. Với vấn đề vốn có thể giải quyết bằng đọc tệp, hệ thống trực tiếp nói không thể xác định là lãng phí năng lực. Chiến lược hợp lý là phân biệt trước “thiếu tài liệu có thể bổ sung”, “công cụ hiện tại không thể kiểm chứng” và “bản thân vấn đề không chắc chắn”, rồi chọn truy hồi, thí nghiệm hoặc giới hạn kết luận rõ ràng.
+25615	Nhưng mô tả cũng không được hẹp tới mức chỉ nạp khi xuất hiện đúng từ khóa. Người dùng nói “hai yêu cầu cập nhật đồng thời rồi mất một lần sửa” có thể cần kiến thức đồng thời và nhất quán, dù không nhắc “lost update”. Mẫu hồi quy nên gồm từ khóa, cách diễn đạt đồng nghĩa, nhu cầu chuyên môn ngầm, nhiệm vụ lân cận dễ nhầm và nhiệm vụ không liên quan.
+3649	Nhưng tỷ số vẫn dùng giá trị gốc
+16308	Nhưng nếu phân công và tích hợp tốn thêm 4 đơn vị, tổng là 11, ngược lại còn chậm hơn. <strong>Đường găng</strong> là chuỗi bắt buộc dài nhất trong đồ thị phụ thuộc quyết định thời gian hoàn thành ngắn nhất, không phải càng nhiều nhiệm vụ càng nhanh.
+23517	Nhưng biểu diễn có thể phân giải nhập nhằng không có nghĩa là mô hình đã chạy bộ phân tích ngôn ngữ. Trong mã thực tế,
+28063	Nhưng phương pháp chẩn đoán không đổi: làm rõ hợp đồng giao diện và đối tượng từng bước trước, rồi kiểm chứng quy mô nhỏ có thể đối chiếu, cuối cùng đo hiệu năng. Không thể chỉ vì một công nghệ mang tên
+4341	Vị trí/sự kiện
+30938	Vị trí 0 / ID1
+31122	Vị trí 0 và vị trí 2
+29333	Vị trí 0 xoay đến 0 độ
+14745	Vị trí 0 dùng để dự đoán mục thứ 1 tiếp theo
+30940	Vị trí 1 / ID2
+19824	Vị trí 12
+12002	vị trí 1 không
+29334	Vị trí 1 xoay đến 30 độ
+13888	Tích vô hướng của Q vị trí 1 và K vị trí 0
+31113	Vị trí 1: góc 1×30°
+12003	vị trí 2 không
+29335	Vị trí 2 xoay đến 60 độ
+31116	Vị trí 2: góc 2×30°
+29336	Vị trí 3 xoay đến 90 độ
+2675	logits tại vị trí 3 lấy mẫu y0
+31119	Vị trí 3: góc 3×30°
+2676	logits tại vị trí 4 lấy mẫu y1
+19819	Vị trí 5
+3357	Vị trí 5 chia lấy phần nguyên cho 4
+2677	logits tại vị trí 5 lấy mẫu y2
+1698	Vị trí không đặt lại khi đi vào lần gọi mới.
+12702	Vị trí khác với vị trí đọc ra
+5614	Sắp xếp vị trí có thể giúp ràng buộc then chốt hiển thị rõ tại mục vào và chỗ bàn giao nhiệm vụ, nhưng không nên sao chép lặp lại toàn bộ quy tắc. Lặp quá nhiều sẽ lãng phí Token, khác biệt nhỏ về lời văn còn có thể tạo xung đột mới. Cách tốt hơn là duy trì một bộ ràng buộc có thẩm quyền và tham chiếu chính xác trong bàn giao trạng thái cần thiết.
+27171	Vị trí đi vào phép tính số như thế nào — Kỹ thuật hệ thống AI
+27172	Vị trí đi vào phép tính số như thế nào</a><a href="#topic-3">Giải thích từng bước và bản ghi tính toán
+20831	Hiệu ứng vị trí chỉ là một rủi ro của ngữ cảnh dài. Thông tin nhiễu, tổ hợp nhiều bằng chứng, điều kiện phủ định và xung đột phiên bản cũng ảnh hưởng nhiệm vụ kỹ thuật.
+20832	Thí nghiệm hiệu ứng vị trí chỉ di chuyển bằng chứng đích
+1718	Không được lặp lại phép xoay vị trí khi tái sử dụng bộ nhớ đệm
+14714	Cơ chế vị trí
+1338	và các hành vi về vị trí. Không thể trông đợi “dùng softmax ổn định” tự động giải quyết đầu vào không xác định. Quy ước cụ thể của kernel phải nhất quán với logic mask ở lớp trên.
+24708	Mã vị trí
+538	Mã vị trí</strong> cho mô hình biết đoạn xuất hiện ở đâu, như 0, 1, 2; mã Token cho mô hình biết đoạn là mục nào. <strong>Bộ nhớ đệm KV</strong> lưu một phần số liệu đã tính ở các lớp để tái sử dụng khi tiếp tục sinh. Lần xử lý đầu thường không có bộ nhớ đệm cũ. Nên học attention trước để hiểu đầy đủ K, V rồi mới xem bộ nhớ đệm, không cần học thuộc chúng một cách vô căn cứ ngay ở đoạn này.
+13877	Không được lẫn mã vị trí, khe bộ nhớ đệm và cửa sổ mô hình
+13843	Mã vị trí không nhất thiết là một đoạn văn bản đưa cho người dùng xem; nó có thể được truyền vào làm tham số riêng, cũng có thể do mã mô hình suy ra từ độ dài đầu vào và bộ nhớ đệm.
+11713	Mã hóa vị trí, phiên bản tài liệu và phạm vi chỉnh sửa văn bản phải nhất quán; số byte truyền tải và vị trí ký tự tài liệu là các phép đo khác nhau.
+1484	Vị trí đi vào bước nào, tần số, K trong bộ nhớ đệm đã được xoay chưa
+3765	Đặt lại vị trí/bộ nhớ đệm cũ/mask không vuông
+27948	Thành phần vị trí
+27952	Thành phần vị trí được cộng trực tiếp vào biểu diễn lấy ra; ví dụ này làm vậy chỉ để kiểm tra độ lệch vị trí, không tương đương RoPE. Bộ nhớ đệm tiếp theo phải dùng tiếp cùng quy tắc vị trí của ví dụ này.
+12955	Vị trí: bộ nhớ CPU/GPU
+19551	Trang web ít được tin cậy có thể cung cấp sự thật đúng, nhưng không thể tự cấp quyền hành động; quy tắc ưu tiên cao ràng buộc hành vi nhưng không bảo đảm dữ liệu bên ngoài được nêu sẽ không bao giờ đổi. Độ tin cậy nội dung và mức ưu tiên chỉ dẫn là hai chiều khác nhau.
+10031	Vị trí trọng số thấp đóng góp lớn hơn.
+26046	Triển khai ít bit còn chịu ảnh hưởng hỗ trợ kernel phần cứng. Số byte trọng số lý thuyết giảm nhưng nếu thường xuyên chuyển đổi lúc chạy hoặc không có kernel hiệu quả thì tốc độ đầu cuối chưa chắc tăng. Cần đo riêng lợi ích dung lượng và lợi ích tốc độ.
+24430	Phần thay đổi hạng thấp và điều chỉnh hiệu quả tham số.
+22838	Kích thước hạng thấp, mô-đun tác động và dữ liệu huấn luyện quyết định hiệu quả điều chỉnh. Ít tham số có thể huấn luyện không đồng nghĩa toàn bộ bộ nhớ GPU huấn luyện giảm theo cùng tỷ lệ.
+15129	Phép nhân hạng thấp
+10208	Bộ nhớ đệm hạng thấp lưu ít số hơn, vì sao không đồng nghĩa với nén K/V tùy ý
+23487	Điều chỉnh hạng thấp
+902	Khi điều chỉnh hạng thấp còn cần hỏi ai huấn luyện hàng mới
+22671	Tỷ lệ lỗi thấp có thể là chỉ báo trễ.
+22550	Rủi ro thấp, có thể lặp lại
+26158	Nhiệm vụ rủi ro thấp cho phép thử nhanh và kiểm chứng, thao tác rủi ro cao cần bằng chứng mạnh hơn. Ngưỡng do hậu quả và khả năng khôi phục quyết định, không nên áp cùng một bộ phê duyệt nghiêm ngặt cho mỗi truy vấn thông thường.
+16508	Sửa đổi nhỏ rủi ro thấp có thể triển khai và kiểm chứng trực tiếp; thay đổi đồng thời phức tạp hoặc xuyên mô-đun đáng được phân tích độc lập hơn. Vấn đề nhỏ phát hiện khi rà soát có thể sửa và kiểm thử lại ở bước hiện tại, không cần mỗi lần quay về đầu sinh lại toàn bộ phương án.
+7159	Văn bản rủi ro thấp có thể để mô hình đưa giải thích ứng viên; danh tính, thời gian, phiên bản và cấp quyền then chốt tốt nhất được ràng buộc bằng thông tin có cấu trúc. LLM giỏi so sánh ngữ nghĩa, nhưng không nên dùng sự tự tin về ngôn ngữ ghi đè sự thật có thẩm quyền cao. Khi không thể phán định, giữ xung đột đáng tin hơn tạo một kết luận thống nhất giả.
+16783	Đọc rủi ro thấp có thể tự động thực thi trong phạm vi đã xác định; xóa, phát hành hoặc gửi ra ngoài có rủi ro cao cần xử lý theo quy tắc cấp quyền và xác nhận hiện có. Yêu cầu xác nhận mỗi hành động vô hại sẽ gây mệt mỏi phê duyệt, còn bỏ hoàn toàn ranh giới cũng không hợp lý.
+9026	Hành động lặp rủi ro thấp có thể được phê duyệt theo nhóm với chính sách rõ, chẳng hạn cho phép sửa và chạy kiểm thử trong một worktree, không cần hỏi mỗi lần đọc. Hành động rủi ro cao có thể trình bày tóm tắt tối thiểu cần thiết: sẽ đổi gì, ảnh hưởng ai, có thể hoàn tác không, căn cứ kiểm chứng là gì. Đừng để nhật ký dài làm chìm nội dung thực sự cần người dùng quyết định.
+23701	Khi nào cô đọng mới đáng công
+4901	Khi nào kiểm tra ranh giới exclude và script tương ứng
+15745	Còn 50; nhật ký cũ không nên chiếm chỗ kiểm thử cần thiết.
+17302	Độ tương đồng cosine / Cosine
+7406	Trừ số dư đồng thời dẫn đến số âm
+17947	Bài tập 01: biến một nhiệm vụ thành dấu vết sự kiện và biên nhận có thể kiểm tra.
+10868	Bài tập 01｜Quan sát</a>　Hoàn thành khi kết thúc giai đoạn này.
+17948	Bài tập 01｜Quan sát: biến một nhiệm vụ thành dấu vết có thể kiểm tra — Kỹ thuật hệ thống AI
+18018	Bài tập 02: xây vòng lặp thực thi có thể ngắt và khôi phục.
+17898	Bài tập 02｜Xây dựng vòng lặp
+18019	Bài tập 02｜Xây dựng vòng lặp — Kỹ thuật hệ thống AI
+10870	Bài tập 02｜Xây dựng vòng lặp</a>　Hoàn thành khi kết thúc giai đoạn này.
+18058	Bài tập 03: tối ưu có kiểm soát và so sánh trong điều kiện không thay đổi mô hình.
+17899	Bài tập 03｜Tối ưu hộp đen
+18059	Bài tập 03｜Tối ưu hộp đen — Kỹ thuật hệ thống AI
+10872	Bài tập 03｜Tối ưu hộp đen</a>　Hoàn thành khi kết thúc giai đoạn này.
+18102	Bài tập 04: tiếp quản đường suy luận mô hình và đo chi phí của nó.
+17900	Bài tập 04｜Tiếp quản mô hình
+18103	Bài tập 04｜Tiếp quản mô hình — Kỹ thuật hệ thống AI
+10874	Bài tập 04｜Tiếp quản mô hình</a>　Hoàn thành khi kết thúc giai đoạn này.
+18166	Bài tập 05: dùng một giả thuyết có thể bác bỏ để cải thiện cùng một nhiệm vụ trên toàn ngăn xếp.
+10876	Bài tập 05｜Toàn ngăn xếp</a>　Hoàn thành khi kết thúc giai đoạn này.
+18167	Bài tập 05｜Toàn ngăn xếp: dùng một giả thuyết có thể bác bỏ để cải thiện cùng một nhiệm vụ — Kỹ thuật hệ thống AI
+21756	Dùng làm công cụ
+30765	Làm cơ sở cho thay đổi tương đối
+25515	Dùng làm manh mối định vị đã lỗi thời, không trực tiếp chấp nhận là đúng.
+14650	Lấy hiệu và đổi tỷ lệ
+13512	Vai trò
+16201	Phạm vi scope</strong> giới hạn dự án, người dùng, môi trường và nhiệm vụ mà bộ nhớ áp dụng. Đừng dùng quy tắc triển khai dự án A cho dự án B; đừng đưa sở thích một người dùng sang người khác.
+6207	Thẻ mô hình e5-base-v2 do tác giả phát hành yêu cầu nhiệm vụ truy hồi dùng phần tương ứng
+11724	Bài thực hành kỹ thuật của tác giả; đọc lại vào ngày tra cứu
+11747	Chương thực hành kỹ thuật của tác giả
+24181	Thực hành kỹ thuật của tác giả hoặc tổ chức　｜　Mục lục tương ứng: 11.10
+24169	Thực hành kỹ thuật của tác giả hoặc tổ chức　｜　Mục lục tương ứng: 11.4
+24175	Thực hành kỹ thuật của tác giả hoặc tổ chức　｜　Mục lục tương ứng: 11.7
+24177	Thực hành kỹ thuật của tác giả hoặc tổ chức　｜　Mục lục tương ứng: 11.8
+24179	Thực hành kỹ thuật của tác giả hoặc tổ chức　｜　Mục lục tương ứng: 11.9
+24243	Thực hành kỹ thuật của tác giả hoặc tổ chức　｜　Mục lục tương ứng: 14.4
+24245	Thực hành kỹ thuật của tác giả hoặc tổ chức　｜　Mục lục tương ứng: 14.5
+23903	Hướng dẫn kỹ thuật của tác giả　｜　Mục lục tương ứng: 0.2
+23911	Hướng dẫn kỹ thuật của tác giả　｜　Mục lục tương ứng: 1.1
+23920	Hướng dẫn kỹ thuật của tác giả　｜　Mục lục tương ứng: 1.5
+23922	Hướng dẫn kỹ thuật của tác giả　｜　Mục lục tương ứng: 1.6
+23917	Giáo trình hoặc giải thích triển khai của tác giả　｜　Mục lục tương ứng: 1.4
+24294	Giáo trình hoặc giải thích triển khai của tác giả　｜　Mục lục tương ứng: 16.5
+24122	Giáo trình hoặc giải thích triển khai của tác giả　｜　Mục lục tương ứng: 8.16
+31033	你 → mã 4
+30414	你(4)
+16622	Bạn không cần xây nền tảng đồ sộ trước. Trước hết thu thập thất bại thực tế và nhiệm vụ tiêu biểu, để con người kiểm chứng tiêu chí, lưu dấu vết chạy rồi mở rộng dần. Con số có mẫu số, phạm vi và bằng chứng hữu ích hơn một điểm tổng đẹp mắt.
+14913	Bạn đã tính được 2×3=6, bước tiếp theo lại cần cùng kết quả thì có thể lưu 6 để dùng lại. <strong>Bộ nhớ đệm (cache)</strong> là tái sử dụng tính toán đã có khi điều kiện không đổi, tránh công việc lặp lại. Điều then chốt không phải “đã lưu”, mà là “kết quả đã lưu có còn tương ứng điều kiện hiện tại không”.
+1263	Bạn cần có thể chỉ vào bảng tính và trả lời: một logit đến từ cột nào của U? Trước U là hàng nào của F? Trước F là hàng nào của H? Hai số hạng của H lần lượt đến từ đâu? Attention đã đọc những Value nào? Những Value đó do N1 và tham số nào tạo ra?
+1414	Khác biệt bạn cần quan sát
+12013	Lúc này bạn chưa cần hiểu đầy đủ công thức Attention mà đã có thể giải thích từng đối tượng của bước này. Nếu đoạn sau trực tiếp xuất hiện Q, K, V hoặc softmax, hãy đi theo F07→bài 44→bài 46 trước, không đọc tiếp bằng cách đoán chữ viết tắt.
+12522	“爱” bạn thấy là một ký tự. Máy tính cần quy tắc mã hóa để lưu văn bản; chẳng hạn UTF-8 biểu diễn nó bằng một số byte, <strong>byte</strong> là đơn vị lưu trữ gồm 8 bit nhị phân. Một ký tự không nhất thiết chỉ chiếm một byte.
+12178	Những thứ bạn gặp
+475	Bạn nhập một câu nhiệm vụ, chương trình bao quanh thu thập quy tắc, tài liệu, công cụ khả dụng và lịch sử liên quan trước, tổ chức thành “yêu cầu” gửi dịch vụ mô hình. Bên nhận theo quy tắc tương ứng chuyển văn bản thành mã số nguyên. Mô hình dùng mã lấy biểu diễn ban đầu của từng vị trí từ bảng số của mình, rồi tính tiếp văn bản hoặc lời gọi công cụ ở bước sau. <strong>Bong bóng trò chuyện, yêu cầu chương trình, danh sách mã và bảng số nội bộ là các đối tượng khác nhau.</strong> Bài này sẽ lần lượt viết chúng ra, không mặc định bạn đã biết đọc tensor.
+15234	Chi phí bạn cần theo dõi
+30430	你／爱／PAD → [4,2,0]
+29283	Cho tensor nhỏ tham gia phép toán tensor lớn dọc theo trục được phép.
+19968	Làm cho khác biệt có thể giải thích.
+1067	Cho phép mô hình học cách tổ hợp tuyến tính xuyên các đầu và ánh xạ trở lại chiều rộng phần dư. Không có
+25060	Dùng SQLite ghi lại
+5045	sử dụng. Mã nguồn còn phân biệt các lỗi như phản hồi chưa đầy đủ, vượt ngữ cảnh, hủy, không thể coi mọi thất bại là thử lại thông thường.
+5132	Dùng một nhiệm vụ kho mã cố định để so sánh khám phá quy tắc→yêu cầu thực tế→đề xuất công cụ→chấp nhận tham số→bằng chứng thực thi→cô đọng/khôi phục→kiểm chứng cuối cùng. Có thể so sánh kết quả quan sát được, không đoán lời nhắc hệ thống nguồn đóng, suy nghĩ bên trong hay thuật toán lập lịch chính xác từ đầu ra.
+2431	Dùng phần thưởng tương đối của một nhóm ứng viên để xây ước lượng lợi thế, giảm phụ thuộc vào mô hình giá trị riêng. Giám sát quá trình đánh giá bước trung gian, giám sát kết quả đánh giá kết quả cuối cùng; các phương pháp khác nhau có thể kết hợp, không thể coi là triển khai thống nhất của mọi mô hình lập luận.
+28190	Khi dùng trạng thái cô đọng không minh bạch, máy khách có thể không kiểm tra được từng trường nội dung mà mô hình giữ bên trong, nên càng cần giữ ràng buộc nhiệm vụ, kết quả thao tác và tham chiếu bằng chứng trong trạng thái lưu bền bên ngoài. Không thể đặt cược toàn bộ độ tin cậy kỹ thuật vào một khối tóm tắt không thể kiểm tra.
+27860	Dùng dữ liệu ưu tiên để xây mục tiêu tối ưu mô hình. Ưu tiên không tự động đồng nghĩa với đúng sự thật.
+3311	Dùng điểm số [1000,1001,1008,1007], Value lần lượt là [1,0], [0,1], [2,0], [0,2]. Kết quả toàn hàng khoảng [1.461030,0.538059]. Chuẩn hóa riêng hai khối rồi lấy trung bình được [0.865529,0.634471], rõ ràng không tương đương.
+30821	Dùng bằng chứng đáng tin và liên quan
+13697	Dùng Wv=[[5,10],[5,-10]] cố định: ô đầu 1×5+(-1)×5=0; ô thứ hai 1×10+(-1)×(-10)=20. Bước này chỉ xử lý vị trí đó, không trộn Token khác.
+25014	Dùng giao diện Responses chính thức, yêu cầu rõ
+30726	Dùng ngữ cảnh đã có
+17159	Quá trình dùng tham số đã có để xử lý đầu vào và tạo đầu ra.
+12566	Khi dùng bộ tách token đã chuẩn bị sẵn, không phải mỗi câu nhận được đều thống kê lại văn bản toàn thế giới. Nó tách đầu vào mới thành các đoạn đã có theo quy tắc cố định và tra mã. Triển khai thực tế còn có tách sơ bộ, dấu đặc biệt và có thể có bước chuẩn hóa, không thể hiểu là cắt từ tùy ý.
+7087	Kiểm chứng lại khi sử dụng
+25262	Dùng bao đóng phụ thuộc tường minh và heuristic mật độ giá trị, không tuyên bố tìm được tối ưu toàn cục. Giữ mục bắt buộc trước; nếu bản thân mục bắt buộc đã vượt ngân sách thì báo lỗi trực tiếp, không âm thầm bỏ ràng buộc cứng. Phụ thuộc vòng và thiếu phụ thuộc cũng thất bại tường minh. Những kiểm tra siêu dữ liệu này có thể kiểm thử xác định, nhưng vi là đầu vào giảng dạy, không phải giá trị thông tin thực tế được hiệu chuẩn bằng đo đạc.
+20760	Giảm thiểu sử dụng và khử dữ liệu nhạy cảm.
+2208	Dùng nhiệm vụ thực sự chưa từng thấy
+3191	Sau khi dùng bộ nhớ đệm,
+2435	Dùng mục tiêu cắt ngưỡng để hạn chế một lần cập nhật đi quá xa. Lợi thế A biểu thị hành động lần này tốt hơn cơ sở bao nhiêu, không phải bản thân phần thưởng gốc. Ước lượng giá trị, thành phần KL, phạm vi cắt ngưỡng và chuẩn hóa đều ảnh hưởng huấn luyện.
+17761	Dùng kết quả huấn luyện để hoàn thành suy luận từng lượt
+7233	Dùng kiểm thử nhiệm vụ xuyên phiên, sửa lại đến muộn, cách ly nhiều dự án, xung đột và quên. So sánh hoàn thành nhiệm vụ và tỷ lệ lỗi giữa không có bộ nhớ, lịch sử gốc và bộ nhớ chọn lọc; các điểm chuẩn như LongMemEval cung cấp hướng đánh giá năng lực bộ nhớ, nhưng dự án của mình vẫn cần đối chiếu trên nhiệm vụ thực tế.
+2065	Dùng checkpoint không tái nhập, ghi lại việc hàm được gọi nhiều hơn một lần và đối chiếu gradient giải tích. Trực tiếp coi bộ đếm giám sát “hàm thực thi một lần” là số mẫu sẽ sai. Nên đưa tác dụng phụ ra khỏi vùng có thể tính lại tối đa có thể.
+19525	Làm hành vi phù hợp nguyên tắc hơn.
+24395	Ví dụ
+16195	Ví dụ đến ngày 10 tháng 10 hệ thống mới đọc được một quy định: quy định đó có hiệu lực từ ngày 1 tháng 10. Hỏi “ngày 5 tháng 10 áp dụng quy tắc nào” cần xét thời gian hiệu lực; hỏi “lúc đó hệ thống biết gì vào ngày 5 tháng 10” còn cần xét thời gian ghi nhận.
+5128	Ví dụ Codex có StepContext cấp yêu cầu không chứng minh bên trong Claude Code cũng có cấu trúc cùng tên. Bài kỹ thuật Claude đề cập một cách tổ chức nhiệm vụ dài không chứng minh mọi phiên Claude Code đều buộc dùng nó. Tài liệu liệt kê hooks không có nghĩa mọi hook đều chạy đồng bộ hoặc có thể thu hồi tác dụng phụ đã xảy ra.
+15425	Ví dụ JSON có hai ký tự “学习”, các byte UTF-8 có thể bị chia đúng giữa một chữ Hán. Trực tiếp giải mã từng mảnh thành chuỗi đầy đủ riêng rẽ có thể báo lỗi hoặc xuất hiện ký tự thay thế. Cần giải mã gia tăng có thể giữ trạng thái ký tự chưa hoàn tất.
+25790	Ví dụ khi p=0.9, xác suất cả năm lần đều thành công theo giả định độc lập khoảng 0.59049, cho thấy điểm cao của một lần vẫn có thể chưa đủ hỗ trợ tự động hóa tần suất cao. Con số này là ví dụ toán học, không phải độ tin cậy thực tế của sản phẩm nào.
+14632	Ví dụ p=[0.5,0.5], q=[0.25,0.75]:
+15103	Ví dụ s=0.1, x=0.26, q=round(2.6)=3, khôi phục thành 0.3, sai số 0.04. Lượng tử hóa thực tế còn có cắt ngưỡng phạm vi, độ lệch, thang đo theo nhóm và định dạng khác nhau, không thể dùng ví dụ tối thiểu này thay mọi triển khai.
+9372	Ví dụ λ=4, thời gian lưu trung bình trong hệ thống W=3 giây, trung bình có 12 mục trong hệ thống, gồm chờ và được phục vụ.
+6534	Ví dụ “chức năng bật mặc định và không tăng phí” gồm hai mệnh đề, có thể lần lượt cần tài liệu cấu hình và căn cứ tính phí. Bảng bằng chứng nên ghi mệnh đề, phạm vi nguồn, phiên bản, thời gian hiệu lực, đối tượng áp dụng, quan hệ ủng hộ hoặc phản đối và mục chưa biết. Giữ phần không có trong nguồn ở trạng thái chưa biết, đừng dùng lời văn trôi chảy để bổ sung thành kết luận.
+16173	Ví dụ “hôm qua bản vá p7 thất bại vì bỏ sót kiểm thử Windows” là trải nghiệm; “dự án hiện tại hỗ trợ Windows” là sự thật; “khi sửa quy tắc đường dẫn, kiểm tra hai loại dấu phân cách” là quy trình có điều kiện áp dụng; “kiểm thử Windows lần này chưa chạy” là trạng thái công việc.
+16103	Ví dụ “exclude thư mục không có tác dụng”, chỉ đọc hàm so sánh chuỗi có thể không thấy vấn đề. Cần biết đường dẫn đã chuẩn hóa chưa, quy tắc thư mục có cần khớp ranh giới dấu phân cách không, dấu phân cách Windows và Unix có thống nhất không. Đây là tiền đề nghiệp vụ và môi trường, không phải mô hình đọc thêm vài tệp ngẫu nhiên là tự bổ sung đủ.
+6879	Ví dụ “sau khi hủy đơn hàng không được hoàn tiền lặp” là bất biến nghiệp vụ; nó tương ứng máy trạng thái, khóa lũy đẳng giao diện thanh toán, ràng buộc cơ sở dữ liệu và kiểm thử. Khi Agent xử lý Bug hoàn tiền, cần biết bất biến này, rồi tìm đường thực thi và cách kiểm chứng. Tài liệu chỉ ghi “hệ thống dùng kiến trúc vi dịch vụ” gần như không thể hướng dẫn sửa đúng.
+21081	Ví dụ “trường này mặc định tắt” cần biết trường, phiên bản và vị trí tài liệu. Bổ sung thông tin này giúp truy hồi, nhưng cũng có thể gây nhiễu chỉ mục vì tóm tắt sai, nên phải giữ nội dung gốc và xuất xứ.
+16230	Ví dụ “kho mã này dùng pytest” cần kèm nguồn, phạm vi và phiên bản. Nếu dự án đã đổi sang mục vào kiểm thử khác, kinh nghiệm cũ phải được xác nhận lại. Nhiệm vụ hiện tại làm tới đâu là điểm kiểm tra; sau này gặp nhiệm vụ tương tự tham khảo gì mới là bộ nhớ kinh nghiệm. Trích xuất bộ nhớ có thể thành công nhưng không có nội dung đáng lưu, đó không phải lỗi. Sau khi thu hồi sự thật cũ còn phải khiến tóm tắt và quy tắc sinh từ nó cùng mất hiệu lực.
+7063	Ví dụ “pytest lần này đạt” chỉ đúng với một phiên bản tệp và tập kiểm thử cụ thể, không nên lưu thành “mô-đun này không có vấn đề”. Một bộ nhớ dùng được nên có nội dung, nguồn, phạm vi, thời gian xảy ra/có hiệu lực, thời gian biết được, trạng thái tin cậy và điều kiện mất hiệu lực. Điểm kiểm tra nhiệm vụ hiện tại trả lời “đã làm đến đâu”, bộ nhớ dài hạn trả lời “sau này khi nào có thể tham khảo”.
+16279	Ví dụ “tuân thủ phong cách dự án” phù hợp làm chỉ dẫn; “cách điều tra rò rỉ bộ nhớ” có thể viết thành Skill; “chạy kiểm thử” là Tool; “kiểm tra ranh giới thư mục trước khi ghi” có thể do Hook hoặc bộ thực thi triển khai. Chỉ viết quy tắc quyền cứng trong Skill không tự động biến nó thành giới hạn xác định.
+24985	Ví dụ một phản hồi có thể đồng thời có văn bản giải thích và hai lời gọi công cụ. Nếu mã chỉ xét “có văn bản thì kết thúc”, công cụ sẽ không bao giờ chạy; nếu chuyển toàn bộ phản hồi thành chuỗi nhét lại vào lịch sử, ID lời gọi, vai trò và trạng thái dịch vụ cần sẽ mất kiểu gốc. Trạng thái không minh bạch mà giao diện công khai yêu cầu giữ phải được lưu nguyên dạng hoặc tham chiếu theo tài liệu, không tự tạo tóm tắt thay thế.
+25611	Ví dụ nhiệm vụ hệ thống lưu trữ cần chuyên môn giao dịch chưa chắc cần Agent con mới; Agent chính có thể đọc Skill đó khi cần. Nó cần công cụ cơ sở dữ liệu cũng không có nghĩa được ghi cơ sở dữ liệu sản xuất. Nó cần suy luận sâu chưa chắc phải gọi bộ phân loại mô hình trước rồi mới chọn mô hình. Mỗi lớp thêm vào đều cần giải thích giải quyết thất bại thực tế nào.
+25482	Ví dụ nguyên nhân gốc ứng viên là cwd sai. Phải tìm được cwd được tạo thế nào lúc khởi động, hàm khám phá quy tắc dùng cwd thế nào, kiểm thử có bao phủ thư mục lồng nhau không. Chỉ thấy một tên hàm
+12259	Ví dụ viết “我→1、爱→2” chỉ cho biết minh họa trong sách dùng mã như vậy. Bộ tách token thực tế có thể tách một chữ thành nhiều đoạn, cũng có thể ghép nhiều ký tự thành một đoạn. Không thể chuyển mã giảng dạy vào mô hình thực tế.
+24933	Ví dụ giảm ghi lại ma trận trung gian có thể cải thiện phần bị giới hạn bộ nhớ, dù số phép toán tăng nhẹ vẫn có thể nhanh hơn. Ngược lại, với phần đã bão hòa năng lực tính toán, tăng tính lại có thể chậm đi. Không thể chỉ dựa vào số FLOPs hoặc một con số sử dụng GPU để xác định nút thắt dịch vụ; cần kết hợp băng thông bộ nhớ, thời gian toán tử, hàng đợi và phân bố yêu cầu.
+12360	Ví dụ lấy [0,1,2]: chọn đầu vào thứ 0 trước, rồi chọn vị trí 1, cuối cùng chọn đặc trưng thứ 2. Ba tọa độ không phải ba Token.
+15983	Ví dụ lấy hằng số giảng dạy c=10, tài liệu A lần lượt xếp 1, 3 trên hai đường, được
+24567	Ví dụ cùng là “đọc config.py”, văn bản người dùng thông thường chỉ đang yêu cầu một hành động; cùng chuỗi đặt trong trường công cụ trả về có ngữ nghĩa là dữ liệu bên ngoài. Mẫu giúp mô hình học khác biệt vai trò, nhưng vai trò không phải bit quyền phần cứng CPU. Việc thực sự được phép đọc tệp hay không vẫn phải do bộ thực thi kiểm tra. Nhầm cơ chế vai trò với cơ chế quyền là ví dụ điển hình về nhận thức sai ở tầng thấp lan tới rủi ro kỹ thuật.
+17106	Ví dụ trả lời “vì sao bộ nhớ đệm KV tái sử dụng được” không thể chỉ có “giảm tính toán lặp”; cần nói được tiền tố nhân quả không đổi, lưu riêng từng lớp, ràng buộc vị trí và trọng số, lệch một vị trí vì Token mới chưa được tính, cùng kiểm thử đối chiếu đầy đủ và gia tăng.
+8242	Ví dụ định nghĩa: khi chưa cấu hình exclude, hành vi không đổi; đường dẫn khớp không vào đầu ra; đường dẫn không khớp giữ thứ tự gốc; cùng đầu vào và cấu hình cho đầu ra xác định. Như vậy có thể dựng trường hợp thông thường, ranh giới và kiểm thử thuộc tính. Nếu người dùng không yêu cầu cú pháp khớp mới thì không nên tự ý đưa DSL phức tạp vào.
+19360	Ví dụ tăng xác suất mục tiêu thật từ 0.1 lên 0.5 sẽ giảm hàm mất mát log âm; điều này không trực tiếp suy ra tỷ lệ thành công nghiệp vụ tăng cùng tỷ lệ. Phân bố huấn luyện khác nhiệm vụ thực tế, mã nguồn riêng và thông tin mới nhất cũng chưa chắc có trong tham số.
+26006	Ví dụ thêm truy hồi ngữ nghĩa: dự kiến cải thiện định vị khi không biết tên ký hiệu, rủi ro là truy hồi nhầm phiên bản cũ và tên trùng; kiểm chứng bằng hai nhóm đối chiếu nhiệm vụ mô tả ngôn ngữ tự nhiên và nhiệm vụ ký hiệu chính xác, giữ đường ưu tiên truy hồi chính xác. Đánh giá như vậy hướng dẫn triển khai tốt hơn “nâng cao toàn diện năng lực truy hồi thông minh”.
+16990	Ví dụ một nhóm 100 dự đoán đều được gắn mức tin cậy 80%; nếu thực tế khoảng 80 mục đúng thì nhóm này khá hiệu chuẩn theo nghĩa thống kê đó. Nó không chứng minh từng đáp án cụ thể đúng, cũng không bảo đảm vẫn hiệu chuẩn sau khi đổi phân bố.
+24894	Ví dụ mô hình trả về
+9687	Ví dụ sau khi nhấp “Gửi”, mạng chậm và nút chưa đổi ngay. Nhấp lại có thể gửi lặp. Quy trình đúng là chờ trạng thái quan sát được, truy vấn bản ghi nhiệm vụ hoặc nhận biết trang xác nhận, không coi chưa thấy thay đổi là thất bại. Khi không thể xác nhận, ghi lại
+1717	Ví dụ khe vật lý 0, 1 là PAD trái, khe 2, 3, 4 chứa “我/爱/学习”. Một số adapter ghi position_ids của ba Token hợp lệ là 0, 1, 2, trong khi độ dài vật lý bộ nhớ đệm hiện tại là 5. Không thể trực tiếp dùng độ dài hợp lệ 3 ghi đè khe ghi bộ nhớ đệm tiếp theo. Bộ sinh cụ thể biểu diễn bộ nhớ đệm PAD thế nào phải xem triển khai; đây là bố trí giảng dạy nêu rõ các đối tượng có thể khác nhau, không phải mẫu thống nhất.
+14823	Ví dụ chọn tham lam xác suất lớn nhất
+16490	Ví dụ kiểm thử đơn vị hàm đường dẫn đạt nhưng phía thượng nguồn xử lý sai dấu phân cách trước khi gọi, quy trình tích hợp vẫn có thể thất bại. Ngược lại, chỉ chạy một quy trình lớn cũng có thể khó định vị đoạn logic sai.
+14810	Ví dụ chạm giới hạn độ dài đầu ra có thể cắt ngang JSON; nhận lời gọi công cụ có nghĩa mô hình muốn ứng dụng chủ làm bước tiếp theo, chưa chắc là câu trả lời cuối cùng; người dùng hủy càng không có nghĩa công cụ chắc chắn chưa hoàn tất tác dụng phụ.
+18880	Ví dụ không thể chỉ nhớ bộ nhớ đệm “dùng để tăng tốc”, còn cần giải thích lưu gì, tính toán nào được tái sử dụng, khi nào mất hiệu lực và so sánh với kết quả không dùng bộ nhớ đệm thế nào. Cũng không thể chỉ nhớ “thất bại thì thử lại”, mà cần phân biệt ba tình huống: hành động chưa thực thi, thất bại rõ ràng và kết quả bên ngoài chưa biết.
+24378	Ví dụ: Embedding, nhân ma trận, bài 39, Q001
+25540	Ví dụ: “Phiên bản này có tổng ngân sách byte khi nạp quy tắc; khi quy tắc lồng nhau không vào đầu vào, kiểm tra ngân sách và cwd trước, bằng chứng là hàm cụ thể ở commit cụ thể.” Nó hữu ích hơn “chú ý kiểm tra nạp kỹ năng” vì có thể thay đổi hành động tiếp theo. Sau khi mã phiên bản mới thay đổi, kinh nghiệm này cần mất hiệu lực hoặc được viết lại.
+12402	Ví dụ
+10257	Ví dụ+câu hỏi, điều kiện đã đổi
+25730	Ví dụ: chỉ kiểm thử
+25266	Ví dụ: điểm gọi cho thấy
+3602	Ví dụ:
+8688	Ví dụ: N=100, a=70, b=5, c=10, d=15, phiên bản mới tăng ròng 5 điểm phần trăm nhưng đồng thời khiến 5 nhiệm vụ vốn thành công suy giảm. Nếu đúng 5 nhiệm vụ này có rủi ro cao thì tăng ròng chưa chắc đáng giá. Phải xem loại nhiệm vụ và hậu quả thất bại.
+4169	Ví dụ: t0 khai báo read_file, t1 người dùng bổ sung cấp quyền, t2 thực thi đọc. Cần xét “t0 đã chọn môi trường/handler nào” và “bộ truy cập ở t2 hợp nhất cấp quyền thế nào”, không chỉ suy toàn bộ quyền thực thi từ cấu hình t0. Ngược lại, cấp quyền bổ sung cũng không thể làm mô hình tự nhiên có công cụ chưa được công bố hoặc ràng buộc. Ví dụ này giải thích hai loại trạng thái, không phải nhật ký sản phẩm thực tế.
+17625	Chỉ dẫn chuyên môn và tài nguyên liên quan cho Agent dùng khi cần.
+12787	4 số thực cho tính toán mạng nơ-ron tiếp theo; thường được hình thành qua huấn luyện
+5752	Xử lý theo chính sách lưu giữ sản phẩm, nhưng không nên trực tiếp bỏ bằng chứng duy nhất khi không thể kiểm chứng và khôi phục. Có thể chuyển toàn bộ lịch sử sang lưu trữ bên ngoài có kiểm soát, chỉ đưa chỉ mục cần thiết lại cho mô hình; lưu giữ, quyền và xóa khi hết hạn của nội dung nhạy cảm có ràng buộc riêng. Không thể nhân danh “có thể khôi phục” để lưu vô thời hạn mọi dữ liệu.
+10461	Dựng theo điều kiện cụ thể
+10848	Dựa theo mục 3.2 của bài báo Transformer gốc: tham số chiếu, phân công Query/Key/Value, tích vô hướng có tỷ lệ, nối nhiều đầu và chiếu đầu ra. Ma trận trong nội dung chính là ví dụ tính toán nhỏ do sách tự dựng, không phải trọng số huấn luyện của bài báo.
+17156	Quá trình tính sai số theo mẫu và mục tiêu rồi điều chỉnh tham số.
+17406	Rút ứng viên theo phân phối xác suất.
+18985	Dựa trên trạng thái vị trí cuối của đầu vào A/B
+10129	Đánh giá theo chất lượng dữ liệu, hình dạng mô hình, tối ưu và mục tiêu
+1114	Lần lượt lấy cột
+12592	Lần lượt tra từ vựng
+17887	Lần lượt xem: trừ giá trị lớn nhất, lấy hàm mũ, tính tổng, chia cho tổng. Cộng 1000 vào mọi điểm số, xác suất phải giữ nguyên.
+29722	Phụ thuộc
+27746	Phụ thuộc</strong> là một bước phải chờ kết quả khác mới có thể tiến hành.
+10228	Phụ thuộc vị trí. Nếu trộn phép xoay vị trí với phép chiếu mở rộng nội dung, biến đổi thường thay đổi theo vị trí, không thể đơn giản tái sử dụng một ma trận cố định cho mọi vị trí lịch sử. Tách nhánh vị trí nhằm giữ mô hình hóa vị trí đồng thời duy trì sự thuận tiện của bộ nhớ đệm hạng thấp.
+11244	Phụ thuộc cách chấm điểm
+4574	Phụ thuộc phản ví dụ
+25810	Cài đặt phần phụ thuộc thất bại, mạng dao động và tranh chấp đĩa/CPU có thể thay đổi điểm nhiệm vụ. Đánh giá cần ghi lỗi hạ tầng và lỗi mô hình/Agent, nhưng không được tùy ý xóa kết quả bất lợi. Định nghĩa trước điều kiện thử lại và loại trừ, đồng thời báo cáo trải nghiệm người dùng tổng thể và kết quả có thể quy cho mô hình.
+9403	Phụ thuộc mô hình mới hoặc trường mới
+7707	Nhiệm vụ có phụ thuộc rõ có thể lập kế hoạch trước; nhiệm vụ khám phá nên cho phép vừa làm vừa điều chỉnh. Tách hàng chục nút quá sớm có thể dựa trên giả định sai và gây thực thi vô ích. Có thể hoàn tất định vị then chốt trước, rồi chạy song song những phần thực sự độc lập.
+11219	Phiên bản phần phụ thuộc
+25286	Bổ sung đủ phụ thuộc
+5429	Bao đóng phụ thuộc quan trọng hơn xếp hạng độc lập
+20823	Giúp đánh giá truy hồi có lệch trọng tâm không.
+10552	Giúp khôi phục nhưng không thay thế bằng chứng gốc
+6073	Giúp lọc và truy ngược.
+7516	Mô hình rẻ tiết kiệm mỗi lần gọi, nhưng sau làm lại thì mỗi nhiệm vụ thành công lại đắt hơn
+15830	Lưu 
+4563	Lưu c1→A, c2→B
+14698	Lưu spec và parameters, không chỉ lưu một câu “huấn luyện hoàn tất”.
+3778	Lưu stop_reason, không suy ra nhiệm vụ hoàn tất từ văn bản trôi chảy
+20713	Lưu một kết luận chỉ là khởi đầu, còn cần nguồn, tính hiệu lực và xử lý xung đột. Lời mô hình từng nói không tự động trở thành bằng chứng sự thật độc lập.
+3746	Lưu và nạp
+15010	Lưu gì
+18002	Lưu ID nhiệm vụ, dấu vân tay tệp ban đầu, call_id sự kiện công cụ, dấu vân tay tệp cuối cùng và nghiệm thu độc lập. Lời tự thuật mô hình không làm nhãn thành công; không được viết bù dấu vết thiếu thành quá trình đẹp mắt.
+23793	Lưu JSON nhiệm vụ, mã chấm điểm, cấu hình và bằng chứng thực thi để vẫn so sánh được sau khi nền tảng thay đổi. Một số nền tảng trong mục lục đọc mở rộng có thông báo vòng đời; sách giữ ngày kiểm chứng và ngày kế hoạch, không viết kế hoạch tương lai thành việc đã xảy ra.
+7058	Cần tách lưu kinh nghiệm ứng viên khỏi kích hoạt quy tắc thực thi. Có thể cho phép tự động tích lũy bằng chứng, nhưng để quy tắc đã kiểm chứng, giả thuyết chờ xác nhận và chỉ dẫn rõ của người dùng có trạng thái khác nhau. Nếu không, một lần tổng kết sai có thể lập tức ảnh hưởng mọi nhiệm vụ sau.
+23428	Lưu trải nghiệm, sự kiện và kết quả cụ thể.
+23430	Lưu phương pháp và quy trình tái sử dụng được, cần tránh quá khớp kinh nghiệm.
+23380	Lưu trạng thái nhiệm vụ có thể khôi phục, không đồng nghĩa với kinh nghiệm xuyên nhiệm vụ.
+26127	Kiểm tra giá trị thực tế sau khi lưu
+26072	Lưu mô hình cơ sở, Tokenizer, mẫu trò chuyện, adapter, phiên bản dữ liệu huấn luyện, siêu tham số, tập đánh giá và cấu hình triển khai. Chỉ lưu tệp adapter chưa chắc đủ khôi phục hành vi. Thay mẫu có thể khiến cùng trọng số nhận dấu vai trò khác nhau, thay phiên bản lượng tử hóa cũng có thể ảnh hưởng kết quả.
+23034	Lưu thất bại hoặc sai đường dẫn
+22158	Lưu thành công cục bộ.
+5107	Lưu công cụ đã đăng ký;
+23429	Lưu kiến thức hoặc sự thật kèm phạm vi và bằng chứng.
+23172	Lưu đại lượng trung gian cần thiết.
+17459	Sản phẩm lưu bền chứa trạng thái cần để tiếp tục huấn luyện.
+15551	Lưu danh tính thao tác op7 đã phê duyệt
+5108	Lưu đặc tả công bố cho mô hình lần này;
+14534	Lưu tham số mô hình có đủ tiếp tục huấn luyện AdamW chính xác không?
+21452	Lưu bước 3, lời gọi chưa hoàn tất và phiên bản hiện tại
+17424	Lưu kết quả tính Key và Value tại các vị trí đã có của mỗi lớp để tái sử dụng.
+882	Lưu kết quả tính Key và Value tại các vị trí đã có của mỗi lớp để tái sử dụng. Ví dụ: không phải bộ nhớ dài hạn người dùng, cũng không phải tóm tắt Prompt.
+9727	Việc lưu chưa hoàn tất, cần bổ sung thông tin cần thiết thay vì tuyên bố thành công.
+21455	Lưu lệnh kiểm thử và nguồn
+18235	Lưu mã nguồn</a> · 117 dòng · SHA-256 
+18231	Lưu mã nguồn</a> · 210 dòng · SHA-256 
+18233	Lưu mã nguồn</a> · 33 dòng · SHA-256 
+18232	Lưu mã nguồn</a> · 56 dòng · SHA-256 
+18234	Lưu mã nguồn</a> · 58 dòng · SHA-256 
+8548	Lưu yêu cầu người dùng, ảnh chụp kho mã, khóa phụ thuộc, môi trường kiểm thử, quyền công cụ và ngân sách. Mỗi trial khởi chạy từ môi trường sạch, tránh tệp đã sửa hoặc bộ nhớ đệm lần trước ảnh hưởng. Ghi mô hình/cấu hình/
+4501	Đối tượng được lưu
+711	Lưu cấu trúc thông điệp sau khử dữ liệu nhạy cảm, tóm tắt kết quả kết xuất, chuỗi dấu đặc biệt, số ID và phiên bản. Nội dung nhạy cảm có thể lưu hàm băm và bản tái hiện tổng hợp cục bộ, không nên làm lộ nguyên văn để debug. Đừng xóa BOS/EOS mù quáng khỏi mọi chuỗi: có những dấu là ranh giới nhiều lượt hợp lệ, xóa cũng phá nhiệm vụ.
+22639	Lưu trường chuẩn và giữ cách định nghĩa của nguồn
+14463	Lưu sản phẩm huấn luyện: trọng số phải đi kèm gì
+9434	Lưu đầu vào, phiên bản, đánh giá và điều kiện hoàn tác
+15248	Lưu một phần nút, tính lại phần khác khi lan truyền ngược, đổi tính toán lấy bộ nhớ. Bộ nhớ đệm KV thì đổi bộ nhớ lấy phần tính toán suy luận lặp. Chúng thậm chí thể hiện lựa chọn tài nguyên ngược nhau.
+20183	Lưu trạng thái cần tham chiếu xuyên lượt
+1178	Giữ Q/K
+1803	Giữ Query độc lập
+13618	Giữ nguyên
+22229	Giữ nội dung
+21924	Giữ mục tiêu nghiệm thu ban đầu.
+20757	Giữ khả năng truy vết cần thiết.
+21653	Giữ ranh giới thực thi.
+20074	Giữ tính liên tục giao diện.
+31617	Giữ mục tiêu
+22896	Giữ thông tin tương đối giữa 0.2 và 0.1
+1783	Giữ 4 đầu truy vấn nhưng chỉ lưu đệm 2 nhóm Key/Value
+9652	Giữ A
+2795	Sau khi giữ A, B còn phải chuẩn hóa lại. Khi τ=1, A khoảng 0.731059, B khoảng 0.268941, không dùng tiếp xác suất gốc có tổng nhỏ hơn 1.
+26669	Giữ một adapter OpenAI Responses chỉ đọc cần bật tường minh, mặc định không chạy. Trước khi dùng phải tự xác nhận tài khoản API, khả năng dùng mô hình, chi phí và thư mục gửi đi; chương trình chỉ cho đọc tệp có hậu tố, kích thước được giới hạn và nằm trong thư mục gốc. Không thể dùng thư mục chứa thông tin xác thực hoặc mã nguồn nhạy cảm làm gốc thử nghiệm.
+5993	Giữ lại một phần câu hỏi tiếp theo chưa tham gia thiết kế tóm tắt, thêm ràng buộc ở các nhiệm vụ và vị trí khác nhau; dùng việc thực sự tiếp tục thực thi thay vì chỉ trả lời hỏi đáp cố định. Câu hỏi kiểm tra đã biết có thể là bảo đảm tối thiểu, nhưng không chứng minh không mất mát đối với mọi câu hỏi tương lai.
+2997	Giữ hai tiền tố
+3003	Giữ hai tiền tố thì phải duy trì trạng thái tương ứng
+16728	Giữ từng trường hợp và điều kiện chạy, không thể chỉ ghi “tăng 20%”.
+21543	Giữ khác biệt giữa sự thật và kế hoạch.
+7630	Giữ toàn văn làm bản ghi truy vết có giá trị, nhưng đưa hết vào ngữ cảnh chính có thể làm chìm nhiệm vụ. Luồng chính cần kết luận, bằng chứng và mục chưa quyết định; khi cần mới mở toàn văn. Cần tách trách nhiệm bản ghi gốc khỏi ngữ cảnh hiện tại.
+7178	Giữ trạng thái xung đột và bằng chứng từng bên, khi cần xác minh với người dùng, không thể tạo sự thật bằng điểm tự tin của mô hình. Khi không đủ căn cứ cần trả “chưa xác định”, khác với trích xuất bộ nhớ thất bại. Đánh giá cần gồm trường hợp có thể từ chối trả lời đúng.
+19715	Giữ 3 mục đầu
+13298	Giữ k mục đầu;
+24904	Giữ hai mục đầu
+15828	Giữ hành động, phiên bản bằng chứng, việc cần làm và giới hạn.
+1422	Giữ thông tin gốc và sửa lại
+31609	Giữ cơ sở và phiên bản gốc
+9613	Giữ yêu cầu gốc, khẳng định thất bại và ràng buộc nghiệm thu độc lập, đồng thời rà soát xem có xóa kiểm thử, nới khẳng định hay né chức năng không. Bản thân kiểm thử có thể sai, nhưng sửa kiểm thử phải đưa bằng chứng độc lập. Để cùng một nhánh mô hình tùy ý viết lại cả giải thích yêu cầu, triển khai và chấm điểm sẽ tạo vòng tự chứng minh.
+26017	Giữ lớp phát hành A, đánh giá B trên nhiệm vụ thông thường
+9967	Giữ thông tin bố trí hai chiều gốc của bốn khối
+6431	Giữ biểu diễn nhiều Token, thực hiện khớp chi tiết hơn ở giai đoạn sau.
+29494	Giữ trạng thái hoàn tất và chưa hoàn tất
+5349	Giữ mô tả nhiệm vụ, đoạn kho mã, cấu hình và bước thao tác tối thiểu gây lỗi, đồng thời không xóa ranh giới then chốt. Thu nhỏ kho mã lớn không liên quan thành fixture nhỏ giúp tăng tốc hồi quy, nhưng phải xác nhận sau khi thu nhỏ vẫn tái hiện cùng cơ chế, không tạo một bài toán đồ chơi khác.
+8481	Giữ ít khẳng định cấu trúc và trường then chốt, ngoài ra dùng nhiệm vụ thực tế kiểm chứng định tuyến, truy hồi bằng chứng và chất lượng sản phẩm.
+5647	Giữ chỉ dẫn
+7947	Giữ danh tính thao tác, nội dung yêu cầu và cách kiểm tra.
+28347	Giữ khoảng hiệu lực và thời gian nhập của mục cũ mới giải thích được vì sao câu trả lời trước sai, khi nào có thể được sửa, thay vì dùng mục mới nhất ghi đè toàn bộ lịch sử.
+22192	Giữ phản ví dụ tối thiểu và kỳ vọng
+20543	Giữ ngữ cảnh tối thiểu cần thiết.
+29250	Giữ bảng vị trí hợp lệ
+21792	Giữ điều kiện
+22785	Giữ điều kiện truy vấn, số trang và trạng thái lỗi
+603	Giữ yêu cầu gốc của người dùng, phiên bản mô hình và ứng dụng chủ, đối tượng yêu cầu nhìn thấy được, phiên bản Schema công cụ, đường dẫn và phiên bản bằng chứng, trạng thái phản hồi và kết quả công cụ. Cần khử dữ liệu nhạy cảm; đừng hiểu “nhật ký đầy đủ” là lưu khóa bí mật và dữ liệu cá nhân vô điều kiện. Khi không thấy lời nhắc ẩn nguồn đóng và suy luận nội bộ, nêu rõ ranh giới, không suy ngược từ đầu ra ra một cái gọi là Prompt gốc.
+29493	Giữ mục tiêu và ràng buộc phủ định
+18023	Giữ cùng nhiệm vụ chỉ mục, thay phần “người khác điều khiển quy trình cho bạn”. Từ lần này bắt đầu xây tập nhiệm vụ, hợp đồng thực thi và cơ sở dùng tiếp cho tối ưu sau.
+11590	Giữ mục tiêu nghiên cứu, tiền đề và hạn chế.
+20905	Giữ kiểu và tải dữ liệu
+23344	Giữ tập ứng viên có xác suất tích lũy đạt ngưỡng rồi lấy mẫu, số ứng viên có thể thay đổi động.
+7148	Giữ thời gian ghi nhận để hỗ trợ kiểm toán.
+26247	Giữ hướng được bằng chứng hỗ trợ.
+15925	Giữ tần suất từ
+30015	Giữ chuỗi gốc của bên gọi; chỉ chuẩn hóa khi so sánh.
+22750	Giữ danh tính
+6038	Giữ phạm vi áp dụng
+22251	Giữ trạng thái đạt
+15826	Tóm tắt trung thành với nội dung
+20794	Kiểm tra độ trung thành phải kiểm tra trạng thái mệnh đề
+4372	Bảo đảm mô hình ở bước sau quy kết được kết quả về yêu cầu gốc.
+8136	Bảo đảm không có ghi khác chen vào giữa so sánh và cập nhật.
+25228	Bảo đảm giải thích được khác biệt.
+25564	Bảo đảm phạm vi
+16766	Ranh giới tin cậy trust boundary</strong> phân chia chủ thể nào có thể kiểm soát hành vi nào. Đọc văn bản bên ngoài khiến nó tác động đến dự đoán mô hình, nhưng không nên tự động cho văn bản đó quyền sửa đổi, gửi qua mạng hoặc danh tính chỉ dẫn cao hơn.
+25273	Khi thông tin xung đột, cần giữ xung đột và điều kiện giải quyết. Hai tài liệu mô tả trái nhau thì xem phiên bản và bề mặt sản phẩm áp dụng trước; khi chưa phán định được, không nên hợp nhất trong tóm tắt thành kết luận có vẻ chắc chắn. Giữ “cụ thể điều gì chưa chắc chắn” hữu ích hơn lời miễn trừ chung chung.
+17125	Thông tin mất ở giai đoạn lắp ghép.
+23391	Đưa thông tin ra ngoài
+29526	Dự án, người dùng, phiên bản hoặc môi trường mà thông tin áp dụng.
+11329	Lựa chọn thông tin có thể tổ chức trước hoặc truy hồi khi cần. Cô đọng ưu tiên giữ sự thật và ràng buộc cần cho phán đoán tiếp theo, rồi giảm dư thừa; bằng chứng gốc cần đọc lại được.
+20400	Sửa mục vào
+22321	Sửa thiếu hụt chung có giá trị hơn liên tục chạy lại.
+30792	Sửa exclude, không đổi API công khai
+2819	Sửa chữa.
+26400	Việc sửa trước hết làm sạch thẩm quyền sai và ranh giới áp dụng, rồi mới đánh giá chiến lược ghi. Khi cần giảm bộ nhớ thay vì thêm cấu trúc đồ thị phức tạp hơn. Hồi quy gồm bằng chứng mới bác bỏ kết luận cũ, thu hồi quyền, xung đột lẫn nhau và tình huống không có kết quả khớp; hệ thống phải có thể không dùng bộ nhớ.
+30813	Sửa ngữ nghĩa khớp, không đổi API không liên quan
+28411	Sửa thất bại, cần thử lại
+26275	Bản sửa chuẩn hóa đường dẫn thành biểu diễn POSIX tương đối, từ chối dạng vượt ranh giới; quy tắc thông thường so sánh toàn bộ đường dẫn tương đối; quy tắc thư mục so sánh bằng nhau hoặc
+26389	Sửa cần nhắm đúng nguyên nhân: đặt thất bại rõ ràng cho tập kiểm thử rỗng; thêm khẳng định cho yêu cầu mới; ràng buộc kiểm chứng với phiên bản hiện tại; cách ly tài nguyên kiểm thử rủi ro cao. Đừng máy móc thêm ba lượt Review bằng ngôn ngữ tự nhiên, vì chúng có thể lặp lại việc tin cùng một báo cáo xanh sai.
+25111	Trạng thái sửa lỗi
+28414	Bản sửa cần khiến tóm tắt giữ unknown và bộ thực thi ngăn trực tiếp làm lại hành động chưa biết kết quả; đổi Reviewer khác cũng vẫn cần bằng chứng trạng thái thực tế.
+13625	Sửa một hệ số trong Wq
+13701	Sửa Wv nhưng giữ nguyên Wq/Wk và đầu vào, tỷ trọng đọc của lớp hiện tại có nhất thiết thay đổi không?
+17877	Sửa độ dài ba trục. Chú ý bảng mã chỉ có B và T, kết quả tra bảng mới thêm chiều rộng d ở mỗi vị trí.
+25491	Sau khi sửa hàm, xem bên gọi trực tiếp, hợp đồng tham số và trả về trước, rồi xem cách dùng ở ranh giới và xử lý lỗi; lựa chọn kiểm thử có thể mở rộng theo phụ thuộc. Nhưng đồ thị tĩnh thiếu cạnh, đường động, dữ liệu dùng chung và cấu hình dựng đều có thể gây bỏ sót. Với thay đổi rủi ro cao, có thể thêm hồi quy rộng hơn sau kiểm thử tập trung, không coi đồ thị là bằng chứng tuyệt đối.
+13798	Sửa điểm số
+26281	Sau khi sửa, chạy lại cùng 8 kiểm thử, tất cả đều đạt. Sau đó gọi kiểm tra hoàn tất, xác nhận phiên bản tệp hiện tại nhất quán với phiên bản đạt kiểm thử gần nhất. Thí nghiệm thêm một chú thích nữa để cố ý làm sản phẩm thay đổi; finish lần nữa bị từ chối, cho thấy kết quả xanh cũ không tự động áp vào tệp mới.
+16496	Sau khi sửa phải chạy lại phản ví dụ
+10384	Sửa Schema công cụ cần hồi quy lắp ghép tham số, hook viết lại, ràng buộc cấp quyền, thực thi và đưa kết quả lại. Sửa cô đọng cần hồi quy ràng buộc then chốt, phiên bản lịch sử, lời gọi đang diễn ra và khôi phục. Sửa bộ nhớ cần hồi quy trích xuất, hợp đồng thuê, kiểm chứng sản phẩm, thu hồi nguồn và mất hiệu lực khi sử dụng. Đồ thị giúp xác định phạm vi ảnh hưởng, không yêu cầu mỗi sửa đổi nhỏ chạy lại mọi kiểm thử toàn hệ thống.
+28300	Sửa đổi đã được triển khai chưa
+29556	Sửa đổi phá hành vi vốn đúng.
+6679	Phạm vi sửa đổi
+15564	Lời gọi sửa đổi hết thời gian chờ, vì sao không trực tiếp đặt trạng thái là chưa sửa?
+6919	Kiểm chứng sửa đổi
+21637	Sửa tham chiếu hoặc bổ sung đủ script thực tế
+10333	Sửa phạm vi đọc hợp lệ, giữ nguyên phần khác
+3961	Sửa bản vá
+16317	Vì sao sửa lỗi chính tả và sửa Bug đồng thời không nên nạp cùng bộ kỹ năng
+30826	Sửa lọc phiên bản hoặc điều kiện mất hiệu lực
+31356	Quan hệ đảo: Docker → {A,C}; pytest → {B}
+17586	Chỉ mục đảo
+15875	Vì sao chỉ mục đảo được gọi là “đảo”
+15943	Chỉ mục đảo và từ vựng có phải cùng một thứ không?
+30645	Ví dụ chỉ mục đảo
+15927	Danh sách đảo cũng có thể ghi vị trí và số lần.
+30647	Danh sách đảo (tra trực tiếp khi truy hồi)
+29505	Đảo: từ từ ngữ tìm tài liệu chứa nó
+23407	Hợp nhất nghịch đảo thứ hạng
+2772	Ứng viên A
+31360	Ứng viên A, C
+2773	Ứng viên B
+2774	Ứng viên C
+28416	Ứng viên H1: năng lực mô hình mới giảm; H2: tóm tắt mất trạng thái; H3: quá tải kỹ năng; H4: nhiễu môi trường kiểm thử.
+28122	Bản sửa ứng viên cần đổi đường dẫn thành dạng tương đối với thư mục gốc tại ranh giới đúng, đồng thời nêu rõ cách xử lý đường dẫn ngoài gốc.
+7312	Ứng viên có liên quan; nếu nhiệm vụ là sửa lỗi chính tả tài liệu thì không nên ép nạp.
+31554	Danh sách ứng viên
+21672	Xem riêng khám phá, nạp và thực thi ứng viên
+31364	Truy hồi ứng viên
+6239	Độ rộng ứng viên
+30534	Ứng viên đã xuất hiện
+26244	thì việc tìm kiếm ứng viên mới có phản hồi đáng tin.
+26237	Số ứng viên tăng
+30824	Có phải ứng viên ưu tiên phiên bản cũ không
+5778	Dù ứng viên cuối cùng không được dùng, yêu cầu sinh vẫn có thể đã tốn tính toán. Dừng cần hủy và xử lý kết thúc, cũng phải xử lý mức sử dụng đã báo. Chỉ đếm “tóm tắt được cài đặt thành công” sẽ đánh giá thấp chi phí hệ thống.
+21188	Ứng viên lẫn lộn.
+25420	Quyền có thể thay đổi giữa lúc sinh ứng viên và lúc xuất kết quả
+6379	Cửa sổ ứng viên quá nhỏ thì xếp hạng lại không thể khắc phục
+21471	Quy luật ứng viên
+25439	Mở rộng hàng đợi ứng viên và ngân sách khám phá sẽ tăng lượng truy cập
+24913	Tập ứng viên và thứ tự khác nhau, cần ghi cấu hình sinh.
+6516	Tập ứng viên chỉ có A/B
+15972	Nếu tập ứng viên không chứa tài liệu đúng, bộ xếp hạng lại không thể tự tìm ra từ hư không. Xếp hạng lại mạnh hơn không có nghĩa cả đường ống truy hồi đầy đủ hơn.
+17605	Phương pháp dùng biểu diễn câu trả lời giả định được sinh ra để hỗ trợ truy hồi.
+6555	Phương pháp dùng biểu diễn câu trả lời giả định được sinh ra để hỗ trợ truy hồi. Ví dụ: nội dung giả định không phải sự thật đáng tin, cần bằng chứng thực tế.
+13147	Cách sắp xếp giá trị
+19507	Nghiêng về A.
+19889	Giả định prefill cũng giảm một nửa còn 10
+30571	Nhiệm vụ giả định: giới hạn dưới tính toán 0.01 giây, giới hạn dưới vận chuyển bộ nhớ 0.10 giây
+21575	Kỹ năng kiểm tra đường dẫn giả định có thể gồm tình huống áp dụng, ngữ nghĩa đường dẫn, kiểm thử cần thiết và phản ví dụ. Mô tả phụ trách định tuyến, nội dung chính phụ trách phương pháp, tài nguyên phụ trách bằng chứng, script phụ trách thao tác xác định. Dù nội dung chuyên nghiệp tới đâu, nếu không được chọn cũng không giúp được lượt này.
+28330	Giả sử ngày 20 tháng 10 nhận tài liệu mới D2@v4 cho biết dự án A đã bỏ trường nhạy cảm từ ngày 18 tháng 10, nhật ký lỗi mới chuyển sang quy tắc 30 ngày thông thường. Hệ thống đến ngày 20 tháng 10 mới biết thay đổi này, nên:
+16492	Giả sử Agent sửa hàm loại trừ thành luôn trả true, kiểm thử dương “vendor/a.py phải bị loại” sẽ đạt. Thêm phản ví dụ “src/a.py không được bị loại” sẽ phát hiện kiểu sửa giả này.
+16305	Giả sử A chuẩn bị đầu vào mất 2 đơn vị thời gian, B và C là các kiểm tra độc lập lần lượt mất 3 và 4, D tích hợp mất 1. Chạy tuần tự tổng cộng 10; đường găng lý tưởng khi B/C song song là 2+max(3,4)+1=7.
+16033	Giả sử D2 cao nhất sau hợp nhất hai đường tìm kiếm nhưng D2 áp dụng phiên bản cũ, câu hỏi hiện tại về phiên bản mới. Nó liên quan nhưng không áp dụng được. Quy trình đúng xem độ liên quan trước, rồi xem phiên bản, quyền, điều kiện và bằng chứng có bao phủ câu hỏi không. Hai khối đến từ cùng nguyên văn không tự động tính là hai nguồn hỗ trợ độc lập. Trước khi trả lời, trỏ từng kết luận đến bằng chứng cụ thể; thiếu mục nào thì tìm tiếp hoặc thu hẹp kết luận.
+2668	Giả sử Prompt là
+13182	Giả sử X có 2 hàng 3 cột, mỗi hàng đều cần cộng bias
+28127	Giả sử c19 đã hoàn tất thay tệp nhưng bộ chạy gặp sự cố trước khi ghi thành công. Mô hình và trạng thái nhiệm vụ chỉ biết hết thời gian chờ, tệp bên ngoài đã là r43.
+15697	Giả sử tổng ngân sách một dịch vụ giảng dạy là 2000, dành 500 cho đầu ra dự kiến và 100 cho định dạng cùng sai số ước lượng, thì giới hạn sắp xếp đầu vào là 1400. Quy tắc cố định 200, mô tả công cụ 300, nhiệm vụ người dùng 100, còn 800 cho lịch sử và bằng chứng.
+2768	Giả sử logits của ba ứng viên là
+12349	Giả sử hai câu mỗi câu có 3 đoạn văn bản, mỗi đoạn được mô tả bằng 4 số. Câu thứ nhất tương ứng một bảng 3 hàng 4 cột, câu thứ hai cũng tương ứng một bảng 3 hàng 4 cột. Đặt hai bảng cùng nhau sẽ có hình dạng
+4398	Giả sử các sự kiện lần lượt đến:
+7545	Giả sử chi phí gọi mô hình rẻ là 1, mô hình mạnh là 5, 40% nhiệm vụ chuyển sang phương án dự phòng, thì chi phí mô hình kỳ vọng mỗi nhiệm vụ là
+9484	Giả sử ứng viên gồm chính sách công tác thông thường, ngoại lệ công tác nước ngoài và một phiên bản hết hiệu lực. Hệ thống nên biểu diễn chúng thành bằng chứng kèm nguồn và khoảng hiệu lực, không ghép thành đoạn không có thứ tự. Trước khi sinh, liệt kê các khẳng định cần trả lời: loại chi phí có được bao phủ không, giới hạn số tiền, có cần phê duyệt không. Mỗi khẳng định phải có bằng chứng áp dụng được; nếu thiếu khu vực phát sinh chi phí, nói rõ điều kiện đó chưa xác định, không được giả định quy tắc thông thường áp dụng.
+1661	Giả sử độ dài tiền tố P=100, Token mới lẽ ra ở vị trí 100. Nếu xoay nhầm Q/K của nó theo vị trí 0 trong khi K cũ vẫn lưu theo 0 đến 99, “khoảng cách” mô hình đọc được đã không còn là khoảng cách thật. Độ dài tensor,
+21157	Dù giả thuyết rất giống cũng không thể trực tiếp dẫn làm nguyên nhân gốc.
+4394	Giả sử tham số gồm
+6597	Chỉ dùng giả thuyết làm manh mối truy vấn, không làm sự thật để công bố.
+14978	Giả sử chỉ có hai lớp, mỗi lớp một đầu, mỗi K hoặc V là 4 số, đã xử lý 3 vị trí.
+1577	Giả sử chỉ đánh giá hai vị trí dự đoán hợp lệ đầu tiên
+16679	Giả sử cùng 20 nhiệm vụ, A thành công 15, B thành công 17. Chỉ xét tổng điểm là tăng 10 điểm phần trăm. Còn phải xem: những mục nào A thất bại B thành công, những mục nào A thành công B thất bại, mức nghiêm trọng thất bại có khác nhau không.
+9389	Giả sử cùng ngày thay mô hình, định dạng tóm tắt cô đọng và chỉ mục mã rồi tỷ lệ thành công giảm. Không có danh sách phiên bản sẽ khó phân biệt nguyên nhân; mỗi lần chỉ đổi số ít biến có thể quy kết nguyên nhân, hồi quy ngoại tuyến trước rồi quan sát lưu lượng thực tế phạm vi nhỏ giúp phán định hơn. Phát hành thăm dò không phải tùy ý giao thao tác nguy hiểm cho ít người dùng; năng lực rủi ro cao vẫn phải có bảo đảm quyền và nghiệm thu trước.
+25988	Giả sử mô hình nhỏ tốn Cs mỗi lần, thành công với xác suất ps; thất bại được phát hiện đáng tin, sau đó gọi mô hình lớn tốn Cl. Chi phí kỳ vọng đơn giản hóa là
+4999	Giả sử claims đã được thư viện tin cậy xác minh chữ ký là
+23548	Giả sử vị trí hiện tại chỉ thấy hai vị trí đầu, điểm thứ ba được mặt nạ đặt thành âm vô cùng. Sau softmax, trọng số thứ ba bằng không, hai trọng số đầu được chuẩn hóa lại thành khoảng

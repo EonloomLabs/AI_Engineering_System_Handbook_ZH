@@ -1,0 +1,498 @@
+26448	Respuesta de referencia: el enrutamiento es solo una métrica intermedia. Analiza si la nueva carga desplaza la evidencia del código fuente, si la Skill está obsoleta o si el proceso es demasiado pesado; realiza ablaciones separando la descripción, el cuerpo y la estrategia de carga; comprueba los estratos de tareas complejas y simples. No sacrifiques la calidad final por la puntuación de enrutamiento. Si no hay un beneficio neto positivo, revierte el cambio o aplícalo solo a subescenarios respaldados por evidencia.
+18055	Respuesta de referencia: ¿por qué no se pueden reparar los call_id duplicados según su posición en el array?
+26442	Respuesta de referencia: hay que distinguir valid time de recorded/transaction time. Consultar lo que se sabía entonces solo permite usar evidencia registrada antes del día 25; una revisión desde hoy puede usar documentos llegados después pero válidos para el día 25. La implementación didáctica actual incluye ambos filtros temporales, pero no un historial completo de retiradas ni fusión concurrente; no debe exagerarse su alcance.
+31223	Política de referencia πref
+2415	La política de referencia es fija, por lo que el cálculo previo puede reducir el coste de entrenamiento; sin embargo, la caché debe vincularse a los pesos de referencia, el tokenizer, la plantilla, el texto de respuesta y las reglas de truncamiento y mask. Usar solo el ID de la muestra como key y seguir leyendo el logp antiguo tras revisar el texto introduce probabilidades de referencia ajenas en el gradiente. Un acierto de caché no implica que la caché sea válida.
+17849	Referencias</a><a href="checks.html">Verificación de cálculos</a><a href="complete.html">Lectura continua
+10880	Referencias</span><span>206 lecciones temáticas</span><span>Correspondencia con los requisitos de 28 capítulos
+24408	Referencias y ámbito de aplicación — Ingeniería de sistemas de IA
+12551	también representa la matriz Value. En los ejemplos básicos de este libro se usa N para evitar confundirlas.
+26496	y la forma de traza de la pérdida escalar, se obtiene:
+16725	La probabilidad binomial bilateral es aproximadamente 0.289063, insuficiente para rechazar la hipótesis nula con un umbral de 0.05.
+22234	Puntuación bidireccional y comprobación de evidencia
+3104	En un codificador bidireccional, las posiciones anteriores pueden depender de tokens posteriores, por lo que añadir entrada cambia los estados anteriores; algunas normalizaciones entre tokens, transformaciones dinámicas de posición o arquitecturas que modifican el historial también requieren un análisis aparte. Las ventanas deslizantes, los estados recurrentes y los modelos híbridos tienen sus propios mecanismos de estado. La demostración de este capítulo se aplica a capas causales estándar con prefijo y parámetros fijos; no permite afirmar que todos los modelos tengan la misma caché.
+26537	La recuperación de doble torre puede calcular una pérdida contrastiva para una consulta q, un ejemplo positivo d+ y varios negativos dj:
+6417	La recuperación de doble torre convierte
+21116	La recuperación de doble torre codifica la consulta y el documento por separado
+25391	La recuperación de doble torre suele codificar consultas y documentos por separado y calcular su relevancia mediante el producto escalar o el coseno. Los vectores de documentos pueden calcularse sin conexión y los de consulta en línea; los ejemplos positivos, negativos e instrucciones de tarea del entrenamiento determinan qué relaciones de similitud representa bien. La similitud descriptiva no equivale a identidad factual: las condiciones opuestas, los números de versión y los identificadores exactos pueden quedar ocultos por una aproximación semántica.
+6149	Entrenamiento y consulta de modelos de doble torre
+6421	Doble torre:
+8078	Tras completarse ambos
+30691	Ambos fallaron en 1 pregunta
+30688	Ambos acertaron en 13 preguntas
+15987	El codificador dual bi-encoder</strong> convierte por separado la consulta y el documento en vectores para compararlos rápidamente y permite precalcular los vectores de documentos. El <strong>codificador cruzado cross-encoder</strong> entrega juntos la consulta y el documento candidato al modelo, lo que permite interacciones más detalladas entre términos, pero requiere calcular cada pareja; suele ser más adecuado para conjuntos pequeños de candidatos.
+24460	Entrenamiento de codificadores duales y recuperación densa.
+10750	El codificador dual codifica consultas y documentos por separado y permite precalcular los vectores de documentos; el codificador cruzado procesa conjuntamente cada pareja para emitir un juicio más detallado, normalmente con un cálculo por pareja. La reordenación solo ordena candidatos ya recuperados.
+19053	La retropropagación modifica los parámetros; muestras independientes los comprueban
+17652	Contraejemplos / pruebas de propiedades
+18200	Contraejemplos y presión
+16495	Los contraejemplos revelan defectos en los límites
+13221	Comprobación de contraejemplos
+22859	Hacia atrás
+24594	Retropropagación
+17441	Retropropagación / Backprop
+14206	La retropropagación backpropagation</strong> calcula en sentido inverso los gradientes de cada parámetro según las dependencias del cálculo; el <strong>optimizador optimizer</strong> recibe los gradientes y actualiza los parámetros según sus reglas. Ejecutar
+14205	La retropropagación y el optimizador son pasos distintos
+1828	La retropropagación devuelve el error de salida por la ruta del contenido Value y por las rutas de ponderación Q/K. La diferenciación automática puede calcular fielmente el gradiente del grafo de cálculo actual, pero no sabe si tu mask, tus etiquetas o tus dimensiones expresan la tarea correcta. Hay que separar la comprobación matemática del gradiente de las pruebas de invariancia semántica.
+1989	La retropropagación aplica la regla de la cadena al grafo de cálculo para obtener los gradientes de parámetros capa a capa desde loss; el optimizador obtiene la actualización usando los gradientes y su propio estado histórico.
+14241	Tras calcular los gradientes con retropropagación, ¿han cambiado necesariamente los parámetros?
+26488	En la derivación inversa, cada objeto gradiente debe corresponder al operador y la shape de la propagación hacia delante; primero observa cómo vuelve cada cambio local.
+12488	Magnitud de los valores hacia atrás
+14199	La dirección hacia atrás es opuesta a las dependencias de datos; eso no significa que ejecutar todo el código hacia delante en orden inverso produzca automáticamente las derivadas correctas.
+13443	Durante el cálculo hacia atrás, r también depende de x; no puede tratarse como una constante y calcular solo
+1976	Por qué aparecen aquí dos contribuciones durante el cálculo hacia atrás
+12597	Consulta inversa del vocabulario
+1438	Examinar las diferencias en sentido inverso
+12583	La decodificación inversa también exige atender a los límites: algunos procesos unifican mayúsculas y minúsculas o normalizan el texto; algunos tokens aislados no se decodifican como caracteres completos. En tareas de código hay que distinguir entre «tener el mismo significado» y «tener los mismos bytes originales».
+2268	El cálculo hacia atrás también necesita tensores intermedios o material para recalcular
+29698	Recálculo hacia atrás
+27699	El recálculo hacia atrás</strong> vuelve a ejecutar una parte del cálculo hacia delante para obtener gradientes.
+25799	Probar diez prompts y publicar solo la puntuación más alta introduce sesgo de selección. Se necesita un conjunto de desarrollo para ajustar parámetros y un conjunto de prueba que no se consulte repetidamente para la evaluación final; cuando los modelos o las Skills se iteran continuamente, también hay que controlar las filtraciones del benchmark. Añadir muestras fallidas de prueba al prompt es una mejora razonable, pero después esas mismas puntuaciones dejan de demostrar generalización a datos no vistos.
+3969	Invocar repetidamente la misma búsqueda sin obtener evidencia nueva es estancamiento, no progreso continuo. Los fallos irrecuperables de herramientas deben registrarse y aislarse explícitamente, sin reintentos infinitos que bloqueen el resto del trabajo. La condición de finalización necesita evidencia verificable externamente; las condiciones de parada también deben cubrir el agotamiento del presupuesto, la cancelación del usuario, la falta de autorización y las decisiones que corresponden al usuario. <strong>Detenerse no equivale a tener éxito, y continuar no equivale a ser eficaz.
+9895	Tres reflexiones respaldan la misma conjetura: ¿cuándo sigue sin haber progreso?
+21466	La reflexión puede producir abstracciones de nivel superior, pero también generalizar incorrectamente acontecimientos concretos. Los resúmenes generados siguen necesitando fuentes y condiciones de aplicación.
+20212	La reflexión debe conservar la causa concreta del fallo
+21467	Al condensar acontecimientos en experiencia, la reflexión debe evitar la generalización excesiva
+24758	Preguntas adicionales mediante refutación
+7244	A la inversa, borrar todos los recuerdos similares también puede dañar fuentes independientes legítimas. Hay que conservar el conjunto de fuentes: si un hecho está respaldado por dos fuentes independientes permitidas, la posibilidad de usarlo tras retirar una depende de la política y de su relación con las fuentes. No trates todos los textos similares como si procedieran del mismo origen.
+10362	A la inversa, mejorar tras cambiar cinco cosas a la vez tampoco permite saber cuál fue útil. Haz combinaciones limitadas de experimentos según las dependencias sospechadas, evitando gastar recursos en todas las permutaciones sin sentido. Parte de muestras reales de fallo y de la mínima hipótesis falsable.
+15156	Descuantización
+20110	Retroalimentación, reflexión y parada
+4637	Capa de retroalimentación
+19490	Modelo de retroalimentación
+9866	También hay que confirmar la fiabilidad de la propia retroalimentación. Un registro de pruebas de una versión antigua no demuestra que el código nuevo tenga un error; una valoración generada por un modelo puede interpretar mal los requisitos. Los registros de retroalimentación deben incluir la versión, el comando ejecutado y las condiciones del fallo. Tras la reparación, solo se aceptan resultados de una nueva ejecución; evita usar la afirmación «ya está cambiado» como prueba de cierre del defecto.
+15659	Envía tools/call y devuelve el resultado del id de solicitud correspondiente
+15653	Envía tools/list
+4550	Emite cA y cB
+6787	Antes de publicar
+9627	Fecha de publicación
+9416	La lista de publicación debe cubrir las versiones del modelo, Prompt, herramientas, índice, permisos, evaluación y dependencias; las relaciones reales de compatibilidad determinan cuáles deben cambiarse conjuntamente.
+9433	Registro de publicación
+25437	Encuentra C a distancia 1 y sustituye el mejor candidato actual.
+26308	Encuentra NameError; la tarea actual falla.
+21216	Detecta que generated está excluido.
+21155	Encuentra la implementación de startswith.
+16337	El descubrimiento, la selección, la lectura del cuerpo, los recursos o la configuración de permisos pueden estar incompletos; existir no equivale a entrar en el contexto de esta ronda e influir en la ejecución.
+6911	Encuentra dos ramas de descuento
+4844	No todas las herramientas descubiertas están necesariamente autorizadas para el modelo.
+4813	Descubre las descripciones de herramientas; puede requerir paginación.
+7864	Detecta que la versión actual no se ha probado
+5978	Detecta que el resumen omite el estado de solo lectura, la versión y unknown.
+22997	Detecta un fallo de validación
+11678	Descubrir una capacidad no equivale a autorizar su ejecución; las anotaciones de herramientas proceden del servicio y no son fiables por naturaleza.
+31432	Fase de descubrimiento
+7272	La fase de descubrimiento escanea los directorios admitidos y analiza los metadatos. Una ruta no admitida o un formato incorrecto puede hacer que la Skill sea totalmente invisible. En la fase de selección, el modelo ve el nombre y la descripción y decide si son pertinentes para la tarea actual; una descripción demasiado amplia puede provocar selecciones erróneas y una demasiado estrecha puede omitir casos válidos. La fase de carga lee el cuerpo; si el archivo es demasiado largo, las referencias están rotas o el contexto se recorta, el contenido efectivo puede quedar incompleto.
+19453	Encuentra contenido muy similar
+17112	qué ocurrió; después, explica cómo el modelo usa Q/K/V para producir nuevas representaciones; luego, cómo propone llamadas a herramientas y cómo el harness determina que una acción ha finalizado. Por último, toma una tarea real y di qué evidencia recogerías para distinguir dos posibles causas.
+29379	Se modifica el prefijo → se invalida el sufijo afectado
+4915	Se produce un cálculo real o una operación externa.
+7970	Envía una solicitud; el extremo remoto guarda la key, la semántica de la solicitud y el resultado dentro de su límite transaccional y puede gestionar duplicados de forma segura. La misma key con parámetros distintos debe reconocerse como conflicto, sin devolver silenciosamente el resultado anterior. La key también necesita un ámbito, un tiempo de retención y una política de caducidad para evitar colisiones entre usuarios o intenciones de negocio distintas.
+30661	Iniciar
+15512	Iniciar una modificación
+4816	Emisor→receptor
+10736	Normalmente no es posible hacer que el destinatario «no haya visto» un correo enviado. La compensación podría consistir en enviar una corrección; no equivale a deshacer realmente el efecto histórico.
+20273	Envía tools/call.
+4840	Envía tools/list
+15415	El emisor puede transmitir en varios envíos y la red y el cliente pueden recibir fragmentos distintos. Un <strong>chunk (fragmento de transporte)</strong> es una parte de los bytes recibidos en ese momento; no garantiza corresponder a un token, una oración en chino o un JSON completo.
+25879	Enviar correos, crear incidencias, pagar, borrar o desplegar requiere un objeto de destino, identidad, aprobación e idempotencia. Si cambian los parámetros producidos por el modelo, la aprobación anterior puede dejar de ser válida; la aprobación debe vincularse al contenido o alcance concreto de la operación, no limitarse a registrar que «el usuario ya dijo que sí».
+22452	Enviar correos no forma parte de resumir
+25411	Tomar A/B
+6512	Tomar C
+2530	Tomar top-2
+26548	Tomar ε=10^-6 y calcular (f(Q+εv)−f(Q−εv))/(2ε)
+2300	Toma dos lotes: sumas de pérdidas 2 y 3, y cantidades de tokens 1 y 3. La pérdida correcta es 5/4=1.25; la media incorrecta es (2/1+3/3)/2=1.5. No es un error de precisión de visualización: ha cambiado la función objetivo.
+14494	Depende del método de evaluación
+8199	Depende del coste de repetir el trabajo y del riesgo de efectos secundarios. Cada
+7537	Depende del tipo de error y del método de verificación. Las comprobaciones de formato y deterministas pueden hacerse a bajo coste; los diseños concurrentes complejos o entre módulos pueden necesitar un razonamiento más potente. Si al Reviewer le cuesta más que al ejecutor detectar errores de la misma clase, añadir Review solo añade un texto de conformidad. Hay que medir la detección de defectos reales y los falsos positivos.
+31628	Depende de la longitud, el hardware y el cuello de botella
+8821	Depende del riesgo, pero los permisos críticos, las operaciones irreversibles y las invariantes deterministas no deben depender solo de puntuaciones probabilísticas. Judge sirve para ayudar a clasificar y descubrir problemas; los límites de autorización necesitan condiciones verificables y, cuando corresponda, autorización humana.
+26381	Toma el estado de la tarea antes y después de la compactación y comprueba si se conserva «lo que no puede cambiar»; compara las instrucciones de delegación posteriores con el objetivo autorizado vigente. Si la compactación del harness no puede leerse, bifurca desde el mismo prefijo y continúa para probar restricciones concretas. La reparación debe priorizar la persistencia de unas pocas restricciones críticas y los puntos de entrada a la evidencia; no hace falta construir por defecto un segundo servicio de resúmenes de todo el historial.
+8077	Recupera el resultado de K y completa el registro
+5917	Recuperar evidencia
+21411	La recuperación necesita un índice, permisos y referencias válidas; tras externalizarla, no se puede confiar solo en que el modelo «debería recordarla» para restaurar detalles. Mover información entre capas también tiene costes de llamadas y latencia.
+9954	Tomar un bloque
+21066	Obtiene 5 y la versión.
+20721	Obtiene el comando real.
+21219	Obtiene el resultado real.
+9514	Obtiene las condiciones completas de la política de prueba actual
+24543	Forma de obtención:</strong> se ha leído el cuerpo del índice público. <strong>Alcance del respaldo:</strong> son observables tareas, herramientas, subagentes, fallos y costes; este libro añade fixtures sin conexión.
+24549	Forma de obtención:</strong> se ha leído el cuerpo del índice público. <strong>Alcance del respaldo:</strong> modelo fijo, incorporación de un Agent existente y recogida de evidencia del motor en ejecución.
+24547	Forma de obtención:</strong> se ha leído el cuerpo del índice público. <strong>Alcance del respaldo:</strong> estudio del flujo de control y la sobrecarga de llamadas con resultados de tareas comparables.
+24545	Forma de obtención:</strong> se ha leído el cuerpo del índice público. <strong>Alcance del respaldo:</strong> Schema de herramientas, estados, errores y parada, junto con la evaluación de tareas.
+24551	Forma de obtención:</strong> se ha leído el cuerpo del índice público. <strong>Alcance del respaldo:</strong> protocolos de sistema y tarea, resultados emparejados, costes de fallo y alcance de las conclusiones.
+24553	Forma de obtención:</strong> se ha leído el cuerpo del índice público. <strong>Alcance del respaldo:</strong> selección de problemas reales y cierre con resultados de producto o investigación revisables.
+24555	Forma de obtención:</strong> se ha leído el cuerpo del índice de documentación oficial. <strong>Alcance del respaldo:</strong> la interfaz Chat necesita la plantilla y el análisis de herramientas correspondientes; disponer de una API key no implica que todas las rutas del servicio estén protegidas.
+11186	Método de obtención y limitaciones
+7044	Obtener evidencia
+12393	Toma la primera característica de todas las posiciones de todas las oraciones y obtiene
+13308	Aplicar la exponencial
+15258	Tomar el mayor cuello de botella
+29251	Tomar la última posición válida
+13288	Tomar el máximo y muestrear según probabilidades son cosas distintas
+13291	Tomar el máximo y muestrear según probabilidades son cosas distintas: distinguir cada caso
+1113	Toma las 4 características de la muestra 0, posición 2.
+8188	Cancelar
+8212	Cancelar no retira una solicitud que ya llegó a un componente posterior
+22594	Cancelar la solicitud al modelo no garantiza que se detenga el proceso de la herramienta. Se necesitan tiempos de espera por tarea y operación, propagación de la cancelación, idempotencia y eliminación de duplicados. Reintentar sin límite no es trabajo continuo, sino un riesgo de pérdida de control.
+7731	La cancelación debe entenderse capa a capa
+8155	La cancelación debe impedir acciones nuevas, propagar la señal a las herramientas en ejecución y esperar o registrar el estado final. Detener la generación del modelo, cerrar la UI, terminar el proceso y detener la tarea remota son acontecimientos distintos. Que el usuario no vea progreso no significa que la tarea se haya revertido.
+11216	Cancelar una solicitud
+4582	Una solicitud de cancelación solo pide detenerse; la herramienta puede haber terminado ya o no admitir interrupción. Hay que basarse en los efectos secundarios reales y el estado del protocolo, registrando cancel_requested y el resultado final en lugar de fundirlos en un booleano. En particular, una publicación o un pago remoto no debe considerarse revertido porque localmente se haya dejado de esperar.
+25121	Tras enviar la solicitud de cancelación, ¿se puede anunciar inmediatamente que han cesado todos los efectos secundarios? No. Hay que saber si el ejecutor admite cancelación y cuál era el estado de la operación cuando llegó. Las acciones externas irreversibles requieren continuar la conciliación. Un Agent fiable es primero un sistema de ejecución fiable y después un modelo de lenguaje de calidad.
+15244	Sobrecarga de acceso y sincronización
+3749	¿Se toma la última posición válida? ¿Coinciden la caché y el cálculo completo? ¿Son iguales las reglas de selección y parada?
+13107	Tomar la columna 1
+13108	Tomar la columna 2
+19700	Tomar el token del elemento 2
+12392	Toma el tercer número de cada fragmento de la segunda oración y obtiene una fila de longitud 3.
+12389	Toma el primer fragmento de la segunda oración y queda una fila de 4 números;
+12387	Toma la segunda oración y queda una
+22931	Recogida de evidencia
+29624	Tomar un valor representable cercano.
+19745	No se pueden falsificar o concatenar arbitrariamente estados de razonamiento protegidos u opacos. Una respuesta final corta también puede consumir mucho cálculo interno, y el razonamiento puede continuar entre llamadas a herramientas.
+21231	Reconstrucción de la expresión afectada y los nodos padres relacionados
+31564	Reparación controlada
+4739	Puede ser más adecuado usar SQL de solo lectura controlado que crear una herramienta nueva para cada tipo de consulta.
+23118	Intervención controlada
+4596	La intuición de la decodificación restringida es bloquear, según el prefijo de salida actual y el estado de la gramática, el siguiente
+6263	Búsqueda restringida
+1316	se convierte en
+7703	Pasa a 11 segundos y resulta más lento que en serie.
+8467	Cambio
+11225	Los cambios pueden invalidar candidatos
+25763	Implementación mutante
+16500	Las pruebas de mutación mutation testing</strong> introducen pequeños errores deliberados para comprobar si las pruebas los detectan. Que una prueba no falle solo demuestra que no encontró problemas con esas entradas; detectar mutaciones dirigidas aporta más evidencia de su capacidad de discriminación.
+25737	Cuando no hay respuestas completas, las pruebas metamórficas deducen relaciones entre salidas a partir de transformaciones de entrada. Complementan las pruebas con ejemplos, pero las propias relaciones deben ser correctas. Por ejemplo, «añadir cualquier regla de exclusión no debe cambiar el resultado» es una propiedad falsa, porque una regla que coincide debe cambiarlo. No conviertas una regularidad adivinada en una verdad.
+19167	Se convierte en [2,3]
+10383	Cómo usar el grafo durante un cambio
+3591	Se acorta.
+31023	Oración 0
+31024	Oración 1
+19184	Otro vector de contexto [0,1] obtiene una puntuación de 0
+25167	en otro commit fijado
+28191	Otra pregunta adicional es: ¿heredan automáticamente los subagentes estas herramientas y estados? No debe suponerse. Hay que confirmarlo según el producto y la configuración, y proporcionar explícitamente en el traspaso la evidencia y los permisos mínimos necesarios. El Agent principal tiene
+13515	Otro conjunto independiente de parámetros
+6021	El extremo opuesto consiste en tratar un documento de decenas de miles de caracteres como un solo chunk: su vector puede promediar muchos temas, una consulta corta no localiza bien la regla concreta y cargarlo completo en el contexto resulta caro. Puede recuperarse en bloques pequeños y leerse en bloques grandes: localizar primero un párrafo y después ampliarlo a su sección padre o al contenido adyacente necesario. La ampliación debe eliminar duplicados y respetar el presupuesto.
+13459	Otra entrada x=2
+17232	Otra clase de métodos de modelado por subpalabras, que suele usar codificación por la coincidencia más larga del vocabulario.
+681	Otra clase de métodos de modelado por subpalabras, que suele usar codificación por la coincidencia más larga del vocabulario. Ejemplo: su objetivo de entrenamiento difiere del proceso de fusión de BPE; no deben memorizarse como un único algoritmo.
+10030	Otra contribución
+9957	Otros dos bloques
+22198	Añadir entradas de la misma clase con prefijos distintos
+26517	Definir además X=[1,2], Q=XWq
+7619	Entregar solo los fragmentos clave del registro y la ruta del registro completo
+8800	Intercambiar únicamente el orden de presentación de las respuestas
+12555	Solo sirve como relleno; no forma parte del contenido de esta secuencia de entrenamiento
+11407	Solo usa la biblioteca estándar de Python. El experimento de caída de subprocesos escribe únicamente en directorios temporales; el código de salida 17 es el valor esperado construido para la prueba.
+22030	Usar únicamente resultados de validación de la versión correspondiente
+29705	Conservar solo los checkpoints
+2041	Solo hace w−lr×g
+18033	Solo permite rules.json y README.md; devuelve el contenido, SHA-256 y diagnósticos de redundancia
+7416	Reducir únicamente la carga también puede omitir tareas en las que B debería activarse.
+5927	Añadir solo los campos y las versiones pertinentes para decidir el despliegue
+10336	Añadir solo una base vectorial sin cambiar el ámbito legible
+5480	Cargar solo el nombre y la descripción de la Skill
+21611	Qué ahorra cargar solo las Skills pertinentes
+21436	Tomar solo los registros autorizados de u2
+16027	Consecuencias de tomar solo los 2 primeros
+22893	Indicar solo la clase objetivo
+9401	Riesgos de revertir solo el modelo
+9419	Por qué persiste el fallo tras revertir solo el Prompt
+29798	Usar solo si ya dispones de un servicio local o controlado y has confirmado el coste de recursos
+6352	Solo en la posición 3 del vector
+30024	Procesa únicamente tras recibir un salto de línea completo, admite LF/CRLF y no trata como texto medio carácter UTF-8.
+21704	Solo se necesita en tareas de rendimiento
+7468	Se carga solo en tareas pertinentes.
+16019	Solo ocupa el puesto 1 de la clasificación 1
+6349	Solo en la posición léxica 1
+9631	Solo es válido con esta definición de medición
+20891	Añadir únicamente la interferencia declarada
+7147	Guardar solo el valor actual 7 pierde «por qué entonces respondió 5»
+2743	Solo da el último índice válido para una disposición de relleno a la derecha en la que «los elementos válidos se distribuyen consecutivamente desde 0». El relleno a la izquierda
+13809	Si la pérdida se calcula solo sobre la respuesta del asistente, ¿hay que ocultar la pregunta del usuario en attention?
+29583	Solo muestra la frase de inyección didáctica «ignora la tarea original», sin ejecutarla realmente; no accede a sistemas externos ni realiza acciones peligrosas.
+6641	Mostrar únicamente la ruta recorrida por esta entrada tampoco demuestra que no existan otras. Una localización fiable suele combinar evidencia textual, estructural, de tipos y de ejecución.
+16811	Resumir solo hechos de los documentos disponibles
+14435	Poner a cero solo la loss de PAD pero seguir dividiendo por 4
+4030	Entregar al Agent sucesor solo un resumen de «actualizado»
+29422	Solo reduce a la mitad el volumen de transferencia
+29420	Solo duplica la capacidad de cálculo
+19611	Según el valor final únicamente, ambos podrían recibir recompensa.
+22230	Cambiar solo la posición
+23474	Conceder solo los recursos y permisos de operación imprescindibles para completar la tarea.
+8836	Solo se ha descartado una clase de sesgo evidente de posición. Ambas respuestas podrían contener errores factuales, y el juez aún podría verse influido por la longitud o por expresiones familiares. Se necesitan evidencia independiente y un oracle específico de la tarea; comprobar sesgos es necesario, pero no demuestra corrección.
+14733	Solo se proporciona BOS 我 爱, sin etiquetas reales del sufijo. El modelo produce primero candidatos para el siguiente token y después selecciona uno por sí mismo.
+21318	Solo admite este escenario.
+1175	Qué cambia al modificar solo Value y al modificar solo Query
+18191	Cambiar solo un factor
+18195	Cambiar solo un factor del servicio
+13619	Qué cambia únicamente
+20836	Solo cambia la posición.
+17436	Símbolo de la tasa de cambio cuando solo varía una variable y las demás se mantienen fijas según su definición.
+29269	Cambiar solo la precisión de las características
+12462	Solo significa que «X son datos reales de forma B, T, d». No te pide resolver una ecuación en ese momento.
+31361	Solo es un candidato, no una respuesta
+762	Solo es una propuesta de acción
+24994	Solo es un incremento de los parámetros y puede que aún esté incompleto. El modelo produce primero
+13065	Solo expresa como regla general las tres multiplicaciones y sumas anteriores. El resultado del producto escalar es un escalar, no tres filas de números. Puede usarse para comparar direcciones o generar puntuaciones, pero el producto escalar original también depende de la longitud de los vectores: no puede afirmarse sin condiciones que sea una similitud puramente semántica.
+21957	Solo es una descripción.
+30805	Solo existe el archivo
+25585	Solo es una aproximación textual.
+2924	Solo se pausa el modelo para ceder el control al ejecutor; la tarea completa del usuario no ha terminado.
+20556	Solo es un punto de entrada para juzgar la pertinencia.
+20254	Solo se ha establecido el canal.
+31600	Actualizar solo los parámetros seleccionados, como A/B
+3292	Actualizar solo m sin reescalar los anteriores u y l
+19435	Solo hay 11 tipos de documentos.
+9830	Solo hay 4 elementos
+28245	Solo cuando esté completa la cadena de condiciones de D1@v2 y D2@v3 puede concluirse que los registros de errores de A se conservan 7 días. D3 solo indica que retention_days acepta enteros; no determina qué entero debe usarse.
+26511	Solo si Q=XWq puede calcularse con ello el gradiente de los parámetros de proyección.
+14114	Si solo hay W1 y W2, sin ReLU, ¿sigue siendo el mismo modelo?
+7163	Tener solo updated_at pierde dos preguntas distintas
+10255	Solo dice «excelente»
+31147	Solo «学习» aún no se ha guardado en K/V
+31152	Solo «！» aún no se ha guardado en K/V
+14154	Con un único parámetro es la derivada; con muchos parámetros, el conjunto de tasas locales de cambio respecto a cada uno se llama <strong>gradiente (gradient)</strong>. El símbolo
+14286	Por qué la pérdida final tampoco puede ser 0 aunque solo haya dos oraciones
+2983	Solo puede haber beneficio del paralelismo cuando las dos partes pueden investigarse realmente de forma independiente.
+10342	Solo cuando tareas representativas demuestren que el mecanismo adicional sigue aportando un beneficio neto
+21805	Solo hay una conjetura inicial
+22063	Atribuir causas solo cuando las respalde evidencia controlada
+4987	Solo un servicio fiable y una implementación revisada permiten ese juicio de seguridad. Las anotaciones y descripciones son metadatos, no un entorno aislado. Una consulta también puede desencadenar efectos secundarios mediante entradas maliciosas o enviar datos sensibles a la red. Hay que controlar realmente la implementación, la dirección de destino y los permisos sobre recursos.
+7959	Solo hay evidencia si realmente invocó una consulta fiable cuyo ámbito baste para confirmarlo. Una promesa en lenguaje natural no sustituye la comprobación del estado remoto. Hay que considerar además la consistencia eventual: un objeto recién creado puede no aparecer todavía en una consulta, lo que no justifica crearlo de nuevo inmediatamente.
+9769	El coste de una revisión adicional solo merece la pena si realmente detecta errores importantes. Para una tarea sencilla puede ser mejor modificar directamente y ejecutar la validación pertinente; en migraciones de bases de datos, cambios de permisos o concurrencia compleja, la revisión independiente y las pruebas de fallos aportan más valor. Una buena práctica debe responder «qué fallo concreto aparecería sin hacer esto», en lugar de imponer el proceso más largo a todas las tareas.
+16320	Solo se ha modificado el texto de la documentación
+14789	Solo la última posición válida corresponde al siguiente elemento «tras el prefijo completo actual». Tras seleccionar el siguiente elemento cambia la condición del prefijo, y hay que recalcular con esa nueva condición.
+7872	Ciertas combinaciones de probabilidades solo son válidas bajo supuestos explícitos de independencia y calibración, que normalmente no se cumplen si se comparten entrenamiento y evidencia. La tasa conjunta de detección debe evaluarse estadísticamente con tareas reales; no se pueden convertir sin más dos 90% en 99%.
+20548	El aislamiento solo puede aportar un beneficio neto si coinciden límites de tarea independientes, entrada suficiente y un traspaso verificable; de lo contrario, solo añade llamadas y transferencia de información.
+3951	Solo hay un objetivo, sin evidencia de la causa raíz
+3637	Solo el elemento 1 tiene 0.4; la distribución de remuestreo es [1,0,0].
+15459	Este evento SSE solo se completa al encontrar una línea vacía
+21190	Consultar solo el lenguaje objetivo y la ruta src
+8352	Comprobar solo el tipo
+2380	Usar solo (x,A)
+3659	Bastan dos candidatos para revelar el error
+26240	Usar solo la autoevaluación del mismo modelo: «parece razonable»
+13853	Conocer sin y cos solo mediante puntos del plano
+27939	Solo se dibujan el vocabulario [8,4] y la entrada [1,2,3] ya declarados en A.2; no se sustituyen por el vocabulario de 6 elementos de la parte básica.
+5699	Conservar solo los últimos 20 elementos
+19890	Solo ahorra 10ms.
+3572	Observar solo los 3 intervalos posteriores
+2474	La recompensa final por sí sola no permite distinguirlos; la puntuación del proceso añade otra señal.
+10033	Mirar solo el gráfico de barras de los pesos resulta engañoso.
+31187	Solo se observa la probabilidad asignada al objetivo real en la distribución; no se usa «ID predicho−ID objetivo».
+14967	Mirar solo los índices locales de fila 0/1 de estas dos filas en la pequeña matriz de entrada nueva coloca mal la relación causal.
+7519	Si solo se considera este elemento, B es más barato.
+30529	Solo se conoce el candidato
+7309	Solo se sabe que la Skill existe.
+22483	Prohibir solo la red aún permite filtraciones en registros de archivos
+28948	Calcular solo el token nuevo＋caché
+29582	Dar solo el ámbito de capacidades necesario para la tarea actual.
+29375	Calcular K/V solo para la posición nueva
+8752	Contar solo las tareas completadas recompensa que las más difíciles agoten directamente su tiempo; contar solo el coste de llamadas exitosas subestima el coste real. Deben publicarse también la tasa de éxito de las tareas, los tipos de fallo, los tiempos agotados, las muestras válidas, los reintentos y el coste total por tarea exitosa. Aquí resulta especialmente importante distinguir task/trial/outcome en la evaluación de Agents.
+21121	Codificar solo q y calcular el producto escalar
+7553	Solo puede usarse como una señal débil. Una tarea corta puede ocultar restricciones entre módulos, mientras que una larga puede ser una conversión de formato repetitiva. Hay que considerar la falta de evidencia, las dependencias del razonamiento, el manejo de errores de herramientas y el riesgo de negocio, sin tratar la longitud de la cadena como la verdad sobre su complejidad.
+28172	Solo se puede conjeturar si se completó a partir del resumen
+675	Solo puede convertirse en
+716	Solo puede hacerse tras confirmar que no cambia la semántica del mensaje ni las convenciones del modelo. Ordenar campos JSON normales es totalmente distinto de cambiar marcas de control; compactar espacios arbitrariamente para mejorar la caché también puede cambiar la indentación del código. Primero establece pruebas de corrección y después examina los aciertos de caché, nunca al revés.
+28344	Solo puede usar información conocida antes del 10/19
+6511	Solo puede explicar el historial.
+599	Solo demuestra qué campos visibles envió la aplicación, no la secuencia final del servicio ni que el modelo utilizara correctamente las reglas. El diagnóstico debe recorrer «el archivo existe→se descubrieron las reglas→se leyó el contenido→la solicitud lo incluye→no se recortó después→influyó en la acción real». Si las reglas no entraron en la solicitud, seguir cambiando su redacción carece de sentido.
+8392	Solo puede decirse que el comando terminó normalmente y que la prueba se omitió, sin ejecutar esa aserción. También se necesitan el número de pruebas válidas, su alcance y la versión probada; no se puede equiparar omitir con funcionar correctamente.
+28321	Solo explica cómo debería configurarse; no afirma que ya esté desplegado
+22176	Solo indica la dimensión del resultado.
+25236	Solo demuestra cambios de comportamiento bajo este conjunto de condiciones; no revela el Prompt interno completo de un sistema cerrado.
+13608	Mientras varias proporciones sean distintas de cero, varias posiciones pueden contribuir conjuntamente; los Value pueden ser positivos o negativos y también cancelarse en una característica. La mayor proporción no equivale a la mayor contribución numérica absoluta, ni explica por sí sola la causa de la respuesta final. Aquí se obtiene una nueva representación numérica de cuatro dimensiones, no un token discreto.
+10821	Ver la palabra Norm no permite mezclar los ejes estadísticos de distintas capas de normalización; dos usuarios independientes tampoco deben compartir por ello el contexto de sesión.
+31575	Solo se cuentan los arrays KV: 2×capas 2×lote 1×longitud 4×cabezas KV 1×anchura 2×bytes 2 = 64 bytes
+31573	Solo se cuentan los arrays KV: 2×capas 2×lote 1×longitud 4×cabezas KV 2×anchura 2×bytes 2 = 128 bytes
+29266	Solo se calcula un tensor de identificadores/características con B=2, T=3, d=4; no se calcula la memoria total del modelo, la sobrecarga del controlador ni la velocidad medida en GPU.
+1092	Calcular solo esta celda Q[0,2,0]
+14953	Solo se calcula q3, que lee las cuatro posiciones de K/V y obtiene los mismos logits finales que el recálculo completo de los cuatro elementos.
+14676	Al entrenar solo LoRA sin actualizar los pesos base, ¿se puede omitir el cálculo hacia delante del modelo base?
+22842	El comportamiento puede cambiar aunque solo se entrenen parámetros de adaptación.
+6264	Acceder solo a A y C
+22025	Solo demuestra el estado de cada uno
+7941	Solo demuestra que no se recibió una respuesta utilizable a tiempo.
+22996	Solo demuestra que el evento de entrada se completó.
+4009	Solo demuestra que estas pruebas corresponden a r8
+25022	Solo indica que este prefijo puede analizarse.
+6910	Implementación de solo lectura
+20435	Leer solo las reglas del módulo actual
+20524	Inspeccionar en modo de solo lectura y proponer sugerencias
+25869	Una investigación de solo lectura suele necesitar únicamente leer el directorio de muestras o consultar una API; modificar código requiere delimitar el repositorio y la rama; desplegar exige una aprobación explícita adicional. No proporciones por comodidad acceso Shell arbitrario al host, todo el directorio del usuario y todas las credenciales.
+10738	Un fallo transitorio de conexión en una solicitud de solo lectura puede reintentarse; si se desconoce el resultado de una escritura, primero hay que comprobarlo. «Reintentar durante más tiempo» no sustituye el diseño de permisos o idempotencia.
+7957	La lectura suele tener menos riesgo, pero aún implica facturación, límites de frecuencia y cambios de vigencia; algunas consultas nominales activan actualizaciones de caché o tareas en segundo plano. Los reintentos deben tener un plazo y espera con retroceso, conservando en lo posible el contexto de la misma consulta lógica. No permitas que un fallo de infraestructura consuma indefinidamente rondas del LLM.
+26083	Ajustar un solo peso no equivale a implementar AWQ
+21652	Producir solo un plan y condiciones de validación
+22497	Buscar solo molestar menos puede dejar pasar acciones peligrosas; buscar únicamente cero omisiones en el bloqueo puede impedir todo el trabajo. La evaluación debe considerar tanto la seguridad como la finalización de tareas normales.
+20854	Solo supera la comprobación de longitud.
+22378	Restringir solo la escritura no impide divulgar secretos ya leídos; desconectar solo la red no evita borrar archivos locales. El aislamiento del sistema de archivos y de la red pueden combinarse para reducir aprobaciones de operaciones normales, pero el comportamiento dentro del aislamiento aún puede ser erróneo.
+8941	Restringir solo el directorio de escritura y permitir cualquier red aún permite que el modelo divulgue secretos legibles; restringir solo la red y permitir modificar scripts de arranque también puede dejar efectos posteriores. Los límites de seguridad deben cubrir las rutas reales de ataque, no una «
+16821	¿Restringir solo el sistema de archivos permite concluir que no hay comunicación saliente por red?
+10215	Solo necesita 1 valor latente y después reconstruye con B el vector objetivo de este ejemplo.
+20871	Solo necesita acertar en un punto.
+21618	Solo necesita ese cuerpo y las dependencias imprescindibles.
+25307	Solo se validan estructura y versión; este libro no ha medido en modelos comerciales la eficacia de la compactación semántica del lenguaje natural.
+28982	se llama <strong>vector</strong>. Dos filas de estos números forman una tabla con filas y columnas, llamada <strong>matriz
+13740	Se llama «causal» porque la posición actual no puede depender de tokens posteriores aún no ocurridos, no porque se afirme que el modelo aprendió la causalidad del mundo real. Durante el entrenamiento puede introducirse toda la respuesta a la vez; la máscara limita cada posición al prefijo y el objetivo suele ser predecir el siguiente token.
+29498	Recuperación de candidatos
+15969	La recuperación de candidatos candidate retrieval</strong> encuentra primero un conjunto pequeño entre muchos materiales, intentando no omitir los cruciales mientras controla el coste. La <strong>reordenación reranking</strong> ordena después estos candidatos mediante un juicio de relevancia más detallado.
+22979	Recuperación insuficiente.
+25357	Definición de la recuperación
+15968	Por qué se separan la recuperación y la reordenación
+12102	Por qué se separan la recuperación y la reordenación</a><a href="foundations/29.html#fdiag-29-02">Cómo combinar palabras clave y vectores</a><a href="foundations/29.html#fdiag-29-03">Por qué Cross-encoder es más detallado y más caro</a><a href="foundations/29.html#fdiag-29-04">Ser pertinente no equivale a bastar para responder</a><a href="foundations/29.html#fdiag-29-05">Límites de la reformulación de consultas y los documentos hipotéticos
+6233	la exhaustividad y aumenta la latencia; el número de conexiones y la anchura de búsqueda durante la construcción afectan a la calidad del grafo y la memoria. Los nombres de parámetros y los detalles pueden variar entre implementaciones.
+25423	La exhaustividad debe definirse respecto al conjunto pertinente al que el usuario tiene derecho de acceso
+29565	La exhaustividad considera el conjunto realmente necesario
+6363	El conjunto recuperado suele crecer, pero el presupuesto de contexto posterior es fijo: más ruido puede desplazar evidencia clave y aumentar el coste de rerank y del modelo. Hay que distinguir k de recuperación, k de reordenación y k de lectura final, eligiéndolos por calidad de tarea y no fijando el mismo número grande para todos.
+22614	Permite rastrear la acción hasta la solicitud.
+15371	Sí. Tras recibir nueva información de la herramienta, el harness suele iniciar otra llamada al modelo para continuar la tarea.
+9321	Pueden separarse para el diagnóstico, pero la latencia de extremo a extremo que percibe el usuario debe incluir la cola. De lo contrario, durante una sobrecarga «la inferencia del modelo sigue siendo rápida» mientras el usuario continúa esperando. El diseño de sobrecarga en SRE debe atender a las colas y los plazos, no solo a la velocidad de ejecución del dispositivo.
+1493	Se puede elegir compartirlos deliberadamente, pero eso impone otra restricción estructural. Este modelo tiene tres conjuntos de parámetros independientes con funciones distintas; compartir forma no implica compartir valores o papel.
+906	Puede ser un diseño que validar, pero no una garantía universal. Sigue requiriendo que el modelo comprenda la función del límite; un parámetro sin entrenar, una marca especial existente y un separador textual visible no son sustituciones equivalentes. Comprueba con tareas reales si expresa establemente el límite y conserva una alternativa de retorno.
+8147	Puede hacerse como un paso de tarea nuevo, pero primero hay que leer el contenido actualizado, reinterpretar los cambios de ambas partes y validarlos. No se puede tratar un conflicto como un error transitorio y reintentar sin cambios. Una fusión automática también necesita una nueva condición de versión para evitar otra sobrescritura.
+22438	Puede ser contenido que analizar
+8458	Pueden conservarse unas pocas instantáneas para revisar los cambios globales, pero como ayuda a review, no como único umbral de calidad. En scripts ejecutables, paquetes de evidencia fijos o claves de caché, el hash de contenido conserva una función clara; oponerse a pruebas frágiles no implica prohibir todos los hashes.
+25345	Puede conservarse la cola completa de acontecimientos posteriores a la instantánea, pero hay que comprobar si contradice afirmaciones del resumen como «pendiente» o «sin autorización». Añadir una línea nueva de resultado de herramienta al resumen antiguo puede dejar estados contradictorios. Puede regenerarse el resumen o usar reglas autorizadas de fusión para el estado de control estructurado. No hay una solución universal: la aceptación debe basarse en poder determinar el siguiente paso correcto al restaurar.
+2303	Se puede obtener primero el número total de tokens válidos de todos los minilotes de esta ronda y <strong>dividir la pérdida sum de cada lote por ese mismo total</strong> antes de retropropagar. Si no se conoce de antemano, pueden acumularse gradientes sin escalado por la media y reescalarlos después uniformemente según el total válido acumulado; esto debe coordinarse con AMP, recorte de gradientes, optimizador y reducción distribuida. No basta con «añadir una constante» tras un escalado incorrecto.
+19322	Permite analizar más causas candidatas
+15725	Permite reducir parte del cálculo o la facturación mediante prefijos repetidos; las reglas concretas del servicio pueden cambiar.
+10484	Puede contener decimales y números negativos
+10291	Puede incluir explicaciones, ejemplos, recursos y scripts; al cargarse, pasan a formar parte del contexto o del soporte de herramientas. No cambia automáticamente los parámetros ni garantiza que el modelo cumpla estrictamente. El valor de una Skill debe comprobarse por el comportamiento en tareas, no por la existencia del archivo.
+8282	Puede consistir en una o dos frases que definan el comportamiento, sin un documento o aprobación específicos. La complejidad procede del riesgo del requisito, no de su nombre. Renombrar un campo puede necesitar solo compilar y ejecutar la prueba correspondiente; cambiar una máquina de estados de pagos requiere más límites.
+12336	puede llamarse <strong>escalar</strong>. Una fila ordenada de números
+3913	Se pueden fijar pasos críticos como recuperación, validación y aprobación, dejando al LLM juzgar las partes inciertas. Un Agent dinámico permite al modelo elegir la ruta, con flexibilidad pero costes y comportamiento menos predecibles. Los sistemas reales suelen mezclar ambos enfoques; hay que distribuir el control según la incertidumbre de la tarea, sin convertir también todos los programas deterministas en prompts.
+9074	Puede aumentarse la automatización dentro de su ámbito legítimo de autorización, sin exceder la ley ni los permisos del sistema y los recursos, ni suponer acciones externas de alto riesgo no incluidas explícitamente. El ámbito de automatización debe ser concreto y ejecutable, no una autorización ilimitada.
+9223	Puede guardarse un inventario de contexto: ID del fragmento, versión de origen, rol, motivo de carga,
+8689	Se puede aplicar a pares de tareas
+5435	Comprobaciones que pueden ejecutarse
+11992	Se puede convertir
+16970	Cada bloque puede aplanarse en una fila de longitud 768 y transformarse mediante una transformación aprendida en d números, obteniendo representaciones para 196 posiciones e incorporando un mecanismo posicional. Los modelos reales pueden emplear otros tamaños, resolución dinámica, codificadores visuales o compresores; este ejemplo no representa todos los modelos comerciales.
+7481	Los principios del dominio, los pasos de operación y los recursos pueden redactarse de forma independiente de la plataforma en lo posible, y añadir adaptadores ligeros para herramientas concretas. Sin embargo, suelen requerir adaptación los nombres de herramientas, permisos, rutas y protocolos de llamada. Portabilidad no significa copiar sin cambios a cualquier CLI y que funcione.
+18968	Puede informar del valor numérico 3
+25005	Puede orientar un cambio del método de localización;
+12529	Puede guardarse como entero sin signo de 8 bits en
+3682	W puede dividirse por columnas de salida entre varios dispositivos, de modo que cada tarjeta calcule una parte de la salida; si la capa posterior necesita Y completo, se requiere comunicación o una disposición fragmentada compatible. Otra división por la dimensión de entrada produce varias sumas parciales que deben reducirse.
+401	Qué puede afirmarse a partir de esto
+21523	Permite proponer una asociación.
+2958	Qué puede añadirse
+23516	Puede ser la raíz de un directorio o de un árbol, o el nombre de un objeto. El vector inicial de la palabra proporciona un punto de partida estadístico aprendido; las llamadas a funciones, los comentarios y las pistas de tipos del contexto influyen en las representaciones posteriores. La red no consulta primero «el único significado de root» para usarlo de forma fija: forma una representación adecuada a la entrada actual mediante cálculos en varias capas.
+3379	Se pueden pausar o desalojar ciertas solicitudes, mover estados a otro almacenamiento, recalcular prefijos o rechazar solicitudes nuevas. Cada estrategia afecta a la latencia de cola y al rendimiento. Aumentar simplemente la concurrencia máxima puede provocar intercambios y recálculos repetidos, empeorando la velocidad global. Deben observarse la ocupación KV, los desalojos, el tiempo en cola y la tasa de finalización exitosa.
+13616	Este ejemplo permite hacer dos <strong>comparaciones explícitamente separadas</strong>, restaurando en cada una la base de esta sección:
+15638	Puede entenderse como una declaración que concede un ámbito de acceso, aunque cada recurso concreto aún puede imponer restricciones propias. El <strong>mínimo privilegio</strong> exige dar solo las capacidades necesarias para completar la tarea actual, sin conceder todos los permisos para evitar errores.
+5219	Se pueden comprender arquitecturas públicas, semántica de interfaces, comportamiento de herramientas, observaciones de contexto y experimentos reproducibles, pero hay que detenerse donde acaba la evidencia. Probar mediante variables controladas si una configuración mejora una tarea es investigación de ingeniería válida; deducir de un comportamiento que «dentro tiene que usar cierto enrutamiento oculto» no es un hecho.
+7144	Puede usar la corrección retrospectiva registrada el 10 del mes 10
+3012	Puede llamarse adaptación en contexto o corrección de comportamiento, pero la inferencia normal no actualiza por ello los parámetros. Que se conserve tras acabar la sesión depende de la memoria externa o del sistema de entrenamiento. Escribir retroalimentación en el historial, persistir experiencia y ajustar pesos son tres operaciones distintas y necesitan diseños separados de almacenamiento, permisos y validación.
+22078	Puede seguir ejecutándose.
+25994	Pueden almacenarse en caché resultados de recuperación o de herramientas, cálculos de prefijos del modelo o respuestas finales, con condiciones de invalidación distintas. La caché de recuperación depende de la consulta, los permisos y la versión del índice; la de herramientas, del recurso y el tiempo; la de respuestas también depende del contexto, el modelo y las restricciones de salida. Omitir el inquilino o los permisos de la clave de caché convierte un problema de rendimiento en una filtración de datos.
+14530	¿Pueden ser idénticos input_ids y targets y eliminarse shift?
+21649	Puede leer el método de despliegue
+14213	Puede calcularse aproximadamente
+25418	Puede devolver C/D.
+4766	Puede ejecutarse después de la validación
+13165	Puede reordenarse como
+7813	Sí, pero también necesita un contrato completo y evidencia actual. Añadir un rol no elimina automáticamente la pérdida de información; debe recibir el entorno real de pruebas tras la fusión, no solo los resúmenes de los subagentes. El resultado debe ser un estado final verificable del código, no una descripción de fusión más elegante.
+8444	Sí, siempre que lo permitan la autorización de la tarea y las herramientas y se registren los cambios y la validación. La separación de roles busca una perspectiva independiente, no impedir reparaciones. Corregir directamente pequeños problemas claros durante Review suele ser más eficiente; los cambios importantes deben coordinarse con la tarea principal para evitar alterar la dirección a escondidas.
+13187	Sí;
+8817	Puede servir como filtro inicial barato, pero puede aferrarse a la hipótesis original o repetir sus razones. Otro modelo tampoco garantiza independencia; es más eficaz introducir nueva evidencia, contraejemplos y verificación con herramientas. La confianza autodeclarada debe calibrarse y no usarse directamente como umbral de aprobación.
+3954	Puede analizarse a partir de r7
+29579	Límite de confianza
+16765	Qué es concretamente el límite de confianza
+1424	Se puede aumentar primero la dimensión, aplicar no linealidad y reducir después la dimensión
+5852	Se puede limpiar primero la salida extensa de herramientas que sea claramente recuperable, extraer por bloques el estado clave o usar mecanismos compatibles del servidor. No debe borrarse sin comprobar el contenido más antiguo, que puede incluir restricciones fundamentales. Un producto puede tener una vía específica de degradación; al estudiar el código fuente hay que examinar sus ramas de error, sin suponer que la compactación siempre funciona.
+9417	Se puede observar primero una pequeña parte del tráfico con un despliegue gradual y ampliarlo después, conservando una vía de retorno ejecutable, no solo una promesa escrita.
+19201	Puede expresarse como multiplicación de matrices.
+28455	Puede revertirse por separado
+6672	Pueden quitarse los comentarios, pero llamadas con el mismo nombre aún pueden corresponder a vinculaciones distintas.
+31606	El adaptador puede fusionarse o conservarse
+10885	Capítulos básicos a los que volver
+14467	Reproducible no significa idéntico bit a bit en todas las máquinas
+442	Alcance de la reproducibilidad
+18939	Cálculos intermedios reutilizables
+4892	Plantillas de interacción reutilizables.
+5527	El cálculo reutilizable del modelo depende de un prefijo efectivo idéntico y de las reglas del servicio. Un cambio temprano en el prefijo afecta al cálculo contextual posterior; instrucciones de sistema estables, un conjunto de herramientas estable y materiales fijos facilitan la reutilización. Un resumen acorta la entrada, pero puede sustituir un historial que habría acertado en caché y exigir recálculo a corto plazo. El ámbito de caché, la retención y el precio varían según el producto.
+9545	Pueden reutilizarse instrucciones estáticas y cachés validadas, pero debe garantizarse la vigencia de la elegibilidad dinámica, la autorización y la versión objetivo. Reducir consultas repetidas con condiciones de versión, TTL o transacciones del servidor es optimizar; omitir la validación cambia la semántica de seguridad. Son cosas distintas.
+12773	Aprendible</strong> significa que esos números se ajustan durante el entrenamiento; en inferencia normal suelen leerse de parámetros ya entrenados, en lugar de generar una tabla nueva al ver una frase nueva. La consulta de Embedding es por sí misma una capa del modelo, no un servicio adicional de recuperación en red.
+14715	P aprendible, rango 0—7
+12419	Tabla de coeficientes aprendibles
+22299	Permite localizar problemas de observación de GUI o de permisos.
+20488	Puede formar una causa candidata.
+28137	Conclusiones que pueden extraerse
+3948	Conclusión posible
+29807	Comandos ejecutables y dependencias externas
+8813	Un comentario fluido no debería invalidar fácilmente un resultado ejecutable.
+17337	Puede referirse a la salida intermedia de una capa o a una función de activación; depende del contexto.
+2229	Puede referirse a la salida intermedia de una capa o a una función de activación; depende del contexto. Ejemplo: ReLU convierte los negativos en 0; la memoria de activaciones guarda los resultados intermedios de esta ejecución.
+3446	Permite controlar la espera, pero introduce compromisos de planificación y rendimiento.
+4989	Debe devolverse la retroalimentación de negocio que permita actuar; no deben exponerse sin filtrar trazas sensibles, credenciales o cargas de ataque. Un fallo irrecuperable de infraestructura puede terminar directamente o degradar la operación, sin obligar al modelo a seguir adivinando. Devuelve una categoría breve de error y el estado de ejecución conocido y conserva los registros originales para el diagnóstico por personas autorizadas.
+31171	Puede verificarse la reutilización
+6043	Permite comprobar la fuente y la elegibilidad de acceso
+399	Alcance de los hechos verificables
+428	Programas didácticos independientes en Python, forma de ejecución y alcance de la reproducibilidad.
+9653	Puede explicar una migración histórica
+10358	El diagnóstico puede usar sustituciones controladas con un oracle: entregar directamente al modelo la evidencia realmente correcta para probar si la recuperación es el cuello de botella; entregar al ejecutor parámetros de herramienta conocidos como correctos para comprobar el límite de ejecución; entregar el artefacto final al validador para comprobar si el evaluador se equivoca. <strong>Estas sustituciones sirven para localizar problemas; la tasa de éxito bajo condiciones de oracle no es un resultado de despliegue.</strong> La distinción del outcome real en la evaluación de Agents y los principios de control de infraestructura respaldan esta comparación por capas.
+6880	Un archivo de entrada ligero puede explicar los objetos centrales, los límites, las tareas comunes y las rutas de código; la documentación de módulos concretos registra por qué se diseñaron así, qué alternativas se descartaron y las excepciones actuales. Los registros de decisión deben ser breves y explicitar sus condiciones de aplicación: no hace falta un ADR para cada nombre de variable.
+8438	Puede repararse directamente y repetir las comprobaciones pertinentes, sin rediseñar toda la solución.
+6041	Permite comparar directamente dos entornos
+1572	Se puede observar Key0,1
+3587	Puede
+3122	Es posible. La diferencia de tiempo de respuesta entre aciertos y fallos de caché puede revelar la existencia de estado compartido; cache_salt de vLLM es un diseño de aislamiento por dominio de confianza. Implica un compromiso entre tasa de compartición y aislamiento. No trates una optimización de rendimiento como ajena por naturaleza a la seguridad ni afirmes que una sola sal resuelve todos los canales laterales.
+23105	Puede perder información importante; no basta con observar un menor número de elementos activos.
+25107	Puede duplicar efectos secundarios o sobrescribir una versión nueva.
+28345	Puede seguir basándose en el registro antiguo de 7 días
+22337	Aún puede quedar anulado por la memoria.
+19010	Puede leer primero también al llamador.
+16012	Puede que el corte en bloques haya perdido una negación, que el índice mezcle versiones, que la recuperación omita excepciones, que la reordenación favorezca documentos antiguos o que el modelo convierta una recomendación en norma obligatoria. Cada capa necesita evidencia observable; sustituir solo el generador por uno mayor puede limitarse a expresar el error con más fluidez.
+26388	Entre las causas posibles están que las pruebas no se ejecutaran, que se omitieran elementos críticos, que el modelo debilitara las pruebas, que la versión de pruebas fuera antigua, que no se cubrieran nuevos requisitos o que el entorno difiriera de producción. Primero lee el comando real, el número de pruebas, el código de salida y la versión de los artefactos; no te limites al resumen del modelo.
+15453	Puede recibirse solo el primer 1 o los primeros 2 bytes de un carácter chino
+21996	Puede superar el beneficio.
+8478	Puede fallar
+28123	Puede fallar; no deben silenciarse excepciones solo para evitar errores, ni rediseñarse toda la semántica de rutas sin que lo exijan los requisitos.
+23082	Puede haber superposición o ambigüedad
+2399	Puede aprender algunos hechos, pero es difícil actualizar o eliminar cada uno y rastrear su origen. Las políticas o el código que cambian con frecuencia encajan mejor con la recuperación versionada; para formatos estables de salida, límites de clasificación o estilos de selección de herramientas puede considerarse SFT. Antes de personalizar, distingue entre conocimiento ausente, comportamiento inestable, herramientas insuficientes e instrucciones de tarea poco claras.
+23190	Puede aprender a copiar y tener poca pérdida sin adquirir la capacidad objetivo.
+21020	Pueden estar muy cerca y tener significados opuestos.
+21719	Puede producir resultados duplicados
+25709	Puede romper el supuesto compartido, pero hay que medirlo.
+19492	Puede aprender una interpretación desviada de los requisitos reales de la tarea.
+5233	Puede llevar consigo historial irrelevante, datos sensibles e instrucciones contradictorias, elevar el coste y no heredar automáticamente los permisos de ejecución. Deben enviarse el objetivo, la evidencia necesaria, las restricciones, el formato de resultado y las capacidades disponibles; compartir el contexto completo depende de las dependencias de la tarea, sin suponer que más siempre es mejor.
+25642	Puede ralentizar la mayoría del trabajo ordinario.
+5273	Puede acceder al espacio de trabajo actual y al contenido seleccionado
+25440	Puede aumentar la exhaustividad, pero este ejemplo no garantiza encontrar el vecino global más cercano con cualquier presupuesto.
+11209	Puede cambiar
+2812	Puede cambiar el conjunto de límites, por lo que debe registrarse toda la configuración de generación.
+19258	Puede seleccionar en su lugar al experto 1.
+26241	Puede amplificar el mismo sesgo.
+3503	Costes que pueden añadirse
+12474	Puede ser la longitud de la secuencia; el superíndice
+2977	Puede comparar más cuidadosamente las pistas existentes, pero la variable de entorno ausente no aparece de la nada.
+22060	Puede proceder del recorte.
+5585	Puede haber cambiado el modelo/adapter, el schema o el orden de las herramientas o la serialización real; la caché puede haber caducado, haberse desalojado o estar aislada en otro inquilino o ruta. Que el texto del usuario sea idéntico es solo parte de las condiciones necesarias. Observa el uso de caché informado por el servicio, en lugar de comparar únicamente cadenas del cliente.
+9184	Puede ejecutarlo otro proceso de trabajo. La asociación debe basarse en IDs estables, sin adivinar que pertenecen al mismo grupo porque «coinciden más o menos en el tiempo».
+6020	Puede dar consejos peligrosos. El corte en bloques debe respetar los límites de títulos, párrafos, listas, tablas y código, conservando al menos las condiciones y excepciones.
+5180	Puede heredar las instrucciones de tarea, parte de la conversación, reglas de archivos, ajustes del modelo, catálogo de herramientas, permisos, variables de entorno o identidad de conexión. No necesariamente se heredan todos juntos. Dar al subagente un resumen de la tarea padre no equivale a darle todas las conexiones MCP disponibles para el Agent padre; ver llamadas antiguas tampoco implica poder ejecutarlas de nuevo.
+14724	Puede cargar por error el modelo inicial o mezclar capas de versiones distintas
+19472	Puede ser sobreajuste o un problema de datos/evaluación.
+8944	Puede ejecutarse en otra máquina y tener permisos de base de datos.
+6284	Puede devolver datos retirados, permisos antiguos o contenido caducado. La eliminación debe abarcar el original, el índice disperso, el vectorial, la caché, los resúmenes y la memoria derivada; como mínimo, la consulta debe comprobar la invalidación en una fuente autorizada. Ocultar el nombre del archivo en la UI no completa la eliminación de datos.
+26015	Puede infringir el límite mínimo de riesgo de esa capa.
+20540	Puede elegir acciones inadecuadas.
+11247	Puede causar confusión
+10340	Puede repetir la misma conjetura en lugar de añadir evidencia.
+5494	Puede volver a cargar todo el repositorio; hay que determinar los recursos necesarios según el paso actual.
+21905	Puede volver a buscar en un ámbito amplio.
+25362	Puede restaurarse recuperando de nuevo el original.
+10174	Puede representarse como
+13396	Puede expresar distintas formas de funciones
+4697	Puede expresar cambios locales, pero si el fragmento antiguo no es único puede coincidir incorrectamente; con
+18064	Hipótesis refutable
+21456	Puede recuperarse en tareas futuras.
+4891	Recursos de datos legibles.
+8139	La atomicidad visible no equivale a persistencia ante un corte eléctrico.
+2711	La secuencia visible tiene longitud 4 y la caché calculada sigue teniendo longitud 3.
+29364	Texto visible=学习！; stop_reason=EOS
+31158	Resultado visible
+28206	Ámbito visible
+2971	Entre las métricas observables están el número de solicitudes, el uso informado por el servicio, los resultados de herramientas y la tasa de éxito; las autoexplicaciones del modelo no son registros reales de ejecución interna.
+22567	Observabilidad, coste, fiabilidad y selección de modelos

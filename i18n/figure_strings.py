@@ -1,14 +1,14 @@
-"""Source-bound, offline English adaptation of every published content SVG.
+"""Source-bound, offline en/ja/es/vi adaptation of every published content SVG.
 
 collect writes only figure-registry.json. table.py owns permanent IDs and
 translations. export prints the standard id<TAB>source protocol. write reads
-that one table and validates every input and output before publishing English
+that one table and validates every input and output before publishing translated
 HTML, the SVG fields in visual-data.js and the referenced download mirrors.
 
 No source generator is imported, no experiment is run, and no original input
 is written. The current released nodes are authoritative for colors, frame
 highlights, matrix values and animation identity. figure_layout.py owns local
-word wrapping and geometry reflow; native AP tables own their equivalent SVG.
+language-aware wrapping and geometry reflow; native AP tables own their equivalent SVG.
 """
 from __future__ import annotations
 
@@ -28,8 +28,10 @@ from urllib.parse import unquote, urlsplit
 
 try:
     from . import figure_layout as layout
+    from . import batch
 except ImportError:
     import figure_layout as layout
+    import batch
 
 ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = 'i18n/figure-registry.json'
@@ -101,7 +103,7 @@ def pages(root):
     for path in sorted((root / 'i18n/content').glob('*.json')):
         page = json.loads(path.read_text(encoding='utf-8'))['page']
         safe_relative(page)
-        if not page.endswith('.html') or page.startswith(('en/', 'ja/')) or page == 'complete.html':
+        if not page.endswith('.html') or page.startswith(('en/', 'ja/', 'es/', 'vi/')) or page == 'complete.html':
             raise FigureError('unexpected canonical page: %s' % page)
         result.append(page)
     if not result or len(result) != len(set(result)):
@@ -323,13 +325,18 @@ def _table(root):
     return table
 
 
+def _language(lang):
+    if lang not in ('en', 'ja', 'es', 'vi'):
+        raise FigureError('this adaptation supports --lang=en, --lang=ja, --lang=es or --lang=vi')
+    return lang
+
+
 def export(lang='en', root=None):
-    if lang != 'en':
-        raise FigureError('this adaptation currently supports --lang=en')
+    _language(lang)
     root = _root(root)
     document, table = _current_registry(root), _table(root)
     seen = set()
-    print('# SVG labels — target language: en')
+    print('# SVG labels — target language: %s' % lang)
     print('# Keep all numbers, code IDs and model vocabulary 我 爱 学习 你 ！ unchanged.')
     print('# Labels were recovered across source line wrapping. Keep source edge whitespace literal.')
     for item in document['items']:
@@ -430,7 +437,8 @@ def numeric_values(value, normalize_dates=False):
     return collections.Counter(number.replace('−','-') for number in NUMERIC.findall(value))
 
 
-def validate_translation(source, value):
+def validate_translation(source, value, *, lang='en', approvals=None):
+    _language(lang)
     if not isinstance(value, str) or not value.strip():
         raise FigureError('empty translation: %s' % source[:90])
     if any(ord(c) < 32 or 0xd800 <= ord(c) <= 0xdfff for c in value):
@@ -438,8 +446,16 @@ def validate_translation(source, value):
     remainder = value
     for token in TOKENS:
         remainder = remainder.replace(token, '')
-    if CJK.search(remainder):
+    if lang != 'ja' and CJK.search(remainder):
         raise FigureError('untranslated SVG prose: %s -> %s' % (source[:80], value[:100]))
+    if lang == 'ja':
+        reviewed = (batch.approved_japanese(source, value) if approvals is None
+                    else batch._approved_japanese(source, value, approvals))
+        if ((value == source and not batch.japanese_unchanged(source) and not reviewed)
+                or (len(source) >= 6 and not batch.KANA.search(value)
+                    and CJK.search(batch.residual(value, source)) and not reviewed)):
+            raise FigureError('untranslated Japanese SVG prose requires exact-pair review: %s -> %s' %
+                              (source[:80], value[:100]))
     if numeric_values(source) != numeric_values(value, bool(re.search(r'\d+\s*月',source))):
         raise FigureError('changed SVG numeric values: %r -> %r (%s)' %
                           (NUMERIC.findall(source), NUMERIC.findall(value), source[:90]))
@@ -452,12 +468,30 @@ def validate_translation(source, value):
     return value
 
 
-def _translations(document, table, lang):
+def _japanese_approvals(root, lang):
+    if lang != 'ja':
+        return None
+    path = _path(root, 'i18n/ja-approved.json')
+    if not path.exists():
+        return {}
+    try:
+        document = json.loads(path.read_text(encoding='utf-8'))
+        pairs = document['pairs']
+        if not isinstance(pairs, dict) or any(
+                not isinstance(s, str) or not s.strip() or
+                not isinstance(v, str) or not v.strip() for s, v in pairs.items()):
+            raise ValueError('pairs must contain nonempty source/target strings')
+    except (OSError, UnicodeError, ValueError, KeyError, TypeError) as error:
+        raise FigureError('invalid Japanese exact-pair review: %s' % error) from error
+    return pairs
+
+
+def _translations(document, table, lang, approvals=None):
     unique = dict.fromkeys(item['zh'] for item in document['items'])
     missing = [source for source in unique if not table.get(source, {}).get(lang)]
     if missing:
         raise FigureError('missing %d SVG translations; first: %s' % (len(missing), missing[0][:100]))
-    return {source: validate_translation(source, table[source][lang]) for source in unique}
+    return {source: validate_translation(source, table[source][lang], lang=lang, approvals=approvals) for source in unique}
 
 
 def data_without_svg(value):
@@ -500,11 +534,11 @@ def _download_links(source, page, downloads):
 
 def prepare(lang='en', root=None):
     """Prepare every byte and proof in memory; no directory/file mutation."""
-    if lang != 'en':
-        raise FigureError('this adaptation currently supports --lang=en')
+    _language(lang)
     root = _root(root)
     document, table = _current_registry(root), _table(root)
-    translations = _translations(document, table, lang)
+    approvals = _japanese_approvals(root, lang)
+    translations = _translations(document, table, lang, approvals)
 
     def translate(source):
         if not layout.translatable(source):
@@ -532,7 +566,7 @@ def prepare(lang='en', root=None):
     global_name, target_data = read_data(data_target.read_text(encoding='utf-8'))
     before_data = data_without_svg(target_data)
     if [p for p, _ in walk_svgs(original_data)] != [p for p, _ in walk_svgs(target_data)]:
-        raise FigureError('English visual data frame/field identity changed')
+        raise FigureError('translated visual data frame/field identity changed')
     replacements = collections.defaultdict(list)
     payloads, reports = {}, []
     for figure in document['figures']:
@@ -551,14 +585,14 @@ def prepare(lang='en', root=None):
             # Its prose already passed the page pipeline, but numerical/model
             # cell identity is still a figure publication obligation.
             for original_row, target_row in zip(source_rows, rows):
-                for zh, en in zip(original_row, target_row):
+                for zh, value in zip(original_row, target_row):
                     if CJK.search(zh) and not layout.TOKEN_ONLY.fullmatch(zh):
-                        validate_translation(zh, en)
-                    elif zh != en:
+                        validate_translation(zh, value, lang=lang, approvals=approvals)
+                    elif zh != value:
                         raise FigureError('AP table changed immutable data cell: %s' % zh)
-            output = layout.redraw_table(raw, rows, translate, report)
+            output = layout.redraw_table(raw, rows, translate, report, lang=lang)
         else:
-            output = layout.reflow(raw, translations, translate, report)
+            output = layout.reflow(raw, translations, translate, report, lang=lang)
         reports.append(report)
         if locator['kind'] == 'html':
             match = target_matches[figure['file']][locator['index']]
@@ -635,7 +669,8 @@ def write(lang='en', root=None):
     _publish(root, payloads)
     print('%s: SVG %d 幅；下载镜像 %d 个；%d 个文件已写出。原始文件、数字、横向比例与帧高亮保持。' %
           (lang, proof['figures'], proof['downloads'], proof['outputs']))
-    print('排版验证: 每行测宽均在所属槽内；按词换行；保持可读字号；框与箭头端点随行高增长。')
+    print('排版验证: 每行测宽均在所属槽内；%s；保持可读字号；框与箭头端点随行高增长。' %
+          ('按日语禁则换行' if lang == 'ja' else '按词换行'))
     return 0
 
 

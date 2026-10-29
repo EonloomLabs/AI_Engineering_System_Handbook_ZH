@@ -7,7 +7,7 @@ scores = Q Kᵀ / √d_k
 weights = softmax(scores + mask)
 output = weights V
 </code></pre>
-<p>If X has n rows of hidden width d, and Q and K have d_k dimensions per head, then <code>QKᵀ</code>Yes <code>n×n</code>. It describes paired scores between query and queried positions. Checking dimensions is one of the most effective ways to understand a formula.</p>
+<p>If X has n rows of hidden width d, and Q and K have d_k dimensions per head, then <code>QKᵀ</code>is <code>n×n</code>. It describes paired scores between query and queried positions. Checking dimensions is one of the most effective ways to understand a formula.</p>
 <h2 id="g02-section-2">Compute one combination by hand</h2>
 <p>All values below are original teaching examples. Suppose one position's scores for three visible positions are <code>[0,1,2]</code>. Their exponentials are approximately <code>[1,2.718,7.389]</code>, giving normalized weights of approximately <code>[0.0900,0.2447,0.6652]</code>. If one Value dimension is <code>[10,20,30]</code>, the output in that dimension is about 25.75.</p>
 <p>The output does not simply copy 30; it combines values with weights. The highest weight contributes most, but the other two still matter. Real models also have multiple heads, residual connections and later layers, so the position with the highest attention cannot fully explain the final answer.</p>

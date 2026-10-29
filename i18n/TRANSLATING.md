@@ -15,6 +15,8 @@ Read both, every time:
   register and punctuation. They set the house style. Do not re-translate them.
 - `i18n/glossary.json` — the 104 term pairs from the book's own `glossary.html`.
   For Japanese, also read `i18n/glossary.ja.json` and the Japanese rules below.
+  For Spanish or Vietnamese, also read `i18n/glossary.es.json` or
+  `i18n/glossary.vi.json` and the corresponding rules below.
 
 ## The file protocol
 
@@ -133,6 +135,53 @@ so do not spend effort on spelling; write what comes naturally and it is fixed.
   maintainer records that exact pair in `ja-approved.json`. This file only
   suppresses the identical-text/kana warning; tag, file-name and empty-value
   checks still apply. Translators must not edit this validation file.
+
+## Spanish and Vietnamese editions
+
+- Use clear Spanish (`es`) or Vietnamese (`vi`) technical prose. Preserve accents
+  and diacritics. Translate the Chinese source in context; the English glossary
+  sometimes lists related concepts rather than synonyms. Do not translate an
+  English related term in place of the source concept.
+- Follow the selected language's glossary and `_reference.<lang>.txt`.
+  `第NN课` is `Lección NN` / `Bài NN`; `单元NN` is `Unidad NN` / `Học phần NN`;
+  `作业NN` is `Tarea NN` / `Bài tập NN`. Keep leading zeroes and the `｜` / `·`
+  separators. `追问：` is `Pregunta adicional:` / `Câu hỏi mở rộng:`;
+  `预备知识：` is `Conocimientos previos:` / `Kiến thức tiên quyết:`.
+- Model execution is `inferencia` / `suy luận`; reasoning is `razonamiento` /
+  `lập luận`. Context compaction is `compactación` / `cô đọng ngữ cảnh`;
+  data compression is `compresión` / `nén`. The execution harness is
+  `harness de ejecución` / `khung thực thi`; MCP's Host is
+  `aplicación anfitriona` / `ứng dụng chủ`.
+- Retrieval is `recuperación` / `truy hồi`; recall as a metric is
+  `exhaustividad` / `độ bao phủ`. Precision is `precisión` / `độ chuẩn xác`;
+  accuracy is `exactitud` / `độ chính xác`. A learning-rate step is
+  `tamaño del paso` / `kích thước bước`, distinct from an array stride.
+- Keep literal numeric values, decimal points, dates, units, identifiers,
+  hashes, file names, tags and attributes unchanged. In a date label, keep the
+  original month/day numbers rather than replacing a month number with its
+  name. Do not localize decimal separators in model or experiment data.
+- Keep the model vocabulary `我 / 爱 / 学习 / 你 / ！` and Chinese lexical
+  data coupled to raw code, UTF-8 byte examples or trained parameter/data
+  artifacts exact; translate the surrounding explanation. This includes the
+  teacher-forcing `编程` target/prefix in `chapters/04.html`. Report exact
+  source/target/ID if a legitimate data literal triggers the CJK checker;
+  maintainers review the exception. Do not translate coupled data merely to
+  pass the check. Independent prose-only semantic illustrations may adapt word
+  labels consistently across their setup and results: for example, R01-05
+  (`reading-notes/chapter-01.html`, B1.5) uses Spanish `gato` / `dormir` for
+  `猫` / `睡`. Preserve that example's ID, vectors, numbers and conditions.
+- These editions translate both interface and lesson text from the Chinese
+  original. Do not copy the shared-interface notice that the lesson body remains
+  Chinese. The page-search hint must use actual edition examples:
+  `tensor, Lección 39, Q001` / `tensor, Bài 39, Q001`.
+- Do **not** run the English spelling, terms, vocabulary or consistency fixers
+  with `--lang=es` or `--lang=vi`; their replacement templates are English.
+  Translators run only `batch.py ingest <name>.<lang>.txt --check --lang=<lang>`.
+  The maintainer alone serializes actual ingest, then runs source-structural
+  `embedded.py --lang=<lang> --fix`, round-trip verification and link checks.
+- Shared `是` uses its common copular reading (`es` / `là`). Report yes/no table
+  cells that instead need `sí` / `có`, so maintainers can add per-page overrides.
+  Keep source hedges, evidence status and limitations at the same strength.
 
 ## When one string needs two translations
 

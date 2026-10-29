@@ -1,0 +1,546 @@
+23691	Bài này tương ứng OpenAI Compaction, kết hợp giải thích các cơ chế ngữ cảnh công khai khác. Kết quả cô đọng chuyên dụng có thể chứa trạng thái không trong suốt; ứng dụng cần truyền theo API, không giả vờ khôi phục thủ công được toàn bộ nội dung.
+23537	Bài này trình bày cơ chế cốt lõi của Attention Is All You Need. Gọi biểu diễn hiện tại của ba token là ma trận X, chiếu ra Q,K,V. Query khớp với Key rồi trọng số khớp tác động lên Value. Đây là tính toán liên tục bên trong mô hình, không phải truy hồi cơ sở dữ liệu ngoài.
+23512	Bài này theo chủ đề The Illustrated Transformer, dùng ví dụ tự biên soạn để tạo trực giác, không dịch từng câu nguồn. Tách ba tầng trước: chuỗi là đầu vào con người, ID token là ký hiệu rời rạc, vectơ ẩn là biểu diễn mạng tính toán. Mỗi chiều vectơ không có nghĩa tiếng Trung định trước, không nên hình dung như bảng đầy sự kiện.
+11415	Nội dung nhóm này nằm sau vấn đề tương ứng trong phần hệ thống, với tình huống lỗi xuyên bước trong chuyên đề. Đây là lối vào định vị, không yêu cầu bỏ qua nội dung. Nên đọc theo “cơ chế và ví dụ có sẵn → tìm hiểu sâu kỹ thuật → phản ví dụ cục bộ → câu hỏi mở rộng liên tục”.
+5224	Phần này không xếp hạng từng sản phẩm mà đưa cách chẩn đoán cấu hình kiểm chứng được: xác định điểm vào CLI/IDE/đám mây, phiên bản, nguồn định nghĩa Agent và thứ tự ghi đè có hiệu lực, rồi kiểm tra đầu vào và công cụ thực sự giao cho Agent con.
+7241	Phần này dùng đồ thị phụ thuộc giảng dạy độc lập: doc→chunk→summary→answer_cache và memory. Thu hồi doc rồi đánh dấu vô hiệu cả năm loại đối tượng theo bao đóng phụ thuộc. Kết quả xác minh chương trình cục bộ gồm năm nút. Nó không kết nối dữ liệu người dùng thật hay coi đồ thị là chứng nhận tuân thủ pháp luật.
+2628	Phần này dùng quy ước vectơ hàng:
+13478	Trước hết xác định sáu đối tượng
+14452	Phân tích dữ liệu phía trước đã cho thấy sau BOS có hai mục tiêu “我/你” cùng tần suất; cận dưới là
+1232	Mỗi bản ghi con ở phần này cố định đầu vào riêng, chỉ đổi phép chiếu, co giãn hoặc dropout. Không coi chúng là một chuỗi lan truyền xuôi liên tục; giao diện cùng tên có thể nhận biểu diễn gốc hoặc Q/K/V sẵn có.
+14894	Phần này giữ đầu vào, trọng số đã huấn luyện và quy tắc chọn của bài trước. Chỉ đổi việc tái dùng K/V của vị trí đã xử lý, so logits và độ dài đệm từng vòng. Ví dụ dung lượng hai tầng đầu phần chỉ tính lưu trữ; thí nghiệm số xuyên suốt vẫn một tầng, không trộn thành cùng hồ sơ đệm.
+9986	Hình và dấu vết hành động ở phần này là cấu tạo giảng dạy, không thực truy cập tài khoản người dùng hay thanh toán. An toàn GUI sản xuất còn gồm hệ điều hành, cách ly phiên và phê duyệt người-máy, không thể chứng minh bằng một lưu đồ SVG.
+14359	Ký hiệu huấn luyện phần này:</strong> g là gradient tham số hiện tại; m là trung bình trượt gradient; v là trung bình trượt gradient bình phương; β₁,β₂ là hệ số làm mượt đã đặt; t là số bước tối ưu; dấu mũ như m̂ là đã sửa độ chệch. v thường ở đây không phải Value của Attention, β cũng không phải tham số dịch LayerNorm. m/v đổi theo bước huấn luyện và tốn lưu trữ thêm, không phải đặc trưng token của đầu vào lần này.
+5101	Phần này đọc
+14351	Gz hàng này phải cộng thành 0: tổng xác suất 1, tổng onehot 1, trừ rồi chia N vẫn là 0. Tăng mọi logits cùng một số thì xác suất và loss không đổi, nên tốc độ biến đổi theo “hướng toàn 1” bằng 0. Đây là tự kiểm tra số tốt nhưng vượt qua không chứng minh cả mô hình triển khai đúng.
+14077	Mẫu số RMS cuối hàng này rf=0.530508525. gf ban đầu đều bằng 1.
+13582	Hàng này có ba tỷ phần khác không, ứng với Value tại BOS,我,爱. Nó chưa chọn trong 8 ứng viên từ vựng, cũng không phải độ tin cậy câu trả lời đúng. Muốn dự đoán “学习” vẫn phải qua trộn, phép chiếu đầu ra, phần dư, mạng truyền thẳng, chuẩn hóa cuối và đầu từ vựng.
+27790	Bảng ghi cách xem hình theo từng trang đọc. Nội dung, câu hỏi mở rộng, 206 bài giảng và chương trình gốc giữ nguyên; hình bổ sung đối tượng, đầu vào, trạng thái, điều kiện lỗi và đánh đổi. Không ép hoạt ảnh vào chỉ mục tham khảo và trang mã.
+1076	Bài dùng tham số thật của mô hình xuyên suốt, không đặt mô hình phép nhân khác. Tại mẫu 0, t=2, X gốc là
+14121	Bài này chỉ cần hiểu trước một tham số ảnh hưởng một loss thế nào. Tốc độ học và mục tiêu ví dụ vô hướng được đặt riêng trong ví dụ, không nối kết quả cập nhật ấy vào mô hình xuyên suốt 236 tham số. Công dụng gradient cả tầng được giải thích trong quá trình huấn luyện bài sau, rồi suy diễn từng mục ở chương huấn luyện phần cơ chế hệ thống.
+1460	Cả bài là <strong>đối chiếu cấu trúc độc lập</strong>, không sửa tham số mô hình đã huấn luyện 400 bước hay khẳng định nó dùng các cơ chế này. Trình tự học: biết mô-đun thay thế, rồi kiểm tra hình dạng đầu vào mới, phép tính, bộ nhớ đệm và gradient.
+1237	Bài gom đối tượng đã giải thích rời rạc vào bảng theo dõi. Thống nhất ký hiệu: N1 là chuẩn hóa đầu, R là phần dư chú ý, N2 là chuẩn hóa thứ hai, H là biểu diễn cuối tầng, F là biểu diễn sau chuẩn hóa cuối gửi vào đầu từ vựng. trace trong mã lần lượt dùng n1,residual,n2,hidden,final.
+14994	Query vòng này chỉ dùng chấm điểm vòng này
+30931	input_ids vòng này
+18927	Ngữ cảnh vòng này
+29470	Hạn mức tài nguyên cho phép dùng vòng này.
+28032	Vừa chọn ở vòng này
+11174	Thu thập và đọc vòng này
+5776	Hủy vòng này chưa chắc hủy cô đọng cấp phiên đã khởi động trước.</strong> Kiểm thử cố định phân biệt “không khởi động việc mới sau hủy” và “việc đã khởi động vẫn có thể xong và tái sử dụng”. Chỉ là lựa chọn vòng đời của đường này, không thể suy ra mọi tác vụ nền bỏ qua hủy.
+4761	Nhìn thấy/khám phá được vòng này
+12292	Cho mô hình biết sự kiện vòng này thì tham số chắc chắn đổi không?
+10389	Đồ thị vòng này gắn cạnh với phạm vi mã cố định, mục tài liệu chính thức hoặc nhãn suy diễn nguyên gốc; hồ sơ cũ chưa đọc nguồn được giữ như lịch sử, không tiếp tục viện dẫn. Đọc đồ thị cần xem vị từ và điều kiện cạnh trước rồi xem nguồn. Kiểm thử vượt qua chỉ hỗ trợ ca giảng dạy đã chạy, không thay đọc mã, kiểm thử tích hợp Rust hay xác minh dịch vụ thương mại.
+28031	Sau xử lý vòng này, bộ nhớ đệm phủ
+17194	Số vị trí chuỗi được xếp vòng này; công thức cụ thể cần kiểm tra có tính đệm không.
+551	Nội dung thực vòng này
+28020	Thực sự đưa vào vòng này
+14779	Tiền tố đã biết vòng này
+14829	Vòng này mới tính K/V các tầng của ID4, bộ nhớ đệm tăng đến 4.
+11410	Kiểm thử mới vòng này không cần khóa API, không gửi email hay truy cập triển khai thật. Tệp thí nghiệm và hồ sơ xác minh cũ giữ nguyên, nhưng chưa chạy lại vòng này thì không coi lịch sử vượt qua là bằng chứng hồi quy mới. Kiểm thử Rust trong mã chỉ được đọc làm căn cứ thiết kế, không tuyên bố đã vượt trên máy cục bộ.
+29427	Thông tin giao rõ cho mô hình vòng này, không phải trạng thái cả máy tính.
+5338	Vòng này có nhận mô tả liên quan hoặc chỉ định rõ không
+17567	Tập thông tin đầu vào lời gọi mô hình vòng này dùng được.
+2708	Vòng này tính 3 vị trí, đệm dài 3.
+28021	Khi kết thúc vòng này, đệm phủ
+11399	Kết quả vòng này
+29789	Vị trí tuyệt đối vòng này
+14951	Vòng này tính k3/v3, ghép thành vị trí K/V 0..3.
+28937	Chọn tham lam vòng này: 你</strong>, ID 4. Đây là xác suất mô hình nhỏ do con người tạo ra, không phải kết luận về tính đúng của ngôn ngữ.
+28933	Chọn tham lam vòng này: 爱</strong>, ID 2. Đây là xác suất mô hình nhỏ do con người tạo ra, không phải kết luận về tính đúng của ngôn ngữ.
+29780	Đầu vào vòng này [3]; tiền tố đã biết [6, 1, 2, 3]
+29784	Đầu vào vòng này [5]; tiền tố đã biết [6, 1, 2, 3, 5]
+29774	Đầu vào vòng này [6, 1, 2]; tiền tố đã biết [6, 1, 2]
+15751	Đầu vào vòng này như xếp gói làm việc, không phải chuyển cả kho mã
+14936	Được chọn vòng này nhưng chưa xử lý
+28022	Đầu ra được chọn vòng này
+29307	Trọng số tính bằng softmax vòng này, khác trọng số trong tham số W.
+18894	Bản gốc phần này dùng tiếng Trung giải thích chủ đề nghiên cứu và cơ chế kỹ thuật công khai, không dịch từng câu tài liệu nguồn. Mục nguồn dùng truy thư mục; kết luận bài báo và hành vi sản phẩm đều bị giới hạn bởi phiên bản và phạm vi bằng chứng đã liệt kê.
+23800	Phần này gồm dẫn nhập chủ đề và 206 bài giảng dịch từ tiếng Trung. A là chủ đề cốt lõi, B là nâng cao quan trọng, C là tìm hiểu chuyên sâu; số mục dùng trích dẫn và tìm kiếm. Bài giảng gốc là giải thích tiếng Trung được viết độc lập, không phải dịch toàn văn từng câu tài liệu nguồn.
+23805	Tài liệu tham khảo phần này
+431	Phụ lục gồm chương trình giảng dạy chạy độc lập. Tính toán số, huấn luyện, phân tích giao thức, ví dụ ngữ cảnh và ký ức có mục tiêu chạy khác nhau; hãy phân biệt rõ với đánh giá năng lực mô hình thương mại thật.
+27908	Chương trình trang này chỉ dùng thư viện chuẩn Python. Ví dụ số là tính toán thật; luồng giảng dạy không phải thực đo mô hình thương mại. Dữ liệu gốc tạo hình và dữ liệu phát dùng chung định nghĩa.
+18839	Trang giải thích hình và phần giảng mới thực sự kiểm tra gì, kiểm tra không chứng minh gì. Đầu vào, chiều, định danh thông điệp và môi trường theo khai báo từng ví dụ, không coi dữ liệu dựng là hiệu quả sản phẩm. Thí nghiệm cũ giữ hồ sơ môi trường gốc; nhật ký chạy lại lần này lưu riêng.
+18881	Thuật ngữ, ký hiệu và đáp án tham khảo
+17143	Tra nhanh thuật ngữ và ký hiệu — Kỹ thuật hệ thống AI
+10429	Danh sách vị trí dùng thuật ngữ
+18882	Thuật ngữ được giải thích qua hành động và ví dụ trong bài cơ bản. Liên kết nét đứt trỏ tới <a href="glossary.html">Tra nhanh thuật ngữ và ký hiệu</a>; câu hỏi chuyên sâu có lối vào kiến thức cơ bản cục bộ cần thiết. Tra nhanh để nhớ lại, không thay suy diễn đầy đủ. Tự kiểm tra mặc định chỉ hiện đề; tự nghĩ hoặc tính rồi nhấp “Xem đáp án tham khảo” đối chiếu quá trình, đáp án thu lại được bất cứ lúc nào.
+24388	Định nghĩa thuật ngữ và giải thích ký hiệu
+10431	Danh sách gồm 120 định nghĩa; quét 143 trang đọc theo mẫu chỉ định để bố trí 514 giải thích tại chỗ ở lần dùng ngữ nghĩa đầu; F11 viết riêng theo chuỗi phụ thuộc đầy đủ. Quét không gồm mục lục và đáp án, không chứng minh đã bao quát mọi thuật ngữ hoặc mọi cách đọc mơ hồ. Kiểm thử số và trạng thái xác minh đối tượng liệt kê, không có nghĩa đã chạy Agent thương mại thật.
+11277	Cơ chế
+23500	Khả năng diễn giải cơ chế
+26170	Diễn giải cơ chế nghiên cứu đặc trưng và mạch nội bộ. Bộ tự mã hóa thưa phân rã biểu diễn kích hoạt thành tổ hợp đặc trưng tương đối thưa, thường huấn luyện bộ mã hóa/giải mã bằng sai số tái dựng cộng ràng buộc thưa. Đặc trưng có thể dễ giải thích hơn nơron gốc, nhưng vẫn cần phân biệt sai số tái dựng, tách đặc trưng, tương quan và nhân quả.
+22828	Ranh giới diễn giải cơ chế
+18215	Hiểu cơ chế
+413	Quá trình tính và đổi hình dạng của cơ chế
+26175	Nghiên cứu cơ chế và Trace kỹ thuật bổ sung nhau: một bên nghiên cứu tính toán mạng, bên kia thông tin và hành động ngoài mô hình. Gặp vấn đề quyền công cụ nên xem Trace thực thi trước; vấn đề biểu diễn trong nghiên cứu huấn luyện mới cần phân tích kích hoạt bên trong.
+28954	Kết quả máy đọc được
+17175	Đối tượng dữ liệu trong chương trình học máy để lưu các số sắp theo quy tắc.
+23103	Đánh đổi
+17287	Trọng số / Weight
+13412	Chia sẻ trọng số và đóng băng tham số
+3720	Mỗi thiết bị có 200MB trọng số, truyền kích hoạt giữa tầng; xếp vi lô kém sẽ tạo khoảng rỗi.
+3714	Mỗi thiết bị có 400MB trọng số, một xử lý A, một xử lý B; huấn luyện còn phải đồng bộ gradient.
+1148	Trọng số ở ba vị trí cộng bằng 1 nhưng đầu ra không phải Value gốc nào mà là kết quả trộn. Vì vậy không thể gọi token trọng số lớn nhất là “nguyên nhân duy nhất”. Phần dư, đầu khác, mạng truyền thẳng sau và thay đổi giữa tầng đều ảnh hưởng đầu ra cuối.
+14713	Hình dạng trọng số không khớp hoặc hình dạng dùng được nhưng hàm tính đổi
+3101	Sau cập nhật trọng số, K/V cũ không còn là kết quả tham số mới tính cho tiền tố cũ; huấn luyện còn cần đồ thị và gradient tương ứng. Dùng đệm cũ chạy xuôi với trọng số mới phá nhất quán mục tiêu. Khi suy luận,
+10272	Trạng thái trọng số
+13083	Ma trận trọng số: mỗi cột đầu ra lấy tổng có trọng số của 4096 số đầu vào. Đầu ra vẫn 4096 số nhưng giá trị và cách kết hợp đổi. Quá trình thường gọi <strong>phép chiếu tuyến tính</strong>; “chiếu” ở đây không nhất thiết là vật thể ba chiều chiếu lên tường, cũng không nhất thiết giảm chiều.
+26078	Cùng sai số tuyệt đối trọng số
+24479	Khác biệt giữa suy giảm trọng số và cập nhật bộ tối ưu.
+26054	Sai số trọng số ΔW
+26074	Sai số trọng số bằng nhau, kích hoạt khác làm sai số đầu ra khác
+14722	Danh tính trọng số
+15104	Lượng tử hóa trọng số giảm biểu diễn trọng số; lượng tử hóa KV giảm biểu diễn đệm; lượng tử hóa kích hoạt là đối tượng khác. Ghi “mô hình 4bit” không tự suy ra mọi bộ nhớ chạy đều 4bit.
+22423	Quyền, xác nhận đích và chiến lược phục hồi
+20493	Quyền luôn độc lập.
+6255	Quyền phải áp dụng trước khi trình nội dung cho mô hình hoặc người dùng. Đưa nội dung chưa cấp quyền vào mô hình để tăng độ bao phủ rồi xóa sau không phải lọc an toàn.
+6235	Về quyền, lấy Top10 từ toàn kho rồi xóa mục không có quyền có thể không còn gì, dù vùng có quyền còn kết quả rất liên quan; đây là mất độ bao phủ do lọc sau. Nghiêm trọng hơn, nếu nội dung không có quyền đã gửi ra reranker hay LLM ngoài, xóa trích dẫn cuối cũng không xóa rò rỉ. Cần lọc theo danh tính trong ranh giới đáng tin hoặc dùng chỉ mục/không gian tên có lọc an toàn, rồi giao nội dung được phép cho mô hình sau.
+25889	Xác thực quyền
+26693	Truy hồi có quyền
+5231	Kiểm thử quyền cần cả thành công và từ chối mong đợi: đọc được tệp trong thư mục cho phép, thao tác ngoài phạm vi bị từ chối đáng tin. Không dùng tệp riêng tư thật để kiểm thử, dữ liệu tạm là đủ.
+22546	Quy tắc quyền cần phù hợp rủi ro nhiệm vụ, thực hiện tại tầng công cụ. Đọc tệp, chạy kiểm thử, sửa mã và phát hành tài nguyên cần cân nhắc cấp quyền khác nhau.
+8917	Ranh giới quyền
+6241	Lọc theo quyền
+6403	Lọc quyền và số ứng viên
+25408	Vì sao lọc quyền sau truy hồi khiến top-k không đủ
+9158	Lọc quyền ảnh hưởng đến truy hồi, giữ đúng nguồn ảnh hưởng đến cô đọng, định danh hành động ảnh hưởng đến thử lại, ràng buộc trạng thái ảnh hưởng đến phê duyệt. An toàn xuyên suốt các tầng của hệ thống. Để đến cuối mới thêm một “Agent an toàn” không thể lấy lại dữ liệu đã rò rỉ hay tác dụng phụ đã thực hiện.
+22518	Cấu hình quyền
+20586	Cấu hình quyền kiểm soát việc công cụ hoặc thao tác có được phép hay không, khác với lời khuyên về hành vi trong Prompt. Cần cấu hình và kiểm thử quyền truy cập thư mục, lệnh, mạng và cơ chế phê duyệt theo quy tắc của sản phẩm.
+10330	Cấu hình quyền khiến mã nguồn quan trọng không thể nhìn thấy
+397	Tài liệu và cách biên soạn
+9628	Thời điểm tài liệu được công bố, khác với thời gian sự kiện.
+400	Loại tài liệu
+29511	Tài liệu có hỗ trợ kết luận và các điều kiện mà câu hỏi yêu cầu hay không.
+3835	Nhánh điều kiện, trường hợp thất bại
+5799	Chuyển đổi có điều kiện.</strong> Chỉ chuyển khi phiên bản ảnh chụp gốc vẫn còn hiệu lực; lưu chỉ mục bản ghi cũ và phiên bản cô đọng. Cô đọng thất bại không được xóa sạch lịch sử còn hiệu lực.
+28296	Điều kiện đầy đủ
+11230	Kiểm tra điều kiện
+24381	Loại mục
+19793	Nguồn S005, Prefill và Decode
+19059	Nguồn S005, bản đồ kiến thức xây dựng mô hình ngôn ngữ từ đầu
+19478	Nguồn S005, dữ liệu, mở rộng quy mô và đánh giá huấn luyện
+19212	Nguồn S011, các dạng cơ chế chú ý
+19350	Nguồn S019, toàn cảnh nghiên cứu công nghệ LLM
+19567	Nguồn S028, đặc tả hành vi mô hình và thứ bậc chỉ dẫn
+22744	Nguồn S044, độ trễ tác vụ từ đầu đến cuối
+20062	Nguồn S050, thiết kế lời nhắc Claude
+20174	Nguồn S054, thành phần Agent và luồng công việc
+20618	Nguồn S075, tổ chức tác vụ lập trình hiệu quả
+20672	Nguồn S078, quy trình tác vụ của Copilot CLI
+20862	Nguồn S086, dung lượng ngữ cảnh và trạng thái
+21693	Nguồn S123, tải và sử dụng kỹ năng Codex
+15541	Thông tin nguồn gốc provenance</strong> cho biết kết luận dựa trên tài liệu, phiên bản hay kết quả công cụ nào. <strong>Trích dẫn bằng chứng</strong> phải đủ để tìm lại nội dung gốc, có thể là commit kho mã cùng đường dẫn, hoặc bản ghi cơ sở dữ liệu và khoảng thời gian.
+25530	Nguồn, thời gian có hiệu lực và thời điểm ghi nhận cùng quyết định ký ức có thể dùng hay không; không thể giải quyết xung đột chỉ bằng cách để bản ghi mới nhất ghi đè.
+6028	Thông tin bổ sung như nguồn, phiên bản, quyền và vị trí.
+26739	Nguồn, phiên bản và ranh giới sự thật — Kỹ thuật hệ thống AI
+11417	Nguồn, phiên bản và phạm vi bằng chứng
+28486	Nguồn và điều kiện
+18240	Phạm vi nguồn và phiên bản
+23898	Giải thích về nguồn và phiên bản — Kỹ thuật hệ thống AI
+6537	Thứ tự xử lý khi các nguồn xung đột
+25558	Thay đổi nguồn ảnh hưởng thế nào đến kinh nghiệm suy ra
+9138	Mất độ tin cậy của nguồn.
+8911	Định danh nguồn
+9112	Chuỗi nguồn
+17988	Đến từ lần quan sát nào.
+10529	Đến từ đâu
+3792	Đến từ lượt truyền xuôi độc lập bằng thư viện chuẩn. Hiển thị sáu chữ số thập phân trên trang là lựa chọn phục vụ đọc hiểu; chương trình vẫn dùng toàn bộ độ chính xác.
+3087	Đến từ kết quả cũ của tầng 0
+5944	Xây dựng tác vụ kiểm tra có thể tái lập
+5081	Tạo ToolInvocation mang call_id, payload, session và step_context
+31355	Tài liệu xây dựng
+22077	Dịch vụ xây dựng có job_id riêng
+4371	Tạo kết quả tương ứng với call_id=c1
+28287	Tạo một ma trận bằng chứng:
+5869	Tạo lịch sử cố định chứa phản ví dụ, phủ định, ràng buộc và trạng thái chưa biết, cô đọng lặp lại vài lần rồi kiểm tra bảng mệnh đề; cũng cần tiếp tục một tác vụ nhỏ phụ thuộc bằng chứng cũ. Độ tương đồng văn bản cao không chứng minh trạng thái được giữ đúng; ngược lại, thay đổi cách diễn đạt chưa chắc làm mất thông tin. Định vị lỗi đến mệnh đề và sự kiện nguồn.
+866	Tạo ví dụ vectơ câu
+8354	Tạo cách triển khai sai
+862	Tạo đầu ra nhỏ
+6558	Xây dựng truy hồi tóm tắt phân cấp;
+26533	Tạo mục tiêu vô hướng, lần lượt cộng và trừ ε cho từng phần tử Q/K/V, so sánh gradient số với gradient giải tích. Chi phí chấp nhận được trên ma trận nhỏ; với mô hình lớn, chỉ lấy mẫu một số chiều hoặc kiểm tra đạo hàm theo hướng.
+4842	Tạo yêu cầu gửi đến mô hình
+29572	Bảng ghép cặp 20 câu hỏi được tạo cho ví dụ: 10 cả hai thành công, 4 mới thành công cũ thất bại, 2 cũ thành công mới thất bại, 4 cả hai thất bại. Không xem đây là tỷ lệ thắng của mô hình thực.
+29490	Tình huống sửa exclude được dựng; cố ý giữ trạng thái phủ định “kiểm thử tích hợp chưa được chạy”. Bản tóm tắt sai chỉ dùng làm phản ví dụ, không được dùng làm mẫu khuyến nghị.
+29428	Tác vụ giảng dạy chỉ đọc được dựng: tệp config.txt chứa timeout=30. Sơ đồ làn bơi thể hiện ranh giới trách nhiệm, không tuyên bố đã gọi API thương mại thực; dữ liệu và thứ tự hành động cố định.
+29548	Tình huống ghi ra bên ngoài được dựng; không cam kết cơ sở dữ liệu, hệ thống tệp và API từ xa tự nhiên có giao dịch “đúng một lần”.
+29453	Diễn tiến phục hồi cập nhật tệp được dựng. v7/v8 là nhãn phiên bản của ví dụ, không phải phiên bản mô hình; chỉ minh họa ngữ nghĩa phục hồi, không tuyên bố hệ thống tệp và cơ sở dữ liệu dùng chung giao dịch.
+21962	Tạo phép kiểm tra bằng nhau và cho thất bại
+28353	Tạo các câu hỏi gần nhau: nhật ký chạy thông thường của dự án A, nhật ký lỗi ngày 5 tháng 10 của dự án A, ngoại lệ của dự án B, người dùng không được cấp quyền, tài liệu phân loại bị thiếu, xung đột phiên bản D2 và D1, thay đổi cách viết khóa cấu hình. Với mỗi câu hỏi, viết bằng chứng dự kiến và mức không chắc chắn chấp nhận được.
+1726	Tạo chuỗi ngắn, so sánh đầu ra ở vị trí cuối giữa “truyền xuôi cả đoạn một lần” và “truyền xuôi từng đoạn + bộ nhớ đệm”; bao phủ trường hợp không có PAD, đệm bên trái, batch khác độ dài, phần tăng thêm dài hơn hai Token và vượt ranh giới cửa sổ trượt. Phải so sánh với cùng tham số mô hình, cùng độ chính xác và tắt dropout. Khi có khác biệt, lần lượt kiểm tra định danh Token, vị trí tuyệt đối, bảng cho phép, ô ghi và số lần xoay, đừng vội nới ngưỡng sai số.
+8905	Tạo phản ví dụ như đường dẫn vượt phạm vi, liên kết tượng trưng, sửa tham số, phê duyệt hết hạn, chỉ dẫn bên ngoài giả mạo và tác dụng phụ sau hủy; lần lượt quan sát nội dung mô hình nhìn thấy và sự thật bên ngoài. Khi chưa kiểm thử bộ thực thi thực hoặc cách ly OS, chỉ có thể nói “thiết kế cần giới hạn như vậy”, không thể khẳng định môi trường đã an toàn.
+10098	Kiến trúc, chất lượng dữ liệu, cách tối ưu và phạm vi ngân sách.
+23448	Bản ghi quyết định kiến trúc
+22040	Bản ghi quyết định kiến trúc cần bao gồm điều kiện từ bỏ
+17226	Địa chỉ số nguyên của một Token trong bảng từ vựng tương ứng.
+24386	Một khung hình của một hình minh họa
+29723	Một bước phải đợi kết quả khác mới được thực hiện.
+10578	Một q nhân vô hướng với hai k tạo ra hai điểm; softmax cho hai tỷ phần; mỗi tỷ phần nhân một hàng v rồi cộng lại. Ở đây không tạo từ tìm kiếm và cũng không trực tiếp chọn đáp án.
+4472	Một tiền tố đã phân tích được bằng json.loads không có nghĩa là phần sau sẽ không bổ sung trường hay thay đổi trạng thái. Cần đợi <strong>sự kiện hoàn tất tham số lời gọi do giao diện đó quy định</strong> và xử lý các nhánh từ chối, chưa hoàn chỉnh, hủy và thất bại. Cách triển khai đồng bộ thận trọng có thể chỉ thực thi sau khi xác nhận toàn bộ phản hồi chấp nhận được; giao thức hỗ trợ công cụ bất đồng bộ có thể cho phép thực thi lời gọi đã hoàn tất trong khi mô hình còn xuất nội dung, không thể yêu cầu mọi giao diện đều đợi hết lượt.
+29452	Bản lưu trạng thái tác vụ tại một thời điểm.
+26169	Một đầu chú ý đặt trọng số cao cho một đoạn văn không có nghĩa nó là nguyên nhân duy nhất của quyết định cuối. Phần dư nhiều tầng, mạng truyền thẳng, các đầu khác và tính toán phía sau cùng ảnh hưởng đầu ra. Coi một bản đồ nhiệt là “suy nghĩ thật của mô hình” là diễn giải quá mức.
+2747	Một số mô hình decoder-only không có PAD riêng; khi suy luận có thể dùng EOS để đệm bên trái. <strong>ID đó xuất hiện trong đầu vào</strong> và <strong>ID đó mới được sinh trong lượt này làm kích hoạt dừng</strong> là hai sự kiện khác nhau; mask hợp lệ quyết định vai trò đầu vào. Khi huấn luyện còn nguy hiểm hơn: nếu xóa nhãn theo quy tắc “đặt −100 ở mọi nơi có ID bằng EOS”, sẽ đồng thời xóa cả mục tiêu kết thúc thực sự cần học. Cần phân biệt theo vị trí padding thay vì chỉ theo giá trị ID.
+6196	Một số mô hình embedding dùng tiền tố tác vụ, cách mã hóa hoặc pooling khác nhau cho truy vấn và tài liệu khi huấn luyện. Bỏ qua quy ước khi suy luận sẽ thay đổi phân phối. Đúng số chiều không đồng nghĩa đúng không gian ngữ nghĩa; khi triển khai cần cố định mô hình,
+24712	Một cách triển khai có thể giữ ô PAD, nhưng phải mask và theo dõi vị trí đúng
+15012	Giá trị K/V của các tầng cho một tiền tố của một mô hình
+1242	Tra E[input_ids]
+1243	Tra P[position_ids]
+15887	Tìm “thư mục loại trừ” có thể truy cập trước danh sách tài liệu tương ứng với các từ đó, thay vì mỗi lần đọc lại mọi tài liệu từ đầu. Mã lỗi chính xác, tên hàm và khóa cấu hình thường phù hợp với cách khớp từ như vậy.
+6598	Tra tóm tắt phân cấp để định vị nhóm tài liệu liên quan
+10756	Tìm được “tổng quan thử lại” chưa đủ trả lời “thao tác ghi ở phiên bản này có được thử lại tự động hay không”; còn cần điều kiện áp dụng, phiên bản và ngoại lệ.
+23219	Tra nhầm hàng bảng từ vựng
+22675	Tra tỷ lệ đến nơi/hoàn thành, thử lại và tài nguyên
+22319	Tra nguyên nhân
+12432	Tra hàng tham số
+5334	Tra kết quả khám phá
+24618	Tra cùng một hàng
+29507	Tra lại nguyên văn, kiểm tra điều kiện
+5331	Tra cài đặt
+20625	Tra thư mục làm việc
+20401	Tra kế hoạch công cụ, cấu hình và quyền
+10749	Tra nhanh không có nghĩa chắc chắn tìm đủ láng giềng gần nhất chính xác; độ bao phủ ANN cũng không đồng nghĩa tỷ lệ trả lời đúng cuối cùng.
+5340	Tra việc thực thi
+11944	Tra mã số
+17884	Tra mã số
+12616	Tra mã số cuối
+669	Tra bảng từ vựng cuối
+6775	Tra phiên bản
+24311	Xem nguồn sơ cấp: Attention Is All You Need
+24353	Xem nguồn sơ cấp: Direct Preference Optimization
+24349	Xem nguồn sơ cấp: Efficient Memory Management for LLM Serving with PagedAttention
+24351	Xem nguồn sơ cấp: Fast Inference from Transformers via Speculative Decoding
+24347	Xem nguồn sơ cấp: FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness
+24345	Xem nguồn sơ cấp: GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints
+24341	Xem nguồn sơ cấp: Hugging Face · Fixing Gradient Accumulation（2024-10-16）
+24355	Xem nguồn sơ cấp: LoRA: Low-Rank Adaptation of Large Language Models
+24333	Xem nguồn sơ cấp: PyTorch 2.10 · Activation checkpointing
+24325	Xem nguồn sơ cấp: PyTorch 2.10 · AdamW
+24313	Xem nguồn sơ cấp: PyTorch 2.10 · Autograd mechanics
+24331	Xem nguồn sơ cấp: PyTorch 2.10 · Automatic Mixed Precision examples
+24323	Xem nguồn sơ cấp: PyTorch 2.10 · CrossEntropyLoss
+24327	Xem nguồn sơ cấp: PyTorch 2.10 · Dropout
+24315	Xem nguồn sơ cấp: PyTorch 2.10 · Embedding
+24321	Xem nguồn sơ cấp: PyTorch 2.10 · LayerNorm
+24317	Xem nguồn sơ cấp: PyTorch 2.10 · Linear
+24319	Xem nguồn sơ cấp: PyTorch 2.10 · RMSNorm
+24329	Xem nguồn sơ cấp: PyTorch 2.10 · scaled_dot_product_attention
+24343	Xem nguồn sơ cấp: RoFormer: Enhanced Transformer with Rotary Position Embedding
+24357	Xem nguồn sơ cấp: Root Mean Square Layer Normalization
+24360	Xem nguồn sơ cấp: Transformers 4.32.0 · GPT2LMHeadModel quy ước labels
+24335	Xem nguồn sơ cấp: Transformers 4.57.1 · Caching
+24339	Xem nguồn sơ cấp: Transformers 4.57.1 · Generation strategies
+24337	Xem nguồn sơ cấp: Transformers 4.57.1 · LLM tutorial
+20622	Xem chức năng ngữ cảnh và cô đọng có thể giúp quan sát hội thoại dài, nhưng một lần chạy không thể tiết lộ toàn bộ thuật toán bên trong. Trạng thái thực thi thực của chương trình vẫn cần tệp, kết quả lệnh hoặc đầu ra có cấu trúc làm bằng chứng.
+20501	Xem mức sử dụng ngữ cảnh có thể phát hiện một loại nội dung chiếm quá nhiều, nhưng bản thân tỷ lệ không cho biết giá trị. Một yêu cầu tương thích ngắn có thể quan trọng hơn nhật ký rất dài; dọn kết quả công cụ cũng có thể xóa manh mối cần về sau.
+10410	Xem thí nghiệm chuyên đề →
+26708	Xem mục lục chuyên đề
+17842	Xem ví dụ đầy đủ →
+23897	Xem mục lục đọc mở rộng
+16993	Xem trọng số chú ý, một số kích hoạt trung gian hoặc đặc trưng thưa có thể gợi ý về cơ chế. <strong>Bộ tự mã hóa thưa SAE</strong> thử tái tạo kích hoạt bằng tổ hợp đặc trưng tương đối thưa; biểu diễn thưa chỉ kích hoạt một phần đặc trưng, không có nghĩa mỗi đặc trưng tự nhiên ứng với duy nhất một khái niệm con người.
+17832	Xem giai đoạn quy trình
+16125	Xem bằng chứng chạy
+12591	Tra mã số
+27951	Tra bảng giảm số hàng được lấy ra, không phải thu nhỏ vĩnh viễn bảng từ vựng từ 8 mục xuống 3 mục. Đầu vào tiếp theo vẫn truy cập được cùng bảng 8 mục.
+12839	Sau khi tra bảng, vị trí này không còn chỉ lưu mã số 2, mà lưu
+812	Vectơ ban đầu lấy từ phép tra bảng; trạng thái ẩn là biểu diễn có ngữ cảnh của Token đó tại tầng và tiền tố cụ thể;
+21435	Truy vấn u2
+15929	Truy vấn “loại trừ”
+23274	Truy vấn, khóa và giá trị
+6435	Một vectơ truy vấn, một vectơ tài liệu
+6430	Truy vấn và ứng viên cùng đi vào phép tính để chấm trực tiếp điểm liên quan.
+17363	Truy vấn và thông tin có thể đọc đến từ biểu diễn của cùng một chuỗi.
+23279	Dạng chú ý trong đó biểu diễn truy vấn và biểu diễn được truy vấn đến từ các chuỗi hoặc nguồn khác nhau.
+1568	Vị trí truy vấn 0
+1571	Vị trí truy vấn 1
+17890	Vị trí truy vấn nằm ở hàng, vị trí được đọc nằm ở cột. Khi đã có 3 vị trí rồi xử lý thêm 2 vị trí mới, bảng có 2 hàng 5 cột, không phải 2 hàng 2 cột.
+13737	Vị trí truy vấn＼Vị trí Key
+28014	Ma trận điểm truy vấn. Sau đó là softmax, tổng hợp V, phần dư, FFN, rồi vào tầng 1. Tầng 1 dùng bộ nhớ đệm lịch sử riêng để lặp lại quy trình này.
+22162	Truy vấn kết quả bên ngoài rồi tiếp tục
+7948	Truy vấn để phục hồi
+16002	Viết lại truy vấn</strong> chuyển câu hỏi của người dùng thành cách diễn đạt phù hợp tìm kiếm hơn, nhưng không được biến “có thể là lỗi bộ nhớ đệm” thành “đã xác nhận bộ nhớ đệm hỏng”. Giả thuyết trong bản viết lại vẫn là giả thuyết.
+25402	Viết lại truy vấn và HyDE có thể mở rộng truy hồi ngữ nghĩa: trước hết tạo mô tả có thể đúng, rồi truy hồi. Nhưng tài liệu giả định chỉ hỗ trợ truy vấn, không phải bằng chứng thực; tiền đề sai được sinh ra không được đi vào chuỗi sự thật của đáp án cuối.
+28259	Viết lại truy vấn có thể thêm các thuật ngữ “retention”, “retention_days”, nhưng bản viết lại chỉ hỗ trợ tìm kiếm, không phải bằng chứng sự thật. Nội dung mô hình sinh “dự án A phải là 30 ngày” tuyệt đối không được trở thành tiền đề đã xác nhận chỉ vì được đưa vào mở rộng truy vấn.
+16001	Ranh giới của viết lại truy vấn và tài liệu giả định
+11618	Tài liệu stable động tại ngày tra cứu; thí nghiệm cục bộ ghi riêng 2.10
+11755	Hướng dẫn stable tại ngày tra cứu
+11728	Tài liệu stable tại ngày tra cứu; phiên bản cục bộ được ghi vào kết quả
+11703	Thẻ mô hình của tác giả tại ngày tra cứu
+11672	Hướng dẫn động tại ngày tra cứu
+11720	Sổ tay chính thức tại ngày tra cứu
+11767	Tài liệu chính thức tại ngày tra cứu
+11774	Hướng dẫn khái niệm chính thức tại ngày tra cứu
+11751	Hướng dẫn công cụ tại ngày tra cứu
+11610	Tài liệu tại ngày tra cứu
+31367	Truy vấn là xây dựng → Đọc nội dung chính C để xác nhận phiên bản và điều kiện áp dụng
+21132	Mỗi Token truy vấn tìm vị trí tài liệu phù hợp nhất riêng
+6438	Tính toán kết hợp từ truy vấn và văn bản ứng viên
+21085	Khó khớp khi truy vấn để gỡ lỗi bộ nhớ đệm
+6300	Định danh truy vấn, thế hệ chỉ mục, điều kiện lọc, phiên bản đối tượng thuê/quyền và điều kiện thời gian liên quan. Sau khi người dùng bị thu hồi quyền, các đoạn từng được cho phép trong bộ nhớ đệm cũ không được tiếp tục chảy vào Prompt. Thiết kế key bộ nhớ đệm cần phối hợp với cơ chế làm mất hiệu lực theo phụ thuộc của E36.
+30802	Tra ai gọi nó và chịu sự kiểm soát của điều kiện nào
+5337	Tra đầu vào
+21214	Tra cấu hình
+7013	Khử trùng lặp bắt đầu bằng tìm ứng viên cùng chủ đề/phạm vi, rồi so sánh ngữ nghĩa. Cùng kết luận từ hai bằng chứng độc lập có thể hợp nhất trích dẫn; cách diễn đạt gần nhau nhưng môi trường khác nhau không nên hợp nhất; quan hệ phủ định phải xử lý như xung đột. Mô hình có thể hỗ trợ trích xuất và so sánh, nhưng sự thật có thẩm quyền quan trọng nên có định danh xác định và xác nhận từ người/công cụ.
+3362	Tra bảng trang
+21541	Đánh dấu proposed.
+24478	Tiêu chuẩn · Ngày ghi nhận tài liệu: 2026-10-17
+2466	Chuẩn hóa
+3301	Số cặp của attention dày đặc chuẩn vẫn có bậc bình phương, chỉ giảm lưu lượng bộ nhớ và lưu trữ trung gian. Tỷ lệ tăng tốc khác nhau theo phần cứng/độ dài. Áp thẳng hệ số tăng tốc của một thí nghiệm trong bài báo vào mô hình và GPU của mình là thiếu chặt chẽ; cần đo chuẩn thực tế riêng Prefill/Decode.
+13968	Độ lệch chuẩn
+2465	Độ lệch chuẩn 0.5.
+2471	Độ lệch chuẩn 0, cách triển khai phải định nghĩa xử lý ổn định, không được chia trực tiếp cho 0.
+10420	Chương trình dùng thư viện chuẩn có 30 kiểm tra xác định; còn dùng PyTorch 2.10.0+cpu đã cài, CPU và float64 để đối chiếu 3 phép chiếu Linear, SDPA tầng thấp và MultiheadAttention tầng cao, tổng cộng 5 nhóm đối chiếu đều đạt. MHA tầng cao nhận cùng X, SDPA tầng thấp nhận Q/K/V đã chiếu; việc này kiểm tra khác biệt cấp giao diện, không đánh giá chất lượng mô hình hay hiệu năng GPU.
+10416	Chương trình kiểm chứng bằng thư viện chuẩn
+16685	Hiểu sai số chuẩn như thế nào
+16688	Hiểu sai số chuẩn như thế nào: phân biệt từng mục
+21088	Ghi nhãn “gỡ lỗi bộ nhớ đệm: mặc định tắt” và nguồn
+8928	Nhãn giúp mô hình nhận biết nguồn, nhưng không phải cách ly mật mã. Nội dung vẫn có thể ảnh hưởng mô hình, và nhãn có thể mất trong lần tóm tắt sau. Phải có ràng buộc tầng thực thi và giữ đúng nguồn.
+17447	Nhãn / Label
+3756	Thiếu nhãn/mẫu số/gradient/step
+11816	Nhãn, ignore_index, trọng số và reduction cùng quyết định mất mát và mẫu số; ví dụ trong sách nêu rõ có dùng trọng số hay không.
+12677	Nhãn không làm đầu vào ở cùng vị trí; nó chỉ tham gia tính mất mát sau khi truyền xuôi cho điểm.
+23189	Nhãn cũng dùng [A,B,C]
+29394	Căn chỉnh nhãn dùng chuỗi 5 mục; cross-entropy một vị trí và lấy trung bình PAD là các ví dụ nhỏ độc lập được nêu rõ, không giả vờ những xác suất đó đến từ mô hình trong hình căn chỉnh.
+2410	Mask nhãn quyết định bạn thực sự đang tối ưu điều gì
+10639	Nhãn là mục tiêu đúng để so sánh; huấn luyện Token tiếp theo căn vị trí đầu vào với Token phía sau. Teacher forcing dùng tiền tố thật trong dữ liệu để tính, không thay bằng kết quả vừa lấy mẫu.
+746	Nhãn có giá trị gợi ý nhưng không phải cách ly mật mã hay cách ly nhân hệ điều hành.
+1948	Dịch nhãn sai, huấn luyện vẫn có thể trông rất suôn sẻ
+16799	Đánh dấu D1 là tài liệu bên ngoài
+16427	Đánh dấu unknown, không được suy ra failed từ hết thời gian chờ.
+2921	Đánh dấu đã đạt giới hạn hoặc chưa hoàn chỉnh, không được giả làm hoàn tất tự nhiên.
+4208	Đánh dấu tiến độ
+29545	Định danh cùng một hành động logic, khi thử lại không tùy tiện đổi ID mới.
+17164	Vô hướng / Scalar
+14191	Mục tiêu vô hướng
+12339	Vô hướng: 7
+19642	Nhánh và cắt tỉa trong tìm kiếm cây
+21233	Nút cây
+10806	Hiệu chuẩn, độ tin cậy và từ chối trả lời
+16987	Mức hiệu chuẩn
+26080	Ý nghĩa hiệu chuẩn
+22880	Quan sát phân phối kích hoạt khi hiệu chuẩn
+10807	Hiệu chuẩn kiểm tra độ tin cậy dự đoán có khớp với tần suất đúng thực tế hay không; ECE và Brier dùng các cách hạch toán khác nhau. Xác suất Token cục bộ, lời nói “chắc chắn” và tỷ lệ đúng của toàn bộ câu trả lời không phải cùng đối tượng.
+9826	Quan sát hiệu chuẩn
+11756	Đánh giá hiệu chuẩn cần ghép dự đoán với kết quả thực và dữ liệu độc lập; phân biệt độ tin cậy, khả năng phân biệt và sai số tổng thể.
+26051	Tập hiệu chuẩn phải bao phủ phân phối kích hoạt thực. Chỉ hiệu chuẩn bằng trò chuyện tiếng Anh rồi triển khai cho mã dài và tham số công cụ có cấu trúc có thể gây suy giảm khác nhau. Cũng cần kiểm thử ngữ cảnh dài, ký hiệu hiếm, số chính xác và định dạng công cụ, không chỉ hỏi đáp thông thường.
+7863	Hiệu chỉnh kết luận
+31310	Kiểm tra c1 rồi đọc tệp
+11207	Cho phép sau kiểm tra
+4294	Bộ kiểm tra
+3840	Kiểm tra nội dung cũ rồi sửa tệp
+20471	Kiểm tra người dùng u7 chỉ được đọc P1
+3953	Sau khi kiểm tra đường dẫn, đọc được
+21524	Cạnh kiểm tra
+14318	Mẫu
+2136	Vị trí 爱 của mẫu 0
+30398	Mẫu 0: 3 vị trí, mỗi vị trí 4 đặc trưng
+2137	Vị trí 爱 của mẫu 1
+30399	Mẫu 1: 3 vị trí, mỗi vị trí 4 đặc trưng
+10788	Phụ thuộc giữa mẫu, trộn độ khó tác vụ hoặc chọn lọc đề sẽ thay đổi phạm vi có thể diễn giải; công thức thống kê không phải bằng chứng rằng “điểm tăng chắc chắn nhờ thay đổi này”.
+16566	Đơn vị mẫu: một tác vụ
+1924	Mẫu có thể là
+22113	Ít mẫu cần báo cáo độ không chắc chắn. Có thể Bootstrap theo tác vụ để ước lượng khoảng chênh lệch; nhiều lần chạy cùng tác vụ có tương quan, không được coi tất cả là mẫu độc lập. Phụ lục thí nghiệm dùng dữ liệu tổng hợp để minh họa, không phải bảng xếp hạng đo thực sản phẩm.
+22207	Mẫu cần có thành công và thất bại, đơn giản và phức tạp, trường hợp biên và bất thường. Chỉ thu ví dụ mà phương án mới giỏi nhất sẽ phóng đại lợi ích.
+25796	Khi cỡ mẫu nhỏ hoặc tỷ lệ thành công gần 0/1, khoảng chuẩn đơn giản dễ sai lệch. Khoảng Wilson là lựa chọn vững hơn cho tỷ lệ nhị thức, nhưng vẫn cần hiểu đơn vị lấy mẫu. Với kết quả nhị phân ghép cặp, kiểm định McNemar chủ yếu dùng mẫu bất đồng “chỉ A thành công” và “chỉ B thành công”, không coi cùng thành công là bằng chứng cải thiện.
+22948	Giới hạn mẫu
+484	Mẫu:
+24908	Xác suất trong kernel
+25108	Đối chiếu
+5077	Đối chiếu model_visible_specs, khám phá trì hoãn hoặc đường code-mode
+20720	Đối chiếu package hoặc tệp xây dựng
+18832	Đối chiếu ranh giới tổng hợp phân vị; không lấy trung bình trực tiếp p95 của các nhóm.
+18811	Đối chiếu tái sử dụng K/V lịch sử ở từng tầng, vị trí Token mới và ranh giới giữa bộ nhớ đệm với huấn luyện; không vì vậy cam kết mọi khung đều nhận cùng dạng đầu vào.
+9634	Kết luận sau đối chiếu
+9643	Đối chiếu mệnh đề
+22706	Đối chiếu nội dung thực và ID hành động
+18819	Đối chiếu khám phá công cụ, phân trang và đối tượng tools/call. Mô tả công cụ và kết nối thành công đều không phải cấp quyền bổ sung.
+30803	Đối chiếu mã nguồn hiện tại và cấu hình phụ thuộc
+9720	Đối chiếu trang hiện tại vẫn là biểu mẫu đích
+18826	Đối chiếu phép cộng 1/(k+rank) và thứ hạng bắt đầu từ 1; thứ hạng ứng viên trong bài là thiết lập giảng dạy độc lập.
+18806	Đối chiếu ngữ nghĩa cho phép của mask, căn chỉnh nhân quả của ma trận không vuông và tham số dropout. Bài này tạo tường minh bảng cho phép theo vị trí; số liệu là đầu vào giảng dạy, không phải đo hiệu năng thực.
+11598	Thống nhất ngày đối chiếu thành
+27832	Ngày đối chiếu: 2026-10-19. Giao diện sản phẩm có thể cập nhật; yêu cầu về bộ nhớ đệm, dừng, quyền và giao thức của mô hình cụ thể cần xác nhận lại theo phiên bản lúc sử dụng.
+11805	Ngày đối chiếu: 2026-10-18. Ví dụ toán được tính theo công thức, đầu vào và tham số hiển thị; đặc tính sản phẩm được giải thích theo tài liệu chính thức hoặc ảnh chụp cố định đã liệt kê. Không coi bản ghi lời gọi, số hiệu năng, ngữ liệu truy hồi hoặc mẫu đánh giá được dựng là kết quả sản phẩm thực.
+24309	Ngày đối chiếu: 2026-10-21. Mô tả giao diện theo phiên bản chỉ định, không gọi các phiên bản này là mới nhất của mọi sản phẩm. Đọc nội dung chính không phụ thuộc mạng; liên kết phục vụ đối chiếu nguồn sơ cấp. Ví dụ tính toán, suy dẫn và mô hình xuyên suốt do giáo trình này tự xây dựng, tách biệt kết quả bài báo gốc và đo thực cục bộ.
+21400	Đối chiếu xem còn áp dụng hay không.
+6917	Đối chiếu kiểm thử còn tương ứng nghiệp vụ hiện tại hay không
+4953	Đối chiếu phiên bản và hỗ trợ phương thức
+9646	Đối chiếu phạm vi
+16122	Đối chiếu điểm vào thực thi
+21975	Giá trị cốt lõi rõ ràng.
+18540	Hướng dẫn đọc cốt lõi: cơ chế cụ thể
+21680	Cơ chế cốt lõi vẫn là khám phá qua siêu dữ liệu, tải khi liên quan và lấy tài nguyên theo nhu cầu. Cần kiểm tra thư mục, cách kích hoạt và cấu hình cụ thể trong phiên bản thực tế.
+24681	Quan sát cốt lõi
+20666	Kiểm tra ý nghĩa cụ thể của nó.
+26766	Ngày kiểm tra: 2026-10-17｜Phiên bản: 2a68b74b9bf16b64e285495c1b149d7d6ac8bdf4
+26814	Ngày kiểm tra: 2026-10-17｜Phiên bản: 3.17
+23343	Lấy mẫu nucleus
+19711	Vì sao lấy mẫu nucleus giữ mục vượt ngưỡng
+28170	Điểm vào kiểm chứng
+591	Nguyên nhân kiểm chứng thất bại
+15516	Kiểm chứng tệp đúng phiên bản đích
+5188	Phương pháp kiểm chứng
+22127	Tại ngày kiểm chứng 2026-10-17, tài liệu nền tảng Evals cũ của OpenAI liệt kê kế hoạch chỉ đọc từ 2026-10-31 và đóng cửa từ 2026-11-30, không được viết như đã xảy ra. Dữ liệu tác vụ, logic chấm điểm và Trace cần có thể di chuyển, phương pháp không nên gắn với giao diện cũ.
+3965	Kiểm chứng ràng buộc, r9 và kết quả kiểm thử
+24217	Ranh giới kiểm chứng:</strong> Phải phân biệt tài liệu 2026 với phiên bản cũ; sách giải thích theo cơ chế rủi ro, không sao chép số mục bản cũ chưa kiểm chứng để giả làm bản mới.
+24238	Ranh giới kiểm chứng:</strong> Quy ước ngữ nghĩa GenAI tiếp tục phát triển; cần cố định phiên bản đặc tả và cách triển khai thực sự sử dụng.
+24241	Ranh giới kiểm chứng:</strong> Cần kiểm tra các trường Span và phạm vi hỗ trợ theo phiên bản sử dụng, không coi mọi sản phẩm đã triển khai thống nhất.
+24284	Ranh giới kiểm chứng:</strong> Việc đọc trang dài của nghiên cứu gốc bị hạn chế; sách dùng giới thiệu chính thức của cùng nhóm nghiên cứu để giải thích ý tưởng cốt lõi, không tuyên bố bao phủ mọi phụ lục thí nghiệm.
+23918	Ranh giới kiểm chứng:</strong> Việc đọc trang dài đầu mục đọc mở rộng bị hạn chế; giải thích triển khai cơ bản tham khảo phiên bản lịch sử cùng trang của tác giả, không coi phụ thuộc cũ là cách cài đặt hiện tại.
+24042	Ranh giới kiểm chứng:</strong> Việc tải tệp và ghi nhớ tự động chịu ảnh hưởng của phiên bản, tệp cùng tồn tại và điều kiện cấu hình; không đưa mô tả tuyệt đối xuyên phiên bản.
+24149	Ranh giới kiểm chứng:</strong> Điểm vào kỹ năng Codex cũ có thể chuyển sang tài liệu kỹ năng chung; không suy ngược mọi khả năng trên trang mới thành hành vi phiên bản cũ.
+24297	Ranh giới kiểm chứng:</strong> Phiên bản khung liên tục thay đổi. Thí nghiệm cơ bản trong gói chỉ dùng thư viện chuẩn Python, không phụ thuộc giao diện PyTorch cụ thể.
+24196	Ranh giới kiểm chứng:</strong> Bổ sung kiểm tra phiên bản: nền tảng Evals cũ dự kiến chỉ đọc từ 2026-10-31 và đóng cửa từ 2026-11-30; tính đến 2026-10-17 vẫn là kế hoạch tương lai.
+23957	Ranh giới kiểm chứng:</strong> Dùng bản lịch sử công bố 2025-12-18 để giải thích đặc tả hành vi, không tuyên bố đây là bản mới nhất tại ngày của sách.
+17908	Hạng mục kiểm chứng
+9596	Căn cứ nguyên nhân gốc có thể đối chiếu.
+16410	Dựng lại hoặc thực thi lại dựa trên sự kiện;
+17521	Hệ thống thực thi gọi mô hình và công cụ theo tác vụ cùng quan sát, liên tục đẩy công việc tiến lên.
+17629	Quá trình chọn mô hình, công cụ, kỹ năng hoặc nhánh thực thi theo tác vụ.
+6322	Cộng dồn theo thứ hạng của ứng viên trên các bảng xếp hạng
+17261	Đọc toàn bộ mục theo địa chỉ, không dùng độ lớn địa chỉ để tính ngữ nghĩa.
+17416	Dự đoán dần các mục tiếp theo dựa trên chuỗi đã có.
+13658	Tạo theo chuỗi, vị trí và quy tắc đọc
+10246	Suy ra mẫu tác vụ từ ví dụ hiện tại.
+28384	Đề xuất lại thay đổi cùng loại dựa trên tóm tắt
+7217	Tìm vectơ, tóm tắt và bộ nhớ đệm theo ID nguồn
+23272	Phép tính bên trong mô hình kết hợp có trọng số các giá trị theo độ khớp giữa truy vấn và khóa.
+23454	Đánh giá kết quả hoặc quá trình theo tiêu chí cụ thể, có thể do chương trình, mô hình hoặc người thực hiện.
+14834	Dừng hiển thị theo quy tắc bộ sinh; không cần bịa thêm lần thực thi công cụ chỉ để hiển thị EOS.
+6680	Xác định bên gọi dựa trên ràng buộc và kiểm thử
+4283	Chọn cách triển khai hàm thực theo tên được cấp phép.
+17497	Kiến trúc chọn một phần mạng con chuyên gia tham gia tính toán theo đầu vào.
+18035	Tên thư mục gốc ＋ hàm băm quan sát được; chỉ đổi cấu hình
+8143	Định dạng hoặc sinh mã vẫn thay đổi đối tượng đã được kiểm chứng, có thể gây thay đổi ngữ nghĩa, khác biệt môi trường hoặc ghi không hoàn chỉnh. Quy trình đơn giản, an toàn là hoàn thành mọi thay đổi dự kiến rồi kiểm chứng trạng thái cuối; nếu sửa tiếp sau kiểm chứng, ít nhất chạy lại các kiểm tra chịu ảnh hưởng.
+8371	Định dạng và hành vi giao dịch; nếu tất cả đều kiểm thử từ đầu đến cuối, phản hồi chậm và dễ dao động. Phân tầng theo rủi ro, không cần dựng toàn bộ môi trường cho từng hàm.
+21631	Kiểm tra định dạng
+23245	Khung không phán đoán mất mát của bạn có biểu đạt đúng mục tiêu nghiệp vụ hay không, cũng không tự tránh rò rỉ dữ liệu. Vẫn cần kiểm tra số chiều, mục tiêu và chế độ huấn luyện/kiểm chứng.
+10335	Đối chiếu với khung
+28027	Khung đôi khi tự cắt đầu vào đã có trong bộ nhớ đệm, nhưng đây là quy ước giao diện. Khi tự triển khai, phải nêu rõ nhận “toàn bộ đầu vào” hay “hậu tố tăng thêm”, không dựa vào đoán. Đối tượng bộ nhớ đệm cũng phải ràng buộc định danh mô hình/adapter; nếu đổi trọng số mà dùng tiếp trạng thái cũ sẽ cho kết quả không nhất quán.
+23578	Đối tượng mô hình của khung có thể dùng huấn luyện hoặc suy luận, nhưng cần làm rõ chế độ chạy, đồ thị gradient và mục đích dữ liệu. Mô hình biểu hiện khác sau trò chuyện có thể chỉ do ngữ cảnh đổi; đừng tự suy ra trọng số đã cập nhật.
+26375	Tình huống một: Skill hiển thị đã tải nhưng mã vẫn thiếu chuyên môn
+26398	Tình huống bảy: càng nhiều ký ức, lỗi càng ổn định
+26383	Tình huống ba: kết quả truy hồi liên quan nhưng luôn là phiên bản cũ
+26379	Tình huống hai: sau cô đọng, hướng làm việc thay đổi
+26391	Tình huống năm: tác vụ càng chậm, Token càng nhiều
+26395	Tình huống sáu: thử lại gây tác dụng phụ trùng lặp
+26387	Tình huống bốn: kiểm thử đều xanh nhưng người dùng vẫn phát hiện lỗi
+23026	Tác vụ máy tính không đánh giá thành công bằng số lần nhấp
+14231	Gradient
+17432	Gradient / Gradient
+30507	Gradient −4, tốc độ học 0.2
+3525	Gradient nhất quán ＋ VRAM/thời gian huấn luyện
+30504	Đối chiếu số của hạ gradient
+14487	Gradient và step
+24801	Chia đều gradient và trạng thái bộ tối ưu, sao chép tham số
+14239	Gradient là -4, dùng w←w−0.1×gradient thì w tăng hay giảm?
+2632	Vì sao gradient tạm thời không đối xứng
+27237	Gradient như độ dốc, tốc độ học như độ dài bước — Kỹ thuật hệ thống AI
+27238	Gradient như độ dốc, tốc độ học như độ dài bước</a><a href="#topic-3">Giải thích từng bước và bản ghi tính toán
+3768	Nhánh gradient/cộng dồn tham số dùng chung
+29386	Gradient cho biết hướng cục bộ
+24780	Tổng gradient 10, phóng đại 4 lần.
+22860	Gradient cập nhật tham số thích nghi
+2270	Tích lũy gradient
+14355	Tích lũy gradient</strong> tính và cộng gradient cho vài batch nhỏ trước, sau đó cập nhật một lần để mô phỏng batch hiệu dụng lớn hơn; nó không tự làm biến mất lưu trữ kích hoạt của một đầu vào quá dài. Cách chia tỷ lệ gradient phải tương ứng cách lấy trung bình mất mát.
+14503	Vì sao tích lũy gradient thường sai ở mẫu số
+2231	Tích lũy gradient chia batch lớn thành K micro-batch, truyền ngược liên tiếp nhưng hoãn cập nhật. Nếu mỗi micro-batch có cùng số Token hợp lệ, chia loss cho K thường cho gradient trung bình tương ứng; khi số Token hợp lệ khác nhau, lấy trung bình máy móc các loss trung bình micro-batch sẽ đổi trọng số mẫu. Cần chuẩn hóa theo tổng Token hợp lệ. Tính ngẫu nhiên của Dropout, thứ tự cộng số thực dấu phẩy động cũng có thể khiến số liệu không hoàn toàn giống nhau.
+14400	Tích lũy gradient cố ý gộp đóng góp của nhiều micro-batch; cần phân biệt với tích lũy ngoài ý muốn do quên xóa gradient.
+24737	Tích lũy gradient kết hợp đóng góp của nhiều microbatch thành một lần cập nhật tối ưu. Tính tương đương phụ thuộc chuẩn hóa mất mát, toán tử ngẫu nhiên và cách đếm bước của bộ lập lịch. Chuỗi dài ngắn có số Token hợp lệ khác nhau, “trung bình đơn giản của trung bình từng microbatch” có thể khác trung bình mọi Token hợp lệ. Cần nói rõ mục tiêu tối ưu lấy trọng số theo mẫu hay Token rồi mới thiết kế logic tích lũy.
+23246	Gradient mặc định sẽ tích lũy, vì sao cần đặt về không
+7622	Kiểm tra thay đổi của A và B có xung đột hay không
+21561	Kiểm tra A thực sự gọi giao diện nào
+23200	Kiểm tra phạm vi ID và batch rỗng
+23203	Kiểm tra softmax bị mask toàn bộ, chia cho không, tràn số
+5797	Kiểm tra bất biến.</strong> ID và ràng buộc quan trọng có còn, hành động unknown có còn unknown, phiên bản bằng chứng có nhất quán, từ phủ định có bị mất hay không.
+18199	Kiểm tra tương tác, không được giả định lợi ích cộng được
+8434	Kiểm tra số dư bằng số tiền, cập nhật đồng thời, hoàn tác khi thất bại
+30814	Kiểm tra quy tắc giữ lại, loại trừ, lồng nhau và rỗng
+17657	Kiểm tra thay đổi không phá hành vi cũ đã được yêu cầu.
+17120	Kiểm tra ứng viên
+6261	Kiểm tra cả ba điểm
+19613	Kiểm tra bước cộng
+20454	Kiểm tra nhánh kiểu phù hợp.
+15159	Kiểm tra nguyên nhân
+4971	Kiểm tra địa chỉ, mạng và dịch vụ có truy cập được hay không, đổi Prompt thường không có tác dụng.
+4212	Kiểm tra chữ hoa/thường, thư mục và ký hiệu có thể đã đổi tên
+6786	Kiểm tra mã thực và kiểm thử thất bại.
+4974	Kiểm tra hỗ trợ giao thức phía khách và phía chủ, không được báo nhầm tệp không tồn tại.
+4365	Kiểm tra công cụ đã đăng ký, tham số là chuỗi đường dẫn, đường dẫn nằm trong phạm vi cho phép
+2935	Kiểm tra cần tương ứng với tác vụ. Giải thích khái niệm không cần chạy kiểm thử; sửa một dòng cấu hình chỉ cần kiểm chứng liên quan; tác vụ có tác dụng phụ bên ngoài mới cần xác nhận và đối soát rõ hơn. Nguyên tắc là kiểm chứng kết quả người dùng thực sự quan tâm, không áp cùng một quy trình nặng cho mọi tác vụ.
+26416	Kiểm tra độ trễ đã phục hồi và tỷ lệ lỗi chưa tăng.
+5920	Kiểm tra hiện tại
+12883	Kiểm tra hình dạng
+8493	Kiểm tra siêu dữ liệu kỹ năng phân tích được, tham chiếu quan trọng đọc được, hành vi định tuyến ca đúng và phản ví dụ
+8431	Kiểm tra cách viết và định dạng liên quan
+17010	Kiểm tra trạng thái nút hoặc trang kết quả, không dựa vào xác nhận nhấp để kết luận thành công.
+22336	Kiểm tra đổi tên, sắp xếp lại và bản sao dịch
+22196	Kiểm tra vấn đề cũ tái phát.
+17687	Vấn đề tranh chấp khi đối tượng thay đổi giữa lúc kiểm tra và lúc sử dụng.
+20572	Thời điểm kiểm tra
+9005	Khi kiểm tra, đường dẫn trỏ tới tệp an toàn; kẻ tấn công hoặc tiến trình đồng thời có thể thay liên kết trước open. Tách kiểm tra khỏi sử dụng thực vẫn có rủi ro TOCTOU. openat2 của Linux cung cấp cơ chế dựa trên handle thư mục và ràng buộc phân giải, như RESOLVE_BENEATH/IN_ROOT; cần chọn ràng buộc theo mô hình đe dọa.
+5977	Kiểm tra còn trả lời được F1—F4 hay không
+20323	Kiểm tra còn nằm trong phạm vi tác vụ gốc hay không
+22930	Kiểm tra có nhắc lại hiểu lầm hay không.
+1262	Kiểm tra đã thực sự hiểu truyền xuôi chưa
+23086	Kiểm tra có tách được các tác động khác nhau hay không.
+17123	Kiểm tra đầu vào cuối
+31199	Kiểm tra biểu hiện trên mẫu chưa thấy
+5033	Kiểm tra tên chuẩn hóa có được ánh xạ qua code mode, hiển thị bằng schema trực tiếp/không gian tên, hoặc tìm được như công cụ deferred khi có khả năng tool search hay không.
+8202	Kiểm tra không có tác dụng phụ trùng lặp, không bỏ bước cần thiết, ràng buộc quan trọng vẫn còn, phiên bản sản phẩm nhất quán và kiểm chứng cuối đã thực sự chạy. Chỉ “chương trình có thể khởi động lại” không có nghĩa phục hồi tác vụ thành công.
+17117	Kiểm tra nguồn
+21057	Kiểm tra nguồn đúng và còn mới → chỉ mục có chứa → truy vấn chính xác → ứng viên được truy hồi → tái xếp hạng có loại nhầm → lắp ráp có cắt mất → mô hình giải thích đúng. Phải lọc quyền trước khi trả bằng chứng, không để mô hình đọc xong rồi tự giác giữ bí mật.
+15535	Điểm kiểm tra lưu thông tin cần cho phục hồi
+4026	Nội dung điểm kiểm tra
+21458	Điểm kiểm tra có thể lưu trữ
+20300	Sự kiện thêm sau điểm kiểm tra cũng cần phục hồi
+24834	Kiểm tra mất mát ổn định và gradient giải tích của một cặp ưu tiên; đây không phải bộ huấn luyện DPO hoàn chỉnh, cũng không chứng minh dữ liệu ưu tiên có thể tăng tỷ lệ thành công tác vụ lập trình của bạn.
+4295	Kiểm tra kiểu, đường dẫn và quyền
+16331	Kiểm tra kết quả
+7612	Kiểm tra mục còn thiếu
+11568	Kiểm tra bao phủ 5 loại trang, bốn kích thước khung nhìn 390／1440／1920／2560, cùng mở đáp án, tìm kiếm vấn đề kỹ thuật, định vị mục lục và điểm vào hoạt ảnh gốc. Môi trường trình duyệt cấm điều hướng file và HTTP cục bộ, nên dùng HTML, CSS, script và dữ liệu cục bộ nội tuyến để kết xuất; kiểm tra riêng đường dẫn tệp, neo và tài nguyên tệp đơn. Không tuyên bố đã kiểm thử trên Mac hoặc Safari của người dùng.
+10424	Quy mô kiểm tra
+16507	Kiểm tra thiết kế, chức năng, độ phức tạp, kiểm thử và khả năng bảo trì. Mục tiêu là tìm vấn đề đáng sửa, cải thiện sức khỏe mã tổng thể, không phải theo đuổi vô hạn sự hoàn hảo không rủi ro vốn không tồn tại.
+25509	Kiểm tra chỉ mục dịch vụ ngôn ngữ đã xây dựng lại chưa.
+26062	Kiểm tra nguồn sai số
+25179	Kiểm tra ai gọi và kiểu phản hồi nào sẽ đi vào
+10349	Kiểm tra bất biến xuyên mô-đun, tác dụng phụ chưa biết, ranh giới quyền và thao tác không thể đảo ngược. Nếu chưa rõ những điều này, sửa thẳng một dòng có thể chỉ che giấu rủi ro. Đơn giản là không có bước vô ích, không phải ít bước; cần giữ phân tích và kiểm chứng cần thiết.
+22062	Kiểm tra vấn đề đã biến mất chưa.
+4335	Kiểm tra điều kiện nghiệm thu, lỗi chưa xử lý và yêu cầu đầu ra
+22977	Phát hiện
+27724	Truy hồi</strong> lấy tài liệu ứng viên từ bên ngoài theo câu hỏi lần này.
+15871	Truy hồi retrieval</strong> là tìm những mục có thể liên quan đến câu hỏi trong một tập tài liệu. <strong>Chỉ mục index</strong> là cấu trúc tổ chức được xây dựng trước cho việc này, tương tự chỉ mục từ ở cuối sách, nhưng có thể chứa vị trí, thống kê, quyền và thông tin khác.
+24487	Cơ chế truy hồi, sinh, phản tư và huấn luyện; không đơn giản là thêm một câu nhắc tự kiểm tra.
+26948	Truy hồi, ký ức, cộng tác và giao hàng đáng tin cậy
+21063	Truy hồi không phải “đào” đáp án ra từ mô hình
+21009	Truy hồi và trí tuệ mã — Kỹ thuật hệ thống AI
+12098	Truy hồi và giao hàng đáng tin cậy<span class="module-count">Bài 04—16 · 35 hình
+26407	Truy hồi mất cùng thời gian với mô hình
+6244	Thứ tự truy hồi và lọc
+21014	Truy hồi bắt đầu từ nhu cầu bằng chứng
+6309	Truy hồi tìm rộng trước, tái xếp hạng chọn kỹ sau, kiểm tra bằng chứng cuối cùng mới quyết định có hỗ trợ trả lời được không. Các tầng này có chỉ số khác nhau; xếp hạng cao không đồng nghĩa sự thật đúng, gần chủ đề cũng không có nghĩa đáp ứng điều kiện.
+27372	Truy hồi tìm ứng viên trước, rồi phán đoán có thể trả lời hay không — Kỹ thuật hệ thống AI
+15948	Truy hồi tìm ứng viên trước, rồi phán đoán có thể trả lời hay không</a><a href="#foundations-28-s1">Truy hồi trước hết giải quyết “tìm ứng viên ở đâu”</a><a href="#foundations-28-s2">Vì sao chỉ mục đảo được gọi là “đảo”</a><a href="#foundations-28-s3">Trước tiên hiểu vai trò của TF, IDF và BM25</a><a href="#foundations-28-s4">Vì sao truy hồi vectơ tìm được cách diễn đạt đồng nghĩa</a><a href="#foundations-28-s5">Láng giềng gần nhất chính xác và xấp xỉ</a><a href="#foundations-28-s6">Vì sao phân đoạn, làm sạch và phiên bản đi trước xếp hạng</a><a href="#self-check">Tự kiểm tra sau bài
+15852	Truy hồi tìm ứng viên trước, rồi phán đoán có thể trả lời hay không</a><a href="#foundations-28-s1">Truy hồi trước hết giải quyết “tìm ứng viên ở đâu”</a><a href="#foundations-28-s2">Vì sao chỉ mục đảo được gọi là “đảo”</a><a href="#foundations-28-s3">Trước tiên hiểu vai trò của TF, IDF và BM25</a><a href="#foundations-28-s4">Vì sao truy hồi vectơ tìm được cách diễn đạt đồng nghĩa</a><a href="#foundations-28-s5">Láng giềng gần nhất chính xác và xấp xỉ</a><a href="#foundations-28-s6">Vì sao phân đoạn, làm sạch và phiên bản đi trước xếp hạng</a><a href="#self-check">Tự kiểm tra sau bài</a><a class="sub ap-toc" href="#agent-foundation-retrieval">Cùng một tài liệu biến thành hai loại chỉ mục như thế nào
+27373	Truy hồi tìm ứng viên trước, rồi phán đoán có thể trả lời hay không</a><a href="#topic-3">Giải thích từng bước và bản ghi tính toán
+23743	Truy hồi kiểm tra phạm vi và thời gian trước, rồi so sánh bằng chứng. Khi bằng chứng thiếu, giữ trạng thái xung đột, tránh nhào trộn hai quy tắc đối lập thành tóm tắt mơ hồ.
+15870	Truy hồi trước hết giải quyết “tìm ứng viên ở đâu”
+12100	Truy hồi trước hết giải quyết “tìm ứng viên ở đâu”</a><a href="foundations/28.html#fdiag-28-02">Vì sao chỉ mục đảo được gọi là “đảo”</a><a href="foundations/28.html#fdiag-28-03">Trước tiên hiểu vai trò của TF, IDF và BM25</a><a href="foundations/28.html#fdiag-28-04">Vì sao truy hồi vectơ tìm được cách diễn đạt đồng nghĩa</a><a href="foundations/28.html#fdiag-28-05">Láng giềng gần nhất chính xác và xấp xỉ
+25285	Điểm truy hồi không thể giữ phủ định logic.
+6531	Truy hồi phán đoán “đoạn này liên quan câu hỏi”; trích dẫn chỉ đến “tài liệu này từ đâu”; kiểm tra hỗ trợ phán đoán “đoạn này có suy ra được kết luận hiện tại trong các điều kiện này không”. Ba việc không thay thế nhau. Hợp nhất xếp hạng chỉ kết hợp tín hiệu liên quan, không kiểm tra điều kiện áp dụng của từng mệnh đề đáp án.
+16630	Độ bao phủ truy hồi
+27885	Truy hồi có thể kết hợp phương pháp thưa, dày đặc và tái xếp hạng; thứ hạng và điểm cố định trong sách là ví dụ giải thích hợp nhất, không suy rộng thành lợi ích kiểm thử.
+22966	Sau truy hồi vẫn kiểm tra mức hỗ trợ của bằng chứng
+6179	Vì sao vectơ truy hồi cần huấn luyện thay vì đặt tọa độ tùy ý
+5446	Kết quả truy hồi khớp:
+17072	Truy hồi và bằng chứng có phiên bản
+23393	Sinh tăng cường truy hồi
+10755	Sinh tăng cường truy hồi là một quy trình ứng dụng: lấy tài liệu bên ngoài trước rồi để mô hình sinh trả lời dựa vào đó. Tài liệu truy hồi không phải chỉ dẫn mới của người dùng; có trích dẫn vẫn phải kiểm tra trích dẫn thực sự hỗ trợ khẳng định hay không.
+25861	Tầng truy hồi cần giới hạn tài liệu nhìn thấy; tầng ngữ cảnh ghi rõ nội dung không đáng tin; tầng thực thi giới hạn hành động có thể làm; tầng đầu ra kiểm tra rò rỉ thông tin nhạy cảm; tầng ký ức kiểm soát ghi và vòng đời. Không tầng nào bảo đảm tự giải quyết mọi vấn đề, nhưng phân tầng giảm hậu quả của một điểm phán đoán sai.
+17817	Kỹ thuật truy hồi: từ chỉ mục đến bằng chứng đáng tin cậy
+21051	Chỉ số truy hồi và thành công phía sau
+17121	Nhật ký truy hồi đã có r1, r2
+28253	Khi truy hồi có thể tìm trúng đoạn nhỏ trước để tăng độ chính xác định vị, rồi đọc chương chứa nó hoặc ngoại lệ liên quan, tránh đáp án thiếu điều kiện. Không phải mọi quan hệ đều cần xây cơ sở dữ liệu đồ thị lớn: dự án nhỏ dùng ID tài liệu và tham chiếu đoạn cha là đủ. Chỉ thêm cấu trúc đồ thị khi liên kết xuyên tài liệu phức tạp và có bằng chứng lợi ích.
+16789	Vì sao quyền truy hồi không thể để làm cuối cùng
+24377	Khung truy hồi
+831	Mô hình truy hồi có thể ánh xạ cả đoạn tài liệu thành một vectơ cố định, học mức liên quan qua mẫu dương và âm. Nó cần pooling, chuẩn hóa và mục tiêu huấn luyện cụ thể. Lấy tùy ý trung bình tất cả Token tầng cuối của mô hình trò chuyện về kỹ thuật có thể cho vectơ, nhưng chưa chắc có cấu trúc hình học truy hồi tốt. Ngay cả khi cosine rất cao cũng không bảo đảm hai câu nhất quán về sự thật: “cho phép truy cập” và “không cho phép truy cập” gần chủ đề nhưng ngược ý nghĩa quyền.
+11704	Với mục đích truy hồi, thêm tiền tố query:/passage: theo yêu cầu mô hình và dùng pooling cùng chuẩn hóa đi kèm.
+16628	Độ chuẩn xác truy hồi

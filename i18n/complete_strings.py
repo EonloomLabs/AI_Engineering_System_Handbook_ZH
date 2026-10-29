@@ -180,9 +180,13 @@ def source_counts(root=None):
     return seen
 
 
+def translation_language(lang):
+    if lang not in ('en', 'ja', 'es', 'vi'):
+        raise CompleteError('complete translations support --lang=en, --lang=ja, --lang=es or --lang=vi')
+
+
 def translations(root=None, lang='en'):
-    if lang != 'en':
-        raise CompleteError('the bounded complete builder currently supports --lang=en')
+    translation_language(lang)
     root = Path(root or ROOT).resolve()
     registry = current_registry(root)
     table = json.loads((root / 'i18n/table.json').read_text(encoding='utf-8'))['s']
@@ -194,8 +198,9 @@ def translations(root=None, lang='en'):
     return registry, {it['zh']: table[it['zh']][lang] for it in registry['items']}
 
 
-def localize_shell(source, registry, mapping):
+def localize_shell(source, registry, mapping, *, lang='en'):
     """Translate only recorded shell offsets; JS has its own protected renderer."""
+    translation_language(lang)
     if sha(source) != registry.get('sha256'):
         raise CompleteError('shell source offset drift')
     changes = []
@@ -203,7 +208,8 @@ def localize_shell(source, registry, mapping):
         if item['owner'] != 'shell':
             continue
         value = mapping.get(item['zh'])
-        if not isinstance(value, str) or not value.strip() or CJK.search(value):
+        if (not isinstance(value, str) or not value.strip() or
+                (lang != 'ja' and CJK.search(value))):
             raise CompleteError('invalid complete shell translation: %s' % item['zh'][:70])
         if sorted(units.TAG.findall(value)) != sorted(units.TAG.findall(item['zh'])):
             raise CompleteError('changed inline markup in complete shell translation')
@@ -221,6 +227,7 @@ def localize_shell(source, registry, mapping):
 
 
 def export(lang='en', root=None):
+    translation_language(lang)
     root = Path(root or ROOT).resolve()
     registry = current_registry(root)
     table = json.loads((root / 'i18n/table.json').read_text(encoding='utf-8'))['s']
@@ -247,7 +254,7 @@ def export(lang='en', root=None):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('collect', 'export', 'check'))
-    parser.add_argument('--lang', default='en')
+    parser.add_argument('--lang', choices=('en', 'ja', 'es', 'vi'), default='en')
     args = parser.parse_args(argv)
     try:
         if args.command == 'collect':

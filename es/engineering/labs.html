@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="Manual de estudio traducido del chino que abarca los conceptos básicos, los mecanismos internos de los grandes modelos de lenguaje, la ejecución de agentes y la práctica de ingeniería." name="description"/><title>Contraejemplos de fallo, resultados reales y código completo — Ingeniería de sistemas de IA</title><link href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2032%2032%22%3E%3Crect%20width=%2232%22%20height=%2232%22%20rx=%226%22%20fill=%22#22272e%22/%3E%3Cg%20fill=%22none%22%20stroke=%22#fff%22%20stroke-width=%222.4%22%20stroke-linecap=%22round%22%3E%3Cpath%20d=%22M8%2011h16%22/%3E%3Cpath%20d=%22M8%2021h16%22/%3E%3C/g%3E%3Cpath%20d=%22M8%2016h9%22%20fill=%22none%22%20stroke=%22#5b8def%22%20stroke-width=%222.4%22%20stroke-linecap=%22round%22/%3E%3C/svg%3E" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/visual.css" rel="stylesheet"/><link href="../../assets/atelier.css" rel="stylesheet"/><link href="../../assets/engineering.css" rel="stylesheet"/><link href="../../assets/mechanisms.css" rel="stylesheet"/><link href="../../assets/model-course.css" rel="stylesheet"/><link href="../../assets/integrated-course.css" rel="stylesheet"/><link href="../../assets/diagrams.css" rel="stylesheet"/><link href="../../assets/i18n.css" rel="stylesheet"/><meta content="zh-CN,en,ja,es,vi" name="i18n-locales"/><meta content="Tanto la interfaz como el contenido de las lecciones están traducidos del original en chino simplificado." name="i18n-scope"/></head><body class="is-reader" data-page="engineering/labs.html" data-root="../"><a class="skip-link" href="#main-content" data-i18n="skip.toContent">Ir al contenido</a><header class="site-header"><button aria-controls="book-sidebar" aria-expanded="false" aria-label="Abrir el índice del libro" data-i18n-attr="aria-label:rail.menuAria" class="icon-button menu-trigger" data-studio-menu="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg></button><a class="site-brand" href="../index.html"><span>Ingeniería de sistemas de IA</span><span class="brand-detail" data-i18n="brand.detail">Referencia técnica</span></a><nav aria-label="Navegación principal" data-i18n-attr="aria-label:nav.aria" class="site-links"><a class="section-active" href="../contents.html" data-i18n="nav.docs">Documentación</a><a href="../visual-guides.html" data-i18n="nav.figures">Figuras</a><a href="../studies/index.html" data-i18n="nav.topics">Temas</a></nav><div class="site-actions"><button aria-label="Buscar en el libro de texto" data-i18n-attr="aria-label:search.triggerAria" class="search-trigger" data-search="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><span data-i18n="search.trigger">Buscar en el libro…</span><kbd>⌘ K</kbd></button><button aria-label="Alternar el modo de concentración" aria-pressed="false" class="icon-button focus-trigger" data-focus="" title="Modo de concentración" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5"></path></svg></button><button aria-label="Ajustes de lectura" data-i18n-attr="aria-label:settings.title" class="icon-button settings-trigger" data-settings="" title="Configuración de lectura" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M4 7h16M4 17h16"></path><circle cx="9" cy="7" fill="var(--paper)" r="2.5"></circle><circle cx="15" cy="17" fill="var(--paper)" r="2.5"></circle></svg></button></div></header><div aria-hidden="true" class="page-progress"><span></span></div><aside aria-label="Índice de capítulos del libro" class="book-rail sidebar" id="book-sidebar"><div class="rail-top"><strong data-i18n="rail.title">Índice del curso</strong><div class="rail-actions"><button aria-label="Desplazar el índice hasta la lección actual" data-i18n-attr="aria-label:rail.locateAria" class="rail-locate" data-locate-current="" title="Localizar el capítulo actual" type="button" data-i18n="rail.locate">Ir a la actual</button><button aria-label="Cerrar el índice" data-i18n-attr="aria-label:rail.closeAria" class="rail-close icon-button" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div></div><nav aria-label="Capítulos del manual" class="rail-scroll" tabindex="0"><a class="rail-home" data-section="index" data-target="index.html" href="../index.html" title="Ingeniería de sistemas de IA"><span class="rail-name" data-i18n="railhome.index">Visión general del curso</span></a><a class="rail-home" data-section="preface" data-target="preface.html" href="../preface.html" title="Prólogo y guía de uso"><span class="rail-name" data-i18n="railhome.preface">Prefacio y modo de uso</span></a><a class="rail-home" data-section="guide" data-target="guide.html" href="../guide.html" title="Introducción: cómo aprender un sistema complejo de IA"><span class="rail-name" data-i18n="railhome.guide">Introducción y método</span></a><a class="rail-home" data-section="contents" data-target="contents.html" href="../contents.html" title="Índice y ruta de aprendizaje"><span class="rail-name" data-i18n="railhome.contents">Índice completo</span></a><a class="rail-home" data-section="search" data-target="search.html" href="../search.html" title="Búsqueda de texto completo"><span class="rail-name" data-i18n="railhome.search">Búsqueda de texto completo</span></a><details class="rail-group course-rail-stage" data-group="progressive-stage-1"><summary data-i18n="rail.stage1">Etapa 01 · Observar el sistema</summary><div class="rail-links"><div class="rail-section-name">Unidad 01 · Reconstruir una ejecución de un agente a partir del resultado de la tarea</div><a class="" data-section="foundations--22" data-target="foundations/22.html" href="../foundations/22.html" title="Lección 01｜Ejecución de agentes: de la propuesta a la ejecución y a la aceptación"><span class="rail-code">Lección 01</span><span class="rail-name">Ejecución de agentes: de la propuesta a la ejecución y a la aceptación</span></a><a class="" data-section="foundations--24" data-target="foundations/24.html" href="../foundations/24.html" title="Lección 02｜Estado, eventos y puntos de control: distinguir lo que sabe el modelo de lo que registra el sistema"><span class="rail-code">Lección 02</span><span class="rail-name">Estado, eventos y puntos de control: distinguir lo que sabe el modelo de lo que registra el sistema</span></a><a class="" data-section="chapters--09" data-target="chapters/09.html" href="../chapters/09.html" title="Lección 03｜El ciclo completo de una tarea de un agente: quién piensa y quién ejecuta"><span class="rail-code">Lección 03</span><span class="rail-name">El ciclo completo de una tarea de un agente: quién piensa y quién ejecuta</span></a><div class="rail-section-name">Unidad 02 · Expresar las condiciones de finalización como evidencia revisable</div><a class="" data-section="foundations--34" data-target="foundations/34.html" href="../foundations/34.html" title="Lección 04｜Fundamentos de la calidad de ingeniería: requisitos, contraejemplos, pruebas y revisión"><span class="rail-code">Lección 04</span><span class="rail-name">Fundamentos de la calidad de ingeniería: requisitos, contraejemplos, pruebas y revisión</span></a><a class="" data-section="foundations--35" data-target="foundations/35.html" href="../foundations/35.html" title="Lección 05｜El denominador de las métricas de evaluación: tasa de éxito, precisión, exhaustividad y pass"><span class="rail-code">Lección 05</span><span class="rail-name">El denominador de las métricas de evaluación: tasa de éxito, precisión, exhaustividad y pass</span></a><a class="" data-section="chapters--22" data-target="chapters/22.html" href="../chapters/22.html" title="Lección 06｜Calidad de ingeniería: de los requisitos a las pruebas y al código realmente entregable"><span class="rail-code">Lección 06</span><span class="rail-name">Calidad de ingeniería: de los requisitos a las pruebas y al código realmente entregable</span></a><a class="" data-section="labs--projects--assignment1" data-target="labs/projects/assignment1.html" href="../labs/projects/assignment1.html" title="Tarea 01｜Observar: convertir una tarea en una traza inspeccionable"><span class="rail-code">Tarea 01</span><span class="rail-name">Observar: convertir una tarea en una traza inspeccionable</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-2"><summary data-i18n="rail.stage2">Etapa 02 · Construir el bucle</summary><div class="rail-links"><div class="rail-section-name">Unidad 03 · Convertir las propuestas del modelo en llamadas controladas a herramientas</div><a class="" data-section="foundations--23" data-target="foundations/23.html" href="../foundations/23.html" title="Lección 07｜API y protocolos de streaming: cómo una solicitud se convierte en datos ejecutables"><span class="rail-code">Lección 07</span><span class="rail-name">API y protocolos de streaming: cómo una solicitud se convierte en datos ejecutables</span></a><a class="" data-section="foundations--25" data-target="foundations/25.html" href="../foundations/25.html" title="Lección 08｜Herramientas y MCP: separar las capas de conexión, descubrimiento, autorización y ejecución"><span class="rail-code">Lección 08</span><span class="rail-name">Herramientas y MCP: separar las capas de conexión, descubrimiento, autorización y ejecución</span></a><a class="" data-section="chapters--10" data-target="chapters/10.html" href="../chapters/10.html" title="Lección 09｜Cómo la salida del modelo se convierte en llamadas reales a herramientas: protocolos y límites de ejecución"><span class="rail-code">Lección 09</span><span class="rail-name">Cómo la salida del modelo se convierte en llamadas reales a herramientas: protocolos y límites de ejecución</span></a><a class="" data-section="chapters--11" data-target="chapters/11.html" href="../chapters/11.html" title="Lección 10｜Diseño de herramientas y MCP: de la conexión a una ejecución controlable"><span class="rail-code">Lección 10</span><span class="rail-name">Diseño de herramientas y MCP: de la conexión a una ejecución controlable</span></a><div class="rail-section-name">Unidad 04 · Montar el contexto correcto para cada solicitud</div><a class="" data-section="foundations--26" data-target="foundations/26.html" href="../foundations/26.html" title="Lección 11｜Montaje del contexto: qué recibe exactamente el modelo en cada turno y por qué"><span class="rail-code">Lección 11</span><span class="rail-name">Montaje del contexto: qué recibe exactamente el modelo en cada turno y por qué</span></a><a class="" data-section="chapters--13" data-target="chapters/13.html" href="../chapters/13.html" title="Lección 12｜Cómo se monta cada Prompt: el contexto es una canalización de datos"><span class="rail-code">Lección 12</span><span class="rail-name">Cómo se monta cada Prompt: el contexto es una canalización de datos</span></a><a class="" data-section="foundations--32" data-target="foundations/32.html" href="../foundations/32.html" title="Lección 13｜Skill, enrutamiento y múltiples agentes: comprender primero quién se encarga de qué"><span class="rail-code">Lección 13</span><span class="rail-name">Skill, enrutamiento y múltiples agentes: comprender primero quién se encarga de qué</span></a><a class="" data-section="chapters--19" data-target="chapters/19.html" href="../chapters/19.html" title="Lección 14｜Skills y enrutamiento: cargar justo la capacidad especializada necesaria"><span class="rail-code">Lección 14</span><span class="rail-name">Skills y enrutamiento: cargar justo la capacidad especializada necesaria</span></a><a class="" data-section="chapters--12" data-target="chapters/12.html" href="../chapters/12.html" title="Lección 15｜Codex, Claude Code y Copilot: de los hechos públicos a una cadena de ejecución diagnosticable"><span class="rail-code">Lección 15</span><span class="rail-name">Codex, Claude Code y Copilot: de los hechos públicos a una cadena de ejecución diagnosticable</span></a><div class="rail-section-name">Unidad 05 · Convertir los resultados de recuperación en evidencia suficiente</div><a class="" data-section="foundations--28" data-target="foundations/28.html" href="../foundations/28.html" title="Lección 16｜Introducción a la recuperación: catálogos, índices invertidos, vectores y búsqueda aproximada"><span class="rail-code">Lección 16</span><span class="rail-name">Introducción a la recuperación: catálogos, índices invertidos, vectores y búsqueda aproximada</span></a><a class="" data-section="foundations--29" data-target="foundations/29.html" href="../foundations/29.html" title="Lección 17｜De los resultados de búsqueda a una respuesta fiable: recuperación de candidatos, reordenación y evidencia"><span class="rail-code">Lección 17</span><span class="rail-name">De los resultados de búsqueda a una respuesta fiable: recuperación de candidatos, reordenación y evidencia</span></a><a class="" data-section="foundations--30" data-target="foundations/30.html" href="../foundations/30.html" title="Lección 18｜El código no es un documento corriente: árboles de sintaxis, relaciones de llamada y versiones"><span class="rail-code">Lección 18</span><span class="rail-name">El código no es un documento corriente: árboles de sintaxis, relaciones de llamada y versiones</span></a><a class="" data-section="chapters--15" data-target="chapters/15.html" href="../chapters/15.html" title="Lección 19｜Recuperación sin conexión: cómo los documentos se convierten en un índice consultable"><span class="rail-code">Lección 19</span><span class="rail-name">Recuperación sin conexión: cómo los documentos se convierten en un índice consultable</span></a><a class="" data-section="chapters--16" data-target="chapters/16.html" href="../chapters/16.html" title="Lección 20｜Recuperación en línea: candidatos, fusión, reordenación y suficiencia de la evidencia"><span class="rail-code">Lección 20</span><span class="rail-name">Recuperación en línea: candidatos, fusión, reordenación y suficiencia de la evidencia</span></a><a class="" data-section="chapters--17" data-target="chapters/17.html" href="../chapters/17.html" title="Lección 21｜Inteligencia de código: de la búsqueda de texto a símbolos, versiones y evidencia de ejecución"><span class="rail-code">Lección 21</span><span class="rail-name">Inteligencia de código: de la búsqueda de texto a símbolos, versiones y evidencia de ejecución</span></a><div class="rail-section-name">Unidad 06 · Estado entre turnos, compactación y memoria a largo plazo</div><a class="" data-section="foundations--27" data-target="foundations/27.html" href="../foundations/27.html" title="Lección 22｜La compactación no es magia: cómo cooperan el resumen, el original y el estado de ejecución"><span class="rail-code">Lección 22</span><span class="rail-name">La compactación no es magia: cómo cooperan el resumen, el original y el estado de ejecución</span></a><a class="" data-section="foundations--31" data-target="foundations/31.html" href="../foundations/31.html" title="Lección 23｜Fundamentos de la memoria a largo plazo: hechos, experiencias, procedimientos y tiempo"><span class="rail-code">Lección 23</span><span class="rail-name">Fundamentos de la memoria a largo plazo: hechos, experiencias, procedimientos y tiempo</span></a><a class="" data-section="chapters--14" data-target="chapters/14.html" href="../chapters/14.html" title="Lección 24｜Compactación del contexto: qué se elimina exactamente y cómo se recupera lo perdido"><span class="rail-code">Lección 24</span><span class="rail-name">Compactación del contexto: qué se elimina exactamente y cómo se recupera lo perdido</span></a><a class="" data-section="chapters--18" data-target="chapters/18.html" href="../chapters/18.html" title="Lección 25｜Memoria a largo plazo: escritura, recuperación, conflictos, caducidad y olvido"><span class="rail-code">Lección 25</span><span class="rail-name">Memoria a largo plazo: escritura, recuperación, conflictos, caducidad y olvido</span></a><div class="rail-section-name">Unidad 07 · Recuperación de fallos y límites de colaboración</div><a class="" data-section="foundations--33" data-target="foundations/33.html" href="../foundations/33.html" title="Lección 26｜Reintentos, idempotencia y transacciones: por qué un tiempo de espera agotado no demuestra un fallo"><span class="rail-code">Lección 26</span><span class="rail-name">Reintentos, idempotencia y transacciones: por qué un tiempo de espera agotado no demuestra un fallo</span></a><a class="" data-section="chapters--21" data-target="chapters/21.html" href="../chapters/21.html" title="Lección 27｜Ejecución fiable: reintentos, idempotencia, caídas y recuperación del estado"><span class="rail-code">Lección 27</span><span class="rail-name">Ejecución fiable: reintentos, idempotencia, caídas y recuperación del estado</span></a><a class="" data-section="chapters--20" data-target="chapters/20.html" href="../chapters/20.html" title="Lección 28｜Múltiples agentes: beneficios del paralelismo y pérdidas en los traspasos"><span class="rail-code">Lección 28</span><span class="rail-name">Múltiples agentes: beneficios del paralelismo y pérdidas en los traspasos</span></a><a class="" data-section="labs--projects--assignment2" data-target="labs/projects/assignment2.html" href="../labs/projects/assignment2.html" title="Tarea 02｜Construir: asumir el control del bucle, las herramientas y la aceptación"><span class="rail-code">Tarea 02</span><span class="rail-name">Construir: asumir el control del bucle, las herramientas y la aceptación</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-3"><summary data-i18n="rail.stage3">Etapa 03 · Optimizar la caja negra</summary><div class="rail-links"><div class="rail-section-name">Unidad 08 · Controlar el riesgo desde el mínimo privilegio</div><a class="" data-section="foundations--37" data-target="foundations/37.html" href="../foundations/37.html" title="Lección 29｜Fundamentos de seguridad: los datos pueden influir en el modelo sin obtener permisos por ello"><span class="rail-code">Lección 29</span><span class="rail-name">Fundamentos de seguridad: los datos pueden influir en el modelo sin obtener permisos por ello</span></a><a class="" data-section="chapters--24" data-target="chapters/24.html" href="../chapters/24.html" title="Lección 30｜Seguridad: límites de las instrucciones, entornos aislados, permisos y contaminación de la memoria"><span class="rail-code">Lección 30</span><span class="rail-name">Seguridad: límites de las instrucciones, entornos aislados, permisos y contaminación de la memoria</span></a><div class="rail-section-name">Unidad 09 · Fijar la tarea antes de juzgar si una optimización funciona</div><a class="" data-section="foundations--36" data-target="foundations/36.html" href="../foundations/36.html" title="Lección 31｜No dejarse engañar por unos puntos porcentuales: aleatoriedad, muestras y juicio estadístico"><span class="rail-code">Lección 31</span><span class="rail-name">No dejarse engañar por unos puntos porcentuales: aleatoriedad, muestras y juicio estadístico</span></a><a class="" data-section="chapters--23" data-target="chapters/23.html" href="../chapters/23.html" title="Lección 32｜Evaluation: cómo demostrar el beneficio real de una optimización"><span class="rail-code">Lección 32</span><span class="rail-name">Evaluation: cómo demostrar el beneficio real de una optimización</span></a><div class="rail-section-name">Unidad 10 · Contabilizar cada espera y llamada en la tarea completa</div><a class="" data-section="foundations--38" data-target="foundations/38.html" href="../foundations/38.html" title="Lección 33｜Comprender el funcionamiento en producción: Trace, colas, costes y reversión"><span class="rail-code">Lección 33</span><span class="rail-name">Comprender el funcionamiento en producción: Trace, colas, costes y reversión</span></a><a class="" data-section="chapters--25" data-target="chapters/25.html" href="../chapters/25.html" title="Lección 34｜Funcionamiento en producción: Trace, costes, colas, despliegue gradual y reversión"><span class="rail-code">Lección 34</span><span class="rail-name">Funcionamiento en producción: Trace, costes, colas, despliegue gradual y reversión</span></a><a class="" data-section="labs--projects--assignment3" data-target="labs/projects/assignment3.html" href="../labs/projects/assignment3.html" title="Tarea 03｜Optimizar: qué cambiar para obtener beneficios mientras el modelo sigue siendo una caja negra"><span class="rail-code">Tarea 03</span><span class="rail-name">Optimizar: qué cambiar para obtener beneficios mientras el modelo sigue siendo una caja negra</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-4"><summary data-i18n="rail.stage4">Etapa 04 · Controlar el modelo</summary><div class="rail-links"><div class="rail-section-name">Unidad 11 · De la interfaz del servicio a los números y la entrada del modelo</div><a class="" data-section="foundations--01" data-target="foundations/01.html" href="../foundations/01.html" title="Lección 35｜Ciclo de vida del modelo: objetos, parámetros, entrenamiento e inferencia"><span class="rail-code">Lección 35</span><span class="rail-name">Ciclo de vida del modelo: objetos, parámetros, entrenamiento e inferencia</span></a><a class="" data-section="foundations--02" data-target="foundations/02.html" href="../foundations/02.html" title="Lección 36｜Una fila, una tabla y una pila de tablas: comprender los tensores y sus formas"><span class="rail-code">Lección 36</span><span class="rail-name">Una fila, una tabla y una pila de tablas: comprender los tensores y sus formas</span></a><a class="" data-section="foundations--03" data-target="foundations/03.html" href="../foundations/03.html" title="Lección 37｜Cómo se convierte el texto en identificadores: tokenización, vocabulario y límites de secuencia"><span class="rail-code">Lección 37</span><span class="rail-name">Cómo se convierte el texto en identificadores: tokenización, vocabulario y límites de secuencia</span></a><a class="" data-section="foundations--04" data-target="foundations/04.html" href="../foundations/04.html" title="Lección 38｜De varias frases a un lote de entrenamiento: agrupación, relleno y posiciones de las etiquetas"><span class="rail-code">Lección 38</span><span class="rail-name">De varias frases a un lote de entrenamiento: agrupación, relleno y posiciones de las etiquetas</span></a><a class="" data-section="foundations--05" data-target="foundations/05.html" href="../foundations/05.html" title="Lección 39｜Embedding y posición: de consultar una tabla por identificador a la entrada del modelo"><span class="rail-code">Lección 39</span><span class="rail-name">Embedding y posición: de consultar una tabla por identificador a la entrada del modelo</span></a><a class="" data-section="foundations--06" data-target="foundations/06.html" href="../foundations/06.html" title="Lección 40｜Qué significa «poner en el dispositivo»: tipos de datos, memoria, CPU y GPU"><span class="rail-code">Lección 40</span><span class="rail-name">Qué significa «poner en el dispositivo»: tipos de datos, memoria, CPU y GPU</span></a><a class="" data-section="chapters--01" data-target="chapters/01.html" href="../chapters/01.html" title="Lección 41｜Qué es exactamente la entrada: de una frase del usuario a los tensores del modelo"><span class="rail-code">Lección 41</span><span class="rail-name">Qué es exactamente la entrada: de una frase del usuario a los tensores del modelo</span></a><div class="rail-section-name">Unidad 12 · Calcular una propagación hacia delante multiplicación a multiplicación y suma a suma</div><a class="" data-section="foundations--07" data-target="foundations/07.html" href="../foundations/07.html" title="Lección 42｜La aritmética más habitual del modelo: suma ponderada, producto escalar y multiplicación de matrices"><span class="rail-code">Lección 42</span><span class="rail-name">La aritmética más habitual del modelo: suma ponderada, producto escalar y multiplicación de matrices</span></a><a class="" data-section="foundations--08" data-target="foundations/08.html" href="../foundations/08.html" title="Lección 43｜reshape, permutación de ejes y difusión: cambiar la forma no implica calcular el contenido"><span class="rail-code">Lección 43</span><span class="rail-name">reshape, permutación de ejes y difusión: cambiar la forma no implica calcular el contenido</span></a><a class="" data-section="foundations--09" data-target="foundations/09.html" href="../foundations/09.html" title="Lección 44｜Probabilidad, exponenciales y softmax: convertir puntuaciones en proporciones"><span class="rail-code">Lección 44</span><span class="rail-name">Probabilidad, exponenciales y softmax: convertir puntuaciones en proporciones</span></a><a class="" data-section="foundations--10" data-target="foundations/10.html" href="../foundations/10.html" title="Lección 45｜Parámetros, propagación hacia delante y normalización: convertir una entrada en una representación utilizable"><span class="rail-code">Lección 45</span><span class="rail-name">Parámetros, propagación hacia delante y normalización: convertir una entrada en una representación utilizable</span></a><a class="" data-section="foundations--11" data-target="foundations/11.html" href="../foundations/11.html" title="Lección 46｜Attention paso a paso: calcular primero las puntuaciones de relación y después mezclar el contenido"><span class="rail-code">Lección 46</span><span class="rail-name">Attention paso a paso: calcular primero las puntuaciones de relación y después mezclar el contenido</span></a><a class="" data-section="foundations--12" data-target="foundations/12.html" href="../foundations/12.html" title="Lección 47｜Mask no es una caja negra: expresar «quién puede ver a quién» en una tabla"><span class="rail-code">Lección 47</span><span class="rail-name">Mask no es una caja negra: expresar «quién puede ver a quién» en una tabla</span></a><a class="" data-section="foundations--13" data-target="foundations/13.html" href="../foundations/13.html" title="Lección 48｜Identificadores de posición y RoPE: comprender la posición antes de la rotación"><span class="rail-code">Lección 48</span><span class="rail-name">Identificadores de posición y RoPE: comprender la posición antes de la rotación</span></a><a class="" data-section="foundations--14" data-target="foundations/14.html" href="../foundations/14.html" title="Lección 49｜Completar una propagación hacia delante: residuos, red feed-forward y puntuaciones del vocabulario"><span class="rail-code">Lección 49</span><span class="rail-name">Completar una propagación hacia delante: residuos, red feed-forward y puntuaciones del vocabulario</span></a><a class="" data-section="chapters--02" data-target="chapters/02.html" href="../chapters/02.html" title="Lección 50｜Una propagación hacia delante de Transformer: tensor por tensor y operador por operador"><span class="rail-code">Lección 50</span><span class="rail-name">Una propagación hacia delante de Transformer: tensor por tensor y operador por operador</span></a><a class="" data-section="chapters--03" data-target="chapters/03.html" href="../chapters/03.html" title="Lección 51｜Preguntas en profundidad sobre la atención: posición, máscaras y múltiples cabezas"><span class="rail-code">Lección 51</span><span class="rail-name">Preguntas en profundidad sobre la atención: posición, máscaras y múltiples cabezas</span></a><div class="rail-section-name">Unidad 13 · Entrenar primero y congelar después los parámetros</div><a class="" data-section="foundations--15" data-target="foundations/15.html" href="../foundations/15.html" title="Lección 52｜Derivadas, gradientes y regla de la cadena: cómo encuentra el entrenamiento la dirección de ajuste"><span class="rail-code">Lección 52</span><span class="rail-name">Derivadas, gradientes y regla de la cadena: cómo encuentra el entrenamiento la dirección de ajuste</span></a><a class="" data-section="foundations--16" data-target="foundations/16.html" href="../foundations/16.html" title="Lección 53｜Un entrenamiento de principio a fin: etiquetas, pérdida, actualización, validación y guardado"><span class="rail-code">Lección 53</span><span class="rail-name">Un entrenamiento de principio a fin: etiquetas, pérdida, actualización, validación y guardado</span></a><a class="" data-section="foundations--17" data-target="foundations/17.html" href="../foundations/17.html" title="Lección 54｜Posentrenamiento: ajuste fino supervisado, preferencias, recompensas y adaptación de parámetros"><span class="rail-code">Lección 54</span><span class="rail-name">Posentrenamiento: ajuste fino supervisado, preferencias, recompensas y adaptación de parámetros</span></a><a class="" data-section="chapters--04" data-target="chapters/04.html" href="../chapters/04.html" title="Lección 55｜Mecanismos de entrenamiento: pérdida, retropropagación completa y actualización de parámetros"><span class="rail-code">Lección 55</span><span class="rail-name">Mecanismos de entrenamiento: pérdida, retropropagación completa y actualización de parámetros</span></a><a class="" data-section="chapters--05" data-target="chapters/05.html" href="../chapters/05.html" title="Lección 56｜Posentrenamiento y personalización del modelo: objetivos, estructuras y adaptación de parámetros"><span class="rail-code">Lección 56</span><span class="rail-name">Posentrenamiento y personalización del modelo: objetivos, estructuras y adaptación de parámetros</span></a><div class="rail-section-name">Unidad 14 · Usar el resultado del entrenamiento para realizar la inferencia turno a turno</div><a class="" data-section="foundations--18" data-target="foundations/18.html" href="../foundations/18.html" title="Lección 57｜Cargar el resultado del entrenamiento: predecir, elegir y detenerse paso a paso"><span class="rail-code">Lección 57</span><span class="rail-name">Cargar el resultado del entrenamiento: predecir, elegir y detenerse paso a paso</span></a><a class="" data-section="foundations--19" data-target="foundations/19.html" href="../foundations/19.html" title="Lección 58｜KV Cache: reutilizar cálculos anteriores manteniendo el mismo resultado"><span class="rail-code">Lección 58</span><span class="rail-name">KV Cache: reutilizar cálculos anteriores manteniendo el mismo resultado</span></a><a class="" data-section="chapters--06" data-target="chapters/06.html" href="../chapters/06.html" title="Lección 59｜Mecanismos de inferencia: carga, estrategias de decodificación y generación continua"><span class="rail-code">Lección 59</span><span class="rail-name">Mecanismos de inferencia: carga, estrategias de decodificación y generación continua</span></a><a class="" data-section="chapters--07" data-target="chapters/07.html" href="../chapters/07.html" title="Lección 60｜Procesos internos de KV Cache, FlashAttention y PagedAttention"><span class="rail-code">Lección 60</span><span class="rail-name">Procesos internos de KV Cache, FlashAttention y PagedAttention</span></a><div class="rail-section-name">Unidad 15 · De los operadores a la GPU y la planificación del servicio</div><a class="" data-section="foundations--20" data-target="foundations/20.html" href="../foundations/20.html" title="Lección 61｜Bajo rango, cuantización y expertos: examinar primero qué cálculos se reducen"><span class="rail-code">Lección 61</span><span class="rail-name">Bajo rango, cuantización y expertos: examinar primero qué cálculos se reducen</span></a><a class="" data-section="foundations--21" data-target="foundations/21.html" href="../foundations/21.html" title="Lección 62｜Calcular rápido y caber en memoria: complejidad, ancho de banda, procesamiento por lotes y paralelismo"><span class="rail-code">Lección 62</span><span class="rail-name">Calcular rápido y caber en memoria: complejidad, ancho de banda, procesamiento por lotes y paralelismo</span></a><a class="" data-section="chapters--08" data-target="chapters/08.html" href="../chapters/08.html" title="Lección 63｜Servicio de inferencia: planificación, rendimiento, latencia y paralelismo"><span class="rail-code">Lección 63</span><span class="rail-name">Servicio de inferencia: planificación, rendimiento, latencia y paralelismo</span></a><a class="" data-section="labs--projects--assignment4" data-target="labs/projects/assignment4.html" href="../labs/projects/assignment4.html" title="Tarea 04｜Servicio: del contrato de la interfaz al modelo y el motor"><span class="rail-code">Tarea 04</span><span class="rail-name">Servicio: del contrato de la interfaz al modelo y el motor</span></a></div></details><details class="rail-group course-rail-stage" data-group="progressive-stage-5"><summary data-i18n="rail.stage5">Etapa 05 · Verificar toda la pila</summary><div class="rail-links"><div class="rail-section-name">Unidad 16 · Integrar la multimodalidad y la incertidumbre en la aceptación</div><a class="" data-section="foundations--39" data-target="foundations/39.html" href="../foundations/39.html" title="Lección 64｜Multimodalidad y confianza: cómo una imagen se convierte en entrada y por qué las explicaciones son limitadas"><span class="rail-code">Lección 64</span><span class="rail-name">Multimodalidad y confianza: cómo una imagen se convierte en entrada y por qué las explicaciones son limitadas</span></a><a class="" data-section="chapters--27" data-target="chapters/27.html" href="../chapters/27.html" title="Lección 65｜Fiabilidad factual, multimodalidad e interpretabilidad: dónde están los límites de las capacidades"><span class="rail-code">Lección 65</span><span class="rail-name">Fiabilidad factual, multimodalidad e interpretabilidad: dónde están los límites de las capacidades</span></a><div class="rail-section-name">Unidad 17 · Optimizar un mismo sistema entre distintas capas</div><a class="" data-section="foundations--40" data-target="foundations/40.html" href="../foundations/40.html" title="Lección 66｜De los conceptos básicos al análisis de sistemas: localizar problemas sin limitarse a acumular técnicas"><span class="rail-code">Lección 66</span><span class="rail-name">De los conceptos básicos al análisis de sistemas: localizar problemas sin limitarse a acumular técnicas</span></a><a class="" data-section="chapters--26" data-target="chapters/26.html" href="../chapters/26.html" title="Lección 67｜Aplicación en profundidad: combinar componentes en un sistema de trabajo explicable"><span class="rail-code">Lección 67</span><span class="rail-name">Aplicación en profundidad: combinar componentes en un sistema de trabajo explicable</span></a><a class="" data-section="labs--projects--assignment5" data-target="labs/projects/assignment5.html" href="../labs/projects/assignment5.html" title="Tarea 05｜Pila completa: mejorar la misma tarea con una hipótesis refutable"><span class="rail-code">Tarea 05</span><span class="rail-name">Pila completa: mejorar la misma tarea con una hipótesis refutable</span></a><div class="rail-section-name">Unidad 18 · Completar el curso con conclusiones de proyecto revisables</div><a class="" data-section="chapters--28" data-target="chapters/28.html" href="../chapters/28.html" title="Lección 68｜Investigación avanzada y juicio integral sobre sistemas"><span class="rail-code">Lección 68</span><span class="rail-name">Investigación avanzada y juicio integral sobre sistemas</span></a></div></details><details class="rail-group" data-group="walkthroughs"><summary data-i18n="rail.cases">Casos resueltos</summary><div class="rail-links"><a class="" data-section="walkthroughs--a" data-target="walkthroughs/a.html" href="../walkthroughs/a.html" title="Desglose completo A｜Cómo una entrada se convierte en tres tokens de salida"><span class="rail-name">Cómo una entrada se convierte en tres tokens de salida</span></a><a class="" data-section="walkthroughs--b" data-target="walkthroughs/b.html" href="../walkthroughs/b.html" title="Desglose completo B｜Entradas, salidas, herramientas y recuperación en cada turno de una reparación de repositorio"><span class="rail-name">Entradas, salidas, herramientas y recuperación en cada turno de una reparación de repositorio</span></a><a class="" data-section="walkthroughs--c" data-target="walkthroughs/c.html" href="../walkthroughs/c.html" title="Desglose completo C｜Del ingreso de documentos a la recuperación, respuesta, actualización de memoria y olvido"><span class="rail-name">Del ingreso de documentos a la recuperación, respuesta, actualización de memoria y olvido</span></a><a class="" data-section="walkthroughs--d" data-target="walkthroughs/d.html" href="../walkthroughs/d.html" title="Desglose completo D｜Cómo hallar la causa raíz de una regresión de un agente «más lento y peor»"><span class="rail-name">Cómo hallar la causa raíz de una regresión de un agente «más lento y peor»</span></a></div></details><details class="rail-group" data-group="labs"><summary data-i18n="rail.labs">Laboratorios y verificación</summary><div class="rail-links"><a class="" data-section="labs--stack-code" data-target="labs/stack/code.html" href="../labs/stack/code.html" title="Experimento de principio a fin: localizar código y objetos"><span class="rail-name">Código del experimento de principio a fin</span></a><a class="" data-section="labs" data-target="labs.html" href="../labs.html" title="Cambiar los números y observar cómo cambia cada paso"><span class="rail-name">Cambiar los números y observar cómo cambia cada paso</span></a><a class="" data-section="labs--model-viewer" data-target="labs/model-viewer.html" href="../labs/model-viewer.html" title="Experimentos del modelo: observar paso a paso los valores intermedios del entrenamiento y la inferencia"><span class="rail-name">Experimentos del modelo: observar paso a paso los valores intermedios del entrenamiento y la inferencia</span></a><a class="" data-section="labs--model-values" data-target="labs/model-values.html" href="../labs/model-values.html" title="Experimentos del modelo: registros de parámetros, propagación hacia delante y gradientes"><span class="rail-name">Experimentos del modelo: registros de parámetros, propagación hacia delante y gradientes</span></a><a class="" data-section="labs--model-run" data-target="labs/model-run.html" href="../labs/model-run.html" title="Experimentos del modelo: código completo y resultados de ejecución"><span class="rail-name">Experimentos del modelo: código completo y resultados de ejecución</span></a><a class="" data-section="reference--model-code" data-target="reference/model-code.html" href="../reference/model-code.html" title="Código fuente y parámetros originales de los experimentos del modelo"><span class="rail-name">Código fuente y parámetros originales de los experimentos del modelo</span></a><a class="" data-section="checks" data-target="checks.html" href="../checks.html" title="Código, valores numéricos y límites de la verificación"><span class="rail-name">Código, valores numéricos y límites de la verificación</span></a><a class="" data-section="example-verification" data-target="example-verification.html" href="../example-verification.html" title="Verificación de ejemplos: valores numéricos, estado y código"><span class="rail-name">Verificación de ejemplos: valores numéricos, estado y código</span></a></div></details><details class="rail-group" data-group="visual"><summary data-i18n="rail.visual">Figuras y animaciones</summary><div class="rail-links"><a class="" data-section="visual-guides" data-target="visual-guides.html" href="../visual-guides.html" title="Ilustraciones dinámicas: ver cada paso con claridad"><span class="rail-name">Ilustraciones dinámicas: ver cada paso con claridad</span></a><a class="" data-section="worked-examples" data-target="worked-examples.html" href="../worked-examples.html" title="Índice de ejemplos ejecutables"><span class="rail-name">Índice de ejemplos ejecutables</span></a><a class="" data-section="worked-model" data-target="worked-model.html" href="../worked-model.html" title="Ejemplo de principio a fin: cómo atraviesan dos frases una capa del modelo"><span class="rail-name">Ejemplo de principio a fin: cómo atraviesan dos frases una capa del modelo</span></a><a class="" data-section="foundation-atlas" data-target="foundation-atlas.html" href="../foundation-atlas.html" title="Índice de ilustraciones por sección de los fundamentos"><span class="rail-name">Índice de ilustraciones por sección de los fundamentos</span></a><a class="" data-section="mechanisms--index" data-target="mechanisms/index.html" href="../mechanisms/index.html" title="Índice de ilustraciones y cálculos detallados del texto"><span class="rail-name">Índice de ilustraciones y cálculos detallados del texto</span></a><a class="" data-section="examples--input-representation" data-target="examples/input-representation.html" href="../examples/input-representation.html" title="Ejemplo: de dos frases a una representación tridimensional"><span class="rail-name">Ejemplo: de dos frases a una representación tridimensional</span></a><a class="" data-section="visual--F01" data-target="visual/F01.html" href="../visual/F01.html" title="Los distintos objetos por los que pasa una frase"><span class="rail-name">Los distintos objetos por los que pasa una frase</span></a><a class="" data-section="visual--F02" data-target="visual/F02.html" href="../visual/F02.html" title="¿Qué se añade realmente al incorporar un eje?"><span class="rail-name">¿Qué se añade realmente al incorporar un eje? </span></a><a class="" data-section="visual--F03" data-target="visual/F03.html" href="../visual/F03.html" title="Texto, bytes, tokens e identificadores son cuatro cosas distintas"><span class="rail-name">Texto, bytes, tokens e identificadores son cuatro cosas distintas</span></a><a class="" data-section="visual--F04" data-target="visual/F04.html" href="../visual/F04.html" title="Agrupar en lotes no mezcla dos frases en una"><span class="rail-name">Agrupar en lotes no mezcla dos frases en una</span></a><a class="" data-section="visual--F05" data-target="visual/F05.html" href="../visual/F05.html" title="Embedding consulta una fila; no convierte el identificador a binario"><span class="rail-name">Embedding consulta una fila; no convierte el identificador a binario</span></a><a class="" data-section="visual--F06" data-target="visual/F06.html" href="../visual/F06.html" title="Mover los datos a la GPU cambia su ubicación, no su significado"><span class="rail-name">Mover los datos a la GPU cambia su ubicación, no su significado</span></a><a class="" data-section="visual--F07" data-target="visual/F07.html" href="../visual/F07.html" title="La multiplicación de matrices se parece a rellenar los resultados de una receta casilla por casilla"><span class="rail-name">La multiplicación de matrices se parece a rellenar los resultados de una receta casilla por casilla</span></a><a class="" data-section="visual--F08" data-target="visual/F08.html" href="../visual/F08.html" title="Distinguir entre cambiar la disposición y cambiar los valores"><span class="rail-name">Distinguir entre cambiar la disposición y cambiar los valores</span></a><a class="" data-section="visual--F09" data-target="visual/F09.html" href="../visual/F09.html" title="Softmax no consiste en dividir cada puntuación directamente por la suma"><span class="rail-name">Softmax no consiste en dividir cada puntuación directamente por la suma</span></a><a class="" data-section="visual--F10" data-target="visual/F10.html" href="../visual/F10.html" title="Las capas de la red reorganizan valores, no generan frases ocultas"><span class="rail-name">Las capas de la red reorganizan valores, no generan frases ocultas</span></a><a class="" data-section="visual--F11" data-target="visual/F11.html" href="../visual/F11.html" title="Q/K/V: calcular primero de dónde leer y después cuánto incorporar"><span class="rail-name">Q/K/V: calcular primero de dónde leer y después cuánto incorporar</span></a><a class="" data-section="visual--F12" data-target="visual/F12.html" href="../visual/F12.html" title="Mask es una tabla de visibilidad, no semántica adicional"><span class="rail-name">Mask es una tabla de visibilidad, no semántica adicional</span></a><a class="" data-section="visual--F13" data-target="visual/F13.html" href="../visual/F13.html" title="Cómo entra la posición en el cálculo numérico"><span class="rail-name">Cómo entra la posición en el cálculo numérico</span></a><a class="" data-section="visual--F14" data-target="visual/F14.html" href="../visual/F14.html" title="Una capa de Transformer contiene más que Attention"><span class="rail-name">Una capa de Transformer contiene más que Attention</span></a><a class="" data-section="visual--F15" data-target="visual/F15.html" href="../visual/F15.html" title="Cómo una entrada permite predecir de forma continua hasta terminar"><span class="rail-name">Cómo una entrada permite predecir de forma continua hasta terminar</span></a><a class="" data-section="visual--F16" data-target="visual/F16.html" href="../visual/F16.html" title="KV Cache: conservar lo ya calculado sin omitir lo que hay que leer"><span class="rail-name">KV Cache: conservar lo ya calculado sin omitir lo que hay que leer</span></a><a class="" data-section="visual--F17" data-target="visual/F17.html" href="../visual/F17.html" title="El gradiente se parece a la pendiente; la tasa de aprendizaje, al tamaño del paso"><span class="rail-name">El gradiente se parece a la pendiente; la tasa de aprendizaje, al tamaño del paso</span></a><a class="" data-section="visual--F18" data-target="visual/F18.html" href="../visual/F18.html" title="Entrenamiento: plantear a cada posición una pregunta sobre el «siguiente elemento»"><span class="rail-name">Entrenamiento: plantear a cada posición una pregunta sobre el «siguiente elemento»</span></a><a class="" data-section="visual--F19" data-target="visual/F19.html" href="../visual/F19.html" title="El posentrenamiento cambia el comportamiento; la recompensa no juzga los hechos"><span class="rail-name">El posentrenamiento cambia el comportamiento; la recompensa no juzga los hechos</span></a><a class="" data-section="visual--F20" data-target="visual/F20.html" href="../visual/F20.html" title="Reducir parámetros, bits y activaciones son optimizaciones distintas"><span class="rail-name">Reducir parámetros, bits y activaciones son optimizaciones distintas</span></a><a class="" data-section="visual--F21" data-target="visual/F21.html" href="../visual/F21.html" title="Un cálculo lento puede deberse a un movimiento lento de los datos"><span class="rail-name">Un cálculo lento puede deberse a un movimiento lento de los datos</span></a><a class="" data-section="visual--F22" data-target="visual/F22.html" href="../visual/F22.html" title="Descomponer una tarea de un agente en los turnos que realmente ocurren"><span class="rail-name">Descomponer una tarea de un agente en los turnos que realmente ocurren</span></a><a class="" data-section="visual--F23" data-target="visual/F23.html" href="../visual/F23.html" title="La integridad de caracteres, eventos y argumentos de herramientas son tres controles distintos"><span class="rail-name">La integridad de caracteres, eventos y argumentos de herramientas son tres controles distintos</span></a><a class="" data-section="visual--F24" data-target="visual/F24.html" href="../visual/F24.html" title="El estado de una tarea no es una frase de resumen en el chat"><span class="rail-name">El estado de una tarea no es una frase de resumen en el chat</span></a><a class="" data-section="visual--F25" data-target="visual/F25.html" href="../visual/F25.html" title="MCP conecta interfaces, pero no concede permisos automáticamente"><span class="rail-name">MCP conecta interfaces, pero no concede permisos automáticamente</span></a><a class="" data-section="visual--F26" data-target="visual/F26.html" href="../visual/F26.html" title="El contexto de cada turno se parece a un conjunto de materiales de trabajo delimitado"><span class="rail-name">El contexto de cada turno se parece a un conjunto de materiales de trabajo delimitado</span></a><a class="" data-section="visual--F27" data-target="visual/F27.html" href="../visual/F27.html" title="La compactación debe conservar los hechos de los que depende la acción"><span class="rail-name">La compactación debe conservar los hechos de los que depende la acción</span></a><a class="" data-section="visual--F28" data-target="visual/F28.html" href="../visual/F28.html" title="La recuperación busca candidatos y después determina si se puede responder"><span class="rail-name">La recuperación busca candidatos y después determina si se puede responder</span></a><a class="" data-section="visual--F29" data-target="visual/F29.html" href="../visual/F29.html" title="De dos listas de candidatos a evidencia utilizable"><span class="rail-name">De dos listas de candidatos a evidencia utilizable</span></a><a class="" data-section="visual--F30" data-target="visual/F30.html" href="../visual/F30.html" title="La recuperación de código necesita más que una «semántica similar»"><span class="rail-name">La recuperación de código necesita más que una «semántica similar»</span></a><a class="" data-section="visual--F31" data-target="visual/F31.html" href="../visual/F31.html" title="La memoria a largo plazo no es una nota que siempre tenga razón"><span class="rail-name">La memoria a largo plazo no es una nota que siempre tenga razón</span></a><a class="" data-section="visual--F32" data-target="visual/F32.html" href="../visual/F32.html" title="¿Por qué un Skill puede existir y aun así no servir de nada?"><span class="rail-name">¿Por qué un Skill puede existir y aun así no servir de nada? </span></a><a class="" data-section="visual--F33" data-target="visual/F33.html" href="../visual/F33.html" title="Un tiempo de espera agotado indica que no se recibió la respuesta, no que la operación no ocurriera"><span class="rail-name">Un tiempo de espera agotado indica que no se recibió la respuesta, no que la operación no ocurriera</span></a><a class="" data-section="visual--F34" data-target="visual/F34.html" href="../visual/F34.html" title="Las pruebas buscan contraejemplos; no ponen un sello verde al código"><span class="rail-name">Las pruebas buscan contraejemplos; no ponen un sello verde al código</span></a><a class="" data-section="visual--F35" data-target="visual/F35.html" href="../visual/F35.html" title="Antes de leer una métrica, preguntar cuál es su denominador"><span class="rail-name">Antes de leer una métrica, preguntar cuál es su denominador</span></a><a class="" data-section="visual--F36" data-target="visual/F36.html" href="../visual/F36.html" title="¿Por qué una subida de 10 puntos porcentuales todavía no permite sacar conclusiones precipitadas?"><span class="rail-name">¿Por qué una subida de 10 puntos porcentuales todavía no permite sacar conclusiones precipitadas? </span></a><a class="" data-section="visual--F37" data-target="visual/F37.html" href="../visual/F37.html" title="Que un material influya en el modelo no significa que haya obtenido permisos"><span class="rail-name">Que un material influya en el modelo no significa que haya obtenido permisos</span></a><a class="" data-section="visual--F38" data-target="visual/F38.html" href="../visual/F38.html" title="Trace debe mostrar la causalidad, además de las marcas de tiempo"><span class="rail-name">Trace debe mostrar la causalidad, además de las marcas de tiempo</span></a><a class="" data-section="visual--F39" data-target="visual/F39.html" href="../visual/F39.html" title="La representación de imágenes y las acciones en la interfaz son dos problemas de capas distintas"><span class="rail-name">La representación de imágenes y las acciones en la interfaz son dos problemas de capas distintas</span></a><a class="" data-section="visual--F40" data-target="visual/F40.html" href="../visual/F40.html" title="Localizar la capa del error antes de plantearse cambiar de modelo"><span class="rail-name">Localizar la capa del error antes de plantearse cambiar de modelo</span></a><a class="" data-section="visual--O01" data-target="visual/O01.html" href="../visual/O01.html" title="GQA/MQA: lo que se reduce es el número de grupos K/V"><span class="rail-name">GQA/MQA: lo que se reduce es el número de grupos K/V</span></a><a class="" data-section="visual--O02" data-target="visual/O02.html" href="../visual/O02.html" title="Cuantización: ahorrar almacenamiento e introducir aproximaciones"><span class="rail-name">Cuantización: ahorrar almacenamiento e introducir aproximaciones</span></a><a class="" data-section="visual--O03" data-target="visual/O03.html" href="../visual/O03.html" title="LoRA: congelar la tabla grande y aprender pequeños incrementos"><span class="rail-name">LoRA: congelar la tabla grande y aprender pequeños incrementos</span></a><a class="" data-section="visual--O04" data-target="visual/O04.html" href="../visual/O04.html" title="FlashAttention: leer y acumular sin almacenar la tabla entera"><span class="rail-name">FlashAttention: leer y acumular sin almacenar la tabla entera</span></a><a class="" data-section="visual--O05" data-target="visual/O05.html" href="../visual/O05.html" title="PagedAttention: continuidad lógica con posibles bloques físicos"><span class="rail-name">PagedAttention: continuidad lógica con posibles bloques físicos</span></a><a class="" data-section="visual--O06" data-target="visual/O06.html" href="../visual/O06.html" title="Procesamiento continuo por lotes: incorporar al siguiente cuando queda un sitio libre"><span class="rail-name">Procesamiento continuo por lotes: incorporar al siguiente cuando queda un sitio libre</span></a><a class="" data-section="visual--O07" data-target="visual/O07.html" href="../visual/O07.html" title="Decodificación especulativa: el borrador puede ser rápido, pero hay que verificarlo correctamente"><span class="rail-name">Decodificación especulativa: el borrador puede ser rápido, pero hay que verificarlo correctamente</span></a><a class="" data-section="visual--O08" data-target="visual/O08.html" href="../visual/O08.html" title="MoE: cada token elige parte de las rutas de cálculo"><span class="rail-name">MoE: cada token elige parte de las rutas de cálculo</span></a><a class="" data-section="visual--O09" data-target="visual/O09.html" href="../visual/O09.html" title="Activation Checkpointing: guardar menos y recalcular en la propagación hacia atrás"><span class="rail-name">Activation Checkpointing: guardar menos y recalcular en la propagación hacia atrás</span></a><a class="" data-section="visual--O10" data-target="visual/O10.html" href="../visual/O10.html" title="Compactación, recuperación y Prompt Cache: tres formas distintas de «ahorrar»"><span class="rail-name">Compactación, recuperación y Prompt Cache: tres formas distintas de «ahorrar»</span></a><a class="" data-section="visual--O11" data-target="visual/O11.html" href="../visual/O11.html" title="Múltiples agentes: importa más el trabajo paralelizable que el número de agentes"><span class="rail-name">Múltiples agentes: importa más el trabajo paralelizable que el número de agentes</span></a><a class="" data-section="visual--O12" data-target="visual/O12.html" href="../visual/O12.html" title="Enrutamiento de modelos: una llamada barata no implica un coste bajo por tarea completada con éxito"><span class="rail-name">Enrutamiento de modelos: una llamada barata no implica un coste bajo por tarea completada con éxito</span></a><a class="" data-section="visual--coverage" data-target="visual/coverage.html" href="../visual/coverage.html" title="Correspondencia entre capítulos e ilustraciones"><span class="rail-name">Correspondencia entre capítulos e ilustraciones</span></a><a class="" data-section="visual--optimizations" data-target="visual/optimizations.html" href="../visual/optimizations.html" title="Elegir una optimización: considerar conjuntamente beneficios y costes"><span class="rail-name">Elegir una optimización: considerar conjuntamente beneficios y costes</span></a><a class="" data-section="visual--sources" data-target="visual/sources.html" href="../visual/sources.html" title="Fuentes y límites de aplicación de las ilustraciones"><span class="rail-name">Fuentes y límites de aplicación de las ilustraciones</span></a><a class="" data-section="visual--verification" data-target="visual/verification.html" href="../visual/verification.html" title="Valores numéricos y programa de las ilustraciones"><span class="rail-name">Valores numéricos y programa de las ilustraciones</span></a></div></details><details class="rail-group" data-group="engineering" open=""><summary data-i18n="rail.engineering">Ingeniería a fondo</summary><div class="rail-links"><a class="" data-section="engineering--index" data-target="engineering/index.html" href="index.html" title="Análisis de ingeniería: del mecanismo a los límites de fallo"><span class="rail-name">Análisis de ingeniería: del mecanismo a los límites de fallo</span></a><a aria-current="page" class="active" data-section="engineering--labs" data-target="engineering/labs.html" href="labs.html" title="Contraejemplos de fallo, resultados reales y código completo"><span class="rail-name">Contraejemplos de fallo, resultados reales y código completo</span></a><a class="" data-section="engineering--agent-validation" data-target="engineering/agent-validation.html" href="../engineering/agent-validation.html" title="Contraejemplos ejecutables de los mecanismos de agentes y alcance de la verificación"><span class="rail-name">Contraejemplos ejecutables y alcance de la verificación</span></a><a class="" data-section="engineering--sources" data-target="engineering/sources.html" href="sources.html" title="Fundamento y ámbito de aplicación del análisis de ingeniería"><span class="rail-name">Fundamento y ámbito de aplicación del análisis de ingeniería</span></a><a class="rail-home" data-section="engineering--agent-evidence" data-target="engineering/agent-evidence.html" href="agent-evidence.html"><span class="rail-name">Evidencia de los mecanismos de agentes</span></a></div></details><details class="rail-group" data-group="studies"><summary data-i18n="rail.studies">Estudios temáticos</summary><div class="rail-links"><a class="" data-section="studies--chapters--01" data-target="studies/chapters/01.html" href="../studies/chapters/01.html" title="01｜Cómo se convierte el texto en probabilidades: Tokenizer, plantillas, función objetivo y gradientes"><span class="rail-name">Cómo se convierte el texto en probabilidades: Tokenizer, plantillas, función objetivo y gradientes</span></a><a class="" data-section="studies--chapters--02" data-target="studies/chapters/02.html" href="../studies/chapters/02.html" title="02｜Dentro del Decoder: formas de tensores, RoPE, GQA y corrección de KV Cache"><span class="rail-name">Dentro del Decoder: formas de tensores, RoPE, GQA y corrección de KV Cache</span></a><a class="" data-section="studies--chapters--03" data-target="studies/chapters/03.html" href="../studies/chapters/03.html" title="03｜Dentro de los sistemas de entrenamiento: datos, optimizadores, memoria de la GPU y costes distribuidos"><span class="rail-name">Dentro de los sistemas de entrenamiento: datos, optimizadores, memoria de la GPU y costes distribuidos</span></a><a class="" data-section="studies--chapters--04" data-target="studies/chapters/04.html" href="../studies/chapters/04.html" title="04｜Posentrenamiento y modelos de razonamiento: de los objetivos de preferencias a las capacidades verificables"><span class="rail-name">Posentrenamiento y modelos de razonamiento: de los objetivos de preferencias a las capacidades verificables</span></a><a class="" data-section="studies--chapters--05" data-target="studies/chapters/05.html" href="../studies/chapters/05.html" title="05｜Cómo se selecciona la salida: muestreo, decodificación especulativa y condiciones de parada"><span class="rail-name">Cómo se selecciona la salida: muestreo, decodificación especulativa y condiciones de parada</span></a><a class="" data-section="studies--chapters--06" data-target="studies/chapters/06.html" href="../studies/chapters/06.html" title="06｜Los cuellos de botella reales del servicio de inferencia: memoria, FlashAttention, paginación y planificación"><span class="rail-name">Los cuellos de botella reales del servicio de inferencia: memoria, FlashAttention, paginación y planificación</span></a><a class="" data-section="studies--chapters--07" data-target="studies/chapters/07.html" href="../studies/chapters/07.html" title="07｜Dentro de la interfaz del modelo: mensajes, elementos de salida, SSE y protocolo de llamadas a herramientas"><span class="rail-name">Dentro de la interfaz del modelo: mensajes, elementos de salida, SSE y protocolo de llamadas a herramientas</span></a><a class="" data-section="studies--chapters--08" data-target="studies/chapters/08.html" href="../studies/chapters/08.html" title="08｜Dentro del Harness: decisión, ejecución, persistencia y recuperación tras una caída"><span class="rail-name">Dentro del Harness: decisión, ejecución, persistencia y recuperación tras una caída</span></a><a class="" data-section="studies--chapters--09" data-target="studies/chapters/09.html" href="../studies/chapters/09.html" title="09｜Rastrear el código fuente de Codex: de las reglas del repositorio al historial, el bucle y la compactación"><span class="rail-name">Rastrear el código fuente de Codex: de las reglas del repositorio al historial, el bucle y la compactación</span></a><a class="" data-section="studies--chapters--10" data-target="studies/chapters/10.html" href="../studies/chapters/10.html" title="10｜Claude Code y Copilot: mecanismos públicos, comportamiento verificable e interior desconocido"><span class="rail-name">Claude Code y Copilot: mecanismos públicos, comportamiento verificable e interior desconocido</span></a><a class="" data-section="studies--chapters--11" data-target="studies/chapters/11.html" href="../studies/chapters/11.html" title="11｜El compilador del contexto: selección de información, cierre de dependencias y presupuesto"><span class="rail-name">El compilador del contexto: selección de información, cierre de dependencias y presupuesto</span></a><a class="" data-section="studies--chapters--12" data-target="studies/chapters/12.html" href="../studies/chapters/12.html" title="12｜Problemas profundos de la compactación: estado con pérdidas, recuperación de evidencia y continuación de la ejecución"><span class="rail-name">Problemas profundos de la compactación: estado con pérdidas, recuperación de evidencia y continuación de la ejecución</span></a><a class="" data-section="studies--chapters--13" data-target="studies/chapters/13.html" href="../studies/chapters/13.html" title="13｜Dentro de los sistemas de recuperación: BM25, vectores, ANN, fusión y actualidad del índice"><span class="rail-name">Dentro de los sistemas de recuperación: BM25, vectores, ANN, fusión y actualidad del índice</span></a><a class="" data-section="studies--chapters--14" data-target="studies/chapters/14.html" href="../studies/chapters/14.html" title="14｜Dentro de la inteligencia de código: AST, LSP, grafos de dependencias y evidencia versionada"><span class="rail-name">Dentro de la inteligencia de código: AST, LSP, grafos de dependencias y evidencia versionada</span></a><a class="" data-section="studies--chapters--15" data-target="studies/chapters/15.html" href="../studies/chapters/15.html" title="15｜Dentro de los sistemas de memoria: dos tiempos, conflictos, fuentes y olvido útil"><span class="rail-name">Dentro de los sistemas de memoria: dos tiempos, conflictos, fuentes y olvido útil</span></a><a class="" data-section="studies--chapters--16" data-target="studies/chapters/16.html" href="../studies/chapters/16.html" title="16｜Skills, herramientas y enrutamiento de modelos: cómo entra realmente la capacidad especializada en una tarea"><span class="rail-name">Skills, herramientas y enrutamiento de modelos: cómo entra realmente la capacidad especializada en una tarea</span></a><a class="" data-section="studies--chapters--17" data-target="studies/chapters/17.html" href="../studies/chapters/17.html" title="17｜Dentro de los sistemas multiagente: DAG, traspaso de contexto, conflictos de concurrencia y errores correlacionados"><span class="rail-name">Dentro de los sistemas multiagente: DAG, traspaso de contexto, conflictos de concurrencia y errores correlacionados</span></a><a class="" data-section="studies--chapters--18" data-target="studies/chapters/18.html" href="../studies/chapters/18.html" title="18｜El núcleo de la calidad de ingeniería: contratos, pruebas, contraejemplos, Review y evidencia de entrega"><span class="rail-name">El núcleo de la calidad de ingeniería: contratos, pruebas, contraejemplos, Review y evidencia de entrega</span></a><a class="" data-section="studies--chapters--19" data-target="studies/chapters/19.html" href="../studies/chapters/19.html" title="19｜Evaluación avanzada: experimentos emparejados, fiabilidad, atribución causal y sesgo de puntuación"><span class="rail-name">Evaluación avanzada: experimentos emparejados, fiabilidad, atribución causal y sesgo de puntuación</span></a><a class="" data-section="studies--chapters--20" data-target="studies/chapters/20.html" href="../studies/chapters/20.html" title="20｜Dentro de la seguridad: límites de confianza, autorización MCP, entornos aislados y control de efectos secundarios"><span class="rail-name">Dentro de la seguridad: límites de confianza, autorización MCP, entornos aislados y control de efectos secundarios</span></a><a class="" data-section="studies--chapters--21" data-target="studies/chapters/21.html" href="../studies/chapters/21.html" title="21｜Observabilidad en producción y funcionamiento fiable: Trace, colas, cancelación y recuperación"><span class="rail-name">Observabilidad en producción y funcionamiento fiable: Trace, colas, cancelación y recuperación</span></a><a class="" data-section="studies--chapters--22" data-target="studies/chapters/22.html" href="../studies/chapters/22.html" title="22｜Decisiones de coste y rendimiento: por tarea completada con éxito, no por token"><span class="rail-name">Decisiones de coste y rendimiento: por tarea completada con éxito, no por token</span></a><a class="" data-section="studies--chapters--23" data-target="studies/chapters/23.html" href="../studies/chapters/23.html" title="23｜Ajuste fino, cuantización y destilación: cambiar el modelo o cambiar el sistema de entrada"><span class="rail-name">Ajuste fino, cuantización y destilación: cambiar el modelo o cambiar el sistema de entrada</span></a><a class="" data-section="studies--chapters--24" data-target="studies/chapters/24.html" href="../studies/chapters/24.html" title="24｜Multimodalidad y manejo del ordenador: representación, localización y ciclo cerrado de observación y acción"><span class="rail-name">Multimodalidad y manejo del ordenador: representación, localización y ciclo cerrado de observación y acción</span></a><a class="" data-section="studies--chapters--25" data-target="studies/chapters/25.html" href="../studies/chapters/25.html" title="25｜Respuestas fiables e interpretabilidad: calibración, abstención, evidencia e intervención causal"><span class="rail-name">Respuestas fiables e interpretabilidad: calibración, abstención, evidencia e intervención causal</span></a><a class="" data-section="studies--chapters--26" data-target="studies/chapters/26.html" href="../studies/chapters/26.html" title="26｜Ramas avanzadas de investigación: criterios para elegir arquitecturas, búsqueda, RAG y métodos de memoria"><span class="rail-name">Ramas avanzadas de investigación: criterios para elegir arquitecturas, búsqueda, RAG y métodos de memoria</span></a><a class="" data-section="studies--chapters--27" data-target="studies/chapters/27.html" href="../studies/chapters/27.html" title="27｜Caso de principio a fin: reparar exclude, desde el fallo original hasta una entrega recuperable"><span class="rail-name">Caso de principio a fin: reparar exclude, desde el fallo original hasta una entrega recuperable</span></a><a class="" data-section="studies--chapters--28" data-target="studies/chapters/28.html" href="../studies/chapters/28.html" title="28｜Planos de aplicación en profundidad: preguntas y respuestas empresariales, diagnóstico de repositorios, investigación y automatización controlada"><span class="rail-name">Planos de aplicación en profundidad: preguntas y respuestas empresariales, diagnóstico de repositorios, investigación y automatización controlada</span></a><a class="" data-section="studies--chapters--29" data-target="studies/chapters/29.html" href="../studies/chapters/29.html" title="29｜Manual de diagnóstico de fallos: del síntoma a la reparación mínima eficaz"><span class="rail-name">Manual de diagnóstico de fallos: del síntoma a la reparación mínima eficaz</span></a><a class="" data-section="studies--chapters--30" data-target="studies/chapters/30.html" href="../studies/chapters/30.html" title="30｜Evaluación de competencias avanzadas: preguntas abiertas, respuestas de referencia y proyecto final"><span class="rail-name">Evaluación de competencias avanzadas: preguntas abiertas, respuestas de referencia y proyecto final</span></a><a class="" data-section="studies--chapters--31" data-target="studies/chapters/31.html" href="../studies/chapters/31.html" title="31｜Apéndice de derivaciones: retropropagación de la atención y recuperación entrenable"><span class="rail-name">Apéndice de derivaciones: retropropagación de la atención y recuperación entrenable</span></a><a class="" data-section="studies--index" data-target="studies/index.html" href="../studies/index.html" title="Estudio temático: implementación, verificación y aplicación"><span class="rail-name">Estudio temático: implementación, verificación y aplicación</span></a><a class="" data-section="studies--experiments" data-target="studies/experiments.html" href="../studies/experiments.html" title="Manual de experimentos: implementación, contraejemplos y límites de las mediciones"><span class="rail-name">Manual de experimentos: implementación, contraejemplos y límites de las mediciones</span></a><a class="" data-section="studies--results" data-target="studies/results.html" href="../studies/results.html" title="Resultados reales · Registros y trazas desplegados por completo"><span class="rail-name">Resultados reales · Registros y trazas desplegados por completo</span></a><a class="" data-section="studies--roadmap" data-target="studies/roadmap.html" href="../studies/roadmap.html" title="Cómo leer los estudios temáticos"><span class="rail-name">Cómo leer los estudios temáticos</span></a><a class="" data-section="studies--source-code" data-target="studies/source-code.html" href="../studies/source-code.html" title="Código fuente completo de los experimentos · 12 archivos Python"><span class="rail-name">Código fuente completo de los experimentos · 12 archivos Python</span></a><a class="" data-section="studies--sources" data-target="studies/sources.html" href="../studies/sources.html" title="Fuentes, versiones y límites de los hechos"><span class="rail-name">Fuentes, versiones y límites de los hechos</span></a></div></details><details class="rail-group" data-group="reading-notes"><summary data-i18n="rail.reading">Lecturas adicionales</summary><div class="rail-links"><a class="" data-section="reading-notes--chapter-00" data-target="reading-notes/chapter-00.html" href="../reading-notes/chapter-00.html" title="Visión de conjunto"><span class="rail-name">Visión de conjunto</span></a><a class="" data-section="reading-notes--chapter-01" data-target="reading-notes/chapter-01.html" href="../reading-notes/chapter-01.html" title="Interior del modelo"><span class="rail-name">Interior del modelo</span></a><a class="" data-section="reading-notes--chapter-02" data-target="reading-notes/chapter-02.html" href="../reading-notes/chapter-02.html" title="Formación de capacidades"><span class="rail-name">Formación de capacidades</span></a><a class="" data-section="reading-notes--chapter-03" data-target="reading-notes/chapter-03.html" href="../reading-notes/chapter-03.html" title="Inferencia y servicio"><span class="rail-name">Inferencia y servicio</span></a><a class="" data-section="reading-notes--chapter-04" data-target="reading-notes/chapter-04.html" href="../reading-notes/chapter-04.html" title="Interfaces de entrada y salida"><span class="rail-name">Interfaces de entrada y salida</span></a><a class="" data-section="reading-notes--chapter-05" data-target="reading-notes/chapter-05.html" href="../reading-notes/chapter-05.html" title="Fundamentos de los agentes"><span class="rail-name">Fundamentos de los agentes</span></a><a class="" data-section="reading-notes--chapter-06" data-target="reading-notes/chapter-06.html" href="../reading-notes/chapter-06.html" title="Agentes de programación reales"><span class="rail-name">Agentes de programación reales</span></a><a class="" data-section="reading-notes--chapter-07" data-target="reading-notes/chapter-07.html" href="../reading-notes/chapter-07.html" title="Ingeniería del contexto"><span class="rail-name">Ingeniería del contexto</span></a><a class="" data-section="reading-notes--chapter-08" data-target="reading-notes/chapter-08.html" href="../reading-notes/chapter-08.html" title="Recuperación e inteligencia de código"><span class="rail-name">Recuperación e inteligencia de código</span></a><a class="" data-section="reading-notes--chapter-09" data-target="reading-notes/chapter-09.html" href="../reading-notes/chapter-09.html" title="Memoria a largo plazo"><span class="rail-name">Memoria a largo plazo</span></a><a class="" data-section="reading-notes--chapter-10" data-target="reading-notes/chapter-10.html" href="../reading-notes/chapter-10.html" title="Skills y múltiples agentes"><span class="rail-name">Skills y múltiples agentes</span></a><a class="" data-section="reading-notes--chapter-11" data-target="reading-notes/chapter-11.html" href="../reading-notes/chapter-11.html" title="Ingeniería de software de IA"><span class="rail-name">Ingeniería de software de IA</span></a><a class="" data-section="reading-notes--chapter-12" data-target="reading-notes/chapter-12.html" href="../reading-notes/chapter-12.html" title="Métodos de evaluación"><span class="rail-name">Métodos de evaluación</span></a><a class="" data-section="reading-notes--chapter-13" data-target="reading-notes/chapter-13.html" href="../reading-notes/chapter-13.html" title="Seguridad y permisos"><span class="rail-name">Seguridad y permisos</span></a><a class="" data-section="reading-notes--chapter-14" data-target="reading-notes/chapter-14.html" href="../reading-notes/chapter-14.html" title="Funcionamiento y rendimiento"><span class="rail-name">Funcionamiento y rendimiento</span></a><a class="" data-section="reading-notes--chapter-15" data-target="reading-notes/chapter-15.html" href="../reading-notes/chapter-15.html" title="Temas avanzados"><span class="rail-name">Temas avanzados</span></a><a class="" data-section="reading-notes--chapter-16" data-target="reading-notes/chapter-16.html" href="../reading-notes/chapter-16.html" title="Complementos de matemáticas e implementación"><span class="rail-name">Complementos de matemáticas e implementación</span></a><a class="" data-section="reading-notes--guide-01" data-target="reading-notes/guide-01.html" href="../reading-notes/guide-01.html" title="Transformer ilustrado"><span class="rail-name">Transformer ilustrado</span></a><a class="" data-section="reading-notes--guide-02" data-target="reading-notes/guide-02.html" href="../reading-notes/guide-02.html" title="El mecanismo de atención, calculado paso a paso"><span class="rail-name">El mecanismo de atención, calculado paso a paso</span></a><a class="" data-section="reading-notes--guide-03" data-target="reading-notes/guide-03.html" href="../reading-notes/guide-03.html" title="La cadena completa de uso de un LLM"><span class="rail-name">La cadena completa de uso de un LLM</span></a><a class="" data-section="reading-notes--guide-04" data-target="reading-notes/guide-04.html" href="../reading-notes/guide-04.html" title="Cómo construir un agente eficaz"><span class="rail-name">Cómo construir un agente eficaz</span></a><a class="" data-section="reading-notes--guide-05" data-target="reading-notes/guide-05.html" href="../reading-notes/guide-05.html" title="Desplegar el bucle de ejecución de Codex"><span class="rail-name">Desplegar el bucle de ejecución de Codex</span></a><a class="" data-section="reading-notes--guide-06" data-target="reading-notes/guide-06.html" href="../reading-notes/guide-06.html" title="Cómo funciona Claude Code"><span class="rail-name">Cómo funciona Claude Code</span></a><a class="" data-section="reading-notes--guide-07" data-target="reading-notes/guide-07.html" href="../reading-notes/guide-07.html" title="Métodos centrales de la ingeniería del contexto"><span class="rail-name">Métodos centrales de la ingeniería del contexto</span></a><a class="" data-section="reading-notes--guide-08" data-target="reading-notes/guide-08.html" href="../reading-notes/guide-08.html" title="Cómo mantener la continuidad de una tarea después de compactar"><span class="rail-name">Cómo mantener la continuidad de una tarea después de compactar</span></a><a class="" data-section="reading-notes--guide-09" data-target="reading-notes/guide-09.html" href="../reading-notes/guide-09.html" title="Hacer que la recuperación aporte la evidencia realmente necesaria"><span class="rail-name">Hacer que la recuperación aporte la evidencia realmente necesaria</span></a><a class="" data-section="reading-notes--guide-10" data-target="reading-notes/guide-10.html" href="../reading-notes/guide-10.html" title="Comprender la memoria eficaz a partir de CoALA"><span class="rail-name">Comprender la memoria eficaz a partir de CoALA</span></a><a class="" data-section="reading-notes--guide-11" data-target="reading-notes/guide-11.html" href="../reading-notes/guide-11.html" title="Mejorar la calidad de las entregas mediante el entorno de ingeniería"><span class="rail-name">Mejorar la calidad de las entregas mediante el entorno de ingeniería</span></a><a class="" data-section="reading-notes--guide-12" data-target="reading-notes/guide-12.html" href="../reading-notes/guide-12.html" title="Cómo demostrar que una optimización de un agente funciona"><span class="rail-name">Cómo demostrar que una optimización de un agente funciona</span></a><a class="" data-section="reading-notes--index" data-target="reading-notes/index.html" href="../reading-notes/index.html" title="Lecturas adicionales: temas de investigación y apuntes en español"><span class="rail-name">Lecturas adicionales: temas de investigación y apuntes en español</span></a><a class="" data-section="reading-notes--about" data-target="reading-notes/about.html" href="../reading-notes/about.html" title="Fuentes y convenciones de los ejemplos de las lecturas adicionales"><span class="rail-name">Fuentes y convenciones de los ejemplos de las lecturas adicionales</span></a><a class="" data-section="reading-notes--glossary" data-target="reading-notes/glossary.html" href="../reading-notes/glossary.html" title="Glosario español-inglés"><span class="rail-name">Glosario español-inglés</span></a><a class="" data-section="reading-notes--lab-01" data-target="reading-notes/lab-01.html" href="../reading-notes/lab-01.html" title="BPE didáctico: cómo se combinan los caracteres para formar tokens"><span class="rail-name">BPE didáctico: cómo se combinan los caracteres para formar tokens</span></a><a class="" data-section="reading-notes--lab-02" data-target="reading-notes/lab-02.html" href="../reading-notes/lab-02.html" title="Cálculo manual de la atención y la máscara causal"><span class="rail-name">Cálculo manual de la atención y la máscara causal</span></a><a class="" data-section="reading-notes--lab-03" data-target="reading-notes/lab-03.html" href="../reading-notes/lab-03.html" title="Estimación de KV Cache y reutilización de prefijos"><span class="rail-name">Estimación de KV Cache y reutilización de prefijos</span></a><a class="" data-section="reading-notes--lab-04" data-target="reading-notes/lab-04.html" href="../reading-notes/lab-04.html" title="RRF y métricas de recuperación"><span class="rail-name">RRF y métricas de recuperación</span></a><a class="" data-section="reading-notes--lab-05" data-target="reading-notes/lab-05.html" href="../reading-notes/lab-05.html" title="Fidelidad de la compactación: no perder el estado ni las negaciones"><span class="rail-name">Fidelidad de la compactación: no perder el estado ni las negaciones</span></a><a class="" data-section="reading-notes--lab-06" data-target="reading-notes/lab-06.html" href="../reading-notes/lab-06.html" title="Ámbito, versiones, caducidad y conflictos de la memoria"><span class="rail-name">Ámbito, versiones, caducidad y conflictos de la memoria</span></a><a class="" data-section="reading-notes--lab-07" data-target="reading-notes/lab-07.html" href="../reading-notes/lab-07.html" title="Separar las propuestas del modelo de la ejecución del programa"><span class="rail-name">Separar las propuestas del modelo de la ejecución del programa</span></a><a class="" data-section="reading-notes--lab-08" data-target="reading-notes/lab-08.html" href="../reading-notes/lab-08.html" title="Tasa de éxito, comparación emparejada y criterios del coste real"><span class="rail-name">Tasa de éxito, comparación emparejada y criterios del coste real</span></a><a class="" data-section="reading-notes--lab-09" data-target="reading-notes/lab-09.html" href="../reading-notes/lab-09.html" title="Del contrato al parche y a las pruebas con contraejemplos"><span class="rail-name">Del contrato al parche y a las pruebas con contraejemplos</span></a><a class="" data-section="reading-notes--lab-10" data-target="reading-notes/lab-10.html" href="../reading-notes/lab-10.html" title="Trace en paralelo: el tiempo de reloj y el total de operaciones son distintos"><span class="rail-name">Trace en paralelo: el tiempo de reloj y el total de operaciones son distintos</span></a><a class="" data-section="reading-notes--labs" data-target="reading-notes/labs.html" href="../reading-notes/labs.html" title="10 experimentos de mecanismos sin conexión"><span class="rail-name">10 experimentos de mecanismos sin conexión</span></a><a class="" data-section="reading-notes--roadmap" data-target="reading-notes/roadmap.html" href="../reading-notes/roadmap.html" title="Cómo abordar las lecturas adicionales"><span class="rail-name">Cómo abordar las lecturas adicionales</span></a><a class="" data-section="reading-notes--sources" data-target="reading-notes/sources.html" href="../reading-notes/sources.html" title="Fuentes y versiones"><span class="rail-name">Fuentes y versiones</span></a></div></details><details class="rail-group" data-group="reference"><summary data-i18n="rail.reference">Índices y fuentes</summary><div class="rail-links"><a class="" data-section="guide-coverage" data-target="coverage.html" href="../coverage.html" title="Índice de lecturas temáticas y dependencias de conocimientos"><span class="rail-name">Índice temático y dependencias de conocimientos</span></a><a class="" data-section="guide-advanced-labs" data-target="advanced-labs.html" href="../advanced-labs.html" title="Experimentos numéricos avanzados y de ejecución de agentes"><span class="rail-name">Apéndice de código avanzado</span></a><a class="" data-section="guide-about" data-target="about.html" href="../about.html" title="Acerca del libro y los límites de la evidencia"><span class="rail-name">Acerca del libro y los límites de la evidencia</span></a><a class="" data-section="glossary" data-target="glossary.html" href="../glossary.html" title="Consulta rápida de términos y símbolos"><span class="rail-name">Consulta rápida de términos y símbolos</span></a><a class="" data-section="concepts" data-target="concepts.html" href="../concepts.html" title="Fórmulas y términos: conocer los objetos antes de comprender las operaciones"><span class="rail-name">Fórmulas y términos: conocer los objetos antes de comprender las operaciones</span></a><a class="" data-section="topics" data-target="topics.html" href="../topics.html" title="Índice de temas"><span class="rail-name">Índice de temas</span></a><a class="" data-section="sources" data-target="sources.html" href="../sources.html" title="Referencias y ámbito de aplicación"><span class="rail-name">Referencias y ámbito de aplicación</span></a><a class="" data-section="reference--model-sources" data-target="reference/model-sources.html" href="../reference/model-sources.html" title="Mecanismos del modelo: fuentes de los principios y versiones de las interfaces"><span class="rail-name">Mecanismos del modelo: fuentes de los principios y versiones de las interfaces</span></a><a class="" data-section="example-sources" data-target="example-sources.html" href="../example-sources.html" title="Ejemplos ejecutables: fundamento, parámetros y alcance"><span class="rail-name">Ejemplos ejecutables: fundamento, parámetros y alcance</span></a><a class="" data-section="mechanisms--sources" data-target="mechanisms/sources.html" href="../mechanisms/sources.html" title="Fuentes y condiciones de aplicación de las ilustraciones del texto"><span class="rail-name">Fuentes y condiciones de aplicación de las ilustraciones del texto</span></a><a class="" data-section="mechanisms--verification" data-target="mechanisms/verification.html" href="../mechanisms/verification.html" title="Registros de cálculo y verificación de las ilustraciones"><span class="rail-name">Registros de cálculo y verificación de las ilustraciones</span></a></div></details><details class="rail-group" data-group="implementation"><summary data-i18n="rail.implementation">Código de los laboratorios</summary><div class="rail-links"><a class="" data-section="studies--code--attention_gradients" data-target="studies/code/attention_gradients.html" href="../studies/code/attention_gradients.html" title="attention_gradients.py"><span class="rail-name">attention_gradients.py</span></a><a class="" data-section="studies--code--capstone" data-target="studies/code/capstone.html" href="../studies/code/capstone.html" title="capstone.py"><span class="rail-name">capstone.py</span></a><a class="" data-section="studies--code--context_memory" data-target="studies/code/context_memory.html" href="../studies/code/context_memory.html" title="context_memory.py"><span class="rail-name">context_memory.py</span></a><a class="" data-section="studies--code--journal" data-target="studies/code/journal.html" href="../studies/code/journal.html" title="journal.py"><span class="rail-name">journal.py</span></a><a class="" data-section="studies--code--live_readonly" data-target="studies/code/live_readonly.html" href="../studies/code/live_readonly.html" title="live_readonly.py"><span class="rail-name">live_readonly.py</span></a><a class="" data-section="studies--code--numerics" data-target="studies/code/numerics.html" href="../studies/code/numerics.html" title="numerics.py"><span class="rail-name">numerics.py</span></a><a class="" data-section="studies--code--retrieval" data-target="studies/code/retrieval.html" href="../studies/code/retrieval.html" title="retrieval.py"><span class="rail-name">retrieval.py</span></a><a class="" data-section="studies--code--run_all" data-target="studies/code/run_all.html" href="../studies/code/run_all.html" title="run_all.py"><span class="rail-name">run_all.py</span></a><a class="" data-section="studies--code--sse_protocol" data-target="studies/code/sse_protocol.html" href="../studies/code/sse_protocol.html" title="sse_protocol.py"><span class="rail-name">sse_protocol.py</span></a><a class="" data-section="studies--code--statistics_lab" data-target="studies/code/statistics_lab.html" href="../studies/code/statistics_lab.html" title="statistics_lab.py"><span class="rail-name">statistics_lab.py</span></a><a class="" data-section="studies--code--test_suite" data-target="studies/code/test_suite.html" href="../studies/code/test_suite.html" title="test_suite.py"><span class="rail-name">test_suite.py</span></a><a class="" data-section="studies--code--train_tiny_lm" data-target="studies/code/train_tiny_lm.html" href="../studies/code/train_tiny_lm.html" title="train_tiny_lm.py"><span class="rail-name">train_tiny_lm.py</span></a></div></details></nav><div class="rail-foot"><span><span data-i18n="rail.current">Actual</span> <span data-nav-current-label=""></span></span><a href="../contents.html" data-i18n="rail.full">Ver el índice completo</a></div></aside><div class="reading-layout"><main class="reading-main" id="main-content"><article class="article"><div class="breadcrumb"><a href="../index.html" data-i18n="page.home">Inicio</a> / <a href="index.html">Análisis de ingeniería</a></div><h1 id="eng-lab-title">Contraejemplos de fallo, resultados reales y código completo</h1><details class="mobile-outline"><summary data-i18n="outline.summary">En esta página</summary><nav aria-label="Esquema de este capítulo" class="toc"><a href="#lab-scope">Alcance de esta ejecución</a><a href="#lab-run">Cómo reproducir</a><a href="#lab-results">Observaciones individuales y límites de aplicación</a><a href="#delivery-validation">Comprobaciones de contenido e interfaz de lectura</a><a href="#lab-code">Código completo</a><a href="#raw-log">Registros reales de pruebas</a><a href="#regression-run">Regresión de los programas existentes en esta ejecución</a><a href="#source-digests">Huellas de archivos fuente experimentales</a></nav></details><p class="lead">La validación no busca que «el programa se ejecute», sino que la implementación correcta cumpla los invariantes y que se pueda distinguir de una implementación alterada deliberadamente.</p><h2 id="lab-scope">Alcance de esta ejecución</h2><p>Estos resultados proceden de 69 pruebas reales de esta ejecución: cero fallos, errores y omisiones. Se distinguen operadores CPU, operaciones temporales Git, archivos, bases de datos y procesos y simulaciones lógicas. No hubo API comerciales, benchmarks GPU ni fiabilidad en producción.</p><pre><code>{
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "torch": "2.10.0+cpu",
+  "cuda_available": false,
+  "sqlite": "3.46.1",
+  "pytest": "9.0.2",
+  "git": "git version 2.47.3",
+  "ran_at_utc": "2026-10-21T02:54:49.850270+00:00",
+  "claims": "CPU and local temporary resources only; no commercial model/GPU/production service benchmarks."
+}</code></pre><h2 id="lab-run">Cómo reproducir</h2><p>Leer no requiere dependencias. Los experimentos nuevos necesitan Python, PyTorch y pytest, cuyas versiones están en el registro. Con otras versiones, lee primero los fallos; aflojar aserciones no equivale a reparar.</p><pre><code>cd AI_Systems_Engineering_Textbook_ZH/engineering/labs
+python run.py</code></pre><p>El programa solo crea archivos, SQLite, symlink y repositorios Git temporales. El experimento termina deliberadamente su subproceso, no el principal. Windows puede diferir en permisos de enlaces y disponibilidad Git; no se verificó en Windows ni macOS.</p><h2 id="lab-results">Observaciones individuales y límites de aplicación</h2><section class="eng-local-result" id="proof-E01"><h3 id="topic-1">E01 · La plantilla ya añadió BOS: ¿por qué tokenizar después cambia silenciosamente la tarea?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E01": {
+    "correct": [
+      1,
+      8,
+      9,
+      2
+    ],
+    "wrong": [
+      1,
+      1,
+      8,
+      9,
+      2,
+      2
+    ],
+    "scope": "teaching token list, not HF tokenizer"
+  }
+}</code></pre><p><a href="../chapters/01.html#engineering-E01">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E02"><h3 id="topic-2">E02 · Tokens nuevos, cabeza de salida vinculada y optimizador: ¿por qué «poder consultarlo» no equivale a «poder aprenderlo»?</h3><p>Ampliación didáctica real de PyTorch Embedding, no resize de un modelo HF completo.</p><pre><code>{
+  "E02": {
+    "before": [
+      6,
+      4
+    ],
+    "after": [
+      7,
+      4
+    ],
+    "new_id": 6
+  }
+}</code></pre><p><a href="../chapters/01.html#engineering-E02">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E03"><h3 id="topic-3">E03 · Proyectar dos veces, escalar dos veces y aleatoriedad en eval: tres trampas de interfaces Attention con el mismo nombre</h3><p>Linear y SDPA reales de PyTorch CPU, sin kernels CUDA.</p><pre><code>{
+  "E03-dropout": {
+    "eval_without_dropout": [
+      [
+        [
+          [
+            1.0
+          ]
+        ]
+      ]
+    ],
+    "outputs_with_p_half": [
+      0.5,
+      2.0,
+      0.5,
+      1.5,
+      1.0,
+      1.5,
+      0.5,
+      1.0,
+      1.0,
+      1.5,
+      0.5,
+      0.5,
+      1.0,
+      1.0,
+      1.0,
+      2.0
+    ]
+  },
+  "E03-linear": {
+    "correct": [
+      [
+        5.0,
+        11.0
+      ]
+    ],
+    "wrong": [
+      [
+        7.0,
+        10.0
+      ]
+    ]
+  }
+}</code></pre><p><a href="../chapters/02.html#engineering-E03">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E04"><h3 id="topic-4">E04 · Si una fila entera está enmascarada, ¿por qué restar el máximo tampoco salva softmax?</h3><p>softmax manual y observación real de PyTorch2.10 CPU SDPA; el tratamiento de mask total no se generaliza a todos los backends.</p><pre><code>{
+  "E04": {
+    "finite_fill_result": [
+      0.5,
+      0.5
+    ],
+    "manual_minus_inf_nan": true,
+    "native_sdpa_observed": [
+      [
+        [
+          [
+            0.0
+          ]
+        ]
+      ]
+    ],
+    "scope": "native result not generalized to all backends"
+  }
+}</code></pre><p><a href="../chapters/02.html#engineering-E04">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E05"><h3 id="topic-5">E05 · Semánticas opuestas de mask booleanas; al añadir caché, is_causal también puede alinearse con el lado equivocado</h3><p>MHA y SDPA reales de PyTorch con entradas, máscaras y proyecciones fijas.</p><pre><code>{
+  "E05-polarity": {
+    "correct": [
+      [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.3302384614944458,
+          0.6697615385055542
+        ]
+      ]
+    ],
+    "inverted": [
+      [
+        [
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ]
+    ]
+  },
+  "E05-offset": {
+    "mask": [
+      [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    ],
+    "correct": [
+      2.5,
+      3.0
+    ],
+    "upper_left": [
+      1.0,
+      1.5
+    ]
+  }
+}</code></pre><p><a href="../chapters/03.html#engineering-E05">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E06"><h3 id="topic-6">E06 · Identificadores de posición, ranuras de caché y RoPE: se llaman position, pero no son el mismo número</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E06": {
+    "once": [
+      6.123233995736766e-17,
+      1.0
+    ],
+    "twice": [
+      -1.0,
+      1.2246467991473532e-16
+    ],
+    "cache_slots": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "valid_positions": [
+      0,
+      1,
+      2
+    ]
+  }
+}</code></pre><p><a href="../chapters/03.html#engineering-E06">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E07"><h3 id="topic-7">E07 · Con attention_mask, ¿por qué generar con relleno a la derecha aún puede leer logits incorrectos?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E07": {
+    "indices": [
+      1,
+      2
+    ],
+    "correct": [
+      1,
+      1
+    ],
+    "last_column": [
+      0,
+      1
+    ]
+  }
+}</code></pre><p><a href="../chapters/06.html#engineering-E07">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E08"><h3 id="topic-8">E08 · Temperatura, Top-p y palabras prohibidas: ¿por qué «todos los parámetros iguales» puede no ser el mismo algoritmo de muestreo?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E08": {
+    "p_temperature1": [
+      0.6652409557748218,
+      0.24472847105479764,
+      0.09003057317038046
+    ],
+    "p_temperature2": [
+      0.506480391055654,
+      0.3071958857184984,
+      0.1863237232258476
+    ],
+    "top_p": 0.6,
+    "keep_before_temperature": [
+      0
+    ],
+    "keep_after_temperature": [
+      0,
+      1
+    ]
+  }
+}</code></pre><p><a href="../chapters/06.html#engineering-E08">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E09"><h3 id="topic-9">E09 · Sesgo oculto de la acumulación de gradientes: ¿se promedian lotes o tokens válidos?</h3><p>autograd y cross_entropy reales en CPU; DDP es una simulación algebraica de reducción media, sin entrenamiento distribuido.</p><pre><code>{
+  "E09-xent": {
+    "full_gradient": [
+      [
+        0.33608508110046387,
+        -0.33608511090278625
+      ],
+      [
+        -0.21314038336277008,
+        0.2131403535604477
+      ]
+    ],
+    "sum_normalized_gradient": [
+      [
+        0.33608508110046387,
+        -0.33608511090278625
+      ],
+      [
+        -0.21314038336277008,
+        0.2131403535604477
+      ]
+    ],
+    "mean_of_means_gradient": [
+      [
+        0.06571647524833679,
+        -0.06571649014949799
+      ],
+      [
+        -0.4587741494178772,
+        0.4587740898132324
+      ]
+    ],
+    "loss": 0.8043063879013062
+  },
+  "E09-ddp": {
+    "rank_sum_gradients": [
+      2.0,
+      -6.0
+    ],
+    "counts": [
+      1,
+      3
+    ],
+    "correct": -1.0,
+    "wrong": 0.0,
+    "scope": "algebra simulation; no distributed process group launched"
+  },
+  "E09": {
+    "token_counts": [
+      1,
+      3
+    ],
+    "correct_gradient": -1.0,
+    "mean_of_means_gradient": 0.0,
+    "scalar_loss_counterexample": {
+      "loss_sums": [
+        2.0,
+        3.0
+      ],
+      "counts": [
+        1,
+        3
+      ],
+      "correct": 1.25,
+      "wrong": 1.5
+    }
+  }
+}</code></pre><p><a href="../chapters/04.html#engineering-E09">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E10"><h3 id="topic-10">E10 · Precisión mixta y recálculo: un orden incorrecto desvía silenciosamente un paso del optimizador</h3><p>La llamada de recálculo de checkpoint usa PyTorch real; el ejemplo del orden de AMP es álgebra numérica, no entrenamiento de precisión mixta en GPU.</p><pre><code>{
+  "E10-checkpoint": {
+    "calls": 2,
+    "gradient": 0.9182168245315552
+  },
+  "E10": {
+    "correct_unscaled_clipping": 1.0,
+    "wrong_clip_then_unscale": 0.01
+  }
+}</code></pre><p><a href="../chapters/04.html#engineering-E10">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E11"><h3 id="topic-11">E11 · DPO compara realmente el cambio respecto a la política de referencia, no «la probabilidad de la buena respuesta»</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E11": {
+    "policy_gap": 2.0,
+    "reference_gap": 2.0,
+    "margin": 0.0,
+    "loss": 0.6931471805599453
+  }
+}</code></pre><p><a href="../chapters/05.html#engineering-E11">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E12"><h3 id="topic-12">E12 · Que el gradiente A de LoRA sea cero en el primer paso puede ser normal por diseño, no un fallo de propagación hacia atrás</h3><p>Rama de bajo rango real con autograd PyTorch; no se ejecutó un modelo PEFT completo.</p><pre><code>{
+  "E12": {
+    "A_gradient": [
+      [
+        0.0
+      ],
+      [
+        0.0
+      ]
+    ],
+    "B_gradient": [
+      [
+        -10.0,
+        -10.0
+      ]
+    ],
+    "delta_initial": [
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  }
+}</code></pre><p><a href="../chapters/05.html#engineering-E12">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E13"><h3 id="topic-13">E13 · Dos peligros de compartir caché: identidad incompleta y alias de objetos mutables</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E13": {
+    "aliased_b": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "copy_on_write_b": [
+      1,
+      2,
+      3
+    ],
+    "keys_differ": true
+  }
+}</code></pre><p><a href="../chapters/07.html#engineering-E13">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E14"><h3 id="topic-14">E14 · ¿Por qué softmax en línea debe reajustar la escala de los acumulados anteriores, en lugar de promediar las respuestas de los bloques?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E14": {
+    "correct": [
+      1.461030113080697,
+      0.5380588357249021
+    ],
+    "wrong_block_average": [
+      0.8655292893150024,
+      0.6344707106849976
+    ]
+  }
+}</code></pre><p><a href="../chapters/07.html#engineering-E14">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E15"><h3 id="topic-15">E15 · Baja el throughput pero la GPU está ocupada: puede ser recálculo por desalojo de KV, no falta de capacidad de cálculo</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E15": {
+    "capacity_positions": 12,
+    "before": 11,
+    "after": 14,
+    "requests": 3
+  }
+}</code></pre><p><a href="../chapters/08.html#engineering-E15">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E16"><h3 id="topic-16">E16 · Tras rechazar un borrador en muestreo especulativo, ¿por qué no se puede volver a muestrear directamente de la distribución objetivo?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E16": {
+    "target": [
+      0.8,
+      0.2
+    ],
+    "draft": [
+      0.2,
+      0.8
+    ],
+    "accepted_mass": [
+      0.2,
+      0.2
+    ],
+    "rejection_mass": 0.6,
+    "residual": [
+      1.0,
+      0.0
+    ],
+    "correct": [
+      0.8,
+      0.2
+    ],
+    "wrong_redraw_p": [
+      0.6799999999999999,
+      0.32
+    ]
+  }
+}</code></pre><p><a href="../chapters/08.html#engineering-E16">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E17"><h3 id="topic-17">E17 · Con previous_response_id, ¿por qué pueden perderse todavía reglas o contexto de herramientas?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E17": {
+    "typed_items": [
+      {
+        "type": "function_call",
+        "call_id": "c7",
+        "arguments": "{}"
+      },
+      {
+        "type": "function_call_output",
+        "call_id": "c7",
+        "output": "ok"
+      }
+    ],
+    "lossy_text_items": []
+  }
+}</code></pre><p><a href="../chapters/09.html#engineering-E17">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E18"><h3 id="topic-18">E18 · Final del modelo, final de la herramienta y tarea completada: tres formas de «terminar» no caben en el mismo booleano</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E18": {
+    "current": {
+      "epoch": 2,
+      "target": "b.py"
+    },
+    "late": {
+      "epoch": 1,
+      "target": "a.py",
+      "status": "ok"
+    },
+    "accepted": false
+  }
+}</code></pre><p><a href="../chapters/09.html#engineering-E18">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E19"><h3 id="topic-19">E19 · Llamadas de herramientas en streaming: integridad de UTF-8, de JSON y de la llamada son tres cosas distintas</h3><p>Decodificación incremental UTF-8 y ensamblaje reales de Python; sin conexión a streaming comercial.</p><pre><code>{
+  "E19-status": {
+    "item": {
+      "arguments": "{\"path\":\"a.py\"}",
+      "done": true,
+      "response_status": "incomplete"
+    },
+    "execute": false,
+    "scope": "conservative local policy; actual protocol contract still required"
+  },
+  "E19": {
+    "byte_count": 14,
+    "unicode_length": 12,
+    "assembled": {
+      "a": "{\"x\":1}",
+      "b": "{\"y\":2}"
+    }
+  }
+}</code></pre><p><a href="../chapters/10.html#engineering-E19">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E20"><h3 id="topic-20">E20 · ¿Por qué un JSON estricto tampoco puede impulsar directamente escrituras en la base de datos?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E20": {
+    "missing_field_valid": false,
+    "null_field_valid": true,
+    "unauthorized_path_executable": false
+  }
+}</code></pre><p><a href="../chapters/10.html#engineering-E20">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E21"><h3 id="topic-21">E21 · MCP conecta, pero faltan herramientas: ¿cómo comprobar inicialización, paginación y niveles de error paso a paso?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E21": {
+    "first_page": [
+      "read"
+    ],
+    "all": [
+      "read",
+      "write"
+    ]
+  }
+}</code></pre><p><a href="../chapters/11.html#engineering-E21">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E22"><h3 id="topic-22">E22 · Destinatario del token, alcance de permisos e ID de sesión: tres tipos de «credenciales» que no se sustituyen entre sí</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E22": {
+    "audience": "service-A",
+    "resource": "service-B",
+    "accepted": false
+  }
+}</code></pre><p><a href="../chapters/11.html#engineering-E22">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E23"><h3 id="topic-23">E23 · Pregunta sobre el código de Codex: ¿por qué distinguir registro, visibilidad, accesibilidad y autorización en cuatro pasos?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E23": {
+    "registered": [
+      "read",
+      "write"
+    ],
+    "visible": [
+      "read"
+    ],
+    "authorized": [
+      "read"
+    ],
+    "scope": "illustration, not Rust integration test"
+  }
+}</code></pre><p><a href="../chapters/12.html#engineering-E23">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E24"><h3 id="topic-24">E24 · Ambos se llaman subagentes: ¿por qué la «herencia» de Claude y Copilot no puede darse por intuida?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E24": {
+    "omitted": [
+      "read",
+      "write"
+    ],
+    "empty": [],
+    "unknown": [],
+    "scope": "documented Copilot rule modeled locally"
+  }
+}</code></pre><p><a href="../chapters/12.html#engineering-E24">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E25"><h3 id="topic-25">E25 · Semántica igual, caché invalidada: ¿cómo interactúan prefijos exactos, especificaciones de herramientas y campos dinámicos?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E25": {
+    "semantically_equal": true,
+    "byte_identical": false
+  }
+}</code></pre><p><a href="../chapters/13.html#engineering-E25">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E26"><h3 id="topic-26">E26 · El presupuesto de contexto cuenta más que los archivos leídos: reservar también para resultados de herramientas, generación y dependencias de evidencia</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E26": {
+    "total": 1000,
+    "static": 200,
+    "reserved_generation": 200,
+    "reserved_tool": 250,
+    "evidence_budget": 350,
+    "required_pair": 500
+  }
+}</code></pre><p><a href="../chapters/13.html#engineering-E26">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E27"><h3 id="topic-27">E27 · ¿Por qué no basta conservar el elemento del resultado de compactación que «parece más condensado»?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E27": {
+    "canonical_types": [
+      "message",
+      "compaction"
+    ],
+    "lossy_types": [
+      "compaction"
+    ]
+  }
+}</code></pre><p><a href="../chapters/14.html#engineering-E27">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E28"><h3 id="topic-28">E28 · Un resultado de herramienta llega durante la compactación: ¿cómo pierde progreso real una sustitución del historial?</h3><p>Actualizaciones condicionales reales con dos conexiones SQLite y estado en memoria simulado; sin tareas de producción.</p><pre><code>{
+  "E28-sql": {
+    "stale_revision": 10,
+    "changed_rows": 0,
+    "preserved": [
+      11,
+      "c7 succeeded"
+    ]
+  },
+  "E28": {
+    "snapshot": 10,
+    "current": 11,
+    "commit_allowed": false,
+    "summary": {
+      "version": 10,
+      "pending": [
+        "c7"
+      ]
+    }
+  }
+}</code></pre><p><a href="../chapters/14.html#engineering-E28">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E29"><h3 id="topic-29">E29 · Con la misma dimensión vectorial, ¿por qué consulta e índice pueden estar en espacios completamente distintos?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E29": {
+    "old_space_result": "A",
+    "mixed_space_result": "B",
+    "dimension": 2,
+    "scope": "basis counterexample, not e5 inference"
+  }
+}</code></pre><p><a href="../chapters/15.html#engineering-E29">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E30"><h3 id="topic-30">E30 · Con WHERE en la consulta vectorial, ¿por qué pueden devolverse menos de k elementos?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E30": {
+    "post_filter_top2": [],
+    "eligible_top2": [
+      [
+        "a",
+        "mine"
+      ],
+      [
+        "b",
+        "mine"
+      ]
+    ],
+    "scope": "candidate model, not pgvector index execution"
+  }
+}</code></pre><p><a href="../chapters/15.html#engineering-E30">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E31"><h3 id="topic-31">E31 · RRF no usa las puntuaciones originales: ¿por qué las fuentes duplicadas aún sesgan el orden?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E31": {
+    "two_independent_lists": {
+      "A": 0.03252247488101534,
+      "B": 0.03252247488101534
+    },
+    "duplicated_one_source": {
+      "A": 0.04891591750396616,
+      "B": 0.048651507139079855
+    }
+  }
+}</code></pre><p><a href="../chapters/16.html#engineering-E31">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E32"><h3 id="topic-32">E32 · Pertinente, citable y suficiente para respaldar la conclusión: la evidencia debe superar tres controles distintos</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E32": {
+    "evidence": {
+      "tier": "pro",
+      "version": 3,
+      "limit": 100
+    },
+    "claim_scope": {
+      "tier": "free",
+      "version": 3
+    },
+    "supports": false
+  }
+}</code></pre><p><a href="../chapters/16.html#engineering-E32">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E33"><h3 id="topic-33">E33 · Una unidad incorrecta de posición de código puede editar el carácter equivocado: UTF-8, UTF-16 y número de versión</h3><p>Recuento real de codificación; sin iniciar servidor de lenguaje ni editor.</p><pre><code>{
+  "E33": {
+    "text": "a😀b",
+    "position_of_b_codepoints": 2,
+    "utf16_units": 3,
+    "utf8_bytes": 5
+  }
+}</code></pre><p><a href="../chapters/17.html#engineering-E33">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E34"><h3 id="topic-34">E34 · HEAD no cambió: ¿por qué ya caducó la evidencia? Árbol de trabajo, buffers sin guardar e instantáneas del índice</h3><p>Repositorio y árbol Git temporales reales; sin operar el repositorio del usuario.</p><pre><code>{
+  "E34-git": {
+    "same_head": true,
+    "diff": "diff --git a/a.py b/a.py\nindex bafc5d9..7a56633 100644\n--- a/a.py\n+++ b/a.py\n@@ -1 +1 @@\n-x=1\n+x=2",
+    "scope": "actual local temporary Git repository"
+  },
+  "E34": {
+    "head": "same-commit",
+    "old_hash": "0e587b1d65d6bb203adbe6b9d1d0fbd820d1bba03ea0d54e1bc61585dcbd5458",
+    "new_hash": "eb55118f6a7e3d350d3e51189c6d475f85d53e79a4c0f9542b36f48a34ed69e2",
+    "scope": "actual file edit; Git HEAD represented by fixed label"
+  }
+}</code></pre><p><a href="../chapters/17.html#engineering-E34">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E35"><h3 id="topic-35">E35 · «Cuándo fue cierto» y «cuándo se supo»: distinguir los tiempos de memoria</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E35": {
+    "at_day6_known_day6": 10,
+    "at_day6_known_day9": 20
+  }
+}</code></pre><p><a href="../chapters/18.html#engineering-E35">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E36"><h3 id="topic-36">E36 · Eliminar el original no equivale a olvidar: resúmenes, cachés y entradas de experiencia también tienen dependencias</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E36": {
+    "invalidated": [
+      "answer_cache",
+      "chunk",
+      "doc",
+      "memory",
+      "summary"
+    ]
+  }
+}</code></pre><p><a href="../chapters/18.html#engineering-E36">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E37"><h3 id="topic-37">E37 · Si un Skill no surte efecto, ¿por qué modificar description repetidamente suele actuar en la capa equivocada?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E37": {
+    "exists": true,
+    "discovered": true,
+    "selected": false,
+    "body_loaded": false,
+    "used": false
+  }
+}</code></pre><p><a href="../chapters/19.html#engineering-E37">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E38"><h3 id="topic-38">E38 · ¿Un modelo pequeño con fallback ahorra dinero de verdad? La clave es poder detectar los errores</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E38": {
+    "cheap_cost": 1.0,
+    "fallback_cost": 5.0,
+    "rate": 0.4,
+    "expected_cost": 3.0,
+    "synthetic": true
+  }
+}</code></pre><p><a href="../chapters/19.html#engineering-E38">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E39"><h3 id="topic-39">E39 · Dos personas modifican archivos distintos: ¿por qué puede romperse el sistema al integrarlos?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E39": {
+    "producer_key": "timeout_ms",
+    "consumer_key": "timeout_s",
+    "text_overlap": false,
+    "integration_fails": true
+  }
+}</code></pre><p><a href="../chapters/20.html#engineering-E39">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E40"><h3 id="topic-40">E40 · Dos agentes revisores dan su aprobación: ¿por qué no se pueden multiplicar directamente sus tasas de error?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E40": {
+    "observed_joint": 0.2,
+    "independence_guess": 0.04000000000000001,
+    "synthetic": true
+  }
+}</code></pre><p><a href="../chapters/20.html#engineering-E40">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E41"><h3 id="topic-41">E41 · La acción externa tuvo éxito, pero el registro no alcanzó a confirmarlo: ¿por qué una transacción local no garantiza una sola ejecución?</h3><p>Código de salida 17 real, dos archivos SQLite y clave idempotente estable; el sistema posterior es un servicio local simulado, no pagos ni negocio externo.</p><pre><code>{
+  "E41": {
+    "crash_exit": 17,
+    "unsafe_effects": 2,
+    "keyed_effects": 1,
+    "scope": "two local SQLite stores + actual subprocess os._exit; not network service"
+  }
+}</code></pre><p><a href="../chapters/21.html#engineering-E41">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E42"><h3 id="topic-42">E42 · Tres capas reintentan tres veces cada una: ¿por qué la inferior recibe 27 llamadas?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E42": {
+    "per_layer_attempts": [
+      3,
+      3,
+      3
+    ],
+    "max_leaf_calls": 27
+  },
+  "E42-key": {
+    "reuse_allowed": false
+  }
+}</code></pre><p><a href="../chapters/21.html#engineering-E42">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E43"><h3 id="topic-43">E43 · El comando de pruebas termina con 0: ¿por qué puede no haberse ejecutado ninguna prueba válida?</h3><p>Subproceso pytest real sin pruebas recogidas y con todas skip; no ejecuta código del usuario.</p><pre><code>{
+  "E43": {
+    "no_tests_exit": 5,
+    "all_skip_exit": 0,
+    "all_skip_output": "s                                                                        [100%]\n1 skipped in 0.00s"
+  }
+}</code></pre><p><a href="../chapters/22.html#engineering-E43">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E44"><h3 id="topic-44">E44 · Que la instantánea parezca igual no garantiza las propiedades: ¿cómo hacer que las pruebas maten implementaciones erróneas?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E44": {
+    "weak_inputs": [
+      1,
+      2
+    ],
+    "mutant_survives": true,
+    "strong_inputs": [
+      -1,
+      0,
+      1
+    ],
+    "mutant_killed": true
+  }
+}</code></pre><p><a href="../chapters/22.html#engineering-E44">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E45"><h3 id="topic-45">E45 · La tasa de éxito sube unos puntos: ¿por qué aún no puede declararse efectiva la optimización?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E45-bootstrap": {
+    "trials": 10000,
+    "seed": 20261021,
+    "paired_task_delta": [
+      0,
+      0,
+      -1,
+      1,
+      1,
+      0,
+      0,
+      0
+    ],
+    "mean": 0.125,
+    "percentile_interval": [
+      -0.25,
+      0.5
+    ],
+    "scope": "teaching 8-task dataset, not population certification"
+  },
+  "E45": {
+    "old": [
+      1,
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0
+    ],
+    "new": [
+      1,
+      1,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0
+    ],
+    "improvements": 2,
+    "regressions": 1,
+    "mean_delta": 0.125,
+    "synthetic": true
+  }
+}</code></pre><p><a href="../chapters/23.html#engineering-E45">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E46"><h3 id="topic-46">E46 · Punto ciego del evaluador LLM: al intercambiar izquierda y derecha cambia el ganador</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E46": {
+    "original_order_winner": "A",
+    "swapped_order_winner": "B",
+    "synthetic_judge": "always chooses left"
+  }
+}</code></pre><p><a href="../chapters/23.html#engineering-E46">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E47"><h3 id="topic-47">E47 · La ruta está en un directorio permitido: ¿por qué puede salirse de sus límites? symlink y sustitución tras comprobar</h3><p>Resolución real de symlink temporal; sin prueba de carga de la llamada openat2.</p><pre><code>{
+  "E47": {
+    "lexical_inside": true,
+    "resolved_inside": false,
+    "read_observed": "harmless",
+    "scope": "harmless temporary symlink, not race-safe sandbox implementation"
+  }
+}</code></pre><p><a href="../chapters/24.html#engineering-E47">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E48"><h3 id="topic-48">E48 · El usuario ya confirmó: ¿sigue válida la aprobación si el modelo modifica los parámetros?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E48": {
+    "unchanged_accepted": true,
+    "changed_accepted": false
+  }
+}</code></pre><p><a href="../chapters/24.html#engineering-E48">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E49"><h3 id="topic-49">E49 · Tiempo de reloj, duración total de Span, p95 y coste por éxito: métricas de nombres parecidos cuyo cálculo erróneo lleva a elegir mal la optimización</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E49-cost": {
+    "cost_per_success": 6.0,
+    "successes_only_wrong": 1.0
+  },
+  "E49": {
+    "wall": 7.0,
+    "sum_spans": 10.0,
+    "mean_group_p95": 50.5,
+    "pooled_p95": 100
+  }
+}</code></pre><p><a href="../chapters/25.html#engineering-E49">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E50"><h3 id="topic-50">E50 · ¿Por qué revertir solo el nombre del modelo puede empeorar el desorden? La versión del sistema es un conjunto de vectores</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E50-schema": {
+    "v1_ms": 5000,
+    "v2_ms": 5000,
+    "unknown_version_rejected": true
+  },
+  "E50": {
+    "old": {
+      "model": "m1",
+      "template": "t1",
+      "index": "i1",
+      "tools": "s1"
+    },
+    "new": {
+      "model": "m1",
+      "template": "t1",
+      "index": "i2",
+      "tools": "s1"
+    },
+    "same_model": true,
+    "same_system": false
+  }
+}</code></pre><p><a href="../chapters/25.html#engineering-E50">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E51"><h3 id="topic-51">E51 · ¿Qué falta entre «el material permite un reembolso» y «se puede ejecutar ahora el reembolso»?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E51": {
+    "planned_version": 7,
+    "current_version": 8,
+    "execute": false
+  }
+}</code></pre><p><a href="../chapters/26.html#engineering-E51">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E52"><h3 id="topic-52">E52 · ¿Por qué no se puede hacer clic directamente con las coordenadas de una captura? Escalado, DPR y cambios de página</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E52": {
+    "screenshot": [
+      1600,
+      1200
+    ],
+    "css_viewport": [
+      800,
+      600
+    ],
+    "pixel_point": [
+      1000,
+      600
+    ],
+    "css_point": [
+      500.0,
+      300.0
+    ],
+    "invariant": "coordinate mapping alone does not validate current DOM state"
+  }
+}</code></pre><p><a href="../chapters/26.html#engineering-E52">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E53"><h3 id="topic-53">E53 · Responder solo a preguntas seguras: ¿por qué la mayor exactitud puede ser solo menor cobertura?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E53": {
+    "overall_accuracy": 0.5,
+    "selective_accuracy": 0.8,
+    "coverage": 0.5,
+    "synthetic": true
+  }
+}</code></pre><p><a href="../chapters/27.html#engineering-E53">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E54"><h3 id="topic-54">E54 · ¿Por qué el punto más brillante del mapa de atención puede no ser la causa principal de la respuesta?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E54": {
+    "weights": [
+      0.9,
+      0.1
+    ],
+    "values": [
+      0.0,
+      100.0
+    ],
+    "contributions": [
+      0.0,
+      10.0
+    ],
+    "scope": "scalar aggregation counterexample, not real causal interpretability"
+  }
+}</code></pre><p><a href="../chapters/27.html#engineering-E54">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E55"><h3 id="topic-55">E55 · ¿Por qué un cómputo de entrenamiento óptimo no garantiza el menor coste de todo el ciclo de vida del producto?</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E55": {
+    "extra_training_cost": 1000.0,
+    "inference_saving": 0.01,
+    "break_even_calls": 100000.0,
+    "synthetic": true
+  }
+}</code></pre><p><a href="../chapters/28.html#engineering-E55">Volver a la explicación del texto y los contraejemplos →</a></p></section><section class="eng-local-result" id="proof-E56"><h3 id="topic-56">E56 · El diagnóstico profundo termina al identificar el invariante que falla, no al «cambiar a un modelo más capaz»</h3><p>Simulaciones didácticas de álgebra, estructuras de datos o contratos de ejecución con entradas explícitas; no son integraciones ni mediciones de rendimiento de los productos de los fabricantes correspondientes.</p><pre><code>{
+  "E56-mutants": {
+    "killed": [
+      "mean-of-means",
+      "unconditional-compaction-commit",
+      "cache-position-reset"
+    ]
+  },
+  "E56": {
+    "factorial": {
+      "old_old": 0.6,
+      "new_old": 0.6,
+      "old_new": 0.6,
+      "new_new": 0.9
+    },
+    "interaction": 0.30000000000000004,
+    "synthetic": true
+  }
+}</code></pre><p><a href="../chapters/28.html#engineering-E56">Volver a la explicación del texto y los contraejemplos →</a></p></section><h2 id="delivery-validation">Comprobaciones de contenido e interfaz de lectura</h2><p>El contenido nuevo incluye 56 problemas de ingeniería y 8 casos de fallo. Se ejecutaron realmente 69 pruebas nuevas y 323 pruebas unitarias existentes, todas aprobadas; verifican los programas y contraejemplos indicados, no demuestran el mismo comportamiento en todos los modelos o entornos de negocio.</p><p>Las comprobaciones cubren 5 clases de página, cuatro viewports 390／1440／1920／2560, despliegue de respuestas, búsqueda de problemas de ingeniería, navegación del índice y entradas de animación originales. El navegador impedía navegar por file y HTTP local, así que se renderizaron HTML, CSS, scripts y datos locales en línea; rutas, anclas y recursos del archivo único se comprobaron aparte. No se afirma haber probado en el Mac o Safari del usuario.</p><p>El registro completo de verificación se conserva en el paquete <code>engineering/QA.json</code> y <code>engineering/results/</code>. Los experimentos nuevos no modifican estilos de pantalla ancha, scripts de navegación, programas matemáticos ni datos de animación existentes.</p><h2 id="lab-code">Código completo</h2><p>Código y resultados de página proceden de una misma construcción. Solo se desarrolla el programa de pruebas nuevo; los experimentos anteriores siguen en sus capítulos. No es una biblioteca de seguridad de producción ni debe usarse sin adaptación con efectos reales.</p><section id="code-test_engineering-py"><h3 id="topic-57">test_engineering.py</h3><pre><code class="language-python">"""CPU/stdlib counterexamples for the Chinese engineering textbook.
+
+No external model, GPU, cloud API, production filesystem, or vector database is used.
+Each test fixes its input, compares a valid implementation with a deliberate mutant,
+and records observable results. Run with: python run.py
+"""
+from __future__ import annotations
+import codecs, hashlib, json, math, os, sqlite3, subprocess, sys, tempfile, unittest
+from collections import defaultdict
+from pathlib import Path
+import torch
+from torch import nn
+from torch.nn import functional as F
+
+OBS: dict[str, dict] = {}
+def record(name: str, **values):
+    OBS[name] = values
+
+def softmax(xs):
+    if not xs or not any(math.isfinite(x) for x in xs):
+        raise ValueError('no finite candidate')
+    m = max(xs); ws = [math.exp(x-m) for x in xs]; z = sum(ws)
+    return [x/z for x in ws]
+
+def top_p(ps, cutoff):
+    total = 0.; kept = []
+    for i in sorted(range(len(ps)), key=lambda j: -ps[j]):
+        kept.append(i); total += ps[i]
+        if total &gt;= cutoff: break
+    return kept
+
+def masked_attention(q,k,v,allowed):
+    weights = F.softmax((q @ k.transpose(-2,-1))/math.sqrt(q.shape[-1])
+                         + torch.where(allowed, 0., -torch.inf), dim=-1)
+    return weights @ v
+
+def online_attention(scores, values, block_size):
+    # One row, no mask: each block is incorporated using the CURRENT running max.
+    m = -math.inf; denominator = 0.; numerator = [0.]*len(values[0])
+    for start in range(0, len(scores), block_size):
+        ss=scores[start:start+block_size]; vv=values[start:start+block_size]
+        next_m=max(m,max(ss)); scale=math.exp(m-next_m)
+        ws=[math.exp(s-next_m) for s in ss]
+        denominator=denominator*scale+sum(ws)
+        numerator=[n*scale+sum(w*v[d] for w,v in zip(ws,vv))
+                   for d,n in enumerate(numerator)]
+        m=next_m
+    return [n/denominator for n in numerator]
+
+def rrf(rankings, k=60):
+    out=defaultdict(float)
+    for ranking in rankings:
+        seen=set()
+        for rank, identity in enumerate(ranking,1):
+            if identity in seen: continue
+            seen.add(identity); out[identity]+=1/(k+rank)
+    return dict(out)
+
+def digest(obj):
+    return hashlib.sha256(json.dumps(obj,sort_keys=True,ensure_ascii=False,
+                                    separators=(',',':')).encode()).hexdigest()
+
+class ModelTests(unittest.TestCase):
+    def setUp(self):
+        torch.manual_seed(12); torch.set_num_threads(1)
+
+    def test_E01_duplicate_template_markers(self):
+        # A teaching tokenizer already received the model-specific template markers.
+        templated=[1,8,9,2]
+        correct=templated[:]; wrong=[1]+templated+[2]
+        self.assertEqual(len(correct),4); self.assertNotEqual(correct,wrong)
+        self.assertEqual(wrong.count(1),2)
+        record('E01',correct=correct,wrong=wrong,scope='teaching token list, not HF tokenizer')
+
+    def test_E02_vocab_resize_is_not_width(self):
+        embedding=nn.Embedding(6,4)
+        with self.assertRaises(IndexError): embedding(torch.tensor([6]))
+        grown=nn.Embedding(7,4)
+        with torch.no_grad(): grown.weight[:6].copy_(embedding.weight)
+        self.assertEqual(list(grown(torch.tensor([6])).shape),[1,4])
+        self.assertTrue(torch.equal(grown.weight[:6],embedding.weight))
+        record('E02',before=[6,4],after=[7,4],new_id=6)
+
+    def test_E03_linear_storage_transpose(self):
+        x=torch.tensor([[1.,2.]])
+        w=torch.tensor([[1.,3.],[2.,4.]]) # teaching [in,out]
+        layer=nn.Linear(2,2,bias=False)
+        with torch.no_grad(): layer.weight.copy_(w.T)
+        self.assertTrue(torch.equal(layer(x),x@w))
+        self.assertFalse(torch.equal(layer(x),x@w.T))
+        record('E03-linear',correct=layer(x).tolist(),wrong=(x@w.T).tolist())
+
+    def test_E03_functional_dropout_ignores_module_eval(self):
+        class Attention(nn.Module):
+            def forward(self,q,k,v,p): return F.scaled_dot_product_attention(q,k,v,dropout_p=p)
+        m=Attention().eval(); q=torch.zeros(1,1,1,2); k=torch.zeros(1,1,4,2)
+        v=torch.ones(1,1,4,1)
+        correct=m(q,k,v,0.0)
+        torch.manual_seed(3); wrong=m(q,k,v,0.5)
+        self.assertTrue(torch.equal(correct,torch.ones_like(correct)))
+        # No assumption that every random seed must differ: an ensemble finds differences.
+        outputs=[]
+        for seed in range(16):
+            torch.manual_seed(seed); outputs.append(float(m(q,k,v,0.5).item()))
+        self.assertGreater(len(set(outputs)),1)
+        record('E03-dropout',eval_without_dropout=correct.tolist(),outputs_with_p_half=outputs)
+
+    def test_E04_all_masked_row_has_no_valid_distribution(self):
+        finite=F.softmax(torch.tensor([-1e9,-1e9]),dim=0)
+        infinite=F.softmax(torch.tensor([-torch.inf,-torch.inf]),dim=0)
+        self.assertEqual(finite.tolist(),[0.5,0.5]); self.assertTrue(torch.isnan(infinite).all())
+        with self.assertRaises(ValueError): softmax([-math.inf,-math.inf])
+        q=torch.zeros(1,1,1,2); k=torch.zeros(1,1,2,2);v=torch.ones(1,1,2,1)
+        native=F.scaled_dot_product_attention(q,k,v,attn_mask=torch.zeros(1,2,dtype=torch.bool))
+        record('E04',finite_fill_result=finite.tolist(),manual_minus_inf_nan=True,
+               native_sdpa_observed=native.tolist(),scope='native result not generalized to all backends')
+
+    def test_E05_bool_mask_polarity(self):
+        x=torch.tensor([[[1.,0.],[0.,1.]]]); n=nn.MultiheadAttention(2,1,batch_first=True,bias=False).eval()
+        with torch.no_grad():
+            n.in_proj_weight.copy_(torch.cat([torch.eye(2)]*3)); n.out_proj.weight.copy_(torch.eye(2))
+        allow=torch.tensor([[True,False],[True,True]])
+        mha,_=n(x,x,x,attn_mask=~allow,need_weights=False)
+        q=x.unsqueeze(1)
+        sdpa=F.scaled_dot_product_attention(q,q,q,attn_mask=allow).squeeze(1)
+        wrong=F.scaled_dot_product_attention(q,q,q,attn_mask=~allow).squeeze(1)
+        self.assertTrue(torch.allclose(mha,sdpa,atol=1e-7)); self.assertFalse(torch.allclose(sdpa,wrong))
+        record('E05-polarity',correct=sdpa.tolist(),inverted=wrong.tolist())
+
+    def test_E05_nonsquare_cache_causal_offset(self):
+        # Two NEW queries after three cached positions: absolute q positions 3,4.
+        q=torch.zeros(1,1,2,1); k=torch.zeros(1,1,5,1)
+        v=torch.arange(1.,6.).reshape(1,1,5,1)
+        allow=torch.arange(5)[None,:] &lt;= torch.arange(3,5)[:,None]
+        correct=F.scaled_dot_product_attention(q,k,v,attn_mask=allow)
+        wrong=F.scaled_dot_product_attention(q,k,v,is_causal=True)
+        self.assertEqual(correct.flatten().tolist(),[2.5,3.0])
+        self.assertEqual(wrong.flatten().tolist(),[1.,1.5])
+        record('E05-offset',mask=allow.tolist(),correct=correct.flatten().tolist(),upper_left=wrong.flatten().tolist())
+
+    def test_E06_rope_double_rotation(self):
+        def rot(x,a): return [x[0]*math.cos(a)-x[1]*math.sin(a),x[0]*math.sin(a)+x[1]*math.cos(a)]
+        x=[1.,0.]; once=rot(x,math.pi/2); twice=rot(once,math.pi/2)
+        self.assertAlmostEqual(once[1],1); self.assertAlmostEqual(twice[0],-1)
+        record('E06',once=once,twice=twice,cache_slots=[0,1,2,3,4],valid_positions=[0,1,2])
+
+    def test_E07_padding_last_valid_not_last_column(self):
+        logits=torch.tensor([[[4.,0.],[0.,4.],[9.,0.]],[[4.,0.],[4.,0.],[0.,4.]]])
+        valid=torch.tensor([[1,1,0],[1,1,1]],dtype=torch.bool)
+        indices=torch.arange(3).expand_as(valid).masked_fill(~valid,-1).max(-1).values
+        right=logits[torch.arange(2),indices].argmax(-1)
+        wrong=logits[:,-1].argmax(-1)
+        self.assertEqual(right.tolist(),[1,1]); self.assertEqual(wrong.tolist(),[0,1])
+        record('E07',indices=indices.tolist(),correct=right.tolist(),last_column=wrong.tolist())
+
+    def test_E08_top_p_temperature_noncommute(self):
+        logits=[2.,1.,0.]; base=softmax(logits); warm=softmax([x/2 for x in logits])
+        self.assertEqual(top_p(base,.6),[0]); self.assertEqual(top_p(warm,.6),[0,1])
+        record('E08',p_temperature1=base,p_temperature2=warm,top_p=.6,
+               keep_before_temperature=top_p(base,.6),keep_after_temperature=top_p(warm,.6))
+
+    def test_E09_token_weighted_gradient_accumulation(self):
+        w=torch.tensor(1.,requires_grad=True)
+        a=(w*torch.tensor([1.])-torch.tensor([0.]))**2
+        b=(w*torch.tensor([1.,1.,1.])-torch.tensor([2.,2.,2.]))**2
+        good=(a.sum()+b.sum())/4; good.backward(); gg=w.grad.item()
+        w.grad=None; bad=((w-0)**2+((w-2)**2))/2; bad.backward(); bg=w.grad.item()
+        self.assertEqual(gg,-1.);self.assertEqual(bg,0.)
+        record('E09',token_counts=[1,3],correct_gradient=gg,mean_of_means_gradient=bg,
+               scalar_loss_counterexample={'loss_sums':[2.,3.],'counts':[1,3],'correct':1.25,'wrong':1.5})
+
+    def test_E09_ddp_denominator_simulation(self):
+        # DDP averages rank gradients: scale local SUM by world_size/global_count.
+        sums=[2.,-6.]; counts=[1,3]; world=2
+        corrected=sum(world*g/sum(counts) for g in sums)/world
+        wrong=sum(g/n for g,n in zip(sums,counts))/world
+        self.assertEqual(corrected,-1.);self.assertEqual(wrong,0.)
+        record('E09-ddp',rank_sum_gradients=sums,counts=counts,correct=corrected,wrong=wrong,
+               scope='algebra simulation; no distributed process group launched')
+
+    def test_E10_clip_scaled_gradient_wrong(self):
+        grad=10.;scale=100.;threshold=1.
+        correct=min(grad,threshold); wrong=min(grad*scale,threshold)/scale
+        self.assertEqual(correct,1.);self.assertEqual(wrong,.01)
+        record('E10',correct_unscaled_clipping=correct,wrong_clip_then_unscale=wrong)
+
+    def test_E10_checkpoint_recomputes(self):
+        from torch.utils.checkpoint import checkpoint
+        calls=[];x=torch.tensor([.5],requires_grad=True)
+        def fn(a): calls.append('forward');return a.sin()*a
+        y=checkpoint(fn,x,use_reentrant=False);y.sum().backward()
+        self.assertGreater(len(calls),1)
+        self.assertAlmostEqual(x.grad.item(),math.sin(.5)+.5*math.cos(.5),places=6)
+        record('E10-checkpoint',calls=len(calls),gradient=x.grad.item())
+
+    def test_E11_dpo_requires_reference_ratio(self):
+        # Chosen/rejected log p each shifted by reference likelihood.
+        lp_ch,lp_re=-2.,-4.;lr_ch,lr_re=-1.,-3.;beta=.1
+        margin=beta*((lp_ch-lp_re)-(lr_ch-lr_re));loss=math.log1p(math.exp(-margin))
+        self.assertEqual(margin,0.);self.assertAlmostEqual(loss,math.log(2))
+        record('E11',policy_gap=2.,reference_gap=2.,margin=margin,loss=loss)
+
+    def test_E12_zero_B_zero_A_gradient_first_step(self):
+        # row-vector convention: x @ A @ B, zero B, nonzero A.
+        x=torch.tensor([[1.,2.]])
+        a=torch.tensor([[1.],[2.]],requires_grad=True)
+        b=torch.tensor([[0.,0.]],requires_grad=True)
+        ((x@a@b-torch.ones(1,2))**2).sum().backward()
+        self.assertTrue(torch.equal(a.grad,torch.zeros_like(a)));self.assertTrue((b.grad!=0).any())
+        record('E12',A_gradient=a.grad.tolist(),B_gradient=b.grad.tolist(),delta_initial=[[0.,0.]])
+
+    def test_E13_shared_cache_mutation_and_identity(self):
+        prefix=[1,2,3];a=prefix;b=prefix;a.append(4)
+        self.assertEqual(b,[1,2,3,4])
+        clean=[1,2,3]; a=clean.copy(); b=clean.copy();a.append(4)
+        self.assertEqual(b,[1,2,3])
+        base={'tokens':[1,2,3],'adapter':'a','tenant':'T1'}
+        changed={**base,'adapter':'b'}
+        self.assertNotEqual(digest(base),digest(changed))
+        record('E13',aliased_b=prefix,copy_on_write_b=b,keys_differ=True)
+
+    def test_E14_online_softmax_stability(self):
+        scores=[1000.,1001.,1008.,1007.];v=[[1.,0.],[0.,1.],[2.,0.],[0.,2.]]
+        reference=[sum(w*x[d] for w,x in zip(softmax(scores),v)) for d in range(2)]
+        for size in [1,2,3,4]:
+            got=online_attention(scores,v,size)
+            self.assertTrue(all(abs(a-b)&lt;1e-12 for a,b in zip(reference,got)))
+        # invalid equal average of two independently normalized blocks
+        wrong=[(online_attention(scores[:2],v[:2],2)[d]+online_attention(scores[2:],v[2:],2)[d])/2 for d in range(2)]
+        self.assertTrue(any(abs(a-b)&gt;.1 for a,b in zip(reference,wrong)))
+        record('E14',correct=reference,wrong_block_average=wrong)
+
+    def test_E15_token_capacity_not_request_count(self):
+        cap=12;current=[4,4,3];next_lengths=[n+1 for n in current]
+        self.assertLessEqual(sum(current),cap);self.assertGreater(sum(next_lengths),cap)
+        record('E15',capacity_positions=cap,before=sum(current),after=sum(next_lengths),requests=3)
+
+    def test_E16_speculative_residual_distribution(self):
+        p=[.8,.2];q=[.2,.8]
+        accepted=[min(a,b) for a,b in zip(p,q)]
+        reject=1-sum(accepted); residual=[max(a-b,0) for a,b in zip(p,q)]
+        residual=[a/sum(residual) for a in residual]
+        correct=[a+reject*r for a,r in zip(accepted,residual)]
+        wrong=[a+reject*t for a,t in zip(accepted,p)]
+        self.assertTrue(all(abs(a-b)&lt;1e-12 for a,b in zip(correct,p)))
+        self.assertAlmostEqual(wrong[0],.68)
+        record('E16',target=p,draft=q,accepted_mass=accepted,rejection_mass=reject,
+               residual=residual,correct=correct,wrong_redraw_p=wrong)
+
+
+class SystemTests(unittest.TestCase):
+    def test_E17_history_preserves_typed_items(self):
+        history=[{'type':'function_call','call_id':'c7','arguments':'{}'},
+                 {'type':'function_call_output','call_id':'c7','output':'ok'}]
+        text_only=[x for x in history if x['type']=='message']
+        self.assertEqual(text_only,[]);self.assertEqual(history[0]['call_id'],history[1]['call_id'])
+        record('E17',typed_items=history,lossy_text_items=text_only)
+
+    def test_E18_late_result_epoch(self):
+        state={'epoch':2,'target':'b.py'};result={'epoch':1,'target':'a.py','status':'ok'}
+        accepted=result['epoch']==state['epoch']
+        self.assertFalse(accepted);record('E18',current=state,late=result,accepted=accepted)
+
+    def test_E19_utf8_and_interleaved_calls(self):
+        payload='{"text":"爱"}'.encode(); decoder=codecs.getincrementaldecoder('utf-8')()
+        parts=[decoder.decode(bytes([b])) for b in payload]+[decoder.decode(b'',final=True)]
+        self.assertEqual(json.loads(''.join(parts)),{'text':'爱'})
+        chunks=[('a','{"x":'),('b','{"y":'),('a','1}'),('b','2}')];buffers=defaultdict(str)
+        for key,chunk in chunks: buffers[key]+=chunk
+        self.assertEqual(json.loads(buffers['a']),{'x':1});self.assertEqual(json.loads(buffers['b']),{'y':2})
+        with self.assertRaises(json.JSONDecodeError): json.loads(''.join(c for _,c in chunks))
+        record('E19',byte_count=len(payload),unicode_length=len(payload.decode()),assembled=dict(buffers))
+
+    def test_E19_terminal_status_gates_execution(self):
+        item={'arguments':'{"path":"a.py"}','done':True,'response_status':'incomplete'}
+        authorized=True
+        execute=item['done'] and item['response_status']=='completed' and authorized
+        self.assertFalse(execute)
+        record('E19-status',item=item,execute=execute,scope='conservative local policy; actual protocol contract still required')
+
+    def test_E20_missing_null_and_permission(self):
+        def valid(x): return set(x)=={'path','note'} and isinstance(x['path'],str) and (x['note'] is None or isinstance(x['note'],str))
+        self.assertFalse(valid({'path':'a.py'}));self.assertTrue(valid({'path':'secret.txt','note':None}))
+        allowed={'a.py'}
+        self.assertFalse('secret.txt' in allowed)
+        record('E20',missing_field_valid=False,null_field_valid=True,unauthorized_path_executable=False)
+
+    def test_E21_tool_discovery_pagination(self):
+        pages={None:{'tools':['read'],'nextCursor':'p2'},'p2':{'tools':['write']}}
+        cursor=None; result=[]
+        while True:
+            page=pages[cursor];result+=page['tools'];cursor=page.get('nextCursor')
+            if cursor is None:break
+        self.assertEqual(result,['read','write']);self.assertNotEqual(pages[None]['tools'],result)
+        record('E21',first_page=pages[None]['tools'],all=result)
+
+    def test_E22_audience_not_session(self):
+        # This checks policy on already-verified claims, NOT JWT signature validation.
+        claims={'aud':'service-A','scope':['read'],'sub':'u1'}
+        accepted=claims['aud']=='service-B' and 'read' in claims['scope']
+        self.assertFalse(accepted)
+        record('E22',audience=claims['aud'],resource='service-B',accepted=accepted)
+
+    def test_E23_registered_visible_executable_are_separate(self):
+        registered={'read','write'};visible={'read'};authorized={'read'}
+        self.assertTrue('write' in registered);self.assertFalse('write' in visible and 'write' in authorized)
+        record('E23',registered=sorted(registered),visible=sorted(visible),authorized=sorted(authorized),scope='illustration, not Rust integration test')
+
+    def test_E24_omitted_empty_tools(self):
+        all_tools=['read','write']
+        def resolve(value):return all_tools if value is None or value==['*'] else [x for x in value if x in all_tools]
+        self.assertEqual(resolve(None),all_tools);self.assertEqual(resolve([]),[]);self.assertEqual(resolve(['typo']),[])
+        record('E24',omitted=resolve(None),empty=resolve([]),unknown=resolve(['typo']),scope='documented Copilot rule modeled locally')
+
+    def test_E25_semantics_not_exact_serialization(self):
+        a='{"a":1,"b":2}';b='{"b":2,"a":1}'
+        self.assertEqual(json.loads(a),json.loads(b));self.assertNotEqual(a,b)
+        self.assertEqual(digest(json.loads(a)),digest(json.loads(b)))
+        record('E25',semantically_equal=True,byte_identical=False)
+
+    def test_E26_budget_dependency_closure(self):
+        total=1000;static=200;generation=200;tool_future=250;available=total-static-generation-tool_future
+        self.assertEqual(available,350)
+        candidates={'definition':200,'implementation':300}
+        self.assertGreater(sum(candidates.values()),available)
+        record('E26',total=total,static=static,reserved_generation=generation,
+               reserved_tool=tool_future,evidence_budget=available,required_pair=sum(candidates.values()))
+
+    def test_E27_compacted_window_not_one_item(self):
+        output=[{'type':'message','role':'user','text':'do not publish'},
+                {'type':'compaction','encrypted_content':'opaque'}]
+        lossy=output[-1:]
+        self.assertEqual(len(lossy),1);self.assertEqual(len(output),2)
+        record('E27',canonical_types=[x['type'] for x in output],lossy_types=[x['type'] for x in lossy])
+
+    def test_E28_compaction_compare_and_swap(self):
+        version=10;captured=version;summary={'version':captured,'pending':['c7']}
+        version+=1 # tool completion arrived during summary generation
+        committed=captured==version
+        self.assertFalse(committed)
+        record('E28',snapshot=captured,current=version,commit_allowed=committed,summary=summary)
+
+    def test_E29_same_dimension_different_vector_space(self):
+        docs={'A':[1.,0.],'B':[0.,1.]};q1=[1.,0.];q2=[0.,1.] # same semantics, a different encoder's basis
+        choose=lambda q:max(docs,key=lambda k:sum(x*y for x,y in zip(q,docs[k])))
+        self.assertEqual(choose(q1),'A');self.assertEqual(choose(q2),'B')
+        record('E29',old_space_result=choose(q1),mixed_space_result=choose(q2),dimension=2,scope='basis counterexample, not e5 inference')
+
+    def test_E30_filter_after_topk_underfills(self):
+        hits=[('x1','other'),('x2','other'),('a','mine'),('b','mine')]
+        post=[x for x in hits[:2] if x[1]=='mine']
+        pre=[x for x in hits if x[1]=='mine'][:2]
+        self.assertEqual(post,[]);self.assertEqual(len(pre),2)
+        record('E30',post_filter_top2=post,eligible_top2=pre,scope='candidate model, not pgvector index execution')
+
+    def test_E31_rrf_duplicate_evidence(self):
+        a=rrf([['A','B'],['B','A']]);wrong=rrf([['A','B'],['A','B'],['B','A']])
+        self.assertAlmostEqual(a['A'],a['B']);self.assertGreater(wrong['A'],wrong['B'])
+        record('E31',two_independent_lists=a,duplicated_one_source=wrong)
+
+    def test_E32_evidence_time_and_condition(self):
+        evidence={'tier':'pro','version':3,'limit':100};query={'tier':'free','version':3}
+        support=all(evidence[k]==query[k] for k in query)
+        self.assertFalse(support);record('E32',evidence=evidence,claim_scope=query,supports=False)
+
+    def test_E33_utf16_utf8_position(self):
+        text='a😀b';before='a😀'
+        self.assertEqual(len(before),2);self.assertEqual(len(before.encode('utf-16-le'))//2,3)
+        self.assertEqual(len(before.encode('utf-8')),5)
+        record('E33',text=text,position_of_b_codepoints=2,utf16_units=3,utf8_bytes=5)
+
+    def test_E34_head_not_worktree(self):
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td)/'a.py';p.write_text('x=1\n');first=digest(p.read_text());head='same-commit'
+            p.write_text('x=2\n');second=digest(p.read_text())
+            self.assertNotEqual(first,second);self.assertEqual(head,'same-commit')
+            record('E34',head=head,old_hash=first,new_hash=second,scope='actual file edit; Git HEAD represented by fixed label')
+
+    def test_E35_bitemporal(self):
+        events=[{'valid':1,'recorded':1,'value':10},{'valid':5,'recorded':8,'value':20}]
+        def asof(valid_at,known_at):
+            candidates=[e for e in events if e['valid']&lt;=valid_at and e['recorded']&lt;=known_at]
+            return max(candidates,key=lambda x:(x['valid'],x['recorded']))['value']
+        self.assertEqual(asof(6,6),10);self.assertEqual(asof(6,9),20)
+        record('E35',at_day6_known_day6=10,at_day6_known_day9=20)
+
+    def test_E36_revocation_invalidates_derived(self):
+        deps={'chunk':['doc'],'summary':['chunk'],'answer_cache':['summary'],'memory':['summary']};revoked={'doc'}
+        changed=True
+        while changed:
+            old=len(revoked);revoked|={k for k,v in deps.items() if any(x in revoked for x in v)};changed=len(revoked)!=old
+        self.assertEqual(revoked,{'doc','chunk','summary','answer_cache','memory'})
+        record('E36',invalidated=sorted(revoked))
+
+    def test_E37_skill_stages(self):
+        stages={'exists':True,'discovered':True,'selected':False,'body_loaded':False,'used':False}
+        self.assertFalse(all(stages.values()))
+        record('E37',**stages)
+
+    def test_E38_fallback_expected_cost(self):
+        cheap=1.;expensive=5.;fallback=.4
+        total=cheap+fallback*expensive
+        self.assertEqual(total,3.);self.assertNotEqual(total,cheap)
+        record('E38',cheap_cost=cheap,fallback_cost=expensive,rate=fallback,expected_cost=total,synthetic=True)
+
+    def test_E39_disjoint_files_semantic_conflict(self):
+        producer=lambda:{'timeout_ms':5000}; consumer=lambda x:x['timeout_s']
+        with self.assertRaises(KeyError):consumer(producer())
+        record('E39',producer_key='timeout_ms',consumer_key='timeout_s',text_overlap=False,integration_fails=True)
+
+    def test_E40_correlated_reviewers(self):
+        failures1={1,2,3,4};failures2={1,2,3,4};n=20
+        joint=len(failures1&amp;failures2)/n;independent=(len(failures1)/n)*(len(failures2)/n)
+        self.assertEqual(joint,.2);self.assertAlmostEqual(independent,.04)
+        record('E40',observed_joint=joint,independence_guess=independent,synthetic=True)
+
+    def test_E41_external_effect_before_journal_real_process(self):
+        script=Path(__file__).with_name('crash_worker.py')
+        with tempfile.TemporaryDirectory() as td:
+            # unsafe retry: committed effect precedes the separate journal acknowledgement.
+            first=subprocess.run([sys.executable,str(script),td,'unsafe','crash'],capture_output=True)
+            self.assertEqual(first.returncode,17)
+            second=subprocess.run([sys.executable,str(script),td,'unsafe','resume'],capture_output=True)
+            self.assertEqual(second.returncode,0)
+            con=sqlite3.connect(Path(td)/'external.sqlite');unsafe=con.execute('select count(*) from effects').fetchone()[0];con.close()
+            self.assertEqual(unsafe,2)
+        with tempfile.TemporaryDirectory() as td:
+            first=subprocess.run([sys.executable,str(script),td,'keyed','crash'],capture_output=True)
+            self.assertEqual(first.returncode,17)
+            second=subprocess.run([sys.executable,str(script),td,'keyed','resume'],capture_output=True)
+            self.assertEqual(second.returncode,0)
+            con=sqlite3.connect(Path(td)/'external.sqlite');safe=con.execute('select count(*) from effects').fetchone()[0];con.close()
+            self.assertEqual(safe,1)
+        record('E41',crash_exit=17,unsafe_effects=unsafe,keyed_effects=safe,scope='two local SQLite stores + actual subprocess os._exit; not network service')
+
+    def test_E42_retries_multiply(self):
+        attempts=[3,3,3];self.assertEqual(math.prod(attempts),27)
+        record('E42',per_layer_attempts=attempts,max_leaf_calls=27)
+
+    def test_E42_same_key_different_intent_rejected(self):
+        saved={'key':'op7','hash':digest({'path':'a','value':1})}
+        changed=digest({'path':'a','value':2})
+        self.assertNotEqual(saved['hash'],changed)
+        record('E42-key',reuse_allowed=saved['hash']==changed)
+
+    def test_E43_test_exitcodes(self):
+        with tempfile.TemporaryDirectory() as td:
+            env=dict(os.environ,PYTEST_DISABLE_PLUGIN_AUTOLOAD='1')
+            empty=subprocess.run([sys.executable,'-m','pytest','-q',td],capture_output=True,text=True,env=env)
+            self.assertEqual(empty.returncode,5)
+            Path(td,'test_skip.py').write_text('import pytest\n@pytest.mark.skip(reason="demo")\ndef test_x():\n    assert False\n')
+            skipped=subprocess.run([sys.executable,'-m','pytest','-q',td],capture_output=True,text=True,env=env)
+            self.assertEqual(skipped.returncode,0);self.assertIn('skipped',skipped.stdout)
+            record('E43',no_tests_exit=empty.returncode,all_skip_exit=skipped.returncode,all_skip_output=skipped.stdout.strip())
+
+    def test_E44_mutation_test_oracle(self):
+        good=lambda x: x&gt;0;bad=lambda x: x&gt;=0
+        weak=[1,2];strong=[-1,0,1]
+        self.assertTrue(all(good(x)==bad(x) for x in weak));self.assertFalse(all(good(x)==bad(x) for x in strong))
+        record('E44',weak_inputs=weak,mutant_survives=True,strong_inputs=strong,mutant_killed=True)
+
+    def test_E45_paired_deltas(self):
+        old=[1,1,1,0,0,0,1,0];new=[1,1,0,1,1,0,1,0]
+        improvements=sum(a==0 and b==1 for a,b in zip(old,new));regressions=sum(a==1 and b==0 for a,b in zip(old,new))
+        delta=(sum(new)-sum(old))/len(old)
+        self.assertEqual(improvements,2);self.assertEqual(regressions,1);self.assertEqual(delta,.125)
+        record('E45',old=old,new=new,improvements=improvements,regressions=regressions,mean_delta=delta,synthetic=True)
+
+    def test_E46_order_biased_judge(self):
+        judge=lambda left,right:left
+        original=judge('A','B');swapped=judge('B','A')
+        self.assertNotEqual(original,swapped)
+        record('E46',original_order_winner=original,swapped_order_winner=swapped,synthetic_judge='always chooses left')
+
+    def test_E47_symlink_bypasses_lexical_check(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);inside=root/'allowed';inside.mkdir();outside=root/'outside.txt';outside.write_text('harmless')
+            link=inside/'link.txt';link.symlink_to(outside)
+            lexical=link.is_relative_to(inside)
+            resolved=link.resolve().is_relative_to(inside.resolve())
+            self.assertTrue(lexical);self.assertFalse(resolved)
+            record('E47',lexical_inside=lexical,resolved_inside=resolved,read_observed=link.read_text(),scope='harmless temporary symlink, not race-safe sandbox implementation')
+
+    def test_E48_approval_bound_to_intent(self):
+        request={'user':'u','op':'write','path':'a','body':'v1','version':7,'expiry':10}
+        approved=digest(request);changed={**request,'body':'v2'}
+        self.assertNotEqual(approved,digest(changed));record('E48',unchanged_accepted=True,changed_accepted=False)
+
+    def test_E49_parallel_spans_and_percentiles(self):
+        wall=max(3.,5.)+2.;span_sum=3.+5.+2.
+        self.assertEqual(wall,7.);self.assertEqual(span_sum,10.)
+        # Nearest-rank p95 of 95 zeros and 5 hundreds is zero.
+        a=[0]*95+[100]*5;b=[0]*95+[100]*5
+        p95=lambda xs:sorted(xs)[math.ceil(.95*len(xs))-1]
+        mixture=a+b
+        self.assertEqual(p95(mixture),0)
+        # Separate tenants of unequal size: averaging quantiles is not pooled quantile.
+        fast=[1]*100;slow=[100]*10
+        self.assertNotEqual((p95(fast)+p95(slow))/2,p95(fast+slow))
+        record('E49',wall=wall,sum_spans=span_sum,mean_group_p95=50.5,pooled_p95=p95(fast+slow))
+
+    def test_E49_cost_includes_failures(self):
+        costs=[1,1,5,5];success=[1,1,0,0]
+        correct=sum(costs)/sum(success);wrong=sum(c for c,s in zip(costs,success) if s)/sum(success)
+        self.assertEqual(correct,6.);self.assertEqual(wrong,1.)
+        record('E49-cost',cost_per_success=correct,successes_only_wrong=wrong)
+
+    def test_E50_version_vector(self):
+        old={'model':'m1','template':'t1','index':'i1','tools':'s1'};new={**old,'index':'i2'}
+        self.assertEqual(old['model'],new['model']);self.assertNotEqual(digest(old),digest(new))
+        record('E50',old=old,new=new,same_model=True,same_system=False)
+
+    def test_E51_policy_rechecked_at_commit(self):
+        plan_policy=7;current_policy=8;allowed_at_plan=True;allowed_at_commit=False
+        execute=allowed_at_plan and plan_policy==current_policy and allowed_at_commit
+        self.assertFalse(execute);record('E51',planned_version=plan_policy,current_version=current_policy,execute=execute)
+
+    def test_E52_coordinate_scale_and_staleness(self):
+        screenshot=[1600,1200];viewport=[800,600];p=[1000,600]
+        css=[p[i]*viewport[i]/screenshot[i] for i in range(2)]
+        self.assertEqual(css,[500.,300.]);self.assertNotEqual(css,p)
+        record('E52',screenshot=screenshot,css_viewport=viewport,pixel_point=p,css_point=css,
+               invariant='coordinate mapping alone does not validate current DOM state')
+
+    def test_E53_selective_accuracy_needs_coverage(self):
+        correct=[1,1,1,1,0,1,0,0,0,0];accepted=[1,1,1,1,1,0,0,0,0,0]
+        selective=sum(c for c,a in zip(correct,accepted) if a)/sum(accepted)
+        coverage=sum(accepted)/len(accepted)
+        self.assertEqual(selective,.8);self.assertEqual(coverage,.5)
+        record('E53',overall_accuracy=sum(correct)/len(correct),selective_accuracy=selective,coverage=coverage,synthetic=True)
+
+    def test_E54_attention_high_weight_not_high_contribution(self):
+        weights=[.9,.1];values=[0.,100.];contributions=[a*b for a,b in zip(weights,values)]
+        self.assertEqual(contributions,[0.,10.]);record('E54',weights=weights,values=values,contributions=contributions,scope='scalar aggregation counterexample, not real causal interpretability')
+
+    def test_E55_lifecycle_break_even(self):
+        upfront=1000.;per_call_saved=.01;break_even=upfront/per_call_saved
+        self.assertEqual(break_even,100000.)
+        record('E55',extra_training_cost=upfront,inference_saving=per_call_saved,break_even_calls=break_even,synthetic=True)
+
+    def test_E56_interaction_not_main_effect(self):
+        table={'old_old':.6,'new_old':.6,'old_new':.6,'new_new':.9}
+        interaction=table['new_new']-table['new_old']-table['old_new']+table['old_old']
+        self.assertAlmostEqual(interaction,.3)
+        record('E56',factorial=table,interaction=interaction,synthetic=True)
+
+class ExtendedIntegrationTests(unittest.TestCase):
+    def test_E09_actual_cross_entropy_accumulation(self):
+        torch.manual_seed(9)
+        features=[torch.tensor([[1.,2.]]),torch.tensor([[2.,1.],[0.,1.],[1.,0.]])]
+        targets=[torch.tensor([0]),torch.tensor([1,0,1])]
+        initial=torch.tensor([[.2,-.1],[.3,.4]])
+        w=initial.clone().requires_grad_()
+        full=F.cross_entropy(torch.cat(features)@w,torch.cat(targets),reduction='mean')
+        full.backward();expected=w.grad.clone()
+        w=initial.clone().requires_grad_()
+        for x,y in zip(features,targets):
+            (F.cross_entropy(x@w,y,reduction='sum')/4).backward()
+        correct=w.grad.clone()
+        w=initial.clone().requires_grad_()
+        for x,y in zip(features,targets):
+            (F.cross_entropy(x@w,y,reduction='mean')/2).backward()
+        wrong=w.grad.clone()
+        self.assertTrue(torch.allclose(expected,correct,atol=1e-7))
+        self.assertFalse(torch.allclose(expected,wrong,atol=1e-4))
+        record('E09-xent',full_gradient=expected.tolist(),sum_normalized_gradient=correct.tolist(),
+               mean_of_means_gradient=wrong.tolist(),loss=full.item())
+
+    def test_E28_sqlite_conditional_update_prevents_stale_summary(self):
+        with tempfile.TemporaryDirectory() as td:
+            path=Path(td)/'history.sqlite';a=sqlite3.connect(path);b=sqlite3.connect(path)
+            a.execute('CREATE TABLE history(id INTEGER PRIMARY KEY, rev INTEGER, text TEXT)')
+            a.execute("INSERT INTO history VALUES(1,10,'c7 pending')");a.commit()
+            captured=a.execute('SELECT rev FROM history WHERE id=1').fetchone()[0]
+            b.execute("UPDATE history SET rev=11,text='c7 succeeded' WHERE id=1");b.commit()
+            cur=a.execute("UPDATE history SET rev=rev+1,text='summary: c7 pending' WHERE id=1 AND rev=?",(captured,));a.commit()
+            self.assertEqual(cur.rowcount,0)
+            state=a.execute('SELECT rev,text FROM history WHERE id=1').fetchone()
+            self.assertEqual(state,(11,'c7 succeeded'))
+            record('E28-sql',stale_revision=captured,changed_rows=cur.rowcount,preserved=list(state))
+            a.close();b.close()
+
+    def test_E34_actual_git_worktree_hash(self):
+        import shutil
+        if not shutil.which('git'): self.skipTest('git not installed')
+        with tempfile.TemporaryDirectory() as td:
+            def git(*args):return subprocess.run(['git','-C',td,*args],check=True,capture_output=True,text=True).stdout.strip()
+            git('init','-q');git('config','user.name','Local Test');git('config','user.email','test@example.invalid')
+            p=Path(td)/'a.py';p.write_text('x=1\n');git('add','a.py');git('commit','-qm','fixture')
+            before=git('rev-parse','HEAD');p.write_text('x=2\n');after=git('rev-parse','HEAD')
+            dirty=git('diff','--','a.py')
+            self.assertEqual(before,after);self.assertIn('+x=2',dirty)
+            record('E34-git',same_head=before==after,diff=dirty,scope='actual local temporary Git repository')
+
+    def test_E45_paired_bootstrap_task_unit(self):
+        import random
+        delta=[0,0,-1,1,1,0,0,0];rng=random.Random(20261021)
+        draws=sorted(sum(rng.choice(delta) for _ in delta)/len(delta) for _ in range(10000))
+        interval=[draws[249],draws[9749]]
+        self.assertLessEqual(interval[0],0);self.assertGreaterEqual(interval[1],0)
+        record('E45-bootstrap',trials=10000,seed=20261021,paired_task_delta=delta,
+               mean=sum(delta)/len(delta),percentile_interval=interval,scope='teaching 8-task dataset, not population certification')
+
+    def test_E50_schema_rollback_compatibility(self):
+        # Explicit dual-reader keeps old and new formats distinguishable, never guesses units.
+        def read(v):
+            if v['schema']==1:return v['timeout_seconds']*1000
+            if v['schema']==2:return v['timeout_ms']
+            raise ValueError('unsupported schema')
+        self.assertEqual(read({'schema':1,'timeout_seconds':5}),5000)
+        self.assertEqual(read({'schema':2,'timeout_ms':5000}),5000)
+        with self.assertRaises(ValueError):read({'schema':3,'timeout_ms':5000})
+        record('E50-schema',v1_ms=5000,v2_ms=5000,unknown_version_rejected=True)
+
+    def test_E56_regression_mutants_are_detectable(self):
+        # These deliberately broken functions must not satisfy the intended invariants.
+        good_mean=lambda sums,counts:sum(sums)/sum(counts)
+        bad_mean=lambda sums,counts:sum(s/n for s,n in zip(sums,counts))/len(counts)
+        self.assertNotEqual(good_mean([2,3],[1,3]),bad_mean([2,3],[1,3]))
+        safe_commit=lambda old,current:old==current
+        bad_commit=lambda old,current:True
+        self.assertNotEqual(safe_commit(10,11),bad_commit(10,11))
+        correct_positions=lambda past,n:list(range(past,past+n))
+        bad_positions=lambda past,n:list(range(n))
+        self.assertNotEqual(correct_positions(3,2),bad_positions(3,2))
+        record('E56-mutants',killed=['mean-of-means','unconditional-compaction-commit','cache-position-reset'])
+</code></pre></section><section id="code-crash_worker-py"><h3 id="topic-58">crash_worker.py</h3><pre><code class="language-python">"""Two independent databases model an executor and a downstream effect store.
+A deliberate os._exit occurs ONLY inside the supplied temporary directory.
+"""
+import json, os, sqlite3, sys
+from pathlib import Path
+
+def main():
+    root=Path(sys.argv[1]).resolve(); mode=sys.argv[2]; phase=sys.argv[3]
+    if mode not in {'unsafe','keyed'} or phase not in {'crash','resume'}:
+        raise ValueError('invalid mode')
+    external=sqlite3.connect(root/'external.sqlite')
+    external.execute('CREATE TABLE IF NOT EXISTS effects(id INTEGER PRIMARY KEY, intent TEXT UNIQUE, value TEXT)')
+    journal=sqlite3.connect(root/'journal.sqlite')
+    journal.execute('CREATE TABLE IF NOT EXISTS jobs(id TEXT PRIMARY KEY, status TEXT)')
+    journal.execute("INSERT OR IGNORE INTO jobs VALUES('job7','pending')");journal.commit()
+    done=journal.execute("SELECT status FROM jobs WHERE id='job7'").fetchone()[0]=='done'
+    if not done:
+        intent=None if mode=='unsafe' else 'stable-operation-7'
+        external.execute('INSERT OR IGNORE INTO effects(intent,value) VALUES(?,?)',(intent,'effect'))
+        external.commit()
+        if phase=='crash': os._exit(17)  # downstream committed; journal NOT acknowledged
+        journal.execute("UPDATE jobs SET status='done' WHERE id='job7'");journal.commit()
+    print(json.dumps({'status':'done'}))
+    external.close();journal.close()
+if __name__=='__main__': main()
+</code></pre></section><section id="code-run-py"><h3 id="topic-59">run.py</h3><pre><code class="language-python">"""Run offline tests and persist machine-readable, versioned observations."""
+from __future__ import annotations
+import contextlib, datetime, hashlib, io, json, platform, sqlite3, sys, unittest
+from pathlib import Path
+import torch
+import importlib.metadata, subprocess
+import test_engineering as test
+
+def main():
+    out=Path(__file__).resolve().parents[1]/'results';out.mkdir(exist_ok=True)
+    stream=io.StringIO()
+    result=unittest.TextTestRunner(stream=stream,verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(test))
+    env={'python':sys.version,'platform':platform.platform(),'torch':torch.__version__,
+         'cuda_available':torch.cuda.is_available(),'sqlite':sqlite3.sqlite_version,
+         'pytest':importlib.metadata.version('pytest'),
+         'git':subprocess.run(['git','--version'],capture_output=True,text=True,check=True).stdout.strip(),
+         'ran_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+         'claims':'CPU and local temporary resources only; no commercial model/GPU/production service benchmarks.'}
+    data={'environment':env,'tests':result.testsRun,'failures':len(result.failures),
+          'errors':len(result.errors),'skipped':len(result.skipped),'observations':test.OBS,
+          'source_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in Path(__file__).parent.glob('*.py')}}
+    (out/'run.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
+    (out/'test.log').write_text(stream.getvalue())
+    print(stream.getvalue());print(json.dumps({k:v for k,v in data.items() if k!='observations'},ensure_ascii=False,indent=2))
+    return 0 if result.wasSuccessful() else 1
+if __name__=='__main__':sys.exit(main())
+</code></pre></section><h2 id="raw-log">Registros reales de pruebas</h2><pre><code>test_E09_actual_cross_entropy_accumulation (test_engineering.ExtendedIntegrationTests.test_E09_actual_cross_entropy_accumulation) ... ok
+test_E28_sqlite_conditional_update_prevents_stale_summary (test_engineering.ExtendedIntegrationTests.test_E28_sqlite_conditional_update_prevents_stale_summary) ... ok
+test_E34_actual_git_worktree_hash (test_engineering.ExtendedIntegrationTests.test_E34_actual_git_worktree_hash) ... ok
+test_E45_paired_bootstrap_task_unit (test_engineering.ExtendedIntegrationTests.test_E45_paired_bootstrap_task_unit) ... ok
+test_E50_schema_rollback_compatibility (test_engineering.ExtendedIntegrationTests.test_E50_schema_rollback_compatibility) ... ok
+test_E56_regression_mutants_are_detectable (test_engineering.ExtendedIntegrationTests.test_E56_regression_mutants_are_detectable) ... ok
+test_E01_duplicate_template_markers (test_engineering.ModelTests.test_E01_duplicate_template_markers) ... ok
+test_E02_vocab_resize_is_not_width (test_engineering.ModelTests.test_E02_vocab_resize_is_not_width) ... ok
+test_E03_functional_dropout_ignores_module_eval (test_engineering.ModelTests.test_E03_functional_dropout_ignores_module_eval) ... ok
+test_E03_linear_storage_transpose (test_engineering.ModelTests.test_E03_linear_storage_transpose) ... ok
+test_E04_all_masked_row_has_no_valid_distribution (test_engineering.ModelTests.test_E04_all_masked_row_has_no_valid_distribution) ... ok
+test_E05_bool_mask_polarity (test_engineering.ModelTests.test_E05_bool_mask_polarity) ... ok
+test_E05_nonsquare_cache_causal_offset (test_engineering.ModelTests.test_E05_nonsquare_cache_causal_offset) ... ok
+test_E06_rope_double_rotation (test_engineering.ModelTests.test_E06_rope_double_rotation) ... ok
+test_E07_padding_last_valid_not_last_column (test_engineering.ModelTests.test_E07_padding_last_valid_not_last_column) ... ok
+test_E08_top_p_temperature_noncommute (test_engineering.ModelTests.test_E08_top_p_temperature_noncommute) ... ok
+test_E09_ddp_denominator_simulation (test_engineering.ModelTests.test_E09_ddp_denominator_simulation) ... ok
+test_E09_token_weighted_gradient_accumulation (test_engineering.ModelTests.test_E09_token_weighted_gradient_accumulation) ... ok
+test_E10_checkpoint_recomputes (test_engineering.ModelTests.test_E10_checkpoint_recomputes) ... ok
+test_E10_clip_scaled_gradient_wrong (test_engineering.ModelTests.test_E10_clip_scaled_gradient_wrong) ... ok
+test_E11_dpo_requires_reference_ratio (test_engineering.ModelTests.test_E11_dpo_requires_reference_ratio) ... ok
+test_E12_zero_B_zero_A_gradient_first_step (test_engineering.ModelTests.test_E12_zero_B_zero_A_gradient_first_step) ... ok
+test_E13_shared_cache_mutation_and_identity (test_engineering.ModelTests.test_E13_shared_cache_mutation_and_identity) ... ok
+test_E14_online_softmax_stability (test_engineering.ModelTests.test_E14_online_softmax_stability) ... ok
+test_E15_token_capacity_not_request_count (test_engineering.ModelTests.test_E15_token_capacity_not_request_count) ... ok
+test_E16_speculative_residual_distribution (test_engineering.ModelTests.test_E16_speculative_residual_distribution) ... ok
+test_E17_history_preserves_typed_items (test_engineering.SystemTests.test_E17_history_preserves_typed_items) ... ok
+test_E18_late_result_epoch (test_engineering.SystemTests.test_E18_late_result_epoch) ... ok
+test_E19_terminal_status_gates_execution (test_engineering.SystemTests.test_E19_terminal_status_gates_execution) ... ok
+test_E19_utf8_and_interleaved_calls (test_engineering.SystemTests.test_E19_utf8_and_interleaved_calls) ... ok
+test_E20_missing_null_and_permission (test_engineering.SystemTests.test_E20_missing_null_and_permission) ... ok
+test_E21_tool_discovery_pagination (test_engineering.SystemTests.test_E21_tool_discovery_pagination) ... ok
+test_E22_audience_not_session (test_engineering.SystemTests.test_E22_audience_not_session) ... ok
+test_E23_registered_visible_executable_are_separate (test_engineering.SystemTests.test_E23_registered_visible_executable_are_separate) ... ok
+test_E24_omitted_empty_tools (test_engineering.SystemTests.test_E24_omitted_empty_tools) ... ok
+test_E25_semantics_not_exact_serialization (test_engineering.SystemTests.test_E25_semantics_not_exact_serialization) ... ok
+test_E26_budget_dependency_closure (test_engineering.SystemTests.test_E26_budget_dependency_closure) ... ok
+test_E27_compacted_window_not_one_item (test_engineering.SystemTests.test_E27_compacted_window_not_one_item) ... ok
+test_E28_compaction_compare_and_swap (test_engineering.SystemTests.test_E28_compaction_compare_and_swap) ... ok
+test_E29_same_dimension_different_vector_space (test_engineering.SystemTests.test_E29_same_dimension_different_vector_space) ... ok
+test_E30_filter_after_topk_underfills (test_engineering.SystemTests.test_E30_filter_after_topk_underfills) ... ok
+test_E31_rrf_duplicate_evidence (test_engineering.SystemTests.test_E31_rrf_duplicate_evidence) ... ok
+test_E32_evidence_time_and_condition (test_engineering.SystemTests.test_E32_evidence_time_and_condition) ... ok
+test_E33_utf16_utf8_position (test_engineering.SystemTests.test_E33_utf16_utf8_position) ... ok
+test_E34_head_not_worktree (test_engineering.SystemTests.test_E34_head_not_worktree) ... ok
+test_E35_bitemporal (test_engineering.SystemTests.test_E35_bitemporal) ... ok
+test_E36_revocation_invalidates_derived (test_engineering.SystemTests.test_E36_revocation_invalidates_derived) ... ok
+test_E37_skill_stages (test_engineering.SystemTests.test_E37_skill_stages) ... ok
+test_E38_fallback_expected_cost (test_engineering.SystemTests.test_E38_fallback_expected_cost) ... ok
+test_E39_disjoint_files_semantic_conflict (test_engineering.SystemTests.test_E39_disjoint_files_semantic_conflict) ... ok
+test_E40_correlated_reviewers (test_engineering.SystemTests.test_E40_correlated_reviewers) ... ok
+test_E41_external_effect_before_journal_real_process (test_engineering.SystemTests.test_E41_external_effect_before_journal_real_process) ... ok
+test_E42_retries_multiply (test_engineering.SystemTests.test_E42_retries_multiply) ... ok
+test_E42_same_key_different_intent_rejected (test_engineering.SystemTests.test_E42_same_key_different_intent_rejected) ... ok
+test_E43_test_exitcodes (test_engineering.SystemTests.test_E43_test_exitcodes) ... ok
+test_E44_mutation_test_oracle (test_engineering.SystemTests.test_E44_mutation_test_oracle) ... ok
+test_E45_paired_deltas (test_engineering.SystemTests.test_E45_paired_deltas) ... ok
+test_E46_order_biased_judge (test_engineering.SystemTests.test_E46_order_biased_judge) ... ok
+test_E47_symlink_bypasses_lexical_check (test_engineering.SystemTests.test_E47_symlink_bypasses_lexical_check) ... ok
+test_E48_approval_bound_to_intent (test_engineering.SystemTests.test_E48_approval_bound_to_intent) ... ok
+test_E49_cost_includes_failures (test_engineering.SystemTests.test_E49_cost_includes_failures) ... ok
+test_E49_parallel_spans_and_percentiles (test_engineering.SystemTests.test_E49_parallel_spans_and_percentiles) ... ok
+test_E50_version_vector (test_engineering.SystemTests.test_E50_version_vector) ... ok
+test_E51_policy_rechecked_at_commit (test_engineering.SystemTests.test_E51_policy_rechecked_at_commit) ... ok
+test_E52_coordinate_scale_and_staleness (test_engineering.SystemTests.test_E52_coordinate_scale_and_staleness) ... ok
+test_E53_selective_accuracy_needs_coverage (test_engineering.SystemTests.test_E53_selective_accuracy_needs_coverage) ... ok
+test_E54_attention_high_weight_not_high_contribution (test_engineering.SystemTests.test_E54_attention_high_weight_not_high_contribution) ... ok
+test_E55_lifecycle_break_even (test_engineering.SystemTests.test_E55_lifecycle_break_even) ... ok
+test_E56_interaction_not_main_effect (test_engineering.SystemTests.test_E56_interaction_not_main_effect) ... ok
+
+----------------------------------------------------------------------
+Ran 69 tests in 5.371s
+
+OK
+</code></pre><h2 id="regression-run">Regresión de los programas existentes en esta ejecución</h2><p>Se volvieron a ejecutar los 7 grupos originales de pruebas unitarias, con 323 pruebas en total, y todas pasaron. Validan sus programas didácticos y no demuestran ausencia de errores en todos los hechos del libro o comportamientos de productos. No se modificaron los archivos de los programas originales.</p><pre><code>[
+  {
+    "suite": "foundations",
+    "command": "python -m unittest test_foundations",
+    "cwd": "labs",
+    "exit": 0,
+    "count": 39,
+    "tail": ".......................................\n----------------------------------------------------------------------\nRan 39 tests in 0.002s\n\nOK\n"
+  },
+  {
+    "suite": "advanced",
+    "command": "python -m unittest test_suite",
+    "cwd": "studies/labs",
+    "exit": 0,
+    "count": 49,
+    "tail": ".................................................\n----------------------------------------------------------------------\nRan 49 tests in 2.869s\n\nOK\n"
+  },
+  {
+    "suite": "concepts",
+    "command": "python -m unittest verify_concepts",
+    "cwd": "concepts",
+    "exit": 0,
+    "count": 30,
+    "tail": "..............................\n----------------------------------------------------------------------\nRan 30 tests in 0.001s\n\nOK\n"
+  },
+  {
+    "suite": "visuals",
+    "command": "python -m unittest test_visual",
+    "cwd": "visual/labs",
+    "exit": 0,
+    "count": 97,
+    "tail": ".................................................................................................\n----------------------------------------------------------------------\nRan 97 tests in 0.018s\n\nOK\n"
+  },
+  {
+    "suite": "worked",
+    "command": "python -m unittest engine",
+    "cwd": "worked-examples",
+    "exit": 0,
+    "count": 34,
+    "tail": "..................................\n----------------------------------------------------------------------\nRan 34 tests in 0.007s\n\nOK\n"
+  },
+  {
+    "suite": "operators",
+    "command": "python -m unittest chain_and_operators",
+    "cwd": "worked-examples",
+    "exit": 0,
+    "count": 14,
+    "tail": "..............\n----------------------------------------------------------------------\nRan 14 tests in 0.002s\n\nOK\n"
+  },
+  {
+    "suite": "additional",
+    "command": "python -m unittest additional_checks",
+    "cwd": "worked-examples",
+    "exit": 0,
+    "count": 60,
+    "tail": "............................................................\n----------------------------------------------------------------------\nRan 60 tests in 0.008s\n\nOK\n"
+  }
+]</code></pre><h2 id="source-digests">Huellas de archivos fuente experimentales</h2><pre><code>{
+  "test_engineering.py": "9ee81e26a2ef4e75301ecd8dc001814e148e0a8475f08e908816e1bfd2013094",
+  "run.py": "c01e6983ee6a9028f0c4c203b2454cb676e25187c44102431a0236bc547b59d0",
+  "crash_worker.py": "4bbe19ed20b08909c6226e0fc3a5faca980bb18f8037c2cf4400a4e455c85639"
+}</code></pre><footer class="footer">Ingeniería de sistemas de IA: de los fundamentos al interior · <a href="index.html">Índice del análisis de ingeniería</a> · <a href="sources.html">Fundamento y versión</a></footer></article></main><aside aria-label="Índice de este capítulo" class="chapter-outline"><div class="outline-label" data-i18n="article.outline">En esta lección</div><nav aria-label="Esquema de este capítulo" class="toc"><a href="#lab-scope">Alcance de esta ejecución</a><a href="#lab-run">Cómo reproducir</a><a href="#lab-results">Observaciones individuales y límites de aplicación</a><a href="#delivery-validation">Comprobaciones de contenido e interfaz de lectura</a><a href="#lab-code">Código completo</a><a href="#raw-log">Registros reales de pruebas</a><a href="#regression-run">Regresión de los programas existentes en esta ejecución</a><a href="#source-digests">Huellas de archivos fuente experimentales</a></nav><div class="outline-tools"><button data-settings="" type="button" data-i18n="outline.settings">Ajustes de lectura</button><button aria-pressed="false" data-focus="" type="button" data-i18n="outline.focus">Alternar el modo concentración</button><button data-outline-top="" type="button" data-i18n="outline.top">Volver arriba ↑</button></div></aside></div><button aria-label="Cerrar el índice" data-i18n-attr="aria-label:rail.closeAria" class="nav-backdrop" tabindex="-1" type="button"></button><button aria-label="Volver arriba" data-i18n-attr="aria-label:page.backTop" class="back-top icon-button" data-top="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="M12 20V5m-6 6 6-6 6 6"></path></svg></button><div aria-live="polite" class="toast" id="studio-toast" role="status"></div><dialog aria-label="Buscar en el libro de texto" data-i18n-attr="aria-label:search.triggerAria" class="studio-dialog" id="command-search"><div class="command-head"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.7"></circle><path d="m15.7 15.7 4.2 4.2"></path></svg><input aria-label="Buscar conceptos, lecciones o números de pregunta" data-i18n-attr="aria-label:search.inputAria" autocomplete="off" id="command-input" placeholder="Buscar conceptos, capítulos o números de pregunta" spellcheck="false"/><button aria-label="Cerrar la búsqueda" data-i18n-attr="aria-label:search.closeAria" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><p class="command-hint" id="command-hint" data-i18n="search.hint">Escribe una palabra clave para buscar.</p><div class="command-results" id="command-results"></div><div class="command-foot"><span data-i18n="search.keys">↑ ↓ para moverse · Enter para abrir</span><span data-i18n="search.esc">Esc para cerrar · solo búsqueda local</span></div></dialog><dialog aria-labelledby="reading-settings-title" class="studio-dialog settings-dialog" id="reading-settings"><div class="settings-header"><h2 id="reading-settings-title" data-i18n="settings.title">Ajustes de lectura</h2><button aria-label="Cerrar los ajustes de lectura" data-i18n-attr="aria-label:settings.closeAria" class="icon-button" data-close-dialog="" type="button"><svg aria-hidden="true" class="studio-icon" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg></button></div><div class="setting-row"><label data-i18n="settings.font">Tamaño del texto</label><div class="setting-picks"><button aria-label="Reducir el tamaño del texto" data-i18n-attr="aria-label:settings.smallerAria" data-font="-1" type="button" data-i18n="settings.smaller">A- Reducir</button><button aria-label="Aumentar el tamaño del texto" data-i18n-attr="aria-label:settings.largerAria" data-font="1" type="button" data-i18n="settings.larger">A+ Aumentar</button></div></div><div class="setting-row"><label data-i18n="settings.paper">Fondo de la página</label><div class="setting-picks"><button aria-pressed="true" data-paper-choice="sage" type="button" data-i18n="settings.paperSage">Gris suave</button><button aria-pressed="false" data-paper-choice="white" type="button" data-i18n="settings.paperWhite">Blanco estándar</button></div></div><div class="setting-row"><label data-i18n="settings.width">Ancho del texto</label><div class="setting-picks"><button aria-pressed="false" data-width-choice="narrow" type="button" data-i18n="settings.widthNarrow">Estrecho</button><button aria-pressed="true" data-width-choice="comfortable" type="button" data-i18n="settings.widthComfy">Cómodo</button><button aria-pressed="false" data-width-choice="wide" type="button" data-i18n="settings.widthWide">Ancho</button></div></div><p class="setting-info" data-i18n="settings.note">Los ajustes se guardan solo en este navegador; no se envía ningún dato.</p></dialog><script src="../assets/i18n-data.js"></script><script src="../assets/i18n.js"></script><script src="../assets/app.js"></script><script src="../assets/visual-data.js"></script><script src="../assets/visual-player.js"></script><script src="../assets/catalog.js"></script><script src="../assets/atelier.js"></script><script src="../assets/reader-navigation.js"></script><script src="../assets/mechanisms.js"></script><script src="../assets/diagrams.js"></script></body></html>
