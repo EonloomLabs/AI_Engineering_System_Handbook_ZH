@@ -1,7 +1,15 @@
-# The most-used already-translated strings from this book, most-used first.
+# Already-translated strings from this book, most-used first.
 # Follow their terminology, register and punctuation. Do not re-translate them.
-# Spelling is American, matching the book's own glossary.html.
-# (4990 strings are translated in all; these are the 900 that recur most.)
+# Regenerated after the spelling and 宿主→harness sweeps, so it is current.
+# (11596 strings are translated in all; these are the 900 that recur most.)
+
+# Settled house terms, which override anything that looks different below:
+#   宿主 → harness   (the book's glossary prints "Harness / 宿主执行框架");
+#                    but MCP's Host stays "host" - it is a role in that protocol
+#   追问： → Follow-up:        预备知识： → Prerequisite:
+#   子Agent → sub-agent        压缩 → compaction        显存 → VRAM
+#   产物 → artifact            推理 → inference (execution) / reasoning (reasoning models)
+#   Spelling is American; i18n/spelling.py sweeps it, so do not spend effort there.
 
 把一个Agent任务拆成真正发生的几轮	→	Break one agent task into the turns that actually happen
 MCP连起接口，不自动交出权限	→	MCP connects interfaces; it does not hand over permissions on its own
@@ -43,11 +51,14 @@ Skill存在，为什么仍可能完全没用？	→	A skill exists — so why ca
 Trace要告诉你因果，不只是时间戳	→	A trace should tell you causation, not just timestamps
 图像表示与界面行动，是两层不同问题	→	Image representation and interface action are two different problems
 先找错误发生在哪层，再谈换模型	→	Find which layer the error happens in before talking about changing models
+运行示例索引	→	Index of worked runs
+基础篇逐节图解索引	→	Index of section figures in Foundations
+正文图解与细算索引	→	Index of figures and detailed calculations
 Q/K/V：先算从哪读，再算读进多少	→	Q/K/V: first compute where to read from, then how much to read in
 GQA/MQA：减少的是K/V组数	→	GQA/MQA: what is reduced is the number of K/V groups
 量化：省存储，也引入近似	→	Quantization: saves storage, and introduces approximation
 LoRA：冻结大表，学习小增量	→	LoRA: freeze the large table, learn a small increment
-FlashAttention：一边读一边累计，不攒整张表	→	FlashAttention: accumulate while reading, without materialising the whole table
+FlashAttention：一边读一边累计，不攒整张表	→	FlashAttention: accumulate while reading, without materializing the whole table
 PagedAttention：逻辑连续，物理可以分块	→	PagedAttention: logically contiguous, physically chunked
 连续组批：有座位空出来，就接下一位	→	Continuous batching: when a seat frees up, take the next one
 推测解码：草稿可以快，但必须正确校验	→	Speculative decoding: the draft may be fast, but it must be verified correctly
@@ -56,9 +67,6 @@ Activation Checkpointing：少存一点，反向时重算	→	Activation checkpo
 压缩、检索与Prompt Cache：三种不同的“省”	→	Compaction, retrieval and prompt cache: three different kinds of saving
 多Agent：可并行的工作，比Agent数量重要	→	Multi-agent: work that can run in parallel matters more than the number of agents
 模型路由：便宜一次，不一定便宜一项成功任务	→	Model routing: cheaper per call is not cheaper per successful task
-运行示例索引	→	Index of worked runs
-基础篇逐节图解索引	→	Index of section figures in Foundations
-正文图解与细算索引	→	Index of figures and detailed calculations
 专题研修：实现、验证与应用	→	Topic studies: implementation, verification and application
 全局认知	→	A global view
 模型内部	→	Model internals
@@ -135,6 +143,7 @@ AI 系统工程	→	AI Systems Engineering
 模型机制：原理来源与接口版本	→	Model mechanisms: where the principles come from, and interface versions
 正文图解的来源与适用条件	→	Sources and conditions of use for the figures in the text
 图解计算与验证记录	→	Figure calculations and verification records
+。	→	.
 先认识这里的对象与符号	→	Start with the objects and symbols used here
 步骤与对象	→	Steps and objects
 内部动作	→	Internal action
@@ -221,7 +230,7 @@ AI 系统工程	→	AI Systems Engineering
 全程拆解D｜一次“变慢且变差”的Agent回归怎样查到根因	→	Walkthrough D｜How the root cause of a "slower and worse" agent regression is found
 贯穿实验：代码与对象定位	→	Worked experiment: locating code and objects
 01｜文本怎样成为概率：Tokenizer、模板、目标函数与梯度	→	01｜How text becomes probability: tokenizer, template, objective and gradient
-03｜训练系统内部：数据、优化器、显存与分布式代价	→	03｜Inside the training system: data, optimiser, memory and the cost of distribution
+03｜训练系统内部：数据、优化器、显存与分布式代价	→	03｜Inside the training system: data, optimizer, memory and the cost of distribution
 04｜后训练与推理模型：从偏好目标到可验证能力	→	04｜Post-training and reasoning models: from preference objectives to verifiable capability
 05｜输出怎样被选中：采样、推测解码与停止条件	→	05｜How the output is chosen: sampling, speculative decoding and stopping conditions
 06｜推理服务的真实瓶颈：内存、FlashAttention、分页与调度	→	06｜The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling
@@ -364,7 +373,7 @@ Agent机制的可运行反例与验证范围	→	Runnable counterexamples for ag
 可运行反例与验证范围	→	Runnable counterexamples and the scope of verification
 文本怎样成为概率：Tokenizer、模板、目标函数与梯度	→	How text becomes probability: tokenizer, template, objective and gradient
 进入Decoder：张量形状、RoPE、GQA与KV缓存的正确性	→	Into the decoder: tensor shapes, RoPE, GQA and KV cache correctness
-训练系统内部：数据、优化器、显存与分布式代价	→	Inside the training system: data, optimiser, memory and the cost of distribution
+训练系统内部：数据、优化器、显存与分布式代价	→	Inside the training system: data, optimizer, memory and the cost of distribution
 后训练与推理模型：从偏好目标到可验证能力	→	Post-training and reasoning models: from preference objectives to verifiable capability
 输出怎样被选中：采样、推测解码与停止条件	→	How the output is chosen: sampling, speculative decoding and stopping conditions
 推理服务的真实瓶颈：内存、FlashAttention、分页与调度	→	The real bottlenecks in inference serving: memory, FlashAttention, paging and scheduling
@@ -400,7 +409,7 @@ Skills、工具与模型路由：专业能力如何真正进入任务	→	Skills
 专注模式	→	Focus mode
 从基础概念到大语言模型内部机制、智能体执行与工程实践的中文学习教材。	→	A study guide covering core concepts, the internals of large language models, agent execution and engineering practice.
 怎样把图中的变化读明白	→	How to read the changes in the figure
-。本例数字和宿主场景为明确给定的教学设定，不是商业模型输出或生产性能测量。	→	. The numbers and host setting in this example are an explicitly given teaching construction, not commercial model output or a production performance measurement.
+。本例数字和宿主场景为明确给定的教学设定，不是商业模型输出或生产性能测量。	→	. The numbers and harness setting in this example are an explicitly given teaching construction, not commercial model output or a production performance measurement.
 本章提纲	→	On this page
 标记已读	→	Mark as read
 边界与反例。</strong>本表是独立教学构造，用来解释该研究主题的一个局部机制，不是原论文实验或产品实测；完整方法与适用条件仍需结合本节正文。	→	Limits and counterexamples.</strong> This table is an independent teaching construction used to explain one local mechanism of that research topic; it is not an experiment from the original paper or a product measurement. For the complete method and its conditions of use, read this section's main text as well.
@@ -411,6 +420,7 @@ Skills、工具与模型路由：专业能力如何真正进入任务	→	Skills
 来源说明	→	Source note
 参考资料	→	References
 术语与符号	→	Terms and notation
+；	→	;
 依据：	→	Basis:
 对应参数、前向及梯度记录	→	Matching parameters, forward pass and gradient records
 各行是独立对象或条件的对照，不暗示上一行的结果自动进入下一行。	→	Each row is a comparison of an independent object or condition; it does not imply that the row above feeds into the one below.
@@ -447,9 +457,6 @@ AI系统工程：从基础到内部<br/><a href="../contents.html">全书目录	
 SVG图源	→	SVG source
 。源码限提交 86e17e98c7f9 和已读取路径；文章经验、公开文档与原创教学实验分别标注。<a href="../engineering/agent-evidence.html#acquisition">查看取得方式、阅读范围与限制	→	. The source is limited to commit 86e17e98c7f9 and the paths actually read; article experience, public documentation and original teaching experiments are labeled separately.<a href="../engineering/agent-evidence.html#acquisition">See how it was obtained, what was read, and the limits
 参见本步解释	→	See the explanation for this step
-t=2 · 爱	→	t=2 · 爱
-t=3 · 学习	→	t=3 · 学习
-t=1 · 我	→	t=1 · 我
 上一步	→	Previous step
 播放	→	Play
 基础篇	→	Foundations
@@ -468,14 +475,10 @@ t=1 · 我	→	t=1 · 我
 图形，窄屏可横向滚动	→	Figure — scrolls sideways on a narrow screen
 默认静止。用“下一步”看完解释再继续；播放到最后一步自动停止。键盘聚焦播放器后，可用左右键逐步查看、空格播放/暂停。图中颜色辅助区分，含义同时用文字注明。	→	Still by default. Use "Next step" to finish reading an explanation before going on; playback stops automatically at the last step. With keyboard focus on the player, the arrow keys step through it and the space bar plays and pauses. Color in the figure helps tell things apart; every meaning is stated in words as well.
 JavaScript未启用；第一帧仍可阅读。完整图解页下方列出全部步骤说明。	→	JavaScript is off; the first frame is still readable. The full figure page lists every step's explanation below it.
-特征0	→	Feature 0
-特征1	→	Feature 1
 核查日期：2026-10-17｜版本：见固定URL或核查日期；动态网页不等于本地版本	→	Checked on 2026-10-17｜Version: see the fixed URL or the check date; a live web page is not the same as the local version
 本图仅使用当前算例声明的输入；具体公式、来源和边界见紧邻正文。	→	This figure uses only the input declared for the current worked example; the formulas, sources and limits are given in the adjacent text.
 本图使用的数据与条件	→	The data and conditions used in this figure
 页面	→	Page
-特征2	→	Feature 2
-特征3	→	Feature 3
 继续阅读与机制对应	→	Continue reading, matched to the mechanism
 阅读关系	→	Reading relationship
 课程顺序	→	Course order
@@ -501,23 +504,29 @@ JavaScript未启用；第一帧仍可阅读。完整图解页下方列出全部�
 对象一	→	Object one
 对象二	→	Object two
 对象三	→	Object three
+t=2 · 爱	→	t=2 · 爱
+t=3 · 学习	→	t=3 · 学习
 版本／日期	→	Version / date
 核对日期	→	Check date
 对应章节	→	Matching section
 支持的事实	→	Facts it supports
 适用边界	→	Limits of use
+t=1 · 我	→	t=1 · 我
 逐步说明与计算记录	→	Step-by-step explanation and calculation record
 以下解释全部展开，与播放器使用同一份数据；不是另换输入的第二个算例。	→	Every explanation below is expanded and uses the same data as the player; it is not a second worked example with different input.
 在上方查看第1步	→	See step 1 above
 在上方查看第2步	→	See step 2 above
 在上方查看第3步	→	See step 3 above
 在上方查看第4步	→	See step 4 above
+特征0	→	Feature 0
+特征1	→	Feature 1
 第0行	→	Row 0
 AI系统工程：从基础到内部<br/><a href="../../contents.html">全书目录	→	AI Systems Engineering: from the basics to the internals<br/><a href="../../contents.html">Book contents
 官方出处／固定提交定位	→	Official source / pinned commit location
 本地中文研读笔记	→	Local Chinese reading notes
 显式输入的教学代数、数据结构或运行契约模拟；不是对应厂商产品集成或性能实测。	→	A teaching algebra, data structure or run-contract simulation with explicit input; not an integration with the corresponding vendor's product, and not a performance measurement.
 论文 · 资料记录日期：2026-10-17	→	Paper · source recorded on 2026-10-17
+、	→	,
 从具体对象与小例子开始，理解计算过程与适用条件。	→	Start from concrete objects and small examples, to understand the computation and the conditions under which it applies.
 课后自检	→	End-of-lesson self-check
 自检 1	→	Self-check 1
@@ -527,6 +536,8 @@ AI系统工程：从基础到内部<br/><a href="../../contents.html">全书目�
 查看本例程序结果	→	See the program result for this example
 完整可运行代码	→	Full runnable code
 延伸阅读：相关系统问题	→	Further reading: related system questions
+特征2	→	Feature 2
+特征3	→	Feature 3
 保留索引或代码阅读方式	→	Reading as an index or code page kept
 保留索引、代码或参考性质；补导航与全书入口	→	Index, code or reference character kept; navigation and a book-wide entry added
 本页目录	→	Page contents
@@ -633,6 +644,7 @@ q是接收信息的一行查询表示；k是可读位置提供的一行匹配表
 爱	→	爱
 学习	→	学习
 OAuth、scope与授权	→	OAuth, scope and authorization
+，	→	,
 Top-k、Top-p与重新归一化	→	Top-k, Top-p and renormalization
 通过	→	Passed
 第04课	→	Lesson 04
@@ -651,7 +663,7 @@ AI系统工程：从基础到内部<br/><a href="contents.html">全书目录	→
 结果	→	Result
 第53课	→	Lesson 53
 Top-k保留概率最高的k项；Top-p按概率降序保留累计概率达到阈值的候选前缀。用于抽样时，被保留的候选需按剩余总质量重新归一化。<span class="concept-micro">这里k是候选数量，p是累计概率阈值；不是注意力Key表K，也不是表示维度d_k。	→	Top-k keeps the k items with the highest probability; Top-p sorts by descending probability and keeps the leading candidates until the cumulative probability reaches a threshold. When used for sampling, the kept candidates have to be renormalized over the remaining total mass.<span class="concept-micro">Here k is a number of candidates and p a cumulative-probability threshold; k is not the attention Key table K, nor the representation width d_k.
-SQL是操作关系数据的语言；SQLite是可嵌入应用的数据库引擎。将操作状态写入数据库，是宿主程序的持久化动作，不会修改模型神经网络参数。<span class="concept-micro">一次事务可以同时保存本数据库中的业务行与待发送记录，但不能因此推断邮件服务也已一起原子提交。	→	SQL is the language for working with relational data; SQLite is a database engine that embeds into an application. Writing operational state into a database is a persistence action by the host program; it does not modify the model's neural network parameters.<span class="concept-micro">One transaction can save the business row in this database together with a pending-send record, but that does not let you infer that the mail service committed atomically along with it.
+SQL是操作关系数据的语言；SQLite是可嵌入应用的数据库引擎。将操作状态写入数据库，是宿主程序的持久化动作，不会修改模型神经网络参数。<span class="concept-micro">一次事务可以同时保存本数据库中的业务行与待发送记录，但不能因此推断邮件服务也已一起原子提交。	→	SQL is the language for working with relational data; SQLite is a database engine that embeds into an application. Writing operational state into a database is a persistence action by the harness; it does not modify the model's neural network parameters.<span class="concept-micro">One transaction can save the business row in this database together with a pending-send record, but that does not let you infer that the mail service committed atomically along with it.
 无	→	None
 向量同维度，不代表能放在同一个相似度空间	→	Vectors with the same number of dimensions need not belong in the same similarity space
 第17课	→	Lesson 17
@@ -676,41 +688,35 @@ Mermaid源文件</a>。图的排布只表达数据／调用顺序，不代表计
 选择	→	Selection
 这些是不同层对象的标识：工具调用、输出项、请求或响应。用来把增量和结果配回正确对象，不是模型输入的Token ID，也不天然是业务幂等键。<span class="concept-micro">两次read_file可分别有c1与c2；结果返回顺序颠倒时仍按调用标识配对，而不是按工具名称猜。	→	These are identifiers for objects at different layers: a tool call, an output item, a request or a response. They match increments and results back to the right object; they are not the token IDs of the model input, and they are not business idempotency keys by nature.<span class="concept-micro">Two read_file calls can carry c1 and c2; when the results come back in the reverse order they are still paired by call identifier, not guessed by tool name.
 工作树	→	Work tree
-事件	→	Event
 汇总	→	Aggregate
 第07课	→	Lesson 07
 DAG、依赖与关键路径	→	DAG, dependencies and the critical path
 处理	→	Handling
-来源	→	Source
-3 学习	→	3 学习
 用具体过程辅助理解：<a href="../visual/F27.html">压缩要保留行动所依赖的事实</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F27.html">Compaction must keep the facts an action depends on</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
 用具体过程辅助理解：<a href="../visual/F38.html">Trace要告诉你因果，不只是时间戳</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F38.html">A trace should tell you causation, not just timestamps</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
 第44课	→	Lesson 44
+：	→	:
 图像中的patch是切分的小块，RGB是红绿蓝3个通道；软件工程中的patch则是代码补丁，两者同名。图像块展开后可通过可学习变换成为向量，不是查文字词表。<span class="concept-micro">独立图像例：16×16×3的一块含768个数，投影后可以变成d个特征。d由模型设计决定。	→	A patch in an image is a small block cut out of it, and RGB is the 3 channels red, green and blue; a patch in software engineering is a code patch — the same word for both. An image block, once flattened, can become a vector through a learnable transformation; it is not a lookup in a text vocabulary.<span class="concept-micro">Independent image example: one 16×16×3 block holds 768 numbers, and after projection it can become d features. d is fixed by the model design.
 DPR、DPI与坐标单位	→	DPR, DPI and coordinate units
 一个注意力头是一套匹配并聚合内容的路径。MHA常让每个Query头有自己的K/V头；MQA让多个Query头共用一组K/V；GQA在两者之间，分组共享。它们是结构选择，不是运行时随便改一个开关。<span class="concept-micro">独立形状例：8个Query头、2个K/V头，若均匀分组，每4个Query头共享1组K/V；缓存按K/V头数记账。	→	An attention head is one path that matches and then aggregates content. MHA usually gives every query head its own K/V head; MQA has several query heads share one group of K/V; GQA sits between them, sharing by group. These are structural choices, not a switch to be flipped at run time.<span class="concept-micro">Independent shape example: 8 query heads and 2 K/V heads, grouped evenly, means every 4 query heads share 1 group of K/V; the cache is accounted for by the number of K/V heads.
 第46课	→	Lesson 46
-归一化	→	Normalization
 步骤	→	Step
 LoRA、低秩及r	→	LoRA, low rank and r
 候选	→	Candidate
 观察	→	Observation
-授权	→	Authorization
+事件	→	Event
 不变	→	Unchanged
 输入	→	Input
 DAG是有方向且没有环的任务依赖图。箭头A→B表示B依赖A完成；关键路径是在给定任务时长与依赖下决定最早完成时间的最长依赖链。<span class="concept-micro">独立例：A需2秒，B/C依赖A分别需3/5秒且可并行，则A后两者完成至少7秒，不是把2+3+5=10当墙钟时间。	→	A DAG is a task dependency graph that is directed and has no cycles. The arrow A→B means B depends on A finishing; the critical path is the longest dependency chain, the one that fixes the earliest finishing time given the task durations and dependencies.<span class="concept-micro">Independent example: A takes 2 seconds, B and C depend on A, take 3 and 5 seconds and can run in parallel, so finishing both after A takes at least 7 seconds — not 2+3+5=10 read as wall-clock time.
 绿色测试需要绑定“真的运行过”和“当前版本”	→	A green test has to be bound to "it really ran" and "the current version"
 pass@k、pass^k和一次成功率为什么不能混用？	→	Why can pass@k, pass^k and a single-attempt success rate not be used interchangeably?
+来源	→	Source
 第18课	→	Lesson 18
 第33课	→	Lesson 33
-这只是二维旋转的教学频率。实际RoPE对Q/K成对分量使用不同频率；作用在匹配表示上，不是简单把位置编号加到Token ID。	→	This is only a teaching frequency for a two-dimensional rotation. Real RoPE uses different frequencies for the paired components of Q/K; it acts on the matching representation, and does not simply add the position ID to the token ID.
 第4行	→	Row 4
 第5行	→	Row 5
 第6行	→	Row 6
 第7行	→	Row 7
-1 我	→	1 我
-2 爱	→	2 爱
-4 你	→	4 你
 回到 第37课 的完整讲解 →	→	Back to the full explanation in Lesson 37 →
 用具体过程辅助理解：<a href="../visual/F31.html">长期记忆不是永远正确的小纸条</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F31.html">Long-term memory is not a note that is always right</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
 用具体过程辅助理解：<a href="../visual/F37.html">资料能影响模型，不代表获得了权限</a>。图解说明共通机制，本条资料的专用方法与实验结论仍以本条讲义为准。	→	A concrete process to help: <a href="../visual/F37.html">Material can influence a model without thereby gaining permission</a>. The figure explains the shared mechanism; the method specific to this item and its experimental conclusions remain as stated in this item's own notes.
@@ -727,15 +733,15 @@ DPR常表示设备像素与CSS像素的比例；DPI表示每英寸的点数。�
 数据/调用方向以图中连线为准；参数与激活、训练与推理分别标注。	→	The direction of data and calls is as drawn by the lines in the figure; parameters and activations, and training and inference, are labeled separately.
 ∂、∇：偏导与梯度	→	∂, ∇: partial derivative and gradient
 MoE、专家与路由器	→	MoE, experts and the router
+归一化	→	Normalization
 03｜注意力的深入追问：位置、掩码、多头与反向传播	→	03｜Attention, pressed further: position, masks, multiple heads and backpropagation
 第47课	→	Lesson 47
 LoRA用两个较小矩阵的乘积表示一部分权重增量，而不是重新训练整个大矩阵。r是中间维度，限制这个乘积的最大秩。不同资料采用行/列向量约定时，A、B的左右次序可能不同。<span class="concept-micro">右乘约定微例：W[4,6]，增量A[4,2]B[2,6]仍为[4,6]；r=2。A在这里不是注意力份额表。	→	LoRA represents part of a weight increment as the product of two smaller matrices instead of retraining the whole large matrix. r is the inner dimension, and it bounds the maximum rank of that product. Where sources use a row-vector or a column-vector convention, the left-right order of A and B can differ.<span class="concept-micro">Micro-example in the right-multiplication convention: with W[4,6], the increment A[4,2]B[2,6] is still [4,6]; r=2. A here is not the table of attention shares.
 解释	→	Explanation
-量化	→	Quantization
 组织模型输入、工具、状态、权限和反馈的外围程序。 例：模型提出读文件，Harness执行并回填结果。	→	The surrounding program that organizes the model's input, tools, state, permissions and feedback. Example: the model proposes reading a file; the harness runs it and fills the result back in.
-反例	→	Counterexample
 第62课	→	Lesson 62
 一次任务里的两轮模型调用，各自多知道了什么	→	Two model calls in one task, and what each of them knows in addition
+授权	→	Authorization
 诊断	→	Diagnosis
 BM25及N、df、k₁、b	→	BM25 and N, df, k₁, b
 相关不等于可用：从召回到证据闭合	→	Relevant is not the same as usable: from recall to evidence closure
@@ -754,16 +760,15 @@ BM25及N、df、k₁、b	→	BM25 and N, df, k₁, b
 你	→	你
 BPE的合并次序，决定后面还能合并什么	→	The merge order in BPE decides what can still be merged later
 第57课	→	Lesson 57
-是	→	Yes
+是	→	is
 将各分数取指数，再除以所有指数之和。 例：分数[2,1,0]经Softmax后约为[0.6652,0.2447,0.0900]。	→	Take the exponential of each score, then divide by the sum of all the exponentials. Example: the scores [2,1,0] after Softmax are about [0.6652,0.2447,0.0900].
 基础课程：先读逐步讲解与统一算例	→	Foundation lessons: read the step-by-step explanation and the shared worked example first
 Norm、LayerNorm、RMSNorm：不是概率归一化	→	Norm, LayerNorm, RMSNorm: not a probability normalization
 不同查询头与K/V头共享方式的注意力结构。 例：共享更多K/V可减少缓存，但不保证质量完全相同。	→	Attention structures that differ in how query heads and K/V heads are shared. Example: sharing more K/V can reduce the cache, but it does not guarantee identical quality.
-形状	→	Shape
 通常在每个位置应用的前馈子网络。 例：常把宽度先扩展再缩回，带非线性或门控。	→	A feed-forward sub-network usually applied at every position. Example: it often widens first and then narrows back, with a nonlinearity or a gate.
 ∂L/∂w询问保持其他独立变量不变时，w小幅改变会让损失L怎样变化。多个参数的这些变化率合成梯度∇L。它们是导数记号，不是把两个普通数直接相除。<span class="concept-micro">独立微例：L=w²时，w=3处的梯度为6。最简单更新w←w−η×6中，η是学习率。	→	∂L/∂w asks how the loss L changes when w changes a little while the other independent variables are held fixed. These rates of change across many parameters make up the gradient ∇L. They are derivative notation, not two ordinary numbers divided by each other.<span class="concept-micro">Independent micro-example: for L=w², the gradient at w=3 is 6. In the simplest update w←w−η×6, η is the learning rate.
 一起组织计算的一组输入。 例：普通样本batch不让不同用户相互读取内容。	→	A group of inputs organized for computation together. Example: an ordinary sample batch does not let different users read each other's content.
-MoE是包含多套子网络的模型结构；路由器为当前Token表示选择或加权少数专家。专家通常是数值子网络，不是被赋予“数学老师”等提示词的聊天Agent。<span class="concept-micro">独立例：有4个专家，每Token选2个，表示某次只激活其中2条专家路径；仍需保存模型设计要求的参数与路由状态。	→	MoE is a model structure that contains several sub-networks; the router selects or weights a few experts for the current token's representation. An expert is usually a numeric sub-network, not a chat agent given a prompt such as "maths teacher".<span class="concept-micro">Independent example: with 4 experts and 2 chosen per token, one pass activates only 2 of the expert paths; the parameters and routing state that the model design requires still have to be stored.
+MoE是包含多套子网络的模型结构；路由器为当前Token表示选择或加权少数专家。专家通常是数值子网络，不是被赋予“数学老师”等提示词的聊天Agent。<span class="concept-micro">独立例：有4个专家，每Token选2个，表示某次只激活其中2条专家路径；仍需保存模型设计要求的参数与路由状态。	→	MoE is a model structure that contains several sub-networks; the router selects or weights a few experts for the current token's representation. An expert is usually a numeric sub-network, not a chat agent given a prompt such as "math teacher".<span class="concept-micro">Independent example: with 4 experts and 2 chosen per token, one pass activates only 2 of the expert paths; the parameters and routing state that the model design requires still have to be stored.
 BOS / EOS：序列边界标记	→	BOS / EOS: sequence boundary markers
 RoPE保留的是相对角度，不是每轮重新开始的位置	→	What RoPE keeps is the relative angle, not a position that starts over each turn
 d_k、d_v、Dh：每行表示的宽度	→	d_k, d_v, Dh: the width of each row of representation
@@ -781,7 +786,7 @@ FlashAttention：改变中间数据存取方式	→	FlashAttention: changing how
 连续组批把空出来的槽给新请求，但调度步不等于等长时间	→	Continuous batching gives a freed slot to a new request, but a scheduling step is not an equal length of time
 一次任务的执行轨迹与其中有开始结束的操作跨度。 例：并行跨度的耗时不能直接全加成墙钟时间。	→	The execution trace of one task, and the operation spans inside it that have a start and an end. Example: the durations of parallel spans cannot all be added up into wall-clock time.
 拒绝草稿时的补偿，才保证目标分布不被带偏	→	It is the compensation when a draft is rejected that keeps the target distribution from being skewed
-相关动态过程：<a href="../visual/F22.html">把一个Agent任务拆成真正发生的几轮</a>。本节下文继续展示更具体的计算与工程边界。	→	A related step-by-step process: <a href="../visual/F22.html">Break one agent task into the turns that actually happen</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+相关动态过程：<a href="../visual/F22.html">把一个Agent任务拆成真正发生的几轮</a>。本节下文继续展示更具体的计算与工程边界。	→	Related step-by-step process: <a href="../visual/F22.html">Break one agent task into the turns that actually happen</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
 一次回答结束，为什么任务仍未完成？	→	One answer has finished — so why is the task still not done?
 能证明什么	→	What it proves
 任务目标	→	Task goal
@@ -839,15 +844,17 @@ Trace里的并行段不能直接相加成用户等待时间	→	Parallel spans i
 工具定义	→	Tool definition
 计算查询与可读候选的匹配份额，再加权组合内容。 例：先计算分数和权重，再用权重混合V。	→	Compute the matching shares between the query and the readable candidates, then combine the content by those weights. Example: compute the scores and the weights first, then mix V with the weights.
 SwiGLU、Wg/Wu/Wd：两路变换再合成	→	SwiGLU, Wg/Wu/Wd: two transformation paths, then combined
-Norm在层公式中表示一个规范化函数。LayerNorm通常按一个Token的特征减均值、除标准差，再缩放平移；RMSNorm通常不减均值，按均方根缩放。它们不等于softmax。<span class="concept-micro">独立微例，忽略稳定分母用的小正数ε与可学缩放：LayerNorm([1,3])=[-1,1]；RMSNorm([1,3])=[1/√5,3/√5]。	→	In a layer formula, Norm stands for a normalizing function. LayerNorm usually subtracts the mean over one token's features, divides by the standard deviation, then scales and shifts; RMSNorm usually does not subtract the mean and scales by the root mean square. Neither of them is softmax.<span class="concept-micro">Independent micro-example, ignoring the small positive ε that stabilises the denominator and the learnable scaling: LayerNorm([1,3])=[-1,1]; RMSNorm([1,3])=[1/√5,3/√5].
+Norm在层公式中表示一个规范化函数。LayerNorm通常按一个Token的特征减均值、除标准差，再缩放平移；RMSNorm通常不减均值，按均方根缩放。它们不等于softmax。<span class="concept-micro">独立微例，忽略稳定分母用的小正数ε与可学缩放：LayerNorm([1,3])=[-1,1]；RMSNorm([1,3])=[1/√5,3/√5]。	→	In a layer formula, Norm stands for a normalizing function. LayerNorm usually subtracts the mean over one token's features, divides by the standard deviation, then scales and shifts; RMSNorm usually does not subtract the mean and scales by the root mean square. Neither of them is softmax.<span class="concept-micro">Independent micro-example, ignoring the small positive ε that stabilizes the denominator and the learnable scaling: LayerNorm([1,3])=[-1,1]; RMSNorm([1,3])=[1/√5,3/√5].
+形状	→	Shape
 BOS通常表示序列起始，EOS表示结束的特殊Token；具体模型和消息模板可能使用不同名称、数量及结束标记。它们是输入/输出协议中的符号，不是语义正确性的证明。<span class="concept-micro">遇到EOS不自动切断两个训练样本之间的注意力；要隔离读取还需mask或实现支持的样本边界。	→	BOS is usually the special token for the start of a sequence and EOS the one for the end; a particular model or message template may use different names, counts and end markers. They are symbols in the input/output protocol, not proof of semantic correctness.<span class="concept-micro">Meeting an EOS does not automatically cut attention between two training samples; isolating the reads still needs a mask, or a sample boundary the implementation supports.
 d_k表示一个Query/Key向量有多少个分量；d_v表示一个Value向量有多少个分量。Dh或d_h在一些章节中是单头宽度。它们是尺寸整数，不是第k个Key或某个Value数值。<span class="concept-micro">形状微例：Q[2,3]、K[5,3]、V[5,4]，则分数[2,5]，输出[2,4]。Q/K配对宽度3，Value宽度4仍合法。	→	d_k is how many components one Query/Key vector has; d_v is how many components one Value vector has. Dh, or d_h, is the single-head width in some chapters. They are size integers, not the k-th Key or some Value number.<span class="concept-micro">Shape micro-example: with Q[2,3], K[5,3] and V[5,4], the scores are [2,5] and the output [2,4]. A pairing width of 3 for Q/K with a Value width of 4 is still legitimate.
 RLHF、奖励模型与策略	→	RLHF, the reward model and the policy
+量化	→	Quantization
 07｜KV Cache、FlashAttention与PagedAttention的内部过程	→	07｜Inside KV cache, FlashAttention and PagedAttention
 通过分块和在线归一化等方式，避免把完整注意力分数/权重矩阵长期写到较慢显存；目标仍是同一个注意力运算，浮点舍入可随运算次序变化。<span class="concept-micro">它不是把Token永久压缩，也不是跳过所有Key。区分“不把整张表落显存”与“没有进行这些数学计算”。	→	By means such as tiling and online normalization, it avoids keeping the full attention score/weight matrix in slower VRAM for long; the target is still the same attention computation, and floating-point rounding can vary with the order of operations.<span class="concept-micro">It does not compress tokens permanently, and it does not skip any Key. Keep "not writing the whole table to VRAM" apart from "not doing this arithmetic at all".
+反例	→	Counterexample
 输出	→	Output
 08｜推理服务：调度、吞吐、延迟和并行	→	08｜Inference serving: scheduling, throughput, latency and parallelism
-宿主	→	Host
 工具调用	→	Tool call
 为什么每次模型调用都需要一致的上下文快照？	→	Why does every model call need a consistent context snapshot?
 规则	→	Rule
@@ -856,7 +863,6 @@ SSE是服务端发送事件的文本协议；网络chunk是这次收到的一段
 上下文组装为什么不能只做“取前N条”？	→	Why can assembling context not just be "take the first N items"?
 Skill、JIT与触发描述	→	Skill, JIT and the trigger description
 I：单位矩阵	→	I: the identity matrix
-配对	→	Pairing
 RRF对某文档在每条召回路径上的排名r贡献1/(c+r)，再相加。c是平滑常数，r通常从1开始；没进入某条路径的候选不凭空获得该路贡献。<span class="concept-micro">独立例：c=10，某文档两路排名1、3，得1/11+1/13约0.167832。不是把BM25和余弦的原始分数相加。	→	For a document's rank r on each recall path, RRF contributes 1/(c+r), and these are added. c is a smoothing constant and r usually starts at 1; a candidate that did not appear on a path does not receive that path's contribution out of nowhere.<span class="concept-micro">Independent example: with c=10 and a document ranked 1 and 3 on two paths, it gets 1/11+1/13, about 0.167832. This is not adding the raw BM25 and cosine scores together.
 词法名次 / 向量名次	→	Lexical rank / vector rank
 分数	→	Score
@@ -903,6 +909,8 @@ Precision、Recall、MRR与nDCG	→	Precision, Recall, MRR and nDCG
 ⊙：逐元素乘，不是矩阵乘	→	⊙: element-wise multiplication, not matrix multiplication
 动作	→	Action
 Dropout：训练中的随机置零规则	→	Dropout: the rule that randomly zeroes values during training
+Wq / W_Q：查询投影参数	→	Wq / W_Q: the query projection parameters
+04｜训练机制：损失、完整反向传播与参数更新	→	04｜Training mechanics: loss, the full backward pass and parameter updates
 
 # Glossary from the book itself (glossary.html):
 

@@ -88,6 +88,7 @@ def write(lang):
         print('缺译文 %s 条，例: %s' % (format(len(set(miss)), ','), list(dict.fromkeys(miss))[0][:50]))
 
 
-cmd = sys.argv[1] if len(sys.argv) > 1 else 'collect'
-lang = next((a.split('=', 1)[1] for a in sys.argv[2:] if a.startswith('--lang=')), 'en')
-{'collect': collect, 'write': lambda: write(lang)}[cmd]()
+if __name__ == '__main__':
+    cmd = sys.argv[1] if len(sys.argv) > 1 else 'collect'
+    lang = next((a.split('=', 1)[1] for a in sys.argv[2:] if a.startswith('--lang=')), 'en')
+    {'collect': collect, 'write': lambda: write(lang)}[cmd]()

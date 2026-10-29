@@ -1,0 +1,396 @@
+23693	Lesson 20｜The online retrieval chain: recall, fusion, reranking and evidence sufficiency — AI Systems Engineering
+22222	Follow this chapter through its objects and states</a><a href="#topic-2">From two candidate lists to usable evidence</a><a href="#Q061">Q033｜How are BM25 and vector retrieval fused? Why does RRF not add the raw scores directly?</a><a href="#Q062">Q034｜Why are a cross-encoder reranker and ColBERT finer than a simple cosine?</a><a href="#Q063">Q035｜Relevant material has been retrieved: how do you judge that it is already enough to answer? How is a citation bound to the conclusion?</a><a href="#Q064">Q036｜Which failure link does each of HyDE, RAPTOR, GraphRAG and Self-RAG address? When should they not be used?</a><a class="sub ap-toc" href="#agent-practice-retrieval">Relevant is not the same as usable: from recall to evidence closure
+21558	Retrieval searches broadly first, reranking then selects finely, and the evidence check judges last whether an answer can be supported. These layers have different metrics: a high rank is not a true fact, and a close topic is not a satisfied condition.
+23882	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+27542	A quick check before the deep reading:</strong> work RRF out by hand from the ranks on the two candidate lists, say why the scores cannot simply be added, and why the source version and the full conditions still have to be checked after fusion.
+15983	The goal of the online stage is not "find the five passages that look most like the question", but to find evidence sufficient to support the current conclusion or action. Relevance, completeness, timeliness and usability have to be checked separately.
+8192	Q033｜How are BM25 and vector retrieval fused? Why does RRF not add the raw scores directly?
+27480	What to know first for this question</span>Hybrid retrieval merges different clues; RRF fuses by rank, and a cross-encoder compares the query with the candidate again rather than retraining every document.
+10750	Different retrievers score on inconsistent scales, so adding them directly can let one retriever dominate.
+21441	accumulates, over each candidate's rank in each list,
+29248	, which reduces the dependence on the scale of the raw scores. It is a rank-fusion method, not a probability calibration.
+24168	Work through a three-document example
+19537	ranking is A, B, C and the vector ranking is B, C, A. Take the constant k=60:
+25112	After fusion B comes first. B is not second on either list on its own; it is first on one list and second on the other, and so it has consistent support. With a larger k the differences between ranks are gentler; with a smaller one the top ranks matter more. A candidate that did not appear on a list generally receives no contribution from that list, and a particular implementation may also have weights and a window size.
+25111	Before fusion, deduplicate by stable document or chunk identity. If the same passage appears under three different chunk IDs, it can fill up the candidates; if you deduplicate by text alone, you may wrongly merge identical text from different versions or with different permissions. Identity, version and content similarity should be handled separately.
+11354	Two ranking tables, fused row by row into RRF
+26474	Input and conditions.</strong> The lexical ranking is [A,B,C] and the vector ranking is [B,C,D], ranks count from 1, and the constant is c=60. An item that does not appear contributes 0 for that list.
+14972	Lexical rank 1 only
+25742	Lexical rank 2 + vector rank 1
+25743	Lexical rank 3 + vector rank 2
+14968	Vector rank 3 only
+23135	Add the BM25 score and the cosine similarity directly
+11396	The two are on different scales, and one of the units can dominate.
+18904	Join the steps up.</strong> RRF uses ranks instead of pretending that the raw scores of different retrievers can be added directly.
+26647	Limits and counterexamples.</strong> c=60 is only this example's parameter, not the best value for every task; duplicate documents have to be deduplicated within each list.
+27806	Follow-up: why can the fused result still be worse than a single route?
+10261	One low-quality retriever introduces noise; and two retrievers can be highly correlated, so what is added is not independent information. The candidate window, the weights and the deduplication method all affect the result. Run BM25-only, dense-only and fusion ablations rather than assuming that hybrid must be better.
+28011	Follow-up: does query rewriting come before or after fusion?
+28298	Usually different queries are generated before recall, giving several candidate lists; but a rewrite has to keep the original exact keys and the user's constraints. For the question "which write operations cannot be retried", rewriting it to "retry mechanism" may lose the negated condition. Keeping the original query route lowers the risk of rewrite drift.
+27723	Follow-up: does a larger Top-k make an omission less likely?
+15104	The recall set usually grows, but the context budget downstream is fixed, so more noise can crowd out the key evidence, and it also adds rerank and model cost. Distinguish the recall k, the rerank k and the final reading k, and choose them by task quality rather than setting one large number for all of them.
+17853	Engineering deep dive · E31 · continues Q061
+19534	Rank fusion has one prerequisite about identity
+8720	For each retrieval route's results, RRF adds up
+24285	, which solves the problem that different raw relevance scores are hard to add directly; the official documentation also distinguishes rank_constant from the candidate window.
+5855	 But it does not automatically know whether the results from the two routes are duplicate copies of the same source, and it does not automatically merge near-duplicate chunks of the same document.
+22896	A counterexample of double counting with the same candidate
+26087	Route one is [A,B], route two is [B,A], and k=60. A and B both get
+29309	, a tie. If route one is wrongly added a second time, A gets
+29138	, B gets
+29136	, and A is ahead.
+22154	There is no new evidence — one route was simply repeated — and the ranking changes. Several nearly identical query rewrites can bring in correlated "votes" too; that is not necessarily a bug in the code, but it should be stated plainly that it amounts to changing the weights rather than gaining fully independent support.
+20129	Do not mix document-level, chunk-level and fact-level identity
+15428	One document can have several valid relevant chunks; deduplicating them all into one loses context. Conversely, copying the same passage into several chunk_ids should not manufacture several independent pieces of evidence for the answer. Define the unit of fusion first, then check diversity and coverage before the material goes into the prompt, keeping the document source and the local range.
+12513	When the candidate window is too small, reranking cannot make up for it
+16347	If a correct fragment did not enter any route's candidates, the RRF and cross-encoder that follow cannot conjure it back. When checking, split the question into "do the recalled candidates contain the evidence for the answer" and "once contained, does it rank inside the readable budget". Tuning the reranker alone may be fixing the wrong layer.
+28067	Follow-up: is there no problem once each route's scores are normalized and then added?
+11788	The score scales, the query distribution and the calibration still have to be verified. Min-max is affected by extreme values and by the number of candidates; a vector cosine and BM25 are not the same probability. RRF is a robust rank-fusion tool, but it is no guarantee that retrieval evaluation can be skipped.
+27927	Follow-up: how are tied scores tested?
+20347	State a stable ordering rule — keep the original rank, the document ID or some other defined secondary sort; do not let an order the database leaves unspecified make tests fail intermittently. A comparison should check the equivalent set and the actual downstream coverage, and should not treat an irrelevant swap between tied items as a quality regression.
+7507	E31: how to read this result, rather than only looking at "pass"
+15432	Copying the same source once over casts one more vote in RRF. Compared with a genuinely independent retrieval source, what it changes is the weight rather than adding evidence, and a duplicate result must not be taken for independent support.
+24865	Self-check:</strong> if the same recall route is duplicated and RRF is run again, does that add evidence or change the weights?
+11574	Mainly it gives that route an extra vote and changes the weights; it produces no independent source. Define route identity, deduplication and a weighting policy, and test whether correlated routes influence the ranking too much.
+15773	Three fixed documents: work the rank fusion out first
+19985	In the teaching example the lexical ranking is D1, D2, D3 and the vector ranking is D2, D3, D1. With the RRF constant 60, D1 gets 
+29139	, D2 gets 
+29140	, D3 gets 
+29292	, so D2 comes first. What RRF fuses is rank contributions; it does not add the lexical score and the cosine similarity directly. The constant 60 is this example's choice, not a value every system has to use.
+19545	Ranking first can still fail to answer
+7358	If D2 applies only to an old version, it does not cover the current question; if the user has no access to it, being relevant is no reason to send its text to the model; and if D1 and D2 are duplicate chunks of the same original passage, they cannot count as two independent pieces of support. The source ID and the version are part of the evidence object.
+6995	Anthropic's Contextual Retrieval puts a chunk back into its document's context to improve retrieval, and combines methods such as lexical retrieval, vectors and reranking; its evaluation results belong to its own data and configuration, and should not be taken as a percentage that any repository is bound to gain.
+24284	The indexing stage produces silent mismatches too
+15565	Both having 768 dimensions does not mean they come from the same embedding space. After a change of model, pooling, normalization or chunking, an old index and a new query can be interface-compatible yet semantically incompatible. An index version should be bound to the embedding model and the preprocessing version; rebuilding and switching over need a rollback condition.
+21152	Permission filtering and the number of candidates
+26914	If approximate retrieval takes 20 items first and then filters by permission, only 1 may be left, so "we took 20" must not be read as "there are 20 usable candidates". Where the system's capabilities allow it, bring the filter into the retrieval plan; otherwise increase the number of candidates and evaluate the recall loss. Never use a broadened query to get around permissions.
+25687	A teaching table for evidence closure
+17541	For every final conclusion, list the specific claim, the supporting passage, the version, the conditions of use and the information still missing. Answering "can the deployment be rolled back" needs the target version, state compatibility and the way back as well; retrieving the word "supports rollback" is not enough. When the evidence is insufficient, keep retrieving, narrow the conclusion or say plainly that it is unknown, rather than covering the gap with more fluent text.
+17602	Keep the mechanism in the original source apart from the teaching rank calculation
+7299	Contextual Retrieval discusses adding context to document chunks, combining keyword and vector retrieval, and reranking. The RRF candidates D1/D2/D3 in the text are this book's independent algorithm example, not a record of one actual query on the system Anthropic published; the two must not be stitched together into a reproduction of the product.
+15913	Another kind of judgment comes before answering: whether the evidence covers the question, whether permissions allow it, and whether the version applies. Relevance only indicates a match of some kind; it does not prove that the material itself is correct. We suggest storing the generated chunk context and the original citation separately, and going back to the position in the original text when checking; these are engineering suggestions derived from the mechanism, and they have to be evaluated on your own data set.
+8195	Q034｜Why are a cross-encoder reranker and ColBERT finer than a simple cosine?
+27500	What to know first for this question</span>Sufficient evidence requires every key condition to be supported; several relevant fragments side by side can still contradict each other or come from different versions.
+23660	Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+14789	A two-tower retriever compresses
+15603	and doc independently into vectors, which makes a whole-corpus search easy; a cross-encoder encodes the query and the candidate document jointly, which allows fine-grained interaction but has to be computed for every candidate. ColBERT keeps
+24334	-level representations and trades efficiency off against fine matching through late interaction.
+22092	Comparing three places where information interacts
+14793	Two-tower:
+29363	, and one dot product at the end. Documents are cheap to precompute, but much of the detail has already been squeezed into a single vector. Cross-encoder:
+29155	, where query words can interact with different positions in the document, which makes it easier to check things like "old version / forbidden / exception", but it is not suited to running over a million documents one by one.
+7282	ColBERT's simplified MaxSim scoring is: for every query token vector q_i, find the largest similarity among the document token vectors d_j, then sum over the query tokens:
+10230	. This keeps multi-point matching, and the document token vectors can be computed offline. The cost is that storage and indexing are larger than for a single vector, and MaxSim itself is still not a reasoner about facts.
+17887	An engineering pipeline usually recalls a number of candidates cheaply first, then uses a reranker to narrow them to a smaller set, and finally reads the necessary range of the original text. The reranker's input should be permission-filtered first as well: a sensitive candidate must not be sent to an external service that has no authorization for it.
+20903	Conditions for this example:</strong> the independent query is "can validation be turned off in production". Candidate A says "it can be turned off in the test environment", and candidate B says "it must be on in production". No actual scores for any model are invented; the figure only explains how information is accessed.
+12678	Encode each of them separately first, then compare by vector similarity.
+21296	The query and the candidate go into the computation together, scoring relevance directly.
+12431	Keep multi-token representations and do the finer-grained matching later.
+22105	What is kept when comparing
+11923	Cost and limits
+14132	Single-vector recall
+21295	One vector for the query, one for the document
+18378	Fast, but the detail has been compressed away
+7314	Cross-encoder reranking
+21321	The query words and the candidate text are computed together
+20509	More expensive; suited to a smaller candidate set
+7283	ColBERT-style matching
+22009	Every query token finds its high-scoring match among the document tokens
+16419	More storage and computation; the conditions still have to be judged
+11390	Both candidates contain "environment, turn off, validation" and look alike on the surface; whether they answer the production question depends on the conditional words and the direction of the negation.
+28518	Reranking usually comes after recall, because computing jointly over the whole corpus document by document costs too much. If the correct document was never recalled, reranking has no chance to bring it back.
+23184	A relevance score is not the right answer either; the conditions of use still have to be read out and bound to the evidence at the end.
+11201	Do not conflate:</strong> taking the top score from reranking as "it is settled that it may be turned off" skips fact extraction, and negation is especially easy to miss that way.
+27709	Follow-up: can a reranker bring back a document that recall missed?
+11004	It cannot pick the correct document out of candidates that do not exist. It improves the ordering; it does not widen whole-corpus recall directly. If the correct evidence never entered the candidates, fix the chunking, the query, the index or the recall rather than switching to a stronger reranker.
+27708	Follow-up: does a reranker score of 0.9 mean 90% relevant?
+28284	Usually it cannot be read that way. The model's output may be a logit or an uncalibrated value; the training distribution, where the candidates came from, and a change of domain all affect the scale. If a threshold is needed, calibrate it on labeled data and re-check it after a change of model or index.
+27801	Follow-up: why are neighboring fragments expanded after reranking?
+28514	Reranking small fragments locates things more accurately, but a complete answer may need the heading, the preconditions and the exception in the paragraph that follows. After expanding, deduplicate again and check the budget. If every candidate is expanded into a whole document, the benefit of retrieval's focus is lost again.
+8198	Q035｜Relevant material has been retrieved: how do you judge that it is already enough to answer? How is a citation bound to the conclusion?
+27468	What to know first for this question</span>Query rewriting broadens the wording, a hypothetical document helps retrieval but is not fact, and trees and graphs help organize relationships while introducing construction cost and error propagation.
+18857	Break the user's question into the claims or action conditions that need support, and check item by item whether the evidence is direct, current, complete and permitted for use. The existence of a relevant fragment does not mean every part of the question has been answered; the existence of a citation link does not mean it supports the conclusion beside it.
+10252	An evidence table for "can this be retried automatically"
+28700	The question contains three sub-conditions: whether the interface is idempotent, the default retry behavior in the current version, and whether production allows automatic retries. Document A states only that the interface is idempotent, configuration B states that it retries three times, and permission policy C states that a write in production needs approval. Without C, "automatic retries for production writes are allowed" cannot be derived.
+19984	A teaching evidence table can record: claim, evidence_id, support_type, version, missing_condition. support_type distinguishes direct support, indirect inference, contradiction and no evidence. Every factual sentence in the final answer should be bound to the source that supports it; an inference should be marked as such, with its grounds stated. What the original document does not say must not be written down as confirmed because it "sounds reasonable".
+16234	When documents conflict, first check whether they differ in version, environment, date or definition, rather than voting straight away. Two reprints are not two independent pieces of evidence; and a configuration value and a design intent do not necessarily contradict each other — the implementation may have drifted from the design. The answer should preserve these distinctions.
+20594	The top-scoring evidence cannot answer "is it in effect now" — what then
+26420	Input and conditions.</strong> The user asks "what is the production timeout now?" Candidate A has a high similarity and says 3 seconds, but is labeled as the test environment; B says 5 seconds but was updated for an old production version; C is the current production configuration, 7 seconds.
+19318	Break the requirement down
+28861	Production, current and the timeout field all have to hold at once
+10497	None of the three conditions can be dropped.
+11582	Topically relevant but the wrong environment
+11013	It cannot serve as the answer sought.
+22761	The right environment but an old version
+15057	It can only explain history.
+14871	Take C
+25878	Read the current version and the field's unit
+18303	This gives 7 seconds, and it can be traced.
+24710	Without C
+12517	The candidate set has only A and B
+15705	Answer that the evidence is insufficient and keep retrieving, instead of forcing an answer out of the top score.
+19164	Join the steps up.</strong> A relevance ranking is only a priority order over candidates; evidence sufficiency is an item-by-item verification against the target conditions.
+26722	Limits and counterexamples.</strong> The numbers and versions are a teaching construction; a real system needs environment mapping and rules about authoritative sources, not just a look at one date string.
+27757	Follow-up: why can "answer only from the material provided" still produce hallucination?
+21671	The model may fill a gap with background knowledge, join cause and effect wrongly, ignore a negation or cite the wrong thing. A prompt is a constraint, not a prover. What is needed is sufficient evidence, a permitted "missing" state, checks on the key assertions and appropriate deterministic verification; for code behavior a test can be run, and for numbers the calculation can be redone.
+28101	Follow-up: when the material is insufficient, keep searching or stop?
+23258	It depends on whether the gap can be filled from an authorized source, and on the marginal value of searching. If the configuration can be located precisely, go on reading; if there is no permission or the source does not exist, state the boundary. Searching without limit adds cost and may pick up low-quality support; one must not search until satisfied just to arrive at a yes.
+27907	Follow-up: how is citation quality assessed?
+24945	At a minimum, check that the citation exists, that the target is reachable, that the range is right, that the content supports the claim, and that the version applies. Automatic rules plus a model as an aid can judge this, but a high-risk claim needs a human or a deterministic check. Many citations are not the same as high quality; the minimum sufficient support is easier to review.
+17854	Engineering deep dive · E32 · continues Q063
+11170	Do not take retrieval similarity for logical entailment
+21567	Retrieval judges "this passage has to do with the question"; a citation points at "where this material comes from"; a support judgment asks "can this passage, under these conditions, yield the current conclusion". None of the three can stand in for another. Rank fusion only combines relevance signals; it does not check the conditions of use for each proposition in the answer.
+15786	A fixed counterexample: the material says "Pro version 3 allows a limit of 100", and the user asks "does Free version 3 allow 100". The title and the version are both highly relevant and the citation is genuine, but the tier condition does not match, so it cannot support "allowed". This book's local condition check returns false; this is not a judgment that relies on a language model's score.
+18734	Break one sentence into propositions with conditions
+12297	For example, "the feature is on by default and costs nothing extra" contains two propositions, which may need the configuration document and a billing basis respectively. An evidence table should record the proposition, the source range, the version, the time it took effect, who it applies to, the supporting or opposing relationship, and the unknowns. Keep as unknown whatever the source does not contain; do not use fluent language to fill it in as a conclusion.
+20317	Time matters especially: an old document and a new one disagreeing about the same feature may mean the effective period changed, not that one of them is a fake. Research on long-term memory also treats temporal reasoning and knowledge updating as a separate capability.
+5890	 The difference between the question as it was then and as it is now should be preserved.
+21188	The order in which conflicting sources are handled
+12819	First check whether they are discussing the same object, version and conditions; then look at the original source, the publication time and whether it was formally withdrawn later. A conflict that cannot be resolved should be presented as it is, with a statement of which decision still needs verification. One cannot vote by "more sources support my current answer", especially as several web pages may have copied the same error.
+28069	Follow-up: does adding a citation to every sentence avoid hallucination?
+10976	No. A model can attach a genuine source to a sentence that the source does not support. An automatic check needs at least the citation's range and the proposition; a high-risk action needs a deterministic rule or a human check as well. The number of citations is not a measure of evidence sufficiency.
+27940	Follow-up: how are tests like this written without leaning too much on an LLM judge?
+17527	For clearly structured conditions use executable checks: version, date, tier, units of quantity, authorization state. For open-ended statements use a small hand-labeled set of propositions and source fragments, then calibrate the judge. Keep counterexamples such as "relevant but unsupporting", "supports only half the sentence", "expired version" and "sources conflict", instead of testing only correct question-answer pairs.
+7510	E32: how to read this result, rather than only looking at "pass"
+18864	Pair the conclusion's subject, version, plan or time condition with the evidence cell by cell. A relevant passage only shows that the topic is similar; when the conditions do not match, it cannot answer the current user directly.
+24852	Self-check:</strong> a piece of material is highly relevant and its link is genuine, so why can it still not prove the answer?
+16462	It may apply only to another version, user tier or time, or support only part of the answer. The proposition and the source's conditions and range have to be checked against each other, instead of letting relevance stand in for support.
+8201	Q036｜Which failure link does each of HyDE, RAPTOR, GraphRAG and Self-RAG address? When should they not be used?
+27440	What to know first for this question</span>Recall missing the target, reranking pushing the correct item down, and generation distorting the evidence are three kinds of failure; they have to be measured separately before optimization can be aimed at one of them.
+23661	Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent
+27253	These methods address different problems:
+12520	A method that helps retrieval with the representation of a generated hypothetical answer. Example: the hypothetical content is not trustworthy fact, so real evidence is still needed.
+19882	improves the match between the query's wording and the document space;
+21206	builds hierarchical summaries for retrieval;
+13874	uses entity relationships and community summaries to answer global questions; Self-
+18843	brings retrieval and self-evaluation into the model's behavior; Corrective RAG concerns itself with assessing and correcting retrieval quality. They are not a standard production pipeline that all has to be chained together.
+22962	Choose by failure type, not by memorizing names
+22928	When the user has only one vague question while the corpus is detailed technical prose, HyDE generates a hypothetical document and encodes that, which may narrow the gap in wording. A hypothetical document is allowed to contain untrue detail, so it can serve only as a retrieval clue and cannot be cited as evidence. If the query already contains an exact error code, generating a passage of hypothetical content may dilute it instead.
+28895	When several levels of a long document have to be understood, RAPTOR clusters and summarizes recursively into a tree, and a query can hit different levels of abstraction. Summaries make an overview across passages easy, but updating the source document means updating the derived structure, and an error in a summary can propagate. When looking up one function parameter exactly, searching the source directly is usually simpler.
+28927	For global induction such as "what are the main trends across the whole collection", GraphRAG's entity relationships and community summaries may suit better than a few local
+22599	fragments. The cost is extraction, entity disambiguation, wrong relationships, the cost of building the index and the complexity of updating. Turning all the text into a graph does not automatically yield causal knowledge.
+8859	The original Self-RAG research includes mechanisms such as training and reflection tokens; it is not the same as appending "please check" after an arbitrary model. Corrective RAG also needs a quality-judging component; if that judgment is itself unreliable, it may trigger pointless web searches or discard good evidence by mistake.
+15657	Which step does each of the four RAG enhancements take on the same question
+26509	Input and conditions.</strong> The question is "why did the new release rule reduce build failures?" The material has release notes, failure logs and several module documents, with no ready-made summary.
+12831	Generate a hypothetical account first and use it to retrieve
+12541	The hypothesis counts only as a query clue, not as a release fact.
+21235	Search the layered summaries to locate the relevant group of documents
+13561	Then go back to the leaf evidence to check the actual cause.
+13879	Aggregate using the relationships among modules, changes and errors
+15828	The edges in the graph still need support from a source.
+8860	Self-RAG-style selection
+13867	Judge whether evidence should be fetched, and whether the evidence supports what is being generated
+16489	It involves a reflection mechanism that was trained in; adding a "self-check" line is not a full reproduction of it.
+24406	Stopping condition
+25673	The evidence can only show a correlated change, not causation
+24466	Keep the conclusion at "possibly related" and do not invent an experiment.
+18931	Join the steps up.</strong> Different enhancements act on the query, the index levels, relationship aggregation or generation control; a technique's name must not be treated as the same button.
+26756	Limits and counterexamples.</strong> The flow is a comparison of where each method acts, not a complete implementation of the four papers; no performance gain can be derived from a teaching flow.
+27911	Follow-up: how do you verify that an advanced RAG scheme really pays off?
+12787	Build a test set by question type first: exact facts, across passages, across documents, global induction, and conflicts over time. Compare against a simple baseline at the same budget, and look at recall, answer correctness, citation support, latency and the cost of building the store separately. The whole system cannot be judged with only the question type that suits the new method best.
+27885	Follow-up: can the relationships in the graph be executed directly as business rules?
+10953	No. A relationship extracted by an LLM may lack a condition, a time or a negation; "A mentions B" is not "A depends on B", still less "A causes B". A rule that gets executed should have clear authoritative evidence and verification; using the graph for navigation and to associate candidates is sounder.
+27782	Follow-up: why is it unwise to adopt a complex framework the moment basic retrieval works badly?
+25322	Information lost in parsing, wrong permissions and a stale index are inherited and amplified by a complex pipeline. Make sure the original text, the metadata, exact retrieval and simple hybrid retrieval work first, then introduce new mechanisms for the specific failures that remain. A method's name cannot replace locating the failure.
+22221	Follow this chapter through its objects and states</a><a href="#topic-2">From two candidate lists to usable evidence</a><a href="#Q061">Q033｜How are BM25 and vector retrieval fused? Why does RRF not add the raw scores directly?</a><a href="#Q062">Q034｜Why are a cross-encoder reranker and ColBERT finer than a simple cosine?</a><a href="#Q063">Q035｜Relevant material has been retrieved: how do you judge that it is already enough to answer? How is a citation bound to the conclusion?</a><a href="#Q064">Q036｜Which failure link does each of HyDE, RAPTOR, GraphRAG and Self-RAG address? When should they not be used?
+23694	Lesson 21｜Code intelligence: from text search to symbols, versions and run evidence — AI Systems Engineering
+22229	Follow this chapter through its objects and states</a><a href="#topic-2">Code retrieval cannot rely on "semantically similar" alone</a><a href="#Q065">Q037｜What does each of grep, AST, LSP and the call graph know? Why can they not stand in for one another?</a><a href="#Q066">Q038｜How does a code index handle Git versions, the work tree and unsaved files?</a><a href="#Q067">Q039｜How should a bug be located step by step? Why is "read more source" not a sufficient method?</a><a href="#Q068">Q040｜How do you get an agent to "understand the business" instead of only ever looking at local code?</a><a class="sub ap-toc" href="#agent-practice-code">Why does code evidence need the work-tree version, and not just the commit?
+22528	Source code has language structure and version relationships. A text search finds characters, an AST finds syntactic structure, and LSP understands symbols and types; compiling and testing provide run evidence. No single method can replace the other layers.
+23552	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality
+27528	A quick check before the deep reading:</strong> for two modules with a function named foo, say why a regular expression confuses them, what a definition-and-reference relationship adds, and why a language service can also be incomplete when the dependencies are not loaded.
+11942	A code base is not an ordinary collection of articles. Identifiers, types, module relationships, build configuration, versions and the execution environment provide clues more precise than a semantic vector, but those clues have limits too.
+11966	Identical strings in the code, syntax nodes, symbol references, calls at run time and test evidence are different layers. Look first at how one piece of code is located step by step by these layers, then judge whether a full-text search, an AST, LSP or an actual run is needed.
+23177	Related step-by-step process: <a href="../visual/F30.html">Code retrieval cannot rely on "semantically similar" alone</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24547	Related mechanisms to continue with: <a href="../visual/F34.html">Lesson 04 · A test looks for counterexamples; it does not stamp code green</a><a href="../visual/F31.html">Lesson 23 · Long-term memory is not a note that is always right
+8204	Q037｜What does each of grep, AST, LSP and the call graph know? Why can they not stand in for one another?
+27473	What to know first for this question</span>A regular expression finds text, an AST finds syntactic structure, and LSP finds the language's semantic relationships. Dynamic loading, macros and generated code all affect how complete static analysis can be.
+23666	Lesson 18 · Code is not an ordinary document
+9185	grep looks for text patterns;
+19313	The abstract syntax tree, which represents the syntactic structure of a program. Example: it can tell a function definition from an ordinary string, but it does not contain every fact about the run.
+19732	describes syntactic structure;
+24700	The protocol by which an editor and a language service interact, supporting definitions, references, diagnostics and the like. Example: what the service can do depends on the language implementation and the project configuration.
+28337	provides capabilities such as definitions, references and type diagnostics through a language service; a call graph describes possible or already observed call relationships. Text occurring is not a symbol reference, correct syntax is not correct types, and statically reachable is not actually happening at run time.
+28969	Searching along a function name
+29277	, and it can hit the function definition, comments, strings and test data. grep is fast and general, but it does not know which of them are the same symbol. An AST can recognize function declarations and call expressions and rule out some comment and string noise; but a syntax tree alone need not resolve import aliases, generics or dispatch at run time.
+25808	A language service combines the project configuration, the dependencies and type information to resolve one use site to its specific definition. Functions with the same name in two different modules should not be mixed together. If the build configuration is wrong, the dependencies are not installed, or the language server has not finished indexing, the result can also be missing or out of date.
+28915	A static call graph helps widen the scope of impact, but reflection, dependency injection, dynamic imports, function pointers and polymorphism make it incomplete or conservatively too broad. A run
+14979	only shows the path this one input took, and it cannot prove that other paths do not exist. Reliable location usually combines text, structure, type and run evidence.
+15462	The name foo appears three times, so why do grep and LSP give different sets
+26339	Input and conditions.</strong> File a defines foo, file b imports a.foo and calls it, and file c defines another local foo inside a function; a comment mentions foo as well.
+19790	Search for the string foo
+18321	This gives the definition, the call, the local namesake and the comment.
+25805	Syntactic filtering
+6930	The AST recognizes Call nodes
+15163	Comments can be dropped, but calls with the same name may still belong to different bindings.
+23514	Symbol resolution
+7830	LSP looks up the references to a.foo
+18059	It should associate b's call and should not mix in c's local foo.
+26902	Run evidence
+25066	If the call is generated dynamically from a string
+28912	Static references may miss it; check the registration and the actual logs.
+12487	Scope of the change
+21451	Determine the callers from the bindings and the tests
+11098	Not every occurrence of the text foo can be replaced mechanically.
+19106	Join the steps up.</strong> Equal text, equal syntactic role and equal symbol identity are progressively stronger but different relationships.
+26643	Limits and counterexamples.</strong> LSP accuracy depends on the language service and the project configuration; for dynamic languages, reflection and generated code, static analysis is not guaranteed to be exhaustive.
+27725	Follow-up: does Tree-sitter parsing successfully mean the code compiles?
+10631	No. It is concerned with syntactic structure and can tolerate an incomplete editing state; type errors, link errors, missing dependencies and run-time exceptions need other tools. Treating an AST as a complete semantic database misses the engineering configuration layer.
+27798	Follow-up: why is looking up references more valuable than grepping the whole repository?
+18270	When the language service is configured correctly, it returns references by symbol identity, which cuts down false hits on the same name and can follow aliases and modules. But dynamic patterns it does not support may still be missed; choose according to the language and the project, and never take zero references as absolute proof that nothing uses it.
+27820	Follow-up: when is a plain grep best?
+17919	When the error code, configuration key, log text, file name or exact function name is known, a low-cost text search is often the most effective way in. Narrow the scope with cheap tools first, then go deeper with semantic and type tools. A more advanced technique is not the one that should run first.
+17855	Engineering deep dive · E33 · continues Q065
+23673	Lesson 18</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+9401	"character=3": ask what the unit is first
+7827	Position.character in LSP 3.17 is interpreted according to the PositionEncodingKind negotiated at initialization; UTF-16 is the default and the encoding a server must support, and the counts mean different things in UTF-8 and UTF-32. This rule comes from position.md in the Microsoft specification; it was not guessed from the habits of JavaScript strings.
+15791	The fixed string
+29151	, where before b there are 2 Unicode code points, 3 UTF-16 code units and 5 UTF-8 bytes. Python's plain string len, the string length commonly used in JavaScript, the Content-Length of the protocol transport and an LSP position can therefore give different numbers. Do not take tests passing for Chinese and English as proof that Unicode positions are handled correctly.
+11805	From one position to one safe edit
+12835	Interpret the start and end positions with the negotiated encoding first, then convert them to internal indices against the matching document snapshot; take the range boundaries the protocol agrees on, and do not mistake the end position for including the last character. Then check the document version, and generate the edit last. The same line and character can point at entirely different content once the user has typed more.
+20822	This book actually computes the three lengths above, and additionally makes the version and content-fingerprint check a constraint at the execution layer. It did not start a real language server, so it claims no certification of compatibility with any IDE.
+22609	A version conflict cannot be fixed blindly by "searching nearby for the same text"
+16343	If the edit received is based on version 7 while the buffer is already at version 8, applying it directly may overwrite the user's new content. Automatic relocation needs explicit context and a conflict policy; where no unique judgment is possible, fetch the range again or refuse. The line numbers the model gives are only a proposal, and they cannot bypass the host's version protection.
+27983	Follow-up: which is authoritative, the content on disk or the editor's buffer?
+25242	It depends on what the action acts on. LSP usually works with in-memory documents; a shell test usually reads the disk. When the two views are out of sync, the model may analyze the buffer while the test runs the old file. The evidence should say "the source is the in-memory version" or "the source is the work-tree file", and where necessary save explicitly or have the verification read the same snapshot.
+27764	Follow-up: why not unify everything on byte offsets?
+13547	Internally they can be unified, but the boundaries still need exact conversion; the protocol, the editor and the model's reports need not use bytes. A unified unit of storage does not mean the input's unit can be ignored. Tests containing combining characters, emoji, CRLF and non-BMP characters expose hidden assumptions.
+7514	E33: how to read this result, rather than only looking at "pass"
+15418	For the same string "a😀b", the number of code points, UTF-16 units and UTF-8 bytes before b differ. An integer in a position must carry its unit; and the version must match the actual text being edited.
+24844	Self-check:</strong> where does b start in a😀b, in UTF-16 and in UTF-8?
+9019	In UTF-16 it is 3 code units: a takes 1 and the emoji takes 2; in UTF-8 it is 5 bytes: a takes 1 and the emoji takes 4. The Unicode code point position is 2, and the three must not be used interchangeably.
+9154	The commit can be the same and the file still different
+22939	The user has uncommitted changes, and the agent writes files one after another during the task too. Two test runs can both record commit abc while the things actually tested were the work trees r7 and r9. Record the content hash of the affected files, the command run, the environment and the set of tests, not just the branch name.
+11873	From a text search to a verifiable change
+12841	Narrow the scope first with the path, the error message and exact symbols; then, where needed, look up definitions and references with an AST or LSP; and verify the hypothesis with run evidence at the end. A syntax tree can express structure, but it does not automatically know about dynamic loading, run-time configuration or generated files. An LSP position also depends on the encoding unit negotiated in the protocol: a UTF-16 position cannot be taken unconditionally for a UTF-8 byte offset.
+25136	The three preconditions for a patch
+19983	The teaching patch P targets line 12 of r7. Before it is really applied, check that the target is still r7, that the expected old text is still there, and that the path is still within the permitted range. If the file has become r8, an old line number cannot be relied on to overwrite blindly. A patch tool finding similar context automatically is no proof of semantic correctness either; after applying it, still look at the diff and the tests.
+11516	Why a passing test stops holding once something is changed afterwards
+22445	A test-result object should be bound to 
+10242	. Formatting or generating code after it passes means at least re-verifying the affected part. An exit code of 0 also has to be checked for everything being skipped, no tests being collected, the command being wrapped wrongly, or an environment variable having changed the scope of the tests.
+6999	Anthropic's engineering for long-running tasks stresses recoverable progress and verifiable functionality rather than merely writing "done"; the large-scale parallel coding case likewise depends on tests and coordination. A case shows the value of one engineering approach; it does not mean every task should adopt large-scale parallelism.
+11670	A delivery should answer four questions
+19863	What was changed, why it was changed, which evidence supports it, and what is still unverified. State "the static checks pass" and "verified by an actual run" separately; when a check cannot be run, record the reason and the risk, rather than writing "not run" down as "passed".
+28722	Reading, changing and testing must point at the same object
+15797	A fixed teaching example: read sees r7, the patch produces r8, and the test runs r8; if formatting then produces r9, the delivery cannot go on marking the r8 test as r9 having passed. This principle does not require a whole-repository retest for every small change; it requires the coverage of the verification to match the last change made.
+28645	The article on engineering for long-running tasks stresses recoverable artifacts and real tests, but it does not provide a test selector that suits every language. How an AST, LSP or dependency graph helps narrow the scope still needs the language tools' own definitions and evidence from the current work tree; a general article about a harness is not used here as the source for a specific conclusion about the LSP protocol.
+8208	Q038｜How does a code index handle Git versions, the work tree and unsaved files?
+27420	What to know first for this question</span>The repository snapshot, the uncommitted files in the workspace and the run-time dependencies together decide the actual program; citing a commit alone is not enough to stand for the version being executed.
+10258	One repository can have a commit snapshot, a work tree on disk, unsaved buffers in the editor and a background index all at once.
+18363	has to know which layer the current evidence comes from, and which layer the edits and the tests act on. The same path does not mean the same content.
+15646	Four conflicting copies of "the same file"
+9233	On main the file
+22603	is at version r10, the user has changed it locally to r11 without committing, the editor holds a further unsaved r12, and the index is still r10. The agent reads r10 from the index, generates a patch and writes it to disk over r11; the user then saves the editor's r12 over the agent's patch. Even though no single step reports an error, the final result is wrong.
+16509	A safe read interface should return the content's source and version identifier wherever it can. When editing, check the expected old content or the version; and which copy of the code a test actually runs, in the work tree or in the build environment, has to be stated as well. For an IDE integration, a workspace overlay can be designed so that unsaved content is read first, but one cannot assume that every tool shares that overlay automatically.
+16119	Incremental indexing has to handle file modifications, deletions, renames and changes to generated files. Going by mtime alone can miss unusual timestamps or caching problems; going by path alone will misidentify a rename. An implementation can combine version and content identifiers, but it need not build a complex whole-repository signature for every simple search.
+24274	The index is at v7 and the work tree has changed: which code is the evidence
+26154	Input and conditions.</strong> HEAD=v7, the work tree has the uncommitted change w1, and the semantic index is still built from v7. The model's search gives the old function signature foo(x).
+21253	Check the version
+19792	The search result carries index_commit=v7
+23334	This tells you which snapshot it is.
+25891	Read the current file
+17701	In the work tree the signature is foo(x,y)
+18217	The current task should go by the actual work tree.
+15328	Combine the evidence
+20294	The old index serves to locate the file; the current read serves to judge
+11073	Evidence used for locating must not be taken for the final content.
+25154	Scope of the extra tests
+25946	A caller may pass only one argument
+21505	Check the actual code and the test failures.
+14840	Before release
+25567	Record the commit or work-tree fingerprint and what was tested
+23373	This makes sure the final delivery has not switched back to another version.
+19178	Join the steps up.</strong> An index can help find the way even when it is stale, but once a change or a conclusion is involved, the target version has to be read back.
+26661	Limits and counterexamples.</strong> It does not require rebuilding the whole index every time; an incremental diff and reading on demand can be cheaper.
+27838	Follow-up: is it safest to let the agent work only once the whole-repository index has finished updating?
+12128	That costs latency and may block tasks that need no blocking. One can instead locate candidates with the index and then read the current file to confirm: the index is for finding things fast, the live read is for the facts. For a high-risk change, check the version of the key dependencies explicitly; there is no need to rebuild the whole repository every time.
+27776	Follow-up: why is recording the Git commit alone not enough?
+20694	Uncommitted changes, generated code, dependency lock files, environment variables and test configuration can all affect execution. Verification evidence must at least correspond to the actual state of the work tree and the command's environment.
+20440	is an important identifier, but it does not cover every mutable input.
+28051	Follow-up: once the source is updated, are all the old conclusions void?
+10641	Not necessarily. Only the affected facts and dependencies have to be verified again. Knowledge can be bound to a specific module, file or symbol, so that a change triggers a local re-check. Forgetting everything wastes cost, and never expiring is dangerous; what matters is that the scope of the dependency is clear.
+17856	Engineering deep dive · E34 · continues Q066
+9153	A commit identifies the commit, not every current fact
+15348	Under the same HEAD a file can have uncommitted changes; the editor may also hold an unsaved buffer; and build artifacts and environment variables can change the result of a run too. Writing the retrieval cache key as repo+HEAD does not always guarantee that the current code is what gets read. Git's work-tree mechanism separates the working directory from the shared repository data, and it must not be understood as every fact being covered by the commit.
+20815	In a temporary directory this book changes
+19884	to
+29293	, keeping the "HEAD label" fixed while the file's content hash changes. This experiment did not fake a Git commit; it uses an actual file change alone to prove the logic: commit identity is not enough to cover the state of the work tree.
+25678	Evidence should describe the world it observed
+10338	One piece of code evidence can record the path, the content fingerprint, the range, the repository commit, the work-tree or document version, and the time it was read; run evidence also includes the command, the dependencies, the configuration and the input fixture. There is no need to build a complex database for every small task, but it should at least be able to answer "which file exactly does this test correspond to".
+21587	A retrieval index may update asynchronously. When the user has just changed the code while the semantic index is still on the old snapshot, the key files that were hit should be read again, or the index version stated. For a modifying operation, taking the line numbers from an old snippet and writing the current file is not allowed.
+25137	A patch's preconditions have to sit in the same controlled process as the write
+12919	First read hash=r7; while the patch is being generated someone changes it to r8; check before committing that it is still r7, then replace atomically. If another writer can still slip in between the check and the replacement, there is a TOCTOU (a change between the time of check and the time of use) window. A collaborative system needs everyone to honor the same lock, or to use storage that supports a conditional update on version.
+28068	Follow-up: does giving each agent its own worktree avoid conflicts?
+16503	It isolates each one's file changes and makes them easier to collect, but the final merge can still have semantic conflicts; shared ports, databases, package caches and parts of the Git state have no natural isolation either. Tests that depend on the same external state still need their own fixtures.
+27949	Follow-up: how do you avoid pasting an old test result onto a new patch?
+25578	Record the version or fingerprint verified when the test started and when it ended. Run the acceptance tests once all the intended changes are complete; if a file changed during the test, the result should be marked as based on the old version or as uncertain. Showing "the last test was green" without showing what was verified manufactures a false sense of safety.
+7517	E34: how to read this result, rather than only looking at "pass"
+7693	The same HEAD only proves that the commit pointer has not moved. The work tree or the IDE's buffer can already differ, so a verification result has to be bound to the file's content and not only to the commit string.
+24863	Self-check:</strong> under the same commit, a function's file has been changed but not committed. Is a symbol index cached by commit necessarily still valid?
+10636	Not necessarily. HEAD does not include an uncommitted work tree or an unsaved buffer. A critical operation has to check the current content or document version; a hit in the index cannot replace reading before execution.
+8211	Q039｜How should a bug be located step by step? Why is "read more source" not a sufficient method?
+27397	What to know first for this question</span>Locating a bug goes from a reproducible symptom to candidate code, and then rules candidates out with counterexamples. Finding a function that looks suspicious is not the same as finding the root cause.
+23657	Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality
+12751	Form an observable failure first, then propose a falsifiable hypothesis, and choose the smallest evidence that can tell the hypotheses apart. Reading code, tests and logs should serve to narrow the set of causes, not to pile up context aimlessly.
+11978	Take exclude having no effect as an example
+22942	What the user sees: they configured
+12148	but the build directory still gets packaged. Candidate causes include the configuration not being loaded, a rule being parsed wrongly, inconsistent path normalization, and the match result being overwritten later. First confirm that the rule is present in the running configuration, which rules the first one out; then print or test the paths the matching entry point receives, and find that they are absolute while the rule targets relative paths; build a minimal test and reproduce it. At that point the focus turns to normalization and the meaning of the root directory, rather than to reading more of the unrelated packaging module.
+16334	If one reads only
+17650	and swaps the library straight away, the root cause may be buried and new matching semantics introduced. Before fixing it, settle the requirement: are rules relative to the repository root or to the current directory? How are path separators handled? Does a directory rule include the files below it? Are symbolic links followed? These boundaries decide the test and the patch.
+20565	After the minimal patch, run the original failing case first, then the regressions aimed at the neighboring semantics. If a test still fails, update the hypothesis from the new error instead of repeating the same change. Every step should ideally answer "what do I expect to see, and what does a different result mean".
+9178	exclude wrongly drops the ab directory: from the failing input step by step to the root cause
+26459	Input and conditions.</strong> Directory a and everything below it are to be excluded, but ab is to be kept. The old test was path.startswith("a"); the inputs are a, a/x and ab/y.
+26889	Run the old logic
+10492	All three strings begin with a
+9116	ab/y is wrongly excluded.
+13623	Write the correct semantics
+25294	After normalization, path==a or path begins with a/
+26821	The boundary is the directory separator, not any character prefix.
+20554	Minimal counterexample
+22837	ab/y alone is enough to trigger the error
+11244	There is no need to restructure the whole path system first.
+15685	Regression set
+9122	a→excluded, a/x→excluded, ab/y→kept
+13559	Then add the real requirements for absolute and relative paths and for separator normalization.
+17810	Engineering trade-off
+23061	Whether the directories involve symlinks or case
+11735	Add the matching rules only where the deployment platform and the requirement really involve them.
+18965	Join the steps up.</strong> Write the target semantics as an example that tells a correct implementation from a wrong one first, then make the smallest necessary change.
+26702	Limits and counterexamples.</strong> The string condition holds only for the normalized POSIX paths of this teaching example; it cannot be taken as a cross-platform safe path check.
+27859	Follow-up: does analysis by refutation mean designing a lot of checklists?
+10807	It need not. Two or three distinguishable hypotheses and the cheapest verification are enough. The heart of refutation is letting the facts overturn your own explanation, not promoting a simple bug into a long-term research project.
+27823	Follow-up: when does the reading have to be widened?
+17669	When local behavior is correct but the system's result is wrong, or when a caller's contract, state propagation or concurrency is involved, extend along the data and control dependencies. Make clear what evidence is missing first, then read the relevant boundaries. Broad reading should be driven by the problem, not be the default step.
+28025	Follow-up: the model proposes a plausible root cause, so why reproduce it anyway?
+15342	There can be several plausible explanations; only observation and a repeatable counterexample can tell them apart. Reproducing also gives the patch its verification: the old version fails, the new one passes. Without a reproduction a well-grounded fix is still possible, but the shortfall in verification should be stated clearly, and a guess must not be dressed up as a confirmed root cause.
+8214	Q040｜How do you get an agent to "understand the business" instead of only ever looking at local code?
+27419	What to know first for this question</span>Business rules come from the code as well as from conventions and data; record the conditions of use and the acceptance examples first, then decide which knowledge is worth becoming long-term guidance.
+18747	Connect the business goals, the invariants, the key flows, the domain terms and the implementation entry points, and keep them queryable, verifiable and updatable. Understanding the business is not stuffing every document into the prompt, and it is not an architecture diagram either.
+18109	Build the shortest path from requirement to implementation
+12300	For example, "there must be no second refund once an order is canceled" is a business invariant; it corresponds to a state machine, an idempotency key on the payment interface, a database constraint and tests. When an agent works on a refund bug, it needs to know this invariant, and then to find the execution path and the way to verify it. A document that says only "the system uses a microservice architecture" can hardly guide a correct change.
+15188	A lightweight entry file can describe the core objects, the boundaries, the common tasks and the code paths; the documents for a particular module record why it was designed this way, which alternatives were rejected, and the exceptions that hold at present. A decision record should be short and carry its conditions of use; not every variable name needs an ADR.
+11928	Code, tests, run-time metrics and documents check one another. When a document says "at most three retries" while the constant in the code is five, neither the document nor the code can be taken as true automatically; judge the current environment and the target specification, then decide whether the document is out of date or the implementation is defective.
+11295	The business rule lives in the tests, so why is reading the function body not enough
+26246	Input and conditions.</strong> The function returns a discount and the comment says "member discount"; the tests are explicit: 5% for an ordinary member, 10% for a premium member, and no stacking during a campaign.
+15076	Read the implementation only
+14849	Two discount branches are found
+27147	It is still unknown whether no stacking is an important constraint.
+25906	Read the tests
+18656	A case where the campaign discount and the member discount conflict is found
+18318	This gives executable evidence of the precedence.
+25917	Read the requirements
+21406	Check whether the tests still match the current business
+20288	An old test is not an authority that is right forever.
+12489	Verify the change
+20180	Run the new version on the campaign plus premium member combination
+28762	This prevents two separately correct branches being added into a wrong result.
+25825	State which rule was adopted, the version of the evidence and the verification result
+10873	Not just "the code is tidier".
+19044	Join the steps up.</strong> The implementation, the tests, the requirements and the run-time behavior check one another; picking only one of them easily misses a business constraint.
+26712	Limits and counterexamples.</strong> The discount policy is invented data and implies no real company's rules.
+27749	Follow-up: does business knowledge belong in long-term memory or in the repository's documents?
+15746	Knowledge that the team shares and that should change with the version usually belongs in the repository or an authoritative knowledge base; personal preferences and experience that crosses projects can go in personal memory; what is transient to the current task goes in the checkpoint. Storing the same fact in many places increases conflict, so keep one authoritative source and have memory point at it.
+27985	Follow-up: how can an onboarding guide be both easy to read and deep enough internally?
+12884	Give the business flow and the core objects first, then link to the specific modules, state transitions, data structures and failure cases. It cannot be only a table of contents, and it cannot ask the reader to read thousands of lines of source at the start. Progressive does not mean deleting the detail; it means giving the detail a clear entry point and prerequisites.
+27905	Follow-up: how do you know these documents really improved the agent's quality?
+28199	Choose real business tasks and compare three groups — no entry document, one complete large document, and a structured entry point loaded on demand — measuring the reading of the necessary evidence, wrong business assumptions, task success and cost. Growth in the number of documents is not growth in capability.
+22228	Follow this chapter through its objects and states</a><a href="#topic-2">Code retrieval cannot rely on "semantically similar" alone</a><a href="#Q065">Q037｜What does each of grep, AST, LSP and the call graph know? Why can they not stand in for one another?</a><a href="#Q066">Q038｜How does a code index handle Git versions, the work tree and unsaved files?</a><a href="#Q067">Q039｜How should a bug be located step by step? Why is "read more source" not a sufficient method?</a><a href="#Q068">Q040｜How do you get an agent to "understand the business" instead of only ever looking at local code?

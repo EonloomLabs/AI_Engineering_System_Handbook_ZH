@@ -1,0 +1,566 @@
+23975	Lesson 59｜Inference mechanics: loading, decoding strategy and continuous generation — AI Systems Engineering
+24228	Inference inside the system mechanisms: hold the baseline first, then change the selection strategy
+27368	This uses the same training artifact saved by the Foundations lessons. Full recomputation, generation with a cache, temperature and candidate filtering belong to different layers: the first two verify whether the computation is equivalent, while the last two change the selection distribution. Every comparison states explicitly which variables are held fixed; a result from a different temperature or different weights must not be taken for a cache bug.
+19678	Inference splits into processing the input you already have and then producing new tokens one at a time. The output scores are not vocabulary IDs, and the probabilities are not the accuracy of the answer; sampling picks an ID out of the distribution, and decoding turns that ID back into text.
+23876	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/14.html">Lesson 49 · Fitting attention into one layer</a><a class="pill" href="../foundations/18.html">Lesson 57 · From the last row of numbers to one token, and on to a whole answer</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+27540	A quick check before the deep reading:</strong> take the maximum of one set of logits and then sample from that same set by probability, and explain why the two can give different results; then explain why the length actually generated need not equal the maximum budget.
+22793	Understanding generation means following two lines at once: which position the model is predicting right now, and how far the service has already cached. A great many misunderstandings about first-
+9976	, output length and the inference cache come from running the two lines together.
+21036	This chapter uses the training result saved in lessons 57–58 to understand the forward pass and the cache, then compares sampling strategies with three candidate scores that are explicitly independent. The seven-token-vocabulary animation at the end of the chapter is a structural comparison only; it is not part of the worked model.
+8369	Q089｜What is the difference between prefill and decode? When is the first output token produced?
+27415	What to know first for this question</span> Prefill processes the prefix that is already known, and decode uses it to generate new tokens. Both stages use the model parameters; what differs is how the input is organized and which results can be reused.
+23963	Lesson 57 · From the last row of numbers to one token, and on to a whole answer</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch
+16133	: it processes the whole known input prefix and builds the cache at every layer; the scores at the last input position (
+17922	) can already predict the first new token. Once that token has been sampled, it is the next decode that sends it through all the layers as input and predicts the token after that. The output is not thought out in one go and then sent in installments.
+19458	Three generation steps, followed through by time and position
+12529	Suppose the prompt is
+29437	, of length P=4. What we want to generate is
+21010	Tokens fed into the network this time
+21006	Positions computed this time
+24405	What the KV holds afterwards
+22900	Which output picks the next token
+12170	Sample y0 from the logits at position 3
+12171	Sample y1 from the logits at position 4
+12174	Sample y2 from the logits at position 5
+25211	In the table y2 has been sampled, but y2 has not yet passed through the network as input, so the cache does not contain it yet. If generation continues, y2 is only processed at the next step. This "one-step offset" affects the cache length, the stopping condition and the recovery logic. Do not read "how many tokens have been emitted" as "how many output tokens have entered the KV". A particular service may wrap these steps up, but the underlying dependency on these conditions remains.
+11473	Why can prefill compute several positions together? Because the input tokens are all known already, so each layer handles many positions at once through matrix operations, and the causal mask then forbids any dependence on the future. Why can standard decode not produce the next 100 real tokens in one go? Because y1 depends on the sampled y0 and y2 depends on y1; a token that has not been selected yet is unknown and cannot be used directly as the next layer's input.
+22815	Every model layer still runs during generation. What the KV cache saves is the repeated computation for old positions; it does not mean that a new token passes only through the last layer. Each new position has its own Q/K/V at layer l and reads from that layer's own history cache.
+8076	A prompt of length 3, two more tokens generated, with the lengths listed round by round
+26478	Input and conditions.</strong> The request needs only two new tokens, and the original prompt is
+10241	. The tokens selected are 4 and then 5; this is a teaching-given output.
+8057	Prefill input
+21092	Three positions are computed this round; the cache is 3 long.
+8056	Prediction at the end of prefill
+28163	4 is selected
+15246	The visible sequence is 4 long; the computed cache is still 3 long.
+7388	Decode input
+11748	Only [4] is fed in, together with the KV
+24669	The cache is 4 long, which avoids computing 1, 2 and 3 all over again.
+7387	Prediction at the end of decode
+28164	5 is selected
+17916	Two new tokens have been generated, reaching this example's max_new_tokens=2.
+10696	5 is not processed
+20577	The final visible sequence is 5 long and the cache 4 long; this is not a missed computation — the last token simply is not needed for another prediction.
+19177	Join the steps up.</strong> The first output comes from the logits at the last valid position of prefill; after that, each decode consumes the token that was just generated and has not been processed yet.
+26747	Limits and counterexamples.</strong> Some services go on processing internally or managing the cache; what is shown here is the minimal generation loop under an explicit stopping policy.
+28092	Follow-up: why can training predict a whole stretch in parallel?
+25458	Training uses the real prefix for teacher forcing: the target at position i is known, so the conditional probabilities at different positions can be computed at the same time. Inference uses the model's own generated prefix, where the previous choice changes the input that follows. This is also one source of the possible gap between the training distribution and the generation distribution; it does not mean that copying labels during training buys reliable inference.
+28038	Follow-up: if each decode takes only one token as input, how does the model know the whole question?
+27228	That token uses its Q at each layer to read that layer's historical K/V, and those caches hold the contextualized computation of the original prefix. A short input tensor does not mean short conditioning information. If the cache is lost, the service has to rebuild the prefix or use some other supported state; handing over one isolated token and expecting the same distribution will not work.
+28045	Follow-up: does a streaming display mean that every character on screen corresponds to one decode?
+10637	Not necessarily. A token can cover several characters or an incomplete byte sequence, a service may send increments in batches, and network chunks have nothing to do with token boundaries. The visible text may also leave out internal reasoning tokens. The granularity of the UI display, of network events and of the model's token generation must be kept apart.
+17829	Engineering deep dive · E07 · continues Q013
+28976	Prerequisite: <a href="../foundations/04.html">Lesson 38
+19723	The mask and the address the output is sampled from solve different problems
+9120	attention_mask limits reading on the key side;
+28198	picks the last column of the output tensor. There is no logical entailment between the two steps. With right padding the last column may correspond to a PAD query, and the mask will not automatically turn index −1 into the last valid token. The Transformers tutorial on decoder-only generation therefore requires left padding on that path.
+20939	Two sequences are fixed locally with validity tables
+29365	, so the last valid indices should be 1 and 2. With the candidate scores built, the correct selection yields classes
+29354	, while taking the last column unconditionally yields
+10234	. That shows the error comes from choosing the address, not from softmax computing wrongly.
+11175	Do not write length-minus-one as a universal formula
+14976	gives the last valid index only for a right-padded layout in which "the valid items sit contiguously from 0". For left padding,
+23039	sums to 2, but the last valid subscript is 2, not 1. A more general check derives the last valid position from the position indices together with the validity flags; a real generator also has to get the position encoding and the cache right at the same time.
+27312	This is custom sampling logic written for teaching; it is not a recommendation to bypass the library's prepare_inputs_for_generation. When plugging into a ready-made generate, follow the padding convention that the model supports.
+7595	EOS used as PAD: why does generation not stop right at the start?
+21228	Some decoder-only models have no separate PAD, so inference can use EOS as the left padding item. <strong>That ID appearing in the input</strong> and <strong>that ID being newly generated this round and triggering a stop</strong> are different events; the validity mask decides the input's role. During training it is more dangerous: clearing labels by "setting −100 everywhere the ID equals EOS" also erases the end target that really has to be learned. The distinction should follow the padding positions, not the ID value alone.
+27852	Follow-up: a single input works but a batch misbehaves — what should be checked first?
+12817	Check left and right padding, the real lengths, the last valid position, position_ids, EOS/PAD sharing and the cache offset. Running the same sample alone and then mixed into a batch of long and short sequences locates the problem better than blaming GPU nondeterminism. Do not let a synthetic test give every sentence the same length, or these bugs will never show up.
+27870	Follow-up: can right padding never be used with a decoder model?
+10849	No. Training and a custom forward pass can use right padding correctly, as long as the mask, the labels and the output index agree. The problem arises when a particular piece of generation code assumes that the last tensor column is the last valid one; turning one call chain's convention into a mathematical law about models creates a new misunderstanding.
+7429	E07: how to read this result, rather than only looking at "pass"
+9237	The mask controls the reading relationships, but which position the logits are finally taken from is a separate step. The index record states the last real position for each sample; one cannot uniformly take the end of the array, which is occupied by PAD.
+24845	Self-check:</strong> with mask=[0,1,1], what goes wrong if sum(mask)-1 is used to get the last valid token?
+15606	The sum is 2 and minus one gives 1, but the actual last valid position is 2. The formula carries a hidden right-padding assumption; with left padding or sparse valid positions, the last position has to be derived from the indices together with the mask.
+27809	Follow-up: why can many positions be trained in parallel while generation still goes one at a time?
+25478	In training every real prefix is known, so all rows can be computed at once under the constraints of the mask; in generation the next round's input comes from this round's actual choice and does not exist yet. Do not read training's one row of logits per position as predicting several unknown future words at once.
+8372	Q090｜How do temperature, top-k and top-p change the output? And why is a temperature of 0 still not a hundred percent reproducible?
+27481	What to know first for this question</span> Temperature changes the scale of the scores first, top-k filters by count and top-p filters by cumulative probability; after filtering, renormalization is still needed, and which candidate gets drawn is not fixed for ever.
+23879	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/18.html">Lesson 57 · From the last row of numbers to one token, and on to a whole answer
+21642	The model gives vocabulary logits first; the decoding strategy then turns them into a candidate distribution and selects a token. Temperature scales how sharp the distribution is,
+28805	: a cap on the number of candidates,
+28812	: a cap on the cumulative probability covered by the high-probability candidates. They affect exploration and diversity; they provide no guarantee of factual correctness.
+22898	Comparing with one and the same set of logits
+12533	Suppose the logits of the three candidates are
+29339	, and applying
+18329	gives:
+12500	Candidate A
+12501	Candidate B
+12502	Candidate C
+22519	Lowering the temperature gives the existing maximum more of an advantage; it does not re-verify whether A is true. If the highest-probability item happens to be a fluent falsehood, a low temperature only emits it more consistently.
+8979	Top-k keeps the k items with the highest probability and then normalizes. Top-p sorts by probability first, takes the smallest prefix set whose cumulative probability reaches the threshold, and then normalizes. For example, with probabilities
+9949	, p=0.8, a common implementation keeps the first two items; with p=0.9 the third has to be kept as well. The boundary cases, the minimum number kept and the order relative to other processors all depend on the implementation.
+22516	A temperature of 0, in an interface (
+11435	), usually denotes a convention for some kind of greedy selection, not a literal division by 0. Greedy selection takes the largest logit at each step, which is a local decision; it does not guarantee the highest probability over the whole sequence, let alone the best task quality. Beam search explores several candidate prefixes, but for an open-ended answer it can also lead to repetition or unnatural text, so search width is no universal quality knob.
+20887	Conditions for this example:</strong> the A/B/C scores [2,1,0] are used throughout. The baseline temperature is 1; the comparison changes only the temperature, to 2. The top-p threshold is 0.8: in descending order, take the smallest set whose cumulative probability reaches the threshold, then renormalize.
+12766	Divide the logits by τ first; this is not multiplying the probabilities.
+19449	Choose the candidate set by cumulative probability over the current distribution.
+28529	Renormalization
+13857	Once candidates have been removed, the remaining probabilities are divided by the remaining total.
+8980	What top-p=0.8 keeps
+6865	A+B=0.909969 → keep A,B
+6864	A+B=0.813676 → keep A,B
+25072	If the threshold becomes 0.9 — independent comparison
+9391	At τ=1, A+B is enough; at τ=2 it is not
+13938	Two items in the first case, three in the second
+12857	Start from the last row: with the same logits and only the temperature changed, top-p can already keep a different number of candidates. So one cannot filter on the original probabilities one moment and on the post-temperature probabilities the next, and still claim it is the same algorithm.
+12414	Once A and B are kept, they still have to be renormalized. At τ=1, A is about 0.731059 and B about 0.268941; the original probabilities, which no longer sum to 1, are not carried on with.
+25979	Greedy selection takes only the largest item; a temperature of zero is usually an interface convention for choosing greedy mode, not a formula literally divided by 0.
+11209	Do not conflate:</strong> an identical random seed still does not erase a different order of candidate processing, parallel numerical error or differences in service configuration. Do not treat a low temperature as a complete reproducibility plan.
+23197	How the same logits are redistributed by temperature, top-k and top-p
+22513	Temperature 1 is the baseline; temperature 2 is only an independent comparison. The top-k and top-p steps below each start again from the temperature-1 baseline distribution, filtering and normalizing on their own; the result of one row is not fed into the next.
+22512	Temperature 1
+9319	softmax of the original scores
+22514	Temperature 2
+29362	, more spread out.
+15673	Back to the temperature-1 baseline
+29270	, with only top-k=2 applied; keep the first two, drop the third
+28511	Renormalized to
+13583	Again independently back to the temperature-1 probabilities (not continuing from top-k), accumulating in descending order: 0.665241, 0.909969
+18352	The first two have to be kept; keeping only the first item is not allowed.
+19922	Deliberately change the implementation
+12923	Filter first and scale by temperature afterwards, or sort ties differently
+15217	This can change the set at the boundary, which is why the full generation configuration has to be recorded.
+19151	Join the steps up.</strong> Temperature changes the relative probabilities of the candidates; top-k and top-p change the support set. Note that rows 2, 3 and 4 of this table are independent comparisons, not a sequence of executions. Turning sampling off does not remove the underlying floating-point and service differences either.
+26656	Limits and counterexamples.</strong> "Temperature 0" is never substituted into the division; greedy is a separate strategy. The displayed values are rounded, while the computation uses full precision.
+27883	Follow-up: why can results still differ with a fixed seed?
+9313	The seed controls part of the random sampling. A change in the model version, the request template, tool content, parallel kernels, the order of floating-point reduction or the service configuration can still change the logits. Candidates that are nearly tied can swap places over a tiny numerical difference; once one token changes, the prefix that follows changes too and the difference grows. Fix the conditions you can control first, and only then discuss how reproducible things are.
+28112	Follow-up: can a repetition penalty solve repetitive output?
+16467	It can adjust the tendency to select tokens that have already appeared, but repetition can also come from the prompt, the stopping condition, the training distribution or the task itself. Repeated symbols and variables in code may be the correct output, and too strong a penalty will break the code. First establish whether the repetition is a content problem or a protocol loop, then choose where to fix it: in decoding, or in the host framework (
+12470	).
+27994	Follow-up: should many sampling parameters be tuned at once?
+10780	Changing several dimensions at once is a poor idea, because attribution then becomes very hard. Decide first how stable and how exploratory the output needs to be for the task, fix a baseline, then change one key parameter and watch the real success rate. APIs and models support parameters differently, so an example from one open model cannot be applied unchanged to every inference service.
+17830	Engineering deep dive · E08 · continues Q014
+25235	Compare the order, not just the parameter values
+22821	A generator's selector is usually a chain of score processors: repetition penalty, constraint mask, temperature, top-k/top-p, renormalization and sampling. They are not naturally interchangeable functions. If a version upgrade changes the order, the defaults or an inherited generation_config, a different strategy may run even though the two parameters you wrote by hand are the same. What has to be recorded is <strong>the effective configuration and the actual order of processing
+15764	With [2,1,0] fixed, one counterexample to commutativity
+20873	This example does not change F09's candidates or scores. At temperature 1 the probabilities are about
+10193	. With a top-p threshold of 0.6 the first item is already enough, so only A is kept. If the temperature is changed to 2 first, the probabilities are about
+29439	, and a threshold of 0.6 then requires keeping both A and B.
+18526	So "temperature first, then top-p" and "truncate on the original distribution first, then raise the temperature" give different candidate sets. In the second case, once only A is left, raising the temperature will not bring the discarded B back. This is a mathematical counterexample, not a claim that every library uses the wrong order. When debugging, print the number of surviving candidates, the top items and the probability sum after each processor.
+24330	What to do when constraints forbid every candidate
+24417	A structured grammar, banned words, length and EOS rules can all apply at once. When one step is negative infinity everywhere, it is not acceptable to go on with an ordinary softmax and then sample after turning NaN into 0. Spell out which constraint may be relaxed, whether to terminate as a failure, and whether to request a regeneration. Constraint priority is a product policy; silently breaking a permission or grammar rule is not an acceptable numerical fallback.
+24200	Keep precision error and strategy differences apart
+24978	If two candidate scores are very close, a difference of floating-point backend can change the argmax; if the outputs diverge widely even though the inputs were far apart to begin with, check the tensors, the mask and the processors first. PyTorch notes that the numerical result of fused attention can differ slightly between backends.
+5845	Do not call every inconsistent result "random", and do not require every piece of hardware to produce a string identical word for word before it counts as correct.
+27734	Follow-up: is temperature=0 the same as dividing softmax by 0?
+11128	It cannot be implemented that way. Products usually use it to express a deterministic choice or a separate branch; division by 0 is not a legitimate temperature scaling in mathematics. When using an API, check whether that model allows 0 and what it means there; when implementing it yourself, take an explicit argmax and define the rule for ties at the maximum.
+27946	Follow-up: how can a stable test be written for a sampling module?
+13710	Test the candidate set, the normalization of the distribution, the interval selected for a given random number, and whether the frequency statistics fall in a reasonable range — each of them separately. A fixed random seed is for replay, but one draw that happens to pick A is no proof that the distribution is right. Comparing distributions across implementations, and one deterministic step worked out by hand, localize a problem better than a snapshot of a whole sentence.
+7432	E08: how to read this result, rather than only looking at "pass"
+15303	The probability vectors share the same original logits but differ in temperature or in the order of filtering. Check which condition was changed first, then compare the sets of surviving candidates; identical parameter names do not guarantee an identical order of operations.
+24843	Self-check:</strong> with top-p=0.6 and scores [2,1,0], why does applying temperature 2 before truncating leave two items?
+14092	After the temperature is raised, A has a probability of about 0.50648, short of 0.6, so B has to be added; at the original temperature of 1, A was about 0.66524, which was already enough. A candidate set that has been truncated cannot be restored by a later temperature change.
+21654	The model's scores and the decoding strategy are two different levels
+21765	After training, the model produces logits for the current prefix in a fixed way; the generator decides how to turn them into the next item. Lessons 57–58 of the Foundations course fix greedy selection; this lesson explains the strategies with an <strong>independent three-candidate worked example</strong> and does not treat it as the real probabilities of the worked model. The scores of candidates A/B/C are fixed at
+29185	, in line with the convention of the softmax section in Foundations.
+12732	Work the baseline probabilities out in full first
+25978	Greedy picks A. Sampling uses a uniform random number u in 0–1 and selects by cumulative interval: A
+29450	; C takes the rest. u=0.70 falls in B. Choosing B does not mean the algorithm is wrong; this is exactly the distribution allowing an item that is not the maximum.
+22518	Which step does temperature change?
+22515	When the temperature τ&gt;0, first compute
+5861	and then softmax. τ=2 turns the scores into [1,0.5,0], making the distribution flatter; τ=0.5 turns them into [4,2,0], making it sharper. It updates no parameter, and it adds no factual evidence. "The lower the temperature, the more correct" has no general guarantee.
+9390	τ=0 is usually interpreted by products as some setting for deterministic selection; the formula cannot simply be divided by 0. This example takes the argmax directly for greedy selection, with no division by 0 to simulate it.
+8976	Top-k and top-p are not the same filter
+8977	Top-k keeps the k candidates with the highest scores and then normalizes among them. With k=2 the baseline keeps A and B, and the probabilities become about [0.731058579,0.268941421,0].
+8981	Top-p sorts by probability from large to small, chooses the smallest candidate set whose cumulative probability reaches the threshold, and then normalizes. At a threshold of 0.8, A is short of 0.8 and adding B goes past it, so A and B are kept. At a threshold of 0.6 only A is kept. The threshold does not mean "keep only the words whose individual probability exceeds p".
+22669	Independent three-candidate comparison: the input is stated at every step
+14569	The model's original scores
+15763	Fixed at [2,1,0]; no unstated logits are taken from other chapters.
+15274	Optional temperature
+28822	Divide by τ; in this baseline τ=1, so the scores do not change.
+15275	Optional filtering
+9204	With k=2, A and B are kept and C is set to disallowed; then renormalize.
+25976	Greedy takes A; when sampling from the filtered probabilities, u=0.70 also falls in A, not in B as it would under the original distribution.
+15391	The same random number picks a different item under a different distribution. The pre-filter intervals cannot be carried over to the filtered distribution.
+16139	Why the order of processing matters
+12796	Changing the temperature before running top-p changes how many candidates are needed to reach the cumulative threshold. Applying a repetition penalty, constraint filtering or length handling first also changes the distribution downstream. An implementation must state the order; recording only "temperature=1, top_p=0.8" may still not be enough to reproduce every product behavior.
+15660	Record the four stop reasons separately
+7597	EOS means the model chose the end token; the length cap means the host no longer allows generation; a stop string is a rule matched in the decoded text; cancellation means something outside asked it to stop. A stop string can span tokens and network fragments, so the boundary has to be buffered. A finished model response does not necessarily mean a finished agent task either: once a tool call has been emitted, it still has to be executed and the result filled back in.
+22394	A streaming display splits into three layers: the model selecting a token, the tokenizer decoding IDs into characters or bytes, and the network transmitting the message in fragments. One Chinese character appearing is no guarantee that it corresponds to exactly one token or one SSE event.
+8376	Q091｜How does the model know the answer has ended? What is the difference between EOS, a stop string, a length limit and the end of a tool call?
+27490	What to know first for this question</span> The end token, a textual stop string, the cap on output length and a cancellation signal come from different mechanisms; whether generation really finished has to be judged from the returned status as well.
+23964	Lesson 57 · From the last row of numbers to one token, and on to a whole answer</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols
+24404	The end may come from the model sampling an end marker, or from the service terminating because it reached the length cap, hit a stop condition, produced output that has to be handed to a tool, was canceled or raised an error. <strong>"No more text arriving" does not mean "the answer is complete", still less "the task is done".
+15647	Four layers of end semantics
+24026	The first layer is the end of the token sequence. The model can assign a probability to the end-of-sequence token (
+18507	) or to a message-end token and sample it; which marker that is depends on the template. The end marker is trained as well; it is not an independent prover that knows every user requirement has been met.
+24090	The second layer is the end of the model response. A service may terminate because of the maximum output budget; that case usually carries an incomplete status or one related to length. A half-finished payload (
+9959	), an unclosed code block or unfinished tool arguments cannot be treated as a valid result just because the connection closed. A stop string is usually detected by decoding or by post-processing in the service; it can span several tokens, so the boundary has to be maintained.
+24070	The third layer is the tool handoff. Once the model has generated one complete call item, the current inference may pause and hand control to the host. When the tool is done, the result is appended and the next inference is started. This is one stage of a loop finishing, not the user's task finishing. The returned
+17648	exists precisely to tie which call got which result.
+24119	The fourth layer is business completion. The result of a coding task is mainly the current files and the test evidence, not a sentence saying "fixed". If the final answer appears but the tests were never run, the files were never written, or the outcome of an external operation is unknown, the task may still not be done.
+15659	Four stop signals mean different things within one stretch of output
+26332	Input and conditions.</strong> The teaching generator may emit text, EOS or one tool call. The user wants a file read and the result explained, with a cap of 100 new tokens.
+21795	The model chose the end token
+20118	Text generation may end; the host still has to confirm whether the business task is done.
+12600	Stop string
+26596	The output matches the preconfigured string "END"
+20431	This is a convention of the interface or service for cutting off, not any inherent proof from the model that the task is done.
+28656	Length cap
+23632	Still not finished after the 100th new token
+21353	Mark it as having hit the limit or as incomplete; it must not be passed off as a natural completion.
+17794	Tool call complete
+16710	The read_file arguments are produced in full
+15004	The model has merely paused and handed control to the executor; the user's whole task is not over.
+19847	Tool result received
+28542	Re-enter the model loop
+18568	Only then can the file be explained; finishing the tool arguments does not let anyone tell the user that the content has been read.
+19160	Join the steps up.</strong> The end of a generation stage, the end of a tool-call item and the completion of the user's task are three different boundaries.
+26679	Limits and counterexamples.</strong> The field that carries the stop reason differs between APIs; this example describes the semantics and does not commit every interface to the same field name.
+28104	Follow-up: after output has been truncated, is it safe to just say "continue"?
+17565	For plain text it can be tried, but repetition and structural damage have to be prevented. For a tool call, half-finished arguments must not be stitched into an action that is executed without full validation; for a write operation, check as well whether a side effect has already happened. Structured state should be restored through the continuation the protocol supports, rather than by relying on the model to fill the missing fields in from memory.
+27795	Follow-up: why does a "short answer" sometimes still spend a lot of the output budget?
+19683	A reasoning service may include reasoning tokens that are not visible in the final answer, and the interface has its own semantics for their budget and usage. The number of characters visible at the end does not stand for all of the model's output computation. Read the actual usage fields and the response status instead of estimating the bill or the remaining context from the length of a chat bubble.
+27871	Follow-up: does a sensible completion check make simple tasks complicated?
+21508	The check should match the task. Explaining a concept needs no test run; changing one line of configuration needs only the relevant verification; only a task with external side effects needs more explicit confirmation and reconciliation. The principle is to verify the result the user actually cares about, not to wrap every task in the same heavyweight workflow.
+8378	Q092｜What actually happens when a reasoning model "thinks a while longer"? And how does that relate to multi-agent setups and CoT?
+27459	What to know first for this question</span> The reasoning compute budget can exceed the length of the answer that is finally shown. Whether more computation helps should be judged by the task success rate, not by how long the answer is.
+23962	Lesson 57 · From the last row of numbers to one token, and on to a whole answer</a><a class="pill" href="../foundations/17.html">Lesson 54 · The math that comes before post-training</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+19685	A reasoning model can improve its results on some tasks with extra inference-time computation; how much of the internal mechanism and state is published varies from product to product. An ordinary multi-turn loop (
+13825	) goes about it differently: it adds information and execution steps through external tools and repeated model calls. CoT, search, self-consistency, multi-agent setups and the reasoning budget sit at different levels and cannot all be lumped together as "thinking more".
+14068	Four kinds of extra computation, distinguished
+24050	The first is producing more intermediate reasoning within the same generation. Later tokens can use the earlier intermediate results, but an error can be carried along too. More length does not automatically guarantee valid reasoning; how the model was trained and how the task is structured both matter.
+24104	The second is sampling several answers repeatedly and then choosing among them by consistency or with a verifier. It uses several generation paths and needs reliable aggregation; if every path rests on the same wrong fact, the majority vote is still wrong. Aggregation is a completely different problem for a programmatically checkable question than for an open research question.
+24074	The third is searching over candidate states: Tree of Thoughts-style methods, for instance, generate, evaluate, keep or prune explicitly. What it gains depends on whether the evaluator can recognize the better branch, and the number of branches and the depth both raise the cost. Without a reliable evaluator, the search may prune the correct path too early.
+24122	The fourth is an agent calling external tools: reading the current source, running the tests, querying a database. This is not simply more internal reasoning; it brings in new evidence the model did not have. For "why does the current code fail", one correct test run or file read can be worth more than ten times as much reasoning without evidence.
+20909	Conditions for this example:</strong> an independently designed comparison in which each case has to fix one failing test. In the figure, one "model request" and one "tool execution" are counted separately, and nothing is guessed about the internal token content of a closed-source model.
+13548	Internal reasoning computation
+21714	The reasoning resources a model service spends within one request.
+16193	External observation
+17760	New facts brought back by a tool execution.
+16197	Multi-agent
+16212	Several surrounding execution contexts, and the handoffs between them.
+15135	What it can add
+11776	What is still missing
+15438	Raise the reasoning budget within the same request
+20479	More opportunity for internal computation
+20707	An unread file does not appear by itself
+25903	Read the file, then send a second request
+20167	Adds real evidence from the source
+11784	Inference and verification are still needed
+18033	Delegate two subtasks in parallel
+10751	Different search directions can run in parallel
+11686	Handoff, merging and permissions are still managed by the host
+16335	If the failure comes from a test log that was never sent, a few more internal steps are not the same as obtaining that log. Work out first whether what is missing is evidence or computing capacity.
+11378	Between two model requests a tool runs, so the set of information changes; generating longer text within one request brings no such increment of external fact.
+15249	The observable metrics include the number of requests, the usage the service reports, the tool results and the success rate; the model's own written explanation must not be taken for a real record of internal execution.
+11207	Do not conflate:</strong> asking the model to emit a verbose "thought process" is neither reliable internal observability nor a guarantee of better quality.
+20481	More reasoning, external search and multi-agent: three ways of adding work to the same problem
+26213	Input and conditions.</strong> The task is to find why a test fails. The candidate causes are "wrong configuration" and "wrong test environment", and information about the run environment is missing.
+16104	Add model computation
+15356	Have the reasoning model spend more reasoning budget within the same context
+15222	It may compare the existing clues more carefully, but the missing environment variable will not appear out of nowhere.
+16099	Add external evidence
+17789	A tool reads the environment and the dependency versions
+20148	The new fact may rule out "wrong configuration".
+16096	Add agents
+10325	One reads the configuration, the other reads the environment
+15017	There can be a gain from parallelism only if the two parts really can be investigated independently.
+25565	Record the cost
+13709	Compare model computation, tool calls and handoff overhead separately
+11071	They cannot all be written down as "thinking a while longer".
+29091	Verify the gain
+22980	Compare against the same failure case and the same result criterion
+16238	More generated text does not mean a more accurate root cause.
+18978	Join the steps up.</strong> The internal reasoning budget, external information and multi-agent orchestration change the computation, the evidence and the organization respectively.
+26754	Limits and counterexamples.</strong> Nothing here claims that the visible text equals the model's internal reasoning, and no hidden reasoning process is disclosed or invented.
+25977	The best first greedy step does not make the two-step sequence the most probable
+26439	Input and conditions.</strong> At the first step P(A)=0.6 and P(B)=0.4. If A has been chosen, the second step has P(E|A)=0.51 and P(F|A)=0.49; if B has been chosen, P(D|B)=0.99 and P(F|B)=0.01. Only a fixed length of 2 is compared.
+24043	Choose A at the first step, then E
+6905	The joint probability of AE is 0.6×0.51=0.306.
+12417	Keep two prefixes
+17210	A beam of width 2 keeps both A and B at the first step
+24098	The second step has to use each one's own conditional probabilities; they cannot be mixed.
+17684	Expand the four paths
+11379	The highest over two steps is BD, not the AE that greedy selection produces.
+25254	Observe the cost
+12418	Keeping two prefixes means maintaining the state for each
+24621	The cache, the candidate expansion and the sorting all grow; this two-step example does not prove that a fixed beam width finds the global optimum at any length.
+19159	Join the steps up.</strong> A generation strategy changes how the probabilities the model gives are selected from; it does not change the model's own conditional probabilities out of thin air.
+26696	Limits and counterexamples.</strong> The fixed length avoids EOS and length penalties; once those mechanisms are added, the ranking objective has to be stated afresh.
+27978	Follow-up: are reasoning tokens a complete record of the model's real thinking?
+11132	No such inference can be drawn. The visible explanation, a reasoning summary and the model's internal computation are not a complete audit trail in one-to-one correspondence. The exact form of the hidden content and the training mechanism behind it may not be public. Engineering diagnosis should work from observable inputs, tools, outputs, state and tests, and must not take a self-report for the whole causal explanation.
+27887	Follow-up: does a complex task always call for the highest reasoning effort?
+12859	Look at the bottleneck first. Missing evidence, an unavailable tool or a permission error will not resolve themselves at a higher effort. High effort may suit a complex derivation or a comparison of approaches, but it adds latency and cost; measure the gain on real tasks of the same kind. For a simple, low-risk task, piling on reasoning and extra rounds of review in the name of "rigor" is usually wrong.
+28021	Follow-up: if the model corrects a mistake within the current conversation, has it learned?
+15142	It can be called in-context adaptation or a behavior correction, but ordinary inference has not updated any parameter as a result. Whether it survives the end of the session depends on an external memory or a training system. Writing feedback into the history, persisting experience and fine-tuning the weights are three different operations, each needing its own design for storage, permissions and verification.
+24149	The probabilities left after filtering sum to 0.91 — can one sample directly in [0,1) without renormalizing?
+10719	No: the full unit interval cannot be used as it is. The candidate probabilities have to be renormalized, or equivalently the sampling has to happen over the interval of the correct total mass. Otherwise a random number in the tail has no candidate to match, or the result comes out biased.
+23978	Lesson 60｜Inside KV cache, FlashAttention and PagedAttention — AI Systems Engineering
+24628	A cache keeps old computation that can be reused; FlashAttention moves less intermediate data; a paged cache changes how storage is managed. All three can improve efficiency, but they are not the same algorithm, and none of them should be understood as compressing meaning.
+23823	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/08.html">Lesson 43 · reshape, transpose, broadcast</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/12.html">Lesson 47 · A mask is not a black box</a><a class="pill" href="../foundations/13.html">Lesson 48 · Position IDs and RoPE</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+27527	A quick check before the deep reading:</strong> for one layer with 3 positions and K and V holding 4 numbers per row, count the 24 numbers first. Then multiply by the number of layers and the bytes per number, and finally discuss whether the whole history is still being kept.
+27306	This is the part most often waved through in a single sentence, and the part most worth deriving step by step. Answer "which computations really do not change" first, then "how to move less data" and "how to allocate memory". The three kinds of optimization must not be confused.
+8381	Q093｜Why can historical K/V be cached while Q usually is not? Give a layer-by-layer explanation.
+27441	What to know first for this question</span> Under the causal premise an old position never reads a new one, so the K/V of the old layers can be reused. Changing the history, the model or the definition of position breaks that premise.
+23905	Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/12.html">Lesson 47 · A mask is not a black box</a><a class="pill" href="../foundations/13.html">Lesson 48 · Position IDs and RoPE</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch
+15716	In a causal decoder, the hidden state at an old position depends only on itself and on what precedes it in the sequence (
+29511	); appending a new token does not change those old states. The K/V that each layer projects for the old positions therefore do not change either. A new position needs only its own Q, with which to query that layer's historical K/V; the old outputs that the old Q produced have already been computed and usually do not need to be used again.
+10860	"Cache the history" is not a sufficient account
+22914	Take it by induction. For the old tokens at layer 0, the
+15607	, together with the position encoding, does not change. Suppose the layer-l input does not change at the old positions; since the causal mask forbids looking at the newly added position, the set of inputs the old positions attend to (
+26582	) does not change, so the attention output does not change either;
+15613	, together with normalization, acts on exactly the same inputs as before, so the residual result does not change. The old state at layer l+1 therefore does not change, and the induction holds.
+22813	When a new token is generated, at layer l it first obtains that layer's normalized state and computes
+29335	, appends the new K/V to that layer's cache, performs
+15608	, and the weighted sum, then goes on through Wo, the residual and the FFN into the next layer. Only once every layer has been computed do we get the scores that predict the token after that (
+10191	). The cache is not one text vector shared across layers; it is <strong>a separate K/V array for every layer
+24998	If only the topmost K/V were saved, the next token would not find the historical representations it needs in the lower layers. If the old Q were saved but not the K/V, that old Q still could not let a new position recover the historical content. A common cache layout gives K and V one array each of shape
+29234	, where a kernel may use a different memory arrangement, but the semantic axes should not be confused.
+22901	A layer-by-layer proof, from causal dependency, of why old K/V do not change
+26186	Input and conditions.</strong> A two-layer model first processes tokens A and B, then appends C. Every layer is a causal layer with fixed weights, and neither normalization nor the FFN mixes across positions.
+23620	Layer 0 input
+7019	The embeddings and positions of A and B are unchanged
+20301	The old input is the same.
+23617	Layer 0 visible set
+7033	A sees only A; B sees only A and B
+27655	The appended C is not within what the old queries can see.
+23619	Layer 0 result
+20300	Neither the old input nor the visible set changes
+7020	The layer-0 outputs of A and B do not change.
+23681	Layer 1 input
+21196	Comes from the old layer-0 result
+15737	So the K/V of A and B at layer 1 do not change either.
+20135	What happens for the new C
+15959	At each layer only C's Q/K/V are computed, and that layer's A/B cache is consulted
+10870	Not only the top layer is consulted.
+18698	B is changed to D but the cache for B and everything after it is still reused
+15719	The premise of causal dependency is broken; recomputation has to start at the change.
+19187	Join the steps up.</strong> The cache holds because of a conclusion about dependency, not because something happened in the past and is therefore valid for ever.
+26690	Limits and counterexamples.</strong> A bidirectional model, statistics computed across positions or a dynamic position transform each need their own proof; this example is limited to standard fixed causal layers.
+28074	Follow-up: after the 100th token of the prompt is edited, which caches can still be used?
+15968	Under the same weights, template, positions and runtime constraints, the caches for tokens 0 through 99 may still be reusable; the 100th and everything that depends on it have changed and need recomputing. What is meant here is the model's actual token prefix, not the identical characters a human eye sees. Changing the system instruction, the tool definition (
+9948	), the adapter or the position rules can change the prefix earlier than that. One cannot simply replace the cache for the edited token and keep every contextualized state after it.
+27811	Follow-up: why does training usually not reuse KV across optimization steps?
+21133	Once the weights have been updated, the old K/V are no longer what the new parameters compute for the old prefix; and training needs the matching computation graph and gradients. Using an old cache in a forward pass with new weights breaks the consistency of the objective. At inference time,
+15612	and fixed parameters are the usual premises for caching, so an inference optimization should not be dropped into an ordinary training loop.
+27880	Follow-up: which models cannot be cached directly by this proof?
+14787	In a bidirectional encoder an old position can depend on later tokens, so appending input changes the old states; some architectures that normalize across tokens, transform positions dynamically or modify the history also need their own analysis. Sliding windows, recurrent state and hybrid models each have their own state mechanism. The proof in this chapter applies to standard causal layers with a fixed prefix and fixed parameters; it cannot be stretched into a claim that every model caches the same way.
+17835	Engineering deep dive · E13 · continues Q025
+24638	A cache hit has to prove that "what was computed is the same function"
+7760	K/V come from the prefix and the model's computation; they are not an inherent property of the token string. The same tokens can give different K/V under different weights, adapters, position configurations or multimodal features. vLLM's block cache design uses a prefix chain plus extra identity information, and offers a per-request salt to confine reuse to one trust domain.
+15739	So a cache key is not just "a string hash of today's question". At a minimum, state the computation identity, the exact prefix, the representation layout and the valid positions; fields the server already isolates by namespace need not be repeated in every key, but <strong>the isolation condition has to really exist</strong>. A tenant salt that limits sharing is not an authentication system: knowing the salt must not grant access to the data.
+13049	How shared memory creates cross-request contamination
+19978	The teaching program
+25419	lets two requests hold the same mutable list. Once A appends 4, B "sees" 4 as well. Real KV are larger block arrays, but the aliasing problem is the same: a shared complete prefix can be reused read-only, while the appendable tail block needs copy-on-write, exclusive ownership or reference management, depending on the implementation.
+20845	This book reproduces the problem with real Python objects, then uses a separate copy of the tail so that B is still [1,2,3]. The experiment explains the risk of mutable sharing; it does not claim to reproduce any particular vLLM bug. Sharing a full block, appending to a partially filled block, and the lifecycle of release should each be verified separately.
+20225	Problems a hash alone cannot solve
+14162	Even with the right key there can still be a stale pointer, a read that continues after a block has been reclaimed, a writer that misses a lock, or a layout revision that consumers have not picked up. Hash collisions are a separate level; a cryptographic hash can lower the collision risk, but it cannot fix reference counting or a concurrency race.
+27803	Follow-up: why do caches usually insist on a contiguous prefix?
+24823	In an autoregressive layer the representation at a position depends on the visible content before it. Change one token in the middle and the K/V of many later positions can change, even where the IDs did not. Reusing "the same fragment" without regard for the prefix dependency is wrong; what has to be proved is that the context depended on is the same, not merely that a repeated piece of text has been found.
+27840	Follow-up: does a shared prefix have security side effects?
+15193	It can. The difference in response time between a hit and a miss can leak the existence of shared state; vLLM's cache_salt is one design for isolating by trust domain. It brings a trade-off between sharing rate and isolation. Do not assume a performance optimization is inherently unrelated to security, and do not claim that one salt solves every side channel.
+19558	Evidence for troubleshooting
+25555	Record the hit length, the computation identity, the lifecycle of block references, and the comparison result with the cache turned off. A sensitive prompt should not be logged in clear text for the sake of diagnosis. When cross-request inconsistency appears, reproduce "two branches sharing a prefix and each appending a different token" first, rather than only running sequential generation for a single request.
+7448	E13: how to read this result, rather than only looking at "pass"
+29044	First check that the cache key carries the identity of the model, the adapter, the prefix and the positions; then check whether two requests are accidentally sharing a mutable object. Reuse under an identical key that should not have been reused, and cross-writing caused by object aliasing, are two independent kinds of cache bug.
+24842	Self-check:</strong> if the token sequence is the same but the LoRA differs, can the same KV be reused directly?
+10998	Identical tokens alone are not enough to decide. An adapter changes the projections or the representations of earlier layers and so can change the K/V; the cache identity has to reflect the adapter, or the service has to isolate the corresponding computation space explicitly.
+11866	Going from hand calculation to an API, check the interface semantics first
+13031	A formula describes the target computation; an API also prescribes the tensor layout, the mask convention, scaling, dropout, positions and other details. Many mistakes raise no exception and merely push the result off course. This lesson checks with small, explicit counterexamples instead of judging by a generated sentence that "looks fine".
+28920	An automatic causal mask on a non-square matrix can align wrongly
+22704	An independent counterexample: there are 3 historical positions, the new query has 2 rows and the keys total 5 rows. With q and k set to 0, every allowed score is equal; taking Value as [1,2,3,4,5] makes the output the average of the allowed items.
+21857	With the correct absolute-position mask, the first row reads 1–4 and gives 2.5, and the second reads 1–5 and gives 3.0. Wrongly using a local upper-left triangle, the first row reads only 1 and the second reads 1 and 2, giving 1.0 and 1.5. The two have exactly the same shape.
+12627	A difference in the table of what is allowed changes the result directly
+21829	Correct, q at position 3 → 2.5
+21830	Correct, q at position 4 → 3.0
+28590	Misaligned local row 0 → 1.0
+28591	Misaligned local row 1 → 1.5
+8080	In PyTorch 2.10, SDPA's non-square
+28478	follows the corresponding upper-left alignment convention, which cannot simply be carried over to every case that involves a cache. This experiment uses an explicitly correct mask and compares it with the negative control above.
+26544	A change in the input prefix invalidates the cache for the suffix
+19917	Enlarged figure: a change in the input prefix invalidates the cache for the suffix
+13925	When the prefix changes partway through, the cache at the change and in the suffix has to be recomputed
+7930	Mermaid source file
+11302	Two masks, three notions of position
+9118	The attention mask controls which keys can be read; the loss mask controls which targets are scored during training. position_ids controls the position encoding while a cache slot is a storage arrangement, and with left padding, a sliding window or paging the two are not necessarily the same number.
+20712	This model has no PAD, so its cache length can be used directly to produce the new absolute position; generalizing that convenient condition to every production model leads to errors. With left padding one often has to derive the semantic position by accumulating over the valid tokens, and the details are still decided by the model's interface.
+20524	The last "physical position" is not necessarily the last "valid token"
+16341	If one sentence in the batch is right-padded with PAD, using logits[:,−1] directly may pick up the placeholder. One cannot argue that it is masked anyway so the result is the same: a PAD position can still have its own query and output. Common generation interfaces therefore require suitable left padding or correct length tracking. The test for this model compares the last valid position with the last physical position explicitly, and refuses to treat them as the same thing.
+24703	Scale once, softmax once, shift once
+18553	Dividing a hand-written QKᵀ by sqrt(d) and then handing it to an API that scales automatically can divide twice. Handing softmax probabilities to a cross entropy that expects logits computes a different loss altogether. Shifting during data preparation and then letting the model shift internally puts the target two places out. All three problems often "run", which is why one specific cell has to be checked against its expected number.
+25506	Dropout is not the only trap in training mode
+20713	This model has no dropout, but a real model may also have a cache switch, stochastic recomputation, mixed precision, nondeterministic kernels and a different attention implementation.
+9958	, a no-gradient context,
+15618	and freezing the weights are not the same switch. For each one, confirm in practice which step it controls.
+12970	Full masking, a stale cache and boundary lengths
+18532	When no key is allowed at all, this implementation raises an error outright; when an old cache is carried on with after new parameters have been loaded, the test observes a mismatch against the full forward pass; when new input exceeds the position table's length of 8, this model refuses to go out of range. None of these semantic problems is papered over with "just truncate it".
+22452	Test input
+18078	Property it should satisfy
+19925	How it is deliberately broken
+15408	Same prefix, future modified
+13924	The prefix logits do not change
+13304	Turn the causal mask off
+23205	Same sequence, cached versus full
+20523	The final logits agree to within a tolerance
+28549	Reset the new token's position
+23208	Same weights and input
+23209	Reproducible under the same conditions
+22495	Mix in KV from an old version
+26124	Input and target offset by one
+23049	The next token is supervised
+28493	Shift twice
+23210	Same source of probabilities
+7199	Cross entropy matches the hand-computed negative log
+12645	Apply softmax first and cross entropy after
+27793	Follow-up: why can old KV be reused when an old gradient graph cannot be reused indefinitely?
+7781	Reusing KV depends on fixed parameters and a causal prefix; a training step changes the parameters, so the old activations and the new parameters no longer belong to one and the same computation. The backward pass is further constrained by what the graph saves, by lifetimes and by whether the graph is retained. Transplanting the idea of an inference cache into ordinary full-sequence training misses these premises.
+8384	Q094｜How much computation does a KV cache actually save, and how much VRAM does it take?
+27493	What to know first for this question</span> The total cache size counts both K and V, the number of layers, the number of positions, the number of KV heads, the width per head and the bytes per element. Do not put the number of query heads in place of the shared KV head count.
+23770	Lesson 36 · A row of numbers, a table and a stack of tables</a><a class="pill" href="../foundations/06.html">Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch
+16500	It avoids running the projections, the FFN and the old queries' attention over the whole history again and again; a new query still has to read the historical K/V. The attention in one decode still grows with the cached length, and the generation process as a whole is not unconditionally linear. The memory footprint comes from the number of layers,
+9945	, the number of KV heads, the length, the head dimension and the element type (
+13631	).
+18798	Taking the complexity apart
+16246	Big O expresses the order of an upper bound as the scale grows, usually dropping constants and smaller terms. It must be said which variables are growing and whether a single step or the whole sequence is being counted. O here is not the attention output matrix. <span class="concept-micro">When the length doubles, the leading T² term becomes four times as large, but the time actually taken also depends on fixed overheads, memory and hardware utilization, so big O alone cannot promise a measured speed.
+25648	Let the model width be d, the prefix P, and M the number of tokens generated. Ignoring constants, the linear projections and FFN of a full forward pass over length T for one layer cost about
+29150	, and attention about
+10159	. Without a cache, every generated step redoes an ever longer prefix.
+12283	With the cache in place,
+11762	, as before, still processes P positions; each decode does only the new token's projections and FFN, about
+29201	, plus the attention of the new Q against T cached K/V, about
+9986	. Over M steps the attention comes to roughly
+29269	, with a further
+23040	of in-layer computation. That is far less than repeating full forward passes, but it cannot be stated as "KV turns attention from quadratic into linear for ever". Any discussion of complexity has to say whether it is one step or the whole stretch, and whether P is fixed or P and M grow together.
+24644	The usual estimate for the cache size in bytes is:
+13948	The 2 in front comes from K and V. Teaching example: L=32, B=1, T=32768, H_kv=8, Dh=128,
+22024	, 2 bytes per element: the result is 4GiB, and each extra token adds about 128KiB. Changing to 32 KV heads with everything else the same makes it 16GiB. The estimate excludes the weights, page fragmentation, workspace and service metadata. How many concurrent requests a device can really take cannot be found by dividing total VRAM by this number alone.
+20910	Conditions for this example:</strong> an independent configuration: batch=1, 2 layers, 2 KV heads, a history length of 3, a width of 4 per head, and 2 bytes per number. One copy each of K and V; cache-block metadata and alignment are not included.
+17674	The number of layers.
+23315	The number of KV heads actually stored, not the number of query heads.
+17900	The number of historical positions already processed and actually occupying the cache.
+19914	Enlarged figure: the cache is counted in bytes, and the computation saved is a separate account
+14691	Original worked-example data: Q094
+12643	Elements
+16412	Bytes
+10360	K for one layer
+10356	K+V for one layer
+11346	K+V for two layers
+14181	History length becomes 4
+6206	1×2 layers×2×2 heads×4 positions×4=128
+6339	256 B; an increase of 64 B
+28206	Saying what each factor means, one by one, does more to keep the query head count out of the KV head count than memorizing the formula does. Multiply by the bytes per number last.
+24631	The cache reduces the projections and in-layer recomputation for old positions, but a new query still has to read the historical keys and values. The longer the sequence, the more work reading the cache usually becomes.
+15729	So "with the cache on, every token takes exactly the same time to generate" is not a correct conclusion; what the cache occupies also limits how many requests can be served at once.
+11184	Do not conflate:</strong> the figures above are the bare tensor sizes; real VRAM also holds the parameters, temporary tensors, paging, fragmentation and framework overhead, so 192B cannot be used to extrapolate the whole model's memory.
+18740	Working out the K/V bytes of one long context from the units up
+26156	Input and conditions.</strong> L=32 layers, B=1, T=32768, Hkv=8, Dh=128, FP16 at 2 bytes per number.
+10336	One copy of K
+6457	32×1×32768×8×128 numbers
+6019	1,073,741,824 elements.
+19522	Convert to bytes
+7801	K's element count×2
+6262	2,147,483,648 bytes, that is 2GiB.
+13960	Add V
+7802	K and V are the same size
+15344	4GiB in total.
+16094	Add one token
+6154	131,072 bytes, that is 128KiB.
+19857	Switch to MHA for comparison
+7782	KV heads go from 8 to 32, everything else unchanged
+24618	The cache is 16GiB, but that is not the model's total VRAM.
+18973	Join the steps up.</strong> The 2 at the front of the formula comes from having both K and V, and the 2 at the end from the bytes of FP16; neither may be lost by confusing it with the other.
+26715	Limits and counterexamples.</strong> The arithmetic uses GiB=2³⁰, and excludes the weights, page-table fragmentation, workspace and service overhead.
+27814	Follow-up: why can long-context decode be limited by memory bandwidth?
+20184	The new query needs relatively little computation but has to read a great deal of historical K/V layer by layer; if the arithmetic intensity is low, transfer speed sets the total time. A larger batch can improve the reuse of some weight reads, but it also increases the total KV and the service latency.
+17690	-level peak throughput being high does not mean that a single long-context request is bound to be faster; that depends on the actual kernels and memory access.
+27690	Follow-up: are KV quantization and weight quantization the same optimization?
+28572	They quantize different objects. Weight quantization mainly reduces the storage and reading of model parameters; KV quantization mainly reduces the dynamic state that grows with context and concurrency. Error in K changes the attention scores and error in V changes the aggregated result, and both can affect how long-range information is used. Evaluate across different lengths and tasks instead of looking only at the quality of short answers.
+27705	Follow-up: how are a prompt cache and a KV cache related?
+7784	KV is the form the computation state takes; a prompt cache is a product or system capability by which a service reuses the computation for a repeated prefix, and underneath it may draw on state such as KV. A cache hit has to satisfy the service's rules; a persistent session does not make a hit automatic.
+28484	-level billing for cached tokens is not a one-to-one visible mapping onto where the KV physically resides.
+8388	Q095｜Why does FlashAttention save memory? And how is softmax computed without storing the full attention matrix?
+27403	What to know first for this question</span> FlashAttention still computes the same attention objective; what it mainly avoids is writing a huge intermediate matrix back to VRAM. Before taking on online normalization, be sure you can shift softmax by its maximum.
+23843	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+18713	: the attention computation is organized in blocks and the faster on-chip memory is used, so the full T×T score and probability matrices are not written back to high-bandwidth memory over and over. It keeps per-query normalization statistics with an online softmax and computes the same kind of exact attention; it is not an approximate retrieval that drops low-weight items.
+19664	Deriving the online softmax merge
+17257	For one fixed query, take a batch of scores s_j and value vectors v_j. Three quantities are maintained: the current maximum m, the sum of exponentials l, and the unnormalized weighted sum u.
+20280	The statistics of the old block are
+29349	, the maximum score of the new block is m_b. Setting
+13290	The key point is that when the maximum changes, the old statistics have to be rescaled along with it. Otherwise different blocks use different normalization baselines and the result no longer equals the full softmax. For each query, walk the K/V blocks and divide by l at the end. A matrix kernel processes query blocks in parallel and fuses operations such as the mask and the scaling; the backward pass in training can recompute the blocks it needs from a small amount of saved statistics instead of storing the entire probability matrix.
+11586	An example: if the old block has only score 1 and value 2, then m=1,l=1,u=2. With a new block of score 3 and value 10, after merging m=3 and l=
+19381	The exponential function, which turns a number into a positive one; e is about 2.71828. Example: exp(0)=1 and exp(ln2)=2.
+5946	(−2)+1 and u=2exp(−2)+10, giving an output of about 9.0464. If the old u is not multiplied by exp(−2), the output is plainly wrong.
+11341	How two blocks of scores give the same result without storing the full probability table
+26288	Input and conditions.</strong> One query is fixed; the first block contains only score=1, value=2, and the second score=3, value=10. The maximum m, the sum of exponentials l and the unnormalized weighted sum u are maintained.
+25910	Read block 1
+11453	A temporary output of 2.
+25911	Read block 2
+20181	The new maximum is m=3
+20297	The old statistics have to be multiplied by exp(1−3)=exp(−2).
+15323	Merge the normalizing denominator
+24313	About 1.135335.
+15319	Merge the weighted numerator
+24317	About 10.270671.
+20539	Divide at the end
+24320	About 9.046377, the same as a full softmax over [1,3] followed by the weighting.
+15007	Update m but leave the old u and l unscaled
+10735	The blocks are then on different exponential baselines and the result is wrong.
+19026	Join the steps up.</strong> What the online statistics keep is numerical state sufficient for the computation, not a summary of the text. FlashAttention uses blocking and fusion to reduce intermediate reads and writes.
+26790	Limits and counterexamples.</strong> This implements only the online-softmax core for a single query; it is not a GPU FlashAttention kernel, and it proves no speedup factor.
+27991	Follow-up: if the algorithm is exact, why can the results differ bit for bit?
+16900	They are equivalent in real-number mathematics, while the order of floating-point additions, the accumulation precision and kernel fusion introduce tiny errors. "Exact attention" is mainly a contrast with sparse or low-rank approximation; it is not a promise of bit-for-bit agreement across different hardware. Verification should set a reasonable numerical tolerance and distinguish randomness from numerical rounding.
+27688	Follow-up: can FlashAttention replace a KV cache?
+10960	No. The first optimizes how one attention is computed and how its data is moved; the second avoids recomputing historical state at the next step. The two are usually complementary. Fast attention without KV still recomputes; KV with an inefficient kernel can still move too much data.
+27915	Follow-up: does it turn the time complexity from O(T²) into O(T)?
+21331	The number of pairs in standard dense attention is still quadratic; what is reduced is memory traffic and intermediate storage. The speedup differs with hardware and length. Carrying one experimental speedup figure from a paper straight over to your own model and GPU is not rigorous; benchmark prefill and decode separately for real.
+17836	Engineering deep dive · E14 · continues Q027
+23317	The real difficulty is not "cutting the big matrix into small pieces"
+13730	Even after blocking, the globally normalized result for the same softmax row still has to come out. Taking a separate softmax per block and then averaging is equivalent to forcing every block to carry the same total weight, so a block with very high scores and one with very low scores are treated alike. Exact attention implementations of the FlashAttention kind have to maintain normalization statistics across blocks rather than change the attention objective. Different kernels may still end up differing by floating-point rounding.
+26047	Tracking three accumulated objects
+17308	For the scores s and values v already processed, maintain: m=the current maximum score, l=Σexp(s−m), o=Σexp(s−m)v. o is the unnormalized content sum, not the final output. When the new block's maximum moves the baseline to m′, every old term has to be multiplied by
+29290	, because they were counted against the old baseline.
+25001	Updating the maximum without rescaling the old l and o adds numbers measured against different baselines and gives the wrong distribution. This is an invariant of the normalization state, not an implementation detail to be dropped at will.
+15822	A counterexample with fixed high scores
+12274	With scores [1000,1001,1008,1007] and values [1,0], [0,1], [2,0], [0,2] in order, the whole-row result is about [1.461030,0.538059]. Normalizing the two blocks separately and then averaging gives [0.865529,0.634471], which is plainly not equivalent.
+20856	The program shipped with this book accumulates with block lengths of 1, 2, 3 and 4, and each agrees with the stable whole-row softmax to within 1e−12. The test deliberately uses input whose per-block maximum grows sharply from one block to the next; if every block had the same maximum, a missing rescaling could stay hidden.
+19724	Masking and mixed precision need extra checks
+15584	When a block is fully masked, the difference of infinities must not be allowed to become NaN; it has to be stated that this block contributes nothing to the statistics. A row that is fully masked in the end is still handled as in E04. With FP16 or BF16 input, the precision used for the intermediate statistics affects both the result and the cost; do not infer bit-for-bit agreement on a GPU from this book's double-precision Python results.
+28037	Follow-up: is correct blocking always faster?
+10630	No. An interpreted implementation on small CPU arrays can be slower. Speedup depends on the device's memory hierarchy, on how parallelism is organized and on kernel fusion; verifying correctness and benchmarking performance are two different jobs. A report has to list the device, the dtype, the length, the batch, the mask, the forward and backward passes and the memory together, not just "n times faster".
+27990	Follow-up: if the full weights are not stored, how does the backward pass obtain its gradients?
+16910	An implementation can keep the necessary statistics and recompute local blocks on the backward pass, trading that for lower intermediate storage. You have to look at what the kernel you use saves and how it restores things; "no big matrix" does not mean there is too little gradient information, nor that the backward pass needs no extra computation.
+7451	E14: how to read this result, rather than only looking at "pass"
+10736	The exponentials in different blocks may use different maxima as their baseline. Before merging, move the old denominator and the old weighted sum onto the new baseline together; averaging the blocks' answers directly ignores how much probability mass each block really has.
+24879	Self-check:</strong> when a new block raises the maximum score from 1 to 10, can the old l and o be kept as they are?
+10975	No. The old accumulations are counted as exp(s−1) and the new block as exp(s−10); the old l and o have to be multiplied by exp(1−10) so that both are on one baseline before they are added.
+8391	Q096｜What exactly does PagedAttention "page"? And why does it raise concurrency?
+27433	What to know first for this question</span> Paging puts a logically contiguous cache into physical blocks; a page table records the mapping, and a shared prefix has to take copy-on-write into account. It is not a summary that deletes historical tokens.
+23829	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+13801	Paging divides each sequence's logically contiguous KV into fixed-size blocks mapped onto a pool of physical KV blocks. Blocks are allocated on demand as the sequence grows, so no large contiguous stretch of VRAM has to be reserved; several requests and a shared prefix can use memory more flexibly. It mainly changes how KV is stored, managed and addressed; it does not change the order of tokens the model sees.
+10277	An example with a block size of 4
+25829	Request A already has 10 tokens and needs 3 logical blocks. The block table might be
+29250	, pointing at physical blocks 7, 2 and 19 respectively. Logical position 5 lies in logical block 1 at offset 1 within the block, and the access actually goes to offset 1 of physical block 2. Appending A's 11th and 12th tokens fills block 19; only the 13th token needs a new block.
+25830	Request B can use physical blocks 3 and 15, with no need to be contiguous with A at all. When a request ends, its references are released and the blocks return to the pool. The last block may have internal fragmentation, but that is usually easier to control than reserving a large stretch per request for the maximum length. The kernel uses the block table to access K/V along the logical sequence, and the positions, lengths and mask all have to stay correct.
+24956	If A and B have exactly the same prefix, the prefix blocks can be shared with an increased reference count wherever the implementation's rules allow. Writing a new token into a shared, partially filled last block may require copy-on-write; otherwise A's append contaminates B. The prefix hash also has to carry enough information to distinguish the effective identity — the model, the token prefix, the adapter and so on — and sharing must not go by the human input text alone.
+28932	Which physical slot the page table maps logical position 5 to
+26388	Input and conditions.</strong> Each block holds 4 tokens. Request A already has 10 positions, 0–9, and its logical blocks map to
+16896	Locate the logical block
+12173	Position 5 divided by 4, rounded down
+28346	Logical block 1.
+16889	Locate the offset
+6673	5 mod 4
+16032	Offset 1 within the block.
+21327	Look up the page table
+7050	A's logical block 1 corresponds to physical block 2
+25665	Access physical block 2 at offset 1, not physical position 5.
+27657	Append two tokens
+20153	New positions 10 and 11
+16083	They fill offsets 2 and 3 of physical block 19.
+13602	Append position 12 as well
+27549	This enters the 4th logical block
+27287	Only now is a new block allocated.
+13050	Sharing counterexample
+6885	A and B share a partially filled last block and then each writes a different token
+28863	Depending on the implementation, the shared block has to be copied or the writes separated; they must not overwrite each other.
+19264	Join the steps up.</strong> The page table changes where things are stored; it does not change the model's logical token order or its causal positions.
+26760	Limits and counterexamples.</strong> The physical block numbers are imaginary; the block size, the granularity of sharing and the kernel's access strategy all depend on the implementation.
+27781	Follow-up: why is a smaller block not necessarily better?
+17618	Small blocks reduce tail fragmentation but raise the cost of the block table, of addressing and of management; large blocks reduce metadata but waste more space at the tail. The best size depends on the length distribution, the kernel and the device. Paging is not free operating-system magic; it is a concrete trade-off in data layout.
+27841	Follow-up: what can a service do when memory runs short?
+15137	It can pause or preempt some requests, move state to other storage, recompute the prefix, or refuse new requests. Each policy affects tail latency and throughput. Simply raising the maximum concurrency can trigger repeated swapping out and recomputation, making everything slower overall. Watch KV occupancy, the number of preemptions, queuing time and the rate of successful completion.
+27702	Follow-up: is PagedAttention the same as prefix caching?
+13802	Paging provides infrastructure suited to sharing and management, while prefix caching decides when an identical prefix is recognized, retained and reused. The two are related but distinct: one can page without caching across requests, and prefix reuse can be implemented with other memory management as well. Do not credit one mechanism's gains to the other's name.
+10483	If a test agrees with an "expected value" computed by the same faulty implementation, does that prove correctness?
+10994	No. An expected value needs an independent basis. This package uses several paths — a hand-written analytic backward pass, autograd, finite differences and the standard library's forward pass — and adds negative controls that are deliberately misaligned, but the coverage is still limited to the structures and inputs explicitly tested.

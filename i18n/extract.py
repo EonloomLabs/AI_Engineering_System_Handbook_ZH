@@ -23,6 +23,12 @@ SKIP_ELEMENT = re.compile(r'<(script|style|svg|pre|code|kbd)\b', re.I)
 CLOSE = {'script': '</script>', 'style': '</style>', 'svg': '</svg>',
          'pre': '</pre>', 'code': '</code>', 'kbd': '</kbd>'}
 HAN = re.compile(r'[一-鿿]')
+# Chinese punctuation standing alone between two tags - "。" after a term link,
+# "、" between two of them. HAN does not match it, so it used to survive into
+# the translated page as full-width Chinese punctuation. Only the marks that
+# must change are listed: · and — read correctly in English, and ！ is left out
+# because every standalone one is a cell of the worked model's vocabulary.
+PUNCT_ONLY = re.compile(r'^[\s。；，、：？]*[。；，、：？][\s。；，、：？]*$')
 ATTRS = ('title', 'aria-label', 'alt', 'summary', 'placeholder', 'content')
 # <meta> prose worth translating; the rest (charset, viewport, keys) is machine data.
 META_OK = re.compile(r'name="(description|i18n-scope)"|property="og:(title|description)"'
@@ -41,14 +47,14 @@ def extract(doc):
         lt = doc.find('<', i)
         if lt == -1:
             seg = doc[i:]
-            if HAN.search(seg):
+            if HAN.search(seg) or PUNCT_ONLY.match(seg):
                 items.append((i, n, 'text', seg))
             break
         if lt > i:
             seg = doc[i:lt]
             # Text under data-i18n is replaced at load from the catalogue;
             # translating it again would be overwritten, and could disagree.
-            if HAN.search(seg) and not stack:
+            if (HAN.search(seg) or PUNCT_ONLY.match(seg)) and not stack:
                 items.append((i, lt, 'text', seg))
         m = SKIP_ELEMENT.match(doc, lt)
         if m:
@@ -111,4 +117,5 @@ def main(argv):
     return 0
 
 
-sys.exit(main(sys.argv[1:]))
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

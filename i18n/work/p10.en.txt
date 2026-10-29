@@ -1,0 +1,454 @@
+23712	Lesson 24｜Context compaction: what is actually compacted, and how it is recovered once lost — AI Systems Engineering
+22246	Follow this chapter through its objects and states</a><a href="#topic-2">Compaction must keep the facts an action depends on</a><a href="#Q053">Q041｜What is the fundamental difference between compaction, truncation, prompt cache and external memory?</a><a href="#Q054">Q042｜In what order should one safe compaction run? Why avoid replacing while execution is still going on?</a><a href="#Q055">Q043｜How is the original evidence found again after compaction? How do the summary and external storage work together?</a><a href="#Q056">Q044｜How is compaction fidelity evaluated? Why is comparing the summary with the original text for similarity not enough?</a><a class="sub ap-toc" href="#agent-practice-compaction">A tool result arrives while the summary is being generated asynchronously — how is data kept from being lost?
+14202	Compaction trades a long history for a short state, and usually loses information. Confirmed facts, hypotheses still awaiting verification, real side effects and the location of the original evidence have to be kept apart; a fluent summary must not be taken for an exact snapshot of the task.
+23968	Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+27526	A quick check before the deep reading:</strong> keep the unknown state in the story where "the patch was written but the response timed out", and explain why a summary that says only "execution failed" invites a repeated action.
+27191	This chapter follows one long task and gives the whole process: before compaction, the candidate summary, verification and recovery. No published method can guarantee that one short summary keeps every detail some future question might need; the workable goal is to protect the key state for the task at hand and to keep the original evidence recoverable.
+8216	Q041｜What is the fundamental difference between compaction, truncation, prompt cache and external memory?
+27462	What to know first for this question</span>A summary extracts state from the history, trimming simply removes fragments, and offloading puts the material where it can be read again; they lose and recover things in different ways.
+23544	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic
+18522	Truncation deletes part of the content outright; summary compaction rewrites the original content as a shorter representation, usually with loss; a dedicated
+22993	Replacing a longer history with more compact content or a dedicated state. Example: a lossy summary should keep a recoverable location for the original evidence.
+19585	interface may produce an opaque, service-specific state; a prompt cache reuses computation without changing the logical input; external memory puts content outside the context, from where it has to be retrieved again. These five things cannot all be lumped together as "the model remembered".
+15409	Five outcomes for one and the same history
+28646	The long task already has 40 turns: 20 files read, 3 root causes ruled out, 2 files changed, tests run. The latest goal is to fill in the edge cases.
+23133	Truncating the first 30 turns outright can also delete the original constraint "do not change the public
+9504	". The summary keeps "exclude fixed, tests passed", which looks tidy but loses which version the tests belong to, which tests they were, whether any were skipped, and one remote action that is still unconfirmed. Offloading the full log keeps only a path, which can be recovered, but the model's next step has to know when to read which part of it. A cache may make the computation over the 40 turns of original text cheaper, yet that text still occupies logical context and attention-processing room.
+26120	A better teaching summary distinguishes:
+27265	This summary still does not contain every line of code, but it keeps the constraints, the entry points to the evidence and the state that the action needs. It can support recovery; it does not claim to keep every thought without loss.
+20911	Conditions for this example:</strong> an independent long task: of 100 tool records, no. 3 says "changing the interface is forbidden" and no. 80 confirms the root cause. What follows compares four alternative operations; they are not run one after another.
+23446	Removing content without restating it.
+22967	Replacing old content with a shorter representation, possibly with loss.
+24616	Cache
+26571	Reusing computation when the input is the same.
+16174	External storage
+18776	Keeping the original material where it can be read again.
+19832	Operation
+12032	What the task can still see directly
+15038	Keep only the last 20
+24014	Items 81—100
+23816	The constraint in item 3 is lost
+23425	Changing the interface is forbidden + the root cause and the to-dos
+19812	The summary may get a negation or a state wrong
+13928	Prefix cache
+28352	Caching does not make the logical input shorter
+24625	A cache will not filter out irrelevant content for you
+14166	Offload the original text and retrieve it later
+19801	Summary + a citation of the original text
+28871	It must be possible to read it again at the right version
+12937	Start by asking "does the next turn's logical input change". A cache usually reuses computation, while compaction and truncation change directly what the model is able to read.
+19807	What a summary keeps is a restatement; what a citation of the original keeps is the ability to get back to the evidence. The two complement each other, but when a citation goes dead one cannot pretend the summary holds every detail.
+20521	The most critical constraints and the unfinished actions should be stored separately in structured form, rather than existing only inside one long block of summary.
+11195	Do not conflate:</strong> calling compaction a "lossless cache" leaves the reader thinking that every detail can still be recovered automatically inside the model.
+15658	What each of the four "reduce the load" actions actually changes
+26257	Input and conditions.</strong>The history holds 100 tool logs, three confirmed facts and one action still to be checked.
+23129	Delete the oldest 80 logs outright
+28657	The length drops, but evidence found only there may not be recoverable from the remaining text.
+22982	Replace part of the history with a short state record
+11626	How well the facts and the unfinished actions are kept has to be verified.
+11765	Still supplies the original logical context and reuses some of the existing computation
+10833	It does not change the textual knowledge, and it is not long-term memory either.
+16194	External memory
+18778	Store reusable facts together with their source
+10596	Whether the next task can use them still depends on retrieval and a validity check.
+16253	Offload the large logs, keep the paths in the summary, read more when needed
+28325	Reduces the current input volume by way of recoverable evidence.
+19019	Join the steps up.</strong> The names may all carry "cache" or "memory", but whether it is the text, the computation or an external state that changes has to be stated separately in each case.
+26662	Limits and counterexamples.</strong> An opaque compaction state must not be treated as an ordinary readable summary; the example uses an explicit text summary because that teaches better.
+27746	Follow-up: is an opaque compaction block necessarily more reliable than a text summary?
+10999	Being unreadable settles nothing on its own. A dedicated state may suit the model's further processing better, and it may carry product-specific information, but the quality of the following task still has to be tested. Unreadable means that human inspection works differently; it does not mean lossless in the mathematical sense. Keep the key state and evidence on the application side; do not entrust everything to a representation you cannot see.
+27964	Follow-up: is compacting the history to 10% of its original size enough?
+14210	The compaction ratio is only a measure of length. Dropping 90% of repetitive logs may do no harm, while dropping the one line "deleting the database is not allowed" may be serious. Define what fidelity applies to, and the risks, before tuning the ratio. No fixed proportion is a universally correct target.
+27853	Follow-up: after compaction, can the model still recall details that were not saved?
+16465	It may guess from the context and from what it learned in training, but a guess must not be counted as recovery. If the original evidence is still there, a tool can read it again; if it has been deleted and compaction did not keep it, there is no dependable basis. In engineering terms, state "unknown" rather than let the model fill in a plausible-sounding history.
+17849	Engineering deep dive · E27 · continues Q053
+23705	Lesson 22</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+14205	What the compaction interface returns is a new context contract
+21008	The OpenAI compaction guide read for this section describes a canonical output window: the result of compaction may contain both retained input items and an opaque compaction item, and it should be passed on whole, as the interface requires. Picking out encrypted_content alone and discarding the other items breaks the meaning of the returned window.
+19962	The teaching counterexample has two output items: the user message "do not publish" and an opaque compaction item. Keeping only the last of them gives no ground to infer that "do not publish" has been encoded into it again; the caller cannot guess at black-box content. Use the complete window the service returns as input data, and resend the stable control fields you need separately, instead of inventing your own shortest way of splicing things together.
+19804	Keep the summary and the execution log separately
+12067	The task contains the question "has calling c7 already produced a side effect", and it is the execution log that should record states such as pending/running/unknown/succeeded. A model summary can aid understanding, but it must not become the only truth about an external transaction. A summary that says "done" must not override the executor's unknown; a summary that drops "publishing is forbidden" must not remove the permission restriction either.
+27267	Three storage layers show up here: the original evidence stays traceable, the model context can be compacted, and the execution-control state needs deterministic persistence. This does not require a database for every question and answer; it requires the three to be kept apart whenever a task has irreversible side effects.
+25955	Why negative facts are especially easy to lose
+9467	"the tests were not run", "authorization has not been granted", "not the root cause" and "do not modify the public API" are all states that decide what happens next. A compaction test that asks only for the final conclusion misses them. List the propositions to be kept in a three-valued true/false/unknown table and check it after compaction; unknown must not silently become false, nor attempted become done.
+27854	Follow-up: is a higher compaction ratio always better?
+26043	The shorter it gets, the more potential detail is usually lost. The right metrics include whether key constraints survive, the cost of looking the evidence up again, the success rate of the following task, repeated work and the total cost of calls; the compaction call itself also costs something. Watching only the drop in tokens rewards throwing too much away.
+27974	Follow-up: once the new context is in hand, should the old window be deleted right away?
+12336	Follow the product's retention policy, but do not discard the only piece of evidence while it cannot be verified or recovered. The full history can be moved to controlled external storage with only the necessary index put back into the model; the retention of sensitive content, the permissions on it and its deletion at expiry carry constraints of their own. Keeping all data indefinitely in the name of "recoverability" is not acceptable.
+7490	E27: how to read this result, rather than only looking at "pass"
+22112	Compare the item types of the canonical return with the types left after trimming. A compaction state may contain protocol items that are not ordinary summary text; keeping, on your own authority, only the item that "looks most like a summary" destroys information the next call needs.
+24860	Self-check:</strong> the compaction response holds a retained message and one opaque item; why is passing on only the opaque item not a safe optimization?
+25947	The caller cannot prove that the discarded message was encoded into the opaque item. The items of the returned window together make up the interface contract and should be used in full, as documented; execution permissions and transaction state still have to be stored separately.
+12837	Use the history numbers to see the race condition
+19961	The teaching history starts out as
+10061	. A background job takes this prefix and generates summary S. While it is being generated, a new tool result e4 and a user addition e5 are already written into the live history. Replacing the whole list with S outright makes e4 and e5 disappear. The correct target is a verified
+29180	, not a blind replacement.
+12147	Nor may the suffix be appended unconditionally. Suppose a rollback happened in the meantime: e2 has been undone while the old summary S still carries e2's conclusion, and S should then be invalidated. Append-only and destructive rewrite have to be told apart, and the candidate has to be checked against the history version, the model, the compaction configuration and the authorized identity it was generated from.
+15758	Key boundaries in the pinned Codex source
+18147	Asynchronous compaction is enabled only for particular feature combinations and provider paths; it is not uniform behavior across all sessions. The routing, history and budget conditions are checked before it starts, and the candidate is tied to a history version, a model identifier, a compaction hash and an authorized-owner generation.
+5881	The install stage also checks the model and the compaction hash; then, inside the lock in
+5926	it checks the history-rewrite generation, the prefix length and the authorized-owner generation, and keeps the live suffix as it stands at that moment. If the window is still over budget after the install, processing may continue in the foreground; the suffix is not dropped blindly.
+21078	Canceling this turn does not necessarily cancel a session-level compaction started earlier.</strong> The pinned test separates "no new task is started after a cancellation" from "work already started may still finish and be reused". That is only this path's choice of lifecycle; it cannot be generalized into all background tasks ignoring cancellation.
+16279	Why the failure path has to be billed too
+12510	A candidate may end up unused while the generation request has already consumed computation. Shutting down means canceling and winding up, and it also means dealing with usage already reported. Counting only "summaries that were installed successfully" underestimates the cost of the system.
+19803	A summary is not an execution log
+18355	What has to be kept: the task goal, the forbidden actions, the confirmed versions and conclusions, the hypotheses not yet confirmed, the unfinished tools, the reasons for failure, the next step and the location of the evidence. Compacting "the production configuration must not be changed" into "the configuration may be changed", or "the tests have not been run yet" into "the tests are done", changes what happens next. Complete summary fields are no proof of complete meaning; design counterexamples for negation, ordering, conditions and versions.
+20846	The merge experiment in this book verifies only the teaching history structure and the invalidation check; it does not simulate a proprietary remote compaction result. Some services return an unreadable state, and that must not be described as lossless compaction from which all the original text can be recovered.
+16519	A successful install has one more persistence boundary that is often missed
+5877	validates the candidate's identity inside the lock and splices on the live suffix, then updates the in-memory history; the write to disk happens in a later call. The path read here does extra work on the persistence return value, but a final true cannot stand on its own as proof that "recovery also succeeds after a power loss". This explains a function contract; it does not claim that every user will lose data.
+19948	The teaching events are fixed as e1, e2 and e3, with e4 appended while candidate S is being generated. An acceptable candidate yields S＋e4; if a rollback happens or the authorized identity changes, S is rejected. Then construct "the in-memory replacement is accepted, the log write fails": two different states should be reported here, accepted=true and persisted=false. A shorter window, an updated memory and a recoverable history each need their own evidence.
+22523	The source test also distinguishes two kinds of cancellation: after a cancellation no new background candidate is started; session-level work already begun may continue across this turn's cancellation and be taken up later. This round read that Rust test and <strong>did not run it</strong>; the added Python test only reproduces the teaching state constraints.
+8220	Q042｜In what order should one safe compaction run? Why avoid replacing while execution is still going on?
+27426	What to know first for this question</span>Build the candidate compaction state first, then verify it and switch over, so that you never have half an old history and half a new summary. The record of external actions should be checked independently.
+23551	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions
+12866	Fix a consistent history/state snapshot first, then produce a compaction candidate, verify the key invariants, build the new context and switch over; if verification fails, keep the old state or roll back. Compaction is not a matter of calling a summarizing model and overwriting a string. Codex's pinned source snapshot shows one concrete path for rebuilding and replacing the history, but the transactional checks in this section are a general teaching design.
+10484	The seven-step process, and what failure at each step costs
+28194	Choose the boundary.</strong> Compact when the tool calls have finished and the goal of the stage is clear, if you can. If an action is still running/
+14015	, its state has to be carried over explicitly and must not vanish.
+13653	Freeze a snapshot.</strong> Record the history version v and the current task version. If new messages arrive during compaction, either queue them or merge them again before the switch; otherwise a new constraint from the user gets overwritten.
+19764	Extract the key objects.</strong> The goal, the negative constraints, the verified facts, the citations of evidence, the completed actions, the open questions and the next step. The key objects can come from structured state; they need not rest entirely on the model's recollection.
+22809	Generate the candidate.</strong> Require that unconfirmed hypotheses are not promoted into facts, and that sources and versions are kept. With a dedicated API, follow its input/output state contract.
+21494	Check the invariants.</strong> Are the key IDs and constraints present, is an unknown action still unknown, are the evidence versions consistent, has a negation been lost.
+28507	Rebuild the context.</strong> Put back the fixed instructions you need, the tool definitions, the current environment and the candidate compaction state; avoid duplication, and avoid raising permissions by mistake.
+21163	Switch conditionally.</strong> Switch only while the original snapshot version is still valid, and save the index of the old records together with the compaction version. A failed compaction must not empty a valid history.
+27200	These seven steps do not mean that every chat tool needs a complex database. A short task may not compact at all; a lightweight implementation can use a write-once new file and an atomic rename; stronger version conditions are needed only once concurrency and long-running tasks are involved.
+27821	Follow-up: when is the best moment to trigger compaction?
+24757	Weigh the remaining window, the expected next tool result, the stage boundaries, how relevant the history still is, and what the cache gains or loses. Triggering only at 100% of the window is too late, because the compaction call itself also has to process the history; too early wastes cost or drops a detail that was about to be used. A threshold is a safety line, not the only signal.
+27855	Follow-up: what if the compaction call itself exceeds the limit?
+15159	You can first clear out verbose tool output that is clearly recoverable, extract the key state chunk by chunk, or use a supported server-side mechanism. Deleting the earliest content without checking is not an option, because the earliest may hold a fundamental constraint. A product may have its own degradation path; when studying source code, read its error branches rather than assume that compaction always succeeds.
+28107	Follow-up: why can repeated summarizing drift away from the truth?
+15517	A later round usually takes the earlier summary as input, so once an early uncertainty or detail is lost, it can be carried on as a settled, simplified conclusion and reinforced. The remedy is not an ever longer summary but traceable evidence, a stable table of facts and a periodic check against the original text; for an important conclusion, avoid citing only "the previous summary".
+17850	Engineering deep dive · E28 · continues Q054
+12853	Look at the timeline first: the problem is not the summary's prose
+16318	If t4 overwrites version 11, the tool result that has just arrived disappears. On its next turn the model may repeat the operation, and even produce the side effect a second time. This race is a counterexample constructed by this book from the design of concurrent state; it is not a claim that the accident happened in some commercial compaction service.
+14658	An atomic replacement is still not enough
+18832	Replacing the whole file with one rename only guarantees that no reader sees half the content; it does not guarantee that the basis for the replacement is still fresh. At commit time, "which history version the summary is based on" has to be compared. In the local experiment snapshot=10 and current=11, so the CAS (compare-and-swap) condition fails and the stale summary is refused.
+10453	One workable design treats compaction as producing a "new base": read an immutable prefix snapshot, form the summary in the background, and at commit time either confirm that the version is unchanged or splice on the tail of events that came after the snapshot, correctly. The splice has to keep the call/result dependencies; it cannot cut by message count alone. If the tail changes a key conclusion in the summary, the summary can be abandoned and recomputed.
+19660	The control state should stay consistent ahead of the model history
+18609	The execution log records that c7 has finished, so if the update to the model history fails, the system can still rebuild from the log. That is safer than trusting a pending state in the summary. A database transaction can protect the version pointer and the event commit inside the same database, but it does not automatically coordinate side effects in external files or in a model service.
+5868	The compaction interface itself supplies context output; it should not be misused as the whole task state machine.
+27848	Follow-up: a global lock that waits for the summary is the simplest thing; why is it not always done?
+16494	It does avoid some races, but it can block tool results, user cancellations and the progress of a long task, and it raises tail latency. For a short flow it is acceptable; a long call suits a snapshot plus a version check better. Choose on the basis of the task's concurrency and recovery needs, not to force in a complex event system for the sake of an "advanced architecture".
+28111	Follow-up: repeated compaction drifts over time — how is that tested?
+21202	Construct a fixed history that contains counterexamples, negations, constraints and unknown states, compact it several times over and check the table of propositions; also carry on with a small task that depends on the old evidence. High text similarity is no proof that the state is faithful, and conversely a change of wording does not necessarily lose information. Pin each failure down to a proposition and a source event.
+7494	E28: how to read this result, rather than only looking at "pass"
+26863	An update on a stale version affecting 0 rows is the protection working, not the database failing. Once the original events have moved from version 10 to 11, a summary generated from 10 cannot overwrite 11 unconditionally.
+24888	Self-check:</strong> if the summary file is replaced atomically with os.replace, does that guarantee that no tool result which arrived during compaction has been overwritten?
+10962	No. Atomicity avoids a half-written file, but it does not guarantee that the version it was based on is still the latest. A version comparison at commit time, a lock, or a correct merge of the event tail is still needed, and the execution log should hold the real state separately.
+8223	Q043｜How is the original evidence found again after compaction? How do the summary and external storage work together?
+27501	What to know first for this question</span>A citation of evidence has to be able to locate both the original text and its version. A summary of content that carries no qualifying conditions and no record of what was withdrawn turns an old hypothesis into a new fact.
+23698	Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory
+19816	A summary should keep enough locating information, and the conditions that trigger a read; external storage keeps the original evidence and its version. Recovery means reading the matching record again and checking whether it still applies, not letting the model expand on the summary. A citation has to be resolvable, authorizable and verifiable.
+22167	Follow one citation of evidence all the way down
+19805	The summary says
+10006	. When the next step is to edit the current r44, the model must not treat r42 as the current code.
+18506	, or the tool, should read the matching region of r44 and check whether the relevant logic has changed; the r42 evidence can still explain the historical root cause, but the patch has to target the current version.
+20257	A log citation needs its range and its meaning too. For example
+29178	, not just
+10016	. A temporary file may already have been cleaned up, and a path may have been overwritten. For a long-running task, important logs should live in storage with an explicit lifecycle, or a small enough copy of the key output should be kept.
+18453	A recovery can be triggered by a concrete question: about to modify a function that was discussed earlier, finding the current summary at odds with the source, needing to state publicly that a test passed, reconsidering an option already ruled out. Without such a trigger there is no need to read the whole history back in, or the gain from compaction is canceled out.
+19809	The summary says "the configuration has changed": how is the basis for the next step found again
+26327	Input and conditions.</strong>The summary records timeout=5, the evidence points to
+29167	, and the next step is a deployment; but the current working tree is v9.
+13866	Judge the precision needed
+28403	A deployment needs the configuration in effect now
+10348	One line of summary cannot serve as the basis for execution.
+14881	Fetch the evidence back
+19486	Read v8 by path and version
+23397	Confirm that the summary did not rewrite the number or the unit.
+21510	Check the current state
+25867	Read the matching field in v9
+24997	If it has become 7, judge again; do not reuse a stale conclusion.
+20237	Cannot be read
+9363	v8 no longer exists and there is not enough permission for v9
+22645	The state should be an evidence gap, not "5 by default".
+18439	Restore the context
+14959	Add only the fields and versions relevant to the deployment decision
+20252	There is no need to read the whole repository history again.
+19036	Join the steps up.</strong> A good summary states the state and also lets a key conclusion lead back to the original evidence; and evidence fetched again still has to be checked for currency.
+26759	Limits and counterexamples.</strong> A version citation has to resolve for real in the storage system; writing a path that merely looks official does not make anything recoverable.
+27932	Follow-up: does a citation always need to include a hash?
+10847	No. A version number, an immutable object ID, or a controlled repository
+17949	is often enough already. A hash is valuable for identifying exact content, but not every statement needs a signature, a chain of checksums and a complex structure added to it. Let "would a change in the content lead to a wrong action" decide how strong the verification should be; a hash is also no proof that the content itself is correct.
+27856	Follow-up: does the original evidence have to be kept forever?
+10639	Not necessarily. How long it is kept has to do with reproduction, compliance, privacy and cost. Short-lived noise can be cleared out early; key decisions, irreversible actions and the basis of long-term experience deserve suitable retention. Before deleting, invalidate or migrate the citations that depend on it, rather than leave behind a dead link that still looks usable.
+28001	Follow-up: with RAG in place, can the task summary be skipped?
+19831	is good at finding content for a question, but it does not necessarily know the current progress, which actions have been carried out, or which results are unknown. A task summary provides the control view of "what should be done now"; retrieval provides the evidence view of "where to look when it is needed". The two complement each other, and semantic retrieval cannot replace a log of side effects.
+8227	Q044｜How is compaction fidelity evaluated? Why is comparing the summary with the original text for similarity not enough?
+27436	What to know first for this question</span>The quality of compaction is not one number, the ratio. Check which constraints survive, whether the facts are accurate, whether the to-dos can be recovered and how execution continues afterwards, and keep a simulated check apart from the effect on a real model.
+23700	Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent
+14201	Compaction should be evaluated on whether the key facts and constraints survive, on errors newly introduced, on the consistency of the state, and on execution really continuing after compaction. Similarity of wording does not mean that the information needed for action is kept; a very short but accurate state table may be more dependable than a long retelling.
+21197	Build a check task that can be reproduced
+15902	Prepare a set of questions before compaction whose answers the history fixes: which API must not be modified? Which hypothesis has been ruled out? What version is the current file? Did the tests pass, fail, or not run? Which remote action has an unknown result? Tie every question to its evidence, so that the judge does not score from impressions.
+14198	After compaction, let the system answer and take the next step using the new state alone. The check cannot rest on "the keyword is still there":
+28408	both contain "rollback"; "the tests have passed" and "the tests have not passed yet" look alike on the surface and mean the opposite. Negation, conditions, quantities, ordering and the identity of resources all have to be checked.
+24939	Use at least three experiment groups: the full history, an unprotected summary, and a summary with structured state and citations of evidence. Under the same task and the same budget, compare the rate at which the work is completed afterwards, repeated operations, violations of key constraints,
+11263	, and time. Run it several times to observe the randomness; results for a real commercial model can only be reported by actually calling it, and this package offers only the method and deterministic counterexamples — it does not fabricate win rates of that kind.
+16307	How to check whether compaction turned "unconfirmed" into "succeeded"
+26258	Input and conditions.</strong>The baseline facts before compaction: F1 is read-only, F2 passed its tests at v7, F3 is the current v8 and untested, F4 is the call to c7 whose result is unknown. The candidate summary says only "tests passed, changes done".
+28262	Question by question
+21520	Check whether F1—F4 can still be answered
+14853	The summary turns out to lack the read-only state, the version and the unknown.
+9470	"tests passed" supports only v7
+11089	That is no ground for labeling v8 as passing.
+22639	State counterexample
+9137	c7's unknown has been turned into done
+27320	This is a wrong fact, not merely an omission.
+12062	Carry the task on
+25434	Let the deterministic checker try to deliver v8
+21854	A correct system should demand the missing tests and check c7.
+19393	Take the metrics apart
+24498	Count what survives, what errors are new, and how execution continues
+19813	A lower word count in the summary cannot stand in for these three.
+18993	Join the steps up.</strong> The quality of compaction has to be judged by the information kept, the errors introduced and the action downstream, not by how fluent the language is.
+26776	Limits and counterexamples.</strong> A rule-based check covers only the facts set out explicitly; it cannot prove that every shade of meaning in a natural-language summary is faithful. A real model still has to be evaluated on real tasks.
+27938	Follow-up: how is overfitting the summary to known check questions avoided?
+12416	Hold back some follow-up questions that took no part in designing the summary, and add constraints from different tasks and different positions; use real continued execution rather than only answers to fixed questions. Known check questions can serve as a floor, but they cannot prove that nothing is lost for every future question.
+27818	Follow-up: when is it better to keep the longer context?
+21814	While fine-grained code changes are under way, when several original fragments have to be compared, or when details will be checked over and over in the short term, keeping the original text may beat a summary. When a task is about to end, an extra compaction call may also gain nothing. Compaction is a means, not a rite that every long conversation has to perform.
+28079	Follow-up: can a strict standard for "lossless compaction" be given?
+25059	If the requirement is that all the information in the original can be recovered for any future query, a short summary generally cannot guarantee it. It is more practical to define a set of task-relevant invariants and the sources that can be recovered, and to state how well they survive those checks. A strict boundary is worth more in engineering than a vague promise to "keep all the important information".
+22245	Follow this chapter through its objects and states</a><a href="#topic-2">Compaction must keep the facts an action depends on</a><a href="#Q053">Q041｜What is the fundamental difference between compaction, truncation, prompt cache and external memory?</a><a href="#Q054">Q042｜In what order should one safe compaction run? Why avoid replacing while execution is still going on?</a><a href="#Q055">Q043｜How is the original evidence found again after compaction? How do the summary and external storage work together?</a><a href="#Q056">Q044｜How is compaction fidelity evaluated? Why is comparing the summary with the original text for similarity not enough?
+23675	Lesson 19｜The offline retrieval chain: how a document becomes a queryable index — AI Systems Engineering
+22286	Follow this chapter through its objects and states</a><a href="#topic-2">Retrieval finds candidates first, then judges whether they can answer</a><a href="#Q057">Q029｜What steps does building a RAG store go through, from the original file to the index? How should a chunk be cut?</a><a href="#Q058">Q030｜What does each term of the BM25 formula do? Why does a word occurring four times not necessarily score higher than one occurring twice?</a><a href="#Q059">Q031｜How is an embedding retrieval model trained? Why is semantic similarity not the same as being relevant to the answer?</a><a href="#Q060">Q032｜How does HNSW find a nearest neighbor approximately? At which step is permission filtering safe?</a><a class="sub ap-toc" href="#agent-practice-indexing">Which metadata, once lost while the index is built, is hard to recover?
+24276	An index is an auxiliary structure for finding candidates faster; it is not the document itself. Keyword retrieval works on terms, vector retrieval on numeric distance; either can land on the wrong version or cross a permission boundary.
+23783	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+27523	A quick check before the deep reading:</strong> build a word-to-document inverted table for three short texts first, then find the candidates for one query. After that, see why BM25 and HNSW do not amount to a full judgment of fact.
+12779	Start by splitting retrieval into "offline preparation" and "online querying". Much of what gets called poor
+19934	performance is really a parse that lost a table, a chunk split that broke a condition, wrong permission metadata, or a stale index.
+23435	The offline chain decides what can be retrieved later. Document parsing, chunking, indexing and version labels each change what is searchable; however clever the online search, it cannot recover a condition that never entered the store or was cut away by a bad split.
+23176	Related step-by-step process: <a href="../visual/F28.html">Retrieval finds candidates first, then judges whether they can answer</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24546	Related mechanisms to continue with: <a href="../visual/F30.html">Lesson 18 · Code retrieval cannot rely on "semantically similar" alone</a><a href="../visual/F31.html">Lesson 23 · Long-term memory is not a note that is always right
+8177	Q029｜What steps does building a RAG store go through, from the original file to the index? How should a chunk be cut?
+27429	What to know first for this question</span>Parse the document and its metadata first, then build the retrievable units. Permissions and versions are part of the evidence; they are not patched in at the last moment before generation.
+23790	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+12899	Parse first and keep the structure and the provenance, then clean up, divide into semantic units and attach metadata, and finally build the sparse and the dense index separately. A chunk is the unit of retrieval; it need not be the unit the model finally reads. Cutting small sharpens localization, cutting large keeps context, and the two have to be coordinated in layers.
+10341	Two wrong ways to cut one technical document
+20123	The document says: "Retry three times by default. For non-idempotent write operations, automatic retries are forbidden." If a fixed-character split pushes the second sentence into the next chunk, the
+15226	, which matched only the first chunk, may give dangerous advice. Chunking has to respect the boundaries of headings, paragraphs, lists, tables and code, and at the very least keep a condition together with its exceptions.
+14942	The other extreme makes one chunk out of a whole document of tens of thousands of characters: the vector may be averaged over many topics, a short query struggles to locate a specific rule, and putting the whole document into the context is expensive. Retrieve in small chunks and read in large ones: match the specific paragraph first, then expand to the parent section or to the neighboring material that is needed. Expansion has to de-duplicate and stay within budget.
+12641	The metadata should cover at least doc_id, chunk_id, source_version, the section path, the range in the original, the language, the permissions and the valid time. The text used to generate the vector may include the heading and some local context, but the original text used for citation has to stay traceable. A summary enrichment is derived content; it cannot pose as a fact from the original.
+25163	Tables go wrong especially easily. Keep the cell values but lose the row and column headers, and the model has no idea whether "30" is seconds, days or an amount of money. A code block whose indentation a cleaner has collapsed may mean something different. Spot-check the parse before building the store, instead of tuning the vector model once retrieval has already failed.
+20899	Conditions for this example:</strong> an independent document D1 has the header "test environment only" and the row content "timeout=10"; the next paragraph states that the production default is 30. The bad chunking keeps only the table row.
+24272	A block of material in the index that can be recalled on its own.
+12633	Metadata
+21182	Additional information such as the source, the version, the permissions and the position.
+25794	Semantic boundary
+24777	A split point that keeps the relation between a condition and its object.
+13733	Chunking scheme
+16031	What the chunk actually contains
+15707	Risk in the answer
+19429	Truncate at a fixed character count
+17011	Easily generalized to every environment
+19800	Carry the header along
+11746	Test environment only: timeout=10
+12454	The scope of application is kept
+16754	A complete conditional block
+22408	Test 10; production 30
+15190	The two environments can be compared directly
+24281	Index record
+15183	The source and the access entitlement can be checked
+13728	Chunking is not finished once the file has been cut small. A number that leaves behind its header, its unit or its exception clause may already mean something else.
+28487	Overlapping chunks reduce what is missed at the boundaries, but they add duplicate recall and storage; the larger the chunk, the more irrelevant content it drags into the context as well.
+22913	Judge the chunking with real questions that carry conditions: can the production value and its evidence be found, not merely whether a keyword matched.
+11205	Do not conflate:</strong> if acl is written into the index but the query performs no permission filtering, the metadata by itself will not prevent a leak.
+11814	Start from one concrete document
+19970	The teaching document
+5866	contains "the test environment can be rolled back; production needs extra approval". If chunking cuts the second half away, the first chunk is still grammatical but the semantic condition is gone. A longer chunk is not always better either: one chunk holding four environments may be matched by a query for only one of them, and the model still has to work out which applies.
+16036	A chunk's identity should be more than a string of text
+22003	Each chunk needs at least a source document ID, a version, a position range, a permission scope, a valid time, the parsing method and the index generation. Only when the vector record and the lexical record use the same stable chunk identity can duplicates be spotted during fusion. When a source file is withdrawn, follow the ID to delete or invalidate the derived chunks; deleting it from the source directory alone is no guarantee that the vector store has kept up.
+17697	An embedding space is a contract
+21676	The model name, the exact version, the dimension, the normalization, the pooling, the input prefix and the way of chunking all shape what a vector means. Two kinds of 768-dimensional vector cannot be compared together just because they are the same length. In deployment, building a new index, running shadow queries and regressions, and only then switching the index alias is more controllable than mixing new vectors into the same index.
+10559	Context enrichment has to stay traceable
+11552	When a note is generated for a chunk, it should be based on the document the chunk belongs to and should keep its provenance. The background a model generates for a chunk may be wrong, and it must not be cited as if it were content from the original. Contextual Retrieval offers one way to make chunks easier to tell apart in retrieval, but better retrieval does not remove the duty to verify the facts in a generated note.
+10498	Three checkpoints
+25328	After parsing, check whether a table header or a negation was dropped; after chunking, check whether the conditions and the citations can still be recovered; after indexing, check the permission filtering, the propagation of deletions and the consistency of versions. Use a counterexample in which an old and a new document both exist to verify that the current query does not prefer the stale content. Evaluate not only Recall@k but also whether the final answer used the right version and the right conditions.
+10346	One input, and at least three traceable objects
+14663	The original R7, the context note C7 generated for the chunk, and the index entry I7 are not one and the same thing. After an update to R8, the fact that I7 can still be found says nothing about whether it applies; and a mistake in how C7 was generated must not be written back as "that is what the original says". The teaching index gives all three their own versions and records how they derive from one another.
+20131	The context enrichment in the article serves to improve retrieval; it cannot replace a quality check on the source data. Vectors of the same dimension produced by different embedding models are not compatible for that reason either; rebuilding or migrating an index needs its own versioning and evaluation strategy. That last sentence is a general engineering judgment, not a claim that the article implemented this book's whole index lifecycle.
+18739	Cut one conditional sentence in half, and why even a successful recall can still answer wrongly
+26263	Input and conditions.</strong>The original text: "Trial accounts: refunds on working days only, and the request must be made within 7 days; paid accounts: the request may be made within 30 days."
+16022	Bad chunking
+16030	Chunk A holds only "within 7 days"; chunk B only "within 30 days"
+20011	The numbers are there, but they have lost their link to the subject and the condition.
+19477	Chunk by structure
+13698	Keep the trial and the paid subject each with its full condition
+16033	Each chunk can be interpreted on its own.
+28798	Attach metadata
+25568	Record the document ID, the version, the section and the permissions
+12359	This makes filtering and tracing back easier.
+22592	Read back the parent paragraph
+22957	The user asks about a weekend refund on a trial, and the trial chunk is recalled
+18347	Read the full clause as well when needed, rather than matching only "refund".
+20501	Handling an update
+25280	The rule changes from 7 days to 14
+20188	The new version enters the store and the old chunk stops counting as currently valid evidence.
+18982	Join the steps up.</strong> The basic unit of chunking is interpretable evidence, not a fixed number of characters.
+26810	Limits and counterexamples.</strong> The refund material is invented business content and constitutes neither legal advice nor a real product policy; the optimal chunk size has to be verified against actual data.
+27701	Follow-up: does a larger overlap always mean better recall?
+28488	Overlap eases the breaks at boundaries, but it produces duplicate candidates that crowd out the
+18019	, and they add to storage. A mass of near-duplicates can also make the model believe that several independent sources support the conclusion together. Evaluate cross-boundary questions and candidate de-duplication, instead of chasing a fixed high overlap.
+27792	Follow-up: why can a document update not simply add new vectors?
+20274	The old chunk may still be in the index, so a query returns the old rule alongside the new one; a change in length also makes the original chunk numbering point at different content. What is needed is a versioned replacement, deletion or invalidation of the old chunks, and an update that keeps the sparse and the dense index in one consistent view. Where brief inconsistency is allowed, the read path's choice of version has to be stated explicitly.
+27956	Follow-up: is all content suited to being turned into vectors?
+24201	Exact IDs, error codes, configuration keys and numeric ranges are usually better served by exact, lexical or structured queries. Vectors help with semantic recall, but they cannot take the place of database conditions and permission filtering. A retrieval system should keep several kinds of index, rather than squeeze all the data into one vector and lose the structure.
+8181	Q030｜What does each term of the BM25 formula do? Why does a word occurring four times not necessarily score higher than one occurring twice?
+27431	What to know first for this question</span>Chunking decides the smallest unit of retrieval: too small a chunk may cut a condition away, too large a one may drown the match. Overlap is not free, and it is no substitute for understanding the structure.
+24399	combines how distinguishing a word is, the saturation of term frequency, and document-length normalization. A query word that occurs often helps, but with diminishing returns; repeated occurrences in a long-winded document should not be allowed to overwhelm a short relevant one without limit. The exact form of IDF and the parameters are up to the implementation.
+28255	Take the formula apart term by term and compute it
+10290	One common positive-valued version of IDF is:
+7967	N is the number of documents and df the number of documents containing the word; tf is how many times the word occurs in the current document; |d| is the length and avgdl the average length. k1 affects how fast saturation sets in, b controls length normalization, b=0 makes no adjustment for length and b=1 adjusts more fully by relative length. Tokenization and the unit of indexing affect every one of these statistics.
+19955	Teaching example: N=100, df=10, k1=1.2, b=0.75, avgdl=100, so IDF is about 2.263745. Three documents, with one query word considered:
+28653	Length
+7357	D2 occurs 4 times and still scores below D1, because it is four times as long; D3 occurs only once but is shorter, and scores above D2 as well. This is not "a long document is always worse"; it balances the matching signal against the incidental hits that length brings. The numbers were computed by a script in this package.
+11322	Both documents contain "exclude": why does BM25 not simply count occurrences
+26344	Input and conditions.</strong>Document A=[exclude,path], B=[exclude,exclude,path,cache], C=[log,output]. N=3, the average length is 8/3, k1=1.2, b=0.75; the non-negative IDF form ln(1+(N−df+0.5)/(df+0.5)) is used.
+20130	Document frequency
+9451	"exclude" occurs in A and B
+9165	df=2, not the total of 3 occurrences.
+7055	A's term-frequency factor
+24312	About 1.113924.
+7150	B's term-frequency factor
+24314	About 1.205479.
+15300	Multiply each factor by IDF
+7126	B occurs twice but is longer
+18299	The score is only slightly higher, not simply twice A's.
+18887	Join the steps up.</strong> BM25 weighs how rare a word is, the saturation of frequency, and length normalization all at once.
+26732	Limits and counterexamples.</strong> The non-negative IDF variant is used explicitly and is not to be confused with the log form without the added 1 found in other textbooks; for Chinese, the given tokens are used as they stand, and no actual tokenizer is involved.
+27677	Follow-up: why does BM25 fail to find a synonymous wording?
+16045	The basic form depends on term overlap: the query "authentication expired" and the document "
+16259	-invalidation" may have too few words in common. Tokenization, synonyms, query rewriting or dense recall can make up for this, but a rewrite has to keep the original exact keys, so that error codes and function names are not rewritten away.
+27753	Follow-up: what is special about tokenizing Chinese and code?
+11429	Chinese has no natural spaces, so the tokenization strategy shapes the terms; code contains snake_case, camelCase, paths and symbols, which need both splitting for recall and, often, the whole identifier kept for exact matching. A general natural-language tokenizer is not necessarily right for code, and real queries should be used to evaluate it.
+27743	Follow-up: can BM25 scores from different queries be treated as one confidence scale?
+10469	Usually not. Query length, term frequency and the distribution of the corpus differ, so the scale of the scores shifts. A 10 on one query does not mean more factual grounding than a 5 on another. A ranking score is a signal of candidate relevance, not the probability that an answer is correct.
+8185	Q031｜How is an embedding retrieval model trained? Why is semantic similarity not the same as being relevant to the answer?
+27396	What to know first for this question</span>BM25 works from term statistics, while a dense vector uses a learned geometric similarity. Their scoring scales differ, and both have to match the concrete query.
+23846	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/28.html">Lesson 16 · Retrieval, to begin with
+17971	Dense retrieval commonly uses a
+5799	encoder and a document encoder to produce vectors, pulling relevant pairs closer and pushing negatives away through contrastive learning. The query and the document can be encoded separately so that the index can be built offline. Vector similarity approximates relevance under the training objective; it does not automatically understand negation, versions, permissions or exact numeric conditions.
+14792	Training and querying a two-tower model
+17533	For a query q, a positive d⁺ and a negative d⁻, compute
+18512	or the normalized cosine. One contrastive objective is:
+13781	The negatives in the denominator force the model to tell apart passages that look relevant but do not answer the question. Random negatives may be too easy; hard negatives come closer to the real difficulty of search — different versions of the same function, or the same product on different platforms. But mistaking a genuinely relevant document for a negative harms the training.
+23438	Offline, every document chunk is encoded and stored; online, only the query is encoded before the similarity search. That is far cheaper than feeding the query together with every document in the store into a large model. If the embedding model is replaced, the old vectors usually cannot be mixed directly with new query vectors: the index has to be rebuilt, or separate index versions maintained.
+25789	Two semantically similar passages can hold opposite positions: "automatic retries are allowed" and "automatic retries are forbidden" are very close in topic; the old and the new description of an interface are also highly similar. After retrieval, the conditions in the original text and the metadata have to be read; a conclusion cannot be drawn from vector distance alone.
+21571	Why retrieval vectors have to be trained rather than given arbitrary coordinates
+26370	Input and conditions.</strong>The query vector q=[1,0], the relevant document a=[0.8,0.6] and the irrelevant document b=[0,1] are all unit vectors; scoring is by dot product, with temperature 1.
+25397	Compute the similarities
+23053	As things stand, the relevant document is closer.
+26100	Turn it into a training probability
+23190	The probability of the relevant item is about 0.689974.
+17546	Contrastive loss
+24304	About 0.371101.
+13773	Gradient on the scores
+9318	softmax minus the target [1,0]
+24322	About [-0.310026,0.310026], pushing the relevant score up and the irrelevant one down.
+15749	Hard negative
+24966	If b is a document whose words are similar but whose meaning is not
+22088	It tests the fine-grained boundary better than a completely unrelated negative, but a wrong label misleads the training.
+19124	Join the steps up.</strong> The geometric relations of a retrieval embedding come from the task objective and the training samples; they are not a distance that exists naturally between token IDs.
+26675	Limits and counterexamples.</strong> The example stops at the gradient on the scores; training a full encoder also needs the chain rule, in-batch negatives, normalization and more, and a 2-dimensional teaching point must not be taken for a real semantic space.
+27789	Follow-up: why must the query/document prefix and the pooling be watched?
+21229	Some embedding models are trained with different task prefixes, encodings or pooling for queries and for documents. Ignoring the convention at inference time changes the distribution. A correct dimension does not mean a correct semantic space; in deployment, pin the model,
+9979	, the preprocessing, the normalization and the version.
+27874	Follow-up: is a larger vector dimension always better?
+20513	A higher dimension can add representational capacity, and it also adds storage, indexing and computation; what it gains depends on the training and the task. High dimensions do not necessarily solve problems of exact IDs or of currency. Measure recall and the downstream completion rate under the same corpus, the same queries and the same Top-k budget.
+28020	Follow-up: what is the difference between the knowledge in a model's parameters and an embedding index?
+14751	Knowledge in the parameters is pressed into the weights by training and is hard to update item by item; an index holds representations of external documents and can locate the original text and its version. An embedding by itself usually cannot restore the original text without loss, so the original content still has to be kept. Treating the vector store as the only backup of knowledge loses the readable evidence.
+17851	Engineering deep dive · E29 · continues Q059
+24603	The dimension is a contract about shape, not about meaning
+11327	Two models both outputting 768 dimensions does not mean that dimension 1 and dimension 2 correspond to the same internal directions. Replace the embedding model but keep querying the old index, and relevance can fail even though the matrix multiplication is perfectly legal. The model version, the tokenizer, the pooling, the prefix, the normalization and the text cleaning together define the retrieval representation.
+12239	The e5-base-v2 model card published by its author requires retrieval tasks to use the matching
+13933	prefixes, and gives the pooling and normalization that go with them.
+5880	That is the contract of one specific English model: not every vector model has to add the same prefix, and it is certainly no guarantee of performance on Chinese.
+11640	A two-dimensional counterexample explains "space mismatch"
+20295	In the old index A=[1,0] and B=[0,1], and the old query, expressed as [1,0], matches A. A new model may rotate the direction for the same meaning to [0,1]; if only the query encoding is updated, the old index matches B. Every vector length, dtype and norm is correct; the only thing wrong is that the semantic reference is inconsistent across versions.
+27237	This local linear-algebra counterexample does not run the e5 model, but it proves exactly that "the same dimension is not enough to make things comparable". That the database did not refuse the insert is no reason to think an upgrade needs no rebuild.
+26857	A migration has to switch both ends together
+24485	Give the index generation an identity that includes the document chunking version, the embedding configuration and the corpus version. Encode on the query side for the same generation; during a dual-write or dual-index phase, retrieve and evaluate each separately rather than mixing the two sets of scores. Before the switch, verify recall and the downstream task with a fixed query set, and keep the old index for a rollback; on a rollback the query model has to go back with it.
+22128	Another common pooling mistake is counting PAD in the denominator of the mean. When averaging the vectors of the valid tokens, mask the values and also count only the valid ones; zeroing the PAD vectors while still dividing by the padded length makes the magnitude of the sentence vector shift with the composition of the batch.
+28109	Follow-up: are they compatible once both have been L2-normalized?
+10971	No. Normalization only makes the lengths uniform; it does not align two coordinate systems of direction. Nor does it fix a wrong prefix, an answer passage that was truncated away, or Chinese input that lies outside the distribution the target model is good at.
+27988	Follow-up: the new model is stronger on the public leaderboards, so why is retrieval in the business worse?
+25725	The language of the evaluation, the document lengths, the type of task and the index handling may all differ. Compare candidate recall first on the same corpus with the same queries, then look at reranking and generation; do not let a stronger generation model mask a regression in the index, and do not put every regression down to the embedding weights.
+7497	E29: how to read this result, rather than only looking at "pass"
+11344	Two sets of vectors can both be two-dimensional and still use different coordinate systems. Once the query and the documents no longer come from compatible models, the distance computation runs as usual while the meaning of the ranking has already failed.
+24856	Self-check:</strong> both models output 768 dimensions and normalize; can a new query vector be used directly against the old document vectors?
+11001	That alone does not settle it. The space of directions, the prefix, the pooling and the training objective may all differ. The query and the index have to use matching representation contracts, and the migration has to be verified with a fixed query set.
+8187	Q032｜How does HNSW find a nearest neighbor approximately? At which step is permission filtering safe?
+27502	What to know first for this question</span>Approximate nearest-neighbor search uses an index to compare fewer candidates, which can miss some recall. ACL filtering changes which candidates are visible, and content the user has no right to should be kept out of the models downstream.
+23652	Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+22886	navigates a hierarchical neighbor graph: the upper layers close in on the target region quickly, the lower ones widen the candidate search, and the result is an approximate nearest neighbor. It trades off speed, memory and recall. Permission filtering belongs to security and to the meaning of retrieval; it cannot come down to asking the model "do not leak" in the final answer.
+11839	From the entry node to the candidate heap
+29102	The upper graph is sparser: starting at the entry node, the distances to the neighbors are compared and the search moves greedily to a position closer to the query; it descends layer by layer and explores the bottom layer with a wider candidate set.
+24191	-style parameters control the search width; raising them usually improves
+15101	recall while adding latency; the number of connections used in building the graph, and the search width during construction, affect the quality of the graph and the memory it takes. Parameter names and details vary between implementations.
+26915	Approximate retrieval has two different failures: not finding the point that is truly nearest in the vector space is a recall problem of the ANN algorithm; finding the nearest point when it does not answer the question is a problem of semantic representation or task relevance. Raising efSearch addresses only the first, and does not automatically repair a wrong embedding or a wrong chunking.
+21145	As for permissions: if the candidates are taken as the Top 10 of the whole store and the items without permission are removed afterwards, nothing may be left, even though the permitted area still holds highly relevant results; that is recall lost to post-filtering. Worse, if text the user has no right to has already been sent to an external reranker or LLM, deleting the citation at the end does not undo the leak. Filter by identity inside the trusted boundary, or use an index or namespace that supports secure filtering, and only then hand the permitted content to the models downstream.
+20893	Conditions for this example:</strong> an independent candidate list: the nearest 3 items are A/B/C, none of them within the current user's permissions; the 4th item, D, is both accessible and relevant. The sketch only shows the relation between filtering and candidate width; it does not reproduce HNSW in full.
+22986	Using an index to find the nearest candidates approximately.
+12507	Candidate width
+19794	How many alternatives the search stage considers.
+21151	Permission filtering
+11219	Keeping unauthorized content out of the context the user can see.
+21556	Order of retrieval and filtering
+11731	Take only the top 3, then filter
+6866	A,B,C → all removed
+6004	0 results; this does not mean there is no relevant document
+12631	Retrieve within the allowed set
+11732	Search only in the accessible set
+20642	D has a chance of being found
+18621	Widen the candidates, then filter
+6867	A,B,C,D… → D is kept
+16102	More search work; the strategy has to be explicit
+23503	An empty result may come from too few candidates, not from a knowledge base without the answer. Troubleshooting should look at the recall range and at the filter counts together.
+21144	Permissions have to take effect before anything is shown to the model or the user. Feeding unauthorized text into the model to improve recall and deleting it afterwards is not secure filtering.
+26865	How well filter-aware ANN works depends on the implementation; use an exact retrieval over the same authorized scope as the reference, rather than reading Recall from the unfiltered case alone.
+11190	Do not conflate:</strong> raising the number of candidates can repair some missed recall, but it adds latency and resources, and it still gives no formal guarantee that every neighbor is found.
+26910	The approximate search sees only two points: how the true nearest neighbor is missed
+26367	Input and conditions.</strong>The query q=0. The candidates are A=0.2, B=0.1 and C=0.9, with absolute distance. Because of its visit budget, the teaching search process inspects only A and C.
+24205	Exact baseline
+21499	Inspect all three points
+7151	B is nearest, at a distance of 0.1.
+14927	Restricted search
+15070	Visit only A and C
+26928	Returns A, at a distance of 0.2.
+25737	Identify the error
+7022	A is not a document that does not exist
+28615	The error is that the search never visited B, not that the similarity formula computed wrongly.
+13992	Add permissions
+24962	If B may not be accessed
+15932	Within the authorized set A and C, A is in fact the correct result.
+25928	Compare parameter settings
+18625	Raise the visit budget while leaving the data and the permissions unchanged
+22405	Measure recall, latency and resources, not just how many results come back.
+19238	Join the steps up.</strong> Approximation error, candidate changes caused by filtering, and error in the vector representation have to be diagnosed separately.
+26803	Limits and counterexamples.</strong> This is the smallest counterexample of recall missed because of a visit budget; it is not a full implementation of HNSW graph construction or traversal, which also involves layers, adjacency and a candidate queue.
+28123	Follow-up: is pre-filtering always faster?
+10644	Not necessarily. A complex filter changes the graph search path or needs extra structures, and some implementations may fall back to an exact search. The choice has to satisfy both correct isolation and performance; authorization must not be skipped for the sake of speed. On a small dataset an exact vector scan may already be simple and dependable enough.
+27669	Follow-up: how is ANN recall measured?
+15789	Fix the vectors and the definition of distance, use the exact Top-k as the reference, and compare the overlap with the set the ANN returns; this evaluates only the approximation error of the index. Evaluating the recall of the documents that are genuinely relevant also needs human or task labels. The two senses of "
+27146	The share of the returned items that are correct, and the share of all the items that should have been found that actually were. Example: the denominators differ, so the relevant or required labels have to be defined first.
+9499	" have different denominators, and a report must say which is meant.
+27845	Follow-up: what happens when a document is deleted but its vector remains?
+15231	Data that has been withdrawn, old permissions or stale content may be returned. A deletion has to run through the original text, the sparse index, the vector index, the caches, the summaries and any derived memory; at the very least there must be an authoritative invalidation check at query time. Hiding a file name in the UI is not a completed data deletion.
+17852	Engineering deep dive · E30 · continues Q060
+14070	Distinguish which comes first: secure filtering or the candidate search
+17526	Applying permission filtering to the final SQL result in the database keeps disallowed rows from reaching the application; but if the ANN finds only a small batch of candidates first and filtering comes afterwards, the number of results may fall short. <strong>No leak</strong> and <strong>sufficient recall within the authorized set</strong> are two different goals. The official pgvector README discusses explicitly how an approximate index can return too few rows after filtering, and introduces the iterative scan of the corresponding version.
+15790	Pin four candidates to see the truncation effect
+12958	The global nearest-neighbor order is
+10033	. Taking the Top 2 first and then filtering for mine leaves nothing; considering the Top 2 within the allowed set gives a and b. This is not random error: the candidates had already been truncated before the filter. Even with a and b both present and the permissions right, the application may still wrongly announce that "there is no material".
+20813	This book simulates the logic with a list only and makes no claim to have actually run pgvector or HNSW; real recall also depends on the index search parameters and on how the data is distributed.
+15272	Each possible fix comes with conditions
+18622	Widening the candidate set or enabling an iterative scan improves the chance of finding enough qualifying rows, at the price of scan work and latency; partitioning by tenant or by condition cuts down irrelevant candidates but raises the number of indexes and the management burden; an exact search over a small authorized set may be simpler. Before choosing, measure the selectivity of the authorization condition, the count after filtering, the real Recall@k and the tail latency.
+11077	Filtering cannot be moved into the LLM prompt to "solve recall". Once secret material has entered the prompt, telling the model not to cite it is not access control. Permissions should be enforced by a trusted layer before the material reaches the model.
+28098	Follow-up: does setting a larger ef_search always fix it?
+10689	No guarantee. It is only one of the search budgets; the index version, the selectivity of the filter, the scan limit and changes in the corpus all have an effect. A larger budget may also make latency unacceptable. Use an exact search as a small-sample reference to check whether the approximate candidates are enough, instead of only seeing whether k results were gathered.
+28072	Follow-up: what information does a cached retrieval result have to be bound to?
+21323	The identity of the query, the index generation, the filter conditions, the tenant and permission version, and the relevant time conditions. Once a user's rights are revoked, a fragment in the old cache that used to be allowed must not keep flowing into the prompt. The design of the cache key has to work together with the dependency invalidation of E36.
+7503	E30: how to read this result, rather than only looking at "pass"
+12799	Count first how many candidates are left after authorization. Filtering only after a very small global Top-k can return an empty set, even when there really is permitted and relevant material a little further down.
+24841	Self-check:</strong> the SQL result contains no rows beyond the user's rights but fewer than k of them; why can this still be a retrieval problem rather than "the material does not exist"?
+6913	The ANN candidates may have been truncated by Top-k first, leaving too few after the authorization filter. Examine the candidate and filter stages, the iterative search and the exact reference, instead of mistaking security correctness for sufficient recall.
+22285	Follow this chapter through its objects and states</a><a href="#topic-2">Retrieval finds candidates first, then judges whether they can answer</a><a href="#Q057">Q029｜What steps does building a RAG store go through, from the original file to the index? How should a chunk be cut?</a><a href="#Q058">Q030｜What does each term of the BM25 formula do? Why does a word occurring four times not necessarily score higher than one occurring twice?</a><a href="#Q059">Q031｜How is an embedding retrieval model trained? Why is semantic similarity not the same as being relevant to the answer?</a><a href="#Q060">Q032｜How does HNSW find a nearest neighbor approximately? At which step is permission filtering safe?

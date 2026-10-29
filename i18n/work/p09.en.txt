@@ -1,0 +1,390 @@
+23645	Lesson 15｜Codex, Claude Code, Copilot: from public fact to a diagnosable execution chain — AI Systems Engineering
+22271	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#Q045">Q025｜In the Codex source, which objects does a tool pass through from being visible to the model to being really dispatched? And how does compaction replace the history?</a><a href="#Q046">Q026｜How does Claude Code obtain project context? Why is a subagent not a complete copy of the main agent?</a><a href="#Q047">Q027｜Why must Copilot's IDE, CLI and cloud agent be looked at separately?</a><a href="#Q048">Q028｜How do you turn a complaint that "the product is no good" into a problem you can locate?</a><a class="sub ap-toc" href="#agent-practice-rules">Rule-file loading and subagent inheritance: why is "inherited automatically" not enough to say?</a><a class="sub ap-toc" href="#agent-practice-products">How can the open-source Codex and the Claude engineering articles be read against each other without manufacturing a conflict?
+24258	Systems</span><span>about 8.1k characters</span><span>Figures and item-by-item notes
+22532	When reading source, follow where the objects go instead of memorizing class names first. Draw out how one output item becomes a tool call, how it carries the call ID and how it enters the execution registry; for a closed-source product, describe only the boundaries that have been made public.
+23523	Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+27538	A quick check before the deep reading:</strong> work through "registered → discoverable → exposed → authorizable → executed successfully" one level at a time to find why a tool went unused, instead of declaring it in effect as soon as you see a config file.
+10485	The three products are not one implementation, nor three model options behind the same interface. For Codex this chapter uses a pinned source snapshot; for Claude Code and Copilot it uses public product documentation. It claims no knowledge of closed-source prompts, of the full scheduling policy, or of unpublished server-side implementations.
+8166	Q025｜In the Codex source, which objects does a tool pass through from being visible to the model to being really dispatched? And how does compaction replace the history?
+27477	What to know first for this question</span> Read along the pinned Codex commit: response item → ToolCall → ToolInvocation → registry. The names really do exist, which does not mean every tool is visible to the model.
+23521	Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/23.html">Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP
+15943	In the Codex commit this book inspected,
+11443	, ToolRouter distinguishes the registry, the different ways of exposing a tool, and the model-visible
+11250	; a response item is first turned into a ToolCall, then wrapped in a ToolInvocation and handed to the registry to dispatch. The compaction path builds a new history, rebuilds the context and replaces the current history; it does not merely clear the chat text. This is a local source observation of that snapshot, and no guarantee that every version or hosted product is the same.
+12860	Look at the real fields first, instead of guessing the architecture from names
+14046	contains such fields as
+24131	. Their separation says directly that "the tool is registered" is not the same as "the model can see it directly this turn".
+21526	checks whether a normalized name is mapped through code mode, exposed by a direct or namespaced schema, or can be found as a deferred tool when a tool search capability exists.
+28885	requires both tools to be exposed, the one that starts an interactive terminal and the one that continues it; and the capability to manage sub-
+24187	s is likewise computed from the relevant set of tools. The "reachable" here is still not the final authorization for every specific set of arguments.
+25953	The call-conversion path can be read in this order:
+17239	branches on FunctionCall, the client-executed ToolSearchCall and CustomToolCall, and may return None for the remaining items. This shows that ordinary text and a tool call are not told apart by scanning for function names in natural language. An argument-parsing error also has an error channel back to the model. The real handler, the permission and the sandbox checks have to be traced on through the registry and the matching tool implementation; reading the router alone cannot claim that all execution safety has been audited.
+14219	The compaction path, in
+11425	, clones the history, prepares the model input and handles stream completion or failure; on success it collects the user messages and the summary, builds the compacted history, rebuilds the world-
+24226	A record of the facts or progress currently in effect in the system. Example: committed, running, succeeded, failed, result unknown.
+23156	-related context, and then calls
+18041	, recomputing the use of
+12269	. The source also distinguishes an incomplete response, exceeding the context limit and cancellation as different errors, so not every failure can be treated as an ordinary retry.
+11859	From tool registration to real dispatch, checking gate by gate whether it can arrive
+26201	Input and conditions.</strong> Against the pinned Codex commit recorded by this book, ce0323f2f2d3b25e82806cd555237da3db4e1897, assume tool x has already entered the registry.
+9293	x is present in the registry
+27274	This only proves the execution implementation can be found, not that the model can see it this turn.
+21390	Check model_visible_specs, deferred discovery or the code-mode path
+28842	A hidden tool cannot be judged usable on successful registration alone.
+15631	The response item is a recognizable FunctionCall or the matching CustomToolCall
+9133	build_tool_call converts it into an internal ToolCall.
+21198	Build a ToolInvocation carrying call_id, payload, session and step_context
+28135	It goes to the registry's dispatch path.
+22345	The registration count rises but no call appears this turn
+12820	Check the exposure plan and the actual request first, instead of rushing to put it down to the model being "unwilling to use it".
+19144	Join the steps up.</strong> Registered, discoverable, visible, callable and executed successfully are different states, and each should be observed in turn.
+26758	Limits and counterexamples.</strong> The source walkthrough is limited to the archived pinned commit and the paths read; it claims no consistency across all current Codex versions. The full chain for permissions and the like still calls for reading the neighboring implementations.
+27780	Follow-up: why does a pinned commit matter more than citing a path on main?
+11570	The main branch moves: functions are relocated and behavior changes, which makes line numbers useless. A pinned snapshot lets a reader check the same piece of code. This book uses that snapshot only to show local structure and does not call it forever current; when the product is updated, the call chain and the tests have to be located again.
+28061	Follow-up: does seeing retry in the code let you assert that a tool must be idempotent?
+10990	No. There are different layers here: model stream retries, compaction retries and tool execution. Whether a side effect is repeated depends on the execution record, the handler and the remote interface. Reading source has to follow the data and the side-effect paths; a backoff inside one function does not yield a whole-system guarantee.
+27773	Follow-up: why not copy the full source verbatim as the tutorial?
+16758	The full source would drown the core path, and a reader might mistake one version's internal type for a stable
+10132	. This book gives the real symbols, the paths, a pinned version and an explanation of the control flow, keeping the principle separate from the teaching implementation. Compiling that repository calls for its own dependencies and test environment; this text does not claim to have compiled the source or audited all of it.
+17845	Engineering deep dive · E23 · continues Q045
+15812	Pin the source scope; do not guess the internals from product behavior
+21064	This section reads
+19734	at commit
+29344	, committed 2026-10-21 02:02:49Z, in file
+10054	. The analysis rests only on the functions visible there; the Rust client was not built, and no claim is made to knowing the closed-source server-side logic.
+11849	Trace one call through four objects
+12378	holds the registered tools;
+12383	holds the specs exposed to the model this turn;
+25562	records the identity of nested tools;
+17595	wraps the session, the step context, the cancellation token, call_id, the origin and the payload that the actual dispatch needs. They are not four aliases for one "tool list".
+12894	first considers the nested names reachable in Code Mode, then the direct function and namespace specs, and last the registry entries that can be discovered later when a ToolSearch surface exists. From this it follows: a tool existing in the registry does not mean it has been written directly into the prompt, and having no direct spec does not necessarily make it unreachable, since it may be used through the deferred-discovery path. This is a conclusion from reading that function's control flow, not a conclusion about runtime authorization.
+26631	How an output item enters dispatch
+19403	branches by ResponseItem type: a plain FunctionCall yields name, namespace, arguments and call_id; a client-executed ToolSearchCall is turned into a search payload; a CustomToolCall keeps its input form; other items return None. A ToolInvocation is then built and handed to the registry's dispatch method.
+27350	Here <strong>name matching, payload parsing, execution policy and permission checks must not all be lumped together as "the routing is correct"</strong>. This file cannot prove on its own that some tool has been allowed to write a file; permissions have to be traced on through the runtime executor. The comment on the registration metric in the source also separates registration from being visible or reachable to the model.
+23290	Which four lists real troubleshooting should collect
+17299	For one and the same turn, record the registered inventory, the final exposed specs, the call items in the model output, and the executor's accept or reject result. If registration exists but exposure is missing, check the exclusion rules, name conflicts and deferred discovery. If the spec exists but the model never called it, look next at the description, the task evidence and the selection behavior. If a call was produced but execution refused it, look at the arguments and the permissions instead of only editing the model's prompt.
+27733	Follow-up: does supports_parallel=true mean two calls can safely write the same file at once?
+10943	It does not. The parallel-capability flag in the source comes from the registry; a clash over a shared resource still depends on the specific arguments and on the executor's policy. Reading two files and applying two patches to one file are different conflict relationships. Parallelism at the type level cannot be stretched into freedom from conflict for arbitrary instances.
+27790	Follow-up: why must the commit be pinned?
+13762	The branch name main moves, and paths and functions change. What the textbook compares against is that commit; a later reader can use the file path, the function name, the commit and the blob identity to locate the basis as it stood then. When the version changes, the control flow should be verified again rather than treating today's observation as a permanent architecture.
+7478	E23: how to read this result, rather than only looking at "pass"
+22343	Track the registration list, the model-visible list and the runtime authorization list separately. A tool having an implementation does not mean the model can choose it this turn; the model being able to choose it does not mean every action is granted.
+24870	Self-check:</strong> a tool exists in the registry but does not appear in model_visible_specs — can it be judged uncallable straight away?
+10986	No. That pinned source also has reachable paths through Code Mode and deferred tool search. The specific branches of exposes_tool have to be checked; and even when it is reachable, that does not mean execution authorization has passed.
+15665	Four kinds of evidence, not all at the same level
+15813	Pinned source proves "how the program does it in this commit, on this configuration path"; a test proves the expected behavior under constructed conditions; an engineering article explains design motivation, experiments and experience; product documentation states which features and configurations are supported. They cannot stand in for one another.
+12291	That Codex has a request-level StepContext, for example, does not prove Claude Code has a structure of the same name inside. A Claude engineering article mentioning some way of organizing long tasks does not prove that every Claude Code session is required to use it. Documentation listing hooks does not mean every hook runs synchronously, or that one can undo a side effect that has already happened.
+28357	Five things to ask first when sources conflict
+20383	Is it the same product, the same date, the same interface, the same configuration, the same layer of behavior? The advice in an older article may change as model capability and product mechanisms change; and open-source main is not the version a user has installed. A textbook should keep the snapshot date and the commit instead of writing it up as "the product is forever like this".
+26051	A shared task for comparing products
+12270	Use one fixed repository task and compare rule discovery → the actual request → the proposed tool → argument admission → execution evidence → compaction and recovery → final verification. Observable results can be compared; closed-source system prompts, internal reasoning and the exact scheduling algorithm cannot be guessed from the output.
+11039	Results cannot be explained by model strength alone
+11700	Product-level tools, context, default reasoning settings and execution limits all affect the result. Anthropic's public quality review can serve as a case of "changes in the surrounding engineering also affect the experience"; when a historical report like that is used, the date and the scope of impact have to be labeled, and it cannot be taken to show that the same fault is still present in the product today.
+17523	What this textbook requires of its evidence
+27338	The source basis for this group of mechanisms is pinned to the commit obtained on 2026-10-22,
+29311	, and it keeps full-file verification, reading of a stated line range, statements from official articles and documentation, and original teaching derivation apart from one another. The other older chapters keep their original historical commits; the two cannot be stitched into one version. Reading code is not an end-to-end product benchmark, and a test stub is not a measurement of a commercial model. Every conclusion holds only within the recorded scope; what is unpublished is left as unknown, with no guessing to fill in a supposed completeness.
+22877	Use a table of product semantics for statements that look contradictory
+15538	A post-hoc block, AGENTS file discovery, sub-agent preloading and temporary tool permission have to be checked item by item in the two products. The same name does not prove the same implementation; and public open-source code does not automatically cover a commercial deployment or the version installed on your own machine.
+6321	The Claude Code quality retrospective of 2026-04-23 describes the effect of changes at a particular time and in a particular product. It supports "check the different changes in the model, the configuration, the context and the product layer first"; it does not support "poor quality today must be the same historical bug". This page uses the old incident as teaching material for fault attribution, and states explicitly that it does not claim the fault is still present today.
+8169	Q026｜How does Claude Code obtain project context? Why is a subagent not a complete copy of the main agent?
+27399	What to know first for this question</span> Claude Code's public behavior covers reading rules, managing context and running subtasks; an unpublished template cannot be invented from a single observation.
+23545	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent
+13023	The public documentation describes Claude Code as an agent that runs around a model, tools and feedback, with support for project instructions, skills, sub-agents and context management. A sub-agent can have its own context and configuration, and the main agent usually receives its result rather than its whole internal process. The specific built-in prompts and the server-side details are not published in full.
+22990	Unfold one turn of work with a diagnostic eye
+18202	When you open a repository and ask a question, check separately whether the working directory is right, which project instructions were discovered, whether a skill is relevant, whether tools and permissions are available, and which files the model actually read. These checks are a general diagnostic method, not an assertion about the exact order of every internal field.
+17265	For an "analyze this module" subtask, the main agent can pass on the goal and the scope; the sub-agent reads the code under its own tool and permission configuration and returns the root cause, the evidence and a recommendation. A separate context keeps the main thread from filling up with long logs, but it also creates an information bottleneck: if the sub-agent only says "no problem", the main agent has no way of knowing which version was checked, over what scope and with which tests.
+28959	Project instructions suit stable constraints; automatic memory or persistent notes suit information that should be available across sessions; the current task's progress needs specific evidence and state. The three cannot all be stuffed into one file that grows ever longer. Cleaning up or compacting tool output in a long session can lighten the context load, but details can still be lost, so it is best if the key evidence can be located again.
+9485	"Inherits from the parent agent" has at least seven different meanings
+15227	What may be inherited is the task statement, part of the session, file rules, model settings, the tool catalog, permissions, environment variables or the connection identity. They are not necessarily inherited together. Giving a sub-agent a summary of the parent task is not the same as giving it every MCP connection the parent agent can use; and seeing an old tool call is not the same as being able to run it again.
+15756	The pinned Codex startup and communication paths handle user input, internal messages, session history and metadata separately. Some fork paths filter out history items and usage records; what is kept also depends on the path and the configuration. This textbook does not read one filter function as proof that every sub-agent always copies history the same way.
+10363	A handoff checklist is more reliable than "carry on"
+19952	A teaching handoff covers the goal, the boundaries, the working directory, the baseline commit and the hashes of uncommitted files, the confirmed evidence, the permitted tools, the forbidden side effects, the output format and the acceptance conditions. Rather than copying a hundred thousand lines of conversation, hand over enough information to finish the subtask independently, plus traceable entry points.
+25282	Do not carry a rules file from one product to another
+7265	For Codex, Claude Code and other coding tools, the rules-file names, the hierarchy, the scope of automatic loading and the sub-agent inheritance behavior are decided by each product's own documentation and version. When one
+20330	is shared, confirm whether the target product reads it natively, or reference it explicitly through a rules entry point it does support; do not assume it is in effect just because the file exists.
+27153	also keeps the project-instruction snapshot apart from the thread instructions returned by the provider; which of them are shared with a sub-agent is decided by configuration. When tightened permissions invalidate the cache, it should fail safe rather than quietly fall back on the old, looser rules.
+21423	How to verify
+25420	Have the main agent and the sub-agent each report a verifiable list of their inputs, instead of saying vaguely "I inherited the context"; check the requested directories and the executor's capabilities, without demanding a display of invisible system prompts or internal reasoning. Construct a counterexample: the parent agent can query the database while the sub-agent has no connection configured, and the sub-agent should state plainly that the capability is missing rather than fabricate query results.
+20086	File names, discovery scope and what is inherited have to be checked separately
+7243	The documentation Claude Code reads does not treat AGENTS.md as the same kind of automatic entry point as CLAUDE.md; it has to be imported or configured explicitly as the documentation describes.
+19529	, which authorizes access to a directory, does not directly imply that the rules file has been injected either. The separate context of a non-fork sub-agent does not contain every file-reading result the main agent obtained earlier, and some built-in roles also trim the rules. Different modes have to be verified separately.
+7277	Codex's rules manager invalidates the cache first when the environment or the trust level changes, and only then tries to refresh. That way, even if the refresh fails, "there is already a cache" cannot become a reason to re-expose rules that are no longer readable. Sharing a dynamic thread provider with a sub-agent also needs that provider's explicit permission, which is a different thing from passing along existing text.
+27815	Follow-up: if the main agent can use an MCP, can the sub-agent always use it?
+11014	That cannot be a general assumption across products and configurations. Check the sub-agent's tool configuration, the permission mode, what was actually discovered and the run logs. File permissions,
+27628	-level connections and the schema visible to the model are different layers; one authorization on the main thread does not necessarily mean every sub-agent inherits the same capability in every context.
+27680	Follow-up: does a longer CLAUDE.md guarantee behavior better?
+28666	Long instructions can conflict with one another or bury what matters, and they take up input. Keep the globally stable rules, move local specialist procedures into on-demand content, and put facts back into a source that can be queried. A natural-language rule is model input, not a deterministic executor; a high-risk limit still needs real permissions and verification.
+27989	Follow-up: can you still understand it deeply without seeing the internal prompt?
+15140	You can understand the public architecture, the interface semantics, tool behavior, observations of the context and reproducible experiments, but you should stop at the edge of the evidence. Testing whether a configuration improves a task by controlling the variables is valid engineering research; guessing from one behavior that "it must use some hidden routing inside" is not a fact.
+17846	Engineering deep dive · E24 · continues Q046
+12826	Compare the runtime contract first, not the names
+11569	If the main session has read a skill, does the sub-agent automatically have its body? If a tool is available to the main agent, is it available to the sub-agent by default? These are facts decided by the host's configuration, not properties that follow from the concept of an "agent". Claude Code's public documentation separates a sub-agent's own context, skill preloading and the permission mode; and different forms of forking or delegation must not be conflated either.
+21055	This section does not rank every product item by item; it gives a verifiable way to troubleshoot configuration: first establish the entry point — CLI, IDE or cloud — the version, where the agent definition comes from and the order in which overrides take effect, then check the input and the tools actually handed to the sub-agent.
+7304	In Copilot, an omission and an empty array mean different things
+21002	The Custom agents configuration document checked here states that omitting the tools field, or using the matching wildcard configuration, is not the same as an explicit empty array: an empty array can mean no tools, and an unknown tool name is ignored.
+27342	This explains a class of symptom in which "the config file is valid, the run reports no structural error, and yet the tools are gone".
+23042	, a misspelling, may not turn itself into the read_file you wanted. That the YAML parses does not mean the capability loaded correctly.
+10256	An acceptance check that does not rely on guessing the model
+22891	Use a small read-only task to make the sub-agent report the tool surface available to it, and check that against the host log; then have it read a temporary fixture file and return a fingerprint of the content. For skill loading, check whether the description was discovered, the body was read, the attached resources were accessible and the key steps were actually carried out. The model answering "I have that skill" is not sufficient evidence.
+21148	A permission test should include both an expected success and an expected refusal: a file in an allowed directory can be read, and an operation inside a forbidden scope is refused reliably. Tests must not run on real private files; a temporary fixture is enough.
+27963	Follow-up: is copying the main agent's whole text to the sub-agent the safest option?
+15212	It can carry irrelevant history, sensitive material and conflicting instructions across as well, which costs more and does not pass on execution permissions anyway. Send the task goal, the necessary evidence, the constraints, the result format and the available capabilities; whether the full context is shared is decided by what the task depends on, not by a default that more is better.
+28110	Follow-up: can explaining the configuration in the prompt fix a tool that was never loaded?
+10954	No. A prompt can affect selection; it cannot create a tool that is not registered or not exposed at runtime. Only once "the tool does not exist", "the tool is not exposed", "the model did not choose it" and "execution was refused" are kept apart do you know which layer to change.
+7481	E24: how to read this result, rather than only looking at "pass"
+23233	Whether omitting a field is equivalent to passing an explicit empty collection depends on the specific product version and its configuration semantics. This record is an isolated teaching probe; it does not generalize one host's behavior to all products.
+24850	Self-check:</strong> why can omitting the tools field and tools: [] not be treated as two ways of writing the same thing?
+13517	A given host may read the omission as "the default tools are available" and the empty array as "grant no tools at all". It has to be checked against the current product's entry-point documentation and verified by an actual run; permissions cannot be inferred from YAML syntax.
+8172	Q027｜Why must Copilot's IDE, CLI and cloud agent be looked at separately?
+27400	What to know first for this question</span> Copilot's IDE, CLI and cloud tasks are not one runtime environment; indexing, visible files, permissions and instruction loading have to be checked for each specific form.
+23609	Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent
+7305	Copilot covers different surfaces of use, and their tools, context sources, custom agents, permissions and execution environments should not be lumped together. The CLI's custom-agent documentation describes configuration-based specialist behavior and tool sets; a capability of the same name may have a different scope of support in the IDE or in the cloud.
+11820	Troubleshooting one "the task agent did not load the skill" layer by layer
+12868	First establish the exact entry point and version: IDE chat, CLI, a background coding task or some other surface. Then see whether the skill file is in a discovery location that surface supports, whether its metadata is valid, whether the task description is enough to trigger it, and whether the skill body was actually read. Last, check whether the tools the skill requires are exposed to this agent and allowed.
+19927	The fault may be in discovery: the file path is not scanned. It may be in selection: the description is too broad or does not match. It may be in execution: the skill was read but a tool it depends on is unavailable. Merely seeing that a pattern is missing from the final code is no proof of a complete failure to load the
+16521	. Look at the evidence of reading and execution rather than letting the model report "I used it" for itself.
+11914	Repository instructions, path-specific instructions, a skill, a custom agent and MCP each cover a different layer. Copying one large block of rules into every location may raise the chance of triggering for a while, and may also produce duplication and conflict. The better practice is to look up what the target surface is responsible for, then design the smallest sufficient configuration.
+15401	Why one set of repository instructions can differ between the IDE, the CLI and a cloud task
+26362	Input and conditions.</strong> The local workspace has an uncommitted
+29510	; the remote branch is still the old version. The user runs the same question in the IDE, in the local CLI and in a cloud task.
+15214	May have access to the current workspace and the selection
+28897	Which buffer content is actually supplied has to be confirmed.
+28297	Usually works around the current directory and the files its tools read
+25887	The read scope and the configuration paths cannot be inferred from what you see in the IDE.
+11652	Cloud task
+24989	If the environment is created from the remote branch
+20948	Local uncommitted changes will not appear there by themselves.
+17575	Reconcile
+13717	Record the product surface, the repository commit, the working tree and the instruction source separately
+12892	Make the environment the same before comparing model capability.
+11653	The cloud task "did not follow the new rule"
+14491	The cause may be that it never obtained the file at all, not that the model will not follow it.
+19139	Join the steps up.</strong> Before comparing agent products, compare the version, the context entry points and the permissions they were given.
+26680	Limits and counterexamples.</strong> The exact loading rules depend on the product surface and the version; this example shows the usual differences between distributed workspaces and does not fabricate an internal prompt.
+27778	Follow-up: why does the same prompt on the same repository behave differently in the IDE and the CLI?
+10568	The context sources may differ — the current editor selection, unsaved buffers, the working directory or the available tools — and the model, the default instructions, the history and the permissions may differ too. These variables have to be controlled when comparing; a difference cannot simply be put down to one product "understanding the business better".
+28084	Follow-up: if a custom agent declares a tool, will the model definitely use it?
+16122	A declaration is usually one of the conditions for exposing or allowing a tool, not a program that forces the call. The model still judges by the task. A check that must certainly run can use a deterministic workflow or a suitable
+29405	, rather than relying on "must" repeated in a description. A forcing mechanism should also be proportionate to the risk.
+27939	Follow-up: how do you compare the three products fairly?
+15394	Use the same task, the same repository snapshot, the same visible evidence, comparable budgets and comparable permissions, and record the result and the cost of each. State plainly the differences in model and hosting environment that cannot be controlled. Compare real completion rates rather than one demo or the length of the output; and do not splice capabilities from different surfaces into a "unified Copilot" that does not exist.
+8175	Q028｜How do you turn a complaint that "the product is no good" into a problem you can locate?
+27427	What to know first for this question</span> Check that the configuration was discovered and that the actual request exposed it before judging the model's selection. "It did not use the tool" cannot be read directly as the model not being clever enough.
+23543	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+18802	Break the failure down into information not discovered, information not loaded, information not used, the action not executed, the execution state unknown, verification insufficient, and the wrong thing delivered. Look layer by layer for the first evidence that departs from what was expected, instead of blindly editing the prompt at the last layer.
+10271	A diagnostic tree you can act on
+22952	The user says "I told it to keep the API compatible and it changed the interface anyway". Step one: confirm that the original constraint entered this turn's effective context; if it was in an older session that has been compacted, check whether the compaction kept it. Step two: confirm that the model read the callers and the compatibility tests; if it did not, improve retrieval. Step three: see whether the plan or the patch identifies the compatibility risk explicitly; if it was identified but implemented wrongly, the implementation and the verification are what need work. Step four: see whether the tests cover the old callers; if there are only tests for the new feature, a green light cannot rule out a regression.
+15499	Likewise, for "it did not use MCP", look at the connection first, then discovery, then what the model could see, then the intent to call, and last the actual refusal at execution. For "the token count is too high", look first at redundant context, the volume tools return, repeated failures and multi-agent handoffs, rather than starting by lowering the model's reasoning capability.
+22015	Every diagnostic conclusion should come with a check that could refute it. If you believe it is a retrieval problem and the task still fails once the correct evidence is supplied, keep looking at the model and the execution layers. If you believe multi-agent brings quality and a single agent reaches the same success rate on the same budget, the value of the orchestration needs rethinking.
+18650	The skill cannot be found: ruling it out step by step with four observable facts
+26423	Input and conditions.</strong> Symptom: the task did not use a certain skill. The configuration, the discovery list, this turn's input and the execution log are all available.
+21244	Check the installation
+20090	The file really exists and its format can be parsed
+10775	If it does not exist, fix the installation; do not analyze the model's routing.
+21241	Check discovery
+18668	Whether the skill metadata appears in the candidate list
+23059	If the directory scan or the scope is wrong, fix the discovery chain.
+21324	Check the input
+21090	Whether this turn received the relevant description or an explicit instruction
+20708	If it never entered the input, the model cannot be said to have "ignored" it.
+21248	Check execution
+18678	The skill was read but a tool inside it is disabled
+28704	The problem is capability or authorization, not that the skill went unselected.
+20533	Only last, evaluate the semantics
+16766	The full evidence shows it is visible and usable yet consistently chosen wrongly
+22994	Compare descriptions with boundary tasks instead of adding more rules at the outset.
+19143	Join the steps up.</strong> Following the real execution chain to the first missing link gives a reliable conclusion more easily than changing the model, the description and the permissions at the same time.
+26757	Limits and counterexamples.</strong> The procedure is a diagnostic method; it does not require keeping large amounts of sensitive raw prompt for every simple task, and logs can be redacted as needed.
+27825	Follow-up: what is a reproducible minimal failing example?
+12433	Keep the least task statement, repository fragment, configuration and sequence of steps that still produces the fault, without deleting the key boundaries. Shrinking a large, unrelated repository into a small fixture speeds up regression testing, but you have to confirm that the shrunken version still reproduces the same mechanism rather than creating a different toy problem.
+27766	Follow-up: why can a system's success rate not be computed from one trace?
+25347	explains what happened in one run; it gives no probability over a distribution of tasks. Mechanism diagnosis and statistical evaluation complement each other: the first finds the root cause, the second judges whether a change helps in general. One success can serve as a case, not as proof of overall benefit.
+27878	Follow-up: where is further optimization not worth it?
+22142	Be careful with any mechanism that has no specific failure behind it, no measurable gain and a long-term maintenance cost. If simple, direct execution already meets the goal reliably, adding another layer of routing and review may only add cost. The point of going deep into a system is to know where to change things and where not to, not to make every layer complicated.
+22270	Follow this chapter through its objects and states</a><a href="#topic-2">Break one agent task into the turns that actually happen</a><a href="#Q045">Q025｜In the Codex source, which objects does a tool pass through from being visible to the model to being really dispatched? And how does compaction replace the history?</a><a href="#Q046">Q026｜How does Claude Code obtain project context? Why is a subagent not a complete copy of the main agent?</a><a href="#Q047">Q027｜Why must Copilot's IDE, CLI and cloud agent be looked at separately?</a><a href="#Q048">Q028｜How do you turn a complaint that "the product is no good" into a problem you can locate?
+23639	Lesson 12｜How each turn's prompt is assembled: context is a data pipeline — AI Systems Engineering
+22288	Follow this chapter through its objects and states</a><a href="#topic-2">Each turn's context is like a working file with a boundary</a><a href="#Q049">Q017｜Which objects should make up one turn of model input? How should the budget be computed?</a><a href="#Q050">Q018｜How does JIT loading save tokens without missing anything essential? Why does the "dependency closure" have to be filled in?</a><a href="#Q051">Q019｜Why does a prompt cache require a stable prefix? How do you work out what compaction gains and loses for the cache?</a><a href="#Q052">Q020｜When the context holds instructions and facts that conflict, how should they be ordered and adjudicated?</a><a class="sub ap-toc" href="#agent-practice-context">Why can assembling context not just be "take the first N items"?
+24257	Systems</span><span>about 7.9k characters</span><span>Figures and item-by-item notes
+10581	A context budget is how a limited number of input slots is allocated. Rules, evidence, history and tool descriptions compete for the space; work out which facts the current problem needs first, then optimize how they are put in and how they are cached.
+23788	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent
+27544	A quick check before the deep reading:</strong> with a total budget of 100 units, 20 for fixed rules, 30 reserved for output and 10 for tools, work out that 40 is left for evidence, and say which kind of content would change the conclusion if it were removed.
+10562	Context engineering is not "summarize the material and put it in the prompt". It covers selection, permission filtering, version checking, filling in dependencies, ordering, budgeting and rendering. The object model and the algorithm below are a teaching design; no claim is made that some closed-source product adopts them field by field.
+8138	Q017｜Which objects should make up one turn of model input? How should the budget be computed?
+27475	What to know first for this question</span> Each turn's context is a limited set of input, not the whole repository. Fixed rules, tool descriptions, working state and evidence get different budgets.
+23789	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context
+18761	Treat the task constraints, the tool definitions, the evidence, the history of actions, the current state and the open problem as different context objects, then select and render them for this turn's goal. The budget has to leave room for output, tool feedback and later actions; the nominal window cannot be filled entirely with input. Products differ in exactly how they count input, output and reasoning
+23034	s, so this should be calibrated against the interface's own rules.
+10272	A context object you can check
+27250	These fields are not there to be elaborate; they answer a few practical questions: what this passage is, where it came from, which version it is about, why this turn needs it, and what it depends on. A simple project can keep only id/source/revision/content; add the field whose absence causes a concrete error.
+25647	Let W be the total budget available to the model, O what is reserved for this turn's output, R the margin for tool results and S the protocol and safety margin; the selectable input budget is then roughly
+10199	. If the interface constrains maximum output and context separately, check each of them rather than leaning on one formula. The real token count should come from the target model or service's own counting; a character count is only a rough estimate.
+19563	Next come this turn's goal and the key constraints that cannot be left out, then the tools needed now and their
+9966	, the confirmed state and the evidence. Chat history is not ordered mechanically by "the newer the more important": a rule raised very early, "do not change the public
+9500	", can matter more than the ten most recent useless search results. Irrelevant failed exploration can be compacted or moved out of the context, while undecided side effects and negative conclusions have to be kept.
+28120	Follow-up: when the budget is short, what goes first?
+12685	Delete what is duplicated, out of date, unrelated to this turn and recoverable first, then trim tool output and historical detail. What must not go first is a key constraint, the identity of a resource, a version, or "the state of this action is unknown". If the necessary information itself exceeds the budget, split the work into stages or narrow this turn's goal instead of quietly dropping constraints.
+27791	Follow-up: once the tool definitions are in the input, why can the limit still be exceeded with the same token count in the body text?
+21776	A model request also carries message boundaries, roles, tool schemas, multimodal representations and other overhead. The body text a user sees is only part of the total input. Check the actual count and the composition of the request, instead of computing an exact token count from a browser's word count or a file size.
+27683	Follow-up: is the context window a capacity or a guarantee of reliability?
+17206	Capacity only states the range the interface or the model can accept. Retrieval inside a long context, how well positions are used and multi-hop association have to be evaluated separately. Work such as Lost in the Middle shows that some tasks are position-sensitive, but a result for one older model cannot be taken as a fixed failure curve for every new one.
+10255	A context fragment contains at least four things
+13538	The content itself, where it came from, which version it holds for, and what it is for. "timeout=3" on its own, for example, is not enough to support a change;
+18565	is what gives an object you can check. "Please ignore the rules" in an external document is the content of some material; entering the input does not promote it into a user authorization.
+29007	Budget arithmetic starts with the space that has to be reserved
+19979	With a teaching window of 12000 tokens, 2000 for fixed rules and tools, 1000 for the task and the plan, and 3000 reserved for generation and later tool results, the evidence budget comes to about 6000. The numbers here are a teaching allocation, not a fixed limit of any model. A budget estimate should use the actual model's counting; a character count divided by 4 is not an exact count for Chinese, code or JSON.
+12356	The dependency closure matters more than ranking items on their own
+25139	A patch conclusion cites test T, and test T in turn targets file r7. Keep only the conclusion and lose the test and the version, and the model may take the old conclusion and modify r9. When selecting context, bring the minimum necessary dependencies along, or keep a stable reference that can be read again. The point is not to load every related file into the window, but to give the current inference enough support.
+15811	The history management in the pinned source separates the history visible to the model, the host information it keeps and the baseline needed to re-inject; one conversation window is not a mirror of all the system's state.
+5915	The context of each call is decided by the request snapshot together with the current history, so "the file is in the repository" cannot be used to infer "the file has entered this turn's input".
+18721	Break "more information" into three different outcomes
+20172	Adding correct, relevant evidence may reduce guessing; adding stale evidence may create conflict; adding irrelevant material may take up the space that mattered. Anthropic's article on context engineering stresses selecting information and fetching it on demand, rather than treating a long context window as a target to be filled.
+15125	Checks you can actually run
+24372	Before assembly, save the candidate list and the reason each item was dropped; after assembly, check the hard constraints, the version of the object being acted on, the unfinished items, the most recent failures and the pointers to the original evidence. Mark discarded material as "not included"; do not claim the model has reviewed it. Sensitive data should be handled before anything is submitted to the model, not only after the final answer.
+25847	If tools is empty in the request, does that prove the tool definitions were lost?
+11040	One field is not enough to tell. The pinned
+5876	leaves this turn's tools and base_instructions fields empty in incremental tool mode; in non-incremental mode it supplies the definitions the router can see along with the basic instructions. Judging something missing has to take in the message history and the protocol in use, instead of reading an empty array in one request's JSON directly as "the model does not know about the tools".
+15500	Likewise, a tool definition existing does not guarantee it was really used that turn. It helps to trace one piece of information along "source → read → selected → serialized → retained → actually acted on". Material missing from the original, budget trimming, and the model not using it properly have to be attributed separately; endlessly rewording the prompt cannot fix material that never entered the request at all.
+8141	Q018｜How does JIT loading save tokens without missing anything essential? Why does the "dependency closure" have to be filled in?
+27458	What to know first for this question</span> Loading on demand supplies a description good enough to choose from first, then reads the full resource. The dependency closure makes sure that when a piece of evidence is used, the conditions needed to understand it come with it.
+12695	Load a discoverable lightweight index first and read the specific content once the need is established; after content is selected, fill in the dependencies needed to understand and act on it. What is saved is irrelevant loading by default, not the necessary premises. A dependency closure means that when a conclusion or an action is kept, the definitions, evidence and constraints needed to explain it are kept too.
+10267	A counterexample: reading one fragment of a function
+21572	The retrieval hit:
+10073	. Read that one line alone and a model may conclude that a non-empty exclude always skips; in fact exclude may be a filter object whose boolean conversion is decided by a custom type, and skip may have side effects as well. Understanding this fragment takes at least the config type, the calling conditions and the related tests.
+15501	Likewise, when a skill description says "run the review by the team's rules" but gives no path to the team rules,
+13886	The full resource is read only once a relevant task arrives. Example: show the skill's name and description first, then read the body when it is relevant.
+13993	-loading that far is still not enough. A summary that says "option B is ruled out" without keeping the basis for ruling it out lets a later model explore B all over again. A short reason and a reference to the evidence can be kept, with the detailed log fetched on demand.
+10459	One teaching selection procedure runs: pick candidates by relevance to the task; expand the necessary dependencies of each; de-duplicate; check versions and permissions; compute the budget; and when it does not fit, adjust this turn's scope or demote the non-critical items. If selection is done purely by similarity with
+29303	, you may pick several fragments that look related yet cannot be assembled into a usable chain of evidence.
+19496	Loading one skill on demand, but having to bring two dependencies with it
+26216	Input and conditions.</strong> The task triggers the "fix the tests" skill S, and S references rule R and script P. S's body is 100 units, R is 60, and P needs only 40 for its description; the tool result needs another 10 for the call identity.
+13852	First pass
+14961	Load only the skill's name and description
+28395	This avoids reading every script in advance.
+13865	Judge that S is related to the current failure
+25862	Read the 100 units of body text.
+22170	Follow the dependencies
+8905	S's steps require R and P
+25132	Add 60+40, for 200 in all; handing the executing agent only S's title will not do.
+24437	Result dependencies
+17798	Tool output depends on call_id and the necessary arguments
+13566	Another 10, so that an isolated output is not left unexplainable.
+11316	Two skills reference the same version of R
+13048	Share one copy; do not take up the space twice.
+20243	An unbounded counterexample
+18539	Read every reference recursively
+15236	This can turn back into loading the whole repository; the resources needed have to be decided by the current step.
+19149	Join the steps up.</strong> Progressive loading is not loading the shortest text; it is loading the smallest complete set of dependencies the current action needs.
+26726	Limits and counterexamples.</strong> The numbers stand for given budget units, not a measurement by a real tokenizer; a dependency closure needs a task boundary and cannot be expanded mechanically without end.
+27829	Follow-up: can a dependency closure expand without limit until it covers the whole repository?
+12115	That risk is real, which is why the current problem has to be the boundary. Needing the semantics of a type does not mean reading the whole module the type lives in; needing to confirm one caller does not mean enumerating every caller in history. Choose the smallest evidence that can settle the current hypothesis, then expand as new questions arise, rather than exhausting every dependency in advance.
+27904	Follow-up: how do you know a dependency was left out?
+25266	Watch for the model using undefined terms, guessing the units of an argument, being unable to say where a conclusion came from, or reading back over the same thing repeatedly. A more direct method is to mark the necessary evidence in an evaluation task and check whether retrieval and the context contain it. The point is not that production must always have perfect labels, but to build a regression set from real failures.
+27689	Follow-up: how do you order JIT and summarizing?
+12086	Not loading irrelevant content in the first place is often cheaper than loading it and then spending a model call to compact it; but once a long history has accumulated, a summary is worth having. For key code just retrieved, summarizing too early can lose the precise conditions, and keeping the original fragment is usually better. JIT, trimming, summarizing and moving content out of the context are different operations, and the choice should follow the object.
+17848	Engineering deep dive · E26 · continues Q050
+28983	Prerequisites: <a href="../foundations/26.html">Lesson 11
+29003	A budget is "the space available" minus "what has to be reserved", not the window's upper limit
+25643	Take a teaching window of 1000 units, with 200 for fixed rules and tool specs, 200 for generating the plan and 250 for the expected next tool result; the evidence budget is then only 350. The units are used for demonstration; they do not pretend that a character count equals a real token. In practice, check against the model's tokenizer and the interface's counting rules, and include visible usage limits such as opaque state.
+24999	If all you do is
+29278	, the current request may go out and then blow the window the moment tool results come back. The compaction interface has an input-length limit of its own, so you cannot count on "just compacting it endlessly" once the limit is already exceeded.
+22597	Fragments are not scraps of paper that can be packed greedily on their own
+10293	An interface declaration is 200 units and the real implementation 300, 500 in all; the budget is 350. Keep only the declaration and the answer "the feature is already implemented" has nothing behind it. A dependency closure is the set of material that has to come along for a piece of evidence to be understood correctly. The engineering choice this book offers here is to treat the declaration and the implementation as one group, or to read a smaller relevant range of the implementation first; a high relevance score does not justify selecting half of it.
+15503	Likewise, an error log and the matching code version, one configuration and the higher-priority configuration that overrides it, a conclusion and the conditions that negate it, may all have to be kept together. Whether a summary can stand in for one of them depends on whether the later task needs exact verification.
+22849	Replace a whole-repository scan with a minimum sufficient evidence plan
+12672	Write down the proposition to be proved first: for example, "do the directory rules exclude descendants recursively?" Then find the rule parsing, the matching function and the failing test; there is no need to read in every function of the same name. If the evidence is not enough, expand in a chosen direction. Record at each step why this material was read and what it confirmed or ruled out, which gives an auditable stopping condition for the search.
+27831	Follow-up: is keeping a file path the same as keeping the evidence?
+26070	A path is only a locator; a file may have moved, changed or become unreadable. Record at least the version or a fingerprint of the content, the relevant range and the key facts. When exact code is needed, read the current content again; a path in a summary does not authorize execution by itself, still less prove that an old test applies to a new working tree.
+28121	Follow-up: when the budget is too small, is a larger-window model the only option?
+12677	First cut irrelevant history, trim duplicated tool output and reuse verifiable state, then assess whether a larger window is needed. Splitting a task has a handoff loss of its own: independent subtasks can be separated, while a tightly coupled problem should not be broken into pieces that each lack context. What is being measured is the success rate and the total cost of finishing the task, not the smallest token count per turn.
+7487	E26: how to read this result, rather than only looking at "pass"
+26583	Besides the current file, the input budget has to leave room for tool results, generated output and a safety margin. When evidence is squeezed down to a single number, the units and the environment it applies to can still be lost even though the total token count is within the rules.
+24890	Self-check:</strong> with a window of 1000, 200 for rules, 200 for generation and 250 for future tools, can a 500-unit group of evidence go straight in?
+10984	No. The evidence budget is 350. It should be narrowed while keeping the dependencies complete, fetched in stages, or given a larger budget; what must not happen is quietly including only the declaration and treating the implementation as verified.
+8144	Q019｜Why does a prompt cache require a stable prefix? How do you work out what compaction gains and loses for the cache?
+27408	What to know first for this question</span> A prompt cache reuses the computation for an identical prefix, while compaction changes the input; shortening the tokens and raising the cache hit rate do not always move in the same direction.
+23969	Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context
+15169	Reusable model computation depends on an identical effective prefix and on the service's rules. A change early in the prefix affects the contextualized computation after it; stable system instructions, a stable tool set and fixed material all help reuse. A summary shortens the input, yet it may replace history that would have hit the cache, so in the short term the computation has to be done again. The exact cache scope, retention time and price vary with the product.
+11834	Understand the prefix through its dependencies
+23977	Lesson 60 has already shown that an old position keeps the same K/V only while the prefix, the parameters and so on are unchanged. Put a timestamp that changes every turn right at the front, and the tokens and positions after it may change; even if a long stretch of body text is identical, it is not necessarily reused. A stable prefix should hold what is genuinely stable and needed every turn, rather than keeping irrelevant information forever for the sake of the cache.
+25645	Let u be the unit price of uncached input, c the unit price of a cache read, w the cost of writing or establishing the cache, P the prefix length and n the number of later reuses. Looking at the input part alone, the cached option comes to about
+29355	, the uncached option to about
+10169	. The break-even condition is
+10174	. A real service may cache automatically with no separate write price, or follow different rules, so these symbols are there for reasoning, not as a price quote.
+14207	Compaction also adds the cost K of the compaction call and the risk of later errors. Suppose most of the history hit the cache each turn before compaction: afterwards it is shorter but entirely uncached the first time, so the first turn may not be cheaper, and the gain from the reduced length only shows after several turns. Latency behaves similarly, and compaction may raise quality by cutting noise or lower it by dropping evidence.
+15497	The same text, with one leading field moved, and the cache can differ
+26188	Input and conditions.</strong> The stable prefix shared by the two turns is instruction I, tools T and repository rules R; the task state at the tail goes from S1 to S2.
+23498	Stable ordering
+23690	Turn 1 [I,T,R,S1], turn 2 [I,T,R,S2]
+13946	The first three segments can form the same prefix candidate.
+13922	A dynamic value inserted in front
+19885	Change it to [current time,I,T,R,S]
+20319	The time changes every turn, which affects the chance of reuse prefix by prefix.
+14206	Compaction changes it
+18801	Replace several turns of history with summary M
+8959	Fewer tokens, but the original history prefix is no longer exactly the same.
+26016	Resource reconciliation
+13721	Record the logical input volume, cached tokens, the actual latency and the cost separately
+11041	The character count after compaction is not enough on its own.
+28626	A wrong conclusion
+9427	"The cache hit, so the window got bigger"
+24641	A cache reuses computation; it does not move that logical input out of the context limit.
+19175	Join the steps up.</strong> Organizing the input stably and compacting it lossily solve different problems; the optimization target should be the overall cost of a successful task.
+26684	Limits and counterexamples.</strong> The minimum cache length, the price and the hit behavior depend on the service; this example only explains the principle of prefix consistency and guarantees a hit for no particular request.
+27971	Follow-up: is stuffing all the material in ahead of time and waiting for the cache the best strategy?
+10848	No. A cache reduces repeated computation or billing; it does not remove irrelevant information from the logical context, nor does it solve the window being occupied. Content goes stale, and it can also affect how the model uses its attention. Show that material is worth being there this turn first, then optimize reuse.
+27779	Follow-up: why does identical text not necessarily hit?
+15224	The model or the adapter may have changed, the tool schema or the ordering may have changed, the actual serialization may differ, or the cache may have expired, been evicted or been isolated to a different tenant or route. Identical user text is only part of the necessary condition. Watch the cache usage the service reports rather than comparing strings on the client.
+28070	Follow-up: should the cache hit rate be optimized to 100%?
+11009	A hit must not be bought at the cost of fresh data and relevance to the task. A new question each turn, and tool results, are different by nature. What is worth more is the hit rate on the stable, reusable part, the cost of a successful task and the latency, rather than defining the denominator so that it looks good.
+17847	Engineering deep dive · E25 · continues Q051
+24659	What a cache compares is not "it reads the same to a human"
+13929	Prefix caching reuses the computation of an identical leading segment that meets the service's specific conditions; it does not treat two passages as equal because their wording is close in meaning. OpenAI's caching guide describes exact prefixes and model-related controls; thresholds, retention times and billing change, so they should not be written down as eternal numbers.
+25327	parse to equal objects while their strings and token sequences differ. A local experiment can check that difference. Normalized serialization can improve stability, but only for objects that have no ordering semantics to begin with; message order, whitespace in code and the order of examples may carry meaning and must not be reordered freely.
+10354	One dynamic field can cost everything after it a common prefix
+25042	If the current time, a random request_id, retrieval hits or the session title are inserted ahead of a long system rule each turn, the fixed body after them is no longer in the same contiguous prefix even when it is identical. Put stable rules and stable tool descriptions where they can be reused, and content that changes turn by turn after them; but this has to obey the interface's role hierarchy and the model's usage rules, and a trusted instruction must not be demoted to ordinary material for the sake of the hit rate.
+17721	Changes to the names, the order, the descriptions or the available subset of tool schemas can also change the identity of the input. A cache-hit metric should be read together with the specific request sequence, instead of inferring that nothing else changed because "only the user message was edited".
+24627	Keeping something in the cache is not deleting the content
+15595	A hit can cut part of the computation or the cost, but logically the model is still using the full context; hit tokens cannot be subtracted from the context window budget. Compaction, by contrast, really does change the input. Confusing the two leads to an over-full budget, or to the mistaken belief that the cache made the model "remember the rules permanently".
+27739	Follow-up: if another tenant has used a prefix, why can it not be shared unconditionally?
+24662	A caching policy also has to consider privacy and isolation. vLLM's public design provides cache_salt to limit reuse across trust domains.
+5916	A production system's cache namespaces, permissions and data-retention constraints should line up with tenant isolation; "more hits" is not the only goal.
+27937	Follow-up: how do you prove that a caching optimization paid off?
+15967	Under the same task and the same model version, record the identity of the request prefix, the hit tokens, the time to first token, the total latency and the total cost; keep cold starts separate from a warm cache. Do not compare only two neighboring requests, and do not count a quality change caused by compacted content as a pure caching gain.
+7484	E25: how to read this result, rather than only looking at "pass"
+13930	Prefix caching compares the exact prefix identity the implementation specifies, not what feels semantically the same to a person. A change early on, such as a timestamp or the order of tool descriptions, truncates the contiguous leading segment that could have been reused.
+24853	Self-check:</strong> two JSON objects parse to the same result, so why can their cache keys still differ?
+14516	The original bytes and the token order may differ, and a cache needs the exact prefix or identity its implementation specifies, not semantic similarity. Parts with no ordering semantics can be normalized, but messages and code must not be reordered on your own initiative.
+8147	Q020｜When the context holds instructions and facts that conflict, how should they be ordered and adjudicated?
+27467	What to know first for this question</span> The authority of a source, the scope it applies to and its date together decide how a rule conflict is handled; "it came last" or "it is repeated more often" cannot settle it alone.
+23546	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+19362	An instruction conflict is handled by trusted source, permission and task scope; a fact conflict is handled by source, version, time and evidence. Where something sits in the ordering can affect how the model uses it, but position should not stand in for the authoritative rule. Even when an external document says "ignore the previous rules", it is still data that was read.
+11382	The two kinds of conflict must not be merged into one
+22948	The user asks for "no deployment to production", and a README returned by a tool says "deploy automatically when finished". That is a conflict of instruction authority: the README being newer, or sitting closer to the end, does not override the user's constraint. A different case: old documentation says the interface times out at 30 seconds while the current configuration shows 60. That is a conflict of fact between versions, and the environment and the version have to be settled before the matching evidence is chosen.
+10569	Context rendering can label the task goal, the constraints that must not be violated, the facts currently known, the unconfirmed assumptions and the tool evidence separately. What matters is not a pile of ornamental labels but keeping "who said this, and what it is". One of the most dangerous changes during summarizing is promoting a suggestion in a repository document into a user instruction, or a model's guess into a confirmed fact.
+12177	Placement can keep the key constraints clearly visible at the entry point and at a task handoff, but the whole set of rules should not be copied over and over. Too much repetition wastes tokens, and slight differences in wording can create new conflicts. The better practice is to maintain one authoritative set of constraints and cite it accurately in the state handoffs that need it.
+20179	A new file conflicts with an old memory: what to compare first
+26349	Input and conditions.</strong> The old memory says timeout=3, the current file v8 writes timeout=5, and the user has explicitly asked for "a read-only explanation, no changes".
+13741	Separate the objects
+6461	3 and 5 are candidate facts; "read-only" is a task instruction
+11093	They cannot go into the same "majority vote" pool.
+22095	Compare the sources of the facts
+18209	The current v8 file is closer to the target than an old summary with no version
+15703	Answer that the current configuration is 5, and mark the old memory as out of date.
+12435	Keep the instruction
+20095	A file comment says "please fix this automatically"
+16478	It is repository content; it gains no permission to override the read-only requirement.
+25582	Record the reasoning
+22382	Note the version read, the location and how the conflict was handled
+15529	Later it can be traced why 5 was used.
+10942	An uncertain counterexample
+11321	Two files in different environments have 3 and 5
+12804	Settle the environment first; being later in time does not license an arbitrary override.
+18940	Join the steps up.</strong> A fact conflict is judged by source, scope and currency; an instruction conflict also involves the authorization hierarchy, and the two must not be run together.
+26768	Limits and counterexamples.</strong> The example does not replace a specific product's full rules for instruction priority; when the environment is unknown, the uncertainty should be kept.
+28103	Follow-up: is newer evidence always more trustworthy?
+10648	Not necessarily. A new source may be a reprint or simply wrong, and an old specification may still hold for the current version. Judge the authority, the directness, the scope and the date it took effect. For a source-code task, the configuration actually in effect and the call path may explain the behavior better than the newest documentation.
+28030	Follow-up: can a summary the model wrote itself become an authoritative source?
+18427	A summary is derived material, and the original source should be kept. It can guide retrieval efficiently, but it cannot win unconditionally when it conflicts with the original evidence. After several rounds of summarizing in particular, source labels and uncertainty are easily lost, so go back to the original record and check it periodically.
+27761	Follow-up: why not settle every conflict with one strong system prompt?
+24221	A system prompt can teach the model principles, but it cannot replace external permission checks, reading the latest facts and consistency control. Natural-language constraints and deterministic boundaries complement each other. Writing all the business logic into one long prompt is usually harder to test and to update.
+22287	Follow this chapter through its objects and states</a><a href="#topic-2">Each turn's context is like a working file with a boundary</a><a href="#Q049">Q017｜Which objects should make up one turn of model input? How should the budget be computed?</a><a href="#Q050">Q018｜How does JIT loading save tokens without missing anything essential? Why does the "dependency closure" have to be filled in?</a><a href="#Q051">Q019｜Why does a prompt cache require a stable prefix? How do you work out what compaction gains and loses for the cache?</a><a href="#Q052">Q020｜When the context holds instructions and facts that conflict, how should they be ordered and adjudicated?

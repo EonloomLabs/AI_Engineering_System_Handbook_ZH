@@ -121,4 +121,5 @@ def main():
         print('缺译文的标题:', ', '.join(missing[:6]))
 
 
-main()
+if __name__ == '__main__':
+    main()

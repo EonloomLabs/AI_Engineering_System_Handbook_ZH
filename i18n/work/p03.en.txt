@@ -1,0 +1,513 @@
+23957	Lesson 55｜Training mechanics: loss, the full backward pass and parameter updates — AI Systems Engineering
+24229	Training in the system mechanisms: from the loss down to every group of parameters
+16073	The Foundations course has already carried one training run through. This page opens no separate learning path; it returns to the parameters from before that same update and computes, item by item, the gradients of the output head, the normalization, the FFN, the residuals, attention and the embedding, checking how contributions to shared parameters accumulate and where the AdamW update stops. The implementation, the records and the negative controls correspond to one another.
+24261	Systems</span><span>about 8.8k characters</span><span>Figures and item-by-item notes
+25522	Training has to define "what we want it to predict" first; only then is there an error and a direction to update in. A gradient is the local effect a small change in a parameter has on the loss; Adam keeps statistics of past gradients, and model parameters, activations and optimizer state are different stored objects.
+23826	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/15.html">Lesson 52 · Only the calculus you will actually use</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+27536	A quick check before the deep reading:</strong> with x=2, target 4 and w=1, compute prediction 2, loss 2 and gradient −4; update w to 1.8 with a step size of 0.2, and check whether the error goes down.
+27189	This chapter does not end at "pre-training is predicting the next word"; it follows how one training sample becomes labels, loss, gradients, optimizer state and new weights. The discussion assumes an autoregressive decoder by default; a particular architecture or training recipe can change the details.
+8339	Q080｜What does next-token training actually predict? How do the labels shift, and which positions is the loss computed on?
+27451	What to know first for this question</span>The current position predicts the next one, so the training labels have to be offset accordingly. The error on padding and on non-target regions can be masked out, but the valid conditioning must not be removed along with it.
+23784	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end
+21678	At position i the model reads the prefix no further than i and outputs the distribution for position i+1; the training code aligns the
+11256	with the true
+17583	shifted one position to the right. Every known prefix can be processed in parallel in one forward pass, and the causal mask prevents any peeking at the future. The model minimizes the negative log probability of the true token; it does not directly compare the edit distance between the generated sentence and the answer.
+22876	Walk the alignment through with five tokens
+25656	Let the training sequence be
+10105	. A common implementation takes the whole stretch as the input and then aligns it as follows when the loss is computed:
+9219	logits position
+18067	The label it should predict
+7096	BOS,我
+7097	BOS,我,爱
+24693	programming
+7098	BOS,我,爱,programming
+20530	The last position has no following label, so it usually does not count towards this stretch of loss. An equivalent way to write it is to take the first four tokens as the input and the last four as the labels; do not shift once in the data processing and again inside the model, or it turns into predicting the token after the next one.
+17281	For position t the model obtains the vocabulary logits
+29420	, turns them into probabilities
+29342	, and the loss is
+10200	. If the probability of the correct token is 0.1, the loss is about 2.3026; if it rises to 0.8, the loss is about 0.2231. The loss of one
+23030	is usually the average over the valid label positions. Here "valid" is decided by the
+13645	, which is not the same as the
+21382	samples can be
+10129	. Some recipes compute the loss only on the assistant's answer positions, yet those positions may still attend to the user's question. Setting the labels at the user positions to ignore is not the same as deleting the question from the input. The data code has to maintain the role boundaries, the end markers,
+15623	and the ignored labels all correctly at once.
+21350	With the labels shifted wrongly, training can still look perfectly smooth
+26489	Input and conditions.</strong>The input sequence is
+10145	. Correct training aligns the first four positions with the last four targets.
+21864	Correct input
+21986	Each position sees only itself and what comes before.
+21853	Correct targets
+18544	Every target is moved 1 position relative to the input.
+28241	Cell-by-cell explanation
+26135	The position holding the input 我 predicts 爱
+10924	Not predicting the 我 that the current position already knows.
+28607	Wrong alignment
+18859	Setting the targets to
+21674	The model can copy the current input with ease: the loss falls, but the next-token objective has not been learned.
+29027	Extra mask
+8807	If SFT trains only the assistant's reply
+22917	The user prompt can serve as input without necessarily entering the loss; the exact target policy has to be stated.
+19091	Join the steps up.</strong> A falling loss only proves that some objective is easy to optimize; what that objective means has to be verified first.
+26655	Limits and counterexamples.</strong> Different training frameworks may shift inside the model automatically, and then the caller must not shift a second time; what is shown here is the mathematical alignment, not any one API's calling convention.
+27808	Follow-up: why does generation still go astray when training accuracy looks good?
+25472	Training usually uses the true prefix, while inference uses the model's own. After one step picks the wrong token, what follows may enter states that appeared rarely in training; this difference between the training and the generation conditions is usually called exposure bias. Another reason is that the loss is averaged over tokens, so improvements in format and fluency can mask a few high-risk factual errors. Validation cannot look at the training loss alone: the model also has to generate on its own, and the complete task result has to be checked.
+27703	Follow-up: can perplexity compare two models with different tokenizers directly?
+10470	Generally they cannot be compared directly. Perplexity is usually
+29459	; one
+18789	splits the same text into more tokens, so the unit being averaged is no longer the same. Comparing across tokenizers requires an explicit normalization by bytes, by characters or by a unified evaluation setting, with the dataset controlled as well. PPL on different corpora also cannot be taken as one leaderboard of overall ability on a single scale.
+27967	Follow-up: when several samples are concatenated for training, does inserting EOS isolate the information?
+7596	EOS is a token; it does not establish isolation in the computation by itself. With an ordinary causal mask, the later sample can still see the earlier one. Whether such cross-sample attention is allowed is a matter of training design; if strict independence is required, use a block attention mask or a boundary mechanism the implementation supports, and handle the
+25189	The IDs that stand for the real logical position, not a token's identity ID. Example: the same 爱 appearing at position 1 or at position 7 can have the same token ID but a different position.
+10118	. Keep "learning to stop at EOS" separate from "explicitly cutting the attention".
+14816	Why two contributions appear here on the backward pass
+15358	One and the same R affects the final loss through both the direct main path and the FFN branch, and the two effects are later summed at R. Likewise X both travels the residual and goes through N1 into Q/K/V. Keeping only one of those gradients changes the training.
+22909	Compute the contributions of ten positions with the actual output head U[0,3]
+22012	The gradient contribution of each supervised position to U[feature 0, candidate 学习]
+14089	The ten cells sum to 0.025178163462. The division by the valid token count of 10 has already happened inside Gz, so do not average a second time.
+27340	This explains why the matrix form is
+29200	, and
+10116	. The "multiply by the transpose on the backward pass" that people speak of comes from the index summation; it is not a mechanical transpose done for the sake of a slogan.
+8347	Q082｜Once the loss is computed, how are the parameters updated? And why is AdamW not just the gradient times the learning rate?
+27469	What to know first for this question</span>A gradient points in the local uphill direction; the optimizer adjusts the parameters in the opposite direction. AdamW also maintains gradient statistics and weight decay, so resuming training is not just loading the weights.
+23934	Lesson 52 · Only the calculus you will actually use</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end
+14809	Backpropagation follows the chain rule over the computation graph, computing the parameter gradients layer by layer from the loss; the optimizer obtains the update from the gradients and from its own history.
+24606	maintains first- and second-moment exponential moving averages of the gradients, and decouples weight decay from the adaptive gradient update. Caches, gradients and optimizer state are different objects.
+11905	From the output projection all the way back to the embedding
+25644	Let the final hidden state be h and the output matrix W, so that
+10100	. For
+11678	cross entropy,
+10076	. If the probability of the correct class is too low, the gradient on that class's logit is negative, and gradient descent pushes that logit up. This is the first step from a probability prediction to a parameter adjustment.
+19593	Next,
+10060	. The latter term continues through the final normalization, through each layer's
+9962	and residual branch, and finally to the
+10151	. The gradients of the residual branches have to be added together, and when a shared parameter is used in several places its gradients accumulate as well. What automatic differentiation does is combine these local derivatives; it does not search for "which neuron knows this fact".
+6941	One common way of writing AdamW is:
+18001	Squaring and division are element-wise operations. m smooths the direction of the gradient, v estimates the scale of the squared gradient, and the bias correction handles the bias caused by the initial state being zero. The weight-decay term is not mixed into g first and then scaled by v, which makes it different from the usual case of "adding an L2 penalty into
+23029	's loss". Which parameters decay, where ε goes and how mixed precision maintains the master weights all depend on the implementation.
+6942	AdamW's first step, with the momentum, the bias correction and the decay all worked out
+26250	Input and conditions.</strong>Initial w=1 and gradient g=0.2; m0=v0=0; β1=0.9 and β2=0.999; learning rate 0.1, weight_decay=0.01, ε=1e−8.
+20493	Update the first moment
+20496	Update the second moment
+13694	0.2 and 0.04 respectively.
+25345	Decoupled weight decay
+9372	w is first multiplied by (1−lr×wd)
+11792	It goes from 1 to 0.999.
+18190	Normalized gradient update
+13556	Then subtract 0.1×0.2/(√0.04+1e−8)
+20143	The new w is about 0.899000005.
+11249	Compared with SGD
+14956	Doing only w−lr×g
+12113	gives 0.98, which is not the same update rule.
+18884	Join the steps up.</strong> AdamW keeps a history and performs normalization and bias correction; it cannot be described as just "the gradient times the learning rate".
+26742	Limits and counterexamples.</strong> This example is a first-step scalar update, with no gradient clipping, mixed precision or scheduler; in a real implementation different parameter groups can have different decay.
+28014	Follow-up: why does zeroing the gradients matter?
+18297	Many training frameworks accumulate by default into
+10228	. That is convenient for gradient accumulation, but in an ordinary one-step-one-update loop, forgetting to zero it piles the gradients of the previous steps on unintentionally. Conversely, zeroing before every micro-batch destroys accumulation that was intended. The right place is usually just before or just after one effective optimizer step, not mechanically on the first line of every loop.
+28016	Follow-up: what does gradient clipping change? And why can it not fix every NaN?
+12956	Global-norm clipping scales the whole gradient vector down proportionally when the gradient norm exceeds a threshold, which limits very large updates. It does not repair illegal forward values that have already occurred, a fully masked softmax, a division by zero or corrupted data. Under mixed precision the loss scaling also has to be undone at the right moment before clipping, or the threshold is in the wrong units. When a NaN appears, locate the earliest illegal tensor instead of only lowering the learning rate and hoping.
+27953	Follow-up: is loading the weights enough to resume training?
+24508	Continuing along the same training trajectory usually also requires restoring the optimizer's m/v, the learning-rate scheduler, the step count, the position in the data sampling and the random state; distributed training further involves the sharding and the global progress. Loading the weights alone can start a new optimization process, but that is not seamless continuation. An inference deployment generally does not need the optimizer state, which is why a training checkpoint and an inference weight package can differ markedly in size.
+17832	Engineering deep dive · E10 · continues Q018
+24705	Scaling the gradient is a numerical measure, not a change to the learning rate
+6912	The loss scaling in AMP scales the loss up first, so that smaller gradients are easier to represent in low precision; the gradients should be restored before the update. The official PyTorch example explicitly requires an unscale before gradients are inspected or clipped, and attention to the timing while gradients are being accumulated.
+20555	Minimal counterexample: a true gradient of 10, a scale factor of 100 and a clipping threshold of 1. Restore first and then clip, and the gradient is 1; clip 1000 down to 1 first and then divide by 100, and the gradient becomes 0.01. Both are finite and both can produce an update, but they differ by a factor of 100. This book's CPU test verifies this algebra; it is not taken as a measurement of GPU AMP.
+10301	One update step should have a clear life cycle
+10749	Different frameworks wrap up how the scheduler counts steps, so it cannot simply be asserted that every microbatch should advance it. What matters most is recording four different counts: <strong>samples seen, backward passes, attempted updates and updates actually performed</strong>. A learning rate that changes while the parameters do not may be a step skipped because of overflow, not necessarily a model that is not learning.
+22558	Activation checkpointing runs your function a second time
+28550	Recomputation does not read a snapshot from disk; it re-executes part of the forward pass during the backward pass. If the function writes files, increments a global counter, consumes uncontrolled random numbers or reads a global configuration that has since changed, it can disagree with the original forward pass. The official documentation states the limits for RNG saving, device changes and the reentrant mode.
+20821	This book applies a non-reentrant checkpoint to
+12287	, records that the function is called more than once, and checks that against the analytic gradient. Taking the monitoring count of "the function ran once" directly as a sample count is then wrong. Side effects should be moved out of any region that can be recomputed wherever possible.
+27863	Follow-up: can training be resumed from the model weights alone?
+24793	It can restore some inference function, but not necessarily the same training trajectory. The optimizer momentum, the scaler, the scheduler, the random state, the data cursor and which microbatch the accumulation had reached may all be necessary. Record the level of guarantee the restore gives: continued training, approximately the same training, or strict reproduction; do not call them all "lossless restore".
+28017	Follow-up: why can checkpointing not be wrapped around any function at all?
+16490	It trades recomputation for activation memory, and requires the recomputation to preserve the semantics that matter. How a random mask is restored, calls across devices, and changes to parameters between the two forward passes all have to be checked. It also adds computation; where memory is plentiful and compute is the limit it can be slower, so the gain should be measured at the same batch size and on the target device.
+7438	E10: how to read this result, instead of only looking at "pass"
+12778	Restore the gradient to its true scale first, and only then discuss the clipping threshold. Recomputation must also keep the state that needs reproducing consistent; these are questions of training order and side effects, and it is not enough to check whether the final loss is a finite number.
+24878	Self-check:</strong> after the loss has been scaled up 100-fold, if the gradient is clipped to 1 first and unscaled afterwards, what does the magnitude of the true update direction become?
+24995	If the true gradient was 10, scaling gives 1000, clipping that to 1 and then dividing by 100 gives 0.01; done correctly, unscaling before clipping gives 1. The clipping threshold has to be defined on the scale of the true gradient.
+27194	Which set of numbers this lesson carries on from
+11770	It is still the <strong>worked model before the update</strong>, the same batch of two sentences and ten valid prediction targets. Every G here comes from the full-batch average loss computed in F16; no arbitrary "upstream gradient" is supplied instead. So that the formulas do not pile up into a black box, the order of dependencies comes first and the local rules are explained one at a time.
+24188	The arrows describe gradient dependencies. The final gradient of a parameter includes the contributions of every valid sample, position and path of use.
+16717	The full backward pass: gradients travel along the dependencies and are summed where they fork
+19911	Enlarged figure: the full backward pass: gradients travel along the dependencies and are summed where they fork
+14811	The backward pass follows the real dependencies: both residual points have to merge gradients
+24048	Step one: in the RMSNorm backward pass, do not forget that the denominator depends on the input
+25635	Let a single row be
+29226	, where
+29166	, with G_y as the upstream. First write
+10203	. Now compute the effect of any input cell x_i: on the one hand it changes its own numerator directly, and on the other it changes the r that all the outputs share.
+24113	The second term comes from
+29241	, and then the effects of all the output cells on that denominator are added up. Writing only the first term amounts to treating r wrongly as a constant; the numbers and the direction of learning can differ noticeably.
+20991	This model has three independent scale parameters, g1, g2 and gf. Apply this rule separately to the final norm, the norm before the FFN and the norm before attention; the r or the gradient from one of them must not be handed straight to another.
+24101	Step two: propagating back through the FFN and the residual
+16885	Define
+8729	ReLU's negative branch is 0 here; the convention for the derivative at zero depends on the framework, and this implementation uses PyTorch's. Finite differences should avoid coordinates that step exactly across zero, or the non-smoothness makes the comparison hard to interpret.
+23624	Item 0, t=2: the actual intermediate values in the FFN backward pass
+7670	G_a: passed back by W2
+7671	G_u: after the ReLU gating
+8758	R receives two contributions
+11578	Main path G_H
+7626	FFN branch, passed back through the norm
+11645	The two added together = G_R
+24072	Step three: compute attention's content path and share path separately
+11971	Let C=A V, so that the attention branch is Dattn=C Wo and R=X+Dattn:
+7666	G_A answers "how would changing a particular read share affect the loss"; G_V answers "how would changing the content supplied by a particular source position affect the loss". Both paths come from the same mixture C, but they cannot be exchanged.
+24121	Step four: why a term is subtracted in the softmax backward pass
+17260	For one row A=softmax(S) the local derivative is
+10138	. Every output in this row depends on every score, so G_Si has to add up the effects of all the outputs:
+9158	c is one weighted-average scalar for the current row. At masked positions A=0, so the gradient along this path is 0. It is not a matter of multiplying each cell independently by
+5887	and being done; that would miss the off-diagonal terms.
+23627	Item 0, t=2: the softmax backward pass for the same row
+7792	Key position s=0
+7793	Key position s=1
+7794	Key position s=2
+7795	Key position s=3
+7796	Key position s=4
+7065	A: read share
+7667	G_A: from the content mixture
+7669	G_S: softmax backward pass
+24116	Step five: the dot product, the scaling and the three projection parameter tables
+23002	Since S=QKᵀ/2:
+8463	The scaling of Q and of K each passes through the 1/2 exactly once along its own path; do not leave it out, and do not divide once before and once after entering SDPA.
+9058	Wq[0,0]: the actual gradient contributions of the ten points of use
+22050	Each cell = N1[b,t,0]×G_Q[b,t,0]; the ten cells sum to -0.002217527833.
+24117	Step six: embedding gradients accumulate by address; they are not derivatives with respect to an ID
+9087	X=E[ids]+P[pos]. The input IDs are discrete addresses, and this book takes no continuous derivative with respect to an integer ID; the effect on the selected parameter rows can be differentiated. The same 爱, ID 2, appears twice across the two samples, so:
+14756	Parameter row E[2] receives gradients from two positions
+21378	The 爱 position in sample 0
+21379	The 爱 position in sample 1
+23193	Added together and written into G_E[2]
+22144	A row of E that is not used in the input receives no data gradient from the lookup path. Whether the optimizer's weight decay still changes it depends on whether that parameter has a gradient tensor, on its parameter group and on the implementation, so "it did not appear in this batch" must not be stated as "every value in storage is certain not to change".
+20967	How this experiment is checked, rather than only listing formulas
+11433	's analytic backward pass does not call autograd for these gradients; it is the other path that calls
+10115	. All 12 parameter gradients are compared item by item, with a maximum absolute difference of
+10211	. Central finite differences are also used to check various parameter coordinates.
+27344	This proves that these rules are consistent with one another on <strong>the current small model and the test input</strong>; it does not prove that any newly added structure, mixed precision or distributed implementation is automatically correct too.
+8350	Q083｜What happens to pre-training data before it reaches the model? And why does data quality become a systems problem?
+27498	What to know first for this question</span>The training set is used to update the parameters, the validation set to select and the test set for the final check. Duplication and contamination can make a score look higher without it standing for generalization.
+23944	Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+25444	Training is not as simple as "feeding in internet text". Data acquisition, licensing and privacy handling, cleaning, deduplication, mixed sampling, tokenization, sharding and the training/validation split together decide the distribution the model sees. The statistics have to be observed at several stages of the processing chain, not merely recorded as a final total token count.
+10344	The full life cycle of one document
+12661	Save the original source and the collection version first, then extract the main text; HTML navigation, repeated footers, mojibake and machine-generated junk make the gradient learn meaningless patterns over and over. Language, format, quality and sensitive-data handling follow. Filters also introduce a selection bias: too strong a preference for one style of writing can wrongly remove professional forums, colloquial speech or rare languages.
+14711	Deduplication has to distinguish at least exact duplicates, near-duplicates and rewrites from the same source. An exact hash can only identify identical bytes; near-duplicate methods usually work from fragment features or similarity, together with a threshold. Too wide a threshold throws away valuable independent samples, too narrow a one keeps batches of templates. Deduplication not only saves compute, it also affects memorization and the risk of evaluation contamination.
+19564	Next the sampling mixture is set by data source, language, code and difficulty, converted into tokens and packed into training sequences. A large raw volume from one source does not mean it should carry the same training weight; repeated sampling makes the actual training distribution differ from the distribution on disk. What should be recorded is "how many tokens of each kind of data were actually consumed in training", not just how much was downloaded.
+25731	An evaluation set should be isolated at the level where sources may be shared. Splitting adjacent functions from the same repository randomly between training and test can make the result mainly reflect projects already seen; putting different sites' reposts of one problem on either side can still leak. For a code
+29424	, a further distinction is needed between contamination of the model's training, leakage from the retrieval store and exposure in the test itself; these three paths are not the same.
+28501	How repeated samples turn an evaluation into "memorizing the answers"
+26481	Input and conditions.</strong>The material has document A, A′ (a whitespace-formatting variant of A) and an independent document B. A random file-by-file split puts A in training and A′ in test.
+14514	The original split
+20087	The file names differ
+23242	It looks as though training and test share no file of the same name.
+25299	Normalized comparison
+14705	With the meaningless whitespace removed, A and A′ are identical
+22428	The test has already leaked training content.
+19493	Split by duplicate cluster
+18693	Treat A/A′ as one group
+20083	The whole group goes to one side only, and B is assigned independently.
+25559	Record the processing chain
+14674	Original identity, cleaning policy, duplicate cluster, partition
+15530	Later it can be traced why a piece of data entered training.
+25696	Judge generalization
+12282	Use a genuinely unseen task
+11107	A low loss on duplicated samples cannot prove ability on new problems.
+19105	Join the steps up.</strong> Data engineering affects what a model can do, and it affects how that ability is judged; deduplication is not only about saving disk.
+26780	Limits and counterexamples.</strong> Semantic near-duplicates need a finer strategy; removing whitespace is used only for this explicitly constructed duplication example and is not suitable for all code or text.
+27794	Follow-up: why can more data lower some ability instead?
+25513	The training objective optimizes an expectation over the mixed distribution. New data changes the proportions: it can dilute the high-quality tasks that were there, and it can introduce contradictions, noise or a shift in style. A falling total loss does not guarantee that every task subset improves, which is why validation sets separated by language, task and risk category are needed. Data scale and data quality cannot stand in for each other as a single number.
+28062	Follow-up: is the knowledge cutoff one uniform timestamp in a database?
+28282	Usually not. Different sources were collected and mixed at different times, and post-training may follow the training; the model may also obtain more recent facts from a tool. Whether it knows a particular thing cannot be inferred from one "cutoff date" alone. An engineering system should hand live facts to retrieval that has sources and can be updated, rather than rely on the model's spoken promise that "I know the latest".
+28095	Follow-up: can training-data deduplication and agent-memory deduplication use the same method?
+23121	Their purposes differ. Corpus deduplication mainly controls the sample distribution and the contamination; memory deduplication also has to preserve a fact's scope of application, its time, its evidence and its negations. "The interface needs a retry" and "this interface must not be retried automatically" are close in wording and still cannot be merged. Similarity can be reused to find candidates, but it cannot be used directly to rule on knowledge equivalence.
+8353	Q084｜Why does training use more VRAM than inference? What do gradient accumulation, checkpointing and sharding each save?
+27437	What to know first for this question</span>Parameters are the model's long-term numbers, activations are the result of this computation, and the optimizer state records update statistics; the three differ in quantity, precision and life cycle.
+23828	Lesson 40 · What "putting it on the device" means</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+25533	Besides the parameters, training also has to keep the gradients, the optimizer state and the activations used for the backward pass; inference usually has none of these objects, though a long context needs the KV cache. Different optimization techniques target different objects, so "saving VRAM" must not be treated as one and the same thing.
+11857	Estimate from a list of objects, instead of memorizing one fixed multiple
+11983	Take one teaching configuration: low-precision parameters 2 bytes, low-precision gradients 2 bytes,
+11572	master weights 4 bytes and Adam's two FP32 states 8 bytes, for about 16 bytes per parameter, not yet counting activations, temporary buffers and communication. Some implementations have no separate master weights, keep the gradients in FP32 or quantize the optimizer, and then this factor changes. When estimating, list the objects and their
+29236	first, then multiply by the parameter count.
+22554	What the activations occupy depends on the batch, the sequence length, the number of layers and the kernel. If standard attention explicitly stores
+12130	it becomes very expensive; a more memory-frugal kernel avoids materializing it.
+15180	May refer to a layer's intermediate output or to the activation function, depending on the context. Example: ReLU turns negative numbers into 0; what activation memory holds is this run's intermediate result.
+5798	checkpointing, by contrast, does not store some of the intermediate values and runs part of the forward pass again during the backward pass, trading compute for VRAM. It is not the same concept as "saving a model checkpoint file".
+21486	Gradient accumulation cuts a large batch into K micro-batches, with consecutive backward passes but a delayed update. If every micro-batch contains the same number of valid tokens, dividing the loss by K usually gives the corresponding average gradient; when the valid token counts differ, mechanically averaging each micro-batch's average loss changes the sample weights. Normalize by the total number of valid tokens instead. Dropout randomness, the order of floating-point accumulation and the like also keep the numbers from matching exactly.
+14717	Sharding the parameters, gradients and optimizer state addresses the redundancy across devices;
+5800	parallel splits the matrix computation inside a layer; pipeline parallel splits by layer; data parallel processes different samples and then synchronizes the gradients. They can be combined, but their communication and scheduling costs differ. Lesson 63 goes on to take apart the parallelism on the inference side.
+25498	Training VRAM: with the same 1,000,000 parameters, where does the extra state come from
+26234	Input and conditions.</strong>Assume everything is FP32: 1,000,000 parameters, with one matching set each of gradients, first moments and second moments; 4 bytes per number.
+15491	The same size
+13550	Another 4MB.
+6947	Adam state
+9239	4MB each for m and v
+13551	Another 8MB, 16MB for the four kinds together.
+14820	The backward pass also needs intermediate tensors or the material to recompute them
+13312	What they occupy depends on the batch, the length and the number of layers, and is not yet included in the 16MB.
+21483	Gradient accumulation
+17624	Compute the small batches one after another, accumulate the gradients, then update
+13670	This lowers the peak activation of a single pass; it does not remove the parameters or the optimizer state.
+7224	Checkpointing / sharding
+13940	The former stores fewer activations and recomputes more; the latter spreads the state out
+11924	The cost is compute in one case and communication in the other, and neither can be called free VRAM saving.
+18962	Join the steps up.</strong> Only by listing the objects before computing the sizes can you judge which part an optimization actually reduces.
+26716	Limits and counterexamples.</strong> MB here is decimal; real mixed precision, master-weight copies, a ZeRO implementation and the workspace all change the ledger.
+28015	Follow-up: can gradient accumulation lower the peak VRAM of a single long sequence?
+16501	It lowers the peak caused by the number of micro-batches, but the activations of one sequence still have to be handled. If the batch is already 1, accumulating more times does not shorten that sequence. What is needed are targeted measures such as a more memory-frugal attention, checkpointing, sequence parallelism, sharding or a shorter sequence.
+28114	Follow-up: does quantizing to 4bit mean every part of training's memory becomes a quarter?
+10858	No. Quantization usually changes mainly the storage of the base weights; the backward activations, the adapters, the optimizer, the quantization scales and the temporary dequantization computation still occupy memory.
+13654	freezes the quantized base and trains low-rank adapters, so it is not the case that any 4bit weights can be updated as full parameters directly.
+28093	Follow-up: is a smaller training learning rate always safer?
+17623	A small learning rate reduces the change per step, but it can also fail to learn within the budget; a large batch, accumulation, warmup and changes in the data all change what scale is appropriate. In engineering terms, look at the gradient norm, the update-to-weight ratio, the validation loss per task and numerical anomalies. Training instability cannot be removed by a single "conservative parameter".
+21029	Further basis for the distributed-training and parallelism part of this chapter: the PyTorch tensor-parallel documentation and the original
+14576	paper.
+17831	Engineering deep dive · E09 · continues Q020
+27293	This is an engineering problem that has been fixed in public
+7718	Hugging Face publicly described the loss-normalization problem in gradient accumulation on 2024-10-16: when small batches have different numbers of valid tokens, averaging each batch's average loss is not the average of the loss over all the tokens. What is re-checked here is the basis of that historical fix, <strong>not a claim that current Transformers still carries the bug
+25652	Let microbatch j (the small batch processed in memory at one time) have a loss sum of S_j and n_j valid tokens. If the objective is to give every valid token equal weight, it should be
+29404	, not
+10063	. The latter gives every token in a small batch a larger weight.
+15442	The same set of numbers shows that both the loss and the gradient change
+14874	Take two batches: loss sums of 2 and 3, token counts of 1 and 3. The correct loss is 5/4=1.25, while the wrong mean is (2/1+3/3)/2=1.5. This is not a display-precision error; the objective function has changed.
+20864	This book verifies it further with real autograd: the parameter w starts at 1; the first batch has a single squared error against target 0, and the second has three squared errors against target 2. Averaged over the 4 tokens the gradient is −1; averaging each batch first and then averaging those gives 0. The wrong implementation decides "nothing needs to change at this step", while the correct one increases w. Checking whether the loss curve is smooth does not reveal this at all.
+21851	Correct accumulation needs the normalization basis to be known first
+15114	You can obtain the total number of valid tokens across all the small batches in this round first, then divide each batch's <strong>sum loss by that same total</strong> and run the backward pass. If it cannot be known in advance, you can accumulate gradients that have not been mean-scaled and then scale them consistently by the valid total accumulated; but this has to work together with AMP, gradient clipping, the optimizer and the distributed reduction, and it cannot be settled by "adding a constant" after the wrong scaling.
+17278	For D DDP ranks that average the gradients by default, to obtain
+29280	, each rank's local loss sum should be scaled by
+24709	, and only once DDP has divided by D as well is the target reached. If an upper-level Trainer has already done this, multiplying by D by hand repeats it. The algebra here assumes the default averaging reduction; re-derive it when a communication hook or a framework policy changes.
+15783	How the pinned historical source carries out this fix
+15324	Merge commit
+23022	's
+11446	, when
+20307	is provided, sums first and then divides by that denominator; the CausalLM path shifts the logits/labels first.
+5933	The function does not prove on the caller's behalf that the count passed in is correct; you still have to track whether it covers this accumulation group, whether it excludes the ignored items and whether it matches the targets after the shift. The parameter name contains batch, which does not mean it is necessarily "the number of samples".
+10950	Inequivalence does not come from the denominator alone
+14157	Even with the normalization correct, dropout, BatchNorm, the timing of gradient clipping and the order of floating-point reduction can keep small-batch accumulation from matching one large batch bit for bit. The first step of acceptance is to switch off randomness and cross-sample statistics and compare the gradients on the same samples; the second is to restore the real training factors one at a time. Do not use "it is normal for them not to match exactly" to cover up a wrong denominator.
+27976	Follow-up: is averaging per sample always wrong?
+10654	Not necessarily. If the product objective really is to give every sample equal weight rather than every token, a per-sample average can be reasonable. The error lies in claiming to optimize a token-average objective while actually optimizing another one. Whether long and short answers should carry equal weight is a modeling decision; write it down and keep the training and evaluation bases consistent.
+27737	Follow-up: what if a whole microbatch is masked out by ignore_index?
+13313	Its valid count is 0. That batch's sum can be 0, but 0/0 must not be computed for it on its own and then accumulated. When the global valid count is 0, skip it or report a data error, and handle the scheduler and the statistics counts; do not create a NaN and go on updating.
+7435	E09: how to read this result, instead of only looking at "pass"
+20620	Micro-batches with different numbers of valid tokens have to be normalized by the total denominator the objective specifies. A different gradient result means the objective being optimized has changed; it is not merely floating-point error.
+24855	Self-check:</strong> two batches have 1 and 3 valid tokens and local gradient sums of 2 and −6. With two ranks averaging the gradients by default, how is the global token average obtained?
+12954	The global N=4 and D=2; each rank scales its local gradient sum by D/N=1/2, giving 1 and −3, which average to −1. Having each rank divide by its own token count first gives 2 and −2, which average to 0, and the objective has changed.
+18717	Is writing the residual as N1+attn_delta consistent with this model?
+10667	It is not. The input of a pre-norm branch has been normalized, but the main residual path is the original X. Even where their shapes agree, the numbers and the backward path still differ.
+18703	What does writing G_N1 as only G_Q Wqᵀ miss?
+22545	It misses the two paths by which the input affects the loss through K and V. The direct residual path also has to be added back at X, further upstream. Shared parameters and summed branches are where a backward pass most easily goes quietly wrong.
+23958	Lesson 56｜Post-training and model customization: objectives, structure and parameter adaptation — AI Systems Engineering
+24259	Systems</span><span>about 8.2k characters</span><span>Figures and item-by-item notes
+8804	SFT supplies the target answer, preference training compares answers, and reinforcement learning improves the policy with a reward. Low rank, quantization and expert structures are about how parameters are organized and computed, not about adding a knowledge base to the context.
+23845	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/17.html">Lesson 54 · The mathematics needed before post-training</a><a class="pill" href="../foundations/20.html">Lesson 61 · Low rank, quantization, experts
+27521	A quick check before the deep reading:</strong> first compute a preference score from the probability ratio of two answers, then tell "fewer weights", "fewer weight bytes" and "fewer weights activated each time" apart.
+27190	This chapter separates "giving the model new material", "making the model change its behavior" and "lowering the cost of running the model". The three can work together, but their training objectives, the objects they change and the ways they are validated are completely different.
+8357	Q085｜How do SFT, RLHF and DPO each change the model? What does the DPO formula compare?
+27411	What to know first for this question</span>SFT imitates the target output, RLHF optimizes the policy with feedback, and DPO compares relative preference probabilities directly; all of them involve training, and none is a prompt added at run time.
+23941	Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/17.html">Lesson 54 · The mathematics needed before post-training
+22979	does supervised learning with target answers;
+13869	The family of methods that do reinforcement-learning-style post-training with human or AI feedback. Example: both the source of the feedback and the objective have to be checked; the acronym alone is not enough.
+28300	usually learns or uses a reward signal and then optimizes the policy;
+11999	A training method that compares a policy's probabilities with a reference model's on preference pairs. Example: the conditional probability of the complete answer has to be computed, not just the last token.
+23123	builds a training objective directly from pairs of preferred answers to the same question, without running a full online reinforcement-learning loop at every training step. They optimize the distribution of behavior; they are no guarantee of factual truth.
+11846	Starting from two answers to the same question
+24486	Given a question x, a preferred answer y⁺ and a dispreferred answer y⁻. SFT takes only one ideal output and raises its probability one
+19777	at a time. It does not tell the model directly "why the other answer is worse"; that distinction is conveyed indirectly by the distribution of the examples.
+16296	A reward model can be trained on answer pairs so that
+10185	. During policy optimization the model generates an answer and is then updated according to the reward, usually together with a penalty on the divergence from the reference policy to avoid violent drift. A reward model only approximates human preference or a task standard, and it may reward surface features.
+7377	One standard objective for DPO is:
+15704	The probability of an answer is the product of the conditional probabilities of its answer tokens, so in practice the sum of the
+19384	The inverse function of the exponential; where this book states no base it usually means the natural logarithm. Example: ln(1)=0 and ln(2) is about 0.6931.
+21618	probabilities is used. The objective pushes the advantage of the preferred answer over the reference model to be greater than the advantage of the dispreferred answer; it is not a matter of simply setting y⁺ to 1 and y⁻ to 0. The reference model supplies the anchor, and β controls the scale in the objective and is related to the regularization strength in the corresponding derivation.
+12549	Suppose the current model and the reference model both give a relative log gain of 0 for the two answers; then Δ=0 and the loss is about 0.693. If the preferred answer has the larger relative gain, Δ grows and the loss falls. This objective still depends on data quality: if the annotators prefer long-winded flattery, training will take that preference as the signal.
+15419	The same pair of answers: SFT and DPO look at different training signals
+26502	Input and conditions.</strong>Question x has a good answer A and a poor answer B. Assume the whole-sequence probabilities and the reference probabilities take the teaching values from F17, with β=1.
+8805	SFT sample
+15033	Uses only (x,A)
+20545	Maximizes the conditional likelihood of A, with no need for B.
+12579	Preference sample
+22830	Uses (x, A better than B)
+19743	Supplies a relative judgment between the two answers.
+7374	DPO comparison
+25373	Compute ln(0.6/0.3)−ln(0.2/0.2)
+28719	A gap of ln2, and a loss of ln1.5≈0.405465.
+24382	The classic RLHF route
+12834	Train a reward model with the preferences first, then use it to feed back into the policy update
+11266	It is not the same training pipeline as DPO, which optimizes this pair of probability ratios directly.
+28619	Counterexample: a wrong label
+24990	If the preference label in fact picks the wrong answer as A
+23076	the objective may reinforce the wrong preference; a correct formula cannot repair bad annotation.
+19207	Join the steps up.</strong> What a training method changes first of all is the supervision signal and the optimization objective, not attaching a cross-session database to the model.
+26723	Limits and counterexamples.</strong> The numbers explain only the standard single-sample DPO objective; RLHF has many variants, and no general account of every post-training system follows from this.
+27684	Follow-up: does DPO really need no reward at all?
+16441	It does not have to train and call a separate scalar reward model explicitly, but it still needs a preference signal, and an implicit reward relation can be derived from the objective. "No reward model needed" is not "no judgment of quality needed". Likewise, offline preference data cannot cover all the new distributions that appear once the policy has been optimized.
+27714	Follow-up: will SFT make the model remember all the new business facts?
+15206	It may learn some facts, but it is hard to provide item-by-item updating, deletion and source tracing. Rules or source code that change often are better suited to versioned retrieval; a stable output format, classification boundaries and a style of tool selection can be considered for SFT. A customization decision should first distinguish missing knowledge, unstable behavior, insufficient tools and an unclear task description.
+27835	Follow-up: why can preference training make answers more likeable without making them more correct?
+25698	Raters easily take fluency, confidence, length or tone as a proxy for quality. Once the model optimizes the proxy, errors that "look professional" can appear. The training data and the evaluation have to cover correctness, citation support, permitted refusal and whether the task was completed, rather than only asking "which passage do you prefer".
+17833	Engineering deep dive · E11 · continues Q021
+28980	Prerequisites: <a href="../foundations/16.html">Lesson 53
+23955	Lesson 54</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+12903	Identify the four log probabilities first
+17300	For the same question x there is a preferred answer y+ and a rejected answer y−; the current policy πθ and the frozen reference policy πref each score both answers. The core quantity in DPO is
+10002	. π is a probability model and β is the coefficient that controls the scale of the objective; the log probability here usually comes from multiplying the conditional probabilities of the answer tokens and taking the log, which makes it the sum of the per-token log probabilities.
+15730	So "the current model gives the good answer a higher probability" is still not enough to explain the update. In the teaching example the current pair is −2 and −4 and the reference pair is −1 and −3; the preference gap is 2 in both, the corrected margin is 0, and the loss is ln2≈0.693147. Looking only at the current gap of 2 misjudges how much has been learned.
+21347	The label mask decides what you are really optimizing
+18076	Check whether the prompt part is excluded, which token the answer starts at, whether EOS counts, whether padding counts, and whether both paths use the same template and truncation rules. If the prompt is included in the sequence scoring, its common term may cancel under some settings, but do not take that ideal cancellation as a license in code: padding, truncation and batching differences can break it, and it creates unnecessary computation.
+17643	In particular, do not freely swap
+28834	for each other. The former brings length normalization and is no longer the same objective; comparisons between long and short answers change. A different objective may be designed, but it has to be declared a variant and validated again, not claimed to be merely "for numerical stability".
+24632	Caching the reference probabilities needs a version identity too
+14779	The reference policy is fixed, so precomputation can reduce the training cost; but the cache has to be bound to the reference weights, the tokenizer, the template, the answer text, the truncation and the mask rules. Using only the sample ID as the key and then reading the old logp after the text has been revised brings unrelated reference probabilities into the gradient. A cache hit is not the same as a valid cache.
+27834	Follow-up: does winning on preference mean being factually correct?
+10839	No. Preference data may reward length, tone or ingratiation rather than fact. Validation should check the preference metrics, the executable task result, the refusal behavior and the length distribution together. The objective in the paper describes how to make use of pairwise preference; it offers no guarantee that "any preference label is reliable".
+27736	Follow-up: does raising β just make it learn faster?
+11110	It cannot be treated as a learning rate directly. It changes the scale at which the margin enters the logistic loss, and it also ties into what the reference constraint means as a model; what it controls is not what the optimizer's learning rate controls. When tuning it, record the log-probability gap, the length and how far things saturate, rather than watching a single training loss.
+7442	E11: how to read this result, instead of only looking at "pass"
+18250	If the difference is the same for the current policy and the reference policy, the margin after the subtraction is zero; even when the absolute probability of the preferred answer is high, the preference objective has gained no relative improvement.
+24874	Self-check:</strong> the current policy and the reference policy both give a log-probability difference of 2 between the good and the bad answer. What is DPO's corrected margin?
+11413	Subtracting the two gaps gives 0, and multiplying by β still gives 0. The loss is −log(sigmoid(0))=ln2, which is not a judgment made from the current gap of 2 alone.
+8360	Q086｜Why do reasoning models often use reinforcement learning? How do PPO, GRPO and process supervision differ?
+27488	What to know first for this question</span>A policy is a probability distribution over actions, a probability ratio compares how much the new and the old policy support the same action, and KL measures how far the distributions diverge; none of these quantities is the rate of correct answers.
+23877	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/17.html">Lesson 54 · The mathematics needed before post-training
+18200	When the task result can be verified, the solution trajectories the model generates can be rewarded, which encourages more effective multi-step reasoning.
+20367	is a family of constrained policy-update methods;
+12271	builds an advantage estimate from the relative rewards of a group of candidates, which reduces the dependence on a separate value model. Process supervision judges the intermediate steps and outcome supervision judges the final result; different methods can be combined, and none of them can be taken as the uniform implementation of every reasoning model.
+10478	The logic of one round of training on a verifiable task
+12009	Take a coding problem with hidden tests: the problem is fixed, the current policy samples several programs, the isolated tests are run, and results such as a pass, a timeout or an illegal operation come back; the results are turned into rewards, and then the policy gradient for the sequence or the token is computed. Only once the model parameters have been updated is it training. Feeding an error log back to the model for another fix is feedback at inference time, not RL.
+8026	PPO often applies a clipped objective to the new-to-old policy probability ratio
+12284	, which limits how far a single update can go. The advantage A says how much better this action is than the baseline, not the raw reward itself. The value estimate, the KL term, the clipping range and the normalization all affect training.
+7662	GRPO compares relatively, using the mean and the standard deviation of the rewards of a group of answers to the same question; a common simplified advantage is
+10093	. It shows what "comparing within one question" does: it removes part of the influence of the question's difficulty and brings out the relative merit inside the group. But when the whole group gets the same reward, the signal inside the group can be very weak, and that is not a problem more training steps necessarily solve.
+24442	An outcome reward is clear and comparatively cheap, but a piece of wrong reasoning can arrive at the right answer by chance; a process reward gives finer credit assignment, yet it needs reliable judgment of the intermediate steps and easily marks an unusual but correct route as wrong. A long trajectory also brings computational cost and the risk of reward hacking.
+15651	How the rewards of four candidate trajectories become relative advantages
+26279	Input and conditions.</strong>Four candidate trajectories are generated for the same question, with verifier rewards
+10053	. The population standard deviation is used and the stabilizing ε ignored; only the standardization within the group is demonstrated.
+24360	Group mean
+15639	Average the four rewards
+24365	Group standard deviation
+22079	Each item differs from the mean by ±0.5
+21333	The standard deviation is 0.5.
+21330	Standardize
+5947	(reward − mean) / standard deviation
+12093	The advantages are
+15460	Counterexample: equal scores
+16293	All the rewards are
+21334	The standard deviation is 0, so the implementation has to define stable handling; dividing by 0 directly is not allowed.
+26867	Compared with process supervision
+24984	If one of two trajectories that both succeed in the end has a wrong intermediate step
+15041	the final reward alone cannot tell them apart; process scoring adds a signal of another kind.
+23081	Difference in objective
+8029	PPO can also have a value estimate and a clipped probability ratio
+11158	Do not call "we did the standardization" a complete GRPO or PPO implementation.
+19035	Join the steps up.</strong> The reward is the supervision coming in and the advantage is the improvement signal relative to the current baseline; they are no prior guarantee that the model's answer is correct.
+26670	Limits and counterexamples.</strong> Only the sub-step of standardizing within the group is shown; no complete reinforcement-learning training is provided, and the gains reported in the paper are not reproduced.
+28036	Follow-up: does a longer stretch of thinking in the output mean the training was more successful?
+28663	Length is only intermediate behavior. The criterion for success should be whether the task's accuracy and reliability improve under the same resources. The model may question itself over and over, search ineffectively, or make a short task complicated. The reasoning budget should match the difficulty; not every question is worth sampling along several paths.
+27941	Follow-up: how does reward hacking arise?
+18257	When the reward only checks the public tests, the model may speculate on features of those tests without meeting the real requirement; when only the format is rewarded, it can produce a structurally perfect empty answer. Isolate the hidden validation, use several independent checks and watch the behavior out of distribution. The reward score itself must not be taken as the task's ground truth.
+27717	Follow-up: what is the difference between self-consistency and training?
+8865	Self-consistency samples several paths at inference time and then aggregates by agreement among the answers; the parameters usually do not change. It can reduce some random reasoning errors, but if the samples share the same wrong premise the majority vote is still wrong. More votes cost more, and they cannot turn errors correlated between models into independent evidence.
+8363	Q087｜Why does MoE have so many total parameters yet activate only some of them? What does the router actually do?
+27418	What to know first for this question</span>An expert is an optional sub-network of parameters; the routing selects which of them are used this time. The total parameters, the activated parameters and the amount of data moved cannot be lumped together.
+23900	Lesson 45 · The smallest neural network model</a><a class="pill" href="../foundations/20.html">Lesson 61 · Low rank, quantization, experts</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory
+15955	replaces, in some layers, a single
+20514	with several expert networks, uses a router to pick a few experts to compute for each token, and then merges the results by weight. Shared parts such as
+24128	are usually still executed. The total parameters decide storage and capacity, and the activated parameters are closer to the computation for a single token, but latency cannot be inferred from the activated parameters alone.
+23237	A look at a simplified Top-2 MoE layer
+26129	The input token's hidden vector is
+29156	, the router computes
+29324	, giving E expert scores. The top-2 indices a and b are chosen and their scores normalized into the weights w_a and w_b; the expert FFNs
+29422	are computed separately, returning
+10099	. A real model may have shared experts, a different normalization, load balancing or more complex routing, so one formula cannot be applied to describe every MoE.
+10244	Within one
+13527	different tokens pick different experts. An implementation has to group the tokens first, send them to the matching experts, run the matrix multiplication and then return the outputs to their original positions. That produces dispatch/combine and possibly all-to-all communication across devices. However many experts there are, if one of them receives most of the tokens it becomes the bottleneck.
+25964	A balanced load is not a balanced meaning. Training uses auxiliary objectives, capacity limits or other mechanisms to reduce congestion, but each has a cost: dropping tokens over capacity can hurt quality, balancing too strongly can interfere with choosing the best expert, and the communication can swallow the theoretically saved
+22470	One way of counting the number of floating-point operations. Example: less computation can still be slow because of memory movement.
+7937	MoE routing picks two experts — how the result is combined
+26173	Input and conditions.</strong>The raw gate probabilities for three experts are
+10134	. This example renormalizes after the top-2; expert 0 outputs
+29186	, and expert 1 outputs
+14872	Take the top-2
+28147	Experts 0 and 1 are chosen
+10820	Expert 2 is not executed.
+28510	Renormalize
+28150	The chosen probabilities sum to 0.9
+20182	The new weights are 2/3 and 1/3.
+25379	Compute the expert outputs
+11357	The two branches transform the current token independently
+18328	This gives the two vectors stated above.
+25963	Counterexample: load
+10372	All 100 tokens in one batch pick expert 0
+14158	Even with a large total parameter count, this can congest one device, so the routing load and the capacity have to be considered.
+19071	Join the steps up.</strong> The total expert parameter count, the parameters activated per token and the bottleneck at execution time are three different quantities.
+26663	Limits and counterexamples.</strong> The expert outputs are given for teaching; how capacity overflow is handled and how the weights are normalized depend on the model's implementation, and this configuration is not presented as a uniform standard.
+27747	Follow-up: are the experts "a mathematics expert, a law expert, a code expert"?
+15516	The name misleads easily. An expert is a block of parameters, the routing is formed by training, and patterns of specialization can appear without corresponding naturally to a discipline named by people. Seeing which expert a particular token went to does not license the claim that the model assigned it an interpretable professional role. Nor is an MoE expert a sub-
+27980	Follow-up: is it enough to load only the selected experts at inference time?
+15527	Later tokens will choose different experts, and which ones are needed is not necessarily known before the choice. Offloading experts can save VRAM, but it introduces transfer and prefetch problems; a low-latency service usually needs careful planning of which weights stay resident and how they are spread across devices. Few activated parameters does not mean a small model file.
+27713	Follow-up: how does the router differ from an agent's model routing?
+7933	The MoE router is a trainable computation inside the model at token granularity; agent routing usually picks one complete model, tool or skill at the granularity of a request or a sub-task. The two differ in budget, in how they are trained and in how they fail. Do not take "MoE already routes" as a reason not to dispatch agent tasks.
+8366	Q088｜How do you choose between LoRA, QLoRA, quantization and distillation? What do they actually change?
+27425	What to know first for this question</span>Low rank expresses the update with smaller matrices; quantization reduces the number of bits each weight occupies; distillation trains a student with the teacher's signal. Fewer bytes does not necessarily mean less computation overall.
+23852	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/20.html">Lesson 61 · Low rank, quantization, experts
+22883	A fine-tuning method that adapts the original weights with a low-rank parameter increment. Example: ΔW=AB, where A and B are trained rather than all the base weights.
+13652	freezes most of the base parameters and learns the task's changes with a low-rank increment;
+18818	stores the base at low bit width and trains an adapter; quantization approximates weights or activations with fewer bits; distillation has a student learn the teacher's output or distribution. The purposes of the four can overlap, but they are not synonyms.
+7857	LoRA's sizes and gradient flow
+24996	If the original linear layer is
+29294	, add
+9950	, with r far smaller than the dimensions on either side, and compute
+10058	. Trainable parameters:
+10028	. For example, a 4096×4096 matrix has 16,777,216 parameters, and at r=16 A+B is only 131,072, about 1/128 of that.
+18097	That the base is not updated does not mean the backward pass need not go through the base. To obtain the gradients of a downstream adapter or of an earlier layer, the chain still has to be traversed backwards, with the activations saved or recomputed. Many implementations initialize one low-rank matrix at random and set the other to zero, so that the initial increment is zero; if both were zero, the initial gradient path could degenerate.
+20453	Ordinary uniform quantization can be summarized as
+29330	, with the approximate value recovered as
+9994	. The scale and the
+5801	point have to be stored; group- or channel-level quantization can reduce the error but adds metadata. Low bit width is a way of representing numbers; whether the compute kernel really accelerates at that width, and whether it has to dequantize to a higher precision, decides the actual speed.
+25103	Distillation can use high-quality answers generated by the teacher, and it can also have the student match soft targets. The student does not copy all the teacher's parameters; it approximates particular behavior under the constraints of its capacity and its training distribution. Validation has to include tasks that were not used for distillation; the teacher's errors are passed on as well.
+18725	Keep "the knowledge is out of date" and "the output format is wrong" apart when choosing the intervention
+26445	Input and conditions.</strong>The system has two failures: A does not know the new configuration that was changed to 5 seconds yesterday; B has the correct configuration in hand and yet keeps printing the wrong field name.
+28618	The error comes from missing new source code
+12824	Retrieve the current version first; do not memorize a configuration that changes daily by fine-tuning.
+25682	The evidence is right, but the output structure does not match the agreement
+12911	Try a clear schema, prompting and validation first; consider fine-tuning only once the requirement stays stable.
+7854	A small LoRA ledger
+6086	A 1000×1000 increment with rank r=8
+12962	The full matrix has 1,000,000 parameters; factored into 1000×8 and 8×1000 it is 16,000 in all, not counting the base W.
+28573	A small quantization calculation
+9374	x=0.26, step size 0.1
+9304	After rounding it is 3, recovering 0.3; the representation cost falls, but an error is introduced.
+25105	Choosing distillation
+25423	Have a small model fit the teacher's distribution
+28902	How far the evaluation tasks hold up has to be measured; it is not a copy of all the teacher's ability.
+18964	Join the steps up.</strong> Locate first whether the failure is in the data, the interface, the behavior or the compute resources, and only then choose RAG, constrained output, adaptation or compression.
+26689	Limits and counterexamples.</strong> The parameter ledger is a calculation from first principles, not a prediction of training time or accuracy gain; a complete scheme such as QLoRA also involves quantization and training details.
+27694	Follow-up: can LoRA be merged into W without loss?
+15936	In a supported ordinary linear layer and precision setting one can compute
+29390	, which saves the extra branch; mathematically it is equivalent to the same linear increment, though floating point and requantization can still introduce differences. Adding several adapters together is also no guarantee that their behavior in the business will not conflict. When adapters are switched dynamically, the adapter's identity should be taken into the cache and the version management.
+28100	Follow-up: should fine-tuning or RAG come first?
+12864	Start with where the error comes from. Missing up-to-date facts call for retrieval; insufficient stability of format or decision style can be addressed with examples and fine-tuning; a tool that will not execute means changing the
+29473	; a great deal of irrelevant context means changing the selection. Fine-tuning without locating the root cause can burn knowledge that goes stale quickly into the parameters and still not solve the tool or data-permission problem.
+27900	Follow-up: how do you tell whether quantization has damaged real agent ability?
+10672	Do not only measure perplexity on static text: measure structured arguments, the use of evidence in a long context, code regression, tool selection and stability across turns as well. A tiny change in one logit can lead to a different branch being chosen, which is then amplified across a whole task. Run a paired evaluation under the same harness and keep a high-precision fallback path, rather than only comparing how far the VRAM went down.
+17834	Engineering deep dive · E12 · continues Q024
+23984	Lesson 61</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+14736	Fix the parameter naming first, to avoid confusing AB with BA
+21057	This section uses the row-vector convention:
+29134	, with A of shape
+29137	, and B of shape
+29391	, leaving out the scaling constant. The reference PEFT initialization makes one side random and the other zero, so that the initial increment does not change the base model's output; column-vector implementations often write the multiplication as BA. When comparing code, confirm by the shapes and by which side is zero-initialized, not by guessing from the order of the letters.
+21476	Why the gradients are asymmetric for the moment
+25659	Let the output gradient be G. The gradient for A has to pass through B's transpose; if B=0, that gradient is 0 at the first step. The gradient for B passes through xA, which is usually non-zero when A is non-zero. Only once B has been updated for the first time can A receive a non-zero gradient at the second step.
+20956	A local counterexample with real autograd: x=[1,2], A=[[1],[2]], B=[[0,0]], target=[1,1], sum of squared errors. xA=5, the initial increment is [0,0], A's gradient is [[0],[0]] and B's is [[-10,-10]]. This gives better judgment than changing the initialization the moment a grad of 0 is seen.
+11723	When it really is a bug
+25011	If neither side has changed after several update steps, check: whether they are in the optimizer's parameter groups, whether something was detached by accident, whether the right module was selected, whether that batch went through this path, whether the step was skipped on an AMP overflow, and whether the learning rate is 0. Not every initialization scheme has a zero B, so check the configuration before judging by what is shown in this section.
+15317	Merging, quantization and caching have to be considered together
+15315	Merging LoRA, which adds the increment back into the base weights, is one way to deploy it; quantizing and dequantizing low-precision weights, and quantizing them again, can make "merge first, then quantize" and "quantized base plus separate adapter" numerically inequivalent. Changing the adapter changes K/V, so an old prefix cache must not be reused merely because the tokens are the same. A prefix-cache design has to take in extra identity information such as the adapter.
+27842	Follow-up: does freezing the base mean the base need not be stored?
+10818	It does not. The forward pass still depends on W, and computing the gradients for the increment path still needs the relevant activations. What is saved is part of the trainable parameters, the gradients and the optimizer state, not all of the model's memory. When reporting VRAM, keep the weights, the activations, the gradients, the optimizer and the cache separate.
+27886	Follow-up: if the increment's rank is small, why can it still be useful without being equal to full fine-tuning?
+16502	It limits the space in which parameter updates can be expressed, yet it may happen to cover the important directions the task needs. Whether that is enough depends on the task, the target modules, the rank and the data. Do not push "fewer parameters" into "no loss of capability"; compare with a validation set at the same budget and by the types of task failure.
+7445	E12: how to read this result, instead of only looking at "pass"
+13843	When one side of the low-rank product is zero at initialization, the other side's gradient is zero at the first step. Check the other parameter's gradient and the next step's update as well, instead of judging a single array of zeros to be a broken backward path.
+24893	Self-check:</strong> when B is zero-initialized, A has no gradient at the first step. Should the code be considered wrong straight away?
+10783	It should not. A's gradient passes through B, and when B=0 it can be 0 at the first step; once B has been updated, A may receive a gradient. Check both sides, the later steps and the initialization scheme together.
+27810	Pressing further: why can it still talk nonsense after training is finished?
+25514	The training objective is prediction or preference conditioned on data, not a formal proof of every fact about the real world. Insufficient data, limits on generalization, a mismatched objective, missing retrieval and the decoding strategy all affect the output. The worked model fits only two sequences, so it is even less able to support inferences about real question-answering ability.

@@ -1,0 +1,416 @@
+# p13 — en
+# page: chapters/20.html
+23720	Lesson 28｜Multi-agent: the gain from parallelism and the loss at handoff — AI Systems Engineering
+22259	Follow this chapter through its objects and states</a><a href="#topic-2">Multi-agent: work that can run in parallel matters more than the number of agents</a><a href="#Q077">Q053｜What does a sub-agent receive, and what does the main agent get back? What should a handoff package contain?</a><a href="#Q078">Q054｜How does a task DAG decide what runs in parallel? Why is cutting it finer not necessarily faster?</a><a href="#Q079">Q055｜When several agents change the same repository, how are overwrites and wrong merges avoided?</a><a href="#Q080">Q056｜Why can an independent reviewer still make the same mistake? What does A2A solve, and what does it not?</a><a class="sub ap-toc" href="#agent-practice-parallel">Why can tools running in parallel finish earlier and show their results later?</a><a class="sub ap-toc" href="#agent-practice-delegation">How do several agents run in parallel, and how is loss at handoff avoided?
+24253	Systems</span><span>about 6.7k characters</span><span>Figures and item-by-item notes
+16209	Several agents are not one brain split into several for free. For every subtask you have to supply information, bring evidence back and integrate the result; and a shared file adds the problem of concurrent overwriting.
+23556	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+27531	A quick check before the deep reading:</strong> separate two modules that can be analyzed independently from the one configuration both of them must change, and say which work can run in parallel and which needs a handoff or a serial commit.
+16196	Multi-
+10892	is not copying one problem out to more models. It brings in separate contexts, concurrent tasks, merging and recovery, and it can also amplify duplicated work and correlated errors.
+8258	Q053｜What does a sub-agent receive, and what does the main agent get back? What should a handoff package contain?
+27445	What to know first for this question</span> A sub-agent isolates context but costs a handoff: the goal, the evidence, the permissions and the return format all have to be clear; parallelism suits loosely coupled work.
+23547	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent
+16381	A sub-agent usually receives an explicit task, the context it needs and the tool configuration available to it; it should not be assumed to hold the main agent's whole history and permissions automatically. What it returns should contain the conclusion, the evidence, the artifacts and the open questions. A handoff is a process of selecting information, and so it can be lossy by nature.
+10345	A handoff that can be acted on, and one that cannot
+9440	"Have a look at the database problem for me" is too broad. A more actionable teaching handoff is: the goal is to confirm whether the duplicated refund was caused by a retry; the scope is the payment module and its callers; do not modify code; the current observation is that the same order shows two remote requests; provide the relevant
+5795	ID; return a falsifiable root cause, the evidence paths and the points left unconfirmed.
+26934	Returning "a retry caused it" is still not enough. It should say which branch was seen in which version, which log line shows the same business ID twice, whether two independent orders have been ruled out, and what test is needed. Only then can the main agent make its change on the strength of the result, instead of redoing the whole investigation.
+11688	A handoff cannot be endlessly detailed, or a multi-agent setup is merely copying a large context around. Pass in the key facts and the references that locate them, and let the sub-agent read more as it needs to; what finally comes back is a compacted summary of the evidence plus original output that can be traced. The problem of summary fidelity is present in a multi-agent handoff just as much.
+16372	Why "no problem" handed back by a sub-agent cannot be integrated safely
+26403	Input and conditions.</strong> The parent task is to fix two modules. Subtask A returns only "the tests pass", without saying which code version, which test command or which paths were changed.
+21537	Check what is missing
+20231	Which version the verification covered cannot be determined
+22588	The parent agent cannot take it as final evidence.
+19864	Change what is handed over
+27139	Return the goal, the files changed, the version, the test command, the exit status and the limits
+22083	Each item serves the merge decision.
+14212	Scope of compaction
+14950	Hand over only the key log excerpt and the path to the full log
+10771	The whole history of exploration is not copied.
+22595	Integration by the parent
+21490	Check whether A's and B's changes conflict
+15309	Each passing on its own is no proof that the combination passes.
+15910	Run the necessary tests again on the merged version
+11692	A finished handoff is not a finished whole.
+19039	Join the steps up.</strong> A sub-agent's output has to be enough to support the next action, not just a summarizing tone of voice.
+26701	Limits and counterexamples.</strong> These fields are a suggestion for a concise handoff; when a task is very small they can be carried in plain language, and no huge template has to be brought in.
+27968	Follow-up: is handing the sub-agent's whole conversation back the safest thing to do?
+12421	Keeping the full text as a traceable record is worth doing, but putting all of it into the main context can swamp the task. The main thread needs the conclusion, the evidence and the open items, and can expand the full text when it has to. The job of the original record and the job of the current context should be kept apart.
+27913	Follow-up: can a sub-agent's conclusion be written straight into long-term memory?
+18058	The source and the result should be confirmed first. A sub-agent guesses and misreads too, and promoting an unverified conclusion straight into memory propagates the error. It can be saved as a candidate experience, and activated once the main task's result and evidence support it.
+27797	Follow-up: why do permissions have to be checked explicitly?
+16380	A sub-agent's run environment, set of tools and approval mode can all differ. Without the permission it should report the gap, instead of pretending to be done or switching to higher privileges to get around it. A handoff package describes a task; it cannot grant permission on an external system by itself.
+12879	Start by working out an example that really can run in parallel
+19951	In the teaching example, task A takes 4 time units to look at the callers and B takes 6 to look at the callee; consolidating takes 2. When they are fully independent, running them in sequence is 12 and in parallel 8. But if the handoff and the re-checking add 5, parallel becomes 13, which is slower instead. The numbers are teaching time units, not a measurement of any model.
+6997	Anthropic's multi-agent research practice stresses the coordinator, the subtask goals, the scope of the output and the integration of evidence, and it also notes that parallelism suits certain decomposable work; its results on research tasks should not be taken directly as a guarantee for coding tasks.
+26600	The output contract matters more than the role name
+9412	"You are the expert, have a look" is too vague. A better handoff writes down which version to check, the read and write scope allowed, the specific questions that must be answered, where the evidence is, which paths have been ruled out, what cannot be confirmed, and how long the result may be. A sub-agent returning "no problem" is not evidence; returning
+11265	together with the test command is what makes it checkable.
+15464	Messages with the same name are not the same kind of control
+15761	The pinned Codex communication path distinguishes input that triggers a new turn from internal messages that trigger no turn; for a child thread that has not been loaded yet, a message can be queued. A message submitted successfully has not thereby been read by the model, still less has the subtask finished.
+5851	A handoff record should distinguish queued, delivered, started, completed and validated, rather than a single sent.
+11383	Two kinds of merge conflict
+20114	A textual conflict: two agents write the same file at the same time. A semantic conflict: one changes the interface while the other changes the call site against the old interface, and even with entirely different files the combination is still wrong. The way to handle it is an explicit dependency DAG, explicit owners, an explicit baseline version, and whole-system verification after the merge. Only independent research subtasks can safely be analyzed separately and then pooled; shared writes call for more care.
+10814	There is no need to force every small task through analysis—implementation—review
+16097	Adding an agent should answer a real need: isolating context, exploring in parallel, or verifying independently. When a simple change has already been located and has a direct test, several rounds of handoff may be no more than reading the same thing again. Measure rework, success rate and total time with paired tasks; the complexity of a process is not a measure of professionalism.
+16377	A sub-agent's message being accepted does not mean it has started work
+18546	In the Codex path that was read, a message to a receiver that is not loaded and carrying trigger_turn=false can simply be put into the mailbox, returning a submission_id. What that ID proves is acceptance, not that the task has started, and still less that it has finished. Forked history is also filtered type by type, so the parent thread's cumulative usage is not taken directly as the child's newly added usage.
+19950	A teaching handoff has to write out the result contract: the paths returned, the baseline version, a summary of the changes and the test evidence, for instance. Putting two independent reviewers in different contexts can reduce how much they cue each other, but it cannot be claimed to make them statistically independent; a shared model, shared material or the same wrong assumption still produces correlated failures. Before adding an agent, prove that the task can be split and that whoever consolidates has enough evidence to accept it.
+8261	Q054｜How does a task DAG decide what runs in parallel? Why is cutting it finer not necessarily faster?
+27401	What to know first for this question</span> A DAG is a directed acyclic dependency graph whose edges state what must come before what; the critical path fixes the ideal shortest time, which is not the simple sum of the task durations.
+23989	Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions
+20242	A directed dependency graph with no cycles, and the longest dependency chain that fixes the ideal completion time. Example: independent tasks run in parallel, while dependent tasks still have to wait.
+25180	states the dependencies between subtasks, and only a task whose input is already satisfied and whose resources do not clash can safely run in parallel. The total latency is affected by the critical path, the coordination overhead and contention for resources; splitting work adds handoff and merge costs and does not raise quality by itself.
+24169	Work out a simple critical path
+12026	Task A takes 2 units of time to locate the interface, B takes 4 to change the implementation, C takes 3 to add tests, and D takes 2 to verify the integration. If C depends on B in order to know the new contract, the chain A→B→C→D comes to 11. If the contract is already settled after A, B and C can run independently in parallel, giving roughly A2+max(B4,C3)+D2=8, with communication and conflicts not yet counted.
+25039	If every handoff adds 1 and B and C changing the same file costs 2 units to merge, the 3 units saved in theory can be eaten up entirely. Worse, the parallel tasks may understand the contract differently and the work has to be redone. A task's independence has to come from stable input and boundaries, not from splitting a title across several lines.
+10738	Different subtasks share the model's rate limit, the tool server, the database and the Git work tree. Even when they are logically independent, they can contend for resources. Scheduling should have a concurrency cap and a cancellation mechanism, so that one user task does not use up the entire quota.
+11359	Two parallel tasks plus a merge: how the critical path is worked out
+26205	Input and conditions.</strong> Task A takes 3 s and task B 5 s, and they are independent of each other; the merge C takes 2 s and has to wait for both A and B to finish.
+6101	10 s.
+18031	Start A and B in parallel
+18135	Both start at time 0
+7035	A ends at 3 s and B at 5 s.
+7321	C starts
+7319	C ends at 7 s, an ideal wall clock of 7 s.
+19835	Total work
+11775	Still 3+5+2=10 s
+18026	Parallelism does not turn the total work into 7.
+13975	Add the overhead
+16323	If a handoff and repeated retrieval add 4 s on the critical path
+14929	It becomes 11 s, slower than running in sequence.
+19062	Join the steps up.</strong> What parallelism gains comes from independent work overlapping; coordination overhead and dependencies eat into the gain.
+26763	Limits and counterexamples.</strong> The ideal timeline contains no contention for resources; a real service has to be measured for queuing, concurrency caps and correlated failures.
+27930	Follow-up: should the DAG be planned out in full before starting?
+12353	A task with clear dependencies can be planned in advance; exploratory work should be allowed to adjust as it goes. Splitting out dozens of nodes too early may rest on wrong assumptions and produce execution that leads nowhere. You can finish the most critical locating work first, and then parallelize the parts that really are independent.
+27909	Follow-up: how is every subtask kept from repeating Analysis→Task→Review?
+18770	Pool the shared analysis and constraints into reusable evidence, and let a subtask fill in only its local gaps; choose verification by risk instead of copying the whole process mechanically. A small problem can be fixed directly in implementation or in review, and only a change to a core assumption or boundary calls for going back to redesign.
+27888	Follow-up: how is a multi-agent speed-up counted fairly?
+22109	Compare, at the same quality target, wall-clock time, total
+9961	, model calls and tool resources; do not look only at when the longest subtask finishes. Ignoring the total cost that parallelism consumes creates the illusion of "faster and cheaper".
+11333	Two reads and one write
+19964	The teaching harness receives A reading a file, B looking at the log and C changing the configuration. A needs 30 ms and B needs 10 ms. B can finish first, but to keep the order of the messages the harness still prints A and then B. That is no proof that B did not run in parallel; equally, showing two "start" lines is no proof that the two really occupied resources at the same time.
+15760	The pinned Codex path creates an asynchronous task once it has received the call; whether parallelism is allowed is decided by the tool's registration information, and by default it cannot be assumed that every tool can run in parallel. A shared read-write gate lets the parallel paths in the safe category coexist, while a serial path has to take the exclusive gate. Waiting for admission and actually executing are timed separately.
+5934	This path keeps execution separate from consuming the future's result, and records that the execution result is ready. The particular timeline of A and B being backfilled in order here is a teaching comparison, and is not passed off as a uniform display order for every Codex client and message type. The times of the action finishing, the result being consumed and the backfill should be checked separately.
+28621	A wrong performance calculation
+6897	A at 30 ms and B at 10 ms overlap completely, so the ideal computation stretch is about 30 ms of wall clock and 40 ms of total work. With another 5 ms of admission and 8 ms of consolidation, the task's wall clock is at least about 43 ms. You cannot say "two tasks of 30 ms each, so two threads must take 15 ms"; nor can parallel spans be added up straight into the user's waiting time.
+18032	A declaration of parallelism is no proof about side effects
+11311	Two tools writing different files can still have a semantic dependency: A changes the protocol definition while B generates the caller from the old protocol. The file paths do not clash, but the tests fail once the two are combined. Safe parallelism needs the read set, the write set, the versions and the task dependencies all considered together; a lock at tool level can only settle the range of conflict it was designed to cover.
+14907	Cancellation behavior has to be understood layer by layer
+24136	A cancellation while waiting at the gate can come before the action has started; a cancellation once the handler has finished but the result is still in the queue must not let the result be dressed up as never having happened. Some actions have to go on tidying up after being canceled, while others can be aborted. Canceling a coroutine is not canceling a request an external system has already received.
+18118	The trace should separate at least: queuing started, admission granted, action started, action finished, result collected, backfill finished. Otherwise one case of "the model is slow" may really be queuing, waiting on a mutex, or an earlier task blocking the ordered collection of results.
+12622	Allowing parallelism is a scheduling declaration, not a semantic proof
+25856	A read-write gate can constrain the calls that runtime manages, but it cannot know by itself whether two remote APIs contend for the same business object. A parallel flag should be reviewed together with the actual handler, the side effects and the external version constraints. A teaching counterexample: two calls are both marked as parallelizable, but each reads the balance and then deducts from it; with no atomic constraint downstream, a local read lock cannot keep the business figure from going over.
+18404	A performance record divides into "queuing—admission—execution—result ready—consumption—backfill". When action B has finished and still shows nothing, the cause may be the order of consumption, or an earlier action blocking it; the model's computation should not be blamed straight away. The timing model here is a tool for engineering analysis, not an assertion about every UI refresh policy in any product.
+8264	Q055｜When several agents change the same repository, how are overwrites and wrong merges avoided?
+27484	What to know first for this question</span> Independent files can be divided up, while shared changes need their versions and their merging coordinated. Several agents all returning success is no guarantee that the merged result holds.
+23555	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions
+28856	Isolate the work trees or state the write scope explicitly, record the shared baseline, and verify the merged version again. Git reporting no conflict says only that the text can be merged; it says nothing about semantic correctness.
+10312	A semantic conflict with no textual conflict
+6949	Agent A changes a function's return value from a list to an iterator, and Agent B adds
+10010	. The two of them change different files and Git can merge automatically, but it may fail at run time. The shared interface contract matters more than the file boundary. Fix the contract as far as possible before parallel tasks begin, and notify the dependent tasks when the contract changes.
+17704	Isolating the work trees avoids direct overwriting, but the merge still has to happen. Every subtask saves its baseline, its diff and its test evidence; at integration, check the difference in baselines, the conflicts and the related dependencies; after the merge, run tests that cover the interacting behavior. Each subtask's tests passing is not the combination passing.
+17295	For simple edits to the same shared file, overwriting can be avoided by going serially or by using a version condition. No elaborate branch system has to be created for every small task; what matters is being clear about who holds the write permission and when, and how to recover after a conflict.
+11300	Two agents both write the same file from v7: what happens to the later write
+26163	Input and conditions.</strong> The v7 file contains a=1,b=1. Agent A wants to change a to 2 and B wants to change b to 2, and both have read v7.
+7046	A produces a complete file
+16038	Based on v7.
+7145	B produces a complete file
+11597	Also based on v7.
+28968	Overwriting in sequence
+12668	Write A first, then B
+20572	In the end a falls back to 1 and A's change is lost.
+22621	Version check
+7136	At commit time B finds the baseline is no longer v7
+28560	Read again and merge, rather than writing blind.
+22713	Separate work trees
+11411	Each side saves its diff, and then they are merged explicitly
+20579	The end state should be a=2,b=2, with the combined version tested.
+19166	Join the steps up.</strong> Changes that look like they touch different fields can still lose an update, because the whole file is written.
+26728	Limits and counterexamples.</strong> Replacing a file atomically only avoids a half-written file; it does not settle the logical merge between several writers by itself.
+27771	Follow-up: why can the main agent not simply believe a sub-agent's "tested"?
+22421	The tests may have been run against the version on a child branch, and the merge changes the conditions. The evidence has to carry the command, the working directory, the version and the result, with the necessary verification added on the final integrated version. A verbal report is not a verification credential anyone can reuse.
+28082	Follow-up: can a model that resolves conflicts automatically commit straight away?
+13630	Resolving a conflict is itself a new code change, and needs its semantics checked and its tests run. The model may pick one side and drop the other side's functionality. A high-risk conflict can be made to require human review, while an ordinary local conflict can be resolved and verified inside the same task, with no need for endless replanning.
+27928	Follow-up: do parallel reads carry a consistency risk as well?
+20599	Yes. When one agent reads a file while another is changing it, the set of evidence it gets can straddle two versions. Read-only investigation should also know the extent of its snapshot; critical analysis is best based on a stable version, or the relevant files should be read again before the conclusion is used.
+17861	Engineering deep dive · E39 · continues Q079
+20117	No textual conflict does not mean the contracts are compatible
+6950	Agent A changes the producer field to
+29133	, while Agent B still consumes according to
+22483	. The two agents edit different files and Git may merge smoothly, yet the integration call throws KeyError, or more dangerously treats 5000 milliseconds as 5000 seconds. This book's program reproduces the first of those failures with a fixed-field example, and does not call it a real incident in any open-source project.
+18029	The boundaries of parallel tasks should be drawn around contracts, shared state and dependencies, not just file names. Data structures, API signatures, configuration precedence, version formats and the database schema can all reach across files.
+9370	A worktree solves part of the isolation
+7677	A Git worktree separates the working directories, which makes it easier for an agent to commit and merge independently, but it shares part of the repository's data, and it does not isolate an external database, service ports, temporary directories, the package cache or test accounts by itself.
+5888	If parallel tests all use the same fixed port, an intermittent failure may come from the environments interfering with each other rather than from the patch logic.
+11691	A handoff package has to be bound to the object being accepted
+24942	It contains at least the baseline, the changes, the interface agreement, the checks that were run, the risks not covered and a fingerprint of the result. Handing over a line saying "I have fixed it" is not enough. Whoever owns the merge runs the integration verification on the final combined version; each branch being green does not imply the combined version is green.
+27970	Follow-up: is locking every shared file enough?
+20100	A file lock prevents some write races but not a semantic conflict, and a lock also depends on every participant honoring it. For changes with strong dependencies, coordinating the interface design serially may take less time than repairing a parallel conflict afterwards. To decide whether to split a task, compare the work that really is independent against the cost of the handoff.
+28080	Follow-up: can one agent be dedicated to doing the merging?
+15151	It can, but it too needs the complete contract and the current evidence. Adding a role does not remove the loss of information by itself; give it the real test environment after the merge, rather than only the sub-agents' summaries. The result should be a final code state that can be verified, not a prettier account of the merge.
+7533	E39: how to read this result, rather than only looking at "pass"
+22801	It is the field names and units on the producer and the consumer side that make up the semantic interface. Changing different files produces no textual conflict, and can still leave a protocol mismatch between milliseconds and seconds.
+24840	Self-check:</strong> A and B change different files and Git reports no conflict — so why should integration tests still be run on the merged result?
+26057	Contracts, units, fields and the shared environment can disagree across files. A textual merge handles local content only and verifies no semantic compatibility; and each branch being green is not the combined version being green.
+8267	Q056｜Why can an independent reviewer still make the same mistake? What does A2A solve, and what does it not?
+27483	What to know first for this question</span> The value of an independent review comes from different evidence and a different angle of checking, not from a change of name. Agent communication across systems also needs a real protocol and real authorization.
+23611	Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+10728	Different agents may share the model, the prompt, the evidence and the biases, so their errors are correlated; one more reviewer is not an independent insurance policy on probability. A cross-agent communication protocol can standardize discovery, messages and task status, but it does not settle the credibility of the evidence, the permissions or the correctness of the conclusion.
+25412	Make the review supply new information rather than a second agreement
+16316	If the reviewer sees the implementer's full reasoning first, it readily confirms along the same path. Let it judge independently from the requirements, the diff and the tests first, and read the explanation afterwards; give it a different goal, such as looking for counterexamples, compatibility edges or concurrency, rather than a vague "see whether there is a problem". Independence comes from the evidence and the method of checking, not merely from a different agent name.
+23379	A deterministic check is often more independent than asking another model: type checking, property tests, a build, static analysis or a real run. A model is good for the design judgments those tools struggle to cover, but it also raises false alarms. What a review gains has to be measured against missed findings, false alarms and the cost of rework together.
+6893	An A2A-style protocol is concerned with capability discovery between agents and with exchanging messages, tasks and artifacts.
+12575	leans toward the interface between the
+11257	and a tool or resource service; the two sit at different levels of abstraction. Even with communication working, the receiver still has to judge the identity behind the request, the scope of the task, where the artifacts came from and what side effects are authorized; a protocol does not turn a remote agent into a trusted colleague.
+10493	Why three reviewing agents agreeing is not three pieces of independent evidence
+26174	Input and conditions.</strong> All three agents read only the same stale summary, "v8 tests pass", when in fact the tests covered only v7.
+13066	Shared input
+10531	All three rely on the wrong summary
+28617	The sources of error are highly correlated.
+15307	Their own outputs
+28404	All judge that it can be delivered
+16233	A majority vote only repeats the same wrong premise.
+16105	Add independent evidence
+25435	Have a verification tool read the version actually tested, or rerun v8
+11711	That produces information from a different source.
+21369	Correct the conclusion
+14852	The current version is found to be untested
+10317	One definite piece of evidence is enough to overturn three unverified opinions.
+6894	A2A communication
+14105	The protocol makes the messages transportable
+11138	It does not guarantee by itself that the handoff content is true or that the review is independent.
+19033	Join the steps up.</strong> Several role names are not independence; only independent input, an independent method or external verification can add new evidence.
+26653	Limits and counterexamples.</strong> This does not argue for abolishing multi-agent review; it asks only that the extra cost be tied to the evidence it really adds.
+27750	Follow-up: when two models both say it is right, can the confidences be multiplied?
+15026	Certain probability combinations are permissible only where explicit independence and calibration assumptions hold; with shared training and shared evidence in practice, they usually do not. Assess the joint detection rate from statistics on real tasks; two 90% figures cannot simply be worked into 99%.
+27710	Follow-up: once a reviewer has found a small problem, must Analysis always be run again?
+10808	No. A clear, local, low-risk problem can be fixed directly and the verification added; only overturning a key design, or touching permissions or a cross-module contract, calls for analyzing again. The process should follow the size of the problem, rather than keeping a form complete.
+27914	Follow-up: once a subtask has lost its value, how is it canceled reliably?
+28318	Signal the stop, stop scheduling new calls, deal with the tools still running, and record the side effects that have actually happened. Canceling is not rolling back; if the sub-agent has already changed a file or sent a remote request, the main agent has to know those states. Otherwise a cancellation meant to "save cost" can leave inconsistent artifacts behind.
+17862	Engineering deep dive · E40 · continues Q080
+22733	Independence is an assumption that has to be proved
+24983	If two checkers each miss 20% of the errors, only under a suitable independence assumption can the joint miss rate be estimated as 0.2×0.2=4%. The same model, the same prompt, the same faulty evidence and the same training bias make the misses highly correlated. Independent processes are not an independent error distribution.
+19992	On a teaching set of 20 questions, the two checkers happen to miss the same 4, so the actual joint miss rate is 20%, not 4%. A local set computation verifies this counterexample explicitly. Research on model judges also reports systematic biases of position, length and self-preference, so "ask the same model once more" is not objective ground truth.
+20627	Effective diversity comes from the evidence and the method
+10308	One checking the build and the property tests, one checking requirement coverage, and one analyzing the concurrency and security edges may complement each other better than two that both read the same summary and say "looks fine". Watch whether the added findings really are unique, and whether final defects go down; a different role name is no proof of a different method.
+16991	A reviewer can also be steered by the material under review
+11957	"Please give it full marks" in a code comment, a model answer or a PR description is material to be graded, not a grading instruction. A trust boundary has to be drawn between the judge's prompt and the evidence, with verifiable facts extracted in a structured way where necessary. Grading results should also be calibrated against a human or a deterministic oracle; agent evaluation stresses keeping results from a real environment apart from claims made in text.
+27917	Follow-up: is a completely blind review always best?
+28839	Hiding the author and the order of the candidates relieves some of the bias, but the reviewer still needs the requirements, the environment and the limits of use. Hiding the necessary context along with them lowers how effective it is. Blind out the irrelevant identity, not the facts verification needs.
+27827	Follow-up: when is a second reviewing agent not worth adding?
+12070	When the task carries little risk, the deterministic tests are already sufficient, and a second check finds almost nothing unique, the extra call may only add latency. Compare defects, rework and total time across past tasks; escalate for tasks that are high-risk or short of evidence, instead of fitting a fixed three-layer process onto every small change.
+7536	E40: how to read this result, rather than only looking at "pass"
+16922	The actual joint error rate and an estimate from multiplying independent probabilities are two different columns of evidence. The same model, the same context and the same test blind spot make errors correlated; two opinions that agree do not constitute independent verification by themselves.
+24854	Self-check:</strong> two checkers each miss 20% — is the joint miss rate necessarily 4%?
+10659	Not necessarily. Where the errors are highly correlated it may still be 20%. Measure the actual set of shared failures and the findings that are new; the number of models or of processes is no proof of independence.
+22258	Follow this chapter through its objects and states</a><a href="#topic-2">Multi-agent: work that can run in parallel matters more than the number of agents</a><a href="#Q077">Q053｜What does a sub-agent receive, and what does the main agent get back? What should a handoff package contain?</a><a href="#Q078">Q054｜How does a task DAG decide what runs in parallel? Why is cutting it finer not necessarily faster?</a><a href="#Q079">Q055｜When several agents change the same repository, how are overwrites and wrong merges avoided?</a><a href="#Q080">Q056｜Why can an independent reviewer still make the same mistake? What does A2A solve, and what does it not?
+# page: chapters/21.html
+23719	Lesson 27｜Reliable execution: retries, idempotence, crashes and state recovery — AI Systems Engineering
+22318	Follow this chapter through its objects and states</a><a href="#topic-2">A timeout tells you nothing arrived, not that nothing happened</a><a href="#Q081">Q049｜Why must there be an unknown state after a tool times out? Why not mark it failed straight away?</a><a href="#Q082">Q050｜How is an idempotency key designed? Why can a local deduplication table not guarantee Exactly Once across systems?</a><a href="#Q083">Q051｜How do CAS and atomic replacement keep a local file change from being overwritten? How does that work together with a database transaction?</a><a href="#Q084">Q052｜How does a long task continue after a restart? What are Retry, Resume, Replay and Cancel?</a><a class="sub ap-toc" href="#agent-practice-recovery">Written successfully but not confirmed: how a retry becomes a duplicated side effect
+25848	Retrying a request deals with an unstable network, but the external action may already have happened. An idempotency key identifies the same business action; a transaction guarantees certain atomic properties for a group of changes; neither of them covers every external system out of thin air.
+23593	Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+27524	A quick check before the deep reading:</strong> list the three states "not executed yet", "executed and a receipt received" and "possibly executed with no receipt received", and then decide for each whether it may be retried.
+7821	The more an LLM can execute on its own, the more "it suggests trying again" has to be told apart from "executing again is safe". This chapter follows the failure window of one write operation, and does not treat a model's self-reflection as a transaction mechanism.
+8244	Q049｜Why must there be an unknown state after a tool times out? Why not mark it failed straight away?
+27466	What to know first for this question</span> An unknown result calls for checking the facts first; a retry of the same business action uses a stable identifier, and generating a new key each time to look idempotent will not do.
+26032	A timeout means only that the caller did not get a definite result within the deadline; it is no proof that the side effect did not happen.
+25183	means the result of execution cannot be confirmed yet; it stops the system from wrongly equating "no success seen" with "safe to redo".
+10414	Five moments in the creation of one ticket
+8908	T1: the client records that it is about to create, with the business action ID a17. T2: the request reaches the server. T3: the server writes the ticket into the database. T4: the success response is lost in the network. T5: the client times out.
+21873	If the client now marks it failed and retries with a new ID, the server creates a second ticket. The model seeing two results and then deleting one is not necessarily equivalent either: a notification, an audit entry or an external sync may already have happened. Correct recovery queries or retries under the same idempotent identity, or checks the existing result against a business uniqueness condition; where it cannot be settled, it stays unknown and asks for appropriate handling by a person.
+23225	By contrast, if the request fails at the local argument-validation stage, no side effect was executed, and the arguments can usually be adjusted and tried again. Where the failure happened decides how to recover, so the error structure should carry the execution stage that is known, instead of one string "error".
+25846	The request timed out but the counter has already gone up by 1: what state is that
+26295	Input and conditions.</strong> An external counter starts at 10. Operation op7 asks for 1 to be added, the server takes it to 11, and the success response is lost in the network.
+17004	What the client observes
+15072	It proves only that no usable response arrived in time.
+16172	The external fact
+25364	The counter is already 11
+11054	That is no reason to mark it "not executed".
+16508	The safe state
+25543	Record op7=unknown
+12436	Keep the operation's identity, the content of the request and the way to check it.
+21305	Recovery by query
+19408	Look up the external operation record by op7
+25032	If 11 is found to have succeeded, move to succeeded; if it clearly was not committed, it may be retried by the rules.
+19891	Switching to a new ID op8 and adding 1 again
+25361	The counter reaches 12 and the duplicated side effect appears.
+19073	Join the steps up.</strong> Success, failure, in progress and result unknown have to be distinguished; a timeout is an observation about communication, not a fact about execution.
+26699	Limits and counterexamples.</strong> Where the external system offers no operation lookup and no idempotency, checking by hand may be the only option; an internal log cannot guarantee exactly once on its own.
+27957	Follow-up: can every read-only query be retried without thinking?
+15081	A read is usually low-risk, but there is still billing, rate limiting and change over time; some nominal queries trigger a cache refresh or a background task. A retry should have a deadline and backoff, and should keep the context of the same logical query as far as possible. Do not let an infrastructure failure consume LLM turns without end.
+28032	Follow-up: the model says "I checked and it was not created" — does that clear the unknown?
+15022	There is evidence only if it really called a trustworthy query and the query's scope was wide enough to confirm. A promise in natural language is no substitute for checking the remote state. Watch out for eventual consistency as well: an object just created may not be found for a while, which is no reason to create it again straight away.
+27735	Follow-up: does an unknown state make the system too conservative?
+16458	It should be used only at a side-effect boundary that genuinely is uncertain. A low-risk, repeatable computation needs no elaborate handling; an irreversible or expensive write deserves care. An explicit unknown is more precise than forbidding every retry, and safer than retrying blind.
+8248	Q050｜How is an idempotency key designed? Why can a local deduplication table not guarantee Exactly Once across systems?
+27398	What to know first for this question</span> CAS compares the version before updating; replacing a file atomically covers only the switch of files, and does not roll back an external database or a network side effect along with it.
+23667	Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions
+17990	An idempotency key identifies one business intent, so that a repeated request returns the same single result or is rejected as a conflict. What matters is whether the deduplication record and the actual side effect sit inside the same boundary where consistency can be guaranteed. Writing one local line saying "done" does not remove the crash window between the remote side effect and the record.
+23240	Look at two wrong orderings
+12674	Write the local done first and then call the remote side: if the crash comes after done is written, the remote side never executed at all, yet recovery skips it, and the operation is lost. Call the remote side first and then write done: if the crash comes after the remote side succeeded, there is no local done, recovery retries, and the operation happens twice. Whatever the order, a gap remains across two independent systems.
+25071	If the remote side supports idempotency keys natively, the client makes its request with a stable
+14861	, and the remote side saves the key, the request's semantics and the result inside its own transaction boundary, so a duplicate can be handled safely. The same key with different arguments should be recognized as a conflict, and the old result must not be returned quietly. A key also needs a scope, a retention time and an expiry policy, so that different users or different business intents do not collide.
+8009	The outbox persists the business change together with the message waiting to be sent, and a dispatcher forwards it afterwards; a saga organizes the steps across services into a compensable flow. They are designs for reliability across a boundary, not a natural guarantee that the remote side executes exactly once.<span class="concept-micro">An email already sent usually cannot make the recipient "not have read it". Compensation may be sending a correction notice, which is not the same as really undoing an effect in the past.
+20935	A local transaction can atomically write the business data and the outbox event, and a worker process sends it afterwards; the sending itself can still happen twice, so the receiver often needs deduplication or idempotent handling. So-called
+28295	usually holds only inside a clearly defined processing boundary, failure model and retention policy; it is not a free end-to-end guarantee across the whole internet.
+17988	Why an idempotency key also has to be bound to the arguments and the result
+26357	Input and conditions.</strong> The service supports the request key k7; the first time, the arguments are account u7 plus 10, and the resulting balance is 110.
+29052	The first request
+11620	The key, a digest of the arguments and the result are recorded inside the transaction
+18474	After it succeeds, k7 corresponds to 110.
+15510	Retry with the same key and the same arguments
+13581	k7 and plus 10 are submitted again
+27132	The existing result 110 is returned, and it does not go on to 120.
+15511	Same key, different arguments
+9200	k7, but changed to plus 20
+18361	The conflict has to be rejected; the old result must not be passed off as a new operation succeeding.
+28637	Key expiry
+14712	k7 is submitted again after the deduplication record has been cleared
+25043	Without a longer-lived business constraint, the risk of duplication comes back.
+16195	The external boundary
+20945	The local database recorded the key, but the remote payment system does not recognize it
+20938	Local deduplication does not cover a failure window across systems.
+19060	Join the steps up.</strong> Idempotency is a contract made up of the operation's identity, consistency of the arguments, persistence of the result and the retention policy together.
+26672	Limits and counterexamples.</strong> The balance is a teaching state and no real financial operation is carried out; an exactly-once effect has to state the transaction boundary and the boundary of the external system.
+27926	Follow-up: can an idempotency key be a hash of all the arguments?
+20639	Sometimes it can serve as an identity for the content, but the same arguments may stand for two legitimate, independent intents, such as two payments of the same amount; and on a retry a change in some irrelevant field can give a different hash. It is safer for the application to generate a logical operation ID and bind the key arguments to that ID. A hash is not a substitute for business intent.
+28026	Follow-up: is it all right for the model to generate a new UUID every time?
+16357	If this is a retry of the same operation, a new UUID gets around the deduplication. The action's identity should be generated by the
+16001	when the intent is first settled, and kept persistently so that later retries reuse it; the model may propose an action, but it should not rebuild an idempotent identity at will.
+28085	Follow-up: is a compensating operation the same as a rollback?
+10777	Not quite. A refund, an unpublish or the deletion of a duplicate ticket may not undo a notification already sent or an observation made outside. Compensation is a new business action, with its own permission, failure and audit needs. Do not treat "compensate if something goes wrong" as a reason to execute repeatedly without constraint.
+17863	Engineering deep dive · E41 · continues Q082
+12773	Start by drawing the two persistent systems
+18599	The executor's log is in a local database and the real side effect is in a downstream service. These are two commit boundaries. Putting the log inside a SQLite transaction controls only the log's own commit; it cannot control the external action atomically. SQLite's transaction scope does not take in arbitrary file writes or network calls.
+13287	The critical failure window is as follows:
+11876	From the log it reads as "never completed", from downstream as "completed once". What a timeout or a crash produces is <strong>unknown</strong>, which is not failure.
+20855	This book really ran this window
+16971	The experiment starts a separate child process and uses two local SQLite databases that share no transaction to stand in for the log and the downstream side. After the downstream commit it runs
+29347	, deliberately skipping the confirmation; it then restarts and recovers. The path with no idempotency key produces 2 side effects; the path where the downstream side puts a uniqueness constraint on a stable intent key produces only 1.
+27240	This result comes from a real process and database experiment run here, not from an imagined description; but two local databases are not a production distributed service, and nothing in it supports a claim that a networked system already has end-to-end exactly-once.
+17989	An idempotency key has to be consumed atomically by the side that really produces the side effect
+16330	If "I have used this key" is recorded only in the executor's log, there is still a window between the check and the downstream commit. The ideal downstream interface takes the intent key, the validation of the arguments and the side effect into its own atomic boundary, and returns a result consistent with the operation already executed. AWS's engineering article stresses the difference between the caller's intent, a retry, a late-arriving request, and the same key with a different intent.
+24976	If the downstream side does not support idempotency, verification can go through a query for a unique business record; where no unique identification is possible, all that is left is to keep it unknown and hand over to a person, with no promise that nothing is duplicated. An outbox can keep the local state and the pending event consistent, but whatever finally consumes the message still needs deduplication or idempotency.
+28041	Follow-up: is generating a new UUID on every retry not safer?
+18457	It does exactly the opposite: it dresses the same intent up as a new action. A stable key should cover one business intent and be carried over by retries; a new key is for when the user really starts a second action. "The same key with changed arguments" also has to be rejected, or duplication and modification get confused.
+27925	Follow-up: does idempotency mean returning exactly the same bytes every time?
+10806	It does not have to. In business terms the same result can carry a different request-tracing ID; but the response should state clearly that the operation has completed, which business object it belongs to, and what the current state is. Idempotency defines the semantics of the side effect, not merely equality of HTTP text.
+7540	E41: how to read this result, rather than only looking at "pass"
+17695	The crash exit code only marks where the fault was injected; what matters is how many side effects there are after recovery. When the downstream side has committed and the upstream side has not booked it, redoing the work without a stable idempotency key produces the effect twice.
+24880	Self-check:</strong> the log transaction and the downstream action are not in the same atomic boundary — so why is writing pending first still not enough to guarantee a single execution?
+10613	A crash can come after the downstream side succeeds and before the log says done, and at recovery pending alone cannot tell you whether it happened. It needs downstream idempotency, a business check, or keeping it unknown; a local log transaction cannot roll back an external action.
+12774	Start by keeping the two ledgers apart
+25966	Ledger one is the downstream world: the file has been replaced, the email has been sent. Ledger two is the agent's own execution log, for instance
+10012	. The two are usually not inside the same transaction. When the crash comes after the downstream commit succeeds and before the agent's log is updated, recovery knows only that "there is no record of success", not that "there was no successful action".
+18855	Split the state out explicitly into
+10674	does not mean it must have failed, and does not mean success may be declared. It means that it has to be checked, that an idempotency mechanism has to be used, or that a human decision has to be asked for.
+15390	What one retry key should stand for
+19954	In the teaching example the operation key K is decided by the logical identity of the action, not generated as a UUID for each network attempt. A retry uses the same K, and only when the downstream side checks inside one transaction whether K has been handled and saves the result can deduplication be reliable. Saving "I remember doing it" locally in the agent does not cover the window where the local side crashes after the downstream commit.
+17694	Crash point
+10611	The downstream fact
+13657	Before admission
+22136	Not executed
+28534	It can be started after revalidation
+25834	After the request is sent, before the reply
+12784	Query by K first; do not write again blind
+10614	After the downstream commit, before the log
+14880	Fetch the result for K and record it afterwards
+14794	After both sides have finished
+16156	Reuse the confirmed result
+20094	A subtle distinction in file operations
+14659	Atomic replacement keeps a reader from seeing half a file, but it does not prevent overwriting someone else's update by itself. Read r7, build a patch, have someone else write r8 in the meantime, then replace atomically, and r8 can still be overwritten. Use a coordinated version check and replacement, or storage that supports conditional updates. Computing a hash before the check and then writing without a lock still leaves a race.
+28556	A retry has a budget too
+7695	Three retries in the HTTP client, three in the tool layer and three more in the agent can produce 27 attempts in the worst case, not 3. Tell a transient failure, a permanent argument error, a permission denial and an unknown result apart; share one total budget, back off, and keep the original error. Do not write "keep going until it succeeds" as a loop with no terminal state.
+20961	The local verification uses temporary files or SQLite rather than real payments and real email. It demonstrates how the state machine and the idempotency algorithm behave under a constructed fault; it does not show that any external service offers the same guarantee.
+19346	Even with a cancellation receipt in hand, the external fact cannot be erased
+11936	Code can cancel a call that has not been admitted yet, and it may also go on tidying up after certain actions have completed. For external side effects such as a database write, a publication or a payment, the real guarantee for a retry has to rest on a downstream unique key, a conditional update or a business check. Codex's local cancellation path is not an exactly-once protocol for every external system.
+28828	The temporary-SQLite counterexample in the tests shipped with this book deliberately separates the commit from the confirmation: the action is committed and the process exits before the confirmation is written; a second execution without a stable business key duplicates the side effect. The experiment is an original teaching program, not a run of the Codex executor. The right question at recovery is "has the downstream side already accepted this business action", not "does the model still remember doing it".
+8252	Q051｜How do CAS and atomic replacement keep a local file change from being overwritten? How does that work together with a database transaction?
+27454	What to know first for this question</span> Recovery reads the persisted events and the current external state and reconciles them; it is not just restoring the conversation. Propagating a cancellation also needs it made clear which actions can no longer be revoked.
+23560	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/38.html">Lesson 33 · Reading a production run
+11738	Update only while the version or the current value still matches what was expected. Example: it stops an old analysis from overwriting a new change, but it does not cover every external side effect.
+18151	-style update applies the change only while the current version still equals the expected version; atomic replacement keeps a reader from seeing half a file. They address concurrent overwriting and visibility respectively, but they cannot by themselves make the file system and another database into one atomic transaction.
+10323	An editor's safe write chain
+25881	Read the file content old and the version v; produce new from old; write to a temporary file in the same directory; flush and fsync where needed; under a controlled concurrency policy, confirm again that the current version is still v; replace the target atomically; record the new version and the result of the action. The rename and persistence semantics of different operating systems and file systems have to be looked up in their implementations; one Python function cannot be taken as a cross-platform guarantee against power loss.
+22347	Note that between "check the version first, then replace" there can still be a
+23504	window. If several writers are at work at once, you need a lock, a controlled single writer, or storage that really supports conditional writes. Comparing a hash once inside the application cannot by itself stop someone else changing the file after the check.
+20093	When the file has been replaced but the task database has not recorded the success, recovery can compare whether the target content equals the new content that action expected, and then record the result afterwards; if the file has been changed by someone else again, it cannot simply be replayed. Keeping the old version and the expected new version helps tell executed, not executed and conflicting apart. Not every file operation has to be raised into an elaborate transaction, but a shared critical file should have an explicit policy.
+14656	Why writing a file atomically and "writing after checking the version" are still one step short
+26495	Input and conditions.</strong> Process A checks the file version v7 and is about to write v8; after its check and before its replacement, process B has already changed the file to v9.
+20222	An unprotected check
+7051	A sees v7, as expected
+27241	That observation holds only for that moment.
+18016	A concurrent insert
+7124	B writes v9
+7049	A's check result is now stale.
+7047	A swaps the new file in with os.replace
+25912	No reader sees half a file, yet B's v9 has been overwritten.
+21834	Correct coordination
+15455	Do the check and the replacement inside the same lock, or use storage that supports version-conditional updates
+12459	That keeps another write from slipping in between the comparison and the update.
+19351	The persistence boundary
+17692	Getting it onto disk across a crash may also need fsync and the like
+15245	Visible atomicity is not durability through a power loss.
+18996	Join the steps up.</strong> Atomic replacement settles the half-written file, CAS the lost update, a transaction the consistency of several items, and persistence whether it is still there after a crash.
+26729	Limits and counterexamples.</strong> The file system, the platform and the scope of the lock all affect the guarantee; a lock held only inside one process cannot stop another writer that does not honor it.
+27800	Follow-up: why does formatting after the tests pass also call for care?
+21455	Formatting or code generation still changes the object that was verified, and can introduce a change in meaning, a difference in environment or an incomplete write. The simple, safe procedure is to finish every intended change and then verify against the final state; if something is changed after verification, at least rerun the affected checks.
+27982	Follow-up: can a database transaction protect a shell command?
+20048	A database transaction protects only the reads and writes inside it. A shell changing a file, calling the network or sending a notification is not inside the transaction, and a database rollback cannot undo those side effects. Do not wrap a transaction around an external command and then claim end-to-end atomicity.
+27679	Follow-up: after a CAS conflict, can the model be left to merge automatically?
+15110	It can be a new step in the task, but it has to read the latest content first, understand both sides' changes again and verify them. A conflict must not be treated as a transient error and retried unchanged. The result of an automatic merge also needs a new version condition, to prevent another overwrite.
+8255	Q052｜How does a long task continue after a restart? What are Retry, Resume, Replay and Cancel?
+27504	What to know first for this question</span> A retry policy has to be designed separately for read-only, idempotent, irreversible and unknown-result cases; backoff reduces the pressure but does not settle a duplicated business action.
+23598	Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+8743	Retry attempts an operation again; Resume continues a task from a known state; Replay plays the records back to rebuild or to diagnose; Cancel asks for the remaining work to stop. They are not interchangeable, and in particular replaying a log must not turn automatically into executing the side effect again.
+18451	A recovery procedure follows the facts
+15586	At startup, read the task goal, the current checkpoint and the outstanding calls; check whether the actual artifacts exist and whether the versions match; query for any unknown side effects; rebuild the smallest sufficient model context; and continue only from the next unfinished step. A read-only result already obtained can be reused within its validity, and a write already completed should not be redone because the chat history is missing.
+28523	When replay is used for debugging, recorded tool results can stand in for real execution, to see how the model or the harness handles them. If a replay has to reach a real external system, the environment and the permissions have to be isolated explicitly, so that "testing the recovery" does not send the email or deploy again.
+14908	Canceling has to stop new actions, propagate the cancellation signal to the tools still running, and wait for or record the final state. The model's generation stopping, the UI closing, the process exiting and the remote task stopping are different events. The user no longer seeing progress does not mean the task has been rolled back.
+28553	How retry, resume, replay and cancel are told apart
+26167	Input and conditions.</strong> A task has executed as far as event 20 and tool c7 has succeeded, but the interface has lost its connection; another call c8 is still running outside.
+28552	Retry
+13578	Send a request again
+18356	Whether c7 is idempotent has to be judged; a dropped interface connection is no reason to execute it again.
+11882	Rebuild the current task from the checkpoint and the events after it
+23083	The aim is to carry on, without repeating an action that has already succeeded.
+28519	Replay
+18759	Apply the events to the local state machine again
+22786	In the ideal design it only rebuilds state and does not send the external write again.
+14904	Cancel
+12601	Stop future scheduling and make a best effort to cancel c8
+27622	If the remote side has already executed, the result still has to be recorded or checked.
+17899	A canceled task can still have side effects that have happened
+20582	The account of the final state has to distinguish stopping the work from undoing the result.
+19017	Join the steps up.</strong> One "try again" button that mixes all four meanings readily duplicates a change or loses a fact.
+26691	Limits and counterexamples.</strong> Cancellation is usually cooperative and is no guarantee that an external operation already committed is withdrawn; nor can compensation necessarily restore every side effect.
+27975	Follow-up: why does exponential backoff also need random jitter?
+16256	When a great many clients fail at the same moment and then retry on the same schedule, they hit the service in sync all over again. Random jitter spreads the retry times out. There should also be a maximum number of attempts, an overall deadline and a classification of errors, so that a permission or argument error is not backed off again and again.
+27682	Follow-up: how often should a checkpoint be taken?
+14876	It depends on the cost of redoing the work and the risk of side effects. Persisting at every
+19352	is usually unnecessary; the key stages, expensive computations and either side of an external write are more worth saving. Too high a frequency adds I/O and complexity, too low a frequency adds to what recovery loses.
+27952	Follow-up: how is a successful recovery verified?
+21527	Check that no side effect was duplicated, that no necessary step was skipped, that the key constraints still hold, that the artifact versions agree, and that the final verification really ran. "The program can start again" on its own is not a successful recovery of the task.
+17864	Engineering deep dive · E42 · continues Q084
+28985	Prerequisite: <a href="../foundations/33.html">Lesson 26
+28558	A retry budget has to be counted along the call chain
+27360	"Retry three times" here means specifically <strong>at most 3 attempts per layer</strong>, so that the first attempt and the number of retries are not mixed together. The outer agent makes 3 attempts, the SDK makes 3 per attempt, and the proxy makes 3 more per attempt, so the worst case is 3×3×3=27 leaf calls. That number is a local enumeration and multiplication under fixed assumptions, not any service's default.
+28557	Retry amplification can add pressure during a failure and turn a brief error into sustained overload. SRE practice on handling overload stresses queues, useful work and deadlines; health is not recovered through an unbounded backlog.
+10442	One call needs a shared deadline
+22037	With 30 seconds set independently at every layer, retries layer upon layer can drag the user's wait out into minutes. Pass the remaining deadline down, so that a child call's timeout does not exceed the budget left; backoff and jitter spend that budget too. Before deciding to retry, check the kind of error, whether the action is idempotent, the time left, the cumulative count and the current authorization together.
+28133	Backoff deals with requests arriving in sync, not with a non-idempotent side effect. If the result is unknown after a call times out, check it first or carry the downstream idempotency key over; a key should not be swapped automatically to "get around the duplicate". The same key with different arguments has to be rejected explicitly.
+14905	Canceling is not withdrawing a request that has already reached the downstream side
+22925	After the user cancels or the task epoch changes, stop starting new actions; an action in flight may already have committed, and should be recorded and checked. The recovery logic has to distinguish not started, started with an unknown outcome, and finished; writing cancelled for all of them erases the changes that really happened.
+27882	Follow-up: which errors are suitable for a retry?
+20472	A transient connection failure, or rate limiting explicitly marked as retryable, may be suitable, but confirm first whether the call could already have executed. An invalid argument, a permission denial or an incompatible schema will usually not improve by being sent again unchanged. If the model is to change the arguments, that counts as a new decision step and the permissions have to be verified again, rather than being a transparent retry in the SDK.
+27908	Follow-up: how is "recovery fails → recover again → endless loop" avoided?
+18441	A recovery action gets a budget and a state it can end in as well. Where the missing evidence really does make recovery impossible, mark the scope, keep the risk on record, and skip it or hand it to a person, rather than letting one broken task block all the work behind it. A read-only task that can continue and a side-effecting task that cannot be retried have to be handled separately.
+29063	The acceptance procedure
+22342	Inject a dropped connection, rate limiting, a slow response, a timeout after the commit, a user cancellation and a late-arriving old result; then check the actual number of downstream calls, the idempotency key, the total wall-clock time and the final state. Mocking a single "return 500 then 200" is not enough to show that recovery is correct.
+7544	E42: how to read this result, rather than only looking at "pass"
+12679	First tell "total attempts" from "extra retries". Multiplying the caps at each layer can expand one top-level task into a great many calls at the bottom; use one unified budget instead of letting every layer retry eagerly on its own.
+24866	Self-check:</strong> the outer layer, the SDK and the proxy each make at most 3 attempts — so why can we not simply say "the system retries at most 3 times"?
+29002	With budgets nested, the worst case downstream multiplies out to 27 attempts. Share one total budget and deadline along the call chain, and make clear which layer is responsible for retrying, above all so that a non-idempotent operation is not amplified.
+22317	Follow this chapter through its objects and states</a><a href="#topic-2">A timeout tells you nothing arrived, not that nothing happened</a><a href="#Q081">Q049｜Why must there be an unknown state after a tool times out? Why not mark it failed straight away?</a><a href="#Q082">Q050｜How is an idempotency key designed? Why can a local deduplication table not guarantee Exactly Once across systems?</a><a href="#Q083">Q051｜How do CAS and atomic replacement keep a local file change from being overwritten? How does that work together with a database transaction?</a><a href="#Q084">Q052｜How does a long task continue after a restart? What are Retry, Resume, Replay and Cancel?

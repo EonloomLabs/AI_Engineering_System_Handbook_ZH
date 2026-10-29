@@ -1,0 +1,642 @@
+23929	Lesson 50｜One Transformer forward pass: tensor by tensor, operator by operator — AI Systems Engineering
+24262	Systems</span><span>about 9.3k characters</span><span>Figures and item-by-item notes
+21032	Every matrix expression in this chapter is made of two things: multiplying numbers by different coefficients and adding them up, and rearranging those numbers. Attention first finds the matching scores, then turns them into shares that sum to 1, and finally mixes the content according to those shares.
+23842	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/08.html">Lesson 43 · reshape, transpose, broadcast</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/10.html">Lesson 45 · The smallest neural network model</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/14.html">Lesson 49 · Fitting attention into one layer
+27519	A quick check before the deep reading:</strong> first work out by hand the scores of q=[1,0] against the two rows of K, then compute the result with V=[[10,0],[0,20]]. Do not treat Q, K and V as three separate input texts.
+21031	Where each table in this chapter comes from and goes to
+29042	First, keep <strong>parameters, functions and intermediate results</strong> apart. The names below are used in this chapter's local formulas; the same letter in another formula has to be read again according to its definition there.
+23010	Produced by what, handed to what
+26555	Input or intermediate-result arrays
+9093	X is the current layer's input; U/R/Y are names given to results once the corresponding equations have been computed, not extra parameters. U may be redefined in different passages.
+21736	The model's coefficient tables
+14001	Load the trained parameters; applied at each position, they produce a new representation. F11 demonstrates Q/K/V cell by cell.
+15262	Callable operations or sub-networks
+19588	They take an array and return an array; whether a function holds parameters inside is decided by the structure.
+13765	Scores, shares, output and the read constraint
+8904	S comes from comparing Q and K, A from softmax, and O from A mixing V; M is built from the read rules.
+17655	Size integers
+18643	Batch size, number of positions, hidden width, number of heads, per-head width; not five input texts.
+22628	A special-case matrix, normalization parameters and a stability constant
+7743	I leaves values unchanged through multiplication; γ/β are learnable; ε is a small positive number that is set. A demonstration with W=I must not be taken as a general rule for real models.
+21025	This chapter works mainly with a teaching decoder-only structure using␣
+24412	. The original 2017 paper was an encoder-decoder architecture;␣
+19433	Normalized by the root-mean-square scale, usually without subtracting the mean. Example: [1,3] divided by sqrt(5).
+20378	␣are later common choices; these combinations must not be described as the original paper's implementation, or as one shared by every commercial model. The shapes and numbers throughout this chapter serve to explain the algorithm; they are not an actual serving configuration.
+8318	Q073｜Once a string of tokens enters a Transformer, which computations does it pass through, and in what order?
+27428	What to know first for this question</span> Start with what each axis of X means, then check that the inner lengths of the multiplication are equal. A transpose rearranges the layout; only multiplying by weights combines the values. Identical shapes alone do not make the contents identical.
+23771	Lesson 36 · A row of numbers, a table and a stack of tables</a><a class="pill" href="../foundations/07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/08.html">Lesson 43 · reshape, transpose, broadcast</a><a class="pill" href="../foundations/10.html">Lesson 45 · The smallest neural network model</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/14.html">Lesson 49 · Fitting attention into one layer
+17536	For each layer, first normalize the current hidden state, then project out Q/K/V; add the position mechanism and the visibility constraint, compute attention and mix the␣
+29500	; after the output projection it is added back as a residual; then come normalization and the feed-forward network, with a second residual. After every layer has been repeated there is a final normalization and a vocabulary projection, and the last position's␣
+22875	are used to predict the next␣
+18850	Pinning down the identity of each tensor
+29361	, for now using␣
+29132	, 4 positions with 8 numbers each. Note: one position is one token, not necessarily one word.
+27188	What this step actually changes
+19659	Controls the feature scale at each position; does not mix different positions
+15452	Maps the same input into three subspaces: matching, being matched, and being read
+19316	Split into heads and transpose
+6348	2 heads, each handling 4 positions and 4 feature dimensions
+17244	Apply the position transform to Q/K
+15456	Same as above
+25432	Makes the relevance include the positional relation
+22010	Scores every query position against every visible key position
+22178	Along the last dimension,␣
+22011	Each query's row of scores becomes read weights
+19466	Weights the historical Values by each row's weights
+15313	Merge the heads, project with␣
+19294	, residual
+18782	Fuses the per-head results back into the main hidden space
+25129	A family of functions that measure the size of a vector; the L2 norm is the square root of the sum of squares. Example: the L2 norm of [3,4] is 5.
+9576	→residual
+17537	Applies a nonlinear feature transform at each position
+23976	The two "4"s in row 5 mean different things: one is the query length, the other the key length. In cached decoding they become␣
+11253	␣and the total history length, and must not be hard-coded just because they happen to be equal during training. The softmax in row 6 has to be over the key-position axis, because that decides which positions the current token reads from. A softmax along the head axis may be shape-legal, but the algorithm has already been swapped out.
+10361	Once one layer ends, its output is the next layer's input. The next layer projects again with its own Wq/Wk/Wv and does not reuse the previous layer's K/V. Adding layers does not mean repeating the same search several times; it means transforming further on a representation that has already fused the context. The final vocabulary projection is generally not each head sampling a word of its own: the whole layer's representation is fused first, and then the entire vocabulary is scored.
+27756	Follow-up: why does prefill usually have to compute every input position rather than only the last one?
+20529	In layer 2 the last position has to read the layer-2 K/V of the earlier positions, and those K/V come from the hidden states those positions hold after layer 1. So one cannot take the raw␣
+23148	␣and skip straight over the intermediate layers of every history position. A causal mask gives the dependencies among history positions a direction, but it does not remove the need for them as input to the later layers. An implementation may leave out intermediate logits it does not need; it cannot generally leave out the work of building the history representation.
+27676	Follow-up: the attention output has already mixed information, so why do we still need␣
+22004	Each head produces its result in its own subspace, and concatenation only places them side by side;␣
+12267	␣lets the model learn how to combine linearly across heads and map back to the residual width. Without␣
+18044	␣it is not mathematically impossible to build a model, but the expressive structure changes and training and evaluation have to be redone; it cannot simply be deleted from an existing model.
+27934	Follow-up: how do you tell whether you really understand this chain?
+24473	Given␣
+15542	␣you can write down every shape, point to the softmax axis, the transposed axis, where the residual addition happens, and which position finally predicts the next token. Being able to recite "Embedding—
+9505	" is not yet enough to debug a real implementation.
+12917	First, say what this lesson is preparing
+19560	From here on you will often see
+10902	␣is not some new mysterious computation; it is simply many "multiply the matching entries and add them up" operations happening together. To understand where Q comes from, first see exactly which inputs one particular output cell uses.
+21069	This lesson uses the actual parameters of the worked model rather than setting up a separate multiplication model. At t=2 of sample 0, the raw X is
+10070	. Foundations has already computed the RMSNorm result cell by cell: N1=
+10237	. For now take this row as given and concentrate on how it is multiplied by Wq; <strong>it comes from running RMSNorm on that same X along the feature axis, and the detailed arithmetic is in the normalization subsection of Foundations
+13830	The initial Wq: four input features, four output query features
+8452	Query output j=0
+8453	Query output j=1
+8454	Query output j=2
+8455	Query output j=3
+26567	Input feature k=0
+26568	Input feature k=1
+26569	Input feature k=2
+26570	Input feature k=3
+15066	Computing just the single cell Q[0,2,0]
+19344	Take the whole row of N1 and pair it with column 0 of Wq. Multiply each pair and add the four products:
+27384	The 0 here is a query-feature index, not token 0. t is still fixed at 2. "The current token gets a query vector" means computing once for each of columns 0, 1, 2 and 3 of Wq, which gives four results.
+15453	The same input row against the four columns of Wq
+9201	k=0 product
+9202	k=1 product
+9203	k=2 product
+9205	k=3 product
+23194	Sum
+26588	Output j=0
+26589	Output j=1
+26590	Output j=2
+26591	Output j=3
+11498	Why the inner dimensions must match
+10374	A row of 4 input numbers has to pair with a column of 4 coefficients; if the coefficient column held only 3 numbers, one input would have no counterpart. So
+29481	; counting the batch in as well gives
+10059	. The same W is used for every sample and every position; this step <strong>does not mix different tokens together
+19298	A projection changes the features at each position, not the number of positions
+15772	Fix one row
+14903	Take the 4 features of sample 0, position 2.
+12343	Take the columns in turn
+9064	Wq has 4 columns, each a set of 4 coefficients.
+15654	Four dot products
+22025	Each column yields one number, and together they form the row of 4 numbers that is q[0,2].
+28359	Go through every row
+17291	Repeat the same rule for the other 9 training input positions to get Q[2,5,4].
+23321	Real mixing across positions happens at attention's A×V; it does not happen in this linear projection.
+24343	A linear projection, a bias and a nonlinearity are not the same thing
+10472	A general linear layer can be written
+10136	. This model has no b. A linear projection recombines the input with fixed coefficients; negative coefficients are legal and the coefficients need not sum to 1, so it cannot all be read as "what percentage each contributes".
+16358	If two successive linear transforms have no nonlinearity between them,␣
+29274	, they can be merged into one; add a ReLU that sets negative values to 0 and the output can no longer be replaced equivalently by one fixed matrix across all inputs. The matching Foundations subsection of this book shows how positive and negative cells change the feed-forward result.
+11946	The most common transpose discrepancy in code interfaces
+20808	This book stores W with shape
+29218	, and multiplies on the right with
+5860	stores its internal
+5857	as
+29399	, computing
+10117	. When porting a hand-written model to Linear, assign
+29406	, rather than copying it as it stands. With a square matrix both forms are shape-legal but numerically different, so "no shape error was raised" does not prove that the two implementations agree.
+8321	Q074｜Why are Q, K and V split into three? What does attention actually compute?
+27409	What to know first for this question</span> Q is the numbers with which the current position states what it wants to match, K is the numbers of each candidate being compared, and V is the content gathered according to the shares; all three usually come from different transforms of the same input.
+23848	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step
+8460	Q and K together decide "how a position takes information from the visible positions", and V decides "what the content taken is". They come from learnable projections; their meaning is not a human-fixed "question, keyword, answer". The attention output is a weighted mixture of Values — it does not generate a word directly, and it is not an exact database query.
+22847	Working through an example you can compute by hand
+11973	Let the inputs at the three positions be␣
+29273	, with a single head and, for now, no normalization and no positional rotation. Let␣
+24069	The third position can see all three positions. The three dot products are␣
+29440	, divided by␣
+15519	␣giving␣
+9996	. Softmax gives about␣
+10018	. So the output at the third position is:
+21131	The weights sum to 1 over the three positions, but the output is not any one original Value: it is a mixture. That is why the token with the largest weight cannot simply be called "the only cause". The residual, the other heads, the feed-forward that follows and the changes between layers all affect the final output as well.
+25024	If␣
+19887	␣is changed while Q/K are left alone, the read proportions can stay the same while the content read changes; if only Q is changed, the current query distributes the read proportions differently. Keeping Q/K/V separate lets the matching space and the content space serve different purposes. Forcing all three to share reduces the parameters and changes the inductive bias; it is not equivalent to the standard structure.
+24019	The first position sees only itself, so the weights should be␣
+29496	; the second position sees only the first two. This example also shows that the causal mask and content relevance are two separate mechanisms: a token that is highly relevant but lies in the future must still be masked out.
+14991	What changing only Value changes, and what changing only Query changes
+26266	Input and conditions.</strong> Take q=[1,0], k0=[1,0] and k1=[0,1], with the original v0=[10,0] and v1=[0,20], width 2. The original attention shares are about
+12403	Keep Q/K
+18748	Multiply both Values by 2
+22356	The attention shares are unchanged; the output goes from about
+18438	Restore Value
+18716	Change q to
+22576	The dot product goes from
+5870	to
+28524	Softmax again
+20193	The new shares swap over
+25391	Compute the new output
+14222	The original Values mixed by the new shares
+18464	Comparing what they mean
+9026	Value changes the content; Q/K change the read allocation
+11367	The two paths have different effects; V cannot be read as another name for K.
+19240	Join the steps up.</strong> This comparison shows how the three divide the work far better than reciting "Q is query, K is key, V is value".
+26644	Limits and counterexamples.</strong> Q/K/V are given by hand here and their components carry no fixed human meaning; this example is not cosine retrieval.
+27716	Follow-up: does the "self" in self-attention mean looking only at itself?
+10844	No. It means that Q and K/V come from the same sequence, or from the same source of representation; different positions in the sequence can still read one another, and the range is decided by the mask. In cross-attention Q usually comes from one sequence and K/V from another — a decoder reading an encoder's output, for example. A decoder-only chat model does not need cross-attention in every layer.
+27726	Follow-up: why not just use the raw X as Value?
+23142	Using X directly is a variant one could design, but a learnable V projection lets the model choose a content representation suited to being aggregated, and it can also change the per-head width. Existing weights depend on the structure used in training, so the V projection cannot be deleted while the same result is expected. Likewise K is not a fixed index table: the K at each position depends on that layer's contextual representation.
+27674	Follow-up: is attention simply "semantic similarity"?
+16484	It is a matching function the model has learned; it may express positional copying, syntactic dependency, pattern matching and so on, and it need not agree with human semantic similarity. The dot product is also affected by vector scale, and it is usually not a cosine retrieval over the embeddings of external documents. Calling both of them retrieval has value as an analogy, but the algorithm and the evaluation metric must not be mixed up.
+17825	Engineering deep dive · E03 · continues Q006
+28978	Prerequisite: <a href="../foundations/07.html">Lesson 42
+23927	Lesson 49</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+12802	First, be clear which part of the computation chain the interface sits in
+23025	's Q is a Query that has already been projected. A high-level MultiheadAttention interface may take the pre-projection input and do the projection inside; the low-level SDPA takes Q/K/V that have already been projected and arranged into head dimensions. Calling both interfaces "attention" does not remove this boundary. Read the interface's input shape, which parameter tables belong to it and who is responsible for the scaling, and then decide which step the caller performs.
+24051	The first: a square matrix lets a transpose error pass silently
+20000	Textbooks use right-multiplication notation and write␣
+29149	, where W has shape␣
+29453	; PyTorch Linear stores the parameter as␣
+10131	. This book takes␣
+10147	. The correct output is␣
+29515	; transposing once more by mistake gives␣
+10065	. Because W is 2×2 both can be multiplied, so a shape test catches nothing at all.
+22431	A test has to use an asymmetric and preferably non-square weight, and check the actual values. Weight conversion, splitting into heads, merging heads and similar paths should all be tested with this kind of small "runs but is not equivalent" matrix rather than with the identity matrix alone: the identity matrix hides many transpose errors.
+24105	The second: the scaling is done twice
+29111	By default SDPA internally scales the dot product by␣
+10206	. If Q has already been divided by␣
+29265	␣before the call and the default SDPA is then used, the scores as a whole are shrunk to␣
+10227	. That changes the softmax distribution; it is not a harmless rearrangement. If a custom scale parameter is set, the semantics of the current version have to be checked; do not handle it once in the tensor and once again in the function's options.
+24075	The third: model.eval() does not take over a bare function's arguments
+7945	A Module's eval mode changes the module's behavior; it does not magically turn an arbitrary function argument into 0. The PyTorch documentation states explicitly that SDPA applies dropout according to␣
+18079	; at inference the caller has to pass 0.
+20953	A local test put the custom module into eval but still passed 0.5; changing the random seed still changed the output. Passing 0 fixes it. This is a check of the actual PyTorch 2.10 CPU function, not an explanation of randomness in a commercial model.
+27884	Follow-up: is fixing the seed enough?
+15768	Fixing the seed helps locate a random path, but it must not be used to cover up a dropout that was switched on by mistake. Different kernels, precisions and batch shapes can still take different numeric paths. Switch off the random operations that should not be there first, then compare within a tolerance; only when bit-for-bit reproduction is genuinely required should the device and deterministic algorithms be constrained as well.
+28105	Follow-up: why can returning the attention weights be slower?
+25835	Asking for the full weights can mean the implementation has to materialize a large intermediate that could otherwise have been skipped, and it may even change which fast paths are available. When diagnosing, record␣
+9972	, the training state, the dtype, the mask type and the backend; do not compare function names alone. A performance conclusion has to be measured on the target hardware.
+7414	E03: how to read this result, rather than only looking at "pass"
+21060	Each sub-record in this section fixes its own input and changes the projection, the scaling or the dropout on its own. Do not take the different sub-records as one continuous forward pass; an interface with the same name may receive the original representation, or Q/K/V that have already been computed.
+24858	Self-check:</strong> why can an attention comparison test built on the identity matrix be too lenient?
+14119	The identity matrix is the same when transposed, and some repeated projections leave the values unchanged, so a wrong implementation passes easily. Use asymmetric parameters and distinguishable inputs, and check the actual numbers, the mask and the dropout state.
+13892	Why we still cannot say "training is done" at this point
+18500	We have only run one forward pass with the initial parameters. No parameter has been adjusted against a label. The initial model can produce scores and probabilities too, which shows that the computation chain runs — not that it has learned a language.
+21072	This lesson puts the objects explained separately above into one ledger. The notation is unified: N1 is the result of the first normalization, R the attention residual, N2 the result of the second normalization, H the representation at the end of this layer, and F the representation sent to the vocabulary head after the final normalization. In the code trace they are called n1, residual, n2, hidden and final.
+23483	Program record
+11848	Computed from what
+25479	Training batch shape
+23630	Actual value at t=2 of sample 0
+21232	look up E[input_ids]
+21233	look up P[position_ids]
+9235	masked softmax along the key axis
+9322	softmax along the vocabulary axis
+16715	The full forward pass: the two residual bypasses cannot be left out
+19910	Enlarged figure: the full forward pass: the two residual bypasses cannot be left out
+13074	The shared forward pass: parameters enter from the side; the residual is kept and rejoins the original representation
+15635	Which steps mix positions and which only mix features
+7607	The embedding and the position table fetch rows by address; the projections, RMSNorm and the FFN compute features position by position; QKᵀ scores pairs of positions; A×V mixes along the position axis. The residual only adds the same feature at the same position. Being clear about this division of work lets you check causality: if some step accidentally takes statistics across T, or concatenates across the batch, information that should not be read can be mixed in.
+20082	The whole chain seen from one position
+23234	The other positions left out of the display are not left out of the computation; the other Keys and Values that attention needs come from the same batch's forward pass.
+11840	Going from one layer to many: what exactly is added
+22035	Every layer has its own set of attention, normalization and FFN parameters. The previous layer's output H enters the next layer, and a deep layer's K/V come from that layer's current representation rather than from reusing the bottom embedding over and over. The output head is normally used after the last layer; there is no requirement for each layer to produce a word first and pass it on.
+17675	More layers bring more transformations of the representation, and also more parameters, activations, computation and cache. One cannot simply write 32 layers instead of this example's 1 while still treating one set of K/V, or one W, as the result for every layer.
+11532	Why training can compute five positions at once
+27247	The inputs at these positions come from a real training sample and are already given; the causal mask makes sure each row's result depends only on the permitted prefix. Running them in parallel means arranging together the arithmetic that does not need any unknown future result, <strong>not that the model already knows what the next free generation will choose
+15933	At inference, until the first new token has been chosen the next round's input ID does not exist, so the whole unknown answer cannot be fixed in one go by the same kind of teacher forcing. Speculative decoding can propose a draft and then verify it, but it still has to handle the boundary between acceptance and rejection, and it does not overturn this dependency.
+21523	Checking whether the forward pass is really understood
+12258	You should be able to point at the ledger and answer: which column of U does one logit come from? Which row of F comes before U? Which row of H comes before F? Where do H's two addends each come from? Which Values did attention read? And which N1 and which parameters produced those Values?
+16346	If the only answer available at some step is "the model worked it out itself", go back to the number tables of the matching lesson. <strong>Understanding is not reciting the names of formulas; it is being able to trace one output cell back to the inputs and the parameters.
+8325	Q075｜Why divide by √d? Why softmax? Why must the maximum be subtracted for numerical stability?
+27482	What to know first for this question</span> A dot product gives a score that can be positive or negative; scaling controls its magnitude; softmax turns the scores into weights that are non-negative and sum to 1. A weight is not confidence in a fact.
+23874	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step
+15878	Under a common initialization approximation, the variance of a d-dimensional dot product grows with d; dividing by √d keeps the magnitude from expanding linearly with the dimension and lowers the risk of softmax saturating too early. Softmax turns the scores into weights that are non-negative and sum to 1. Subtracting the maximum leaves the mathematical distribution unchanged while markedly lowering the risk of exponential overflow.
+11875	Deriving the scaling from the variance, instead of just memorizing the conclusion
+22668	␣be independent with mean 0 and variance 1, and the dimensions independent; then␣
+10162	. The dot product␣
+29376	, with standard deviation␣
+10114	. So␣
+23044	␣has variance 1. Vectors after real training do not satisfy these conditions strictly, but this explains the design motivation for the scaling; it is not an exact estimate of the variance of each sample.
+24992	If the scores become␣
+29158	, softmax puts almost all of its mass on the first entry. The derivative of softmax contains␣
+29319	, so when p is extreme many gradients become very small. A model that is too sharp this early in training learns with difficulty. The scaling is one part of stabilizing training; it does not replace normalization, initialization, the learning rate or the other factors.
+17280	For any constant c, we have␣
+10051	. Taking␣
+15524	␣makes every exponential at most 1, which avoids␣
+22535	␣overflow. This is not "to make the probabilities smoother", because in exact mathematics the distribution does not change at all. It is a numerically stable implementation of the same formula.
+10437	One stable softmax computation, plus a fully masked counterexample
+26248	Input and conditions.</strong> The scores are
+10106	. In a common floating-point environment computing exp(1002) directly overflows, even though the target probabilities themselves are not large.
+13681	Subtract the maximum
+14928	becomes
+18540	Every exponential is ≤1.
+22126	Compute the probabilities
+11247	Compared with
+5895	it gives exactly the same mathematical distribution
+25348	Explain the invariant
+24472	Add the same constant to every score
+13739	Numerator and denominator are both multiplied by exp(c), so the ratio is unchanged.
+28629	A bad input
+24968	If masking turns it into
+10774	There is no option left, so ordinary normalization can no longer be applied.
+23473	What the program does
+19958	The teaching function raises an explicit error when every value is non-finite
+28759	This keeps NaN from slipping quietly into the next layer.
+19173	Join the steps up.</strong> A stable implementation changes the numeric path of the expression, not the target distribution; it cannot repair the semantic error of having no legal candidate at all.
+26753	Limits and counterexamples.</strong> Each production kernel may have its own convention for a fully masked row; the caller should confirm it explicitly rather than relying on this example's exception policy.
+27837	Follow-up: why does a fully masked row so easily produce NaN?
+25022	If every score is␣
+29366	, the maximum is␣
+29388	␣too, and subtracting gives␣
+29381	, so there is no valid normalized distribution. A correct implementation avoids such a query in advance, or settles on behavior such as returning zero or skipping␣
+12184	␣positions. Do not expect "use a stable softmax" to resolve an undefined input by itself. The kernel's own convention has to agree with the mask logic above it.
+27765	Follow-up: why not just use argmax to take one Value?
+23372	A hard selection changes the model's expressiveness and the nature of its gradients; softmax provides a differentiable soft mixture, letting several positions contribute together and letting the matching parameters be updated through the loss. Both sharp and spread-out weights after training can be useful. Some sparse or routing models do use a different selection mechanism, but that has to be designed separately; it cannot simply be substituted for the attention of a network that has already been trained.
+27675	Follow-up: is the softmax in attention the same thing as the softmax at generation time?
+20432	It is the same kind of mathematical normalization, over a different axis and with a different meaning. Attention normalizes over the "visible key positions" to give weights for reading information; the output softmax normalizes over the "vocabulary tokens" to give the probability of the next token. The first does not directly decide which word is output; only the second takes part in decoding and sampling.
+17826	Engineering deep dive · E04 · continues Q007
+23920	Lesson 47</a>. Reading order: confirm the run contract first, then look at the counterexamples and the fix, and finally test the limits.
+20020	Numerical stability has a precondition that often goes unwritten
+13666	Subtracting the maximum eases exponential overflow, but only if the row holds at least one finite score that may take part. If every candidate is forbidden, the correct reading is not "choose one of these candidates" but <strong>this row has no legal distribution</strong>. Visibility has to be dealt with before any numeric trick.
+20726	This book uses two forbidden positions. If the two cells are filled with the finite value␣
+29157	, softmax returns␣
+29494	; there is no NaN, but the forbidden content has been averaged in. If they are filled with␣
+29334	, a hand-written "subtract the maximum" produces␣
+29326	, which gives NaN. The two spellings fail in different ways, so "no NaN" cannot be used as proof of correctness.
+18053	A library's special handling is not a change in the mathematical definition
+20996	In this run, PyTorch 2.10 CPU SDPA was observed to output 0 for an all-False boolean mask, while a hand-written softmax on all negative infinities gave NaN. This <strong>local measurement</strong> establishes only the behavior of that version and that backend; it does not mean that every fused kernel and every dtype behaves the same way. The official documentation likewise asks readers to watch for behavioral and floating-point differences between implementations.
+18399	Which fix to choose depends on what the row is
+16337	If it is a PAD query, its output should generally not be used as a valid token at all: it can be explicitly zeroed or ignored later, and it must be kept out of the loss and out of any pooling denominator. If it is a real query with no readable Key, that is usually a mask, position-offset or indexing error, and the error should be surfaced rather than turned into a uniform distribution. If it is a generation-side constraint that forbids the whole vocabulary, an explicit failure or relaxation policy is needed; a forbidden item must not be sampled quietly.
+12900	First compute␣
+29242	, then branch according to the task's semantics.</strong> Once a safe placeholder has been used so that an invalid row can take part in the arithmetic, the placeholder's result must still be excluded from the business result. Using only␣
+18705	␣to wipe NaN away makes an upstream error hard to find.
+29066	Acceptance should cover four boundary cases
+21815	A normal row with several candidates, a row with only one candidate, a fully forbidden PAD row and a fully forbidden real row must each have their own assertion. Checking that "the weight of a disallowed position is 0", that "the weights of a valid row sum to 1" and that "an invalid row is not counted in the loss" discriminates better than a blanket check that the output is finite. Mixed precision has to be tested as well, because a very large negative number that is finite in one dtype may overflow to negative infinity in another.
+27865	Follow-up: with only one legal Key, is it a bug that the output does not change when Q/K do?
+10640	Not necessarily. With a single candidate the softmax is always 1 and the output equals that Value; a change in Q/K has no competitor to act on. Attention should be tested with at least two visible positions that have different scores and different Values; a single-Key case is no evidence that the gradient path already works.
+27962	Follow-up: if PAD's embedding is set to 0, is a mask no longer needed?
+10819	It does not hold. A zero vector can become a non-zero representation after a bias, position handling, normalization or another layer; and even with Value at 0, PAD can still take a share of the softmax and change the normalization of the valid content. Filling the content with 0 and forbidding participation are therefore two different constraints.
+7418	E04: how to read this result, rather than only looking at "pass"
+12079	Shares of [0.5,0.5] look legal, yet they can let two positions that should be forbidden both take part in the computation. NaN and a zero output are the boundary results of different implementations; check the specific interface and version instead of replacing a test with one general rule of thumb.
+24848	Self-check:</strong> softmax([-1e9,-1e9]) returns [0.5,0.5]. Why is that more dangerous than raising an exception?
+16446	It produces probabilities that look legal while averaging into the output two positions that were forbidden to be read, violating visibility silently. First find out whether a legal candidate exists at all, then handle the row according to whether it is a PAD query or a real one.
+8327	Q076｜Why does a layer need residuals, Norm and an FFN as well as attention?
+27474	What to know first for this question</span> The residual adds the original input back, normalization controls the scale of each row of numbers, and the feed-forward layer applies a transform with a nonlinearity at each position; they do not do quite the same job.
+23899	Lesson 45 · The smallest neural network model</a><a class="pill" href="../foundations/14.html">Lesson 49 · Fitting attention into one layer
+7014	Attention handles the exchange of information between positions, the FFN handles the position-by-position nonlinear transform, the residual provides a direct path for information and gradients, and Norm controls the feature scale. They solve different problems: the FFN is not an optional decoration, and the residual is not a mechanism that guarantees training will never fail.
+18715	Writing one pre-norm layer as two equations
+15993	In this structure the X on the residual main path is not replaced outright by the attention output: what the model learns is what to add to the representation it already has. On the backward pass,␣
+14054	␣contains the identity term I, so the gradient can travel back along a more direct path; this eases the difficulty of optimizing deep networks, but the overall gradient is still affected by each branch's Jacobian, by the training configuration and by the numeric state.
+17538	␣subtracts the mean from the features at each position, then divides by the standard deviation and applies a learnable scale and shift. RMSNorm usually does not subtract the mean: it scales by the root mean square and applies a learnable weight. They do not take statistics across the whole␣
+24502	; so the Norm here is not the BatchNorm common in image networks. Pre-norm normalizes first and then enters the sub-layer, while␣
+13822	␣normalizes after the residual addition, and the optimization behaves differently.
+20449	An ordinary two-layer FFN can be written␣
+29443	: widen first, then the nonlinearity, then back down to d. The SwiGLU form can be written␣
+29190	, where the multiplicative gate controls which features pass. It uses the same set of weights at every position but does not read other positions directly; information from other positions enters this position's representation through attention first, and is only then processed by the FFN.
+14763	The parameter count also shows that the FFN is no small accessory. Ignoring bias, MHA's four d×d projections come to about␣
+14765	␣parameters; if an ordinary FFN has an inner dimension of 4d, its two projections come to about␣
+9987	. If SwiGLU has an inner dimension m, its three matrices come to about␣
+10037	. A particular modern model may use a different m,␣
+29207	, but "attention must take the most parameters and compute" cannot be treated as a general rule.
+20895	Conditions for this example:</strong> an independent single-position demonstration: the main path is x=[2,4]; ε is ignored to keep the arithmetic doable by hand, and LayerNorm has no extra scale or shift; the branch is assumed to give [-0.5,0.5]. That branch value is set explicitly and does not pretend to have been computed by a full attention.
+22181	Compute the mean and variance along the feature axis, then standardize.
+21966	The residual branch
+17263	A correction proposed to the main path, not a replacement for the whole representation.
+15298	A nonlinear transform that each position applies independently with the same set of parameters.
+16957	What is actually computed
+12259	The difference to look for
+16013	Mean 3, variance 1 → [-1,1]
+16018	The mean becomes 0, but this does not make it a probability
+13761	The branch correction
+24477	Given [-0.5,0.5]
+11251	The same width as the main path
+13983	Add back to the main path
+12427	Keeps the original information and corrects it
+13553	Then the FFN
+15158	Can widen, apply a nonlinearity, then narrow again
+10769	Does not read other positions at this step
+18189	Normalization controls numeric scale: [-1,1] allows negative numbers and sums to 0. It must not be confused with softmax, which is non-negative and sums to 1.
+16333	Keeping only the branch value [-0.5,0.5] throws away the main path [2,4]. The residual addition lets the network learn a small correction instead of rewriting all the information at every layer.
+7010	Attention changes how information is linked between positions; the FFN extends the nonlinear processing available at each position. They are not a case of "both multiply by matrices, so one of them is enough".
+11204	Do not conflate:</strong> a real LayerNorm includes ε and may have a learnable scale and shift; the exact [-1,1] in this figure corresponds only to the simplified conditions already stated.
+18736	Delete one residual branch: the shape is unchanged but the function is not
+26200	Input and conditions.</strong> Let x=[2,−1] and the branch F(x)=[0.5,0.25]. Compare the correct residual
+5848	with the wrong overwrite
+21833	The correct forward pass
+28222	Add cell by cell
+28599	The wrong forward pass
+23143	Overwrite with the branch directly
+9377	y=[0.5,0.25]; the shape is still [2], so no dimension error is raised automatically.
+14818	The difference seen backwards
+21839	The correct derivative is I+J_F; the wrong one is only J_F
+18437	The identity path has been deleted.
+25293	A normalization counterexample
+17254	Add a new, untrained Norm to x
+20007	The numeric distribution differs from the original architecture, so it must not simply be added on the grounds of being "more stable".
+29092	How to verify
+15819	Fix the input and compare the intermediate values layer by layer
+12713	Find the first divergence, rather than judging only whether the final sentence reads smoothly.
+19185	Join the steps up.</strong> Structural correctness cannot rest on a shape check alone. Tensors of the same shape can stand for entirely different functions.
+26685	Limits and counterexamples.</strong> The branch output is given for teaching; nothing is inferred about every residual architecture having the same numbers, and the residual is not treated as an absolute guarantee of training stability.
+27687	Follow-up: is the FFN simply a database that stores facts?
+20645	Some research reads part of the feed-forward behavior as a key-value association, but not all knowledge can be located precisely as individual database records. Reproducing a fact depends on the embedding, attention, the feed-forward network, the paths between layers and the context acting together. Treating one neuron as the sole switch for a fact oversimplifies a distributed representation.
+27700	Follow-up: does more Norm mean more stability?
+10922	Adding it at will is not an improvement. A new normalization changes the scale of the information, the residual structure and the training distribution, and it can break the behavior of existing weights. For a trained model, use the original architecture first; studying a variant calls for training and evaluation. In engineering, too, locate where the NaN appears before anything else, rather than adding Norm everywhere the moment a NaN is seen.
+27740	Follow-up: what does a broken layer usually look like?
+9323	A wrong softmax axis may raise nothing while distorting the output; a residual wrongly turned into an overwrite changes the network; a transposed FFN dimension may raise a␣
+28635	␣error outright; a low-precision overflow may propagate NaN. Start debugging from single-operator shapes, finite values and a fixed-input comparison, then compare the whole layer and the whole model. A falling training loss shows only that some objective is being optimized; it does not prove that the implementation matches the intended architecture.
+10822	Not assembling different architectures into a "standard model" that does not exist
+25999	The worked model uses learned absolute positions, a single head, RMSNorm and ReLU. The original Transformer paper has an encoder–decoder and its own particular layer order; a modern decoder-only model may use RoPE, GQA, SwiGLU, a different norm or MoE. They are not made equivalent by renaming an abbreviation.
+21071	Everything in this lesson is an <strong>independent structural comparison</strong>; it does not rewrite the parameters of the model trained for 400 steps earlier, nor claim that it already uses these mechanisms. The order of study is: first know which module is being replaced, then check the new input shapes, operations, cache and gradients.
+16227	Multiple heads: what is split is not the sentence but the feature subspace
+24967	With d_model=8, Hq=2 and d_head=4 per head, the query projection's output can go from
+5900	split into
+5862	then transposed to
+10152	. Each head computes its own position-pair scores, shares and Value mixing; the head dimension is then concatenated back to 8 and passed through Wo.
+11308	Two heads are not two independent user samples, nor is the first half of the sentence given to head 0 and the second half to head 1. Transposing and reshaping must preserve the correspondence of "which sentence, which position, which head, which feature".
+7656	What GQA shares
+22753	An independent configuration with Hq=4 and Hkv=2, and the query-head mapping
+29441	: Q0/Q1 read the same KV group 0, and Q2/Q3 read group 1. There are still four query heads, but only two KV groups are cached, so ideal raw KV storage is halved relative to Hkv=4.
+27347	This is normally the architecture used in training, or a model converted accordingly; it is not a matter of deleting half of the already-trained KV heads at deployment and expecting the quality to hold. The cache layout, the broadcasting and the kernel support have to match as well.
+8754	RoPE: rotating inside Q/K, and why that can express relative position
+22673	An independent two-dimensional comparison with the vectors q=k=[1,0]. After position m is rotated by the angle θm and position n by θn, the dot product of the two vectors is cos(θm−θn), and that difference depends on the relative position. In general each pair of features uses a different frequency, so rotating a whole vector by one angle must not be taken for real multi-frequency RoPE.
+8757	R preserves length; once matching rotations have been applied to Q and K, the match is affected by the difference in position. The worked model, by contrast, adds P[pos] before the network is entered, and the two position mechanisms must not be written together as one step.
+24667	The cache normally holds K that has already been processed at its original position; when generation continues, the new Q/K are processed at their new absolute positions. Rotating the old K again, or letting the new positions start over from 0, breaks consistency. A long-context scaling strategy must also follow the model's training and inference configuration.
+8901	SwiGLU: not just a new activation name for the FFN
+22746	An independent row-vector convention:
+27381	There are two widening projections here: one decides the nonlinear gate, the other supplies the features that are gated; ⊙ is element-wise multiplication, not matrix multiplication. Compared with ReLU(xW1)W2, the parameter count, the choice of width and the backward path all change.
+7963	Where changes to Norm, dropout, weight sharing and the like pull on
+9270	Pre-norm and post-norm change where the normalization sits relative to the residual; LayerNorm and RMSNorm take different statistics; when the embedding and the output head share weights, E receives gradients from both the lookup path and the output-head path; dropout makes the training forward pass random; MoE introduces routing and expert combination, load and communication problems.
+19866	Change
+18367	What must be re-checked
+24487	Absolute P → RoPE
+12190	Which step position enters at, the frequencies, and whether the cached K is already rotated
+14134	Single head → multiple heads / GQA
+9294	reshape/transpose, the head mapping, the KV size and the scaling dimension
+11410	The two weight paths and the element-wise gate, the parameter count, and how the gradients merge
+26579	Sharing input and output weights
+7405	The shapes and transposes of E/U, and the addition of the gradients from the two paths
+16100	Adding layers
+22036	Separate parameters and KV per layer, not just a copy of the last layer's result
+9059	Wq, Wk and Wv all have shape [4,4] — can just one copy be stored?
+15108	Sharing can be chosen deliberately, but that is a different structural constraint. In this model the three parameter sets are independent and serve different purposes; the same shape does not mean the same numbers or the same role.
+15947	In both of this model's samples the first position is BOS. Should the logits at that first position be the same?
+23199	They should. The parameters, the position IDs and the causally visible input are all the same; the differing continuations 我/你 cannot affect the BOS position. A test checks this through prefix invariance, using an implementation with the causal mask removed as the counterexample.
+17923	With M's already-trained weights, can the model still be claimed to be the same one if ReLU in the forward pass is simply swapped for SwiGLU?
+10972	No. The parameters and operations required are different, so the weight file and the configuration no longer match. Comparing architectures calls for an explicit conversion or for retraining; a more fashionable name cannot simply be stuck onto the original experiment.
+23930	Lesson 51｜Attention, pressed further: position, masks, multiple heads and backpropagation — AI Systems Engineering
+19726	A mask states which positions are visible, position encoding helps tell the order apart, and multiple heads process the representation in groups; backpropagation, meanwhile, traces how the final error travels back along the original computation. They solve different problems and cannot be guessed at together from one architecture diagram.
+23864	Lesson 43 · reshape, transpose, broadcast</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/12.html">Lesson 47 · A mask is not a black box</a><a class="pill" href="../foundations/13.html">Lesson 48 · Position IDs and RoPE</a><a class="pill" href="../foundations/14.html">Lesson 49 · Fitting attention into one layer</a><a class="pill" href="../foundations/15.html">Lesson 52 · Only the calculus you will actually use</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end
+27522	A quick check before the deep reading:</strong> first draw the visibility table for 3 history positions plus 2 new ones: new position 3 can see 0 to 3, and new position 4 can see 0 to 4. Then read on about non-square masks and the cache offset.
+21033	This chapter takes apart dimensions and concepts that look alike: the sequence index, the logical position and the cache slot are not the same thing, and neither are the number of Q heads and the number of KV heads. Only once these differences are clear can you explain the failure in which "
+16520	␣is entirely right but the generation is wrong".
+8330	Q077｜How are the causal mask, the padding mask and the chunked-decoding mask actually constructed?
+27442	What to know first for this question</span> A causal mask forbids future positions and a padding mask excludes placeholder entries; with an existing cache the number of query rows and the number of readable columns differ, so a square triangular table cannot simply be copied.
+23800	Lesson 38 · Batching and padding</a><a class="pill" href="../foundations/12.html">Lesson 47 · A mask is not a black box</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch
+15717	The causal mask forbids reading future positions; the␣
+19554	A marker that excludes padded entries from counting as valid content. Example: a PAD vector of all zeros still does not guarantee that its softmax weight is automatically 0.
+19552	␣excludes padded positions that hold no real content; chunked decoding must also map a new chunk's local indices onto global positions after the existing prefix. Whether a key may be read is judged from the logical position and from validity, not by drawing a triangle in the top-left corner.
+12852	Look at the full input first, then at the cache case
+10245	A 4-
+18052	␣sequence, with rows as query positions and columns as key positions, where 1 means reading is allowed:
+27361	The lower triangle appears here because the queries and the keys both start from the same global position 0. Now suppose 3 tokens are already cached and 2 new tokens arrive. The Q length is 2 and the K length is 5; the new queries are at global positions 3 and 4, so the correct mask is:
+28311	The general form is␣
+10077	. Creating␣
+29396	␣directly makes the first row see only old0 and the second only old0 and old1, wrongly hiding most of the history. It is still a legal 2×5 matrix, so a shape check will not expose the problem.
+13557	Now add␣
+10011	. Two sequences are 3 and 5 long, and the shorter one is padded when they are batched. A padded key position should receive no attention weight; a padding query position may still be computed by the operator, but it must not be used as a valid answer or as a training target. With left padding the array index and the real token position come apart more easily, so position IDs should follow the model's and the implementation's conventions rather than the array index alone.
+18792	Drawing the causal, padding and loss masks on one and the same sequence
+26317	Input and conditions.</strong> The second sentence in the batch is
+10003	. The validity of the three positions is
+29513	; right padding is used, and the real token positions are 0 and 1.
+21299	Query position 0
+15724	The causal restriction allows only Key0 to be seen
+21300	Query position 1
+15191	Key0 and Key1 can be seen
+8019	PAD query position 2
+13314	Its output is not used for this sentence's prediction or training
+16911	An implementation may compute it and then discard it, or may have an explicit skip policy.
+25503	Training labels
+12543	Suppose only the first two valid prediction positions are scored
+9224	The loss mask is
+29296	; it controls the scoring and does not automatically control attention.
+20647	With a cache
+6464	3 history + 2 new tokens
+20194	The new attention table is 2×5, with its rows at positions 3 and 4, not 0 and 1.
+18924	Join the steps up.</strong> All three masks may look like tables of 0s and 1s, but they restrict different things: what may be read, which data is real input, and which positions take part in scoring.
+26633	Limits and counterexamples.</strong> The 0s and 1s here are this example's notation for "visible / not visible"; a particular library's boolean mask may use the opposite convention.
+15422	One and the same "allow table", and why its boolean values are reversed between interfaces
+26181	Input and conditions.</strong> The causal visibility of two tokens is: row 0 can see only column 0, and row 1 can see both columns. Define the semantic allow table first, as [[true,false],[true,true]].
+12675	Write the semantics first
+23322	True means "this example wants access allowed"
+27233	This definition is independent of any API.
+12133	Pass it to scaled_dot_product_attention
+19484	Per that interface's documentation, boolean True means taking part in attention
+23124	Pass [[True,False],[True,True]] as it stands.
+12132	Pass it to MultiheadAttention's attn_mask
+25776	For that interface boolean True means access is forbidden
+18351	The inverted table [[False,True],[False,False]] has to be passed.
+13987	The additive-mask form
+12618	Add 0 where it is allowed and −∞ where it is forbidden
+20875	Here that is [[0,−∞],[0,0]]; the dtype, shape and device the interface accepts still have to be checked.
+18935	Join the steps up.</strong> Do not copy a True from one piece of code straight into a new interface. Draw the semantic table first, convert it according to the documentation, and finish with a perturbation test on future tokens.
+26752	Limits and counterexamples.</strong> The comparison here is against the PyTorch 2.14 interface documentation listed. A later version, or another library, has to be confirmed again from its own documentation; a boolean convention must not be taken as a universal standard.
+28096	Follow-up: if the whole answer is fed in at once during training, is that not peeking at the answer?
+10927	No, as long as the visible range at each position is right. The hidden state at position i can read only␣
+29338	, and it is used to predict␣
+10140	. A label existing in the␣
+28483	␣does not mean the forward pass may read it. Predictions for several positions can be computed at the same time, because the correct prefix is already supplied by the training data. With the mask removed the training loss may look unusually good while the task being learned does not match the conditions of deployment.
+27751	Follow-up: if two documents are concatenated for training, does a single EOS isolate them completely?
+10635	Not necessarily.
+20408	␣is a marker in the sequence's content; it does not automatically stop attention from crossing a document boundary. If the goal is to isolate the samples strictly, a segmented␣
+29312	␣is needed, with the positions and the loss range handled consistently. If cross-document context is allowed, a different strategy is possible; what matters is being clear about the training objective, and not taking "a separator appeared" for definite isolation.
+27898	Follow-up: how do you write a test that catches a mask error?
+15802	Fix the weights, switch dropout off and save the prefix output first; then change only the future tokens, and the prefix's corresponding␣
+10789	␣should not change. Then compare the outputs of whole-sequence inference, token-by-token inference and several chunked variants: all three should agree within a reasonable floating-point tolerance. Removing the mask or resetting the positions on purpose should make the test fail; if it does not, the test very likely does not cover the error it is aimed at.
+17827	Engineering deep dive · E05 · continues Q009
+11328	Two correct APIs can still be wrong in combination
+15871	In PyTorch's SDPA, boolean True means the position <strong>may take part</strong>; in MultiheadAttention's␣
+11444	, True means the position is <strong>forbidden</strong>. This is not a small naming difference: reusing the same block of boolean data directly inverts the visibility relation.
+20955	Locally, identity projections line MHA up with the low-level SDPA: pass␣
+29286	␣to MHA and pass␣
+29421	␣to SDPA, and the outputs agree; without the inversion they do not. This test isolates "what the mask means" specifically, and should not be mixed with the previous section's asymmetric-matrix test of projection transposes.
+24079	The second pitfall: a non-square triangle needs absolute positions
+24647	The cache already holds 3 positions and 2 new queries arrive, so K/V are 5 long in total. The new queries are at absolute positions 3 and 4, not 0 and 1. The correct allow table is:
+24761	PyTorch 2.10 SDPA's␣
+17581	␣aligns a non-square mask to the top left, so a 2×5 triangular table comes out as␣
+10096	. It restricts history that should not be restricted; this is an interface contract with a clear version behind it, not "the model forgetting the context".
+20009	A numeric counterexample makes the error obvious at a glance
+25411	Set both Q and K to 0 so that every legal position has the same score, and let V take the values 1, 2, 3, 4 and 5. The correct two rows average 2.5 and 3.0; the top-left triangle gives 1.0 and 1.5. This book ran both paths with the real SDPA.
+27330	This passage is an explicit absolute-position mask scheme. Do not switch on an automatic causal option that conflicts with it at the same time. A real model adapter may already have handled the offset, so check the call boundary and avoid correcting it twice.
+27728	Follow-up: what if the history lengths within a batch differ?
+10697	Stop using one global P to generate the offsets for every sample. Combine each sample's real visible positions with the padding and the cache layout. An unwritten slot in a static cache must not be treated as history already read, and a sliding window also has to bound the lower end. Broadcasting succeeding over the dimensions does not mean every sample has the same read rule.
+27977	Follow-up: will switching to FlashAttention fix it?
+11074	The name of a low-level implementation is no promise about alignment. Different interfaces may use different causal-alignment conventions, and a model's wrapper layer may add an offset of its own. Fixing one explicit allow table with a cache and comparing its numbers against a whole-sequence forward pass without a cache is the correctness check that transfers.
+7422	E05: how to read this result, rather than only looking at "pass"
+12858	Look first at each cell's "allowed or forbidden", then at the output numbers. An inverted boolean True and a non-square causal alignment are two different errors; each keeps its own input and result here.
+24871	Self-check:</strong> with 3 cached positions and 2 new ones, why is simply generating a 2×5 top-left triangular table wrong?
+11405	The two query rows are at absolute positions 3 and 4, so they should read the first 4 and the first 5 keys respectively; the top-left triangle mistakes them for positions 0 and 1 and reads only 1 and 2 keys. The cache offset has to be built into the visibility.
+27706	Follow-up: why do Q/K/V learn different uses?
+24413	The structure sends Q and K into the matching score and V into the content being mixed. Different computation paths produce different gradient signals, and three independent parameter tables allow different feature transforms. Sharing them deliberately adds a constraint to the model, which is then no longer equivalent to the original structure.
+8333	Q078｜How does RoPE let attention know position? Why can the cached positions not start from zero each turn?
+27424	What to know first for this question</span> Position is not token identity. RoPE rotates a pair of coordinates by an angle that depends on the position, so that a relative-position relation appears in the dot product; it does not add the position number to the vocabulary ID.
+23851	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/13.html">Lesson 48 · Position IDs and RoPE
+18707	␣rotates each pair of components of Q/K by a position-dependent angle, so that after both positions have been rotated the dot product contains the difference in position. It does not simply add the position integer to the␣
+10539	. Cached inference has to keep the logical positions of the old and new tokens continuous, or follow a specified position policy; otherwise the relative relation is changed.
+11828	Deriving relative position from a two-dimensional rotation
+17264	For the two-dimensional vector␣
+29215	, position p and frequency θ give:
+8466	With Q at position p and K at position t, the dot product is␣
+10040	. Using␣
+11261	␣and the composition property of rotations gives␣
+10067	. So the position information enters the relevance through the difference␣
+27547	. A high-dimensional vector applies a different frequency to each pair of components, which provides position variation at several scales.
+27279	This does not mean attention depends on the difference in position alone: q and k themselves are still determined by the text content and by the previous layer's representation. RoPE supplies the relative-position structure, while content matching remains the job of the learned projections. Nor can it be said to make the model generalize naturally to any length; phase combinations beyond the training distribution can still degrade it.
+12538	Suppose the prefix length is P=100, so the new token belongs at position 100. If its Q/K are wrongly rotated as position 0 while the old K is still stored as positions 0 to 99, the "distance" the model reads is no longer the real distance. The tensor length, the␣
+9969	␣and the cache concatenation axis may all be right, yet the logits have already drifted away from the whole-sequence forward pass.
+23214	Relative position preserved, and a cache misalignment: the same rotation computed twice
+26409	Input and conditions.</strong> Use the two-dimensional rotation R(θ) with q=k=[1,0]. Let the angle at position m be m×90°, purely in order to show the relative-position property.
+22097	Compare positions 0 and 1
+22573	Dot product 0.
+11397	Shift both back by 1 position
+22575	The dot product is still 0.
+22099	Compare the same position
+9279	q1 and k1
+22574	Dot product 1, which shows that a relative difference of 0 is not the same as a difference of 1.
+24655	The cache handled correctly
+20142	The new token keeps the absolute position 2
+12175	A position is not reset just because a new call has begun.
+28548	The reset counterexample
+18765	Mistake position 2 for 0
+9199	k2 wrongly becomes [1,0], and its comparison with position 0 goes from −1 to 1.
+19022	Join the steps up.</strong> With a fixed rotation frequency, shifting both together does not change the relative angle; wrongly resetting the position does change what the model computes.
+26765	Limits and counterexamples.</strong> Real RoPE's many coordinate pairs, frequencies and extension strategies follow the model's own implementation; this example does not imply that every model uses a 90° step.
+27868	Follow-up: can every position be shifted at once?
+15964	In an ideal pure RoPE dot product, adding the same offset to both the Q and the K position preserves the relative difference. A full model, though, may have other position-dependent mechanisms, sliding-window rules, special positions or a scaling strategy; and an already-rotated cache cannot be transformed consistently by changing one position counter. The mathematical shift property is not in itself a safety proof for any given cache-truncation implementation.
+28115	Follow-up: how is long-context extension done?
+17967	Common approaches include position interpolation, frequency scaling, adjusting particular frequency bands, and continued training on long sequences. They try to bring position patterns beyond the original training length closer to a learnable range while keeping local distinctions. Local precision and long-range coverage may have to be traded off, so real tasks such as retrieval, combining across segments and locating code have to be tested — not just "whether the interface accepts more tokens".
+27813	Follow-up: why is it usually Q/K that are rotated rather than V?
+27335	This design puts the relative-position signal mainly into the computation of the read weights, while␣
+11766	␣still supplies the content being mixed. Other architectures may take other approaches; this implementation choice must not be inflated into a theorem that every model is mathematically obliged to follow. When reading source code, check whether the cache holds K before or after rotation, and whether reuse rotates it again.
+17828	Engineering deep dive · E06 · continues Q010
+28979	Prerequisite: <a href="../foundations/12.html">Lesson 47
+12684	First, list the three kinds of count
+28345	The logical position</strong> describes where a token sits in the model's sequence; the <strong>physical cache slot</strong> describes which array cell holds its K/V; the <strong>valid length</strong> describes how much non-PAD content there is. In a simple example with no PAD and no sliding window they happen to be equal, but that is no reason to merge the fields in engineering. The pinned version of the Transformers cache documentation distinguishes cache_position from padding content explicitly.
+12320	For instance, physical slots 0 and 1 are left PAD and slots 2, 3 and 4 hold "我/爱/学习". Some adapters record the position_ids of the three valid tokens as 0, 1 and 2 while the cache's current physical length is 5. The valid length 3 must not be used directly as the next cache write slot. How a particular generator represents a PAD cache has to be read from its implementation; what is given here is a teaching layout that states explicitly that the objects may differ, not a uniform template.
+12182	Positional rotation must not be applied again when the cache is reused
+17962	A common RoPE implementation rotates Q/K first and caches the rotated K. Rotating the old K again by its original position when it is read on the next turn amounts to adding the angle twice. This book's two-dimensional counterexample:␣
+20215	␣rotated by 90° gives␣
+29247	, and another 90° turns it into␣
+10109	. The shape is identical and the meaning entirely different. Other implementations choose to cache the unrotated values, which reverses the responsibility; <strong>the cache's representation format is part of the contract
+22536	A sliding window must not wind absolute positions back to zero
+22537	Once a sliding window has evicted old slots the stored length can stay constant, but the next token's logical position normally keeps growing. Treating the slot index as the position and starting from 0 each time changes the position phase and the visibility. Changing the RoPE scaling configuration, the position offset or the adapter can also make an existing cache no longer applicable.
+22878	Which invariants detect these errors
+21216	Build a short sequence and compare the last position's output from "one forward pass over the whole thing" with the output from "segment-by-segment forward passes plus a cache"; cover no PAD, left PAD, a batch of differing lengths, increments of more than two tokens, and crossing the sliding-window boundary. The comparison should use the same model parameters, the same precision and dropout switched off. When a difference appears, check in turn the token identities, the absolute positions, the allow table, the write slot and the number of rotations, instead of simply loosening the error threshold.
+28060	Follow-up: why can an identical token prefix still not share a cache?
+20489	Changing the model weights, a LoRA, the position configuration, the image encoding and so on all change K/V; hashing the token list alone is not enough. vLLM's design uses prefix dependency plus extra hash information to identify blocks that can be reused.
+5937	This does not mean that every system handles a change of external adapter for you automatically.
+28048	Follow-up: can clearing the cache "fix" the problem?
+16483	It is a valuable comparison: if the whole sequence is right and the incremental path is wrong, suspecting the cache path is well founded. But disabling the cache permanently only avoids the symptom, and it can raise costs considerably. Once you have found which identity or position contract was broken, fix it and keep a regression test for the consistency of the two paths.
+7426	E06: how to read this result, rather than only looking at "pass"
+15413	Rotated once and rotated twice, the same vector may keep its length in both cases while its direction changes. The error lies in how many times, or at which point, the position information was applied — not in the length of the cache array.
+24887	Self-check:</strong> a sliding-window cache is still 128 long — must the next token's RoPE position therefore be 128?
+10653	Not necessarily. The cache's retained length is the size of the physical window, while the absolute sequence position may already be far beyond 128. Keep counting according to the model's position convention instead of substituting the current cache length for the logical position.
+8336	Q079｜What exactly is missing in MHA, MQA and GQA? Are the multiple heads deleted?
+27444	What to know first for this question</span> Multiple heads group the representation; MQA and GQA let several query heads share fewer K/V heads. Count how many groups are queried and how many are stored separately.
+23865	Lesson 43 · reshape, transpose, broadcast</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch
+28305	␣usually gives each Q head its own K/V head;␣
+25422	␣lets several Q heads share one set of K/V;␣
+15886	␣sits between the two, letting a group of Q heads share one K/V head. It mainly reduces the K/V projection output and the amount cached; it does not make all the query heads share one attention distribution.
+28216	A shape-by-shape comparison
+25661	Take a hidden dimension of 4096, H=32 query heads and Dh=128 per head. MHA has 32 KV heads; GQA is assumed to have only 8; MQA has just 1. Ignoring bias:
+7660	GQA (8 KV heads)
+9065	Wq output width
+9050	Output width of Wk and of Wv
+14135	K cache for one layer
+21982	Attention weights per Q head
+7655	In GQA, Q heads 0—3 can be assigned to KV head 0, Q heads 4—7 to KV head 1, and so on. Sharing K does not mean Q is the same: different Qs dotted with the same K can still produce different weights. Sharing V does not mean the output is the same either, because the weighting proportions differ.
+24660	The cache goes from 32 groups to 8, so in theory that part falls to a quarter. But total VRAM also holds weights, activations, workspace and scheduling metadata, so the machine's memory use does not necessarily fall fourfold. QKᵀ and AV still have to serve 32 Q heads, and the real computational efficiency depends on how the kernel avoids loading the shared KV repeatedly.
+12412	Keeping 4 query heads while caching only 2 sets of Key/Value
+26471	Input and conditions.</strong> Take B=1, T=3, Hq=4 query heads and Dh=2 per head. MHA has 4 KV heads, GQA is set to 2 and MQA to 1.
+11335	48 numbers for the two together.
+13040	24 numbers in total; there are still 4 query heads.
+25634	Set the grouping
+8467	Q heads 0 and 1 read KV group 0; Q heads 2 and 3 read KV group 1
+21983	Each Q has its own query vector; two Q heads have not been deleted.
+18531	All 4 Qs share 1 set of KV
+13039	12 numbers in total, yet the read shares each Q computes can still differ.
+19297	Projection width
+21690	With a model width of 8, GQA's K projection can output 4 dimensions
+8468	The Q projection is still 8-dimensional; the final residual width is not halved automatically along with the number of KV groups.
+18892	Join the steps up.</strong> GQA mainly reduces the K/V projections and the size of the state; it does not delete attention's query heads along with them.
+26799	Limits and counterexamples.</strong> This is the common uniform-grouping configuration; a particular model and kernel layout may differ, and existing MHA weights cannot be used as GQA without adaptation.
+6570	How exactly 4 Q heads pair with 2 shared KV heads
+26472	Input and conditions.</strong> Take 4 Q heads, 2 KV heads and a width of 2 per head. Contiguous grouping is used: Q0/Q1 use KV0, and Q2/Q3 use KV1.
+13624	Write the mapping out
+13051	What is shared is the corresponding K/V, not an average of the four Queries.
+12404	Keep the Queries independent
+8401	Q0=[1,0] and Q1=[0,1], with the same key K0=[2,3]
+22577	The dot products are 2 and 3, so even a shared key can give different attention weights.
+25392	The computation itself
+21975	K and V for each token have 2 heads × 2 numbers each
+13041	2×2×2=8 numbers in total; with 4 KV heads it would be 16.
+27156	Reassemble the output
+21981	Each Q head outputs 2 numbers, and the heads are then concatenated
+18304	That gives 8 numbers, which the output projection then maps back to the model's hidden width.
+18893	Join the steps up.</strong> GQA reduces KV storage, but it does not lower the number of output heads to the number of KV heads. Track the Q heads, the KV heads and the output width separately.
+26774	Limits and counterexamples.</strong> The group mapping, the head dimension and the output projection are decided by the architecture; this example uses contiguous grouping explicitly and says nothing about the specific implementation of any closed-source model.
+28076	Follow-up: can a trained MHA model be turned into GQA just by changing the configuration?
+11033	Changing the head count alone is not enough. The parameter shapes, the weight combinations and the learned functions all change. The GQA paper studied converting from a multi-head checkpoint and continuing training; an equivalent model is not obtained by editing one configuration. A deployment has to match the weights to the architecture.
+27796	Follow-up: why does some GQA code still repeat KV out to H heads?
+27275	This may be to stay compatible with an ordinary␣
+19587	␣interface, expanding it conceptually. Physically copying a long cache cancels the memory saving; an efficient implementation should share the data through a mapping, a view or a dedicated kernel. When reading code, look at the actual memory allocation and the␣
+22180	The spacing in the underlying storage that has to be stepped over when an index moves by one along a given axis. Example: a transposed view may be non-contiguous, so a later reshape may need a copy.
+29408	, rather than only at a comment that says "shared".
+27697	Follow-up: MQA has the smallest cache, so why not use MQA everywhere?
+13052	More sharing changes the capacity of the representation and the quality of the model, and the hardware gain also depends on the workload. GQA is one compromise among quality, training cost and inference resources. There is no number of KV heads that is always best without regard to the model and the task.
+8343	Q081｜How does attention backpropagate? Why does working autograd not mean the model is implemented correctly?
+27438	What to know first for this question</span> Backpropagation computes gradients step by step along the forward computation; a transpose carries a change in the output back into the input's dimensions, and softmax's candidates are coupled to one another by the normalization.
+23844	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/09.html">Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/15.html">Lesson 52 · Only the calculus you will actually use</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end
+14808	Backpropagation carries the output error back along the Value content path and along the Q/K weight path. Autograd computes the gradient of the current computation graph faithfully, but it cannot know whether your mask, labels or dimensions express the right task. The mathematical gradient check and the semantic invariance test have to be kept apart.
+22335	Differentiating step by step along the computation graph
+29415	, and let the upstream gradient be␣
+10034	. Start with the last matrix multiplication:
+24017	The first expression says that a historical Value accumulates error from every query position that reads it; the second measures how the loss changes when one read weight changes. Next comes␣
+29372	, where a row's probabilities a correspond to the upstream g:
+27371	What is subtracted here is the weighted sum over the whole row, and it cannot be left out. Its components sum to 0, which matches the property that "adding a constant to a whole row of scores does not change softmax". Finally:
+24964	If Q/K/V are projected from the same X, the gradient of X is the sum of the three branches, each multiplied by the transpose of its projection, plus the gradient coming straight back along the residual. The transposing and concatenation of multiple heads have to go through the corresponding inverse transforms on the backward pass.
+10306	A useful diagnostic: let only the first position's output enter the loss. Under a causal mask the future K/V should get no gradient from that loss. A non-zero dependence on a future position points to a mask or indexing error. This test is about the task's semantics, not just numerical differentiation.
+17258	Working out the attention gradient for one query by hand, then checking it by perturbation
+26159	Input and conditions.</strong> Q=[[0.4,−0.2]]; K=[[1,0.5],[−0.5,1]]; V=[[2,−1],[0.5,3]]; both Keys are visible. The upstream gradient is G=[[0.7,−0.3]], and the scalar loss is defined as L=sum(O⊙G).
+24182	Compute the scaled dot product, softmax and the mixing
+8086	P is about
+29145	, and O about
+13541	The content path
+11407	The two rows are about
+12141	Pass it through softmax
+29288	, summing to 0.
+12134	Carry it to Q/K
+9162	dQ is about
+20019	The numeric check
+17243	±1e−6 on each of the 10 coordinates of Q/K/V
+20549	The largest absolute difference is about 1.90e−10, which confirms that the derivative agrees with the formula used.
+19123	Join the steps up.</strong> The gradient divides into two paths: "change the read shares" and "change the content read". Verifying dV alone does not prove that Q/K learn correctly.
+26733	Limits and counterexamples.</strong> A finite difference can check the derivative of this example's forward pass, but it cannot on its own prove that the labels or the mask fit the task; an independent causal counterexample test is still needed.
+28004	Follow-up: how does a finite difference check a gradient?
+17532	For an input dimension j, change it to␣
+26908	␣approximates the derivative. A small matrix in float64 makes an error easier to locate. Too large an ε brings truncation error, too small and rounding error dominates; a test must not be made to pass by loosening the tolerance again and again.
+28005	Follow-up: if the finite difference passes, does that prove the model is right?
+16496	It proves that the analytic or automatic gradient agrees with the current forward function; if that forward pass wrongly allows the future to be seen, the two can still agree. Tests of label shifting, causality and whole-sequence-versus-cache consistency are needed as well. "The gradient is right" and "the objective is right" are therefore different pieces of evidence.
+27979	Follow-up: why is backpropagation not needed at inference?
+20465	Ordinary deployed generation uses fixed parameters: it computes a conditional distribution and chooses a token, with no loss to compute and no weights to update. Long reasoning, or many tool calls, adds forward computation and input information; it does not turn into gradient training by itself. A particular online-learning system may update parameters as well, but that has to be designed explicitly — it cannot be inferred from "the model understands the current task better and better" that training is taking place.

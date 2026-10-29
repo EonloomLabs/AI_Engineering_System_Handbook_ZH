@@ -65,10 +65,36 @@ same `N` values, same order, nothing else but optional `#` comments.
 - Chinese full-width punctuation becomes the target language's equivalent. A
   fragment that begins with 。 begins with the target's sentence-final mark plus
   a space.
-- Leading and trailing spaces are **handled for you**: ingest carries the
-  source fragment's own surrounding whitespace onto your line, so a fragment
-  that sits against an inline `<code>` keeps its gap. Do not try to add or
-  preserve edge spaces yourself.
+- Spacing at an inline-element seam is **handled for you**, in two steps.
+  Ingest carries the source fragment's own surrounding whitespace onto your
+  line, and the build then inserts the space English needs wherever a word
+  runs into a `<code>`, `<a>` or `<strong>` that Chinese set without one. So
+  write the natural English and ignore edge spaces: `improves`+`<code>ANN</code>`
+  +`recall` comes out as "improves ANN recall" on its own. Do not contort the
+  wording to make a seam read, and do not add edge spaces yourself.
+  Two things the build deliberately leaves alone, so they still work: a
+  translation that starts with punctuation stays attached (`-style` after
+  `WordPiece`, `-dimensional` after `d`), and `<sub>`/`<sup>` never gain a
+  space. If you do need an edge space the source lacks, write `␣` there.
+
+## Settled house terms
+
+These were split across batches and have been normalized; follow them.
+
+| Chinese | English | why |
+|---|---|---|
+| 宿主 | harness | the book's own glossary prints `Harness / 宿主执行框架` |
+| 宿主 (in MCP) | host | `Host` is a role in that protocol, not the harness |
+| 追问： | Follow-up: | majority of 211 |
+| 预备知识： | Prerequisite: | each one introduces a single lesson |
+| 子Agent | sub-agent | majority |
+| 压缩 | compaction | glossary |
+| 显存 | VRAM | glossary |
+| 推理 | inference / reasoning | model execution vs reasoning models |
+| 产物 | artifact | American spelling |
+
+`python3 i18n/spelling.py` sweeps the -ize family and the other American forms,
+so do not spend effort on spelling; write what comes naturally and it is fixed.
 
 ## When one string needs two translations
 
@@ -91,6 +117,16 @@ name unique to your batch (`<batch>_notes.txt`), or a sibling will overwrite it.
 
 It must print `条通过校验`. It catches missing or extra keys, empty lines,
 untranslated text and inline-tag mismatches. Fix and re-run until clean.
+
+## Two checks the maintainer runs over everything
+
+    python3 i18n/consistency.py        a shared Chinese frame rendered two ways
+    python3 i18n/embedded.py           a link's text against the heading it points at
+
+The second is why reusing canonical wording matters: a chapter's table of
+contents is one string holding every heading on the page, so if you translate a
+heading differently from the TOC entry that links to it, a reader sees two
+different headings. Both checks must come back at zero before a release.
 
 ## Hard constraints
 

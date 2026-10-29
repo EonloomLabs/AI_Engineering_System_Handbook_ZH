@@ -124,6 +124,59 @@ def relink(html, rel, pages):
     return REF.sub(fix, html)
 
 
+# Elements that behave as a word in a sentence. sub and sup are excluded on
+# purpose: a subscript must stay attached to what it subscripts (d_k, x₁).
+WORDISH = r'code|kbd|samp|var|a|strong|em|b|i|span|abbr|dfn|time|cite|q'
+SEAM_OPEN = re.compile(r'(?P<l>[A-Za-z0-9)\]])(?P<t><(?:%s)\b[^>]*>)(?P<r>[A-Za-z0-9(\[])' % WORDISH)
+SEAM_CLOSE = re.compile(r'(?P<l>[A-Za-z0-9)\]])(?P<t></(?:%s)>)(?P<r>[A-Za-z0-9(\[])' % WORDISH)
+OPAQUE = re.compile(r'<(pre|script|style|svg|textarea)\b.*?</\1>', re.S | re.I)
+# English always sets a space after punctuation; Chinese does not, so a comma
+# or full stop that butts straight into the next inline element loses it:
+# "pin the model,<code>Tokenizer</code>", "Basis:<a>tiny_model.py</a>".
+# A block element is skipped - the line break supplies the gap - and so is a
+# digit, which keeps版本 numbers and decimals intact.
+BLOCK = (r'p|div|li|ul|ol|dl|dt|dd|td|th|tr|table|section|article|aside|nav|'
+         r'header|footer|h[1-6]|details|summary|figure|figcaption|blockquote|br')
+PUNCT_SEAM = re.compile(
+    r'(?P<p>[,;:.!?])(?P<t>(?:<(?!/?(?:%s)\b)[^>]+>)+)(?P<r>[A-Za-z])' % BLOCK)
+# The same seam where the punctuation itself follows a tag: "…]</code>,<code>[…".
+# A decimal or version number cannot straddle a tag, so here the following
+# character may be anything - a bracket, a digit, a minus sign.
+PUNCT_AFTER_TAG = re.compile(
+    r'(?P<l></[\w-]+>)(?P<p>[,;:.!?])(?P<t>(?:<(?!/?(?:%s)\b)[^>]+>)+)(?P<r>[^\s<])' % BLOCK)
+
+
+def space_seams(html):
+    """Put back the space English needs where Chinese needed none.
+
+    Chinese sets no space around an inline element, so a text node ending a
+    word runs straight into the <code> or <a> beside it: translated, that
+    renders "improvesANNrecall". The gap belongs to the sentence, not to any
+    one string, so it is restored here rather than asked of every translator.
+
+    A translation that deliberately attaches - "-style" after WordPiece, "-s"
+    after an identifier - starts with punctuation, so it is left alone, and
+    pre/script/style/svg are skipped entirely.
+    """
+    parts, last = [], 0
+    for m in OPAQUE.finditer(html):
+        parts.append((html[last:m.start()], True))
+        parts.append((m.group(0), False))
+        last = m.end()
+    parts.append((html[last:], True))
+
+    out = []
+    for chunk, editable in parts:
+        if editable:
+            for _ in range(2):          # a seam can need both sides fixed
+                chunk = SEAM_OPEN.sub(r'\g<l> \g<t>\g<r>', chunk)
+                chunk = SEAM_CLOSE.sub(r'\g<l>\g<t> \g<r>', chunk)
+            chunk = PUNCT_SEAM.sub(r'\g<p> \g<t>\g<r>', chunk)
+            chunk = PUNCT_AFTER_TAG.sub(r'\g<l>\g<p> \g<t>\g<r>', chunk)
+        out.append(chunk)
+    return ''.join(out)
+
+
 def head(html):
     html = re.sub(r'(<html[^>]*\blang=")[^"]*(")', r'\1en\2', html, count=1)
     return re.sub(r'(<meta content=")[^"]*(" name="i18n-scope"/?>)',
@@ -159,6 +212,8 @@ def main(argv):
         html, pending = chrome(splice(doc, d['items'], table,
                                      over=over_all.get(rel)), en)
         html = head(relink(html, rel, pages))
+        if LANG != 'ja':
+            html = space_seams(html)
         out = ROOT / LANG / rel
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding='utf-8')
@@ -170,9 +225,10 @@ def main(argv):
     return 0
 
 
-argv = sys.argv[1:]
-for a in list(argv):
-    if a.startswith('--lang='):
-        LANG = a.split('=', 1)[1]
-        argv.remove(a)
-sys.exit(main(argv))
+if __name__ == '__main__':
+    argv = sys.argv[1:]
+    for a in list(argv):
+        if a.startswith('--lang='):
+            LANG = a.split('=', 1)[1]
+            argv.remove(a)
+    sys.exit(main(argv))

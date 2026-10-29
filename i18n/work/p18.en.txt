@@ -1,0 +1,431 @@
+13029	Formulas and terms: know the objects before the operations — AI Systems Engineering
+28731	Reading tool</span><span>about 15.2k characters
+28739	Before reading a formula, sort out the five kinds of object
+13028	A formula is not an acronym contest. One symbol may be <strong>this input, a model parameter, a computed intermediate value, a size or a subscript, an execution rule or a function</strong>. Classify the objects first, then read how they relate. The examples below only explain notation; they are independent micro-examples about symbols, and they do not replace the main worked example of any lesson.
+24190	Category
+10471	Usually supplied by
+20393	Changes with this input?
+13524	Typical objects
+26522	Input and labels
+22935	User data, the tokenizer or training samples
+12111	Yes
+26574	Input IDs, X, the correct next token
+13844	The initialization routine, training, a saved weight file
+20458	Usually not updated in ordinary inference
+7614	The embedding table, Wq/Wk/Wv, biases, normalization parameters
+11441	Intermediate computed results
+18211	The current turn's forward computation
+28288	Usually yes
+8087	Q/K/V, the scores S, the shares A, hidden states, logits
+24410	Structure and sizes
+21766	The model design and the length of the current request
+20604	Some are fixed, some change with the request
+17673	The number of layers, the number of heads, the width per head, the current effective length
+19834	Operations and state constraints
+23460	The program, the protocol and the task rules
+12337	Constructed according to the specific conditions
+7964	The Norm function, softmax, a mask, execution state
+9458	"Weight" has two common senses.</strong> The weights in the parameter matrix W are coefficients the model has saved; the weights in the attention table A are shares of information computed from the current input. Both take part in multiplication, but their origin and life cycle differ. The word "parameter" has two levels too: model parameters are numbers that were learned, whereas the parameters of a tool call are fields of one request, and the two must not be conflated.
+12832	Read XW through in one plain sentence first, then look at the matrix sizes
+25854	is read as: "take each row of X and combine it by the coefficients that each column of W supplies, producing each column of Y." For example, X has two rows of three numbers each and W has three rows of two numbers each:
+27352	Here i selects which row of X, and j which column of the output. i and j are not being passed to another model. If X stands for the positions of two tokens, <strong>the origin of one output cell can still be traced back to the three features at that same input position</strong>. Mixing across tokens takes a further operation along the position axis, such as multiplying the table of attention shares by the Value table.
+15619	and, in some sources,
+28406	can all be used to name the query projection parameters. They are ways of writing the notation, not three separate algorithms. Conversely, a letter that looks the same may carry a different role in another chapter, so this book does not let the look of a letter stand in for a local definition.
+16250	How to read capitals, subscripts and superscripts
+28213	Symbol-by-symbol explanation
+17614	Small example
+16248	A capital letter is a table of several rows; a lowercase one takes a single row
+9088	X=[two rows]; x₁ is the row of numbers at position 1
+12932	Pick row i first, then feature j
+20306	gives x₁,₀=3
+8469	Q is a label for what this W is used for
+22972	It is used to produce the query; it is not W times Q
+9506	ℓ marks which layer the parameters belong to
+23618	Layer 0 and layer 1 usually each have their own W_Q
+18704	Swap the designated row and column axes of K
+10836	Not K to the power of T
+20358	Is a table of real numbers with m rows and n columns
+15117	It may contain decimals and negative numbers
+17250	Add up all the terms listed for j
+10676	It does not mean summing over the other axes that are not listed
+17309	Multiply the matching cells element by element
+18509	or matrices side by side
+23349	Matrix multiplication: multiply, then add along the inner dimension
+19513	The rate of change of the loss with respect to the parameters
+24171	Computing the gradient is not the same as having updated the parameters
+17604	Store the result on the right back into the left
+9371	w←w−ηg is one update
+11791	Subscripts that start from 0 are a programming convention. If another worked example states that it starts from 1, read it as declared; do not treat "position 1" and "the first item" as the same object without saying so.
+11079	A letter that recurs cannot be pinned to one meaning for good
+17970	Common different uses
+18392	How to remove the ambiguity
+18051	Sequence length; also the transpose superscript ᵀ
+23251	See whether it is a size or an operation; for temperature, prefer writing τ
+9028	The Value table; some papers use V for the vocabulary size
+23252	Look at the shape; this book writes the vocabulary size as Vocab or n_vocab wherever it can
+16285	The number of heads; a hidden vector; image height
+21994	State the object for each formula first; the letter alone is not enough to decide
+17676	The number of layers; the loss; the average number of tasks in a queueing system
+23253	See whether it is a count, an objective function or a runtime statistic
+21718	A model weight matrix; the average time spent in the system in Little's law
+11384	The two settings differ in both unit and kind of object
+7836	The LayerNorm offset; the Adam smoothing coefficient; the DPO setting coefficient
+15305	Each chapter has to explain it again from the formula at hand
+25301	The stabilizing constant in normalization; the step size of a finite difference
+28409	Both are small positive numbers, but they differ in purpose, value and effect
+22358	The table of attention shares; one factor in LoRA; approach A in a comparison
+11127	Neither shape nor meaning carries over automatically from one formula to another
+15866	The circle constant; the probability-policy symbol π_θ
+20221	A rotation angle and a policy probability belong to different computations
+22373	One row of attention; a retrieval query; the number of items Top-k keeps
+16394	The same letter does not mean the same data
+16319	If a chapter moves from "the vectors of two tokens" to "the retrieval ranking of ten documents", it should establish the new input explicitly. Both sets of numbers can be summed mathematically, which does not mean they come from the same run.
+13688	A function name is not another mysterious data table
+25198	means calling the normalizing operation;
+25197	means calling the feed-forward network;
+25184	means turning scores into shares along the axis designated. A function may use learnable parameters inside it, but the function name itself is not a row of weights.
+11975	Take
+11548	as an example: it should be read in order — first normalize X, let Attention process that result, add the attention output to the original X, and finally call the whole result U. <strong>U is only a name for a temporary result</strong>. Another formula using U as well does not mean the numbers are shared automatically. Where a continuous worked example carries U over, it points explicitly at the line above.
+29107	A high-level interface may also give the data before projection the names
+29479	; the parameter of the same name in a low-level interface may instead be the data after projection. Checking "whether the interface has already done the W transformation inside" matters more than reading the parameter name alone. A formula and a program may also take different layouts, one right-multiplying the parameter table and the other storing the weights transposed; align the layouts first, then compare the numbers.
+23487	Data, requests and state in a program need identities too
+21194	Where it comes from
+12049	Task text
+9459	"Check a.py"
+22916	The user
+25207	It states a goal, not the content of a file
+9265	path has to be a string
+17756	The tool or API definition
+24428	A structural constraint; no proof that the file exists
+25942	Call arguments
+21699	Proposed by the model, checked by the harness
+25245	The object to be called, not the result of executing it
+14096	The protocol participants
+22974	Used for pairing; not automatically a business idempotency key
+17802	Tool return
+20085	File content, an exit code
+16932	The actual executor
+21013	Evidence from this run; the version and the scope have to be stated
+17226	The harness's state management
+23054	Which step has been confirmed so far
+22387	Derived summary
+9437	"Modified, pending tests"
+19823	The summarizing process
+12358	Convenient for recovery, but no substitute for the original evidence
+9461	"The model remembered" also has at least three levels: a set of K/V in the inference cache, facts and summaries within the current session, and long-term memory retrieved across sessions. Ask which kind of object it saved, when that was written and when it expires, instead of treating all three levels as an update to the model parameters.
+11851	The dependency path from the basics to the system
+21764	The model computation path:</strong> numeric containers and shapes → token IDs and embeddings → row-by-column multiplication → parameters and intermediate results → Query/Key/Value → scores and read shares → masks and position → multiple heads, the output projection, residuals and the feed-forward network → output tokens and the cache.
+25527	The training path:</strong> the forward result → the correct labels and the loss → derivatives and the chain rule → the gradient for each parameter → optimizer state and updates → post-training objectives. Without derivatives you can still start by understanding how W takes part in the forward pass; "the weights come from training" must not be mistaken for "every reinforcement learning algorithm has to be understood first".
+6986	The agent path:</strong> requests and structured data → model output items → tool call identifiers → permissions and execution → events and state → reassembling the context → recovery after compaction → multi-agent collaboration.
+23326	The knowledge and quality path:</strong> original evidence → chunking and indexing → recall and reranking → versions and permissions → generation and citation → the memory life cycle → task results you can check → statistical comparison and running cost.
+27513	When you come to a new mechanism, be able to answer "which object is the input, where do the parameters come from, what is actually computed, and which step uses the result" before going into the formula. For the terms this book finds easiest to confuse, the concept index below gives a definition you can read on the spot, an independent micro-example and the matching full lesson.
+21604	Concept index: objects, sources, uses and independent micro-examples
+11991	The micro-examples below only explain the terms; they do not continue the input of any other chapter. Click a lesson entry to read the full chain of computation.
+24345	Linear projection and the weight matrix</a> <a href="#concept-q-projection">Wq / W_Q: the query projection parameters</a> <a href="#concept-k-projection">Wk / W_K: the key projection parameters</a> <a href="#concept-v-projection">Wv / W_V: the value projection parameters</a> <a href="#concept-qkv">Query, Key, Value: three intermediate numeric representations</a> <a href="#concept-wo">Wo / W_O: the attention output projection</a> <a href="#concept-wout">Wout, LM head: the vocabulary scoring parameters</a> <a href="#concept-identity">I: the identity matrix</a> <a href="#concept-bias">b / bias: the additive bias</a> <a href="#concept-sum">Σ: sum term by term over the subscript</a> <a href="#concept-transpose">ᵀ, transpose: swapping a matrix's rows and columns</a> <a href="#concept-elementwise">⊙: element-wise multiplication, not matrix multiplication</a> <a href="#concept-relu">ReLU: keeping the positive numbers, cell by cell</a> <a href="#concept-sigmoid">sigmoid: maps a single number into the range between 0 and 1</a> <a href="#concept-silu">SiLU: the input times a gating coefficient</a> <a href="#concept-gelu">GELU: a smooth adjustment according to the size of the input</a> <a href="#concept-swiglu">SwiGLU, Wg/Wu/Wd: two transformation paths, then combined</a> <a href="#concept-ffn">FFN / MLP: the position-by-position feed-forward network</a> <a href="#concept-norm">Norm, LayerNorm, RMSNorm: not a probability normalization</a> <a href="#concept-norm-params">γ, β, ε: keep the parameters and the stabilizing constant apart</a> <a href="#concept-prenorm">pre-norm / post-norm: where normalization goes</a> <a href="#concept-residual">Residual connection: addition keeps the main path</a> <a href="#concept-sqrt">√ / sqrt: the square root</a> <a href="#concept-dk">d_k, d_v, Dh: the width of each row of representation</a> <a href="#concept-heads">MHA, MQA, GQA: how heads are shared</a> <a href="#concept-rope">RoPE, rotary position encoding</a> <a href="#concept-moe">MoE, experts and the router</a> <a href="#concept-gradient">∂, ∇: partial derivative and gradient</a> <a href="#concept-jacobian">Jacobian: the table of derivatives for several outputs</a> <a href="#concept-loss">loss, cross entropy, negative log likelihood</a> <a href="#concept-labels">Labels, teacher forcing and shift</a> <a href="#concept-optimizer">Optimizers, Adam and AdamW</a> <a href="#concept-beta-policy">π, π_ref and β: the symbols of a preference objective</a> <a href="#concept-sft">SFT: supervised fine-tuning</a> <a href="#concept-rlhf">RLHF, the reward model and the policy</a> <a href="#concept-dpo">DPO: building a training objective from preference pairs
+7769	KL divergence: a difference between distributions that has a direction</a> <a href="#concept-lora">LoRA, low rank and r</a> <a href="#concept-quantization">Quantization, scale and zero point</a> <a href="#concept-dtypes">FP32, FP16, BF16: formats for storing numbers</a> <a href="#concept-mixed">Mixed precision, loss scaling and master weights</a> <a href="#concept-checkpoint">checkpoint: you must look at the object that was saved</a> <a href="#concept-cache">KV cache and prompt cache</a> <a href="#concept-prefill">Prefill / Decode: two phases of computation</a> <a href="#concept-flash">FlashAttention: changing how intermediate data is stored and read</a> <a href="#concept-paged">PagedAttention: managing K/V storage in pages</a> <a href="#concept-memory-hardware">HBM, SRAM and bandwidth</a> <a href="#concept-flops">FLOPs and FLOP/s: a count and a rate</a> <a href="#concept-parallel">DP, TP, PP, ZeRO and FSDP</a> <a href="#concept-temperature">temperature / τ: the temperature of the generating distribution</a> <a href="#concept-topk">Top-k, Top-p and renormalization</a> <a href="#concept-speculative">Speculative decoding: the draft and verification by the target</a> <a href="#concept-harness">Harness / the host program</a> <a href="#concept-api">API, SDK and the call boundary</a> <a href="#concept-schema">Schema and Structured Outputs</a> <a href="#concept-sse">SSE, chunk, delta: different layers of fragmentation
+7749	JSON-RPC, stdio and HTTP</a> <a href="#concept-oauth">OAuth, scope and authorization</a> <a href="#concept-context">Assembling context and the budget</a> <a href="#concept-compaction">Compaction: a lossy reduction of context</a> <a href="#concept-threadturn">Thread, turn, session: the levels of a run</a> <a href="#concept-state">State, events and the reducer</a> <a href="#concept-unknown">unknown / reconcile: verify first when confirmation is missing</a> <a href="#concept-idempotent">Idempotence and the idempotency key</a> <a href="#concept-cas">CAS, version checks and TOCTOU</a> <a href="#concept-transaction">ACID, transactions and isolation</a> <a href="#concept-wal">WAL, fsync and atomic replacement</a> <a href="#concept-outbox">Outbox, saga and compensation</a> <a href="#concept-backoff">Backoff, jitter and cancellation</a> <a href="#concept-tfidf">TF, DF, IDF: term statistics</a> <a href="#concept-bm25">BM25 and N, df, k₁, b</a> <a href="#concept-rrf">RRF: fusing by rank</a> <a href="#concept-cosine">Norms and cosine similarity</a> <a href="#concept-ann">ANN and HNSW: approximate retrieval structures</a> <a href="#concept-rerank">bi-encoder, cross-encoder and reranking</a> <a href="#concept-colbert">ColBERT and MaxSim</a> <a href="#concept-rag">RAG and the evidence behind generation</a> <a href="#concept-hyde">HyDE: the hypothetical text is only used to find material</a> <a href="#concept-graphrag">GraphRAG, RAPTOR and hierarchical organization</a> <a href="#concept-astlsp">AST, LSP and call relationships</a> <a href="#concept-ttl">TTL, valid time and record time</a> <a href="#concept-memory-types">semantic, episodic and procedural memory</a> <a href="#concept-skills">Skill, JIT and the trigger description</a> <a href="#concept-dag">DAG, dependencies and the critical path</a> <a href="#concept-handoff">Handoff and agent-as-tool</a> <a href="#concept-tests">oracle, assertions and mutation testing</a> <a href="#concept-metrics">Precision, Recall, MRR and nDCG</a> <a href="#concept-passk">pass@k and pass^k</a> <a href="#concept-bootstrap">Bootstrap, paired comparison and the confidence interval</a> <a href="#concept-stats">Binomial, standard error and the Wilson interval
+8925	TTFT, TPOT, p95 and throughput</a> <a href="#concept-slo">SLI, SLO and the error budget</a> <a href="#concept-little">Little's law: L=λW as local notation</a> <a href="#concept-security">Prompt injection, sandboxes and permissions</a> <a href="#concept-patch">Patch, image channels and the visual projection</a> <a href="#concept-clip">CLIP and image-text contrastive learning</a> <a href="#concept-sae">SAE, activations and interpretable features</a> <a href="#concept-calibration">Calibration, confidence and abstention</a> <a href="#concept-sigma">σ: tell the function symbol from the statistic</a><a href="#concept-upstream">G, dQ, dW: the intermediate gradients in backpropagation</a><a href="#concept-concat">Concat, split and chunk: joining and splitting</a><a href="#concept-dropout">Dropout: the rule that randomly zeroes values during training</a><a href="#concept-logsumexp">logsumexp: sum the exponentials first, then take the logarithm</a><a href="#concept-batchnorm">BatchNorm: statistics across samples, unlike LayerNorm</a><a href="#concept-combination">C(n,k), !: the number of combinations and the factorial</a><a href="#concept-big-o">O(·): the order of growth with size</a><a href="#concept-probability-symbols">E, Π, ∼, ∝: common notation in probability expressions</a><a href="#concept-bos-eos">BOS / EOS: sequence boundary markers</a><a href="#concept-json">JSON: structured text, not an action being executed</a><a href="#concept-linebreak">LF, CRLF and EventSource
+7692	HEAD, working tree, ETag and content fingerprint</a><a href="#concept-interface-environment">IDE, CLI, UI and DOM</a><a href="#concept-pixels">DPR, DPI and coordinate units</a><a href="#concept-mla">MLA: a learned low-dimensional K/V representation</a><a href="#concept-databases">SQL, SQLite and the transaction object
+24344	Linear projection and the weight matrix
+19299	A projection is the operation that recombines the input features by coefficients; W is the model parameter table that stores those coefficients. The input X is this data, and XW is the result computed this time. The parameter table is usually updated during training, and in ordinary inference it stays fixed once loaded from the weight file.
+22727	Independent micro-example: x=[1,2], W=[[3],[4]], xW=[11]. W is not the 11 itself, nor the ID of the word.
+27310	This is the parameter matrix that turns the input representation into the query, not the query itself. Under this book's right-multiplication convention, each input row has d numbers and Wq has d rows and d_k columns, so after Q=XWq each row has d_k numbers. The subscript q marks what it is for; it does not mean multiplying by another q.
+15351	One Wq can handle many positions; each position gets its own q. F11 gives X, Wq and every multiply-add result.
+27315	This is the model parameter table that produces the key representation. The X in K=XWk comes from the current attention input, and K is the result computed this time; Wk is not a table that stores document keywords or secret keys. Q and K have to have the same row width for a dot product to be possible.
+15868	In F11, x₁=[1,-1] times Wk gives k₁=[0,1]. The original token IDs are not taken as keys.
+27292	This is the model parameter table that produces the value content vectors from the input. After V=XWv, attention mixes the rows of V by the share in which each is read. The value width d_v may differ from the query/key width d_k; it is not the final answer over the vocabulary.
+7619	In F11 the same x₁=[1,-1] times Wv gives v₁=[0,20], which then takes part in the weighted sum.
+9283	q is one row of query representation for the position receiving information; k is one row of matching representation offered by a readable position; v is one row of content representation that position contributes to the mix. Capital Q/K/V collect several rows into tables. They are computed from the input and the parameters, and they carry the separate jobs of scoring and of supplying content.
+21224	One q dotted with two k gives two scores; softmax turns them into two shares; those shares multiply the two rows of v, and the results are added. Nothing here generates a search term, and nothing here picks an answer directly.
+18783	The parameter matrix that concatenates the attention heads' outputs and then converts them to the width the main network needs. It is still a table of coefficients: not the shares from softmax, and not the vocabulary output head Wout.
+24980	If two heads each output 2 numbers, the concatenation is 4 wide; multiplying on the right by Wo of shape [4,6] gives 6 numbers, matching the residual width. This is an independent example about shapes.
+18837	The parameter layer that turns the final hidden representation into a score for every vocabulary candidate. The input width is d, the vocabulary has Vocab entries, and the right-multiplied parameter shape is [d,Vocab]. Producing probabilities means normalizing these scores as well.
+22351	Attention's Wo outputs hidden features; Wout outputs scores over vocabulary candidates. Both names contain "output", but what they output is different.
+7744	In a matrix formula I is usually the identity matrix: 1 on the diagonal and 0 everywhere else. At a compatible size, multiplying a vector or a matrix by I leaves the numbers unchanged. Wq=Wk=I is a special case chosen deliberately; one cannot infer from it that the projections of a real model are all the same.
+22719	Independent micro-example: I=[[1,0],[0,1]], and [3,-2]I=[3,-2]. I here is not the position subscript written as the letter i.
+9126	b / bias: the additive bias
+12592	A bias is a row of parameters added on top of the result of the linear multiplication, aligned with the output features. It is learnable just as W is, but what it performs is addition. Leaving the bias out means that example or that layer has no such addition; it does not mean a matrix multiplication was forgotten.
+22728	Independent micro-example: xW=[3,1], b=[0,-2], xW+b=[3,-1].
+9379	Σ is shorthand for addition. The subscript says which term varies; a subscript that is not summed over stays fixed. It is not an extra parameter, and it does not mean concatenating arrays.
+22729	Independent micro-example: Σᵢ xᵢyᵢ with x=[1,2] and y=[3,4] is just 1×3+2×4=11.
+9392	ᵀ, transpose: swapping a matrix's rows and columns
+26107	Transposing turns the original rows into columns. The point of QKᵀ is to have each row of Q take a dot product with each row of K. For a higher-dimensional tensor, usually only the two axes named explicitly are transposed. The superscript ᵀ is not the sequence length T, and it is not a power.
+22724	Independent micro-example: [[1,2],[3,4]]ᵀ=[[1,3],[2,4]]; it is not the same as a reshape that keeps the order.
+28210	Elementwise multiplication multiplies the numbers at the same position once the shapes are aligned; it does not then sum along any dimension. Matrices written side by side in a formula, or @, usually mean matrix multiplication, and the two are not interchangeable.
+22723	Independent micro-example: [1,2]⊙[3,4]=[3,8], whereas the dot product is 11. The ⊙ in a gated feed-forward network modulates one path with the other, feature by feature.
+8731	ReLU: keeping the positive numbers, cell by cell
+8728	ReLU is a function whose rule is max(0,x): negatives become 0 and non-negatives are kept. Applied to a row of numbers, it runs cell by cell. It is not a parameter table, and it does not need information from any other token.
+22721	Independent micro-example: ReLU([3,-1])=[3,0]. Remove it and [3,-1] is kept, so the multiplication that follows comes out different.
+13690	The function rule is sigmoid(x)=1/(1+exp(-x)). It computes number by number and does not require one row of results to sum to 1, so it cannot stand in directly for a softmax over several candidates.
+22725	Independent micro-example: sigmoid(0)=0.5; computing two zeros separately gives [0.5,0.5], which is only a coincidence — for the input [1,1] the two terms already sum to more than 1.
+8871	SiLU(x)=x×sigmoid(x). The input is first mapped to between 0 and 1, then multiplied back by x itself, which makes it nonlinear. Negative numbers do not all become 0 as they do with ReLU.
+22722	Independent micro-example: SiLU(0)=0; SiLU(1) is about 0.731059; SiLU(-1) is about -0.268941.
+17957	The common definition is GELU(x)=xΦ(x), where Φ is the cumulative probability function of the standard normal distribution. It keeps negative and positive inputs to different degrees; it is not random sampling. An implementation may also use an approximate formula.
+22730	Independent micro-example: Φ(0)=0.5, so GELU(0)=0. Φ here is not a learnable parameter table of the model.
+27321	This is a gated feed-forward structure. Wg produces the path that goes through SiLU, Wu produces the other content path, the two are multiplied element by element, and Wd maps the result back to the original width. These Ws are three sets of parameters, not three agents.
+25849	To read (SiLU(XWg)⊙XWu)Wd, compute XWg and XWu first, then SiLU, then ⊙, and finally multiply by Wd. Every position uses the same set of parameters independently.
+7625	FFN / MLP: the position-by-position feed-forward network
+15872	In the Transformer setting it usually means the sub-network that applies, separately at each position, a linear transformation, a nonlinearity and another linear transformation. It works on the features; at this step it does not weight other token positions directly.
+22716	Independent shape example: [B,T,4]→[B,T,8]→[B,T,4]. The number of positions T does not change; what changes is the representation at each position.
+7965	In a layer formula, Norm stands for a normalizing function. LayerNorm usually subtracts the mean over one token's features, divides by the standard deviation, then scales and shifts; RMSNorm usually does not subtract the mean and scales by the root mean square. Neither of them is softmax.
+22717	Independent micro-example, ignoring the small positive ε that stabilises the denominator and the learnable scaling: LayerNorm([1,3])=[-1,1]; RMSNorm([1,3])=[1/√5,3/√5].
+15870	In the LayerNorm expression, γ is a row of learnable multiplicative coefficients and β a row of learnable additive ones; ε is a small positive number set by hand, placed in the term involving the denominator to avoid division by zero and similar problems. The mean μ and the variance σ² that are computed are in turn statistics of this data.
+9382	γ=1 and β=0 usually mean that every feature uses 1 and 0; they are not the meaning of an input word. The β in DPO refers to a coefficient of the objective function, and the sense it has here does not carry over.
+9271	pre-norm normalizes first and then enters the sub-layer, with the residual added straight from the original input; post-norm adds the sub-layer result to the original input and normalizes after that. This describes the order of operations, not two phases before and after training.
+22745	Independent structural comparison: x+F(Norm(x)) and Norm(x+F(x)) are not generally equal. F stands for the sub-layer function being wrapped here.
+21973	Residual connection: addition keeps the main path
+21970	The residual output is the original input plus the result the sub-layer computed. F(x) is the array that branch produced, not another historical document. The shapes on both sides, and what their features mean, have to be suitable for addition.
+22726	Independent micro-example: x=[1,2] and F(x)=[0.3,-0.1] give [1.3,1.9]; overwriting x with F(x) would replace the function.
+9581	√ / sqrt: the square root
+17582	For a non-negative a, √a is the non-negative number whose square is a. sqrt(a) is the usual way to write it in code. Dividing by √d_k scales the scores by the square root of the number of Query/Key features; it is not a second softmax.
+22731	Independent micro-example: √4=2; √2 is about 1.414214. With d_k=2, a score of 1 divided by √2 is about 0.707107.
+9163	d_k is how many components one Query/Key vector has; d_v is how many components one Value vector has. Dh, or d_h, is the single-head width in some chapters. They are size integers, not the k-th Key or some Value number.
+18288	Shape micro-example: with Q[2,3], K[5,3] and V[5,4], the scores are [2,5] and the output [2,4]. A pairing width of 3 for Q/K with a Value width of 4 is still legitimate.
+10313	An attention head is one path that matches and then aggregates content. MHA usually gives every query head its own K/V head; MQA has several query heads share one group of K/V; GQA sits between them, sharing by group. These are structural choices, not a switch to be flipped at run time.
+22715	Independent shape example: 8 query heads and 2 K/V heads, grouped evenly, means every 4 query heads share 1 group of K/V; the cache is accounted for by the number of K/V heads.
+8748	RoPE, rotary position encoding
+17597	Pair up the features of Query and Key into two-dimensional groups, rotate them by an angle that the position decides, and then compare them. R is the rotation matrix and θ an angle or an angular frequency; position IDs are not token IDs.
+22672	Independent two-dimensional example: rotating [1,0] by 90° gives [0,1]. Real models usually set a different rotation frequency for different pairs of features, rather than 90° throughout.
+7936	MoE is a model structure that contains several sub-networks; the router selects or weights a few experts for the current token's representation. An expert is usually a numeric sub-network, not a chat agent given a prompt such as "math teacher".
+22694	Independent example: with 4 experts and 2 chosen per token, one pass activates only 2 of the expert paths; the parameters and routing state that the model design requires still have to be stored.
+9578	∂L/∂w asks how the loss L changes when w changes a little while the other independent variables are held fixed. These rates of change across many parameters make up the gradient ∇L. They are derivative notation, not two ordinary numbers divided by each other.
+22720	Independent micro-example: for L=w², the gradient at w=3 is 6. In the simplest update w←w−η×6, η is the learning rate.
+18204	When a function has several inputs and outputs, the Jacobian records in one table the partial derivative of every output with respect to every input. J_F denotes that table for the function F; it is not a new matrix in the training data.
+22718	Independent micro-example: F([x₁,x₂])=[2x₁,3x₂], J_F=[[2,0],[0,3]]. The derivative table of the residual x+F(x) is I+J_F.
+9226	loss, cross entropy, negative log likelihood
+19512	The loss is the scalar that measures, during training, how far the prediction is from the target. For a single correct token label, the cross entropy equals its negative log probability, −ln p_target. It is the value of the objective function, not another token the model has output.
+22732	Independent micro-example: with a probability of 0.8 on the correct item the loss is about 0.223144; with a probability of 0.2 it is about 1.609438. The further the probability is from the correct item, the heavier the penalty.
+21348	A label is the correct target to compare against; next-token training lines each input position up with the token after it. Teacher forcing computes with the real prefix from the data rather than replacing it with what was just sampled.
+22691	Independent example: for the full sequence [a,b,c,d] the input [a,b,c] can be paired with the labels [b,c,d]. When the interface already shifts them, do not shift them a second time outside it.
+12102	An optimizer turns gradients into parameter updates. Adam also keeps, for every parameter, a moving average m of the gradient and a moving average v of the squared gradient; these are training state, not attention values. AdamW decouples weight decay from the adaptive gradient update.
+22757	Independent first-step example: with g=2, old m=0 and β₁=0.9, the new m is 0.2, and after bias correction m_hat=2. The 0.2 cannot be taken as the full size of the update.
+15975	In policy and preference optimization, π denotes a conditional-probability policy and π_ref a fixed reference policy; β is a coefficient that sets the scale of the objective or the strength of the constraint. The probability of a complete answer is built from the conditional probability of each token.
+27357	π here is not the circle constant, and β is not the LayerNorm offset parameter. The w/l in the DPO expression mark the preferred and the non-preferred answer, not a weight w and a layer count L.
+8809	SFT: supervised fine-tuning
+22880	Take task inputs and the answers expected of them as training samples, and go on adjusting the parameters of an existing model. It is a training process, not stuffing examples into one prompt for the occasion.
+22697	Independent example: the input is "convert the time to UTC", the label gives the correct conversion, and training computes the loss against the label and changes the parameters. Showing an example in the conversation alone is context prompting.
+8707	RLHF refers broadly to processes that train behavior using human feedback. A reward model scores behavior such as an answer; the policy is the probability model that actually produces actions. Their jobs differ, and a high reward is not automatically factual correctness.
+22690	Independent example: if the reward model prefers long answers, the policy may learn to write at length without being more accurate; the reward criterion therefore needs to be validated.
+7381	DPO: building a training objective from preference pairs
+7373	From the better and the worse answer to the same input, together with a reference policy, DPO builds a preference training loss directly. It changes the model parameters; it is not a prompt that says "think again".
+12681	First sort out the probabilities the current policy gives the two answers, the probabilities from the reference policy, and the preference label; then see how they enter the log ratio.
+27258	These are concepts from policy optimization. PPO commonly limits the update with a ratio of new to old action probabilities, plus clipping; GRPO-style methods build the advantage by comparing rewards within a group. An advantage is performance relative to a baseline, not the probability that an answer is correct.
+22702	Independent raw-difference example: rewards [0,1,1] minus the group mean of 2/3 give [-2/3,1/3,1/3]. An algorithm may normalize them again, so the two forms must not be mixed.
+7768	KL divergence: a difference between distributions that has a direction
+17294	For distributions p and q over the same candidate set, KL(p∥q)=Σpᵢln(pᵢ/qᵢ). It measures the difference between distributions and is usually not symmetric; where p has positive probability and q is 0, the cost even becomes infinite.
+22683	Independent example: with p=[0.5,0.5] and q=[0.25,0.75] it is about 0.143841; do not take it for a Euclidean distance or a probability.
+7856	LoRA represents part of a weight increment as the product of two smaller matrices instead of retraining the whole large matrix. r is the inner dimension, and it bounds the maximum rank of that product. Where sources use a row-vector or a column-vector convention, the left-right order of A and B can differ.
+15285	Micro-example in the right-multiplication convention: with W[4,6], the increment A[4,2]B[2,6] is still [4,6]; r=2. A here is not the table of attention shares.
+28566	Quantization, scale and zero point
+28575	Quantization approximates the original floating-point numbers with integers of fewer bits plus metadata such as a scale. The scale maps the integer steps back to real numbers, and the zero point maps the real 0 to some integer. It does not turn semantic features into one-hot.
+22711	Independent symmetric example: with scale=0.1, 0.26 rounds to the integer 3, and dequantizing gives about 0.3 — an approximation error already.
+7634	FP32, FP16, BF16: formats for storing numbers
+27249	These names describe how the bits of a floating-point representation are allocated. FP32 is usually 4 bytes per number, FP16 and BF16 2 bytes per number; the two 16-bit formats differ in exponent range and mantissa precision. A number of bits is not the model's hidden dimension.
+22709	Independent size example: the data itself for 100 FP16 numbers is 200 bytes, not counting object, allocator and alignment overhead.
+22498	Mixed precision uses different numeric formats for different computations or states. A master copy of the weights can be kept at higher precision as the baseline for updates; loss scaling enlarges the loss before the backward pass and then scales the gradients back down, lowering the risk of underflow at some low precisions.
+18010	This is not multiplying the learning rate up at will. Whether master weights or loss scaling are actually needed depends on the precision format, the optimiser and the implementation.
+21721	A model checkpoint saves weights or training state; activation checkpointing saves a few intermediate nodes so they can be recomputed on the backward pass; an agent task checkpoint saves how far execution has got. The three share a name, but what they restore is entirely different.
+23243	When you see "checkpoint", first ask whether it restores parameters, recomputes activations, or continues a task. An agent saving a summary does not update model weights.
+7770	KV cache and prompt cache
+7787	A KV cache stores the K/V numbers of each layer under the conditions of a particular model, prefix and position; a prompt cache is the mechanism by which a service reuses the computation of an identical prefix when the conditions are met. Neither of them is long-term memory of facts.
+27660	When a new token is appended and the old causal prefix has not changed, the old K/V can be reused; rewriting the history as a summary usually changes the input, and must not be treated as leaving the original cache untouched.
+8049	Prefill / Decode: two phases of computation
+8054	Prefill processes a stretch of input that has already been given, forming the representation and the cache; decode feeds in the new token just selected and predicts the one after that. The new token selected only produces its own K/V at the next forward pass.
+22737	Independent sequence: [a,b,c] is processed first and d is selected, at which point the cache covers the 3 positions processed; only after d is processed does it cover 4, and then e is selected.
+28322	By means such as tiling and online normalization, it avoids keeping the full attention score/weight matrix in slower VRAM for long; the target is still the same attention computation, and floating-point rounding can vary with the order of operations.
+16445	It does not compress tokens permanently, and it does not skip any Key. Keep "not writing the whole table to VRAM" apart from "not doing this arithmetic at all".
+19285	Store a logically contiguous K/V sequence in several physical blocks, located through a block table. It mainly changes how the storage is managed and shared; it does not replace the attention formula with an algorithm that means something else.
+22698	Independent example: logical positions 0—3 are in physical block 7 and 4—7 in block 2; logical position 4 need not physically follow position 3.
+7691	HBM here means the larger high-bandwidth memory on a GPU; the related on-chip SRAM is usually smaller and closer to the computation. Bandwidth is how many bytes can be moved in a given time; arithmetic intensity is the ratio of computation to data moved.
+22748	Independent accounting: 100 operations against 10 bytes moved is about 10 operations per byte. It is not a measurement of real hardware performance.
+7633	FLOPs usually means a number of floating-point operations; FLOP/s means a rate of operations per second. Papers and vendors may count a multiply-add as one operation or two, so the basis has to be fixed.
+11038	Dividing total operations by the theoretical peak is no promise of real elapsed time: movement, queueing, communication and actual utilization cost something too.
+20044	Data parallelism lets several copies of the model process different samples and synchronize their gradients; tensor parallelism splits the parameters and the computation of a single operator; pipeline parallelism puts different layers on different devices. ZeRO/FSDP-style techniques also shard parameters, gradients or optimizer state.
+16451	What they split differs: dividing one layer's matrix in two is not the same as giving two independent user tasks to two agents.
+9345	temperature / τ: the temperature of the generating distribution
+21828	A positive temperature τ is usually used to divide the logits by τ before the softmax. A small τ makes the distribution more concentrated and a large τ flattens it; subtracting the same constant from every score, by contrast, does not change the distribution mathematically.
+22710	Independent comparison: at τ=2, [2,1,0] first becomes [1,0.5,0]; the probabilities for τ=1 must not be joined on as the result of this step.
+8978	Top-k keeps the k items with the highest probability; Top-p sorts by descending probability and keeps the leading candidates until the cumulative probability reaches a threshold. When used for sampling, the kept candidates have to be renormalized over the remaining total mass.
+27353	Here k is a number of candidates and p a cumulative-probability threshold; k is not the attention Key table K, nor the representation width d_k.
+19666	Speculative decoding: the draft and verification by the target
+12843	A cheaper draft mechanism proposes several tokens first, and the target model then verifies them. An algorithm that preserves the target distribution has to specify the acceptance probability and the corrective distribution used after a rejection, rather than only checking that the text "looks right".
+10447	One verification can check the conditional distribution of several candidates; whether it speeds anything up depends on the acceptance rate and on computation and scheduling costs. A teaching example about distributions is not a real throughput test.
+7702	Harness / the host program
+27304	This is the program that runs around the model: it prepares the request, parses the model output, checks tool permissions, carries out actions, saves state and calls the model again. It is not a layer inside the model parameters.
+15411	For the same sentence "read the file", what the model produces is call data; it is the harness that calls the file interface and puts what actually came back into the next turn's input.
+6916	API, SDK and the call boundary
+6922	An API is an agreed interface that programs can call between them; an SDK is a set of libraries that make calling those interfaces easier. Installing an SDK does not train a model, obtain a permission or guarantee that a task is right.
+25832	The request "read the path a.py" and the return "the bytes of that file" are two objects interacting across an interface.
+8850	A schema is a set of structural rules about fields, types and the like; a structured-output mechanism makes it easier for the model to return data that follows those rules. Valid fields still do not mean that the target file exists, that access has been granted, or that the request is right for the business.
+22696	Independent example: path is required to be a string; {"path":3} does not match the type rule, and {"path":"missing.py"} follows the structure yet may still find no file.
+8833	SSE is the text protocol for server-sent events; a network chunk is the stretch of bytes received this time; a delta is the incremental content of one output item. Their boundaries are not guaranteed to coincide. One complete event does not necessarily mean complete tool arguments either.
+14732	The arguments may arrive first as {"path":"a and then as .py"}; they have to be assembled and the protocol's completion condition awaited — seeing a fragment is no reason to execute.
+27255	These are identifiers for objects at different layers: a tool call, an output item, a request or a response. They match increments and results back to the right object; they are not the token IDs of the model input, and they are not business idempotency keys by nature.
+11372	Two read_file calls can carry c1 and c2; when the results come back in the reverse order they are still paired by call identifier, not guessed by tool name.
+7894	MCP is a protocol by which an AI harness connects to tools and resources. The Host is the application, the Client is the protocol connection participant inside it, and the Server provides the capability. Connecting, discovery, exposing something to the model, authorization and the actual call are separate steps.
+17749	A tool existing on the Server does not mean its description is already in the sub-agent's request, nor that the current user may run it.
+7751	JSON-RPC lays down how a method, its arguments, an identifier and a result are represented in JSON; stdio communicates over a process's standard input and output; HTTP is a network request protocol at another layer. The name of a protocol carries no permission with it.
+22840	When stdout carries protocol messages, ordinary debug logs should be kept out of that stream and usually go to stderr; otherwise even legitimate logs can break message parsing.
+15930	In an authorization setting, OAuth lets an application obtain access credentials according to what was granted; a scope declares one class of access range, and the resource service should still check the specific permission. In a memory or task setting, scope can instead mean only the range over which something applies, and must not be conflated with a login credential.
+25093	Being granted "read the calendar" is not being granted the deletion of every event; a successful connection is no proof that an operation was approved.
+10575	Assembling context and the budget
+11867	Select content from the instructions, the task, retrieved evidence, tool results and the current state, and arrange it into this model request. The budget is the limit on how much input fits and how much output is reserved; it does not make the model remember all the material for good.
+10391	A piece of evidence should enter the request together with its source, the version it applies to and the key conditions; keeping only the one-line conclusion can change what it means.
+7289	Compaction: a lossy reduction of context
+15881	When the context has grown too long, replace part of the history with a summary, a selection or a particular compacted state. The representation it keeps is not every original detail; recoverable execution state and the original evidence should still be managed separately.
+9457	"Not tested" cannot be compacted into "the tests passed"; "the call timed out, the effect is unknown" cannot be compacted into "the call failed" either.
+27262	These are usually the host's divisions of a conversation and of units of work, not layers of a neural network. A thread can mean one conversation, and a turn can contain the several model and tool cycles needed to answer one user task; where the boundaries fall depends on the product.
+11066	"This turn is done" cannot be equated with "every external tool has finished"; that takes looking at the actual events and results.
+22636	State, events and the reducer
+22652	State says what is known and done now; an event records what happened; a reducer is the program rule that combines the old state and an event into a new state. It need not call the model. Event sourcing can rebuild the state from the events.
+22693	Independent example: the old state is pending and becomes succeeded once a confirmation event carrying the operation_id arrives; without that confirmation the state must not be changed on the strength of a generated summary alone.
+9359	unknown / reconcile: verify first when confirmation is missing
+9360	unknown means the observer cannot yet confirm the effect; it does not mean the action half-succeeded in reality. Reconciling is verifying against the actual state of the target system, the operation identifier and so on, so that the record agrees with the facts again.
+13622	The response is lost after a file write: the file may already have changed. Read it back and verify, instead of reading the timeout as "it certainly was not written" and appending a second time.
+17982	Idempotence and the idempotency key
+17985	Idempotence means that repeating the same logical operation has, under the stated semantics, the same expected effect as performing it once. An idempotency key identifies one and the same intended operation; the system has to deduplicate at a reliable boundary and check what the request means.
+18767	Setting a value to 10 can be designed to be idempotent; adding 10 to a value accumulates when it runs again. If every retry takes a new key, the original key can no longer be used to deduplicate.
+7196	CAS is a controlled operation that updates only after comparing that the expected version or value still matches. TOCTOU is the race in which something changes between the check and the use: a separate "look at the version, then write" is not automatically equivalent to an atomic CAS.
+25859	If a patch was produced from version 7 and the version is already 8 at commit time, overwriting directly should be refused and the work redone; a concurrent insert between the comparison and the write has to be prevented as well.
+11621	A transaction puts a group of database operations inside a defined commit boundary. ACID stands for atomicity, consistency, isolation and durability; the guarantee you actually get also depends on the isolation level, the configuration and the resource boundary.
+20051	A database transaction committing does not mean another mail service commits along with it. Writing the two operations into the same function does not automatically make a cross-system transaction.
+9037	WAL is the idea of writing a log first and then updating the data by protocol; fsync asks for a file's data to be synchronized to storage; an atomic rename, where it is supported, keeps readers from seeing a half-finished replacement. Visibility and durability after a crash are not the same guarantee.
+10296	One file renaming successfully does not mean several files and a database committed together; durability also has to be checked against the platform, the directory and the storage behavior.
+8008	An outbox persists the business change together with the message waiting to be sent, and a dispatcher forwards it afterwards; a saga organizes steps across services into a process that can be compensated. They are designs for reliability across a boundary, not a natural guarantee that the far end runs exactly once.
+14864	An email already sent usually cannot make the recipient "not have seen it". Compensation may mean sending a correction; it is not the same as really undoing what has already taken effect.
+28134	Backoff makes the interval between retries grow; jitter adds a random perturbation so that requests do not all retry at the same moment. A cancellation signal is notice that a stop has been requested; it does not withdraw external side effects already committed.
+15080	A read-only request whose connection fails temporarily can be retried; when the result of a write request is unknown, verify first. "Retry for longer" is no substitute for permission or idempotence design.
+8915	TF counts how often a term occurs in the current document; DF counts how many documents contain it; IDF uses whole-corpus statistics to lower the contribution of common words and raise that of rarer, more discriminating ones. All three are statistics, not the model's learning rate.
+6103	If only 2 of 10 documents contain a word, DF=2; if the word occurs 3 times in one of them, TF=3 for that document. The two numbers are not interchangeable.
+7087	BM25 is a scoring formula for term-based retrieval. In the usual notation N is the total number of documents, df the number of documents containing the term, tf the term frequency in the current document, |D| the length of the current document and avgdl the average length; k₁ and b are the settings for term-frequency saturation and length correction.
+9211	k₁ is not the Key vector k₁, and b is not a neural network bias. The score only orders candidates; 8.2 cannot be read as 82% accuracy.
+8719	For a document's rank r on each recall path, RRF contributes 1/(c+r), and these are added. c is a smoothing constant and r usually starts at 1; a candidate that did not appear on a path does not receive that path's contribution out of nowhere.
+22681	Independent example: with c=10 and a document ranked 1 and 3 on two paths, it gets 1/11+1/13, about 0.167832. This is not adding the raw BM25 and cosine scores together.
+25084	Norms and cosine similarity
+15562	The usual L2 norm of a vector is the square root of the sum of the squares of its components. Cosine similarity is the dot product divided by the product of the two norms, so it mainly compares direction; if either vector is zero, that case has to be handled explicitly.
+22680	Independent example: [1,0] and [2,0] have a dot product of 2 and a norm product of 2, so the cosine is 1. It is not attention's raw dot product before normalization.
+6914	ANN here means approximate nearest-neighbor search, not artificial neural networks in general. HNSW is a structure that narrows the search using a hierarchical graph of near neighbors; its parameters affect recall, speed and memory.
+21247	Finding something quickly is no guarantee of finding the exact nearest neighbors; nor does ANN recall equal the correctness of the final answer.
+14797	A bi-encoder encodes the query and the document separately, so document vectors can be stored in advance; a cross-encoder processes a query and a document together for a finer judgement, usually computing every pair. Reranking only orders candidates that have already been recalled.
+28366	A correct document that was missed is not in the candidate set, and no reranker, however strong, can put it first; the recall has to be fixed first.
+7284	ColBERT-style methods keep several token vectors for the query and for the document, then interact them late. The usual MaxSim takes, for each query token, the highest similarity with any document token, and then aggregates.
+16443	It is not dual-encoder retrieval where "the whole document has only one vector", and it is not the self-attention output of each layer of a generative model.
+8697	RAG and the evidence behind generation
+21575	Retrieval-augmented generation is an application flow: obtain external material first, then have the generating model answer from it. Retrieved material is not a new instruction from the user; even with a citation, you still have to check whether the citation really supports the claim.
+21236	Finding an "overview of retries" is not enough to answer "can a write operation in this version be retried automatically"; that also takes the conditions of use, the version and the exceptions.
+22977	Have the model generate a hypothetical answer or document and use its representation for retrieval. That generated text is an aid to finding evidence, not a source of facts already found.
+21729	The model guesses "it may be cache invalidation", which is reason enough to widen the search; before there is real evidence it must not be written up as "cache invalidation confirmed".
+7689	GraphRAG-style methods use organizational information such as entity relationships and communities; RAPTOR uses hierarchical clustering and summaries to support retrieval. They introduce extra derived information, and with it problems of updating, provenance and error propagation.
+22521	When the source document changes, an old summary or a relationship in the graph may be out of date. Changing the original text is no proof that every derived index has been updated with it.
+6925	AST, LSP and call relationships
+6928	An AST is the syntactic structure tree of code; LSP is the protocol by which an editor and a language service exchange definitions, references, diagnostics and the like. A syntax tree can be parsed from the code, while semantics across files usually also needs the language and the project environment.
+13683	A string with the same name appearing somewhere does not mean the same function is called; dynamic behavior such as string concatenation and reflection can also go beyond what static analysis is able to settle.
+8933	A TTL is an expiry setting on storage or a cache; valid time is when a fact applies; record time is when the system came to know it. An expiry policy cannot stand in for verifying the fact and its source.
+6096	A rule that takes effect on October 1 is only read on October 10: the business valid time counts from the 1st, while the time the system knew about it counts from the 10th.
+25793	Semantic memory keeps facts, episodic memory keeps experiences, procedural memory keeps conditional methods; working memory serves the current task. CoALA is a framework for analyzing this kind of cognitive architecture, and MemGPT studies how a limited context and external storage are organized.
+9404	"Patch p7 failed because a test was missing" is an experience; "Windows has to be supported for now" is a fact; "check the separator when changing path rules" is a conditional procedure, and must not be promoted straight into running the full test suite for every task.
+15986	In a capability-loading setting, a Skill is a reusable set of guidance and resources; JIT means loading only when needed, and does not necessarily mean a compiler's just-in-time compilation. A trigger description helps the model judge whether something applies; it does not grant tool permissions by itself.
+18057	First judge whether the task needs a given skill, then read the details; a loaded skill is not the same as its requirements having actually been carried out.
+7363	A DAG is a task dependency graph that is directed and has no cycles. The arrow A→B means B depends on A finishing; the critical path is the longest dependency chain, the one that fixes the earliest finishing time given the task durations and dependencies.
+22678	Independent example: A takes 2 seconds, B and C depend on A, take 3 and 5 seconds and can run in parallel, so finishing both after A takes at least 7 seconds — not 2+3+5=10 read as wall-clock time.
+7699	A handoff gives control to another agent; agent-as-tool treats a sub-agent as a callable component whose result returns to the current controller. An orchestrator is the coordinating program or agent responsible for distributing and integrating the work.
+16365	Delegation needs the task, the boundaries, the evidence and the completion conditions; it does not require copying the whole history of the main session across.
+9249	oracle, assertions and mutation testing
+20134	An assertion compares the actual result with what was expected; the oracle is the reliable criterion that expectation comes from; property testing checks a general rule; mutation testing puts small errors in deliberately, to see whether the tests fail.
+16362	An exclude function that always returns True can pass a single positive example; it takes the counterexample "src/a.py should not be excluded" to expose it.
+24214	Precision looks at how many of the returned results are relevant; recall looks at how many of the relevant items that should have been found were found; MRR averages the reciprocal rank of the first correct item; nDCG takes the degree of relevance and the position in the order into account, and normalizes against the ideal ordering.
+22692	Independent example: 5 documents should be found, 4 are returned and 3 of them are relevant, so precision is 3/4 and recall 3/5. Do not swap these two denominators.
+9262	pass@k-style metrics usually care about at least one success in k attempts; pass^k-style metrics stress succeeding every time. The exact basis of an estimate depends on the benchmark, and stopping after one success must not be conflated with being reliable every time.
+22706	Under an independent, equal-probability assumption of p=0.8, at least one success in 3 attempts is 0.992 and all 3 succeeding is 0.512. If real tasks are correlated or differ in difficulty, it has to be computed differently.
+7115	Bootstrap, paired comparison and the confidence interval
+7116	Bootstrap resamples an existing sample with replacement to watch how a metric fluctuates; a paired comparison should draw the A/B results of the same task together. A confidence interval comes from a specified sampling procedure; it is not how confident the model is about its answer.
+18694	Breaking the A/B pairing of tasks mixes differences in question difficulty in as well; and more resampling cannot fix a task set that does not represent the real business.
+11651	The binomial model is commonly used for a fixed number of independent success/failure trials; the standard error describes the scale on which an estimator fluctuates; Wilson is one way of constructing an interval for a proportion. McNemar looks at disagreement in both directions among paired classification results.
+21380	Dependent samples, a mixture of task difficulties or hand-picked questions change how far the result can be read; a statistical formula is not evidence that "the improvement must come from this change".
+8985	A trace strings together the operations that belong to one task, a span records the time and attributes of one of those operations, a log records the details of an event, and a metric aggregates many runs. They record observable execution, which is not the model's real inner thinking.
+18023	The durations of parallel spans cannot be added up blindly into the user's waiting time; look at the dependencies and the start and end times.
+8928	TTFT is the latency from the request to the first output token; TPOT describes the statistics of the time per token after that; p95 is the quantile that about 95% of observations in a given window do not exceed; throughput is the amount completed per unit of time. Say where the timing starts and stops.
+29048	A fast first character does not mean a fast task: tool execution may still take a long time. Nor does theoretical peak throughput equal the latency one user sees.
+8815	An SLI is a service level indicator that is actually measured; an SLO is the target for that indicator; the error budget is the room for failure that target allows. They are objects of service operation, not model parameters.
+9396	"The API returned 200" may not be success for the user; some businesses should define the indicator as the proportion of tasks completed correctly within a bounded time.
+28753	In queue accounting, L is the average number of tasks in the system, λ is the average arrival rate and W is the average time spent in it; under applicable conditions such as stability, L=λW. Here W is not a projection matrix, and L is not the number of model layers.
+22695	Independent example: with 2 items arriving per second on average and an average stay of 3 seconds, about 6 items are in the system on average; an instantaneous spike cannot simply stand in for the long-run average.
+8064	Prompt injection, sandboxes and permissions
+19774	Prompt injection is an attempt to change the model's behavior through content that enters the context. A sandbox limits the resources a program can reach; authorization decides what is actually allowed. Labeling text "untrusted" is not the operating system having isolated it.
+25882	"Send the key out", read from a document, is still the content of that document, not a new authorization from the user. The tool execution boundary should judge the permission independently.
+15832	A patch in an image is a small block cut out of it, and RGB is the 3 channels red, green and blue; a patch in software engineering is a code patch — the same word for both. An image block, once flattened, can become a vector through a learnable transformation; it is not a lookup in a text vocabulary.
+22707	Independent image example: one 16×16×3 block holds 768 numbers, and after projection it can become d features. d is fixed by the model design.
+17544	Contrastive learning uses an objective that makes paired representations easier to match and keeps unpaired ones relatively distinct. CLIP-style training learns the association between image and text; it does not automatically provide full chat generation or reliable desktop operation.
+15415	One image with its correct caption can serve as a positive pair and the other captions as the contrast; training for relevance does not mean every generated conclusion is factually correct.
+8795	SAE stands for sparse autoencoder: it reconstructs a model's activations from a combination of relatively few active features. An activation is an intermediate number from this computation, not a complete record of natural-language reasoning. A successful reconstruction does not by itself prove that a feature has a unique causal meaning.
+25265	Seeing a feature change together with the output is a clue; judging causation also takes control of other conditions, intervention and a comparison.
+21361	Calibration, confidence and abstention
+21365	Calibration checks whether the stated confidence of a prediction matches how often it is actually correct; measures such as ECE and Brier do the accounting differently. A local token probability, the word "certain" in a sentence, and the correctness rate of a whole answer are not the same object.
+22677	Independent example: 100 items are all marked 80% confident and about 80 of them are correct; that supports the statistical calibration of this group only, and does not prove that every item is right.
+15877	In σ(XW+b), σ usually stands for whatever nonlinear function this layer has chosen; it may be ReLU or another, and σ alone does not make it a sigmoid. In statistical formulas σ usually means the standard deviation and σ² the variance. They are not the same object.
+22688	Independent example: if σ is specified as ReLU, σ(-1)=0; if it is specified as sigmoid, the value is about 0.268941. The function has to be defined before any result can be computed.
+7645	G=∂L/∂O is usually the gradient of the loss with respect to the current output O, passed back from the computation that follows. The backward pseudocode writes ∂L/∂Q as dQ and ∂L/∂W as dW; their shapes match the objects being differentiated, and are not the feature dimension d times Q.
+12806	Only after the forward pass O=AV, and once G has arrived, can dV=AᵀG and dA=GVᵀ be computed; dA changes the share path, dV the content path.
+7293	Concat joins several arrays along a chosen axis; it does not add their elements. split or chunk groups them at specified boundaries. Every axis that is not being joined has to be compatible. chunk here means a block of an array, whereas a chunk in networking is a slice of bytes.
+22689	Independent example: two heads of [2,3] each, joined along the feature axis, give [2,6]; joined along the position axis they would give [4,3], which already means something different.
+17955	The common inverted dropout zeroes elements at random during training with drop probability p, and divides the kept ones by 1-p so that the expected scale is preserved. Evaluation mode usually turns this random operation off; the underlying function may require the caller to pass p=0 explicitly.
+22682	Independent example: with p=0.5, a value of 2 comes out as 4 if it is kept in a given mask and as 0 if it is dropped. This is not training permanently deleting the corresponding model parameter.
+9222	logsumexp: sum the exponentials first, then take the logarithm
+9221	logsumexp(z)=ln(Σexp(zᵢ)). A stable implementation subtracts the maximum m first and then computes m+ln(Σexp(zᵢ-m)). It is a single scalar, usable for computing log-softmax and cross entropy; it is not another round of random sampling.
+22686	Independent example: with z=[0,0], logsumexp=ln2 and both log-softmax values are −ln2. The result here can be negative, whereas a softmax probability cannot.
+7113	BatchNorm usually computes its statistics for one feature or channel along the batch axis and the applicable spatial axes; LayerNorm computes along the feature dimensions designated inside one sample. BatchNorm may use statistics from different sources in training and in evaluation, and the details still depend on the configuration.
+15064	The word Norm alone is no reason to mix up the statistics axes of different normalisation layers; nor should two independent users come to share one session context because of it.
+9240	n! means the integers from 1 to n multiplied together, with 0!=1; C(n,k)=n!/(k!(n-k)!) is the number of ways to choose k of n distinct objects without replacement and without regard to order. It is not a model confidence C.
+22679	Independent example: C(4,2)=6. With n=10, c=3 and k=2, 1−C(7,2)/C(10,2)=24/45, about 0.533333.
+16245	Big O expresses an upper bound on the order of growth with size, usually leaving constants and smaller terms out. It has to be said which variables are growing, and whether the count is for a single step or for the whole sequence. O here is not the attention output matrix.
+28665	When the length doubles, the leading term T² becomes four times as large; but the time actually taken also depends on fixed overhead, memory and hardware utilization, so big O alone is no promise of a measured speed.
+9376	x∼p means sampling from the distribution p, E means taking the expectation under the stated distribution, Π means multiplying the stated terms together, and ∝ means the two sides differ by a common factor rather than being equal already. Here E is not the embedding parameter table.
+22684	Independent example: pᵢ∝exp(zᵢ) still has to be divided by the sum of the exponentials over all candidates; where ∝ is written, an unnormalised value must not be read straight off as a probability.
+7104	BOS is usually the special token for the start of a sequence and EOS the one for the end; a particular model or message template may use different names, counts and end markers. They are symbols in the input/output protocol, not proof of semantic correctness.
+28355	Meeting an EOS does not automatically cut attention between two training samples; isolating the reads still needs a mask, or a sample boundary the implementation supports.
+7755	JSON is a text format that expresses data as objects, arrays, strings, numbers and so on. A braced object maps field names to values; a bracketed array keeps the order of its items. Parsing JSON only yields data; it does not automatically run a tool name inside it.
+22687	Independent example: {"path":"a.py","limit":3} has two fields; "3" is a string while 3 is a number, and a schema can require either one.
+7814	LF is the line-feed character, and CRLF is a carriage return followed by a line feed. SSE lays down how event lines and blank lines are interpreted; EventSource is the browser's interface for receiving SSE. Teaching code that parses only one kind of separator is not a complete protocol implementation.
+16941	Real network fragments may happen to deliver CR and LF separately, so a parser should assemble them by the protocol rules it implements and must not take every network fragment for one event.
+27257	These are program type names from the cited snapshot of the Codex source. ResponseItem stands for one model response; ToolCall stands for the data of a call waiting to be made; ToolInvocation combines the call with execution context such as the session and cancellation; ToolRouter is responsible for the relevant tool path.
+27251	These objects are constructed and dispatched by the program; they are not tensors of the kind the model uses internally for Q/K/V. Field and permission handling must follow the pinned source cited, not be inferred from the names.
+7682	Git's HEAD marks the commit or branch currently checked out; the working tree may still hold uncommitted changes. An ETag is a validator for an HTTP representation, and what it guarantees depends on the service. A content fingerprint is computed over the bytes; these kinds of version identity are not interchangeable.
+24279	When the index comes from commit v7 but the file has been modified locally, the same file name does not mean the same content. Applying a patch or citing evidence should be checked against the version actually present.
+7728	IDE is the integrated development environment, CLI the command-line interface, UI the user interface, and DOM the tree of structural objects of a web document. The code, selection and page information that each entry point attaches automatically can differ.
+21677	The model seeing the selected function in the IDE does not mean the same task in the CLI has received that function; check this turn's input objects first.
+7383	DPR usually means the ratio of device pixels to CSS pixels; DPI means dots per inch. Screenshot pixels, the interface's logical coordinates and screen coordinates need not share a unit, and there may also be scaling, cropping and offsets.
+15941	In an independent example where DPR=2 is stated and the other mappings agree, a CSS x-coordinate of 100 corresponds to 200 device pixels; this conditional relationship cannot be carried straight over to every screenshot.
+7915	MLA refers to a family of multi-head latent attention architectures. It organizes the content behind K/V jointly in a lower-dimensional latent representation and handles the positional part by design. It changes the model's representation and parameter structure; it is not just ZIPping an ordinary KV file.
+25850	In c=xW_down, c is the latent vector for this computation and W_down the learned table of dimension-reducing coefficients; how it is later reconstructed or absorbed into a projection has to be explained for the specific architecture.
+8823	SQL is the language for working with relational data; SQLite is a database engine that embeds into an application. Writing operational state into a database is a persistence action by the host program; it does not modify the model's neural network parameters.
+10403	One transaction can save the business row in this database together with a pending-send record, but that does not let you infer that the mail service committed atomically along with it.
+16888	The basis and limits of the definitions
+22367	Attention projection and aggregation
+12338	Based on section 3.2 of the original Transformer paper: the projection parameters, the division of labor between Query/Key/Value, the scaled dot product, the concatenation of heads and the output projection. The matrices in the text are small worked examples this book constructed itself, not trained weights from the paper.
+7007	Attention Is All You Need · the original paper
+14740	Parameter storage and the linear layer
+17549	Checked against the learnable weight/bias and the y=xAᵀ+b layout in the PyTorch documentation. This book explains everything under one convention, in which an input row vector multiplies the parameter table on the right, transposing explicitly where that is needed. The identities of training parameters, temporary activations and tensor shapes must not be mixed up.
+8081	PyTorch Linear · parameters and shapes
+29106	High-level interfaces and low-level operators
+7946	MultiheadAttention contains the complete layer logic, the projections included; scaled_dot_product_attention computes the attention between a given Query/Key/Value directly. Checking which stage an interface is responsible for avoids projecting twice and avoids getting the polarity of a mask wrong. Nothing here promises that every library uses the same layout.
+13309	Other basic and engineering concepts
+20029	The mathematical micro-examples are direct derivations under the conditions listed; the training, retrieval, protocol and engineering terms follow the original research and official material listed in the matching lessons. The term notes explain objects and responsibilities; they do not treat teaching numbers as a measurement of a commercial product, nor invent internals for a closed-source system.
+12950	Sources and scope of use for the whole book
+26899	Sources of the worked runs
+7399	Additional cross-checks for Dropout, BatchNorm and logsumexp:
+10143	. The main text carries the explanation; the external links serve only for tracing sources.
+23056	Contents and learning paths — AI Systems Engineering
+16074	The foundation lessons build a complete process you can recompute; the system mechanisms explain the limits of an implementation, the real call chain and the engineering trade-offs. Every chapter is read along the same contents list, with no stitching together of parallel tutorials.
+21796	The order of the model part is fixed: input and shared computation → training, validation and saving → loading and inference → resource optimization. The cases, the code and the numeric records sit in the lab area, as evidence for the main text.
+28792	Jump to a stage
+28783	Stage 01 · Observe the system<span class="module-count">Lessons 01—06 · 6 lessons
+12217	Assignment 01｜Observe</a>　Complete it at the end of this stage.
+28784	Stage 02 · Build the loop<span class="module-count">Lessons 07—28 · 22 lessons
+12222	Assignment 02｜Build the loop</a>　Complete it at the end of this stage.
+28785	Stage 03 · Optimize the black box<span class="module-count">Lessons 29—34 · 6 lessons
+12226	Assignment 03｜Optimize the black box</a>　Complete it at the end of this stage.
+28786	Stage 04 · Take over the model<span class="module-count">Lessons 35—63 · 29 lessons
+12230	Assignment 04｜Take over the model</a>　Complete it at the end of this stage.
+28787	Stage 05 · Full-stack verification<span class="module-count">Lessons 64—68 · 5 lessons
+12232	Assignment 05｜Full stack</a>　Complete it at the end of this stage.
+23357	Studies and indexes

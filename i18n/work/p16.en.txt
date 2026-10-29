@@ -1,0 +1,410 @@
+# p16 — en — chapters/26.html, chapters/27.html
+24011	Lesson 67｜Deep applications: composing components into a working system you can explain — AI Systems Engineering
+22233	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#Q101">Q105｜How can enterprise knowledge Q&A not only answer, but also prove that the answer applies and is not out of date?</a><a href="#Q102">Q106｜What is the minimum set of internal objects a repository repair agent needs, from taking the ticket to delivery?</a><a href="#Q103">Q107｜How does a research agent handle "several sources that contradict one another", rather than writing a fluent collage?</a><a href="#Q104">Q108｜Why do long tasks and computer operation need "observe—act—verify" instead of just playing a script through in order?</a><a class="sub ap-toc" href="#agent-practice-optimization">Optimization locates the bottleneck first; it is not about chasing fewer tokens</a><a class="sub ap-toc" href="#agent-practice-research">How does a research agent avoid "searched a great deal, concluded nothing"?
+18087	An application blueprint is not a platter of technical terms but "which input is allowed, what evidence to look for, which actions to take, and how the result is proved". The same basic framework carries different risks in Q&A, in coding and in a GUI.
+23524	Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics</a><a class="pill" href="../foundations/38.html">Lesson 33 · Reading a production run</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness
+27543	A quick check before the deep reading:</strong> list the minimum verification for enterprise Q&A and for automatically changing production data separately, and explain why the citation check of the first cannot replace the permission and execution confirmation of the second.
+27363	This is not a list of the three nouns "enterprise knowledge base, development
+9965	, research assistant". It explains instead how a request is transformed step by step inside these applications. The blueprint is an engineering design put forward by this book; it does not claim that any commercial product implements it in full.
+8420	Q105｜How can enterprise knowledge Q&A not only answer, but also prove that the answer applies and is not out of date?
+27422	What to know first for this question</span>Enterprise Q&A confirms identity and evidence first, then answers with citations; expired knowledge and insufficient evidence each need a defined behavior rather than forced generation.
+23697	Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics
+19287	Break the Q&A into settling the identity and time range, retrieving evidence, checking applicability, generating claims, verifying citations, and replying. Retrieval similarity is only responsible for finding candidates; the version, the permissions and the conditions decide whether a candidate can serve as grounds. Where necessary, admit that the evidence is not enough rather than inventing a policy.
+10401	One run of "can I claim this expense?"
+19592	When the question arrives, settle the user's organization and the date of the expense first, so that a historical claim is not answered with the current policy. The retrieval entry point filters the readable documents by identity, then narrows or widens the candidates by the date the policy took effect. Parsing should keep the main clause, the exceptions, the amount thresholds and the relationship to attachments; it must not return only the sentence "claimable".
+12537	Suppose the candidates include the ordinary travel policy, the exception for overseas travel, and one expired version. The system should represent them as evidence carrying a source and a validity interval, rather than stitching them into unordered paragraphs. Before generating, list the claims that have to be answered: whether the expense type is covered, the amount limit, and whether approval is needed. Every claim must have applicable evidence; if the region of the expense is missing, say that this condition is not yet settled rather than assuming the ordinary rule applies.
+20536	Finally, check that the citation really points at text that supports the claim. A citation existing is not the same as support: a paragraph about transport costs cannot prove a lodging cap. In the reply, keep "the explicit wording of the policy", "what follows from the conditions given" and "material still to be confirmed" apart. Where a real reimbursement decision is involved, the organization's authorization still has to be followed; an answering tool should not acquire financial approval authority on its own.
+12084	How enterprise Q&A connects every clause of the answer back to evidence
+26510	Input and conditions.</strong> The question: "a trial user applies on a Saturday for a refund on day 6 — is that allowed?" The fictional policy says "within 7 days and accepted on working days only".
+19315	Break out the facts
+25768	trial, day 6, Saturday, application
+23384	The conditions to be matched are settled.
+14887	obtain the full clauses of the current trial policy
+10708	Not just the words "within 7 days".
+28218	Condition by condition
+6755	6≤7 meets the time limit; Saturday does not meet "working day"
+11323	The two conditions are an and, not an or.
+9456	"within the time limit, but Saturday does not meet the acceptance-day condition"
+13700	Each is tied to a different condition of the same clause.
+28380	Avoid embellishing
+19920	the policy does not say whether deferring to Monday is still allowed
+11142	No promise of a deferral is added on its own.
+19009	Join the steps up.</strong> A trustworthy answer needs a combination of conditions and a boundary on the evidence, not just a relevant document plus a fluent retelling.
+26719	Limits and counterexamples.</strong> The policy is entirely fictional, used to explain the logic; it corresponds to no real refund or legal right.
+27763	Follow-up: why not put the whole set of rules into a large context?
+17621	A small, single set of rules can simply be read in full, and does not necessarily need
+10023	. But when the documents are many, the permissions differ and updates are frequent, putting everything in the context adds cost and the burden of resolving conflicts. The choice should rest on the scale, the update rate and task performance, not on a default vector store or a default very long context.
+28057	Follow-up: what if the user demands "just give me a definite answer"?
+23377	Certainty comes from conditions and evidence, not from a firm tone. You can state plainly what can be confirmed under the known conditions, and point out which missing condition would change the conclusion. A user's preference for definite phrasing is no reason to ignore a contradiction in the evidence or to fill an unknown field with a favorable value.
+28117	Follow-up: why can the key of a Q&A cache not be the question text alone?
+15412	The same question may come from users with different permissions, from different organizations and on different dates; the knowledge version changes too. The cache has to be bound to the identity scope, the evidence version and the applicable conditions it needs, or else use a safe shared scope. Otherwise the cache bypasses the permission control in the retrieval stage.
+17873	Engineering deep dive · E51 · continues Q101
+18125	The advisory layer and the action layer must have different evidence requirements
+23329	Knowledge-base Q&A can explain the conditions from one policy whose version is recorded; performing a write also has to check the current user, the current order, the current policy, the remaining allowance and whether it is a duplicate. This section uses refunds as the teaching business; it connects to no real payment system and provides no actual financial operation.
+7893	MCP security design requires resources and permissions to match, idempotent API practice requires the intent of a repeated call to be explicit, and agent evaluation requires looking at the result in a real environment rather than a statement in text.
+5898	The engineering inference from putting the three together is: a retrieval conclusion cannot cross a business transaction boundary directly.
+25356	Right at planning time, possibly already void at execution time
+19963	A teaching scenario: at planning time policy version 7 allows the operation; before execution the policy becomes 8 and that order no longer meets the conditions. Using the "allowed" the model remembered produces a stale write. The local test rejects the submission on the version mismatch. The point of the rejection is not that the model answered wrongly, but that the premise of the action has changed.
+14007	An action tool can accept a structured business intent, with the server re-reading the current state and submitting conditionally; do not let a "conditions met = true" supplied by the model stand in for the check. If the executor finds the state has changed, it should return an explainable conflict so the agent verifies again, rather than quietly altering the arguments to get around it.
+16995	The audit chain has to connect the explanation to the operation
+25583	Record the user's request, the policy evidence used, the actual version at execution time, the object that was approved, the intent key of the operation, the downstream result and the final reconciliation. Keep stored sensitive fields to a minimum. The success message the user sees must come from the real submission result, not from the earlier eligibility analysis text.
+28040	Follow-up: is re-reading the material before every operation wasteful?
+15170	Static descriptions and a verified cache can be reused, but dynamic eligibility, authorization and the target version must come with a guarantee of validity. Cutting down repeated queries with a version condition, a TTL or a server-side transaction is an optimization; leaving out the verification changes the security semantics. The two are not the same.
+27748	Follow-up: when a business tool returns a failure, may the agent try another tool to carry out the same action?
+12686	Judge the kind of failure first. A permission or policy refusal should not be treated as a technical error inviting "try another route"; an unknown network outcome should go down the verify-or-idempotent path; insufficient input can be supplemented with more material. Tool orchestration has to respect the boundary of the business intent; the number of actions completed is not the goal.
+7576	E51: how to read this result, rather than only looking at "pass"
+25357	The planned version 7 differs from version 8 at execution time, which means the grounds for the plan may be out of date. Re-reading the state and checking the allowance and permissions matters more than simply executing the old plan.
+24892	Self-check:</strong> policy version 7 allows it at planning time and version 8 forbids it at submission time — is the model's original judgment enough to authorize execution?
+10773	No, it is not. The grounds for the advice and the eligibility at execution time are different things. The executor should check the current policy, the state of the resource, the permissions and the version, and on a conflict either refuse or verify again.
+8423	Q106｜What is the minimum set of internal objects a repository repair agent needs, from taking the ticket to delivery?
+27494	What to know first for this question</span>A coding agent needs the current workspace, reliable location of the fault, bounded changes and real tests; retelling the repository's documentation is not the same as finishing the development.
+23668	Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+24948	At a minimum it has to be able to express the task's goal and constraints, a snapshot of the current code, the candidate explanations and their evidence, the change set, the execution results and the acceptance status. Files plus a few structured records are enough to start with; no complex platform has to be built right away. What matters is that these objects are clearly related to one another, instead of all being mixed into the chat history.
+11979	Take the exclude path bug as the example
+19569	When the ticket is taken, record "match on paths relative to the project root; do not change the existing include rules; keep unexcluded files after the fix". Once repository version r42 has been fetched, run the smallest failing test first and save the command, the environment, the return code and the failing assertion. Then follow the call chain to check whether the path is already normalized before it enters the matching function from the caller.
+18653	Once a candidate root cause is found, the agent should be able to answer "which piece of evidence ruled out the other explanations". For instance, only the fact that the matching library itself works correctly on relative paths while the caller passes an absolute path supports fixing the normalization at the entry point. The change becomes a standalone
+29315	, and when it is applied the old content or version is checked; if the user has changed the file in the meantime, read it again and reconcile rather than overwrite.
+29085	Verification runs the tests tied to the root cause first, then adds regression tests according to the blast radius. The final delivery is bound to the current workspace version: what was changed, why it is right, what the tests actually ran, and what was left unverified. The model may explain this evidence, but an explanation cannot stand in for a run result. Whether to commit, push or deploy is decided by the scope of authorization, not widened automatically by the words "task complete".
+11794	From the bug description to the delivered patch, which objects must agree
+26206	Input and conditions.</strong> Task B17 requires the ab directory to be kept; patch P applies to baseline v7 and yields v8; test R runs against v8.
+28866	The requirement object
+7078	B17 holds the expectations for a, a/x and ab/y
+15537	Later acceptance has a stable target.
+25675	The evidence object
+22526	the source is located at v7's startswith
+21437	The grounds for the root cause can be checked.
+25134	The patch object
+8085	P declares baseline v7 and the scope of the change
+18081	When applying fails, a partial result is not taken for a complete patch.
+22427	The test object
+8759	R records v8, the command, the exit code and the boundary assertions
+11252	It agrees with the delivered version.
+20574	The final delivery
+11673	hand over v8 and R
+11092	After changing on to v9, the v8 test record must not still be used.
+18950	Join the steps up.</strong> The relationships between task, evidence, patch, version and verification are the skeleton of what an engineering agent can deliver.
+26692	Limits and counterexamples.</strong> Plain files and the Git already in place are enough to implement this; no extra complex contract, signature or database platform is required.
+27668	Follow-up: is a more complete AGENTS.md always better?
+20510	It works better as a stable, short entry point for navigation and constraints, with specialist content that can be read on demand kept where it belongs. Loading the whole architecture, history, test rules and long case studies permanently raises the fixed cost of every task. The layering of the content should be adjusted from real omissions and real wrong loading.
+27673	Follow-up: does an agent have to understand the whole repository before it can fix a bug?
+11243	No. It needs a sufficient understanding of the invariants, the callers and the verification scope that the change touches. A local bug can be fixed locally; if the evidence shows coupling across modules, widen the scope then. "Global understanding" is no reason to read source without limit, and neither should a single line be changed while the interface boundary is still unclear.
+27947	Follow-up: how do you stop an agent from breaking the requirement in order to make the tests pass?
+12428	Keep the original requirement, the failing assertion and an independent acceptance constraint, and review whether tests were deleted, assertions loosened or the feature bypassed. The test itself may be wrong, but changing a test calls for independent evidence. If the interpretation of the requirement, the implementation and the grading can all be rewritten at will by the same model path, the result is a closed loop that proves itself.
+8425	Q107｜How does a research agent handle "several sources that contradict one another", rather than writing a fluent collage?
+27505	What to know first for this question</span>A long research task needs persistent evidence, hypotheses and items that expire; a stage summary is for handover and does not replace the original source.
+23549	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+12001	Organize the research around verifiable claims as its unit, recording the date of each source, the scope it applies to and what supports what. A conflict may come from dates, definitions, samples, method or a factual error; which premise the conflict sits in has to be located, rather than settled by a simple majority vote or an average.
+11907	The intermediate states from question to conclusion
+12782	Break the question into sub-questions that need evidence first, such as "what is the mechanism", "under which conditions does it work" and "what are the costs and counterexamples". A search result only enters the candidate set; an evidence record is formed only after the text itself has been read. If source A says context compaction reduces cost while B says compaction reduces reliability, that is not necessarily a real contradiction: the first measures the bill and the second measures information loss, and both may hold at once.
+17296	For a real disagreement about the same metric, compare the experimental tasks, the model versions, the budget and the definition of success. Leave a disagreement that cannot be removed in the conclusion, and say how it bears on the decision. A provisional guess made during the research should not be promoted to a long-term rule on its own; only with explicit evidence, scope and version does something enter reusable knowledge.
+26595	Before output, run a "claim—evidence" check back the other way: where does each important number, capability and causal conclusion come from? Does the original text state only a correlation rather than causation? Has a result the author reported been written up as an independent replication? Has the behavior of an old version been written up as a guarantee of the current product? These checks matter more than simply having the model "polish it to sound more professional".
+20906	Conditions for this example:</strong> an independent study: source A gives 100 daily actives, B gives 150. A counts a calendar day in the local time zone and includes only logged-in users; B counts a rolling 24 hours in UTC and includes guests. The numbers are a teaching setting.
+19392	How the metric is defined and counted.
+11611	Event time
+11627	The time at which the fact happened or that the count covers.
+14841	Publication date
+21159	The moment the material was published, which is not the event time.
+20321	Time window and population
+20960	a local calendar day; logged-in users
+14973	Valid only on that definition
+9018	a rolling 24 hours in UTC; guests included
+10877	Not the same denominator
+21394	The conclusion after checking
+20469	50% business growth cannot be concluded yet
+12893	Align the window and the population before computing
+11319	The two numbers look like the same "daily actives", but they may in fact be different random variables. Listing the definitions first often explains an apparent conflict.
+16328	If the definitions, the versions and the dates all agree and it is still contradictory, keep the disagreement, weigh how first-hand each source is against how it was collected, and do not force them into a single conclusion.
+20160	A newer publication date does not by itself mean a more recent event fact; where old data has been reposted, the original date especially has to be checked.
+11197	Do not conflate:</strong> turning B's 50 more than A into a growth rate hides the change of denominator and yields a research conclusion that is fluent but unfounded.
+11391	Two sources give opposite conclusions: how to decide without voting by count
+26365	Input and conditions.</strong> Source A is the official documentation of an old version and says the default is 3 seconds; source B is the official documentation of the current version and says the default is 5 seconds; the question asks about the current version.
+21395	Check the proposition
+11402	are both of them talking about the default value?
+24975	If one of them is stating a maximum, there is no direct conflict at all.
+21408	Check the scope
+22604	version, product surface, environment
+23403	Confirm that the target matches B.
+20314	Date and authority
+7141	B is the first-hand statement for the version in question
+28475	Adopt 5 and state the version condition.
+12413	Keep A
+15186	it can be used to explain a historical migration
+10821	A is not simply written off as fabrication.
+25667	Insufficient evidence
+16315	if B is only third-party hearsay
+24514	Keep looking for first-hand information; being more recent does not make it more credible.
+18980	Join the steps up.</strong> Resolving a conflict begins by separating the propositions and their scope, then looks at the source and how current it is; whichever appears more often is not thereby adopted.
+26639	Limits and counterexamples.</strong> 3 and 5 are teaching numbers; they stand for no real product's current default parameter.
+28010	Follow-up: does a conclusion get more reliable the more sources there are?
+16215	Several web pages may be copying the same news item or technical report, which is not independent evidence. Identify the chain of dependence between sources, and look first for the original data, the specification and the experiment. The number of sources can describe coverage only; it does not turn directly into confidence.
+27816	Follow-up: when is parallel research by several agents worth it?
+16388	When the sub-questions can be searched relatively independently and the cost of integration is less than the gain from parallelism. For instance, one looks into the model mechanism and another into engineering failures, and at the end they are merged along the shared structure of the question. If every agent searches the same material over again, the extra calls only magnify the redundancy.
+28063	Follow-up: when does the research end?
+18203	It ends when the key claims have enough support, the main counterexamples have been checked, the remaining uncertainty does not change the current decision, or the budget reaches its limit. Ending is not a claim to have exhausted the world's literature; mark the limits of the evidence and the new information that would change the conclusion.
+12748	Start with a ledger of claims
+19991	The teaching question "is the new routing worth shipping" splits into at least six kinds of claim: recall of the skills actually needed, wrong loading, task success, time taken, cost and regressions. Each records its supporting evidence, counterexamples, the situations it applies to, and the questions left open. A search result may put forward a hypothesis, but it has not thereby confirmed a causal relationship.
+23367	Which uncertainty each round of research should reduce
+24057	The first round locates the tasks that really fail; the second follows the trajectory to see whether the rule was loaded; the third constructs a fix that holds the other conditions constant; the fourth runs the paired tasks and the counterexamples. If searching on only turns up the same material again, converge or change the method of verification rather than adding ten more relevant links.
+16385	How the sub-studies are merged
+22663	Separate agents can study tool exposure, context trimming and permissions one each, but the aggregation has to check that they share a version and a timeline. Three agents all citing the same article do not make three independent pieces of evidence. Conflicting conclusions should go back to the original request, the logs or a test, not be settled by a vote.
+12602	Stopping conditions
+26851	Stop when the evidence is sufficient for the task at hand, when an unrecoverable gap is found, when the budget is reached, or when a user decision is needed. A conditional conclusion is allowed: "on this set of tasks and versions, wrong loading went down, but cross-language repositories are not yet covered". That is more professional than an unfounded "all routing problems completely solved".
+23327	How a knowledge graph serves the main text
+15829	A node in the graph is a concrete object or a checkable claim; an edge is labeled with the relationship — calls, depends on, supports, contradicts or contrasts with — and with its source. Do not wire every related noun together into a web no one can read. The main text shows only the local subgraph the mechanism at hand needs, so that a reader can follow an edge back to the code or the record; the full graph is for checking coverage and conflicts.
+26007	A great deal of material is not the same as independent evidence
+10461	One original article retold by three blogs should still be grouped under the same root evidence in the source graph. Splitting one piece of material among several agents and then aggregating does not produce independent confirmation either. The teaching research record is divided into the claim, the original source, the conditions it applies under, the counter-evidence and the current confidence state.
+16201	The articles on multi-agent research stress the delegated goal, the artifacts and traceability; on top of that, this book recommends checking the dependence between sources when merging, rather than merging the summaries alone. Where first-hand grounds cannot be found, mark the gap; it cannot be filled with a longer explanation. The scope verified in the current version is listed in the evidence index, and what lies outside it still must not be written up as "read".
+8428	Q108｜Why do long tasks and computer operation need "observe—act—verify" instead of just playing a script through in order?
+27404	What to know first for this question</span>GUI automation observes the interface first, then locates the action, then verifies the change in the interface or the data; where an API is available it is usually more precise, but the choice has to follow the task.
+23594	Lesson 07 · APIs and streaming protocols</a><a class="pill" href="../foundations/24.html">Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/37.html">Lesson 29 · Security basics</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness
+23301	A real environment changes, and an action may time out, partly succeed, or be affected by the state of the interface. The agent has to observe the current state, perform a controlled action, and then verify the effect; a task that continues across sessions also has to save recoverable progress and the external results, not only a conversation summary.
+11793	From API first to the interface interaction you cannot avoid
+25054	If the system offers a semantically clear, queryable
+29202	, prefer it: idempotency, errors and state are easier to handle that way. When the GUI must be operated, the observation comes from a screenshot, the DOM or the accessibility tree; every such observation has a time of capture, and the page may already have changed before the click. A coordinate points at the visual position at that moment, not at a permanent business object.
+12319	For example, the network is slow after "Submit" is clicked and the button does not change at once. Clicking again may submit twice. The right procedure is to wait for an observable state, query the task record, or recognize the confirmation page, rather than treating an unseen change as a failure. When it cannot be confirmed, record
+18012	and stop the dangerous retry. After a long task resumes, read the current page and the business state first; clicking on straight from "step 17" is not allowed.
+27611	The progress record should include the completion conditions, the confirmed results, the current environment version, the operations still to be verified, and the evidence the next step needs. Each session handover compacts only the analysis that can be compacted; it must not erase an unconfirmed side effect. This brings the GUI agent, the coding agent and business automation under one and the same principle of reliable execution.
+23016	The click on the interface succeeded, so why is the business action still not finished
+26315	Input and conditions.</strong> The center of the button in the screenshot is at (120,80), the screenshot is at 2× the scale of the actual viewport, and the button reads "Save".
+16029	Coordinate conversion
+25305	viewport coordinates=(120/2,80/2)
+18300	This gives (60,40), assuming no further offset.
+14005	Observe before acting
+21398	check that the current page is still the target form
+20283	A position from an old screenshot may no longer be valid.
+22567	Click
+15906	perform the click in a controlled environment
+27273	This only proves that an input action was issued.
+24459	Observe the result
+28935	the page shows "validation failed: name missing"
+12388	The save did not complete; supply the information it needs rather than declaring success.
+11294	Verify in the business system
+18475	after success, read the saved value or the success record again
+12014	Confirmation comes from the result, not from the return of a mouse event.
+18896	Join the steps up.</strong> GUI automation has to form an observe—act—observe-again loop; an execution event is not a business result.
+26698	Limits and counterexamples.</strong> The coordinate transform holds only for the scaling that was declared; the real DPR, cropping, scrolling, an iframe and the screen offset can all change the arithmetic.
+27955	Follow-up: the model read the screenshot correctly, so why can the operation still fail?
+25734	Recognition is only the observation stage. Scrolling, zoom, an overlay, focus, load timing and permissions all affect execution. Observe after the action, instead of letting the confidence of visual recognition stand in for business success.
+27995	Follow-up: should every task be given a full database workflow?
+23355	For a short read-only task it is usually not worth it. Persistent state becomes more necessary for tasks that cross processes, run long, have significant side effects or require human approval. Start the system simple, and let the real need for recovery decide the complexity.
+28047	Follow-up: does a successful browser login mean the agent has every business authorization?
+10840	No. Usable credentials mean only that access is possible; authorization still depends on the user's request this time and on the system's policy. An existing login does not amount to permission to send mail, pay, delete or publish, and an instruction on an external page certainly must not be taken as a new authorization.
+17874	Engineering deep dive · E52 · continues Q104
+12874	First establish which coordinate space the tool uses
+18517	Screenshot pixel coordinates, CSS viewport coordinates and desktop screen coordinates may all differ. DPR describes the ratio of device pixels to CSS pixels; a screenshot may also be scaled again, cropped or given a border by the tool. The Computer Use guide requires operating by the coordinate conventions of the actual screenshot and environment.
+15798	Pinned teaching data: a screenshot of 1600×1200 and a CSS viewport of 800×600, so the point (1000,600) in the image corresponds to CSS (500,300). Clicking (1000,600) directly overshoots the right position. This linear transform holds only on the assumption that the whole screenshot scales one-to-one with the viewport and there is no cropping offset; it must not be forced onto every desktop tool.
+16028	Correct coordinates can still click an old world
+21743	After the model has finished reading the screenshot, a dialog appears on the page, a list scrolls or the layout finishes loading, and the original coordinates now land on a different button. This is a change of state between observing and acting, not a mistake in visual recognition. Before a high-risk action, observe again or locate a structured element and check its text, its extent and its visibility.
+16345	Where a stable API or DOM tool exists, prefer its verifiable semantics; when only the screen is available, check the result after each step. Replaying an earlier sequence of coordinates cannot replace confirming the current state.
+18590	The execution feedback has to match the intent
+22568	Seeing a notice after "Save" is clicked does not always mean the target record was updated; what was saved may be another record, or only a local draft. Verify the identity of the target, the actual data and the version; keep the confirmation that an irreversible action needs. Malicious text inside an image must not turn into a high-privilege instruction either.
+27954	Follow-up: the screenshot shows the button text clearly, so why does the result of the action still need verifying?
+19494	The button may be disabled or covered, the network may fail, or the click may land on old coordinates. Visual recognition proves where you think the button is; only feedback from the environment says what the action actually did. The two are different kinds of evidence.
+27849	Follow-up: can the click path in the animation be used directly as a production script?
+10973	No. The book's screenshot coordinate example only demonstrates the transform and the timing risk; it connects to no real GUI. A production script needs binding to its environment, rules for retrying on failure, permissions for sensitive operations and continuous observation; one smooth demonstration must not be taken for stable automation.
+7579	E52: how to read this result, rather than only looking at "pass"
+18516	Screenshot pixels and CSS coordinates are converted by the viewport scale first; once the page layout changes, the element has to be located again. Getting the ratio right does not mean the button is still in its old place.
+24875	Self-check:</strong> when a 1600×1200 screenshot maps to an 800×600 viewport, the point (1000,600) becomes (500,300) — does that guarantee the click hits the button?
+10966	No. It converts the coordinates only on the assumption of no cropping and a uniform mapping; the page may also change, be covered or scroll. Before and after execution, the current target and the actual result have to be checked.
+15489	Cut the same thousand tokens, and the result can be the opposite
+14706	Removing a large repeated log may leave all the useful evidence intact; removing ten lines of key constraints may cause a wrong action. The compaction ratio is not an independent quality metric. First establish a baseline of success rate, regressions, time taken and cost on a set of real tasks, then make a paired comparison of each single change.
+10515	Three token-saving routes have to be kept apart
+17738	Tool discovery reduces the default tool descriptions; code execution leaves the bulk of the intermediate data in the execution environment and returns only the results that are needed; context selection reduces the evidence irrelevant to this turn. All of these change how information is supplied, but none amounts to stronger model parameters, and none guarantees that it suits every task.
+11721	When a small model turns out to be more expensive
+19965	For teaching: the strong model costs 3 per call with a success rate of 0.9, and the small model costs 1 per call with a success rate of 0.4. Estimating the cost of attempts under the ideal assumption of independent repetition does not cover the rework a failure causes, tool side effects or human review. In practice, compare complete strategies — including escalating to the strong model, extra retrieval and the cost of recovery — rather than only the price of a single call.
+24651	Cache gains and changes in the input
+23496	A stable prefix helps computation be reused, but putting a dynamic timestamp, or tools that are reordered every turn, at the front may destroy that reuse. The exact billing and caching policy depends on the vendor and the version; "the input token count did not change" does not let you infer the same cost, and a cache hit must not be read as long-term memory in the model.
+17632	Is one review fewer a step backwards
+15023	An extra review is worth its cost only when it really catches an important error. For a simple task, changing the code directly and running the relevant verification may be better; for a database migration, a permission change or complex concurrency, an independent review and failure testing are worth more. A best practice should answer "what specific failure appears if this is not done", rather than forcing the longest process onto every task.
+10299	Why one old best practice has gone back to "try it when it is needed"
+9406	The "think tool" article was published on 2025-03-20, and on 2025-12-15 the author added a note: in most cases the recommendation is now the extended thinking that has since improved. That makes a standalone think tool a historical design option rather than a component to install on every agent by default. Longer reasoning does not add evidence on its own; a delivery should still cite tool results and tests.
+17765	Tool search, programmatic tool calling and call examples address, respectively, too many tool definitions, the moving of intermediate data, and unclear argument conventions. When the problem is a wrong argument, adding tool search will not necessarily help; when the tool's network is slow, cutting the tokens the model sees will not necessarily remove the wait. This is a diagnostic derivation from the three kinds of mechanism, not a claim that the articles gave one single best recipe.
+22232	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#Q101">Q105｜How can enterprise knowledge Q&A not only answer, but also prove that the answer applies and is not out of date?</a><a href="#Q102">Q106｜What is the minimum set of internal objects a repository repair agent needs, from taking the ticket to delivery?</a><a href="#Q103">Q107｜How does a research agent handle "several sources that contradict one another", rather than writing a fluent collage?</a><a href="#Q104">Q108｜Why do long tasks and computer operation need "observe—act—verify" instead of just playing a script through in order?
+24005	Lesson 65｜Factual reliability, multimodality and interpretability: where the limits of capability lie — AI Systems Engineering
+22253	Follow this chapter through its objects and states</a><a href="#topic-2">Image representation and interface action are two different problems</a><a href="#Q105">Q101｜Why does an LLM "state an error confidently"? How do you tell confidence, calibration and selective answering apart?</a><a href="#Q106">Q102｜Why does self-reflection sometimes make things worse with each revision? How is effective feedback designed?</a><a href="#Q107">Q103｜How does a multimodal model feed an image into a language model? And what extra links does a GUI agent add?</a><a href="#Q108">Q104｜Can research on model interpretability really tell us "why it answered that way"?</a><a class="sub ap-toc" href="#agent-practice-multimodal">The interface was read correctly — so why can the action still click the wrong thing?
+22399	Fluency, confidence, an internal explanation and external correctness are not the same quantity. An image representation, too, has to enter numeric computation first; research on interpretability helps observe part of the mechanism, and cannot recover every reason for a decision on its own.
+23875	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/14.html">Lesson 49 · Fitting attention into one layer</a><a class="pill" href="../foundations/15.html">Lesson 52 · Only the calculus you will actually use</a><a class="pill" href="../foundations/17.html">Lesson 54 · The mathematics needed before post-training</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness
+27529	A quick check before the deep reading:</strong> tell "the model says it is 90% sure" apart from "of past answers of this kind given 90% confidence, 90% really were right"; only the second involves evidence of calibration.
+22490	Going deep into a system also means knowing what the system cannot prove. A fluent model output is not factual correctness; a self-reported confidence is not calibration; seeing a screenshot is not understanding the business state; finding a correlated activation is not having explained every reason.
+25314	The vectors of a visual input, the output probabilities and the clues from interpretability each express something different. Cutting an image into patches is not having recognized a control; the largest attention is not a proven causal explanation; and a high probability is certainly not a real-world rate of correctness.
+23179	Related step-by-step process: <a href="../visual/F39.html">Image representation and interface action are two different problems</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24545	Related mechanisms to continue with: <a href="../visual/F29.html">Lesson 17 · From two candidate lists to usable evidence</a><a href="../visual/F35.html">Lesson 05 · When reading a metric, first ask what its denominator is</a><a href="../visual/F37.html">Lesson 29 · Material can influence a model without thereby gaining permission
+8408	Q101｜Why does an LLM "state an error confidently"? How do you tell confidence, calibration and selective answering apart?
+27496	What to know first for this question</span>A confidence score is not a calibrated rate of correctness; answering from evidence, being allowed to abstain, and verifying afterwards together reduce the risk of invention.
+23878	Lesson 44 · Probability, exponentials and softmax</a><a class="pill" href="../foundations/17.html">Lesson 54 · The mathematics needed before post-training</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness
+22819	What a generative model picks is an output that is likely under the given context and its trained behavior, not a lookup in a ground-truth database before every fact. An error may come from missing parametric knowledge, wrong evidence, a retrieval omission, a slip in reasoning, or a stylistic preference that does not fit. The relation between a confident tone and the real rate of correctness needs empirical calibration; the two are not automatically the same.
+11884	Begin by separating the probability objects
+21613	probability describes the distribution of the "next token"; it is not directly the probability that the whole answer is right. A correct answer can be worded in many ways; a wrong answer may equally consist of a string of high-probability words. Taking the average token probability as factual confidence mixes in how common the sentence pattern is, the length and the language style.
+21755	A model's self-reported "90% sure" is another output, and has to be checked against tasks whose ground truth is known. In the binary case the Brier score is
+10030	. For example, with three predicted probabilities 0.9, 0.6 and 0.2 and true outcomes 1, 0 and 0, the score is
+10220	. This score reflects the quality of the probabilities taken together; it does not mean that any single question has been proved.
+15279	A reliability diagram sorts the predictions into bins and compares each bin's average confidence with its actual rate of correctness. ECE weights the absolute difference between the two by each bin's share, but the result depends on the binning, the sample size and the task distribution; a model with a low overall ECE may still be badly miscalibrated on a rare, high-risk task.
+28181	Selective answering lets the system abstain or ask for more when the evidence is not enough. Coverage and the error rate on what was answered have to be read together: answering only the easiest 10% of questions makes errors rare without showing that the system is strong overall. In engineering, report both "how much was answered" and "how well it was answered" rather than accuracy alone.
+15655	Four answers all claim 80% sure and only two are right: how is that scored
+26286	Input and conditions.</strong> Four binary judgments all give p=0.8, and the true labels are [1,1,0,0].
+13905	Error on the first two
+15290	0.04 each.
+15518	Error on the last two
+15292	0.64 each.
+7120	Brier mean
+21366	Calibration observed
+27193	this set claims 80% and 50% are actually true
+15590	It shows signs of overconfidence.
+25684	Limits of the evidence
+15009	only 4 items
+11120	The model's overall calibration cannot be estimated precisely; enlarge the sample of questions of this kind and check how the probability is defined.
+19189	Join the steps up.</strong> Confidence is not writing down a percentage; it is a verifiable relation between a probability statement and the outcomes that follow.
+26775	Limits and counterexamples.</strong> A natural-language "quite certain" cannot necessarily be taken straight as a calibrated probability; the Brier definition for multi-class problems also needs stating separately.
+28018	Follow-up: once a real source has been retrieved, will there be no more hallucination?
+11761	It may still misread a condition, cite a paragraph that does not support the claim, mix different versions, or add detail beyond the evidence.
+13677	reduces some of the missing knowledge, but introduces new failure points in retrieval and in integrating evidence. What is needed is a support check at the level of each claim, not just a check of whether the answer carries a link.
+28090	Follow-up: can having the model answer several times and taking a majority vote solve it?
+17578	On some decidable tasks it may improve things, but repeated errors are often correlated: the same model and the same context share a misunderstanding. Agreement by majority is not proof of fact. Calling an independent calculator, a compiler or the original data usually changes the evidence conditions more than asking the same question again.
+27993	Follow-up: can a low probability simply be set as the abstention threshold?
+28749	The threshold has to be calibrated on representative data, with the cost of an error, the coverage target and distribution shift all taken into account. A 0.8 from one benchmark cannot be carried over to every business. After going live, watch new categories, languages and levels of complexity, and recalibrate where necessary.
+17875	Engineering deep dive · E53 · continues Q105
+10523	Three kinds of number cannot stand in for one another
+10594	The next-token probability, the model's verbally stated confidence score and the actual rate of correctness on the complete task are not the same random variable. To use one of these scores to decide whether to answer, look at how that score relates to the real outcome on the target task. The calibration documentation distinguishes reliability, discrimination and overall error, and requires suitable calibration data.
+15781	A fixed set of ten questions to show selection bias
+19980	The teaching system answers 5 of ten questions correctly. After the threshold is raised it answers only 5 of them and gets 4 right, so accuracy on what was answered goes from 50% to 80%; but coverage falls from 100% to 50%. Reporting only the 80% and letting users think the capability has improved across the board is not allowed. The cost of handing the remaining 5 questions to a person or to a stronger model has to be counted too.
+20952	The local test reports overall accuracy 0.5, post-selection accuracy 0.8 and coverage 0.5 together. These are synthetic labels, not a measured score for a commercial LLM.
+28748	The threshold should be chosen by risk, not by chasing the highest accuracy
+16002	For a high-risk action, lower coverage in exchange for fewer errors is acceptable; for ordinary reading Q&A, coverage and explaining the uncertainty may matter more. Build a risk—coverage curve, and note the cost of an error, the cost of abstaining and the capacity for human takeover. Keep the calibration set separate from the evaluation set, so the threshold is not tuned on the same data whose final result is then reported.
+13754	Calibration can stop holding once the distribution changes
+20277	When the old tasks were mostly short FAQs and the new ones become long-text reasoning or a new domain, the same confidence score may no longer correspond to the same rate of correctness. Monitor performance broken down by task type, length, source status and version; do not fix one calibration in place forever.
+27731	Follow-up: if the softmax maximum is 0.9, can the answer be called 90% correct?
+10968	No. It corresponds to the model's distribution over the candidate tokens at one step, and is also affected by temperature and candidate truncation; a complete answer may contain several propositions that can be wrong. Define the scoring and the calibration against the target outcome; a local generation probability must not be passed off as factual reliability.
+28023	Follow-up: is a model safer the more it abstains?
+26861	Abstaining too much fails the task as well. An evaluation should look at wrongly letting something through and at needless abstention together, and confirm whether a reasonable search was made before abstaining. A reliable system is not one that never speaks, but one that knows where the evidence falls short, which parts it can answer, and how to verify the next step.
+7583	E53: how to read this result, rather than only looking at "pass"
+25250	A fall in coverage can raise accuracy on the part that was answered. Report the overall figure, the answered part and the abstention rate together; a selective accuracy must not cover up the requests that went unserved.
+24862	Self-check:</strong> only half the questions are answered and accuracy on them is 80% — why must the coverage of 50% be reported alongside?
+15714	Because giving up on the hard questions can raise the conditional accuracy without the overall capability improving for free. The failure or takeover cost of the remaining tasks has to be shown explicitly.
+8411	Q102｜Why does self-reflection sometimes make things worse with each revision? How is effective feedback designed?
+27443	What to know first for this question</span>An image is encoded into a numeric representation; a patch is a slice of the image, and one slice does not necessarily equal one final token; the interface budget depends on the implementation.
+23772	Lesson 36 · A row of numbers, a table and a stack of tables</a><a class="pill" href="../foundations/07.html">Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness
+24833	Self-reflection can reorganize the reasoning or find an explicit contradiction, but without new evidence it may also repeat the same blind spot and wrongly overturn a correct answer. Effective feedback should point concretely at a checkable error and at an external result, rather than vaguely asking it to "think it over more carefully".
+22200	Looking at feedback quality through one repair loop
+21651	The model wrote a sorting function, and the test shows that elements with equal keys change order. The low-quality feedback is "the code is not good enough, please improve it"; the high-quality feedback is the input, the expectation, the actual output and the stability requirement. The latter narrows the space of candidate errors, so the model can check the comparator and the sorting algorithm instead of rewriting unrelated modules.
+14836	Feedback also has to establish that it is itself trustworthy. A test log from an old version cannot prove the new code is wrong; a comment generated by a model may misread the requirement. A feedback record should carry the version, the command that was run and the failure conditions. After a fix, accept only the result of a fresh run, so that a natural-language "it has been changed" is not taken as grounds for closing the defect.
+12603	The stopping condition matters just as much: the same failure signature appearing again and again means the current approach is making no new progress, so change the evidence or state plainly that you are blocked. Endless self-review inflates the cost and adds unrelated changes as well. For a small problem, fixing it during review and verifying it is usually more sensible than reopening the whole analysis, but the scope of the change and an independent acceptance still have to be kept.
+14825	Three rounds of reflection all support the same guess: when is that still no progress
+26383	Input and conditions.</strong> The model guesses "the error comes from the cache", and all three rounds of reflection read only its own explanation from the round before, without reading the logs or running a comparison.
+23685	Guess 1
+24636	the cache may be stale
+20412	This is a hypothesis awaiting verification.
+23692	Rounds 2 and 3
+19517	the same cause is repeated in different words
+20169	More text is not more evidence.
+18152	Introduce a test that distinguishes
+15509	compare the same request with the cache cleared and with the cache kept
+19652	The other variables are held constant.
+24438	The result is a counterexample
+11386	both conditions fail in the same way
+13897	This weakens the claim that the cache is the only cause; other paths should be checked.
+12606	Stop spinning
+20235	when no new evidence can be obtained, mark the uncertainty
+10766	A longer and longer explanation does not raise the degree of certainty.
+19001	Join the steps up.</strong> The value of reflection lies in correcting an error or producing a verifiable action, not in reviewing yourself again and again until it becomes true.
+26651	Limits and counterexamples.</strong> One comparison can also be disturbed by something else, so the counter-evidence must not be overstated without limit; this teaching case is about the increment of information.
+28052	Follow-up: is an independent reviewer always more reliable than self-assessment?
+10655	Not necessarily. If it is given the same wrong summary, the same model and the same missing evidence, its failures will still be correlated. What makes something independent is a different evidence path, an executable check and an explicit standard — not naming another
+26026	"Reviewer".
+28024	Follow-up: when the model points out a potential problem, should defensive code be added at once?
+12873	Establish the real triggering conditions, the blast radius and the constraints already in place first. A boundary you can imagine in theory is not a risk the current system has to handle. Piling up defenses with no evidence may change the semantics and add complexity, introducing defects instead.
+27858	Follow-up: can the result of a reflection be stored directly as experience?
+18056	It should be saved as a candidate carrying its evidence status. An explanation given after a task fails may be no more than rationalization after the event; only once the source, a test or a verifiable result supports it is it fit to be promoted to reusable guidance. The scope it applies to and the counterexamples should be kept with it.
+8414	Q103｜How does a multimodal model feed an image into a language model? And what extra links does a GUI agent add?
+27487	What to know first for this question</span>A sparse autoencoder tries to reconstruct an activation from a few active features and so explain part of the internal pattern; naming a feature still involves judgment and limited coverage.
+23847	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/10.html">Lesson 45 · The smallest neural network model</a><a class="pill" href="../foundations/15.html">Lesson 52 · Only the calculus you will actually use</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness
+17965	A common multimodal architecture uses a vision encoder to turn an image into features, which a projection, cross-attention or some other fusion structure then makes available to the language model; the exact design is not uniform. Outside the model, a GUI agent also needs screenshot capture, a mapping to coordinates or elements, execution of the operation, and observation of the result. An image entering the context does not mean the model holds a live screen or permission to operate it.
+11838	The execution chain from pixel to action
+10457	One teaching architecture cuts the image up, one
+29378	at a time, converting each patch into a vector, having a vision Transformer produce the features, and then projecting them to a dimension the language side can use. The resolution, the cropping and the patch layout affect how much detail can be kept; if the text is too small or a key control falls outside the crop, no amount of later reasoning can use information that is not there.
+7205	At the core of CLIP is contrastive-learning alignment between image and text representations; by itself it is not a complete chat model that can answer about an image with text of any length. Feeding a visual representation into a generative language model takes the matching connection and training as well. How different products bill image tokens, encode internally and handle high resolution cannot be inferred from the interface alone.
+7665	A GUI system first captures a screenshot at time t, the model picks an element or a coordinate, and the executor operates at t+Δ. If the page reflows during Δ, a correct recognition can still click the wrong thing. The executor can therefore use the DOM or the accessibility tree as well, to locate a stable object, and observe again after a critical action. The screenshot, the element ID, the zoom and the scroll offset should all belong to the same version of the observation.
+10362	A 4×4 image split into four blocks: how many positions does it have once inside the model
+26268	Input and conditions.</strong> Consider only a single-channel 4×4 image, with pixels 1—16 read row by row; each block is 2×2, with no overlap and no padding, and the teaching projection maps each block's 4 numbers to 2 numbers.
+14883	Take the blocks
+17891	top-left [1,2,5,6], top-right [3,4,7,8]
+10912	A whole row is not simply taken as one block.
+14947	The other two blocks
+17892	bottom-left [9,10,13,14], bottom-right [11,12,15,16]
+13044	Four patches in all.
+17680	Flatten
+16035	the block tensor [4,2,2]→[4,4]
+21988	Each position holds 4 pixel values.
+19300	Projection example
+9069	W adds items 1 and 3 into one dimension and items 2 and 4 into another
+26587	Output [[6,8],[10,12],[22,24],[26,28]].
+13969	Add position
+12430	keep the original two-dimensional arrangement of the four blocks
+15575	Otherwise a set of vectors alone makes the spatial layout hard to tell apart.
+19023	Join the steps up.</strong> A position in an image can come from a patch rather than from a text token; both still have to be aligned in the end to the representation interface the model supports.
+26668	Limits and counterexamples.</strong> This teaches patch projection only; it is not the real preprocessing of any commercial vision encoder. RGB, multiple resolutions and special tokens have rules of their own.
+28000	Follow-up: with the DOM available, is a screenshot still needed?
+7370	The DOM gives structure and text, but may not fully express visual occlusion, canvas content and what is actually visible; a screenshot gives the visual, but locating a semantic object in it may be imprecise. The two are complementary, and the choice depends on the environment. The DOM being there is no reason to overlook a covered button, and pixels alone are no basis for guessing that a stable element identifier already exists.
+27891	Follow-up: do multimodal inputs have prompt injection too?
+20658	Yes. Untrusted text can appear in a screenshot, an image or an interface. Once the text has been recognized, its source level still has to be kept; a command inside an image must not be taken as authorization from the user. The trust boundary of a visual input is the same as that of a text tool result.
+27769	Follow-up: why can a vision model's confidence not replace confirming the action?
+25311	Visual confidence is about "what was seen"; it does not prove "what the business state is after the operation". Whether a submission, a deletion or a payment took effect has to be observed in the result or queried from the system. That the object confirmed and the object acted on are different things is the core of GUI reliability.
+10366	A screenshot is also evidence with a version
+19977	In teaching interface r7 the "Save" button is at coordinates (700,400). After the model observes it, a dialog appears and turns the layout into r8. Clicking on at the old coordinates may trigger a different action. A screen coordinate is not a permanent object identity, and a page's DOM selector can also stop working after a re-render.
+25253	The smallest observe—act—verify loop
+12909	First record the current interface, window, zoom and scroll; confirm the target of the operation and the permissions; perform one minimal action; observe the actual change again. A successful click proves only that the event was sent, not that data was saved or submitted at the back end. Verify the status text, the request result or a downstream record — but an optimistic UI message must not be taken for an irreversible business success.
+6917	How to choose between an API and a GUI
+20614	Where a reliable, authorized, clearly structured API exists, the arguments and the result are usually easier to control; operating the interface suits a process that has to be completed through the human interface. It is neither "a browser is more like a person, so it is smarter" nor "an API is certainly safe". Both routes need a trust boundary, management of side effects, and evidence.
+21748	A model's confidence differs from the rate of factual correctness
+25746	A token probability over the vocabulary is the model's distribution, not a calibrated true probability that the whole answer is right. An attention heat map, too, is part of the internal computation rather than a complete causal explanation. Citing evidence, stating the uncertainty and running a checkable verification are more reliable than having the model repeat "I am quite certain".
+21062	The figures and action traces in this section are a teaching construction; no user account was actually accessed and no payment performed. Production GUI security also involves the operating system, session isolation and human approval, and cannot be proved by one SVG flow chart.
+17678	The state seen on screen has a version too
+19966	Teaching screenshot S7 shows the order as not submitted; if an automatic refresh to S8 moves the button, acting on the S7 coordinates may click the wrong thing. An action has to be bound to the current page, the target and an observable result, not just to a pair of coordinates. Seeing a completion notice does not prove the back-end transaction was committed either; an important action should have an independent verification.
+27295	This is an original GUI failure model, not the visual coordinate algorithm of the Codex source that was read, and not a measurement published in Claude's engineering articles. When using it as an engineering boundary, test layout changes, occlusion, a stale screenshot and a response lost after submission, rather than showing one successful click.
+8417	Q104｜Can research on model interpretability really tell us "why it answered that way"?
+27423	What to know first for this question</span>Optimizing against feedback may teach the model to please the grader instead of really improving the task, so the explainable process, the real result and the reward metric have to be kept apart.
+23952	Lesson 54 · The mathematics needed before post-training</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness
+15253	Interpretability provides methods for studying internal representations and causal mechanisms, but one activation correlation, one attention weight or one readable reasoning text cannot fully explain the model's decision. Observational, interventional and generalization evidence have to be kept apart, so that a local phenomenon is not expanded into a complete account of the whole system.
+11886	From activation to feature, and on to a causal test
+25809	A language model's hidden vector may represent several concepts superposed. A sparse autoencoder tries to reconstruct the activation from a larger number of sparse features: the encoder produces sparse coefficients and the decoder's linear combination approximates the original vector, with the sparsity constrained at the same time. You can check which texts a given feature activates on, but calling it the "programming error feature" is only a summary of the observation, not a label with inherent meaning.
+27508	A feature can then be suppressed, amplified or replaced, and the change in the output observed. That comes closer to causal evidence than correlation alone, but an intervention may depart from the natural activation distribution and may affect several behaviors at once. Reconstruction error, feature splitting, uncaptured directions and the choice of data all limit the conclusion.
+17273	For engineering diagnosis, checking the observable input, the tool results, the version and the tests first is usually more practical than tracing neurons directly. Research into internal explanation cannot replace business acceptance; equally, a model-generated "I did this because …" is another piece of model output, with no guarantee that it faithfully records the internal computation.
+7011	A high attention weight: can it prove that this is the reason for the answer
+26366	Input and conditions.</strong> One position has attention weight 0.9 but a very small V vector; another has weight 0.1 but a large V. The scalar V values are 0.01 and 10 respectively.
+25398	Compute the contribution
+29104	The high-weight position contributes very little.
+14946	The other contribution
+12196	The low-weight position contributes more.
+26584	output 1.009
+15042	Looking only at a bar chart of the weights misleads.
+15905	replace one V in a controlled model and observe the output and what follows
+22090	This comes closer to verifying a specific mechanism than a correlated weight does.
+27158	there are also residuals, other heads, layers and nonlinearities
+14109	One intervention result is not a complete explanation of every behavior either.
+19146	Join the steps up.</strong> An attention weight describes a mixing coefficient; it is not a global causal attribution generated for free.
+26749	Limits and counterexamples.</strong> The scalar worked example only refutes the simple inference that "a high weight must mean a high contribution"; real causal analysis has to control for distribution shift and for other paths.
+28043	Follow-up: is the token with the highest attention weight the reason for the answer?
+11115	That cannot be inferred directly. The output also passes through the
+19293	projection, several heads, residuals, the
+15611	and later layers; a high weight is not the only contribution, and low-weight information may also affect the output by another path. A more systematic attribution or intervention experiment is needed.
+27961	Follow-up: once a feature for dangerous behavior is found, can the risk be removed once and for all?
+11015	There is no guarantee. The behavior may be spread across several features and paths, and an intervention may also damage normal capability. Evaluation across several situations and a defensive layer are needed; one internal feature must not be treated as a complete safety switch.
+27774	Follow-up: why is interpretability still worth learning?
+16492	It helps tell "a behavior was observed" apart from "the mechanism that produced it is understood", and it provides methods for studying a model's representations and causal effects. For a user, the most important gain is recognizing how strong or weak a piece of explanatory evidence is, rather than memorizing a batch of feature names.
+17876	Engineering deep dive · E54 · continues Q108
+25869	The share read and the final contribution are different objects
+19946	In a one-dimensional teaching aggregation with weights [0.9,0.1] and Value [0,100], the contributions are [0,10]. The first position, which has the largest attention, contributes 0, while the second supplies the entire aggregated value. A more complex network also has multi-head projections, residuals, nonlinearities and later layers. Looking at the size of the weights alone therefore cannot explain the final output directly.
+20863	This small counterexample in the book proves only that "the largest weight does not entail the largest numeric contribution"; it does not claim to have carried out causal attribution on a real model. Real interpretability research has to trace internal paths, construct interventions and acknowledge the scope within which its results apply.
+23180	Where a correlational visualization and a causal experiment differ
+15251	A visualization shows a correlated quantity from the run at hand; a causal question asks "what happens if this is changed while the other conditions are held constant". Masking a token, replacing an activation or switching off a head can each affect several paths, and can even push the model outside its training distribution. Observing a change does not by itself prove that this is the only cause during a natural run.
+20476	A more reliable experiment uses controlled inputs, an explicit object of intervention and comparable output metrics, and checks for alternative paths and side effects. Ablating an attention head and changing the input text are not equivalent interventions, and not every change can be attributed to one highlighted block.
+24932	Self-reported reasoning cannot replace internal evidence either
+21664	A model can give a coherent explanation, but whether that text is faithful to the real computation needs separate verification. Finding some of the paths in research is not the same as being able to read the model's thought in full. Do not treat the "thinking process" a user sees as an engineering log or as proof of execution.
+28108	Follow-up: so is a heat map of no use at all?
+20600	It is. It can help find a mask bug, an abnormal concentration or a position offset, and can guide a research hypothesis. But its use should be written up as "diagnosing an intermediate computation or generating a hypothesis", not as "proving why the model answered this way". The more intuitive a figure, the more its subject needs stating.
+27906	Follow-up: how is a teaching animation kept from misleading?
+14043	In the animation, label the input, the weights, the Value, the output and the simplifying conditions in step; recompute with pinned parameters; say which layers were left out. Keep real model data separate from a hand-made sketch. A handsome figure should not draw a mechanism that is not yet known as a definite causal chain.
+7586	E54: how to read this result, rather than only looking at "pass"
+22357	The item with the largest attention share may have a Value of zero; a smaller share times a very large Value can still dominate the output. The brightness of a heat map is not a complete causal explanation.
+24885	Self-check:</strong> with attention [0.9,0.1] and Value [0,100], does the first position contribute more?
+10854	No. The item-by-item contributions are 0 and 10. An attention share has to be combined with the content and with the later transforms; the cause of an answer cannot be inferred from heat-map brightness alone.
+22252	Follow this chapter through its objects and states</a><a href="#topic-2">Image representation and interface action are two different problems</a><a href="#Q105">Q101｜Why does an LLM "state an error confidently"? How do you tell confidence, calibration and selective answering apart?</a><a href="#Q106">Q102｜Why does self-reflection sometimes make things worse with each revision? How is effective feedback designed?</a><a href="#Q107">Q103｜How does a multimodal model feed an image into a language model? And what extra links does a GUI agent add?</a><a href="#Q108">Q104｜Can research on model interpretability really tell us "why it answered that way"?

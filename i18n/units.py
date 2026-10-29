@@ -18,6 +18,11 @@ INLINE = re.compile(
     r'^(?:</?(?:strong|b|em|i|code|span|a|sub|sup|abbr|kbd|small|u|mark|br|'
     r'time|cite|q|var|samp|dfn|bdi|wbr)\b[^>]*>|\s)+$')
 TAG = re.compile(r'<[^>]+>')
+# A run of Chinese punctuation on its own translates deterministically, so it
+# stays its own unit instead of being folded into the sentence beside it.
+# Merging it would turn an already-translated phrase into a new composite
+# string and throw that translation away.
+PUNCT_ONLY = re.compile(r'^[\s。；，、：？]+$')
 
 
 def merge(doc, items):
@@ -37,6 +42,11 @@ def merge(doc, items):
             flush()
             units.append({'i': len(units), 'start': it['start'], 'end': it['end'],
                           'kind': it['kind'], 'zh': it['zh']})
+            continue
+        if PUNCT_ONLY.match(it['zh']):
+            flush()
+            units.append({'i': len(units), 'start': it['start'], 'end': it['end'],
+                          'kind': 'punct', 'zh': it['zh']})
             continue
         if buf and INLINE.match(doc[buf[-1]['end']:it['start']]):
             buf.append(it)
@@ -66,4 +76,5 @@ def main():
           (format(tot, ','), format(rich, ',')))
 
 
-main()
+if __name__ == '__main__':
+    main()

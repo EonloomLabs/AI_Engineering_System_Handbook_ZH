@@ -91,10 +91,17 @@ def order(t):
 
 
 def ids(t):
-    """id -> string. The id is assigned once and never moves, so a key handed
-    to a translator keeps its meaning however often the table is rebuilt.
-    Keying by sort position did not: adding strings reordered it and silently
-    re-pointed every key that had already been given out."""
+    """id -> string, for numbering an export.
+
+    An id is kept across rebuilds, unlike the sort position it replaced, which
+    moved whenever a string was added and silently re-pointed keys already
+    given out. But ids were reassigned once, in the rebuild that introduced
+    them, so a key in a src file written before that does not resolve here.
+
+    That is why ingest never trusts the key: pair() matches a translation to
+    its own .src.txt, which records the Chinese for every key it handed out and
+    is therefore the authority. Nothing should look a handed-out key up here.
+    """
     return {v['id']: k for k, v in t.items()}
 
 
@@ -336,11 +343,14 @@ def ingest(files):
             bad += 1
             continue
 
-        miss = [i + 1 for i, (zh, _) in enumerate(pairs) if zh not in t]
-        if miss:
-            print('%-34s 拒收: %d 行源串不在表中（%s…）' % (p.name, len(miss), miss[:4]))
-            bad += 1
-            continue
+        # A source string can legitimately disappear when extraction changes
+        # (a punctuation node that now stands alone, a unit that merged), and
+        # its translation is then moot. Skipping those beats rejecting a whole
+        # batch of good work; anything still in the table is kept.
+        gone = [zh for zh, _ in pairs if zh not in t]
+        if gone:
+            pairs = [(zh, v) for zh, v in pairs if zh in t]
+            print('%-34s %d 行源串已不在表中，跳过' % (p.name, len(gone)))
         pairs, how = check(pairs, p, how, t, dry)
         if pairs is None:
             bad += 1
@@ -376,11 +386,12 @@ def status(args):
     return 0
 
 
-argv = sys.argv[1:]
-for a in list(argv):
-    if a.startswith('--lang='):
-        LANG = a.split('=', 1)[1]
-        argv.remove(a)
-assert LANG in LANGS, 'unknown language %r' % LANG
-cmd = argv[0] if argv else 'status'
-sys.exit({'export': export, 'ingest': ingest, 'status': status}[cmd](argv[1:]) or 0)
+if __name__ == '__main__':
+    argv = sys.argv[1:]
+    for a in list(argv):
+        if a.startswith('--lang='):
+            LANG = a.split('=', 1)[1]
+            argv.remove(a)
+    assert LANG in LANGS, 'unknown language %r' % LANG
+    cmd = argv[0] if argv else 'status'
+    sys.exit({'export': export, 'ingest': ingest, 'status': status}[cmd](argv[1:]) or 0)

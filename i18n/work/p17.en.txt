@@ -1,0 +1,290 @@
+24013	Lesson 68｜Deep research waters and whole-system judgment — AI Systems Engineering
+22235	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#Q109">Q109｜What do Scaling Laws and Chinchilla actually show? Why can one token/parameter ratio not simply be memorized?</a><a href="#Q110">Q110｜What is the essential difference between MLA and GQA? Why can a low-rank KV reduce the cache?</a><a href="#Q111">Q111｜Is In-Context Learning really "learning"? Why does changing a few examples change the behavior?</a><a href="#Q112">Q112｜Faced with a new framework, a new paper or an agent failure, how do you judge which layer to change?</a><a class="sub ap-toc" href="#agent-practice-synthesis">How is a knowledge graph turned into engineering judgment rather than a compendium of concepts?
+24260	Systems</span><span>about 8.4k characters</span><span>Figures and item-by-item notes
+20534	Finally, scale, architecture, in-context learning and engineering control are brought together: capability in the parameters, information given in the input, inference computation and external evidence are four different channels.
+23849	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/17.html">Lesson 54 · The mathematics needed before post-training</a><a class="pill" href="../foundations/20.html">Lesson 61 · Low rank, quantization, experts</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent</a><a class="pill" href="../foundations/39.html">Lesson 64 · Multimodality and trustworthiness</a><a class="pill" href="../foundations/40.html">Lesson 66 · From core concepts to system analysis
+27546	A quick check before the deep reading:</strong> when an error turns up, first ask whether a fact is missing, whether something cannot be computed, whether a tool was never executed, or whether the verification is insufficient; choose the smallest intervention for each cause, instead of switching to a bigger model for all of them.
+20527	This last chapter joins up the mathematical assumptions, the architectural changes and the engineering judgment. Advanced knowledge is not reciting more abbreviations; it is being able to explain what conditions a conclusion depends on, which layer it changes, and how to test whether it suits your own task.
+8430	Q109｜What do Scaling Laws and Chinchilla actually show? Why can one token/parameter ratio not simply be memorized?
+27412	What to know first for this question</span> A scaling law is an empirical relationship under a particular setting, not a law of unlimited extrapolation; parameters, data, compute and quality together decide the result.
+23942	Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/20.html">Lesson 61 · Low rank, quantization, experts</a><a class="pill" href="../foundations/21.html">Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent
+8845	Scaling laws study how model size, data and compute budget affect the loss; compute-optimal allocation asks how, under a given budget and set of assumptions, to divide that budget between parameters and training
+10089	. It is an empirical fit and an optimization problem, not a proportionality law that holds constant for every architecture, every data quality and every deployment goal.
+22850	Deriving the budget allocation from a simplified objective
+12551	Suppose the loss can be approximated as
+29227	, where N is the parameter count and D the number of training tokens. Suppose further that the training compute is
+29255	, so
+29198	, and substituting gives:
+17241	Differentiating with respect to N and setting the result to zero gives:
+27345	This shows that the optimal allocation depends on the fitted coefficients, the exponents and the budget model. If the data repeats, the quality changes, or the training recipe or the architecture changes, the original fit need not continue to apply. If the real objective includes a large amount of later inference cost, training a smaller model for longer may suit the total life-cycle cost better than merely minimizing the loss of one training run.
+11176	Do not take an improvement in the pre-training loss as directly equivalent to a rise in some
+12044	task's success rate. In between come post-training, tool adaptation, retrieval, execution and verification. A model with lower perplexity may still be poor at a particular protocol or at high-risk operations.
+20912	Conditions for this example:</strong> an independent budget figure: the available compute budget is fixed and can be divided between a larger model N and more data D. The trade-off is discussed using only C≈6ND, the common simplified training estimate; no best ratio for a real model is given.
+14746	The number of parameters.
+25438	The number of training tokens.
+19342	Fitting conditions
+21218	Architecture, data quality, optimization method and budget range.
+15762	What changes with C fixed
+11783	Still to consider
+18706	Double N
+15976	In the simplified formula D roughly halves
+20389	Whether the data is insufficient
+18702	Double D
+7968	N roughly halves
+17208	Whether the capacity is enough
+18106	Train a small model for longer
+19682	Inference may be cheaper
+25512	The training objective differs from the deployment objective
+19523	Change the data quality or the architecture
+14662	The original fit may no longer apply
+28535	Measure again instead of memorizing a ratio
+13032	The formula approximates cost; it is not a formula for quality. The same 6ND can still reach different losses with different data, optimization and architecture.
+25523	Optimal training compute and optimal total deployment cost are not the same objective: when the number of calls in production is large, the inference bill affects the choice of model size.
+28737	When reading a report, look at the scope of the study and the measured points first and at the extrapolated curve afterwards; the ratio of one period cannot be taken as a universal constant.
+11199	Do not conflate:</strong> treating an empirical regularity as an exact law of physics produces the wrong budget under a new architecture, repeated data or a different training length.
+15817	The training budget is fixed and the parameters are doubled, so why may the data halve
+26422	Input and conditions.</strong> The very rough approximation C≈6ND for dense model training is used. Starting from N=1 billion parameters and D=20 billion tokens, C≈1.2×10^20 FLOPs.
+29001	The budget is fixed
+7315	C is unchanged
+12626	The permitted product N×D is approximately unchanged.
+14754	Parameters doubled
+7966	N becomes 2 billion
+7404	D has to fall to 10 billion for that approximate budget to hold.
+24779	The capability trade-off
+20480	More parameters but less training data
+11026	Parameter count alone cannot establish that it is better.
+20516	Optimal allocation
+12342	Judged by data quality, model shape, optimization and objective
+24389	An empirical scaling law is not an unconditional law of physics.
+17885	Engineering reality
+19703	When inference happens very often
+25500	What is optimal for training and what is optimal for whole-life-cycle cost can also differ.
+19201	Join the steps up.</strong> Scale, data and compute budget have to be discussed together; "bigger" on its own is not a complete training plan.
+26641	Limits and counterexamples.</strong> C≈6ND is a rough estimate under particular assumptions; it ignores part of the attention, embedding and similar overheads, and makes no claim to reproduce the exact optimal ratio of any paper.
+28088	Follow-up: is the formula C≈6ND exact?
+16485	It is an order-of-magnitude approximation commonly used under particular dense-Transformer training conditions, and it ignores or simplifies part of the attention, embedding and communication costs. Long contexts,␣
+15605	and different implementations change the real cost. Capacity planning has to go back to the specific operators and to hardware measurement.
+27872	Follow-up: is data of the same token count worth the same?
+10666	No. Repetition, noise, domain coverage, quality and mixing proportions all affect how much is effectively learned. Scaling up poor data is no guarantee of being equivalent to adding independent high-quality information. Test contamination also has to be kept from making the capability look stronger than it is.
+27839	Follow-up: a company has only a little private data — should it train a foundation model?
+28292	Usually compare first whether retrieval, prompting, tools, skills or fine-tuning are enough. The data, compute and verification that foundation pre-training requires go far beyond writing one domain prompt. Whether the real need is up-to-date knowledge or behavior adaptation decides which layer to change; the word "private" does not on its own imply training from scratch.
+17877	Engineering deep dive · E55 · continues Q109
+28981	Prerequisite: <a href="../foundations/20.html">Lesson 61
+12918	First be clear about which budget "optimal" holds fixed
+7230	The Chinchilla study compares how model size and data volume are allocated under a given training compute.
+5879	It is not simultaneously optimizing, for every product, the latency, VRAM and serving cost of a hundred million requests after launch. Memorizing some training-data/parameter ratio as an eternal law loses the conditions of the study.
+11703	A product's total cost includes at least training, data, deployment, inference, maintenance and rework after failures. A model that is more expensive to train but cheaper to run can end up with a lower total cost once the request volume is large enough; conversely, a low-traffic experiment is not necessarily worth a large training outlay.
+10300	An explicit break-even calculation
+12555	Suppose approach B spends 1000 units more on training than A and saves 0.01 per request, with everything else the same for now. It takes 100000 requests to recover the difference. Below that number it is more expensive; only above it can it be cheaper. The figures are teaching algebra only, not current API prices or a result from a paper; where the quality is not equal, the cost of failures and of human work has to be added as well.
+11499	Why fewer parameters still does not guarantee faster inference
+16931	Real latency depends on sequence length, batch, memory bandwidth, communication, kernel support and scheduling. The KV preemption and prefill policies in the vLLM tuning documentation are examples of influence at the system layer.
+5899	Taking the model's parameter count on its own as a prediction of latency misses the serving bottleneck.
+20063	Data volume is likewise not the only variable: repeated text, diversity, quality and the match to the target domain all change how well learning works. "Doubling the training tokens" is not doubling the independent information, and an empirical curve cannot be applied without looking at what the data is made of.
+28064	Follow-up: once a study's conclusion is out of date, can it no longer be used?
+14176	An older study can still supply method: control the variables, compare budget allocations, fit and then verify. But when the architecture, the data and the hardware change, the empirical constants and the optimum have to be re-estimated. Cite the study's conditions when using it, and do not write the settings of that year into a product's defaults.
+27897	Follow-up: how do you run an engineering decision experiment that is small enough?
+15779	Fix the task set and the quality floor, then compare a few candidates on cost per success, p95 and resources under the real input/output length distribution; after that, use the projected traffic to compute the life-cycle range. Rule out the approaches that clearly fail the quality or memory constraints first; there is no need to build a large model-routing platform at the outset.
+7589	E55: how to read this result, rather than only looking at "pass"
+25443	The spend on training once and the spend on every inference after launch have to be counted together. The larger the projected request volume, the more likely the long-run inference difference exceeds the training saving; the optimal conclusion depends on that workload.
+24867	Self-check:</strong> with 1000 more spent on training and 0.01 saved per request, why is "inference is cheaper" not enough to choose it straight away?
+24950	About 100000 requests at least are needed to recover the difference, and the quality, the latency and the other costs still have to be comparable. Optimal for the training budget and optimal over the life cycle are different objectives.
+8433	Q110｜What is the essential difference between MLA and GQA? Why can a low-rank KV reduce the cache?
+27406	What to know first for this question</span> MLA compresses a cacheable latent representation and GQA shares K/V heads; the difference lies in the transformation and in the cache structure. Do not treat them as the same method just because VRAM goes down.
+23850	Lesson 42 · The arithmetic a model does most</a><a class="pill" href="../foundations/11.html">Lesson 46 · Attention step by step</a><a class="pill" href="../foundations/19.html">Lesson 58 · KV cache explained from scratch</a><a class="pill" href="../foundations/20.html">Lesson 61 · Low rank, quantization, experts
+28326	reduces the cache by having several
+16282	heads share fewer K/V heads; MLA expresses K/V jointly through a learned low-dimensional latent representation and gives the positional part a dedicated design. MLA is part of the model architecture and of its training; compressing the KV of an arbitrary existing model after the fact is no guarantee of equivalence.
+11891	Understanding a low-rank representation through matrix multiplication
+28477	Using the column-vector convention, let the hidden vector at some position be h, and first compute
+29152	, where the dimension d_c of c is smaller than the dimension of all the K/V heads expanded out. The content
+15239	can be expressed as
+10197	. Considering only the content score:
+15732	So the Query can be transformed into the latent space and then scored against the cached c, which avoids always keeping the full K explicitly. For the Value weighted sum there is likewise:
+24337	Linear transformations can be combined where it suits, but
+11010	cannot be moved around or linearized at will. The MLA of DeepSeek-V3 also separates the position-dependent Key from the content part, caching the compressed latent vector together with the corresponding positional Key; the Query too has a content part and a positional part. The actual sizes and the order of the operators should follow the architecture's implementation, and the ordinary
+24629	cache formula should not be carried over to it.
+10591	The equations above explain why there is room to rearrange the linear part; <strong>they do not prove that a low-rank architecture produces exactly the same output as any full MHA model</strong>. A low-rank restriction needs training to adapt to it; operator fusion and cache layout also affect the real gain. A smaller cache does not automatically mean lower latency at every
+15604	and context length.
+12201	A low-rank cache can store fewer numbers, so why is that not the same as compressing K/V however you like
+26333	Input and conditions.</strong> The teaching matrix W is 4×4, but it happens to be writable as A(4×1) times B(1×4). The input x is 1×4; first compute the latent variable c=xA, then compute cB.
+14698	The original path
+23144	Compute xW directly
+11442	The intermediate output has 4 numbers.
+13792	The factored path
+12878	Compute c=xA first
+15089	Only 1 latent number is needed, and B then recovers this example's target vector.
+24125	The equivalence condition
+9070	W really does equal AB
+13821	Then xW=(xA)B; for a general matrix a rank-1 approximation carries error.
+24637	What this suggests for caching
+24665	Caching a shorter latent representation may save capacity
+12149	but using it still requires recovering it correctly or adjusting the later computation.
+7916	The limits of MLA
+23266	Real MLA also involves a joint low-rank K/V representation, a position-dependent design and matrix absorption
+11078	This small factorization cannot be called full MLA.
+18958	Join the steps up.</strong> A low-rank method works because of the model structure and the algebraic relationships; dimensions cannot be dropped at will from any trained K/V.
+26793	Limits and counterexamples.</strong> This is an example of the low-rank principle, not a reproduction of a DeepSeek model; the mechanism differs from GQA's shared heads.
+27755	Follow-up: why can RoPE not simply be absorbed into one fixed projection?
+12348	depends on position. Mixing the positional rotation together with the content up-projection usually makes the transformation vary with position, so one fixed matrix cannot simply be reused at every past position. Decoupling the positional branch keeps position modeling while retaining the convenience of a low-rank cache.
+27696	Follow-up: is MLA just KV quantization?
+10857	No. Quantization reduces the number of bits used to represent each number; MLA changes the dimension and the structure of the representation that has to be cached. The two can be combined in principle, but the error, the operator support and the effect have to be verified separately: the gain from one technique cannot simply be multiplied by the advertised factor of another.
+27698	Follow-up: which layer does each of MoE, MLA and FlashAttention change?
+7935	MoE changes the sparse selection in the feed-forward computation; MLA changes the attention representation;␣
+12107	optimizes the IO and the intermediate storage of the attention computation. They address different bottlenecks, can appear in the same system, and are not equivalent to one another.
+8435	Q111｜Is In-Context Learning really "learning"? Why does changing a few examples change the behavior?
+27416	What to know first for this question</span> In-context learning is a pattern shown under the current input conditions; it does not mean the parameters are updated each time. Complex capability comes from training and inference acting together.
+23785	Lesson 37 · Why text has to become token IDs first</a><a class="pill" href="../foundations/10.html">Lesson 45 · The smallest neural network model</a><a class="pill" href="../foundations/16.html">Lesson 53 · One training run end to end</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context
+28309	In ordinary inference the model parameters are not updated, but the examples in the input change the hidden state and the conditional distribution, so task adaptation shows up. This is called in-context learning; it differs from training, which updates parameters by gradients, and from writing experience into an external long-term memory.
+12010	Tracking the change through a label-mapping example
+12573	Suppose the input gives the examples "positive review → label A, negative review → label B". Once the model has taken these examples in, the later positions use the correspondence in them through attention; the
+23005	of the final classification token are produced from a hidden state that contains this information. Once the examples are deleted or the session is reset, this local mapping may no longer be supplied, because the weights were not permanently changed by that request.
+23419	The choice of examples affects the task the model infers: whether the labels are balanced, whether the format is consistent, whether the examples cover the boundaries, and whether their order creates a bias. If every example uses the same label, the model may learn the output format as one fixed answer. Wrong examples can contaminate the current behavior as well. Good few-shot work is not piling examples up; it is supplying information that conveys the task rules, the boundaries and the output contract.
+9462	"The model remembers my project" calls for a further question: is the current context still carrying the information, has the client reloaded the files, has the retrieval system fetched the memory back, or has the model really been fine-tuned? Only by telling these mechanisms apart can recovery, deletion and privacy controls be designed correctly.
+20894	Conditions for this example:</strong> an independent classification prompt: two examples are given, "good → positive" and "bad → negative", and then "excellent" is asked about. The model's parameters are unchanged, but a task rule has been added to the input.
+10579	In-context adaptation
+21445	Infers the task pattern from the current examples.
+14741	Parameter learning
+28336	Updates the weights through training.
+19355	Persistent memory
+16190	An external system supplies the information again to a later session.
+26874	Run
+14748	Do the parameters change
+21009	The input this time
+20701	No examples given
+15014	Only "excellent"
+13967	Two examples added
+12328	Examples + question; the conditions have changed
+20150	A new session without the examples
+12693	The earlier conditions may no longer be visible
+23318	Actual fine-tuning
+20441	Yes, updated by gradients
+25485	The training data enters the parameter-update process
+18786	Putting the same function under different input conditions changes the output, and that does not require the function itself to have changed. This explains "it used the format as soon as I taught it".
+27206	This does not deny that the model performs complex adaptation internally; it states the observable mechanism: ordinary inference does not thereby run weight optimization.
+23420	The order of the examples, the quality of the labels and the task distribution can all affect the result; a few examples are no guarantee of having learned something permanently, across tasks.
+11200	Do not conflate:</strong> calling a correction made in chat permanent training easily leads users to believe that a new session keeps every rule automatically.
+21727	The model answers by following the two examples, so have the weights changed
+26308	Input and conditions.</strong> The current context gives "red → R, blue → B", and then asks for "the code for blue". Suppose the model answers B as the examples indicate.
+26547	The input changes
+20166	Two mapping examples are added
+16449	They enter the current forward pass as tokens.
+21134	The state of the weights
+19695	Inference has no backward pass and no optimizer update
+14726	The parameters do not change as a result.
+13549	Internal state
+28847	The hidden state and KV change with the context
+27317	This is computation state, not the model being retrained.
+23448	Removing the examples
+20199	A new request no longer supplies the mapping, and there is no external memory retrieval
+11017	There is no guarantee that it still knows this temporary code.
+23319	Actual training
+17534	Computes the loss on samples and updates the parameters
+27302	This is a different process.
+18926	Join the steps up.</strong> Adaptation within the context can change the current behavior, but no parameterized memory across sessions can be inferred from that.
+26694	Limits and counterexamples.</strong> Answering B is an assumed teaching behavior; there is no claim that every model will follow arbitrary examples accurately.
+28039	Follow-up: does every conversation update the vendor's model parameters?
+11131	That cannot be inferred. A single inference, a product's memory and a vendor's offline training are different processes; the data-use policy depends on the particular product and configuration, and a model "remembering a sentence" is no basis for inferring that it has updated weights online. This book does not speculate about undisclosed data-handling implementations.
+27741	Follow-up: the longer the context and the more few-shot examples, the better?
+20478	More examples can help with coverage, and can also bring in redundancy, conflict and position effects. The number of examples, the selection strategy and the cost have to be compared on a fixed task set. If the error comes from a missing fact about the code, adding format examples is not necessarily useful; what needs filling in is the evidence.
+27718	Follow-up: how are a skill and few-shot related?
+15118	can contain instructions, examples, resources and scripts; once loaded, these become part of the context or of the tool support. It does not change the parameters by itself, and it does not guarantee that the model follows it strictly. The value of a skill has to be verified through task behavior, not confirmed by the file existing.
+8438	Q112｜Faced with a new framework, a new paper or an agent failure, how do you judge which layer to change?
+27486	What to know first for this question</span> Diagnose layer by layer through input, model, tools, state, evidence and verification, and choose the smallest effective fix; do not add retrieval and review without limit just because you are uncertain.
+23554	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/33.html">Lesson 26 · Retries, idempotence and transactions</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/38.html">Lesson 33 · Reading a production run</a><a class="pill" href="../foundations/40.html">Lesson 66 · From core concepts to system analysis
+12741	First locate whether the failure happens in the information, the model, the protocol, the execution, the state or the acceptance, and only then choose the smallest measure that can change the cause. Papers and frameworks offer candidate mechanisms; they do not replace causal diagnosis. An engineering change has to keep a baseline and a counterexample, to prove that complexity has not been used to cover the problem up.
+11812	Working backwards from one wrong answer
+24046	Step one: confirm the task definition — what exactly did the user ask for, and how is success judged? Step two: see whether the evidence exists, whether there is permission for it, and whether the version is right. Step three: see whether the evidence was retrieved and reached the final model request; "a tool read it" is not "the current model still sees it". Step four: check whether the model output expresses the action correctly, and whether the protocol and the arguments are complete.
+24115	Step five: verify that the external execution and the persistent state agree, especially around timeouts and interruptions. Step six: check that the verification targets the final version and that it really ran. Only when these conditions are broadly right and the failure still occurs reliably is there better reason to attribute the bottleneck to model capability and to try a stronger model, a task split or post-training.
+28740	When reading a new paper, join up "the problem the authors solve — the key assumptions — the object changed — the experimental conditions — the limitations". If a study is about question answering over static documents yet is used to show that dynamic code modification is reliable, the scope has been stretched much too far. If a new framework only wraps existing mechanisms in layers of classes without producing a gain in task quality or efficiency, it is not necessarily worth moving to.
+18153	Before bringing in a new framework, run a comparison that could refute you
+26442	Input and conditions.</strong> The success rate of system repair tasks is low. The proposed approach is to add a vector database and three review agents; the logs, however, show that the key file never entered the readable directory at all.
+16268	Attributing the failure
+21157	The permission configuration makes the key source invisible
+27307	This is the gap that was observed.
+12491	Correct the legitimate read scope and change nothing else
+22434	Test whether that restores the task directly.
+21459	The framework comparison
+14960	Add only the vector store without changing the readable scope
+20227	Content that is blocked cannot be indexed out of nothing.
+16988	The review comparison
+10494	The three reviews still have no key file
+15235	They may repeat the same guess rather than add evidence.
+28476	The adoption decision
+15018	Only once representative tasks show that the extra mechanism still has a net gain
+18562	is the added complexity brought into the main pipeline.
+19268	Join the steps up.</strong> Advanced engineering ability includes proving that a complex approach is not needed for now, not just being able to deploy more components.
+26735	Limits and counterexamples.</strong> This example does not reject vector stores or multi-agent setups; it shows that the choice of tool should be driven by the specific failure and by the evidence.
+27950	Follow-up: how do you avoid making a simple task complicated?
+22026	For every retriever, agent, review or memory layer added, first state the specific failure that happens without it and the improvement that can be observed. If neither can be stated, keep the simple implementation for now. The principle is that complexity is driven by real evidence and risk, not by the completeness of a catalog.
+27948	Follow-up: how do you avoid over-simplifying a complex task?
+21544	Check the cross-module invariants, the unknown side effects, the permission boundaries and the irreversible operations. While these are still unclear, changing one line directly may only hide the risk. Simple does not mean fewer steps; it means no useless steps. The analysis and verification that are needed should be kept.
+27942	Follow-up: how do you tell whether you have really learned it?
+24468	Given a task you have not seen before, you can explain step by step the objects, the data flow, the key state, the failure window and the way it is verified, and you can point out which conclusions have no evidence yet. Being able to describe the run clearly, locate an error to a layer and verify the gain from a fix comes far closer to real ability than reciting terms.
+17878	Engineering deep dive · E56 · continues Q112
+24009	Lesson 66</a>. Reading order: confirm the run contract first, then the counterexamples and the fix, and test the limits last.
+18863	Breaking the system into a causal chain you can intervene in
+17267	For one failure, write down the user's acceptance result first, then locate it along the chain of input evidence, retrieval, context assembly, model output, tool execution, state write-back and verification. At every layer ask: which invariant should it preserve, and where is that actually broken? "The model is not clever enough" is too broad to guide a smallest fix.
+15187	A controlled oracle substitution can be used to diagnose: give the model the genuinely correct evidence directly, to test whether retrieval is the bottleneck; hand the executor tool arguments that are known to be correct, to check the execution boundary; hand the verifier the final artifact directly, to check whether the grader misjudges it. <strong>These substitutions are for locating a problem; a success rate under oracle conditions must not be taken as a deployment score.</strong> The principles of real outcomes and of infrastructure control in agent evaluation support this layered comparison.
+14133	No gain from a single factor may still hide an interaction
+20828	This book's teaching table: old retrieval + old prompt gives a success rate of 0.6, new retrieval + old prompt 0.6, old retrieval + new prompt 0.6, and only both new together gives 0.9. The interaction term is
+10216	. This is not measured product data; it illustrates that new evidence only works once the new assembly logic uses it correctly, and that looking at an independent A/B of one module alone can miss a combined dependency.
+14831	Conversely, an improvement after changing five things at once tells you nothing about which one helped. Run a limited set of combinations based on the dependency you suspect, and avoid the pointless expense of a full permutation. Start from real failure samples and the smallest falsifiable hypothesis.
+19868	How much is changed, and the risk, are part of the conclusion too
+24970	If inverting one mask fixes every related counterexample, there is no need to rewrite the whole agent; if the underlying permission model is wrong, one more sentence of prompt is not enough. Judging which layer to fix has to follow the evidence, not a preference for a more complex architecture. Acceptance covers the intended fix, neighboring regressions, the cost and any new failure modes.
+27945	Follow-up: how do you write troubleshooting experience into memory without overfitting?
+25586	Record the trigger condition, the failure mechanism, the original evidence, the smallest fix, the versions it holds for, the counterexample and the conditions under which it stops working. Do not write only broad instructions such as "from now on, add more context whenever there is a problem". When the environment differs next time, check the premises first, and do not promote one success into an eternal rule.
+27738	Follow-up: what is the minimum a "senior-level canned answer" should contain?
+12676	First define the objects and the boundaries accurately; then walk through the key state or computation; give a counterexample that separates a correct implementation from a wrong one; explain why the fix works, what it costs and under which conditions it stops working; and finally be able to point to the basis and the verification path. Reciting terms, flow charts or a list of "best practices" is not enough to answer a series of follow-ups.
+20592	The final acceptance question
+24471	Given a failure trace, can you name the cheapest and most discriminating check to do next? If the answer is always "rerun it, change the model, add more material, add one more review agent", then the mechanisms learned have not yet been turned into engineering judgment.
+7592	E56: how to read this result, rather than only looking at "pass"
+28601	Each error variant breaks one invariant, and then we see whether the verification points to it accurately. One success is not a complete chain of evidence; only catching counterexamples of this kind reliably shows that the fix targets a known failure boundary.
+24877	Self-check:</strong> the task succeeds once the correct retrieved evidence is handed to the model directly — can the production retrieval optimization be declared a success?
+10957	No. An oracle substitution only helps to locate the bottleneck of insufficient retrieval or evidence. The production system still needs real retrieval, permissions, versions and cost to be verified; a condition in which the correct answer was injected by hand cannot be taken as a deployment score.
+15864	The smallest usable unit of the graph is a relationship you can check
+9397	Stringing the three words "agent—tool—memory" together carries almost no information. More useful edges are:
+10155	. Each edge notes its source, the versions it applies to, and a counterexample.
+19288	Putting the problem back into the graph to locate it
+6987	An agent that keeps modifying the same file may be a result that was not filled back in, a task state that was not persisted, a summary that turned "done" into "not done", an unstable retry key, or a subtask dispatched twice. Start from the visible symptom and follow the dependency edges to find the break. Simply adding a prompt that says "do not repeat yourself" only hides the mechanism problem.
+10522	Three different kinds of conclusion
+11638	Fact: in the source, a certain function handles the post-execution hook after the handler returns. Inference: a refusal at that point cannot stop an external action that has already happened. Recommendation: a sensitive operation should be checked before execution, and an unknown result should be given a verification or idempotent path. The three have to be kept apart; a recommendation must not be written up as a guarantee the product already provides.
+14936	How to use the graph when making a change
+12484	Change a tool schema, and argument assembly, hook rewriting, authorization binding, execution and filling the result back in all need regression. Change compaction, and the key constraints, the historical versions, the calls in flight and recovery need regression. Change memory, and extraction, leases, artifact verification, source withdrawal and expiry at the point of use need regression. The graph helps to settle the scope of the impact; it does not require every small change to rerun every test in the system.
+10692	A design that is not worth doing has to be removable too
+10482	A mechanism with no matching failure mode and no gain on the evaluation, yet with added calls, state and maintenance cost, should not be kept because it looks complete. Advanced engineering judgment is knowing when a complex mechanism is needed, and equally when simple direct execution is better.
+23328	Every edge of a knowledge graph has a level of evidence too
+9400	"ToolRouter contains the visible specification" is a code relationship; "a post-execution hook cannot roll back a side effect that has already happened" is a conclusion about execution order; "add one more check for high-risk operations" is an engineering recommendation. The three kinds of relationship need different verification methods, and they must not all be drawn as the same "official requirement".
+21081	This round's graph attaches to each edge a pinned source range, an official documentation section or an original-derivation label, and leaves older records whose original text was not obtained as history rather than continuing to cite them. When reading the graph, look at an edge's predicate and conditions first and at its source afterwards. A passing test supports only the teaching cases that were run; it does not replace reading the source, a Rust integration test, or verification against a commercial service.
+22234	Follow this chapter through its objects and states</a><a href="#topic-2">Find which layer the error happens in before talking about changing models</a><a href="#Q109">Q109｜What do Scaling Laws and Chinchilla actually show? Why can one token/parameter ratio not simply be memorized?</a><a href="#Q110">Q110｜What is the essential difference between MLA and GQA? Why can a low-rank KV reduce the cache?</a><a href="#Q111">Q111｜Is In-Context Learning really "learning"? Why does changing a few examples change the behavior?</a><a href="#Q112">Q112｜Faced with a new framework, a new paper or an agent failure, how do you judge which layer to change?
+11927	Code, numbers and the limits of verification — AI Systems Engineering
+28729	Reading tool</span><span>about 1.2k characters
+16046	The foundation experiment program depends only on the Python standard library. It checks the number tables, matrices, softmax, attention, masks, rotation, gradients, a simple preference and the evaluation formulas. Every input, vocabulary and weight is explicitly stated teaching data.
+22444	Test results and scope of use
+6458	39 unittest tests passed, with 0 failures, 0 errors and 0 skipped.</strong> The complete results are below. They are deterministic program checks, not the model's general capability, the quality of compaction, or a production-safety pass rate.
+20249	No network, GPU or API key is needed. With Python 3.10 or above, run this in the material package's directory:
+11230	All the derivations can be read without running the code. The JSON keeps the exact output; the text uses a suitable number of decimal places.
+16047	The complete hand-calculation program
+6459	The complete program for the 39 tests
+16935	Actual numeric results
+27618	Advanced numeric program
+26905	Run-chain program
+27616	Advanced experiments
+16064	The foundation computation experiments are in the labs directory; the numeric and run-chain experiments are in the checks directory; the training, retrieval and failure-recovery topics are in the studies/labs directory. Each group of experiments states its dependencies, its input data and the scope of its results separately; a passing test does not mean that a commercial model's capability or production safety has been verified.
+21281	See the topic experiments →
+14723	Recomputable checks of parameters, representations and symbols
+7620	F11 uses a fully specified X, Wq, Wk and Wv: it projects first, then computes the scaled dot product and the causal read shares. Every displayed value comes from a continuous computation over unrounded values. The code and results below can be re-checked in an offline environment.
+21336	Standard-library verification program
+16709	Complete intermediate results
+15269	Optional PyTorch comparison program
+16938	Actual framework comparison results
+21335	The standard-library program has 30 deterministic checks; separately, the installed PyTorch 2.10.0+cpu was used on CPU with float64 to compare 3 Linear projections, the low-level SDPA and the high-level MultiheadAttention, and all 5 comparison groups passed. The high-level MHA received the same X while the low-level SDPA received the already projected Q/K/V; this verifies the difference between interface levels, and is not an evaluation of model quality or GPU performance.
+15439	The complete intermediate results of the same worked example
+28455	Check records for the accompanying programs
+23480	Program group
+21539	Scale of checks
+18614	Execution result
+22736	Independent numeric witnesses
+6092	10 experiments
+26894	Run summary
+21113	List of where each term is used
+21603	Concept definition data
+21116	The term list holds 120 definitions, scans 143 reading pages according to a specified pattern, and places 514 in-place explanations at the first semantic use of a term; F11 is additionally written along the full dependency chain. The scan excludes the contents text and the exercise answers, and it cannot prove that every term, or every possible ambiguity in reading, has been exhausted. The numeric and state tests verify the objects listed; they do not mean that a real commercial agent was run.

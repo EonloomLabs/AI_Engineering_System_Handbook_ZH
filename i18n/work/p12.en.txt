@@ -1,0 +1,390 @@
+23713	Lesson 25｜Long-term memory: writing, retrieval, conflict, expiry and forgetting — AI Systems Engineering
+22325	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#Q069">Q045｜What is the difference between working memory, episodic memory, semantic memory and procedural memory?</a><a href="#Q070">Q046｜Which judgments should a piece of information pass through on its way from a conversation into long-term memory?</a><a href="#Q071">Q047｜How are conflicts between old and new memory handled? Why do Valid time and Recorded time have to be kept apart?</a><a href="#Q072">Q048｜How does memory retrieval avoid picking up the wrong project or an expired rule? And when should something be forgotten?</a><a class="sub ap-toc" href="#agent-practice-memory">Why is writing memory a pipeline with leases and acceptance?
+25612	What memory has to keep is information that carries a source, conditions and a time, not "something the model once said". Working state, project facts and rules learned from experience are each updated differently.
+23548	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/28.html">Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+27525	A quick check before the deep reading:</strong> tell "the policy takes effect from 1 October" apart from "the system only learned of it on 5 October", then say why a query about 3 October gives one answer for the policy that really applied and another for the policy the system knew at the time.
+21034	This chapter treats memory as a data system with provenance and a life cycle. Frameworks and papers offer different implementation ideas, but "it can be put into a vector store" completes only a very small part of the work.
+8230	Q045｜What is the difference between working memory, episodic memory, semantic memory and procedural memory?
+27447	What to know first for this question</span>Working state, events experienced, stable facts and execution experience need different storage strategies; they cannot all be stuffed into one ever-growing summary.
+23550	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/27.html">Lesson 22 · Compaction is not magic</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory
+17716	Working memory supports the current task; episodic memory records specific experiences; semantic memory keeps relatively stable facts; procedural memory keeps reusable ways of doing things. The classification helps decide when to write, how to query and when to expire; it does not force you to build four kinds of database.
+15347	One and the same bug produces four different kinds of information
+18225	Current working memory: "filter.py has been located; next, add tests". Episodic memory: "in a task in 2026, absolute paths did not match the relative rule, which made exclude fail; the patch and the test are in PR X". Semantic memory: "in this project, exclusion rules are interpreted relative to the repository root". Procedural memory: "when checking a file-filtering problem, first check the path baseline, the separator and the semantics of the rule".
+27276	These four are not interchangeable. Working memory loses value once the task ends; episodic memory keeps the concrete evidence; a semantic fact can expire as the project changes; procedural experience transfers, but it must carry its conditions and must not turn into "every filtering bug is a path problem".
+14761	Parametric memory is model capability formed by training, and is not the same as an application's external memory. External storage can be updated and audited, but it needs reliable retrieval. Putting the whole history into the context is the simplest extension of working memory, yet it runs into limits of length, cost and interference between pieces of information.
+15393	What each of the four kinds of memory keeps from one and the same incident
+26193	Input and conditions.</strong> The incident: in v7 the path-prefix test wrongly excluded the ab directory; v8 has fixed it and the tests pass.
+17712	Working state
+18215	The current task: v8 awaiting merge
+10609	Needed when this one task is resumed next time.
+11639	The incident's input, the faulty version, the patch and the outcome
+17947	Helps a similar problem in future trace back the experience.
+25785	Semantic fact
+18208	At present exclude is judged on directory boundaries
+18360	Must carry a version and a source, so that it does not quietly go out of date.
+23475	Procedural experience
+28358	When a prefix-matching change comes up, test sibling directories with the same prefix first
+20361	It is a method that comes with conditions of use.
+16720	The full failure log goes into external evidence
+11153	Do not copy the same long log into all four kinds of memory.
+19210	Join the steps up.</strong> Classifying memory serves to decide the granularity of what is stored and what is read; it is not there to build more databases that duplicate one another.
+26778	Limits and counterexamples.</strong> The naming of memory types is not entirely consistent across research and products; this example stresses responsibilities and does not prescribe four tables.
+28097	Follow-up: are memory and RAG the same thing?
+20370	is a class of mechanism that retrieves external knowledge and then uses it to help generate, whereas a memory system also covers writing from interactions, updating, conflict handling and forgetting. Memory retrieval can use RAG, but being able to read documents does not by itself build up experience.
+28028	Follow-up: why is "experience" summarized by the model so prone to overfitting?
+10425	One success may be due to a particular environment, an accidental path or insufficient testing. If the summary drops the conditions, it promotes a local practice into a general rule. A piece of experience needs at least the setting, the action, the outcome, the evidence and the known limits on record; only after it has been reused several times does its effect decide whether it should be raised to a default procedure.
+28116	Follow-up: is more long-term memory always better?
+10855	No. Duplicate, conflicting and expired memories add retrieval noise and context load. The core metrics are fewer repeated mistakes, better task quality and a lower cost of rebuilding context, not the number of memory entries.
+8233	Q046｜Which judgments should a piece of information pass through on its way from a conversation into long-term memory?
+27430	What to know first for this question</span>Before writing to memory, verify the source, the scope and any duplication or conflict. A success the model reports of itself is not a verified fact.
+23658	Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+12910	First identify the candidate fact or experience, verify the source and the range it applies to, check for duplication and conflict, then choose to add it, update it, hold it as pending confirmation, or not store it. Everything the model produces in an answer cannot be stored automatically as fact.
+10380	The write chain for one candidate
+22938	The user states explicitly that "project logs are kept for 7 days", which is a project constraint coming from the user; the tool configuration shows that production keeps them for 30 days, which is a fact about the implementation. When the two conflict, you cannot simply let the newer text overwrite the older: you have to judge whether the user is setting a new target or describing the current situation. Memory can keep "the target requirement is 7 days" and "the current production configuration is 30 days" separately, marked as needing adjustment.
+13612	A lightweight structure can be used when writing: subject, predicate,␣
+9952	, valid_time, source, status. For a piece of experience, add conditions and outcome as well. The fields should answer real needs; there is no need to apply a complex knowledge graph mechanically.
+21326	To check for duplicates, first find the candidates on the same subject or in the same range, then compare the meaning. The same conclusion from two independent pieces of evidence can have its evidence references merged; similar wording in a different environment should not be merged; a negation relationship should be treated as a conflict. The model can help with extraction and comparison, but an important authoritative fact is best given a definite identity and confirmed by a person or a tool.
+10349	Which checks a guess by the model has to pass before it can enter long-term memory
+26226	Input and conditions.</strong> The candidate memory: "fix every path error with startswith." It comes from a suggestion that has not yet passed its tests.
+22148	No successful verification, and the wording "every" is too broad
+11024	It cannot be promoted to general experience.
+24701	Narrow the claim
+19860	Change it to "the exclusion of directories in this case needs a boundary test"
+25078	The range is limited to the specific problem.
+14896	Obtain evidence
+25549	Record the version that fixed it and the a / a-x / ab counterexample tests
+14071	Tell a proposal apart from a confirmed result.
+13613	Conditions for writing
+11258	No conflict with existing entries, reusable in future, and reasonable in cost
+22539	Store it only if these hold.
+16152	Re-check trigger
+26072	The path, the platform or the implementation changes
+28544	Verify that it still applies; do not force it on every task for good.
+19259	Join the steps up.</strong> Long-term memory is not pasting the model's last sentence automatically into the system prompt.
+26751	Limits and counterexamples.</strong> The write threshold here is one optional engineering strategy; a simple preference can be handled more lightly, and there is no need to design a complex approval for every record.
+27817	Follow-up: when is it all right not to store something?
+11451	Temporary state, data that is easy to look up again and changes fast, guesses with no evidence, small talk of no future use, and sensitive information whose storage risk outweighs its benefit may all not be worth long-term memory. Leaving out a worthless write is more effective than cleaning up afterwards.
+28083	Follow-up: does automatic memory mean the model changes the rules by itself?
+12370	Storing a candidate experience and activating an execution rule should be kept apart. Evidence may be allowed to accumulate automatically, but verified rules, hypotheses awaiting confirmation and explicit user instructions should have different statuses. Otherwise one bad summary can affect every later task at once.
+27931	Follow-up: what can go wrong when memory is written asynchronously?
+13610	A write delay means a fact that has just been corrected is not in force yet and the old memory is still retrieved; concurrent writes can overwrite new content. Visibility, versions and a conflict policy have to be defined. Not every application needs strong consistency, but you have to know when what you read is a stale state.
+24769	A conclusion from a chat cannot be promoted straight into a long-term fact
+12303	"pytest passed this time", for instance, holds only for one file version and one set of tests, and should not be stored as "there is nothing wrong with this module". A usable memory should include the content, the source, the scope, the time it happened or took effect, the time it became known, its trust status and the conditions under which it expires. A checkpoint for the current task answers "how far did we get"; long-term memory answers "when, later on, may this be consulted".
+15757	The two stages in the pinned Codex source
+15588	The startup logic is constrained by whether the session is temporary, by feature switches, by the identity of the main thread, and by database and directory conditions.
+5928	The first stage screens the eligible history sources and extracts from them concurrently; the result may be a valid output, or it may be a success with nothing worth keeping. The latter should not be treated as an error and retried without end.
+24111	The second stage has a global task lease: it prepares the workspace, synchronizes the candidates, computes the differences, and then decides whether a consolidation worker is needed. When there is no new difference and the existing artifact is valid, one model call can be skipped. Once the worker has finished, you still have to shut it down, verify the artifact, check that the lease is still held and advance the watermark before publication counts as a success.
+11523	Why a lease is not a boolean lock
+23440	A lease carries an owner and an expiry time. Once an old worker is stuck, a new worker may take out a new lease; when the old worker comes back, it must not go on to publish its old result. The final write has to carry the ownership condition. A heartbeat only extends the validity period; it does not prove the work itself is correct. The watermark states the range of sources already taken in; it does not mean the model "remembers all of it".
+28855	Isolation, too, has to be read branch by branch
+15800	The pinned consolidation worker switches off some tools, memory and collaboration abilities in order to reduce recursive feedback; but the sandbox branch is still affected by the type of the parent environment. Seeing one restricted branch is no reason to write "every memory worker always forces the same sandbox".
+12279	Verify again at the point of use
+25615	The memory says the test command is
+29197	, but the directory was deleted after a change of repository version; the entry should be expired or confirmed again, rather than explained away so that the old memory still holds. When a user withdraws a fact, deleting the original record is not enough: the summaries, vectors and experience rules generated from it also have to be traced through their source dependencies and expired.
+20942	The local experiment builds two competing workers out of lease generations and source versions, and confirms that the old owner cannot commit. It does not run a production memory service or model extraction; what it verifies is the boundary of the control state.
+28246	Read the code step by step; do not trust the order given in a comment
+28788	The actual run of stage one builds the request context first and takes the candidates afterwards, even though the summary comment puts the order differently. Stage two is not "the model has written the file, so it has succeeded": first the worker is ended, then the artifact and the lease are checked, and last the Git baseline and the database record are updated. If the shutdown fails, the code as read keeps the lease and waits for it to expire, so that the old process and the new worker do not modify things in parallel.
+7679	Updating the Git baseline and marking success in the database are two operations, and should not be drawn in a textbook as one transaction guaranteed to be atomic. A teaching counterexample: the baseline succeeds and the database registration fails, and recovery should check both rather than unconditionally run consolidation again or unconditionally declare the publication done. The watermark only states the range of sources taken in; it does not prove that a remembered fact is true.
+28857	The isolation configuration has branches too: a managed sandbox can be restricted to the local memory root with no network; where the parent configuration says Disabled or External explicitly, the relevant branch keeps that choice. Picking out the strictest passage is no reason to claim that "all background memory is always without a network".
+8236	Q047｜How are conflicts between old and new memory handled? Why do Valid time and Recorded time have to be kept apart?
+27485	What to know first for this question</span>Valid time says when a fact applies; recorded time says when the system knew it. Different retrospective questions can give different query results.
+23558	Lesson 02 · State, events and checkpoints</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory
+25174	is the time over which a fact applies in reality, and
+25192	is when the system knew or recorded it. Only by keeping the two apart can you answer both "what was the fact at the time" and "what did the system know at the time". A newer record does not necessarily stand for a more up-to-date fact about reality.
+22995	Seeing both times through a late message
+6097	On 10 October the system records "a timeout of 30 seconds". On 17 October a notice arrives: "it was changed to 60 seconds with effect from 12 October". The new fact's valid time is the 12th and its recorded time is the 17th. A query for the actual configuration on 14 October should answer 60 seconds; a review of "why did the system suggest 30 seconds on 14 October" has to take in that it had not yet received the new message.
+16332	If the original record is simply overwritten using updated_at, the old state of knowledge disappears and historical decisions can no longer be explained. A light implementation can keep version records and a supersedes relation, without necessarily needing a full temporal database. For high-risk tasks you should also tell the target policy, the actual deployment and the observed value apart, because they may hold different values at the same time.
+13629	One order for handling conflicts is: the same object? the same environment or version? the same valid time? is the source entitled to change this fact? is the new record a correction, an exception or additional evidence? Only after answering these do you decide to overwrite, to keep both, or to mark the matter unresolved.
+9408	"When it takes effect" and "when it became known" are not the same time
+26142	Input and conditions.</strong> Recorded on 1 October: the production timeout is 5 seconds, valid over [1 October, ∞). Only on 10 October does it become known that it should have been 7 seconds from 5 October, and the correction is recorded.
+19399	Query by a business time of 3 October
+18264	The value valid at the time
+6675	5 seconds.
+19401	Query by a business time of 7 October, against the records known as of 8 October
+24269	The system did not yet know of the correction
+11755	It still returns the 5 seconds known at the time.
+19400	Query by a business time of 7 October, as of 11 October
+15141	The retroactive correction recorded on 10 October may be used
+26927	Returns 7 seconds.
+11113	Overwriting directly is not allowed
+14975	Storing only the current value 7 loses "why 5 was the answer at the time"
+12450	Keeping the recorded time supports auditing.
+25076	Range filtering
+22442	The test environment has 7 seconds too
+10996	It must not be mixed with production.
+19116	Join the steps up.</strong> Valid time answers when a rule held in reality; recorded time answers when the system came by that information.
+26730	Limits and counterexamples.</strong> Time intervals are defined as closed on the left and open on the right; this is a simplified bi-temporal example, and a retroactive correction must have authoritative evidence behind it, history cannot be rewritten at will.
+28056	Follow-up: does a user's latest instruction always override older experience?
+15989	Within a task constraint that this user is entitled to decide and whose scope is clear, a new instruction should usually change an old preference; but a low-trust web page must not be allowed to pass itself off as a user instruction, and a new requirement for project A must not override project B. Authority and scope come before mere chronological order.
+27846	Follow-up: once a wrong memory is deleted, what about the summaries derived from it?
+28900	The summaries, rules and caches that depend on it have to be expired or regenerated. Deleting only the original entry while keeping "the experience summarized from the old entry" lets the error go on spreading. Recording source dependencies is not just for tidy citation; it is also what makes a revocation propagate.
+27860	Follow-up: when a conflict arises, can it all be left to the LLM's free judgment?
+12208	For low-risk text the model may offer candidate explanations; critical identity, time, version and authorization are best constrained by structured information. An LLM is good at comparing meaning, but it should not override a highly authoritative fact on the strength of linguistic confidence. When no decision can be reached, keeping the conflict is more reliable than manufacturing a false unified conclusion.
+17857	Engineering deep dive · E35 · continues Q071
+23710	Lesson 23</a>. Reading order: confirm the run contract first, then the counterexamples and the fix, and test the limits last.
+15013	updated_at alone loses two different questions
+11632	A fact's valid time answers "from which day was it true in reality"; the recorded time answers "from which day did the system know this". The two are different. LongMemEval lists temporal reasoning, knowledge updating and abstention as separate abilities, a reminder that recall cannot go by content similarity alone.
+5913	The bi-temporal structure in this section is an engineering design given by this book; it is not a claim that the paper specifies this database schema.
+15787	One fixed example answering two kinds of query
+23679	On day 1 the quota is known to be 10; only on day 8 does a notice arrive: from day 5 the quota had in fact been changed to 20. Asked "what was the quota as known on day 6", the answer should be 10; asked "looking back now, what value actually applied on day 6", it should be 20. If the update simply overwrites 10 with 20, the system can never answer the first question correctly again.
+20951	The local test filters events by
+24148	respectively, giving 10 and 20. The "day numbers" here are only a teaching order, not real user data.
+20062	The data structure has to express a correction, not just a new value
+18120	Keep the source, the object it applies to, the valid interval, the recorded interval, the evidence version, the status and the supersedes relation. Intervals should as far as possible use the explicit half-open convention
+29429	, so that a boundary moment does not belong to the old and the new entry at once. A correction, an ordinary change and a revocation should be distinct: a correction may state that the past record was simply wrong, whereas an ordinary change does not deny that the old value once held.
+20055	A database being able to write atomically does not mean it understands any of this meaning; a transaction only protects field updates that were designed correctly.
+5863	Conflict handling has to go by the authority of the source, the time and the range of application; it does not settle every knowledge conflict by "last write wins".
+27986	Follow-up: always overwriting old information with new is simpler, so why is it not enough?
+15710	Because "I live in Tokyo now" does not conflict with "I lived in Beijing last year"; and "the budget changes to 20 from next month" should not affect this month straight away. Crude overwriting flattens the time conditions, and tends to make answers look as if they remember a great deal while using the wrong period every time.
+28009	Follow-up: what do you do when sources contradict each other and there is no ranking of authority?
+12422	Keep the conflict status and the evidence on each side, check with the user where necessary, and do not manufacture a fact out of the model's confidence score. Without sufficient grounds, the answer should be "not yet determined", which is not the same problem as a failure to retrieve the memory. An evaluation should include cases where abstaining is the correct answer.
+7520	E35: how to read this result, instead of only looking at "passed"
+11377	Both queries ask about day 6, but the cut-off for the knowledge they are allowed to use differs. Do not smuggle a rule learned afterwards back into the decision made at the time, unless you are explicitly making a retrospective correction.
+24891	Self-check:</strong> on day 8 it becomes known that the quota changed to 20 from day 5. Asked back "how much did the system know on day 6", what should the answer be?
+18090	It should answer with the old knowledge, 10; if the question is what quota actually applied on day 6, looking back now, then 20. Both valid time and recorded time have to be kept; storing only the last value will not do.
+8240	Q048｜How does memory retrieval avoid picking up the wrong project or an expired rule? And when should something be forgotten?
+27499	What to know first for this question</span>Once a memory has been fetched, its validity still has to be confirmed; updating, expiring and deleting are ordinary functions, not optional trimmings added after retrieval is done.
+23651	Lesson 16 · Retrieval, to begin with</a><a class="pill" href="../foundations/29.html">Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+12786	Filter first by identity, project, task type, time and valid status, then run the relevance retrieval and any reranking needed, and check the key sources before use. Forgetting serves to reduce expired and low-value information; it should not damage what auditing requires or evidence that is still cited.
+11881	The full chain from query to use
+12051	The task is "fix the duplicated refund execution in project A". Restrict to the user and project A first, exclude expired rules, and retrieve experience to do with idempotence and refunds. The candidates may include a payment incident in project B; close as that may be in meaning, it cannot be treated directly as a rule for A. It can serve as a general point to watch, but its limits of application have to be kept.
+28191	Once a memory has been chosen, turn it into context usable now: one concise piece of experience, its conditions of use, an entry point to the evidence, and its relationship to the current version. If the experience depends on the behavior of an old interface, read the current code before deciding whether it applies. "It worked last time" is no reason to skip checking the boundaries of what has changed.
+28362	Forgetting can be handled by life cycle: temporary task state expires; a stable fact is superseded by a new version; duplicate entries are merged; low-value experience long unused is archived; an entry shown to be false is marked revoked. Deleting sensitive information also has to run through backups, indexes and derived data, and the specific retention requirements should be decided by the application's policy.
+13854	Once a memory has been deleted, why can the vector index still leak it
+26469	Input and conditions.</strong> Memory m7 has four derived storage locations: the body text, the vector, a summary reference and a cached answer. The user withdraws permission to use it.
+25663	Restrict access at once
+12905	First stop the retrieval and answer layers returning m7
+11118	It must not wait for all the background physical cleanup to finish before taking effect.
+22386	Locate the derivatives
+21447	Find the vectors, summaries and caches by the source ID
+21821	Deleting the body text is not deleting everything derived from it.
+21593	Retrieval filtering
+19530	The authorization filter is checked both at candidate selection and at the final output
+28384	This keeps a summary from getting around the body text's permissions.
+22625	Physical cleanup
+19438	Delete, or expire the derived items, according to the storage policy
+25563	Record the range already handled and the items left undone.
+15681	Regression test
+14686	The original query is run again
+23393	Confirm that the withdrawn information no longer appears in what is returned.
+19214	Join the steps up.</strong> A memory's life cycle has to cover derived indexes and caches, not only the main database table.
+26686	Limits and counterexamples.</strong> The technical approach to deletion depends on the storage and the compliance requirements; no promise of legally thorough deletion is made here.
+27999	Follow-up: is a memory used often recently necessarily important?
+10651	Not necessarily. A retrieval preference can make one wrong memory used more and more, which becomes self-reinforcing. Value should be judged by actual help and evidence, not by the number of accesses alone. A rare but critical safety boundary may also go uncalled for a long time, and should not be deleted for being infrequent.
+27935	Follow-up: how do you test whether a memory system really works?
+12286	Use cross-session tasks, late corrections, multi-project isolation, and conflict and forgetting tests. Compare task completion and error rates with no memory, with the raw history and with curated memory; benchmarks such as LongMemEval offer ways of thinking about how to evaluate memory ability, but your own project still needs a comparison on real tasks.
+27828	Follow-up: when should you stop adding more memory machinery?
+18262	When new machinery does not reduce repeated mistakes or the cost of rebuilding, yet adds maintenance, retrieval noise and latency, it is time to simplify. One versioned document plus a lean index may suit a small team better than a complex Memory Service. Complexity should be driven by problems that have actually appeared.
+17858	Engineering deep dive · E36 · continues Q072
+28984	Prerequisite: <a href="../foundations/27.html">Lesson 22
+18369	Forgetting is a chain of propagation, not the deletion of one row
+10343	One document can give rise to chunks, summaries, retrieval vectors, answer caches and long-term experience. Once the original is withdrawn or the user's permission is revoked, deleting only the document row still leaves the other derivatives able to feed the original content back into the model. This risk comes from data dependency; tool boundaries such as MCP also require identity and resource access to be handled continuously, not checked only on the first read.
+21056	This section uses an independent teaching dependency graph: doc→chunk→summary→answer_cache and memory. Once doc is revoked, all five classes of object are marked invalid along the dependency closure. The local program's verification result contains five nodes. It is not connected to real user data, and this graph is not treated as legal compliance certification.
+15345	Revoking availability and deleting physically are not one step
+22623	Physical deletion may complete asynchronously; until it does, revoked material must at least be kept from taking any further part in retrieval, cache hits and memory construction. If you rely only on a TTL cleanup once a day, there is still a window between the revocation and the cleanup. The read path should check the validity of the source or the permission version, rather than trusting that the derived record was authorized when it was created.
+14830	Conversely, deleting every similar memory can also catch independent legitimate sources by mistake. The set of sources has to be kept: when a fact is supported by two independently permitted sources, whether it remains usable after one source is withdrawn is decided by the policy and the relation between the facts. Do not treat all similar text as coming from the same place.
+20495	Updating and forgetting have to be evaluated too
+7868	LongMemEval explicitly covers knowledge updating and the ability to abstain.
+5883	For an engineering system you should go further and add timing tests of "remember, then withdraw, then ask"; testing only first-time recall rewards unlimited memory. Record the retrieval hits, what was actually fed into the prompt and the final answer, to confirm that the model did not merely happen not to say it.
+27844	Follow-up: can deleting external memory delete knowledge in the model's parameters?
+11129	That does not follow. Controlling the availability of external storage, deleting training data and unlearning at the parameter level are different problems. What this book guarantees here reaches only as far as the controllable chain of external derivatives; it makes no claim to have changed what the base model has already learned in its parameters.
+28065	Follow-up: if an experience entry does not store the original text, does it still need a source?
+28874	It does. A piece of experience may come from one root-cause analysis of an error; without a source and conditions of use, it cannot be expired once the code is upgraded or the conclusion withdrawn. Storing a lean conclusion does not exempt you from evidence governance; it makes a traceable compression relation all the more necessary.
+7524	E36: how to read this result, instead of only looking at "passed"
+11844	Look outward from the original document along the source dependencies: chunks, summaries, memories and answer caches can all inherit the error. Deleting the document file itself is no guarantee that the derived conclusions disappear.
+24859	Self-check:</strong> after the source document is deleted the answer cache still hits. Why can the system not be considered to have forgotten?
+22389	Derived caches, summaries and memories may go on supplying the content. Invalidation should propagate along the source dependencies, and the revocation or permission version should be checked at read time; physical deletion and ceasing to use have to be verified separately.
+22324	Follow this chapter through its objects and states</a><a href="#topic-2">Long-term memory is not a note that is always right</a><a href="#Q069">Q045｜What is the difference between working memory, episodic memory, semantic memory and procedural memory?</a><a href="#Q070">Q046｜Which judgments should a piece of information pass through on its way from a conversation into long-term memory?</a><a href="#Q071">Q047｜How are conflicts between old and new memory handled? Why do Valid time and Recorded time have to be kept apart?</a><a href="#Q072">Q048｜How does memory retrieval avoid picking up the wrong project or an expired rule? And when should something be forgotten?
+23644	Lesson 14｜Skills and routing: loading exactly the expertise needed — AI Systems Engineering
+22210	Follow this chapter through its objects and states</a><a href="#topic-2">A skill exists — so why can it still be of no use at all?</a><a href="#Q073">Q021｜Which stages does a skill pass through, from existing on disk to really affecting the output?</a><a href="#Q074">Q022｜How do you write a routing description that neither misses a borderline task nor triggers too often?</a><a href="#Q075">Q023｜What should a skill, an instruction, a hook, a tool and an agent each be responsible for?</a><a href="#Q076">Q024｜How does multi-model routing optimize cost without sacrificing quality? And why can a model not be chosen on prompt length alone?</a><a class="sub ap-toc" href="#agent-practice-skills">How does a progressively loaded skill go from "a file" to actual capability?
+24256	Systems</span><span>about 7.3k characters</span><span>Figures and item-by-item notes
+8886	A skill is reusable task guidance, routing decides whether it is offered, and the tool does the real work. Explanatory text can help the model judge, but it cannot stand in for permissions and verification; expertise is not reading every skill every time.
+23525	Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/26.html">Lesson 11 · Assembling context</a><a class="pill" href="../foundations/30.html">Lesson 18 · Code is not an ordinary document</a><a class="pill" href="../foundations/31.html">Lesson 23 · Foundations of long-term memory</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+27535	A quick check before the deep reading:</strong> construct one task that clearly should load it, one that clearly should not, and one on a blurred boundary, and write out for each the real cost of loading wrongly and of missing it.
+18664	A skill is not model parameters, and it is not a program that runs by itself. Through discoverable metadata, task instructions and resources, it supplies the model with an expert method. Routing has to avoid both missing a load and loading too much.
+18687	Skill routing is not a choice between a file being there and not being there. A discoverable name, a matching description, reading the body, reachable resources, correct execution: each of these can fail on its own. Working through this chain of evidence finds the specific cause better than adding one more line saying "the skill must be used".
+23178	Related step-by-step process: <a href="../visual/F32.html">A skill exists — so why can it still be of no use at all?</a>. The rest of this section goes on to show the computation and the engineering limits in more detail.
+24544	Related mechanisms to continue with: <a href="../visual/F25.html">Lesson 08 · MCP connects interfaces; it does not hand over permissions on its own</a><a href="../visual/F26.html">Lesson 11 · Each turn's context is like a working file with a boundary</a><a href="../visual/O12.html">O12 · Model routing: cheaper per call is not cheaper per successful task
+8152	Q021｜Which stages does a skill pass through, from existing on disk to really affecting the output?
+27439	What to know first for this question</span>Discovering a skill relies on metadata, loading the body makes it usable by the model, and running its resources is another layer of action again. A directory existing is no proof that it was loaded this turn.
+24944	There are at least discovery, candidate selection, body loading, resource acquisition, actual execution and verification. A file existing does not mean it was discovered; a description matching does not mean the body was read; the body being read does not mean the key step was executed. Use this chain to explain "the skill had no effect", instead of guessing from the result alone.
+22018	Every stage can fail on its own
+14856	The discovery stage scans the supported directories and parses the metadata. An unsupported path or a malformed format makes the skill completely invisible. At the selection stage the model sees the name and the description and decides whether it is relevant to the current task; too broad a description can be selected wrongly, too narrow a one can be missed. The loading stage reads the body; if the file is too long, a reference is broken or the context is trimmed, the content actually in effect may be incomplete.
+18619	The execution stage needs tools, permissions and current evidence. A database-performance
+25239	asks for a query execution plan, but when the sub-
+22153	has no database tool, the key step cannot be completed. The verification stage checks whether the final code or analysis reflects the relevant constraints, rather than requiring the skill's name to appear in the answer.
+15743	A routing log can therefore record "which candidates were found, which one was chosen, what was read, what was executed, and why it stopped". This need not expose the full internal chain of thought; recording the observable actions and the grounds for them is enough.
+10247	How a skill gets from a file on disk into the current action
+26424	Input and conditions.</strong> The directory holds a Python testing skill whose name and description declare it "suited to diagnosing Python test failures", and whose body cites pytest commands and a classification of failures.
+18633	Scan or load the metadata
+15045	All that is known is that the skill exists.
+12050	The task is a pytest assertion failure
+12505	The candidate is relevant; if the task were fixing a typo in the documentation, it should not be forced in.
+21822	Body loading
+25880	Read the execution steps and the material they need
+11803	This moves from "knowing the name" to "knowing the method".
+24783	Capability check
+22764	The environment has no pytest, or is read-only
+25934	Adjust the verification plan and state the gap, rather than claiming it has been run.
+24463	Accepting the result
+22454	The test run matches the version as currently modified
+8889	A skill having been read is no proof the task is done.
+19079	Join the steps up.</strong> A skill's life cycle comes down in the end to real actions and evidence, not to an "already loaded" label.
+26681	Limits and counterexamples.</strong> How discovery and automatic matching actually work is up to the product; this example follows the open skill organization concept and does not guarantee that every tool runs the same process automatically.
+27807	Follow-up: why is having the model declare "I used skill X" in its answer not a good evaluation?
+16463	It may declare it without executing it, and it may execute it without mentioning the name. Look at what was actually read, which tools were called and how the artifact behaves. A keyword test only suits checking an explicit formatting requirement; it does not suit proving that expertise was applied.
+28049	Follow-up: what hidden costs does progressive loading have?
+29028	Extra rounds of discovery and reading, wrong selections, context switching and broken references. For a short rule needed almost every time, loading it by default may be cheaper. Progressive loading suits a large long tail; it is not an unconditional reason to split every single rule into its own file.
+27720	Follow-up: once a skill's script has run successfully, does that mean the skill is done?
+10633	No. The script may only produce candidates or intermediate files; the task still needs the result explained, its applicability verified, errors handled and the work delivered. Mechanical execution succeeding has to be told apart from the user's goal being met.
+17859	Engineering deep dive · E37 · continues Q073
+18722	Breaking "in effect" into five observable gates
+20088	File exists → host discovers it → selected this turn → body and resources loaded → the key process actually executed. Every gate can fail. The skill description affects discovery and selection, but it cannot fix a path that is not scanned, an invalid file format, a sub-agent that was not preloaded, or insufficient tool permissions. Claude Code's documentation on skills and sub-agents reflects these different life cycles.
+19975	In the teaching state exists and discovered are True, while selected, body_loaded and used are False. Recording only "the skill was discovered" mistakes the first half of the process for success. At that point routing is worth studying; if discovered is itself False, work through the files and the configuration first, and do not rewrite the trigger wording.
+7746	JIT saves tokens only if the supplementary information really arrives in time
+22507	Progressive loading means giving the metadata first and reading the body and resources when they are needed. Too broad a description triggers wrongly, too narrow a one fails to trigger; and too long a body may be trimmed or may swamp the task. The most useful record is not how many tokens were loaded, but whether the steps a key task needs really entered the context and were executed.
+17729	Tools have a similar layering: registration, exposure, reachability and dispatch in the pinned Codex source are not one object.
+5797	When a skill requires a tool but the sub-agent does not have that ability, enriching the skill's content further will not create the ability to execute.
+25775	How to construct a routing regression set
+19855	Collect real tasks that should trigger it, tasks that are close but should not, tasks that name it explicitly, and combined tasks. For each one, note "what specifically goes wrong if it is not loaded" and "what it costs if it is". Do not use loading everything for every task as a high-recall approach, or the test will only reward redundancy.
+15474	Test the hidden dependencies at the same time: if the main agent selected the skill, does the sub-agent get the body it needs when it executes; do the resources' relative paths resolve against the right directory; does a change of description affect other skills of the same kind. What is being judged is the final task's quality and cost, not the accuracy of a static classification.
+27969	Follow-up: does writing a required step into a skill make it enforced?
+10955	No. A skill is guidance and resources supplied to the model; it is not a runtime constraint. If a step touches a security boundary or a deterministic acceptance condition, it should be realized by a program check or wrapped in a tool; not every recommendation has to be raised to a mandatory gate.
+28022	Follow-up: now that the model is stronger, should an old skill be kept?
+22981	Run an ablation test on real tasks. If the success rate does not drop and the time goes down once it is removed, it may be an outdated patch; if a particular boundary clearly regresses, keep the part that covers it. A skill does not grow more expert by piling up; it should maintain a gain that can be demonstrated.
+7527	E37: how to read this result, instead of only looking at "passed"
+28261	Read exists, discovered, selected and body_loaded one by one. The first boundary where true turns to false is usually worth fixing before rewriting the skill body again and again.
+24876	Self-check:</strong> the skill file exists and was scanned, but the subtask did not carry out the test steps in it. What should the first reaction be?
+12822	Check the selection, the body loading, the sub-agent's context and the tool permissions first, to establish which gate it broke at; you cannot put it down to a weak description straight away, and you cannot take "it was discovered" for "it was executed".
+12922	Walk one concrete chain first
+11916	The repository has
+29168	, and that does not mean the review task has used it. It has to be discovered by the directory; the description has to match the task; the full instructions have to be read; the scripts or reference material have to be fetched as needed; and in the end the action has to follow them and get the right result. The first four steps are only conditions; it is the fifth that comes close to effective application.
+22510	The point of progressive disclosure is to let the default context carry only the discovery information that is needed, rather than load every rule unconditionally. Anthropic's Skills design layers metadata, body and on-demand resources; it does not guarantee that routing never errs, and it does not turn documentation into permission.
+15759	The pinned loading site in Codex
+16134	handles explicit mentions, the snapshot of the skills directory, dependencies, warnings and the fragments to be injected; it also de-duplicates paths already injected. The particular isolated-review path does not treat an embedded parent conversation as a new explicit mention, so that untrusted content is not mistaken for the current user's choice.
+19733	How to test the boundaries of a description
+19973	Three classes of teaching sample: renaming one variable, which should not load a large architecture review; migrating a protocol across modules, which should load the relevant expert checks; and a user naming a particular skill, which should be handled by the product's semantics while still bounded by permissions. When comparing an old description with a new one, keep the tasks, the model, the tools and the other rules the same.
+25564	Record the recall of the skills that were needed, the unnecessary loads, the extra tokens, task success and rework. Proving only that "20% fewer skills were loaded" does not establish an optimization, because essential knowledge may have been missed as well. Conversely, loading every skill for every task has high recall but may add conflict and interference.
+11724	What belongs in a skill
+23494	A stable, reusable procedure, how to use a tool, and acceptance criteria can go in; this file version, one lucky success and a deployment address that has expired belong in the task's evidence or in memory with a life cycle. A skill itself should have limits of application and failure examples, rather than accumulating more and more "must", "always" and "under all circumstances".
+11271	Expertise still depends on the model's understanding, the quality of the material and execution feedback. A skill is not independent model training; do not describe "the documentation was loaded" as the parameters having learned a new ability.
+18686	A skill body's lifetime is not the same as a tool permission's lifetime
+7242	The documentation read for Claude Code distinguishes keeping the body from allowed-tools being a temporary permission: the body having entered the context does not mean the tool permission continues indefinitely. Whether it appears in the menu, whether the model can trigger it itself, and whether a sub-agent preloads it are governed by different fields too, and cannot be replaced by a single "enabled" boolean.
+7276	Codex's explicit skill path reads the snapshot, handles MCP dependencies, obtains body fragments and warnings, and de-duplicates against paths already injected; the parent conversation in an isolated review is evidence, and should not be reinterpreted as this turn's user asking for a skill to be installed or invoked. This is the specific path of the function that was read; it does not cover every implicit skill-selection strategy.
+19974	The teaching check uses two moments: at t0 the skill is read and this turn's permission obtained; at t1 a new user message begins. The body can still be cited, while the temporary permission may already have ended; before executing again you have to judge afresh by the current policy, and "I learned it earlier" does not entail "I am permitted to execute now".
+8155	Q022｜How do you write a routing description that neither misses a borderline task nor triggers too often?
+27460	What to know first for this question</span>A description has to state the tasks it suits and its boundaries; too broad and it loads wrongly, too narrow and the expertise is missed. Test it with positive, negative and borderline examples.
+23659	Lesson 17 · From search results to a trustworthy answer</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric
+19730	A description should state a clear task intent, what it applies to and the key boundaries, and avoid merely piling up technical nouns or extending its range without limit. Routing quality comes from validating positive, negative and borderline examples against a real task distribution, not from copy that looks comprehensive.
+23236	Look at an example that is easy to route wrongly
+9474	"For all storage, database, cache, file, performance, security and architecture tasks" covers far too much: almost any backend change would trigger it. Conversely, "use only when the user explicitly says to optimize an SQL index" may miss the natural phrasing "the endpoint query is too slow, help me track it down".
+20507	A more useful description can be built around intent: "use when the task needs analysis of database query plans, index choice, transaction isolation or persistence consistency; ordinary file reads and writes, and renaming a field with no database semantics, usually do not need it." This is still an example, not generally optimal wording. Let the boundary of expertise be corrected by actual evidence: a task looks simple at first, reading the code reveals that transactions are involved, and the expert skill is then escalated.
+25730	An evaluation set includes clear positive examples, clear negative examples and blurred boundaries. Beyond whether the selection is right, look at what specific error a missed selection causes and at how much a wrong selection adds in extra
+15620	and process steps. A case where something loads by mistake but does not affect the output differs in risk from one where transaction consistency is missed and a charge is taken twice.
+9448	How a description saying "applies to all development tasks" leads to wrong loading
+26224	Input and conditions.</strong> Candidate A is described as "improves engineering quality, suits all code tasks"; B as "analyzes concurrent shared state, races and lock ordering".
+12023	Task 1
+19858	Fix a spelling mistake in the README
+7037	A matches it loosely all too easily; B is irrelevant.
+12024	Task 2
+12215	Concurrent balance deductions produce a negative number
+7138	B is clearly relevant.
+12025	Task 3
+20170	Add a test for an ordinary pure function
+25972	Being quality-related is not the same as having to load concurrency analysis.
+19852	Tighten A's specific triggers and its non-applicable examples
+10896	This is not compressing the description into an opaque abbreviation.
+22915	Use the two metrics of necessary recall and unnecessary loading
+14958	Reducing the amount loaded alone may also miss the tasks B should trigger on.
+19228	Join the steps up.</strong> The boundary of a routing description needs positive examples and adjacent negative ones, not a heap of adjectives like "expert", "comprehensive" and "best".
+26720	Limits and counterexamples.</strong> A teaching example cannot establish a real LLM's selection probabilities; those need measuring with the target model and a fixed task set.
+27996	Follow-up: are a lot of hard classification levels needed?
+10642	Not necessarily. You can keep the principle of "do the simple thing directly, and go deeper when the evidence shows it is complex", letting the model judge on the strength of evidence. Hard classification is worth adding only when a predictable error keeps recurring and there really is a gain; otherwise it may force open-ended tasks into boxes that do not fit.
+27889	Follow-up: when several skills overlap, should they all be loaded?
+12867	Establish the main problem and the expert boundaries actually needed first. An overlap may call for a combination, or it may just be a repeated description. After loading, check for conflicting instructions and duplicated work. If both skills demand a full independent analysis and review, stacking them directly may double the task's cost without producing new evidence.
+27832	Follow-up: how do you prove that changing a description has not lowered expert recall?
+15916	Compare the old and the new version on a fixed task set, looking above all at whether tasks that used to hit are now lost, and add real false-trigger negatives at the same time. Do not only verify that "the earlier wrong load has gone", or you may gain a false improvement in precision by writing the description extremely narrowly.
+8158	Q023｜What should a skill, an instruction, a hook, a tool and an agent each be responsible for?
+27457	What to know first for this question</span>An instruction guides behavior, a Skill makes a procedure reusable, a tool performs the action, and a Hook runs a program at a given point. State the actual shortcoming before choosing a mechanism.
+23526	Lesson 01 · An agent is not another neural network</a><a class="pill" href="../foundations/25.html">Lesson 08 · Tools and MCP</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/34.html">Lesson 04 · Foundations of engineering quality
+7742	Instruction expresses a standing constraint; Skill supplies an expert method on demand; Tool performs a concrete action;␣
+15971	runs programmatic logic at a fixed point; Agent carries an independent task's execution and its own context. Choose the mechanism by responsibility, and avoid writing the same logic out five times.
+10332	Where a verification requirement belongs
+9447	"All code follows the project format" can be stated in the project instructions; "when there is a database migration, check rollback and compatibility" can be a skill; "run the migration checker" is a tool; "run the deterministic format check automatically before a commit" can be carried out by a suitable hook/
+18620	; "review the migration plan independently" can be delegated to an agent when the risk warrants it.
+24928	Natural language suits open-ended judgment, and a deterministic program suits conditions that can be checked mechanically. Whether a file exists, whether a
+20382	is valid, whether a command's exit code is zero: none of these need the model to guess. The model is good at judging which tests are relevant and whether the evidence supports a root cause, but the conclusion should still be bound by the facts the tools give.
+18679	A skill citing a resource has to be sure the relative path, the version and the permissions are available. A tool permission cannot be extended because a skill's body says "access allowed". Nor is a hook safe by nature: the script it runs may hold the process's permissions, and needs the same review.
+18462	To enforce a format check, write it into the prompt or use a hook?
+26460	Input and conditions.</strong> The rule is that a format check has to run before a commit; the task also needs expert Python advice and a file-reading tool.
+20457	An ordinary instruction
+15551	State the constraint and the goal to the model
+21749	The model can understand it, but that is no guarantee of deterministic execution.
+19741	Supplies an expert procedure for handling Python problems
+14970	Loaded only on relevant tasks.
+19742	Supplies the actual ability to execute format_check()
+25943	Calling it produces an exit code and a log.
+7712	A hook or a fixed procedure
+15934	Trigger the check deterministically before the commit event
+17520	Better suited to a mechanical step that has to happen.
+15921	Decide, on failure, which files to check, what to change and whether to retry
+25959	It handles the dynamic action; it does not replace the format tool itself.
+19252	Join the steps up.</strong> Choose a mechanism by what it carries: explanation, method, action, enforced timing or dynamic decision.
+26642	Limits and counterexamples.</strong> Which events a hook can use, and whether it can block, depend on the product; do not assume that any given CLI offers the same abilities.
+27762	Follow-up: why not put every check into a hook and enforce it?
+29016	A frequent, expensive full check can slow a simple task down, and some checks need business judgment rather than a fixed script. A hook suits a cheap, deterministic, critical mechanical boundary. A risk-driven deep review should not be replaced by a fixed trigger frequency.
+27719	Follow-up: can a skill be reused independently of a particular framework?
+15128	You can write the domain principles, the operating steps and the resources as platform-independent content as far as possible, and then provide a light adapter for a specific tool. But tool names, permissions, paths and calling protocols usually need adapting. Being portable is not the same as copying it unchanged into every CLI and having it run.
+27824	Follow-up: when does it need splitting into a separate agent?
+12053	When the task has its own context, goals that can run in parallel, or genuine value in independent review; merely being long to explain does not necessarily need a sub-agent. A sub-agent adds handoff, cost and state management, and should not be treated as the default substitute for a file-loading mechanism.
+8163	Q024｜How does multi-model routing optimize cost without sacrificing quality? And why can a model not be chosen on prompt length alone?
+27472	What to know first for this question</span>Model routing goes by task difficulty, risk and the measured cost per success; it does not fix strong and weak by a label for good. Escalating and downgrading both need evidence.
+23990	Lesson 62 · Computing fast and fitting in memory</a><a class="pill" href="../foundations/32.html">Lesson 13 · Skills, routing and multi-agent</a><a class="pill" href="../foundations/35.html">Lesson 05 · The denominator of an evaluation metric</a><a class="pill" href="../foundations/36.html">Lesson 31 · Do not be fooled by a few percent
+26082	Routing should take in task difficulty, risk, the tool and context abilities needed, and the real success rate. Prompt length only reflects the size of the input; it cannot stand for reasoning complexity. The goal is the cost per successful task under a quality constraint, not the cheapest single call.
+11865	Writing the decision from total cost
+21630	Model A costs 1 per call with a success rate of 0.9; model B costs 0.2 with a success rate of 0.5. If a failure can be retried independently and conditions are ideal, cost per success is roughly c/p; but a real agent failure may need rework, human checking and recovery from side effects, so a geometric distribution cannot be applied directly.
+20484	A more practical teaching estimate is:␣
+10212	. You also have to treat the loss from a high-risk error as a quality constraint, rather than converting it lightly into an acceptable probability of being cheap. A strong model can take the core judgments that are hard to verify, and a lighter model the format conversions and the small, independently verifiable tasks; but the assignment itself needs evaluating too.
+14093	An escalation trigger can come from evidence: repeated failures, an invariant spanning modules, several readings still open after retrieval, frequent errors in tool arguments. Do not call a large model every time to analyze which model to use and then hand the tiny task to a small model; the routing overhead may exceed the saving.
+12360	The cheap model saves money on one call, yet costs more per successful task once rework is counted
+26290	Input and conditions.</strong> On the same batch of 100 tasks, plan A costs 100 yuan in total and succeeds on 80; plan B costs 70 in total and succeeds on 40.
+14112	Cost of one attempt per task
+15044	On this item alone B is cheaper.
+12005	Counted by actual successes, B is more expensive.
+24336	Bring in rework
+25012	If a failure also consumes human time
+7147	B's overall cost may rise further.
+13746	Tiered routing
+24153	B's success rate may be enough for simple tasks, while high-risk ones use A
+28887	This has to be measured per task tier, not guessed from a global average.
+25973	Quality constraint
+12830	Meet the correctness and risk floor first
+13562	Then compare cost and latency among the plans that qualify.
+19130	Join the steps up.</strong> A choice of model should answer for the successful outcome, not only for one API quotation.
+26783	Limits and counterexamples.</strong> The costs are a fictitious uniform unit, not any current vendor's prices; this ratio counts the spend on failures as well, and cannot be taken as a model of the success probability of a single task.
+27833	Follow-up: where does the list of candidate models come from?
+11864	From the current CLI/
+28466	configuration, the catalog of available models and the permissions; the model should not be left to invent names from memory. Different tools may not expose the same set of models. A router has to know which abilities are actually available, and should not write a model that does not exist into a plan.
+27920	Follow-up: is a small model enough to handle review?
+14877	It depends on the kind of error and the way it is verified. Format and deterministic checks can be done cheaply; complex concurrency or a design spanning modules may need stronger reasoning. If the reviewer finds errors of a given kind less readily than the executor, adding review only adds a passage of agreement. Measure real defect detection and false positives.
+27826	Follow-up: when is automatic model routing not worth doing?
+12068	When the volume of tasks is small, the cost of one model for everything is acceptable, routing is hard to judge, or it switches wrongly too often, a simple fixed model with explicit escalation may be better. Complex routing needs enough task volume and a steady gain behind it; do not build a long-term maintenance burden for one theoretical optimization.
+17860	Engineering deep dive · E38 · continues Q076
+12776	Write the cost per successful task out first
+12536	Suppose a cheap model call costs 1 and a strong model 5, and 40% of tasks fall back; then the expected model cost per task is
+29174	, not 1. That still leaves out routing, verification, repeated retrieval, rework and the loss from failure. The numbers are a teaching setting, not live model prices. A local program checked this algebra.
+22586	The larger blind spot in cost, however, is <strong>errors that go undetected</strong>. When the small model fails but the verifier judges it a success, the system never triggers the fallback at all. Designing a fallback plan means measuring the recall of failure detection, the false-positive rate and the success rate after falling back; the small model's self-reported confidence is not enough to go on.
+25654	Designing a confusion table you can actually use
+18760	Divide the tasks into four cells: the small model succeeded or failed, and the verifier passed or rejected it. Look especially at "failed but passed"; where the business loss is large, this cell costs far more than one call to the strong model. The verifier may be a test, a schema, a rule, a separate model or a combination with a person; every one of them has a blind spot. An agent evaluation should tell the final actual result apart from what the trace claims.
+15708	Does falling back continue the task, or redo it from scratch?
+16339	If the small model has already modified files, spent budget or produced external side effects, the strong model taking over cannot assume the initial state is still clean. The handoff has to state the actions taken, the current version, the evidence of failure and the items left open. To make falling back simpler, you can restrict the low-cost model to read-only localization or a draft stage first, and give the steps with side effects to a more reliable path.
+28078	Follow-up: can model difficulty be judged by a task's word count?
+15052	Only as a weak feature. A short task may hide a constraint spanning modules, and a long one may be nothing but repeated format conversion. Consider insufficient evidence, dependence on reasoning, handling of tool errors and business risk, instead of taking string length for the truth about complexity.
+27896	Follow-up: surely running the cheap model a few more times is always better?
+10645	Not necessarily. Failures may be highly correlated, and retries add queue pressure, cost and deadline risk; under overload they may also make the experience worse.
+5945	A finite attempt budget and the real gain have to be defined, and "we can always try again" must not be treated as a reliability strategy.
+7530	E38: how to read this result, instead of only looking at "passed"
+20685	The expected cost has to multiply the fallback probability by the added cost. But only if the first stage's failure can be recognized will the right fallback trigger; a cheap model's undetected errors cannot be found automatically by a cost formula.
+24869	Self-check:</strong> the small model fails but the verifier passes it. Can falling back to the strong model repair this kind of error?
+11135	No, because the fallback is never triggered at all. You have to measure the ability to detect errors, above all the proportion that fail but are passed and what that costs the business; you cannot count only the tasks where the fallback triggered.
+22209	Follow this chapter through its objects and states</a><a href="#topic-2">A skill exists — so why can it still be of no use at all?</a><a href="#Q073">Q021｜Which stages does a skill pass through, from existing on disk to really affecting the output?</a><a href="#Q074">Q022｜How do you write a routing description that neither misses a borderline task nor triggers too often?</a><a href="#Q075">Q023｜What should a skill, an instruction, a hook, a tool and an agent each be responsible for?</a><a href="#Q076">Q024｜How does multi-model routing optimize cost without sacrificing quality? And why can a model not be chosen on prompt length alone?
